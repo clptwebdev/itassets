@@ -14,7 +14,10 @@
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
-
+            <a href="/login/microsoft" class="btn">
+                <img style="height: 30px;" src="/images/svg/microsoft.svg" alt="">
+                Office 365
+            </a>
             <!-- Email Address -->
             <div>
                 <x-label for="email" :value="__('Email')" />
