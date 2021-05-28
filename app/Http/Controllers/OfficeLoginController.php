@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use App\Models\User;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class OfficeLoginController extends Controller
 {
@@ -27,18 +30,25 @@ class OfficeLoginController extends Controller
     {
         $user = Socialite::driver('azure')->user();
 
-        $authUser = User::firstOrCreate(['email' => $user->email], [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'Test123',
-        ]);
+        if($authUser = User::whereEmail($user->email)->first()){
 
-        /* if($authUser->wasRecentlyCreated) {
-            (new StoreAndEmailTemporaryPasswordAction())->execute($authUser);
+        }else{
+            $unhash = 'Test123';
+            $password = Hash::make($unhash);
+            $authUser = User::create([
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => $password,
+            ]);
+            
+            Mail::to('stuartcorns@outlook.com')->send(new \App\Mail\NewUserPassword($authUser, $unhash));
+
+            /*  Mail::send('emails.tpl', $data, function($message){
+                $message->to('stuartcorns@outlook.com', 'Stuart')->subject('Email with Laravel and AWS');
+            }); */
         }
- */
         auth()->login($authUser, false);
 
-        return redirect('/');
+        return redirect('/dashboard');
     }
 }
