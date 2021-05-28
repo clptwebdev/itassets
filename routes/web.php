@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('login/microsoft', 'OfficeLoginController@redirectToProvider');
-Route::get('login/microsoft/callback', 'OfficeLoginController@handleProviderCallback');
+Route::get('login/microsoft', 'App\Http\Controllers\OfficeLoginController@redirectToProvider');
+Route::get('login/microsoft/callback', 'App\Http\Controllers\OfficeLoginController@handleProviderCallback');
 
 Route::get('/', function () {
     return view('welcome');

@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
-use App\Domain\User\Models\User;
+use App\Models\User;
 use Laravel\Socialite\Facades\Socialite;
-use App\Domain\User\Actions\StoreAndEmailTemporaryPasswordAction;
 
-class OfficeLoginController
+class OfficeLoginController extends Controller
 {
     /**
      * Redirect the user to the GitHub authentication page.
@@ -31,6 +30,7 @@ class OfficeLoginController
         $authUser = User::firstOrCreate(['email' => $user->email], [
             'name' => $user->name,
             'email' => $user->email,
+            'password' => 'Test123',
         ]);
 
         /* if($authUser->wasRecentlyCreated) {
