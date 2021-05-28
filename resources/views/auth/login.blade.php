@@ -19,20 +19,20 @@
             <hr class="hr-break">
             <div class="container-middle-2  container-margin-login flex-size">
                 <div class="margin-centre">
-                    <h3 class="centred">
+                    <h3 class="centred d-block">
                         Sign In To Your Account
                     </h3>
-                    <div class="centred button padding-25-height font20">
-                        <a href="#">Login</a>
-                    </div>
+                    <a href="#" class="d-block text-center button padding-25-height font20">
+                        Login
+                    </a>
                     <div>
                         <div class="centred">
                             <span></span>
-                            <h3 class="centred padding-25-height white">OR VIA</h3>
+                            <h3 class="text-center padding-25-height white pb-2">OR VIA</h3>
                             <span></span>
                         </div>
                     </div>
-                    <a href="/login/microsoft" class="centred button padding-25-height font20">
+                    <a href="/login/microsoft" class=" d-block text-center button padding-25-height font20">
                             <img src="{{ asset('/images/svg/microsoft.svg')}}" alt="MS" height="30px" style="display:inline;">
                             Office 365
                     </a>
