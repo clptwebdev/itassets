@@ -1,17 +1,17 @@
 @extends('layouts.guest')
 
 @section('css')
-<link href="{{ asset('css/admin.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('css/login.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
     <div class="container">
         <div class="flex direct-middle">
             <div class="container-middle-1  container-margin-login flex-size margin-centre">
-                <div class="apollo">
-                    <img src="{{ asset('images/apollo-logo.svg')}}">
+                <div class="apollo" style="max-width: 300px;">
+                    <x-application-logo/>
                 </div>
-                <div>
+                <div class="m-3 w-100">
                     <h3 class="padding-25-width text-center">Welcome to Apollo</h3>
                 </div>
     
