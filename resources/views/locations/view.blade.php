@@ -40,7 +40,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="{{ route('location.edit', $location->id)}}">Edit</a>
-                            <a class="dropdown-item" href="#" data-id="{{ $location->id }}">>Delete</a>
+                            <a class="dropdown-item" href="#" onclick="deleteForm({{ $location->id}})">>Delete</a>
                             
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                 <small class="text-warning">**Warning this is permanent and the Assets assigned to this location will be set to Available.</small>
             </div>
             <div class="modal-footer">
-                <form  action="{{ route('location.destroy', ) }}" method="POST">
+                <form id="deleteForm" method="POST">
                     @csrf
                     @method('DELETE')
                     <button class="dropdown-item" type="submit">Delete</button>
