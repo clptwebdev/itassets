@@ -40,7 +40,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="{{ route('location.edit', $location->id)}}">Edit</a>
-                            <a class="dropdown-item" href="#">Delete</a>
+                            <a class="dropdown-item" href="#" data-id="{{ $location->id }}">>Delete</a>
                             
                         </div>
                     </div>
@@ -76,12 +76,12 @@
 
 @section('modals')
 
-<div class="modal fade" id="removeMultiUserModal" tabindex="-1" role="dialog"
-    aria-labelledby="removeMultiUserModalLabel" aria-hidden="true">
+<div class="modal fade" id="removeLocationModal" tabindex="-1" role="dialog"
+    aria-labelledby="removeLocationLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="removeMultiUserModalLabel">Are you sure you want to delete this user?</h5>
+                <h5 class="modal-title" id="removeLocationLabel">Are you sure you want to delete this Location?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -91,7 +91,7 @@
                 <small class="text-warning">**Warning this is permanent and the Assets assigned to this location will be set to Available.</small>
             </div>
             <div class="modal-footer">
-                <form action="{{ route('location.destroy') }}" method="POST">
+                <form  action="{{ route('location.destroy', ) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button class="dropdown-item" type="submit">Delete</button>
