@@ -54,7 +54,7 @@
                                 {{ $location->city }}<br>
                                 {{ $location->postcode }}</p>
                                 <p>Tel: {{ $location->telephone }}</p>
-                                <p>Email: {{ $location->email }}</p>
+                                <p>Email:sdsdfsd {{ $location->email }}</p>
                             </div>
                         </div>
                         <div class="col-auto">
