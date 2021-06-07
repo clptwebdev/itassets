@@ -30,6 +30,9 @@ Route::group(['middleware'=>'auth'], function(){
     //Administrator Permissions Middleware
     Route::group(['middleware'=>'role:1'], function(){
         Route::resource('/location', 'App\Http\Controllers\LocationController');
+        Route::resource('/photo', 'App\Http\Controllers\PhotoController');
+
+        Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
         /* Route::resource('admin/groups', 'App\Http\Controllers\RoleController');
         Route::delete('admin/users/delete/multi', 'App\Http\Controllers\UserController@destroyMulti')->name('users.deleteMulti');
         //Settings */

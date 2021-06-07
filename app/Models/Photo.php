@@ -16,4 +16,14 @@ class Photo extends Model
         return $this->hasOne(User::class);
     }
 
+    public function location()
+    {
+        return $this->hasOne(Location::class);
+    }
+
+    public function setPathAttribute($value)
+    {
+        $this->attributes['path'] = 'storage/'.$value;
+    }
+
 }

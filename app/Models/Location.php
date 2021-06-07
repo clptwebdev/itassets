@@ -13,6 +13,6 @@ class Location extends Model
 
     public function photo()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Photo::class);
     }
 }

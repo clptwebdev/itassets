@@ -47,8 +47,8 @@ class LocationController extends Controller
             'telephone' => 'required|max:14',
         ]);
         //
-        $location = Location::create($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'photo_id', 'icon'));
-        session()->flash('success_message', $location->name.' has been created successfully');
+        $location->fill($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'photo_id', 'icon'))->save();
+        session()->flash('success_message', $location->name.' has been updated successfully');
         return redirect(route('location.index'));
     }
 
@@ -71,7 +71,7 @@ class LocationController extends Controller
      */
     public function edit(Location $location)
     {
-        //
+        return view('locations.edit', compact('location'));
     }
 
     /**
@@ -83,7 +83,20 @@ class LocationController extends Controller
      */
     public function update(Request $request, Location $location)
     {
-        //
+         //
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'address_1' => 'required',
+            'city' => 'required',
+            'county' => 'required',
+            'postcode' => 'required',
+            'email' => ['required', \Illuminate\Validation\Rule::unique('locations')->ignore($location->id), 'email:rfc,dns,spoof,filter'],
+            'telephone' => 'required|max:14',
+        ]);       
+
+        $location->fill($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'photo_id', 'icon'))->save();
+        session()->flash('success_message', $location->name.' has been updated successfully');
+        return redirect(route('location.index'));
     }
 
     /**
