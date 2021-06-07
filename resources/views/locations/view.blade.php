@@ -40,7 +40,11 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="{{ route('location.edit', $location->id)}}">Edit</a>
-                            <a class="dropdown-item" href="#" onclick="deleteForm({{ $location->id}})">>Delete</a>
+                            <form id="form{{$location->id}}"action="{{ route('location.destroy', $location->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <a class="dropdown-item deleteBtn" data-id="{{$location->id}}">Delete</a>
+                            </form>
                             
                         </div>
                     </div>
@@ -76,38 +80,45 @@
 
 @section('modals')
 
-<div class="modal fade" id="removeLocationModal" tabindex="-1" role="dialog"
-    aria-labelledby="removeLocationLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<!-- User Delete Modal-->
+<div class="modal fade bd-example-modal-lg" id="removeLocationModal" tabindex="-1" role="dialog"
+    aria-labelledby="removeLocationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="removeLocationLabel">Are you sure you want to delete this Location?</h5>
+                <h5 class="modal-title" id="removeLocationModalLabel">Are you sure you want to delete this Location?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you would like to remove these <strong>Locations</strong> from the system?</p>
-                <small class="text-warning">**Warning this is permanent and the Assets assigned to this location will be set to Available.</small>
+                <input id="location-id" type="hidden" value="{{ $location->id }}">
+                <p>Select "Delete" to remove this location from the system.</p>
+                <small class="text-danger">**Warning this is permanent. All assets assigned to this location will become available.</small>
             </div>
             <div class="modal-footer">
-                <form id="deleteForm" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button class="dropdown-item" type="submit">Delete</button>
-                </form>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
             </div>
         </div>
     </div>
 </div>
-
 
 @endsection
 
 @section('js')
 
 <script>
-    
+    $('.deleteBtn').click(function() {
+        $('#location-id').val($(this).data('id'))
+        //showModal
+        $('#removeLocationModal').modal('show')
+    });
+
+    $('#confirmBtn').click(function() {
+        var form = '#'+'form'+$('#location-id').val();
+        $(form).submit();
+    });
 </script>
 
 @endsection

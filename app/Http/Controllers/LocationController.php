@@ -107,6 +107,9 @@ class LocationController extends Controller
      */
     public function destroy(Location $location)
     {
-        //
+        $name = $location->name;
+        $location->delete();
+        session()->flash('danger_message', $name.' was deleted from the system');
+        return redirect(route('location.index'));
     }
 }
