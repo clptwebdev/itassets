@@ -60,7 +60,7 @@ class LocationController extends Controller
      */
     public function show(Location $location)
     {
-        //
+        return view('locations.show', compact($location));
     }
 
     /**
