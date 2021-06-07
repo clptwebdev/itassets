@@ -13,6 +13,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('login/microsoft', 'App\Http\Controllers\OfficeLoginController@redirectToProvider');
+Route::get('login/microsoft/callback', 'App\Http\Controllers\OfficeLoginController@handleProviderCallback');
+
+require __DIR__.'/auth.php';
+
+Route::group(['middleware'=>'auth'], function(){
+    Route::get('/', function(){
+        return view('dashboard');
+    })->name('home');
+
+    Route::get('/dashboard', function(){
+        return view('dashboard');
+    })->name('dashboard');
+
+    //Administrator Permissions Middleware
+    Route::group(['middleware'=>'role:1'], function(){
+        Route::resource('/location', 'App\Http\Controllers\LocationController');
+        Route::resource('/photo', 'App\Http\Controllers\PhotoController');
+
+        Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
+        /* Route::resource('admin/groups', 'App\Http\Controllers\RoleController');
+        Route::delete('admin/users/delete/multi', 'App\Http\Controllers\UserController@destroyMulti')->name('users.deleteMulti');
+        //Settings */
+    });
 });
