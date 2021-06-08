@@ -126,7 +126,7 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="{{ route('supplier.index') }}">
             <i class="fas fa-fw fa-tags sidebar-icon"></i>
             <span class="sidebar-title">Suppliers</span></a>
     </li>
