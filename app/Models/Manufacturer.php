@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Manufacturer extends Model
 {
     use HasFactory;
+    protected $fillable=[""];//what can  be bulk assigned in tinker
 
+    public function photo()
+    {
+        return $this->belongsTo(Photo::class, 'photoId');
+    }
 
 }

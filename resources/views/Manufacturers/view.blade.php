@@ -39,8 +39,12 @@
                                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
+                                    <a class="dropdown-item" href="manufacturers/edit/{{$manufacturer->id}}">Edit</a>
+                                    <form id="form{{$manufacturer->id}}" action="/manufacturers/delete/{{$manufacturer->id}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <a class="dropdown-item deleteBtn" data-id="{{$manufacturer->id}}">Delete</a>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +58,7 @@
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <img src="{{$manufacturer->photoId}}" style="max-width: 50px">
+                                    <img src="{{$manufacturer->photo->path ?? null}}" style="max-width: 50px">
                                 </div>
                             </div>
                         </div>
@@ -67,9 +71,43 @@
 @endsection
 
 @section('modals')
-
+    <!-- User Delete Modal-->
+    <div class="modal fade bd-example-modal-lg" id="removeManufacturerModal" tabindex="-1" role="dialog"
+         aria-labelledby="removeManufacturerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeManufacturerModalLabel">Are you sure you want to delete this Location?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="manufacturer-id" type="hidden" value="">
+                    <p>Select "Delete" to remove this location from the system.</p>
+                    <small class="text-danger">**Warning this is permanent. All assets assigned to this location will become available.</small>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
+    <script>
+        $('.deleteBtn').click(function() {
+            $('#manufacturer-id').val($(this).data('id'))
+            //showModal
+            $('#removeManufacturerModal').modal('show')
+        });
 
+        $('#confirmBtn').click(function() {
+            var form = '#'+'form'+$('#manufacturer-id').val();
+            $(form).submit();
+        });
+
+    </script>
 @endsection
