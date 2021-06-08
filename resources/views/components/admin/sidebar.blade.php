@@ -119,7 +119,7 @@
     </li>
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="/manufacturers">
             <i class="fas fa-fw fa-tools sidebar-icon"></i>
             <span class="sidebar-title">Manufacturers</span></a>
     </li>
