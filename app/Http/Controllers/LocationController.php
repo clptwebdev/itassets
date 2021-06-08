@@ -15,8 +15,7 @@ class LocationController extends Controller
      */
     public function index()
     {
-        auth()->locations;
-        $locations = Location::orderBy('name', 'asc')->whereLocation($auth()->location)get();
+        $locations = Location::orderBy('name', 'asc')->get();
         return view('locations.view', ['locations'=>$locations]);
     }
 
