@@ -27,6 +27,13 @@ Route::group(['middleware'=>'auth'], function(){
         return view('dashboard');
     })->name('dashboard');
 
+    //manufactures routes
+    Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);
+    Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "create"]);
+    Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "list"]);
+    Route::Post("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "store"]);
+    //
+
     //Administrator Permissions Middleware
     Route::group(['middleware'=>'role:1'], function(){
         Route::resource('/location', 'App\Http\Controllers\LocationController');
