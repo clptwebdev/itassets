@@ -44,8 +44,13 @@ class LocationController extends Controller
             'telephone'=>'required|max:14',
         ]);
         //
+<<<<<<< HEAD
         $location->fill($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'photo_id', 'icon'))->save();
         session()->flash('success_message', $location->name . ' has been updated successfully');
+=======
+        Location::create($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'photo_id', 'icon'))->save();
+        session()->flash('success_message', $request->name.' has been created successfully');
+>>>>>>> 70050b656d5944a4ea41346cac732c987327c314
         return redirect(route('location.index'));
     }
     /**
@@ -55,7 +60,7 @@ class LocationController extends Controller
      */
     public function show(Location $location)
     {
-        return view('locations.show', compact($location));
+        return view('locations.show', compact('location'));
     }
     /**
      * Show the form for editing the specified resource.

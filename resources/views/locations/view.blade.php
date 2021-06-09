@@ -39,6 +39,7 @@
                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="{{ route('location.show', $location->id)}}">View</a>
                             <a class="dropdown-item" href="{{ route('location.edit', $location->id)}}">Edit</a>
                             <form id="form{{$location->id}}"action="{{ route('location.destroy', $location->id) }}" method="POST">
                                 @csrf

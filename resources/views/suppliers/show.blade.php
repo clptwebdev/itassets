@@ -7,13 +7,15 @@
 @section('content')
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">View Location</h1>
+    <h1 class="h3 mb-0 text-gray-800">View Supplier</h1>
     <div>
-        <a href="{{ route('location.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+        <a href="{{ route('supplier.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
-        <a href="{{ route('location.edit', $location->id) }}" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+        <a href="{{ route('supplier.edit', $supplier->id) }}"
+            class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
                 class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
-        <a href="{{ route('location.edit', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+        <a href="{{ route('supplier.edit', $supplier->id)}}"
+            class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
@@ -29,30 +31,36 @@
 @endif
 
 <section>
-    <p class="mb-4">Information regarding {{ $location->name }}, the assets that are currently assigned to the location and any request information.</p>
+    <p class="mb-4">Information regarding {{ $supplier->name }}, the assets that are currently assigned to the location
+        and any request information.</p>
 
     <div class="row">
         <div class="col-12 col-sm-4 col-md-3 col-xl-2">
-            <img src="{{ asset($location->photo->path) }}" width="100%" alt="{{ $location->name }}" title="{{ $location->name }}">
+            <img src="{{ asset($supplier->photo->path) }}" width="100%" alt="{{ $supplier->name }}"
+                title="{{ $supplier->name }}">
         </div>
         <div class="col-12 col-sm-8 col-md-9 col-xl-10">
-            <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid {{$location->icon}};">
+            <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid #333  ;">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold" style="color: {{$location->icon}};">Location Information</h6>
+                    <h6 class="m-0 font-weight-bold">Supplier Information</h6>
                 </div>
                 <div class="card-body">
                     <div class="row no-gutters">
                         <div class="col mr-2">
                             <div class="mb-1">
-                                {{ $location->name }}<br>
-                                <p>{{ $location->address_1 }}<br>
-                                    @if($location->address_2 != "")
-                                    {{ $location->address_2 }}<br>
+                                {{ $supplier->name }}<br>
+                                <p>{{ $supplier->address_1 }}<br>
+                                    @if($supplier->address_2 != "")
+                                    {{ $supplier->address_2 }}<br>
                                     @endif
-                                    {{ $location->city }}<br>
-                                    {{ $location->postcode }}</p>
-                                <p>Tel: {{ $location->telephone }}</p>
-                                <p>Email: {{ $location->email }}</p>
+                                    {{ $supplier->city }}<br>
+                                    {{ $supplier->postcode }}</p>
+                                <p>Tel: {{ $supplier->telephone }}</p>
+                                @if($supplier->fax != "")
+                                {{ $supplier->fax }}<br>
+                                @endif
+                                <p>Email: {{ $supplier->email }}</p>
+                                <p>URL: {{ $supplier->url }}</p>
                             </div>
                         </div>
                     </div>
@@ -79,7 +87,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <input id="location-id" type="hidden" value="{{ $location->id }}">
+                <input id="location-id" type="hidden" value="">
                 <p>Select "Delete" to remove this location from the system.</p>
                 <small class="text-danger">**Warning this is permanent. All assets assigned to this location will become
                     available.</small>
