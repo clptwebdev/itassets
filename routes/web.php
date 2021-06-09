@@ -39,7 +39,6 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/location', 'App\Http\Controllers\LocationController');
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
-
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
     });
 });
