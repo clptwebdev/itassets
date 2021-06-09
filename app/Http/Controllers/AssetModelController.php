@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssetModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class AssetModelController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view ('users.view');
+        return view('asset-models.view');
     }
 
     /**
@@ -24,7 +25,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('asset-models.create');
     }
 
     /**
@@ -35,7 +36,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name'=>'required|max:255',
+            'model_no'=>'required',
+        ]);
+
+        AssetModel::create($request->only('name', 'manfacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'));
+        session()->flash('success_message', $request->name.' has been created successfully');
+        return redirect(route('asset-models.index'));
     }
 
     /**
@@ -55,9 +63,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(AssetModel $assetModel)
     {
-        //
+        return view('asset-models.edit', ['assetModel' => $assetModel]);
     }
 
     /**
