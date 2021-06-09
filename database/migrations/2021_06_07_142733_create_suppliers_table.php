@@ -26,7 +26,7 @@ class CreateSuppliersTable extends Migration
             $table->string('email')->unique();
             $table->string('url')->unique();
             $table->integer('photo_id')->nullable();
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

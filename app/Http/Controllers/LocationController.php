@@ -47,8 +47,8 @@ class LocationController extends Controller
             'telephone' => 'required|max:14',
         ]);
         //
-        $location->fill($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'photo_id', 'icon'))->save();
-        session()->flash('success_message', $location->name.' has been updated successfully');
+        Location::create($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'photo_id', 'icon'))->save();
+        session()->flash('success_message', $request->name.' has been created successfully');
         return redirect(route('location.index'));
     }
 
