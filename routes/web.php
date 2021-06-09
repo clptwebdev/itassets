@@ -40,13 +40,8 @@ Route::group(['middleware'=>'auth'], function(){
     //Administrator Permissions Middleware
     Route::group(['middleware'=>'role:1'], function(){
         Route::resource('/location', 'App\Http\Controllers\LocationController');
-<<<<<<< HEAD
-
-=======
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
->>>>>>> 70050b656d5944a4ea41346cac732c987327c314
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
-
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
     });
 });
