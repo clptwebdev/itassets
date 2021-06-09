@@ -22,10 +22,10 @@ class ManufacturerFactory extends Factory
     public function definition()
     {
         return [
-            "name"=>$this->faker->unique()->word(),
+            "name"=>$this->faker->company,
             "supportUrl"=>$this->faker->slug(),
             "supportPhone"=>$this->faker->unique()->phoneNumber,
-            "supportEmail"=>$this->faker->unique()->safeEmail(),
+            "supportEmail"=>$this->faker->unique()->safeEmail,
             "photoId"=>$this->faker->unique()->imageUrl()
         ];
     }

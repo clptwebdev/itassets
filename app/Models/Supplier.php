@@ -15,4 +15,9 @@ class Supplier extends Model
     {
         return $this->belongsTo(Photo::class);
     }
+    public function asset(){
+        return $this->hasOne(Asset::class);
+
+    }
+
 }

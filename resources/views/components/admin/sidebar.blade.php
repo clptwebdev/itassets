@@ -18,13 +18,13 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+        <a class="nav-link collapsed" href="{{ route('assets.index')}}" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
             aria-controls="collapseTwo">
             <i class="fas fa-fw fa-tablet-alt sidebar-icon" data-toggle="tooltip" data-placement="right" title="Components"></i>
             <span class="sidebar-title">Assets</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <a class="collapse-item" href="buttons.html"><i class="far fa-circle text-secondary"></i> All Assets (1323)</a>
+                <a class="collapse-item" href="{{ route('assets.index')}}"><i class="far fa-circle text-secondary"></i> All Assets (1323)</a>
                 <a class="collapse-item" href="buttons.html"><i class="far fa-circle text-success"></i> Deployed (649)</a>
                 <a class="collapse-item" href="buttons.html"><i class="far fa-circle text-danger"></i> Undeployable (143)</a>
                 <a class="collapse-item" href="buttons.html"><i class="fas fa-check text-success"></i> Requestable (211)</a>
