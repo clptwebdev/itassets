@@ -1,5 +1,5 @@
 /*!
- * Dashbaord 
+ * Dashbaord
  */
 
 :root {
@@ -10508,6 +10508,7 @@ a:focus {
 @media (min-width: 768px) {
   .sidebar {
     width: 14rem !important;
+      transition: all .5s ease-in-out;
   }
   .sidebar .nav-item .collapse {
     position: relative;
@@ -10538,7 +10539,7 @@ a:focus {
     width: 14rem;
   }
   .sidebar .nav-item .nav-link i {
-    
+
   }
   .sidebar .nav-item .nav-link span {
     font-size: 0.85rem;

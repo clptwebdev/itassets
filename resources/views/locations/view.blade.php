@@ -46,7 +46,7 @@
                                 @method('DELETE')
                                 <a class="dropdown-item deleteBtn" data-id="{{$location->id}}">Delete</a>
                             </form>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -106,9 +106,6 @@
 </div>
 
 @endsection
-
-@section('js')
-
 <script>
     $('.deleteBtn').click(function() {
         $('#location-id').val($(this).data('id'))
@@ -120,6 +117,9 @@
         var form = '#'+'form'+$('#location-id').val();
         $(form).submit();
     });
+
 </script>
+@section('js')
+
 
 @endsection

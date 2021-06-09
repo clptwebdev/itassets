@@ -20,7 +20,10 @@ class Photo extends Model
     {
         return $this->hasOne(Location::class);
     }
-
+    public function manufacturer()
+    {
+        return $this->hasOne(Manufacturer::class);
+    }
     public function setPathAttribute($value)
     {
         $this->attributes['path'] = 'storage/'.$value;

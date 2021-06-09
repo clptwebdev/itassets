@@ -5,22 +5,27 @@
 @endsection
 
 @section('content')
-    <form action="/manufacturers/create" method="POST">
+
+    <form action="/manufacturers/edit/{{$manufacturer->id}}" method="POST">
+        @csrf
+        @method("put")
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Add New Manufacturer</h1>
+            <h1 class="h3 mb-0 text-gray-800">Edit {{$manufacturer->name}} Manufacturer Details</h1>
 
             <div>
                 <a href="/manufacturers" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Back to Manufacturers</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
-                        class="far fa-save fa-sm text-white-50"></i> Save</button>
+                        class="far fa-save fa-sm text-white-50"></i> Save
+                </button>
                 <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
             </div>
         </div>
 
         <section>
-            <p class="mb-4">Below are different tiles, one for each Manufacturer stored in the management system. Each tile has different options and Manufacturers can created, updated, and deleted.</p>
+            <p class="mb-4">Below is the {{$manufacturer->name}} tile ,this is for the Manufacturer stored in the
+                management system.</p>
             <div class="row row-eq-height">
                 <div class="col-12 col-md-8 col-lg-9 col-xl-10">
                     <div class="card shadow h-100">
@@ -40,21 +45,26 @@
 
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>" name="name"
-                                       id="name" placeholder="">
+                                <input type="text"
+                                       class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
+                                       name="name"
+                                       id="name" value="{{$manufacturer->name}}">
                             </div>
                             <div class="form-group">
                                 <label for="supportPhone">Telephone</label>
                                 <input type="text" class="form-control" name="supportPhone" id="supportPhone"
-                                       placeholder="Telelphone">
-                            </div>   <div class="form-group">
+                                       value="{{$manufacturer->supportPhone}}">
+                            </div>
+                            <div class="form-group">
                                 <label for="supportUrl">Manufacturer Website</label>
-                                <input type="text" class="form-control" name="supportUrl" id="supportUrl" placeholder="www.dell.com">
+                                <input type="text" class="form-control" name="supportUrl" id="supportUrl"
+                                       value="{{$manufacturer->supportUrl}}">
                             </div>
 
                             <div class="form-group">
                                 <label for="supportEmail">Email Address</label>
-                                <input type="text" class="form-control" name="supportEmail" id="supportEmail" placeholder="Email">
+                                <input type="text" class="form-control" name="supportEmail" id="supportEmail"
+                                       value="{{$manufacturer->supportEmail}}">
                             </div>
 
                         </div>
@@ -67,7 +77,8 @@
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Location Image</h4>
-                                    <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}" width="100%"
+                                    <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
+                                         width="100%"
                                          alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     <input type="hidden" id="photoId" name="photoId" value="0">
                                 </div>
@@ -76,19 +87,15 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card shadow mt-4">
-                <div class="card-header bg-primary-blue text-white">Information</div>
-                <div class="card-body"><p>There are currently {{$manufacturerAmount}} Manufacturers on the System</p></div>
-
-            </div>
         </section>
     </form>
+
 @endsection
 
 @section('modals')
     <!-- Profile Image Modal-->
-    <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel"
+    <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog"
+         aria-labelledby="imgModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -100,7 +107,7 @@
                 </div>
                 <div class="modal-body">
                     <p>Select an image below:.</p>
-                    <?php $photos = App\Models\Photo::all();?>
+                    <?php $photos=App\Models\Photo::all();?>
                     <img src="{{ asset('images/svg/location-image.svg') }}" width="80px" alt="Default Picture"
                          onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">
                     @foreach($photos as $photo)
@@ -109,8 +116,10 @@
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#uploadModal">Upload
-                        file</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                            data-target="#uploadModal">Upload
+                        file
+                    </button>
                 </div>
             </div>
         </div>
@@ -145,14 +154,14 @@
 
 @section('js')
     <script>
-        function selectPhoto(id, src){
+        function selectPhoto(id, src) {
             document.getElementById("profileImage").src = src;
             document.getElementById("photoId").value = id;
             $('#imgModal').modal('hide');
         }
 
-        $(document).ready(function(){
-            $("form#imageUpload").submit(function(e) {
+        $(document).ready(function () {
+            $("form#imageUpload").submit(function (e) {
                 e.preventDefault();
                 var formData = new FormData(this);
                 var urlto = '/photo/upload';
@@ -169,9 +178,9 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function(data) {
+                    success: function (data) {
                         $('#uploadModal').modal('hide');
-                        document.getElementById("profileImage").src = route+data.path;
+                        document.getElementById("profileImage").src = route + data.path;
                         document.getElementById("photoId").value = data.id;
                     }
                 });
