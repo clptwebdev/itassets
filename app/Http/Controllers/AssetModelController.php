@@ -78,10 +78,13 @@ class AssetModelController extends Controller
     public function update(Request $request, AssetModel $assetModel)
     {
         $validated = $request->validate([
-
+            'name'=>'required|max:255',
+            'model_no'=>'required',
         ]);
 
-        $assetModel->fill($request->only(''))->save();
+        $assetModel->fill($request->only('name', 'manfacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'))->save();
+        session()->flash('success_message', $request->name.' has been updated successfully');
+        return redirect(route('asset-models.index'));
     }
 
     /**
@@ -90,8 +93,11 @@ class AssetModelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(AssetModel $assetModel)
     {
-        //
+        $name = $assetModel->name;
+        $assetModel->delete();
+        session()->flash('danger_message', $name.' was deleted from the system');
+        return redirect(route('asset-models.index'));
     }
 }

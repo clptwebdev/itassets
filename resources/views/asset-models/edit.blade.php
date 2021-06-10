@@ -35,6 +35,7 @@
                         @endif
 
                         @csrf
+                        @method('PATCH')
 
                         <div class="form-group">
                             <label for="name">Name</label>
