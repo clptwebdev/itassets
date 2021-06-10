@@ -93,7 +93,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <input id="location-id" type="hidden" value="{{ $location->id }}">
+                <input id="location-id" type="hidden" value="">
                 <p>Select "Delete" to remove this location from the system.</p>
                 <small class="text-danger">**Warning this is permanent. All assets assigned to this location will become available.</small>
             </div>
