@@ -18,12 +18,12 @@
         </div>
     </div>
 
-    <section>
+    <section class="">
         <p class="mb-4">Adding a new supplier to the asset management system. Enter in the following information and
             click the 'Save' button. Or click the 'Back' button
             to return the suppliers page.
         </p>
-        <div class="row row-eq-height">
+        <div class="row row-eq-height container m-auto">
             <div class="col-12">
                 <div class="card shadow h-100">
                     <div class="card-body">
@@ -48,7 +48,33 @@
                         </div>
                         
 
-                        <p>Add the fields here</p>
+                        <hr>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>New Field Name</th>
+                                    <th>New Field Type</th>
+                                    <th>Add+</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" value="" name=""></td>
+                                    <td>
+                                        <select name="name">
+                                            <option></option>
+                                        </select>
+                                    </td>
+                                    <td>Add+</td>
+                                </tr>
+                                <tr>
+                                    <td>New Field Name</td>
+                                    <td>New Field Type</td>
+                                    <td>Add+</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
                     </div>
                 </div>
