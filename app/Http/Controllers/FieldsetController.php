@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Models\Fieldset;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class FieldsetController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-     * 
      */
     public function index()
     {
-        return view('category.view');
+        return view('fieldsets.view');
     }
 
     /**
@@ -26,7 +25,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('fieldsets.create');
     }
 
     /**
@@ -37,22 +36,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required'
-        ]);
-
-        Category::create(['name'=> $request->name]);
-        session()->flash('success_message', $request->name.' has been successfully created');
-        return redirect(route('category.index'));
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Fieldset  $fieldset
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Fieldset $fieldset)
     {
         //
     }
@@ -60,10 +53,10 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Fieldset  $fieldset
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Fieldset $fieldset)
     {
         //
     }
@@ -72,29 +65,22 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Fieldset  $fieldset
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Fieldset $fieldset)
     {
-        $validated = $request->validate(['name' => 'required']);
-        $category->name = $request->name;
-        $category->save();
-        session()->flash('success_message', $request->name.' has been successfully created');
-        return redirect(route('category.index'));
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Fieldset  $fieldset
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Fieldset $fieldset)
     {
-        $name = $category->name;
-        $category->delete();
-        session()->flash('danger_message', $name.' has been successfully deleted from the system');
-        return redirect(route('category.index'));
+        //
     }
 }

@@ -40,10 +40,12 @@ Route::group(['middleware'=>'auth'], function(){
     //Administrator Permissions Middleware
     Route::group(['middleware'=>'role:1'], function(){
         Route::resource('/location', 'App\Http\Controllers\LocationController');
+        Route::resource('/category', 'App\Http\Controllers\CategoryController');
         Route::resource('/users', 'App\Http\Controllers\UserController');
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
+        Route::resource('/fieldsets', 'App\Http\Controllers\FieldsetController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
     });
 });

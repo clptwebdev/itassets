@@ -134,7 +134,8 @@
         <div id="settingPages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <a class="collapse-item" href="{{ route('asset-models.index')}}">Asset Models</a>
                 <a class="collapse-item" href="login.html">Depreciation</a>
-                <a class="collapse-item" href="login.html">Categories</a>
+                <a class="collapse-item" href="{{ route('category.index')}}">Categories</a>
+                <a class="collapse-item" href="{{ route('fieldsets.index')}}">Custom Fields</a>
                 <a class="collapse-item" href="login.html">Settings</a>
         </div>
     </li>
