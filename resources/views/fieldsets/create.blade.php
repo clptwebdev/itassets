@@ -24,7 +24,7 @@
             to return the suppliers page.
         </p>
         <div class="row row-eq-height container m-auto">
-            <div class="col-12">
+            <div class="col-12 mb-4">
                 <div class="card shadow h-100">
                     <div class="card-body">
 
@@ -46,43 +46,40 @@
                                 class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
                                 name="name" id="name" placeholder="">
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="card shadow h-100">
+                    <div class="card-header">
+                        <h5 class="text-right">Selected Fields</h5>
+                    </div>
+                    <div class="card-body text-right">
                         
+                        <input type="text" id="fields" name="fields">
+                        <div id="selected-fields">
+                            <p>RAM <i class="fas fa-chevron-right"></i></p>
+                            <p>Storage Type <i class="fas fa-chevron-right"></i></p>
+                            <p>Storage <i class="fas fa-chevron-right"></i></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <hr>
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>New Field Name</th>
-                                    <th>New Field Type</th>
-                                    <th>Add+</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input type="text" value="" name=""></td>
-                                    <td>
-                                        <select name="name">
-                                            <option></option>
-                                        </select>
-                                    </td>
-                                    <td>Add+</td>
-                                </tr>
-                                <tr>
-                                    <td>New Field Name</td>
-                                    <td>New Field Type</td>
-                                    <td>Add+</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+            <div class="col-6">
+                <div class="card shadow h-100">
+                    <div class="card-header">
+                        <h5>Field Options</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach($fields as $field)
+                            <p onclick="javascript:addField({{ $field->id}}, '{{$field->name}}')"><i class="fas fa-chevron-left"></i> {{ $field->name }}</p>
+                        @endforeach
                     </div>
                 </div>
             </div>
         </div>
-
-        <x-admin.suppliers.details />
-
     </section>
 </form>
 @endsection
@@ -147,37 +144,20 @@
 
 @section('js')
 <script>
-    function selectPhoto(id, src){
-            document.getElementById("profileImage").src = src;
-            document.getElementById("photo_id").value = id;
-            $('#imgModal').modal('hide');
+    function addField(id, name){
+        var string = 'document.getElementById('fields').value';
+        var array = string.split(",");
+        console.log(array.includes(id));
+
+        if(array.includes(id)){
+
+        }else{
+            const p = document.createElement('p');
+            p.innerHTML = name+' <i class="fas fa-chevron-right"></i>';
+            document.getElementById('selected-fields').appendChild(p);
+            document.getElementById('fields').value = id;
         }
 
-        $(document).ready(function(){
-           $("form#imageUpload").submit(function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                var urlto = '/photo/upload';
-                var route = '{{asset("/")}}';
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                // AJAX request
-                $.ajax({
-                    url: urlto,
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(data) {
-                        $('#uploadModal').modal('hide');
-                        document.getElementById("profileImage").src = route+data.path;
-                        document.getElementById("photo_id").value = data.id;
-                    }
-                });
-            });
-        });
+    }
 </script>
 @endsection

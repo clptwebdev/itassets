@@ -51,7 +51,6 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                        <?php $fieldsets = App\Models\Fieldset::all();?>
                         @foreach($fieldsets as $fieldset)
                         <tr>
                             <td class="text-center"><input type="checkbox"></td>

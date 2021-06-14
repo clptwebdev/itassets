@@ -10,4 +10,9 @@ class Fieldset extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function fields()
+    {
+        return $this->belongsToMany(Field::class);
+    }
 }

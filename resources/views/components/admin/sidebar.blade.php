@@ -135,7 +135,8 @@
                 <a class="collapse-item" href="{{ route('asset-models.index')}}">Asset Models</a>
                 <a class="collapse-item" href="login.html">Depreciation</a>
                 <a class="collapse-item" href="{{ route('category.index')}}">Categories</a>
-                <a class="collapse-item" href="{{ route('fieldsets.index')}}">Custom Fields</a>
+                <a class="collapse-item" href="{{ route('fieldsets.index')}}">Fieldsets</a>
+                <a class="collapse-item" href="{{ route('fields.index')}}">Custom Fields</a>
                 <a class="collapse-item" href="login.html">Settings</a>
         </div>
     </li>

@@ -15,7 +15,8 @@ class FieldsetController extends Controller
      */
     public function index()
     {
-        return view('fieldsets.view');
+        $fieldsets = Fieldset::all();
+        return view('fieldsets.view', compact('fieldsets'));
     }
 
     /**
@@ -25,7 +26,8 @@ class FieldsetController extends Controller
      */
     public function create()
     {
-        return view('fieldsets.create');
+        $fields = \App\Models\Field::all();
+        return view('fieldsets.create', compact('fields'));
     }
 
     /**
