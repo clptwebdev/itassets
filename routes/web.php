@@ -35,7 +35,6 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
-
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
 
         //manufactures routes

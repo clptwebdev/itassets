@@ -20,9 +20,10 @@ class CreateAssetsTable extends Migration
             $table->integer("asset_tag")->unique();
             $table->integer("serial_no");
             $table->foreignId("status_id");
-            $table->dateTime("purchased_date");
+            $table->date("purchased_date");
             $table->string("purchased_cost");
             $table->foreignId("supplier_id");
+            $table->foreignId("manufacturer_id");
             $table->string("order_no");
             $table->string("warranty")->default("0");
             $table->foreignId("location_id");
