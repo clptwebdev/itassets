@@ -5,9 +5,9 @@
 @endsection
 
 @section('content')
-<form action="{{ route('fieldsets.store') }}" method="POST">
+<form action="{{ route('fieldsets.update') }}" method="POST">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Add New Fieldset</h1>
+        <h1 class="h3 mb-0 text-gray-800">Edit Fieldset</h1>
 
         <div>
             <a href="{{ route('fieldsets.index') }}"
@@ -18,7 +18,12 @@
         </div>
     </div>
 
-    <section></section>
+    <section>
+        <p class="mb-4">Here are the fieldsets currently on the system. These are here for you to apply to the[12:34] Curt Blunt
+        
+        
+        ​[12:34] Stuart Corns
+        cheers </p>
         <div class="row row-eq-height container m-auto">
             <div class="col-12 mb-4">
                 <div class="card shadow h-100">
@@ -52,7 +57,7 @@
                         <h5 class="text-right">Selected Fields</h5>
                     </div>
                     <div class="card-body text-right">
-                        
+
                         <input type="hidden" id="fields" name="fields">
                         <div id="selected-fields">
                         </div>
@@ -67,7 +72,9 @@
                     </div>
                     <div class="card-body">
                         @foreach($fields as $field)
-                            <div id="select{{$field->id}}" class="p-2 clickable" onclick="javascript:addField({{ $field->id}}, '{{$field->name}}')"><i class="fas fa-chevron-left"></i> {{ $field->name }}</div>
+                        <div id="select{{$field->id}}" class="p-2 clickable"
+                            onclick="javascript:addField({{ $field->id}}, '{{$field->name}}')"><i
+                                class="fas fa-chevron-left"></i> {{ $field->name }}</div>
                         @endforeach
                     </div>
                 </div>
@@ -83,7 +90,6 @@
 
 @section('js')
 <script type="text/javascript">
-
     function addField(id, name){
         var string = document.getElementById('fields').value;
         var array = string.split(",");

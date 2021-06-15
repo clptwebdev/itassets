@@ -38,7 +38,17 @@ class FieldsetController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+        ]);
+
+        $fieldset = Fieldset::create(['name' => $request->name]);
+        $array = explode(',', $request->fields);
+        foreach($array as $id=>$key){
+            $field = \App\Models\Field::findOrFail($key);
+            $fieldset->fields()->save($field);
+        }
+        return redirect(route('fieldsets.index'));
     }
 
     /**

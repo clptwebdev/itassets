@@ -31,14 +31,14 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <table id="fieldsetTable" class="table table-striped">
+                <table id="fieldsetTable" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th>Name</th>
-                            <th>Fields</th>
-                            <th>Assets</th>
-                            <th class="text-center">Options</th>
+                            <th class="text-center col-auto"><input type="checkbox"></th>
+                            <th class="col-3">Name</th>
+                            <th class="col-2">Fields</th>
+                            <th class="col-4">Assets</th>
+                            <th class="col-2 text-right">Options</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -47,7 +47,7 @@
                             <th>Name</th>
                             <th>Fields</th>
                             <th>Assets</th>
-                            <th class="text-center">Options</th>
+                            <th class="text-right">Options</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -55,9 +55,12 @@
                         <tr>
                             <td class="text-center"><input type="checkbox"></td>
                             <td>{{ $fieldset->name }}</td>
-                            <td>9</td>
-                            <td>64</td>
-                            <td class="text-center">
+                            <td>{{ $fieldset->fields->count()}}</td>
+                            <td>
+                                <small class="p-1 bg-danger rounded text-white">HP Pro Desk 10.1</small>
+                                <small class="p-1 bg-primary rounded text-white">Surface Pro 7</small>
+                            </td>
+                            <td class="text-right">
                                     <a href="{{ route('fieldsets.show', $fieldset->id) }}"
                                         class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
                                         View</a>&nbsp;
@@ -124,7 +127,7 @@
         $(document).ready( function () {
             $('#fieldsetTable').DataTable({
                 "columnDefs": [ {
-                    "targets": [0, 4],
+                    "targets": [0, 2, 3],
                     "orderable": false,
                 } ],
                 "order": [[ 1, "asc"]]
