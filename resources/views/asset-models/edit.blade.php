@@ -83,10 +83,10 @@
                         <div class="form-group">
                             <label for="fieldset_id">Additional Fieldsets</label>
                             <select class="form-control" name="fieldset_id" id="fieldset_id">
-                                <option value="0">No Additional Fieldsets Required</option>
-                                <option value="0">Desktop Computer</option>
-                                <option value="0">Laptop</option>
-                                <option value="0">IPad</option>
+                                <option value="0" @if($assetModel->fieldset_id == 0){{ 'selected'}}@endif>No Additional Fieldsets Required</option>
+                                @foreach($fieldsets as $fieldset)
+                                <option value="{{ $fieldset->id }}" @if($assetModel->fieldset_id == $fieldset->id){{ 'selected'}}@endif>{{ $fieldset->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -104,7 +104,7 @@
                         <div class="w-100">
                             <div class="formgroup mb-2 p-2">
                                 <h4 class="h6 mb-3">Asset Model Image</h4>
-                                <img id="profileImage" src="{{ asset($assetModel->photo->path) ?? asset('images/svg/location-image.svg') }}" width="100%"
+                                <img id="profileImage" src="{{ asset($assetModel->photo->path ?? 'images/svg/device-image.svg') }}" width="100%"
                                     alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                 <input type="hidden" id="photo_id" name="photo_id" value="{{ $assetModel->photoid}}">
                             </div>

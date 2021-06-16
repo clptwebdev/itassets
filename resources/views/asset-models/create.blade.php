@@ -46,7 +46,6 @@
                             <label for="manufacturer">Manufacturer:</label>
                             <select class="form-control mb-3 <?php if ($errors->has('manufacturer_id')){?>border-danger<?php }?>"
                                 name="manfacturer_id" id="manufacturer_id" required>
-                                <?php $mans = App\Models\Manufacturer::all();?>
                                 <option value="0">Please select a Manufacturer</option>
                                 @foreach($mans as $man)
                                 <option value="{{$man->id}}">{{ $man->name}}</option>
@@ -79,9 +78,9 @@
                             <label for="fieldset_id">Additional Fieldsets</label>
                             <select class="form-control" name="fieldset_id" id="fieldset_id">
                                 <option value="0">No Additional Fieldsets Required</option>
-                                <option value="0">Desktop Computer</option>
-                                <option value="0">Laptop</option>
-                                <option value="0">IPad</option>
+                                @foreach($fieldsets as $fieldset)
+                                <option value="{{ $fieldset->id }}">{{ $fieldset->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -99,7 +98,7 @@
                         <div class="w-100">
                             <div class="formgroup mb-2 p-2">
                                 <h4 class="h6 mb-3">Asset Model Image</h4>
-                                <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}" width="100%"
+                                <img id="profileImage" src="{{ asset('images/svg/device-image.svg') }}" width="100%"
                                     alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                 <input type="hidden" id="photo_id" name="photo_id" value="0">
                             </div>

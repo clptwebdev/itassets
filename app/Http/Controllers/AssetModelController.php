@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssetModel;
+use App\Models\Fieldset;
+use App\Models\Manufacturer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -25,7 +27,9 @@ class AssetModelController extends Controller
      */
     public function create()
     {
-        return view('asset-models.create');
+        $mans = Manufacturer::all();
+        $fieldsets = Fieldset::all();
+        return view('asset-models.create', compact('fieldsets', 'mans'));
     }
 
     /**
@@ -65,7 +69,9 @@ class AssetModelController extends Controller
      */
     public function edit(AssetModel $assetModel)
     {
-        return view('asset-models.edit', ['assetModel' => $assetModel]);
+        $mans = Manufacturer::all();
+        $fieldsets = Fieldset::all();
+        return view('asset-models.edit', compact('fieldsets', 'mans', 'assetModel'));
     }
 
     /**
