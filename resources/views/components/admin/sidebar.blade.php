@@ -24,7 +24,7 @@
             <span class="sidebar-title">Assets</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <a class="collapse-item" href="buttons.html"><i class="far fa-circle text-secondary"></i> All Assets (1323)</a>
+                <a class="collapse-item" href="{{ route('assets.index')}}"><i class="far fa-circle text-secondary"></i> All Assets (1323)</a>
                 <a class="collapse-item" href="buttons.html"><i class="far fa-circle text-success"></i> Deployed (649)</a>
                 <a class="collapse-item" href="buttons.html"><i class="far fa-circle text-danger"></i> Undeployable (143)</a>
                 <a class="collapse-item" href="buttons.html"><i class="fas fa-check text-success"></i> Requestable (211)</a>
