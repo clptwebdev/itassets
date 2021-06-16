@@ -3,31 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asset;
+use App\Models\Location;
+use App\Models\Manufacturer;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class AssetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('assets.view', [
             "assets"=>Asset::all(),
         ]);
-
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(Asset $assets)
     {
-        //
+        return view('assets.create', [
+            "assets"=>$assets,
+            "locations"=>Location::all(),
+            "manufacturers"=>Manufacturer::all(),
+        ]);
     }
 
     /**
@@ -41,26 +38,21 @@ class AssetController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(Asset $asset)
     {
-        //
+        return view('assets.show', [
+            "asset"=>$asset,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+
+    public function edit(Asset $asset)
     {
-        //
+        return view('assets.edit', [
+            "asset"=>$asset,
+            "locations"=>Location::all(),
+            "manufacturers"=>Manufacturer::all(),
+        ]);
     }
 
     /**
@@ -75,14 +67,12 @@ class AssetController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+
+    public function destroy(Asset $asset)
     {
-        //
+        $name=$asset->asset_tag;
+        $asset->delete();
+        session()->flash('danger_message', "#". $name . ' was deleted from the system');
+        return redirect("/assets");
     }
 }

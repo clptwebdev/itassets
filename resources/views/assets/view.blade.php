@@ -10,7 +10,7 @@
         <h1 class="h3 mb-0 text-gray-800">Assets</h1>
         <div>
             <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Add New Asset</a>
+                    class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
         </div>
@@ -41,7 +41,7 @@
                             <th>Manufacturers</th>
                             <th>Purchased Date</th>
                             <th>Purchased Cost</th>
-                            <th>supplier Id</th>
+                            <th>Supplier</th>
                             <th>Serial No</th>
                             <th>Warranty</th>
                             <th>Audit Dates</th>
@@ -57,7 +57,7 @@
                             <th>Manufacturers</th>
                             <th>Purchased Date</th>
                             <th>Purchased Cost</th>
-                            <th>supplier Id</th>
+                            <th>Supplier</th>
                             <th>Serial No</th>
                             <th>Warranty</th>
                             <th>Audit Dates</th>
@@ -72,10 +72,10 @@
                                 <td>Ipad</td>
                                 <td>{{ $asset->location->name }}</td>
                                 <td>{{ $asset->asset_tag }}</td>
-                                <td class="text-center">Dell</td>  {{--  {{ $asset->manufactuers->name }}--}}
+                                <td class="text-center">{{ \Illuminate\Support\Str::of($asset->manufacturer->name)->limit(5) }}</td>
                                 <td>{{ $asset->purchased_date}}</td>
                                 <td class="text-center">{{ $asset->purchased_cost }}</td>
-                                <td class="text-center">{{ $asset->supplier_id }}</td>
+                                <td class="text-center">{{ \Illuminate\Support\Str::of($asset->supplier->name)->limit(5) }}</td>
                                 <td class="text-center">{{ $asset->serial_no }}</td>
                                 <td>{{ $asset->warranty }}</td>
                                 <td>{{ $asset->audit_date }}</td>
@@ -110,7 +110,6 @@
         </div>
 
     </section>
-
 @endsection
 
 @section('modals')
