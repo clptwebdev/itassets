@@ -27,15 +27,7 @@ Route::group(['middleware'=>'auth'], function(){
         return view('dashboard');
     })->name('dashboard');
 
-    //manufactures routes
-    Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);
-    Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "create"]);
-    Route::get("manufacturers/edit/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "edit"]);
-    Route::Put("manufacturers/edit/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "update"]);
-    Route::delete("manufacturers/delete/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "destroy"]);
-    Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "list"]);
-    Route::Post("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "store"]);
-    //
+
 
     //Administrator Permissions Middleware
     Route::group(['middleware'=>'role:1'], function(){
@@ -48,5 +40,17 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/fieldsets', 'App\Http\Controllers\FieldsetController');
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
+
+        Route::resource('/assets', 'App\Http\Controllers\AssetController');
+
+        //manufactures routes
+        Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);
+        Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "create"]);
+        Route::get("manufacturers/edit/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "edit"]);
+        Route::Put("manufacturers/edit/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "update"]);
+        Route::delete("manufacturers/delete/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "destroy"]);
+        Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "list"]);
+        Route::Post("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "store"]);
+        //
     });
 });
