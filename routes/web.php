@@ -32,12 +32,16 @@ Route::group(['middleware'=>'auth'], function(){
     //Administrator Permissions Middleware
     Route::group(['middleware'=>'role:1'], function(){
         Route::resource('/location', 'App\Http\Controllers\LocationController');
+        Route::resource('/category', 'App\Http\Controllers\CategoryController');
+        Route::resource('/users', 'App\Http\Controllers\UserController');
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
+        Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
+        Route::resource('/fieldsets', 'App\Http\Controllers\FieldsetController');
+        Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
-
-        //manufactures routes
+        
         Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);
         Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "create"]);
         Route::get("manufacturers/edit/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "edit"]);

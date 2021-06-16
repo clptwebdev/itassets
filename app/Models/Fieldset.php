@@ -5,9 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Fieldset extends Model
 {
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function fields()
+    {
+        return $this->belongsToMany(Field::class);
+    }
 }

@@ -100,13 +100,8 @@
             <span class="sidebar-title">Users</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-            <a class="collapse-item" href="login.html">Login</a>
+            <a class="collapse-item" href="{{ route('users.index')}}">View Users</a>
             <a class="collapse-item" href="register.html">Register</a>
-            <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-            <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Other Pages:</h6>
-            <a class="collapse-item" href="404.html">404 Page</a>
-            <a class="collapse-item" href="blank.html">Blank Page</a>
         </div>
     </li>
     <li class="nav-item">
@@ -137,9 +132,11 @@
             <span class="sidebar-title">Settings</span>
         </a>
         <div id="settingPages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                <a class="collapse-item" href="login.html">Asset Models</a>
+                <a class="collapse-item" href="{{ route('asset-models.index')}}">Asset Models</a>
                 <a class="collapse-item" href="login.html">Depreciation</a>
-                <a class="collapse-item" href="login.html">Categories</a>
+                <a class="collapse-item" href="{{ route('category.index')}}">Categories</a>
+                <a class="collapse-item" href="{{ route('fieldsets.index')}}">Fieldsets</a>
+                <a class="collapse-item" href="{{ route('fields.index')}}">Custom Fields</a>
                 <a class="collapse-item" href="login.html">Settings</a>
         </div>
     </li>

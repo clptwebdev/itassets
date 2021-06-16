@@ -7,10 +7,10 @@
 @section('content')
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Users</h1>
+    <h1 class="h3 mb-0 text-gray-800">Asset Models</h1>
     <div>
-        <a href="{{ route('users.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Add New User</a>
+        <a href="{{ route('asset-models.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+                class="fas fa-plus fa-sm text-white-50"></i> Add New Asset Modal</a>
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
@@ -31,14 +31,14 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <table id="usersTable" class="table table-striped">
+                <table id="modelsTable" class="table table-striped">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th> 
-                            <th>Email Address</th>
-                            <th>Admin</th>
-                            <th>Permissions</th>
+                            <th>Name</th>
+                            <th>Manufacturer</th>
+                            <th>Model No:</th>
+                            <th>Deprciation</th>
                             <th class="text-center">Options</th>
                         </tr>
                     </thead>
@@ -46,35 +46,35 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Email</th>
-                            <th>Admin</th>
-                            <th>Permissions</th>
+                            <th>Manufacturer</th>
+                            <th>Model No:</th>
+                            <th>Depreciation</th>
                             <th class="text-center">Options</th>
                         </tr>
                     </tfoot>
                     <tbody>
-                        <?php $users = App\Models\User::all();?>
-                        @foreach($users as $user)
+                        <?php $models = App\Models\AssetModel::all();?>
+                        @foreach($models as $model)
                         <tr>
-                            <td>{{ $user->id }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ $model->id }}</td>
+                            <td>{{ $model->name }}</td>
+                            <td>{{ 'Dell'}}</td>
+                            <td>{{ $model->model_no }}</td>
+                            <td>{{ '36 Months' }}</td>
                             <td class="text-center">
-                                <form id="form{{$user->id}}" action="{{ route('users.destroy', $user->id) }}"
+                                <form id="form{{$model->id}}" action="{{ route('asset-models.destroy', $model->id) }}"
                                     method="POST">
-                                    <a href="{{ route('users.show', $user->id) }}"
+                                    <a href="{{ route('asset-models.show', $model->id) }}"
                                         class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
                                         View</a>&nbsp;
-                                    <a href="{{route('users.edit', $user->id) }}"
+                                    <a href="{{route('asset-models.edit', $model->id) }}"
                                         class="btn-sm btn-secondary text-white"><i
                                             class="fas fa-pencil-alt"></i></a>&nbsp;
 
                                     @csrf
                                     @method('DELETE')
                                     <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                        data-id="{{$user->id}}"><i class=" fas fa-trash"></i></a>
+                                        data-id="{{$model->id}}"><i class=" fas fa-trash"></i></a>
                                 </form>
                             </td>
                         </tr>
@@ -98,21 +98,21 @@
 
 @section('modals')
 <!-- Delete Modal-->
-<div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
-    aria-labelledby="removeUserModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="removeModelModal" tabindex="-1" role="dialog"
+    aria-labelledby="removeModelModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this Supplier?
+                <h5 class="modal-title" id="removeModelModalLabel">Are you sure you want to delete this Asset Model?
                 </h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                <input id="user-id" type="hidden" value="">
-                <p>Select "Delete" to remove this User from the system.</p>
-                <small class="text-danger">**Warning this is permanent. </small>
+                <input id="model-id" type="hidden" value="">
+                <p>Select "Delete" to remove this Asset Model from the system.</p>
+                <small class="text-danger">**Warning this is permanent. This will unassign any Assets that have this model. </small>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -127,20 +127,20 @@
 <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script>
     $('.deleteBtn').click(function() {
-            $('#user-id').val($(this).data('id'))
+            $('#model-id').val($(this).data('id'))
             //showModal
-            $('#removeUserModal').modal('show')
+            $('#removeModelModal').modal('show')
         });
         
         $('#confirmBtn').click(function() {
-            var form = '#'+'form'+$('#user-id').val();
+            var form = '#'+'form'+$('#model-id').val();
             $(form).submit();
         });
 
         $(document).ready( function () {
-            $('#usersTable').DataTable({
+            $('#modelsTable').DataTable({
                 "columnDefs": [ {
-                    "targets": [3,4,5],
+                    "targets": [3,5],
                     "orderable": false,
                 } ],
                 "order": [[ 1, "asc"]]

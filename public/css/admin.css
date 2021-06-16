@@ -11312,3 +11312,7 @@ body.sidebar-toggled footer.sticky-footer {
 .nav-item:hover{
   background-color: var(--secondary);
 }
+
+.clickable{
+  cursor: pointer;
+}
