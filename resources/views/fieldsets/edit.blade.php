@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-<form action="{{ route('fieldsets.update') }}" method="POST">
+<form action="{{ route('fieldsets.update', $fieldset->id) }}" method="POST">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Edit Fieldset</h1>
 
@@ -19,11 +19,7 @@
     </div>
 
     <section>
-        <p class="mb-4">Here are the fieldsets currently on the system. These are here for you to apply to the[12:34] Curt Blunt
-        
-        
-        ​[12:34] Stuart Corns
-        cheers </p>
+        <p class="mb-4">Edit the selected fieldset. These can be added to the Asset Models. For a new field, visit the <a href="{{ route('fields.create')}}">'Create Field'</a> page.</p>
         <div class="row row-eq-height container m-auto">
             <div class="col-12 mb-4">
                 <div class="card shadow h-100">
@@ -38,14 +34,14 @@
                             </ul>
                         </div>
                         @endif
-
+                        @method('PATCH')
                         @csrf
 
                         <div class="form-group">
                             <label for="name">Name</label>
                             <input type="text"
                                 class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                name="name" id="name" placeholder="">
+                                name="name" id="name" value="{{ $fieldset->name }}">
                         </div>
                     </div>
                 </div>
@@ -57,9 +53,23 @@
                         <h5 class="text-right">Selected Fields</h5>
                     </div>
                     <div class="card-body text-right">
-
-                        <input type="hidden" id="fields" name="fields">
+                            <?php 
+                                $string = ""; 
+                                foreach($fieldset->fields as $field){ 
+                                    if($string != ""){ 
+                                        $string .= ",".$field->id;
+                                    }else{ 
+                                        $string = $field->id;
+                                    }
+                                } 
+                                $array = explode(',', $string);
+                            ?>
+                        <input type="hidden" id="fields" name="fields" value="{{ $string }}" autocomplete="off">
                         <div id="selected-fields">
+                            @foreach($fieldset->fields as $field)
+                            <div id="selected{{$field->id}}" class="p-2 clickable" onclick="javascript:removeField({{ $field->id}}, '{{$field->name}}')">
+                                {{ $field->name }} <i class="fas fa-chevron-right"></i></div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                     <div class="card-body">
                         @foreach($fields as $field)
                         <div id="select{{$field->id}}" class="p-2 clickable"
-                            onclick="javascript:addField({{ $field->id}}, '{{$field->name}}')"><i
+                            onclick="javascript:addField({{ $field->id}}, '{{$field->name}}')" <?php if(in_array($field->id, $array)){?>style="display: none;"<?php }?>><i
                                 class="fas fa-chevron-left"></i> {{ $field->name }}</div>
                         @endforeach
                     </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fieldset;
+use App\Models\Field;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -44,10 +45,7 @@ class FieldsetController extends Controller
 
         $fieldset = Fieldset::create(['name' => $request->name]);
         $array = explode(',', $request->fields);
-        foreach($array as $id=>$key){
-            $field = \App\Models\Field::findOrFail($key);
-            $fieldset->fields()->save($field);
-        }
+        $fieldset->fields()->attach($array);
         return redirect(route('fieldsets.index'));
     }
 
@@ -70,7 +68,8 @@ class FieldsetController extends Controller
      */
     public function edit(Fieldset $fieldset)
     {
-        //
+        $fields = Field::all();
+        return view('fieldsets.edit', compact('fieldset', 'fields'));
     }
 
     /**
@@ -82,7 +81,14 @@ class FieldsetController extends Controller
      */
     public function update(Request $request, Fieldset $fieldset)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+        ]);
+
+        $fieldset->update(['name' => $request->name]);
+        $array = explode(',', $request->fields);
+        $fieldset->fields()->sync($array);
+        return redirect(route('fieldsets.index'));
     }
 
     /**
@@ -93,6 +99,10 @@ class FieldsetController extends Controller
      */
     public function destroy(Fieldset $fieldset)
     {
-        //
+        $name=$fieldset->name;
+        $fieldset->fields()->detach();
+        $fieldset->delete();
+        session()->flash('danger_message', 'The ' . $name . ' field was deleted from the system');
+        return redirect(route('fieldsets.index'));
     }
 }

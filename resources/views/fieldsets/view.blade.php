@@ -61,14 +61,12 @@
                                 <small class="p-1 bg-primary rounded text-white">Surface Pro 7</small>
                             </td>
                             <td class="text-right">
-                                    <a href="{{ route('fieldsets.show', $fieldset->id) }}"
-                                        class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
-                                        View</a>&nbsp;
-                                    <a href="{{route('fieldsets.edit', $fieldset->id) }}"
-                                        class="btn-sm btn-secondary text-white"><i
-                                            class="fas fa-pencil-alt"></i></a>&nbsp;
-                                    <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                        data-id="{{$fieldset->id}}"><i class=" fas fa-trash"></i></a>
+                                <a href="{{ route('fieldsets.show', $fieldset->id) }}" class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i> View</a>&nbsp;
+                                <a href="{{route('fieldsets.edit', $fieldset->id) }}"
+                                    class="btn-sm btn-secondary text-white"><i
+                                        class="fas fa-pencil-alt"></i></a>&nbsp;
+                                <a class="btn-sm btn-danger text-white deleteBtn" href="#" data-route="{{ route('fieldsets.destroy', $fieldset->id)}}"><i
+                                        class=" fas fa-trash"></i></a>
                             </td>
                         </tr>
                         @endforeach
@@ -84,12 +82,12 @@
 
 @section('modals')
 <!-- Delete Modal-->
-<div class="modal fade bd-example-modal-lg" id="removeSupplierModal" tabindex="-1" role="dialog"
-    aria-labelledby="removeSupplierModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="removeFieldsetModal" tabindex="-1" role="dialog"
+    aria-labelledby="removeFieldsetModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="removeSupplierModalLabel">Are you sure you want to delete this Supplier?
+                <h5 class="modal-title" id="removeFieldsetModalLabel">Are you sure you want to delete this Fieldset?
                 </h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
@@ -97,13 +95,17 @@
             </div>
             <div class="modal-body">
                 <input id="supplier-id" type="hidden" value="">
-                <p>Select "Delete" to remove this supplier from the system.</p>
-                <small class="text-danger">**Warning this is permanent. All assets assigned to this supplier will be set
-                    to Null.</small>
+                <p>Select "Delete" to remove this Fieldset from the system.</p>
+                <small class="text-danger">**Warning this is permanent. The fieldset will be unassigned from assets models, any
+                    assets with just this fieldset will have their fieldset set to null.</small>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                <form id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                </form>
             </div>
         </div>
     </div>
@@ -114,24 +116,23 @@
 <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script>
     $('.deleteBtn').click(function() {
-            $('#fieldset-id').val($(this).data('id'))
-            //showModal
-            $('#removeSupplierModal').modal('show')
-        });
-        
-        $('#confirmBtn').click(function() {
-            var form = '#'+'form'+$('#supplier-id').val();
-            $(form).submit();
-        });
+        $('#deleteForm').attr('action', $(this).data('route'));
+        //showModal
+        $('#removeFieldsetModal').modal('show');
+    });
+    
+    $('#confirmBtn').click(function() {
+        $('#deleteForm').submit();
+    });
 
-        $(document).ready( function () {
-            $('#fieldsetTable').DataTable({
-                "columnDefs": [ {
-                    "targets": [0, 2, 3],
-                    "orderable": false,
-                } ],
-                "order": [[ 1, "asc"]]
-            });
-        } );
+    $(document).ready( function () {
+        $('#fieldsetTable').DataTable({
+            "columnDefs": [ {
+                "targets": [0, 2, 3],
+                "orderable": false,
+            } ],
+            "order": [[ 1, "asc"]]
+        });
+    } );
 </script>
 @endsection

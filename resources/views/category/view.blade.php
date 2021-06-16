@@ -76,7 +76,6 @@
                                         class="fas fa-pencil-alt"></i></a>&nbsp;
                                 <a class="btn-sm btn-danger text-white deleteBtn" href="#"
                                     data-route="{{ route('category.destroy', $category->id)}}"><i class=" fas fa-trash"></i></a>
-                                </form>
                             </td>
                         </tr>
                         @endforeach
