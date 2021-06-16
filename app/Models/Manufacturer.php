@@ -19,7 +19,10 @@ class Manufacturer extends Model {
     public function asset()
     {
         return $this->hasMany(Asset::class);
+    }
 
+    public function assetModel(){
+        return $this->hasMany(AssetModel::class, 'manufacturer_id');
     }
 
 }

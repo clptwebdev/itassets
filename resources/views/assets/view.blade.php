@@ -35,30 +35,28 @@
                         <thead>
                         <tr>
                             <th class="text-center"><input type="checkbox"></th>
-                            <th>Asset Item</th>
-                            <th>Location</th>
-                            <th>Asset tag</th>
-                            <th>Manufacturers</th>
-                            <th>Purchased Date</th>
-                            <th>Purchased Cost</th>
-                            <th>Supplier</th>
-                            <th>Serial No</th>
-                            <th>Warranty</th>
-                            <th>Audit Dates</th>
-                            <th class="text-center">Options</th>
+                            <th><small>Item</small></th>
+                            <th><small>Location</small></th>
+                            <th><small>Tag</small></th>
+                            <th><small>Manufacturer</small></th>
+                            <th><small>Date</small></th>
+                            <th><small>Cost</small></th>
+                            <th><small>Supplier</small></th>
+                            <th class="col-auto"><small>Warranty (M)</small></th>
+                            <th class="col-auto text-center"><small>Audit Due</small></th>
+                            <th class="text-right col-auto"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
                             <th class="text-center"><input type="checkbox"></th>
-                            <th>Asset Item</th>
+                            <th class="col-2">Asset Item</th>
                             <th>Location</th>
                             <th>Asset tag</th>
-                            <th>Manufacturers</th>
+                            <th><small>Manufacturer</small></th>
                             <th>Purchased Date</th>
                             <th>Purchased Cost</th>
                             <th>Supplier</th>
-                            <th>Serial No</th>
                             <th>Warranty</th>
                             <th>Audit Dates</th>
                             <th class="text-center">Options</th>
@@ -68,22 +66,20 @@
                         @foreach($assets as $asset)
                             <tr>
                                 <td class="text-center"><input type="checkbox"></td>
-
-                                <td>Ipad</td>
-                                <td>{{ $asset->location->name }}</td>
+                                <td>{{ $asset->model->name ?? 'No Model'}}<br><small>{{ $asset->serial_no }}</small></td>
+                                <td class="text-center">@if(isset($asset->location->photo->path)) '<img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="Location"/>'@else {{ 'Unkown' }} @endif</td>
                                 <td>{{ $asset->asset_tag }}</td>
-                                <td class="text-center">{{ \Illuminate\Support\Str::of($asset->manufacturer->name)->limit(5) }}</td>
-                                <td>{{ $asset->purchased_date}}</td>
+                                <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                                 <td class="text-center">{{ $asset->purchased_cost }}</td>
                                 <td class="text-center">{{ \Illuminate\Support\Str::of($asset->supplier->name)->limit(5) }}</td>
-                                <td class="text-center">{{ $asset->serial_no }}</td>
                                 <td>{{ $asset->warranty }}</td>
                                 <td>{{ $asset->audit_date }}</td>
                                 <td class="text-center">
                                     <form id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
                                           method="POST">
                                         <a href="{{ route('assets.show', $asset->id) }}"
-                                           class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i> View</a>&nbsp;
+                                           class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i></a>&nbsp;
                                         <a href="{{route('assets.edit', $asset->id) }}"
                                            class="btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
 
@@ -157,7 +153,7 @@
         $(document).ready(function () {
             $('#assetsTable').DataTable({
                 "columnDefs": [{
-                    "targets": [0, 5],
+                    "targets": [0, 5, 8, 11],
                     "orderable": false,
                 }],
                 "order": [[1, "asc"]]

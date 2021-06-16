@@ -41,6 +41,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
+        Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
         
         Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);
         Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "create"]);

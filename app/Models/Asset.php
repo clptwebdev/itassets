@@ -9,6 +9,8 @@ class Asset extends Model {
 
     use HasFactory;
 
+    protected $fillable = ['asset_tag', 'asset_model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'user_id', 'audit_date'];
+
     //dates
 
     public function location()
@@ -21,16 +23,14 @@ class Asset extends Model {
         return $this->belongsTo(Supplier::class);
     }
 
-    public function manufacturer()
-    {
-        return $this->belongsTo(Manufacturer::class);
-
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
 
+    }
+
+    public function model(){
+        return $this->belongsTo(AssetModel::class, 'asset_model', 'id');
     }
 
 }

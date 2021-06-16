@@ -14,4 +14,12 @@ class AssetModel extends Model
     public function photo(){
         return $this->belongsTo(Photo::class);
     }
+
+    public function asset(){
+        return $this->hasOne(Model::class, 'id', 'asset_model');
+    }
+
+    public function manufacturer(){
+        return $this->belongsTo(Manufacturer::class, 'manufacturer_id', 'id');
+    }
 }
