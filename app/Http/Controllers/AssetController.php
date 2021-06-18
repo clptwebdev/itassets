@@ -20,10 +20,9 @@ class AssetController extends Controller
         ]);
     }
 
-    public function create(Asset $assets)
+    public function create()
     {
         return view('assets.create', [
-            "assets"=>$assets,
             "locations"=>Location::all(),
             "manufacturers"=>Manufacturer::all(),
             'models'=>AssetModel::all(),
@@ -52,7 +51,12 @@ class AssetController extends Controller
             $array = [];
             foreach($fields as $field){
                 $name = str_replace(' ', '_', strtolower($field->name));
-                $array[$field->id] = ['value' => $request->$name];                
+                if(is_array($request->$name)){
+                    $values = implode(',', $request->$name);
+                }else{
+                    $values = $request->$name;
+                }
+                $array[$field->id] = ['value' => $values];                
             }
             $asset->fields()->attach($array);
         }
@@ -76,6 +80,8 @@ class AssetController extends Controller
             "asset"=>$asset,
             "locations"=>Location::all(),
             "manufacturers"=>Manufacturer::all(),
+            'models'=>AssetModel::all(),
+            'suppliers' => Supplier::all(),
         ]);
     }
 
@@ -86,9 +92,33 @@ class AssetController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Asset $asset)
     {
-        //
+        $validated = $request->validate([
+            'asset_tag' => 'required',
+        ]);
+        $asset->fill(array_merge($request->only(
+            'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+        ), ['user_id' => auth()->user()->id]))->save();
+       
+        $assetModel = AssetModel::findOrFail($request->asset_model);
+        if($assetModel->fieldset_id != 0 && $fieldset = Fieldset::findOrFail($assetModel->fieldset_id)){
+            $fields = $fieldset->fields;
+            $array = [];
+            foreach($fields as $field){
+                $name = str_replace(' ', '_', strtolower($field->name));
+                if(is_array($request->$name)){
+                    $values = implode(',', $request->$name);
+                }else{
+                    $values = $request->$name;
+                }
+                $array[$field->id] = ['value' => $values];                
+            }
+            $asset->fields()->sync($array);
+        }
+        
+        session()->flash('success_message', $request->name.' has been updated successfully');
+        return redirect(route('assets.index'));
     }
 
 

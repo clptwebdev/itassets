@@ -56,7 +56,8 @@
             <!-- Card Header - Dropdown -->
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Asset Allocation</h6>
+            
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -75,7 +76,7 @@
             <!-- Card Body -->
             <div class="card-body">
                 <div class="chart-pie pt-4 pb-2">
-                    <canvas id="myPieChart"></canvas>
+                    <canvas id="myPieChart" style="width: 400px; height: 400px;"></canvas>
                 </div>
                 <div class="mt-4 text-center small">
                     <span class="mr-2">
@@ -283,7 +284,62 @@
 @section('js')
 <script src="{{ asset('js/chart.js') }}"></script>
 <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
-<script src="{{ asset('js/demo/chart-pie-demo.js') }}"></script>
+<?php 
+    $jsonArray = '';
+    foreach(\App\Models\Location::all() as $location){
+        $jsonArray .= 'Heath Park,';
+    }
+?>
+<script>
+    $(document).ready(function () {
+        showGraph();
+    });
+
+
+        function showGraph()
+        {
+            
+            $.ajax({
+            url: 'chart/pie/locations',
+            success: function(data) {
+                var as = JSON.parse(data);
+                alert(as);
+                var name = [];
+                var icon = [];
+                var assets = [];
+
+                for (var i in as) {
+                    name.push(as[i].name);
+                    icon.push(as[i].icon);
+                    assets.push(as[i].asset);
+                }
+
+                var chartdata = {
+                    labels: name,
+                    datasets: [{
+                        label: 'Asset Sources',
+                        backgroundColor: icon,
+                        borderColor: '#46d5f1',
+                        hoverBackgroundColor: '#CCCCCC',
+                        hoverBorderColor: '#666666',
+                        data: assets
+                    }]
+                };
+
+                var graphTarget = $("#myPieChart");
+                
+                var barGraph = new Chart(graphTarget, {
+                    type: 'doughnut',
+                    data: chartdata,
+                });
+            },
+            error: function(){
+                console.log('Eror');
+            },
+            });
+        }
+</script>
+
 <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready( function () {

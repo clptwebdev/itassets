@@ -71,7 +71,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="audit_date">Purchased Date</label>
+                                        <label for="audit_date">Audit Date</label>
                                         <input type="date" class="form-control <?php if ($errors->has('audit_date')) {?>border-danger<?php }?>"
                                             name="audit_date" id="audit_date">
                                     </div>

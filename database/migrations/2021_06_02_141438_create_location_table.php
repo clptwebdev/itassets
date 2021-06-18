@@ -22,7 +22,7 @@ class CreateLocationTable extends Migration
             $table->string('address_2')->nullable();
             $table->string('city');
             $table->string('county');
-            $table->string('post_code', 11);
+            $table->string('postcode', 11);
             $table->string('telephone' , 14)->nullable();           
             $table->string('email')->nullable();           
             $table->timestamps();
