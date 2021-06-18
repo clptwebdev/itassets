@@ -17,7 +17,7 @@ class CreateAssetModelsTable extends Migration
             $table->id();
             $table->string('name');
             $table->foreignID('manufacturer_id')->nullable();
-            $table->integer('model_no');
+            $table->string('model_no');
             $table->foreignID('depreciation_id')->nullable();;
             $table->integer('eol')->nullable();
             $table->text('notes')->nullable();

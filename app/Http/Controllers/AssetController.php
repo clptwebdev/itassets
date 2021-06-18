@@ -7,6 +7,9 @@ use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Exports\AssetExport;
+use Maatwebsite\Excel\Excel;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
 
 class AssetController extends Controller
 {
@@ -75,4 +78,14 @@ class AssetController extends Controller
         session()->flash('danger_message', "#". $name . ' was deleted from the system');
         return redirect("/assets");
     }
+
+    public function export(Asset $asset)
+    {
+
+//        return (new AssetExport)->download('assets.csv',\Maatwebsite\Excel\Excel::CSV,['Content-Type' => 'text/csv']);
+//        return (new AssetExport)->download('invoices.xlsx');
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'invoices.xlsx');
+    }
+
 }
