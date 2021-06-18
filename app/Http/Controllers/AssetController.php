@@ -104,17 +104,6 @@ class AssetController extends Controller
         return redirect("/assets");
     }
 
-
-    public function export(Asset $asset)
-    {
-
-//        return (new AssetExport)->download('assets.csv',\Maatwebsite\Excel\Excel::CSV,['Content-Type' => 'text/csv']);
-//        return (new AssetExport)->download('invoices.xlsx');
-
-        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'invoices.xlsx');
-    }
-
-
     public function model(AssetModel $model){
         if($model->fieldset_id != 0){
             $fieldset = Fieldset::findOrFail($model->fieldset_id);
@@ -123,4 +112,10 @@ class AssetController extends Controller
             return false;
         }
     }
+   public function export(Asset $asset)
+   {
+       return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'invoices.xlsx');
+
+   }
+
 }

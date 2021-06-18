@@ -11,10 +11,8 @@
         <div>
             <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
-            <a href="export" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-            <a href="export" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
         </div>
     </div>
 
@@ -68,9 +66,6 @@
                         @foreach($assets as $asset)
                             <tr>
                                 <td class="text-center"><input type="checkbox"></td>
-                                <td>Ipad</td>
-                                <td>{{ $asset->location->name }}</td>
-
                                 <td>{{ $asset->model->name ?? 'No Model'}}<br><small>{{ $asset->serial_no }}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
@@ -86,7 +81,7 @@
                                 <td class="text-center">
                                     £{{ $asset->purchased_cost }}<br>
                                     <?php $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
-                                    $percentage = floor($age)* 33.333;
+                                    $percentage = floor($age)*33.333;
                                     $dep = $asset->purchased_cost * ((100 - $percentage) / 100);?>
                                     <small>(*£{{ number_format($dep, 2)}})</small>
                                 </td>
