@@ -11,8 +11,10 @@
         <div>
             <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a href="export" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+            <a href="export" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
         </div>
     </div>
 
@@ -66,6 +68,7 @@
                         @foreach($assets as $asset)
                             <tr>
                                 <td class="text-center"><input type="checkbox"></td>
+
                                 <td>{{ $asset->model->name ?? 'No Model'}}<br><small>{{ $asset->serial_no }}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path)) 
@@ -75,6 +78,7 @@
                                             .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!} 
                                     @endif
                                 </td>
+
                                 <td>{{ $asset->asset_tag }}</td>
                                 <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
                                 <td data-sort="{{ strtotime($asset->purchased_date)}}"">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
