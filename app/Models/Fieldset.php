@@ -15,4 +15,8 @@ class Fieldset extends Model
     {
         return $this->belongsToMany(Field::class);
     }
+
+    public function model(){
+        return $this->hasMany(AssetModel::class);
+    }
 }

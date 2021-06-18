@@ -33,4 +33,9 @@ class Asset extends Model {
         return $this->belongsTo(AssetModel::class, 'asset_model', 'id');
     }
 
+    public function fields()
+    {
+        return $this->belongsToMany(Field::class)->withPivot('value');
+    }
+
 }
