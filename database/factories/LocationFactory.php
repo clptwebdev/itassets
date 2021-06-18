@@ -30,7 +30,7 @@ class LocationFactory extends Factory
             "address_2"=>$this->faker->address ?? Null,
             "city"=>$this->faker->city,
             "county"=>$this->faker->country,
-            "postcode"=>$this->faker->postcode,
+            "post_code"=>$this->faker->postcode,
             "telephone"=>$this->faker->numberBetween([102373633],[92373633]),
             "email"=>$this->faker->safeEmail,
         ];

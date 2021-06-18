@@ -117,7 +117,7 @@
                 <div class="mb-4">
                 <small><i class="fas fa-circle text-success" style></i> Deployed <i class="fas fa-circle text-secondary" style></i> Deployable <i class="fas fa-circle text-danger" style></i> Out of Service</small>
                 </div>
-                
+
                 <h4 class="small font-weight-bold">Audit Status <span class="float-right">45% Complete</span></h4>
                 <div class="progress mb-1">
                     <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0"
@@ -229,7 +229,7 @@
                             <td>Assets</td>
                             <td>Components</td>
                             <td>Accessories</td>
-                            <th>Consumables</td>
+                            <th>Consumables</th>
                         </tr>
                     </tfoot>
                     <tbody>

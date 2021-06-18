@@ -114,7 +114,7 @@ class AssetController extends Controller
     }
    public function export(Asset $asset)
    {
-       return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'invoices.xlsx');
+       return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
 
    }
 

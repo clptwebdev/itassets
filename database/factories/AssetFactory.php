@@ -38,7 +38,7 @@ class AssetFactory extends Factory
             "location_id"=>Location::factory("locations_id"),
             "user_id"=>User::factory("user_id"),
             "audit_date"=>$this->faker->date() ?? null,
-//            "manufacturer_id"=>Manufacturer::factory("manufacturer_id")
+
 
 
 
