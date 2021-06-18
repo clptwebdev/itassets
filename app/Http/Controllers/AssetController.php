@@ -9,6 +9,9 @@ use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Exports\AssetExport;
+use Maatwebsite\Excel\Excel;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
 
 class AssetController extends Controller
 {
@@ -100,6 +103,7 @@ class AssetController extends Controller
         return redirect("/assets");
     }
 
+
     public function model(AssetModel $model){
         if($model->fieldset_id != 0){
             $fieldset = Fieldset::findOrFail($model->fieldset_id);
@@ -108,4 +112,10 @@ class AssetController extends Controller
             return false;
         }
     }
+   public function export(Asset $asset)
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'invoices.xlsx');
+
+   
+
 }
