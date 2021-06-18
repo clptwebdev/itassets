@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asset;
+use App\Models\AssetModel;
+use App\Models\Fieldset;
 use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Supplier;
@@ -27,6 +29,8 @@ class AssetController extends Controller
             "assets"=>$assets,
             "locations"=>Location::all(),
             "manufacturers"=>Manufacturer::all(),
+            'models'=>AssetModel::all(),
+            'suppliers' => Supplier::all(),
         ]);
     }
 
@@ -38,7 +42,27 @@ class AssetController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'asset_tag' => 'required',
+        ]);
+        $asset = Asset::create(array_merge($request->only(
+            'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+        ), ['user_id' => auth()->user()->id]));
+
+        $assetModel = AssetModel::findOrFail($request->asset_model);
+        if($assetModel->fieldset_id != 0 && $fieldset = Fieldset::findOrFail($assetModel->fieldset_id)){
+            $fields = $fieldset->fields;
+            $array = [];
+            foreach($fields as $field){
+                $name = str_replace(' ', '_', strtolower($field->name));
+                $array[$field->id] = ['value' => $request->$name];
+            }
+            $asset->fields()->attach($array);
+        }
+
+        session()->flash('success_message', $request->name.' has been created successfully');
+        return redirect(route('assets.index'));
+
     }
 
     public function show(Asset $asset)
@@ -79,6 +103,7 @@ class AssetController extends Controller
         return redirect("/assets");
     }
 
+
     public function export(Asset $asset)
     {
 
@@ -88,4 +113,13 @@ class AssetController extends Controller
         return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'invoices.xlsx');
     }
 
+
+    public function model(AssetModel $model){
+        if($model->fieldset_id != 0){
+            $fieldset = Fieldset::findOrFail($model->fieldset_id);
+            return view('assets.fields', compact('model', 'fieldset'));
+        }else{
+            return false;
+        }
+    }
 }

@@ -32,10 +32,16 @@
     @if(session('success_message'))
         <div class="alert alert-success"> {{ session('success_message')}} </div>
     @endif
-    <x-asset-modal :asset="$asset"/>
+
+    <div class="row row-eq-height">
+        <x-assets.asset-modal :asset="$asset" />
+        <x-assets.asset-purchase :asset="$asset" />
+    </div>
+    
     <div class="row row-eq-height ">
-        <x-location-modal :asset="$asset"/>
-        <x-manufacturer-modal :asset="$asset"/>
+        <x-locations.location-modal :asset="$asset"/>
+        <x-manufacturers.manufacturer-modal :asset="$asset"/>
+        <x-assets.asset-log :asset="$asset"/>
     </div>
 
 @endsection

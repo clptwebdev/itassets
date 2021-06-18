@@ -23,4 +23,8 @@ class Field extends Model
     public function getFormatAttribute($format){
         return ucfirst($format);
     }
+
+    public function assets(){
+        return $this->belongsToMany(Asset::class)->withPivot('value');
+    }
 }
