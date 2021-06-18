@@ -20,10 +20,9 @@ class AssetController extends Controller
         ]);
     }
 
-    public function create(Asset $assets)
+    public function create()
     {
         return view('assets.create', [
-            "assets"=>$assets,
             "locations"=>Location::all(),
             "manufacturers"=>Manufacturer::all(),
             'models'=>AssetModel::all(),
@@ -76,6 +75,8 @@ class AssetController extends Controller
             "asset"=>$asset,
             "locations"=>Location::all(),
             "manufacturers"=>Manufacturer::all(),
+            'models'=>AssetModel::all(),
+            'suppliers' => Supplier::all(),
         ]);
     }
 
