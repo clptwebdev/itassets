@@ -43,7 +43,18 @@
                         @foreach($asset->fields as $field)
                         <tr>
                             <td>{{ $field->name ?? 'Unknown' }}</td>
-                            <td>{{ $field->pivot->value }}</td>
+                            <td>
+                                @if($field->type == 'Checkbox')
+                                    @php($field_values = explode(',', $field->pivot->value))
+                                    <ul>
+                                    @foreach($field_values as $id=>$key)
+                                        <li>{{ $key }}</li>
+                                    @endforeach
+                                    </ul>
+                                @else
+                                {{ $field->pivot->value }}
+                                @endif
+                            </td>
                         </tr>
                         @endforeach
                     </table>
@@ -79,6 +90,30 @@
                                                 @break
                                         @default
                                             <button class="btn btn-sm btn-danger p-1 font-weight-bold">{{ 'Unknown Audit Date'}}</button>
+                                    @endswitch
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>End of Life (EOL): </td>
+                            @php($eol =\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol)->format('d/m/Y'))
+                            <td><strong>{{ $eol }}</strong></td>
+                            <td class="text-right">
+                                @if(\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol)->isPast())
+                                <button class="btn btn-sm btn-danger p-1 font-weight-bold">{!! '<i class="fas fa-skull-crossbones"></i> Sorry for your loss' !!}</button>
+                                @else
+                                <?php $age = Carbon\Carbon::now()->floatDiffInDays(\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol));?>
+                                @switch(true)
+                                @case($age == 0)
+                                <button class="btn btn-sm btn-danger p-1 font-weight-bold">{!! '<i class="fas fa-skull-crossbones"></i> Sorry for your loss' !!}</button>
+                                @break
+                                @case($age < 31) <button class="btn btn-sm btn-warning p-1 font-weight-bold text-dark">{!! '<i class="fas fa-book-medical"></i> End is Near' !!}</button>
+                                    @break
+                                    @case($age >= 32)
+                                    <button class="btn btn-sm btn-success p-1 font-weight-bold">{!! '<i class="fas fa-book"></i> Life in the Old Dog' !!}</button>
+                                    @break
+                                    @default
+                                    <button class="btn btn-sm btn-danger p-1 font-weight-bold">{!! '<i class="fas fa-book-dead"></i> Unknown'!!}</button>
                                     @endswitch
                                 @endif
                             </td>

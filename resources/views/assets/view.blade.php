@@ -79,16 +79,18 @@
                                 </td>
                                 <td>{{ $asset->asset_tag }}</td>
                                 <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
+                                <td data-sort="{{ strtotime($asset->purchased_date)}}"">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                                 <td class="text-center">
                                     £{{ $asset->purchased_cost }}<br>
-                                    <?php $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
-                                    $percentage = floor($age)*33.333;
-                                    $dep = $asset->purchased_cost * ((100 - $percentage) / 100);?>
+                                    @php 
+                                    $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date); 
+                                    $percentage = floor($age)*33.333; 
+                                    $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                                    @endphp
                                     <small>(*£{{ number_format($dep, 2)}})</small>
                                 </td>
                                 <td class="text-center">{{ \Illuminate\Support\Str::of($asset->supplier->name)->limit(5) }}</td>
-                                <?php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);?>
+                                @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
                                 <td class="text-center" data-sort="{{ $warranty_end }}">
                                     {{ $asset->warranty }} Months
 

@@ -56,6 +56,9 @@ Route::group(['middleware'=>'auth'], function(){
         Route::delete("manufacturers/delete/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "destroy"]);
         Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "list"]);
         Route::Post("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "store"]);
+
+        Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');
+
         //
     });
 });
