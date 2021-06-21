@@ -20,8 +20,7 @@
 
     <section>
         <p class="mb-4">Change or Update an Asset in the asset management system. Enter or change in the following
-            information and
-            click
+            information and click
             the 'Save' button. Or click the 'Back' button
             to return the Assets page.
         </p>
@@ -69,8 +68,7 @@
                                         name="location_id" id="location_id" required>
                                         <option value="0" selected>No Location</option>
                                         @foreach($locations as $location)
-                                        <option value="{{$location->id}}" @if($asset->location->id ==
-                                            $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
+                                        <option value="{{$location->id}}" @if($asset->location->id == $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
