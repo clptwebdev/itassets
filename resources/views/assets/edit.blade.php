@@ -52,7 +52,6 @@
                                         class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
                                         name="asset_tag" id="asset_tag" value="{{ $asset->asset_tag}}" required>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="serial_no">Serial Number</label><span class="text-danger">*</span>
                                     <input type="text"
@@ -89,6 +88,7 @@
                                         @foreach($models as $model)
                                         <option value="{{ $model->id }}" @if($asset->model->id ==
                                         $model->id){{ 'selected'}}@endif>{{ $model->name }}</option>
+
                                         @endforeach
                                     </select>
                                 </div>
@@ -101,6 +101,7 @@
                                     <input type="text"
                                         class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
                                         name="order_no" id="order_no" value="{{ $asset->order_no }}">
+
                                 </div>
                                 <div class="form-group">
                                     <label for="purchased_date">Purchased Date</label>
@@ -129,10 +130,10 @@
                                     <input type="number"
                                         class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
                                         name="warranty" id="warranty" value="{{$asset->warranty}}">
+
                                 </div>
                             </div>
                         </div>
-
                         <div id="additional-fields" @if($asset->model->fieldset_id == 0){{ 'style="display: none;"'}}@endif class="border border-secondary p-2 mb-3">
                             @php( $field_array = [])
                             @foreach($asset->fields as $as)
@@ -177,7 +178,6 @@
                             </div>
                             @endforeach
                         </div>
-
                         <div class="form-row">
                             <label for="status">Current Status</label><span class="text-danger">*</span>
                             <select type="text"

@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Photo;
+use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PhotoFactory extends Factory
+class AssetFieldFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Photo::class;
+    protected $model = Model::class;
 
     /**
      * Define the model's default state.
@@ -22,8 +22,7 @@ class PhotoFactory extends Factory
     public function definition()
     {
         return [
-            "name"=>$this->faker->unique()->word,
-            "path"=>$this->faker->unique()->imageUrl()
+            //
         ];
     }
 }

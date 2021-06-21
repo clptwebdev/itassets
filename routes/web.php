@@ -42,10 +42,13 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
 
+
+
         Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
-      
+//      exports
         Route::get("/export", [\App\Http\Controllers\AssetController::class, "export"]);
-        
+        Route::get("/export", [\App\Http\Controllers\LocationController::class, "export"]);
+//
         Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);
         Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "create"]);
         Route::get("manufacturers/edit/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "edit"]);
