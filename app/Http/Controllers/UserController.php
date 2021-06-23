@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -81,5 +83,10 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function export(User $user)
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new UserExport, 'users.csv');
+
     }
 }

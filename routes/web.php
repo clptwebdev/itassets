@@ -46,9 +46,15 @@ Route::group(['middleware'=>'auth'], function(){
 
         Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
 //      exports
-        Route::get("/export", [\App\Http\Controllers\AssetController::class, "export"]);
-        Route::get("/export", [\App\Http\Controllers\LocationController::class, "export"]);
+        Route::get("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
+        Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
+        Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
+        Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
+        Route::get("/exportusers", [\App\Http\Controllers\UserController::class, "export"]);
 //
+        Route::post("/importmanufacturer", [\App\Http\Controllers\ManufacturerController::class, "import"]);
+
+
         Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);
         Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "create"]);
         Route::get("manufacturers/edit/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "edit"]);
@@ -56,6 +62,12 @@ Route::group(['middleware'=>'auth'], function(){
         Route::delete("manufacturers/delete/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "destroy"]);
         Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "list"]);
         Route::Post("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "store"]);
+        Route::Post("manufacturers/create/import", [\App\Http\Controllers\ManufacturerController::class, "createMany"]);
+        Route::Get("manufacturers/create/import", [\App\Http\Controllers\ManufacturerController::class, "createMany"]);
+
+        //This needs fixing its trying to get variable array from import
+        Route::Post("manufacturers/import-fail", [\App\Http\Controllers\ManufacturerController::class,"import"]);
+        Route::get("manufacturers/import-fail", [\App\Http\Controllers\ManufacturerController::class,"import"]);
 
         Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');
 

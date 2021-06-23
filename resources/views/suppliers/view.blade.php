@@ -13,6 +13,8 @@
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Supplier</a>
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
     </div>
 </div>
 
@@ -65,7 +67,7 @@
                                     <form id="form{{$supplier->id}}" action="{{ route('supplier.destroy', $supplier->id) }}" method="POST">
                                     <a href="{{ route('supplier.show', $supplier->id) }}" class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i> View</a>&nbsp;
                                     <a href="{{route('supplier.edit', $supplier->id) }}" class="btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
-                                    
+
                                         @csrf
                                         @method('DELETE')
                                         <a class="btn-sm btn-danger text-white deleteBtn" href="#" data-id="{{$supplier->id}}"><i class=" fas fa-trash"></i></a>
@@ -78,7 +80,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Suppliers</h4>
@@ -87,9 +89,9 @@
         </div>
 
     </section>
-    
+
     @endsection
-    
+
     @section('modals')
     <!-- Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeSupplierModal" tabindex="-1" role="dialog"
@@ -116,7 +118,7 @@
         </div>
     </div>
     @endsection
-    
+
     @section('js')
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
@@ -125,7 +127,7 @@
             //showModal
             $('#removeSupplierModal').modal('show')
         });
-        
+
         $('#confirmBtn').click(function() {
             var form = '#'+'form'+$('#supplier-id').val();
             $(form).submit();

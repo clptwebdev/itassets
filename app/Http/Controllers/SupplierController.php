@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SupplierExport;
 use App\Models\Supplier;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -104,5 +105,10 @@ class SupplierController extends Controller
         $supplier->delete();
         session()->flash('danger_message', $name.' was deleted from the system');
         return redirect(route('supplier.index'));
+    }
+    public function export(Supplier $supplier)
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new SupplierExport, 'supplier.csv');
+
     }
 }
