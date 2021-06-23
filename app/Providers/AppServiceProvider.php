@@ -1,6 +1,7 @@
 <?php
 namespace App\Providers;
 
+use App\Models\Asset;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Asset;
 

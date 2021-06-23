@@ -11,10 +11,10 @@
         <div>
             <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
-            <a href="export" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
             <a href="export" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
+                    class="fas fa-download fa-sm text-white-50"></i> Generate Csv</a>
         </div>
     </div>
 
@@ -68,17 +68,15 @@
                         @foreach($assets as $asset)
                             <tr>
                                 <td class="text-center"><input type="checkbox"></td>
-
                                 <td>{{ $asset->model->name ?? 'No Model'}}<br><small>{{ $asset->serial_no }}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
-                                    @if(isset($asset->location->photo->path)) 
+                                    @if(isset($asset->location->photo->path))
                                         '<img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}"/>'
-                                    @else 
+                                    @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'">'
-                                            .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!} 
+                                            .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                 </td>
-
                                 <td>{{ $asset->asset_tag }}</td>
                                 <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
                                 <td data-sort="{{ strtotime($asset->purchased_date)}}"">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
@@ -95,7 +93,7 @@
                                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
                                 <td class="text-center" data-sort="{{ $warranty_end }}">
                                     {{ $asset->warranty }} Months
-                                    
+
                                     <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
                                 </td>
                                 <td class="text-center" data-sort="{{ strtotime($asset->audit_date)}}">

@@ -118,7 +118,7 @@ class AssetController extends Controller
                 
         session()->flash('success_message', $request->name.' has been created successfully');
         return redirect(route('assets.index'));
-        
+
     }
 
     public function show(Asset $asset)
@@ -233,7 +233,6 @@ class AssetController extends Controller
         return redirect("/assets");
     }
 
-
     public function model(AssetModel $model){
         if($model->fieldset_id != 0){
             $fieldset = Fieldset::findOrFail($model->fieldset_id);
@@ -243,8 +242,8 @@ class AssetController extends Controller
         }
     }
    public function export(Asset $asset)
-    {
-        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'invoices.xlsx');
+   {
+       return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
 
     }
 

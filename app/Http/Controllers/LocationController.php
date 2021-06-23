@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LocationsExport;
 use App\Models\Location;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -99,6 +100,11 @@ class LocationController extends Controller
         $location->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
         return redirect(route('location.index'));
+    }
+    public function export(Location $location)
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new LocationsExport, 'Location.csv');
+
     }
 
 }

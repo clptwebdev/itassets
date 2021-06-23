@@ -52,7 +52,6 @@
                                         class="form-control @if($errors->has('name')){{'border-danger'}}@endif"
                                         name="asset_tag" id="asset_tag" value="{{ old('asset_tag') ?? $asset->asset_tag}}" required>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="serial_no">Serial Number</label><span class="text-danger">*</span>
                                     <input type="text"
@@ -92,6 +91,7 @@
                                         @foreach($models as $model)
                                         <option value="{{ $model->id }}" @if($id ==
                                         $model->id){{ 'selected'}}@endif>{{ $model->name }}</option>
+
                                         @endforeach
                                     </select>
                                 </div>
@@ -189,7 +189,6 @@
                             </div>
                             @endforeach
                         </div>
-
                         <div class="form-row">
                             <label for="status">Current Status</label><span class="text-danger">*</span>
                             <select type="text"

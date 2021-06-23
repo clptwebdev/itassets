@@ -42,12 +42,12 @@ class AssetExport implements FromArray, WithHeadings {
             $array =  [];
             $array['asset_tag'] = $asset->asset_tag;
             $array['serial_no'] = $asset->serial_no;
-            $array['asset_model'] = $asset->model->name;
+            $array['asset_model'] = $asset->model->name ?? 'Unknown';
             $array['status_id'] ="Booked out"; //$asset->status->name;
             $array['purchased_date'] = $asset->purchased_date;
             $array['purchased_cost'] = $asset->purchased_cost;
             $array['supplier_id'] = $asset->supplier->name;
-            $array['manufacturer_id'] = $asset->manufacturer->name;
+            $array['manufacturer_id'] = $asset->model->manufacturer->name ?? 'Unknown';
             $array['order_no'] = $asset->order_no;
             $array['warranty'] = $asset->warranty;
             $array['location_id'] = $asset->location->name;
@@ -56,6 +56,7 @@ class AssetExport implements FromArray, WithHeadings {
             $object[] = $array;
 
         }
+
         return $object;
 
     }
