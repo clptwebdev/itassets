@@ -85,13 +85,13 @@ var myBarChart = new Chart(ctx, {
       }],
     },
     legend: {
-      display: false
+      display: true
     },
     tooltips: {
       titleMarginBottom: 10,
       titleFontColor: '#6e707e',
       titleFontSize: 14,
-      backgroundColor: "rgb(255,255,255)",
+      backgroundColor: "rgb(0,0,0)",
       bodyFontColor: "#858796",
       borderColor: '#dddfeb',
       borderWidth: 1,

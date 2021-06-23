@@ -137,6 +137,7 @@
                 <a class="collapse-item" href="{{ route('category.index')}}">Categories</a>
                 <a class="collapse-item" href="{{ route('fieldsets.index')}}">Fieldsets</a>
                 <a class="collapse-item" href="{{ route('fields.index')}}">Custom Fields</a>
+                <a class="collapse-item" href="{{ route('status.index')}}">Status Fields</a>
                 <a class="collapse-item" href="login.html">Settings</a>
         </div>
     </li>

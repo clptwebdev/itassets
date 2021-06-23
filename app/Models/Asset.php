@@ -38,4 +38,8 @@ class Asset extends Model {
         return $this->belongsToMany(Field::class)->withPivot('value');
     }
 
+    public function status(){
+        return $this->hasOne(Status::class);
+    }
+
 }

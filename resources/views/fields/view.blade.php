@@ -36,9 +36,10 @@
                         <tr>
                             <th class="text-center col-auto"><input type="checkbox"></th>
                             <th class="col-3">Name</th>
-                            <th class="col-2">Type</th>
-                            <th class="col-2">Format</th>
-                            <th class="col-2">Fielsets</th>
+                            <th class="col-1">Required</th>
+                            <th class="col-1">Type</th>
+                            <th class="col-1">Format</th>
+                            <th class="col-3">Fielsets</th>
                             <th class="text-right col-2">Options</th>
                         </tr>
                     </thead>
@@ -46,6 +47,7 @@
                         <tr>
                             <th class="text-center"><input type="checkbox"></th>
                             <th>Name</th>
+                            <th>Required</th>
                             <th>Type</th>
                             <th>Format</th>
                             <th>Fieldsets</th>
@@ -56,17 +58,19 @@
                         @foreach($fields as $field)
                         <tr>
                             <td class="text-center"><input type="checkbox"></td>
-                            <td>{{ $field->name }}</td>
-                            <td>{{ $field->type }}</td>
-                            <td>{{ $field->format }}</td>
+                            <td class="text-left">{{ $field->name }}</td>
+                            <td class="text-center">@if($field->required == 1){!! '<i class="fas fa-check text-success"></i>'!!}@else{!!'<i
+                                    class="fas fa-times text-danger"></i>'!!}@endif</td>
+                            <td class="text-center">{{ $field->type }}</td>
+                            <td class="text-center">{{ $field->format }}</td>
                             <td>
                                 @foreach($field->fieldsets as $fieldset)
-                                 {{ $fieldset->name."<br>"}}
+                                 {!! '<small class="d-inline-block bg-secondary text-light p-2 m-1 rounded">'.$fieldset->name.'</small>' !!}
                                 @endforeach
                             </td>
                             <td class="text-right">
                                 <a href="{{route('fields.edit', $field->id) }}"
-                                    class="btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
+                                    class="d-inline-block bg-secondary btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
                                 <a class="btn-sm btn-danger text-white deleteBtn" href="#" data-route="{{ route('fields.destroy', $field->id)}}"><i
                                         class=" fas fa-trash"></i></a>
                             </td>

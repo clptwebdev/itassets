@@ -3,14 +3,14 @@
     <label for="{{str_replace(' ', '_', strtolower($field->name))}}">{{$field->name}}</label>
  @switch($field->type)
     @case('Text')
-        <input type="text" class="form-control" name="{{str_replace(' ', '_', strtolower($field->name))}}" placeholder="{{ $field->name }}"> 
+        <input type="text" class="form-control" name="{{str_replace(' ', '_', strtolower($field->name))}}" placeholder="{{ $field->name }}" required> 
         @break
     @case('Textarea')
-        <textarea name="{{str_replace(' ', '_', strtolower($field->name))}}" id="" cols="30" rows="10" class="form-contol"></textarea>
+        <textarea name="{{str_replace(' ', '_', strtolower($field->name))}}" id="" cols="30" rows="10" class="form-contol" required></textarea>
         @break
     @case('Select')
         <?php $array = explode("\r\n", $field->value);?>
-        <select name="{{str_replace(' ', '_', strtolower($field->name))}}" class="form-control">
+        <select name="{{str_replace(' ', '_', strtolower($field->name))}}" class="form-control" required>
             @foreach($array as $id=>$key)
             <option value="{{ $key }}">{{ $key }}</option>
             @endforeach
@@ -23,7 +23,7 @@
         @endforeach
         @break
     @default
-         <input type="text" class="form-control" name="{{str_replace(' ', '_', strtolower($field->name))}}" placeholder="{{ $field->name }}">
+         <input type="text" class="form-control" name="{{str_replace(' ', '_', strtolower($field->name))}}" placeholder="{{ $field->name }}" required>
  @endswitch
     </div>
 @endforeach

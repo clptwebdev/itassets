@@ -20,11 +20,19 @@ require __DIR__.'/auth.php';
 
 Route::group(['middleware'=>'auth'], function(){
     Route::get('/', function(){
-        return view('dashboard');
+        return view('dashboard',
+            [
+                'locations' => \App\Models\Location::all(),
+            ]
+    );
     })->name('home');
 
     Route::get('/dashboard', function(){
-        return view('dashboard');
+        return view('dashboard',
+            [
+                'locations' => \App\Models\Location::all(),
+            ]
+    );
     })->name('dashboard');
 
 
@@ -41,6 +49,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
+        Route::resource('/status', 'App\Http\Controllers\StatusController');
 
         Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
       
