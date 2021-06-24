@@ -188,6 +188,7 @@
                 </div>
             </div>
         </section>
+    </form>
     @endsection
 
     @section('modals')

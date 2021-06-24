@@ -214,7 +214,6 @@ class AssetController extends Controller
         }
 
         $validated = $request->validate($v);
-
         $asset->fill(array_merge($request->only(
             'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]))->save();

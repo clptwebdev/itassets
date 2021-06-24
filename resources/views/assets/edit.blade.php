@@ -166,10 +166,11 @@
                                     class="form-contol">{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id]}}</textarea>
                                 @break
                                 @case('Select')
+                                <?php if(old('$field->name')){$id = old($field->name);}else{ $id = $field_array[$field->id];}?>
                                 <?php $array = explode("\r\n", $field->value);?>
                                 <select name="{{str_replace(' ', '_', strtolower($field->name))}}" class="form-control">
                                     @foreach($array as $id=>$key)
-                                    <option value="{{ $key }}" @if($field_array[$field->id] == $key){{ 'selected'}}@endif>{{ $key }}</option>
+                                    <option value="{{ $key }}" @if($id == $key){{ 'selected'}}@endif>{{ $key }}</option>
                                     @endforeach
                                 </select>
                                 @break
@@ -203,6 +204,7 @@
             </div>
         </div>
     </section>
+    </form
     @endsection
 
     @section('modals')

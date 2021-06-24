@@ -86,22 +86,15 @@ class ManufacturerController extends Controller {
 
     public function createMany(Request $request)
     {
-$validation = Validator::make($request->all(), [
-    "name.*" => "unique:manufacturers,name|required|max:255",
-    "supportPhone.*" => "required|max:14",
-    "supportUrl.*" => "required",
-    "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
+        $validation = Validator::make($request->all(), [
+            "name.*" => "unique:manufacturers,name|required|max:255",
+            "supportPhone.*" => "required|max:14",
+            "supportUrl.*" => "required",
+            "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
 
-]);
-//        $validation = \Validator::make($request->all(),[
-//            "name" => "required|unique:manufacturers,name|max:255",
-//            "supportPhone" => "required|max:14",
-//            "supportUrl" => "required",
-//            "supportEmail" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
-//        ]);
+        ]);
 
         if($validation->fails()){
-//            return redirect('/manufacturers')->withInput($request->all());
             return  view('Manufacturers.view', [
                "names" => $request->name,
             ]);
@@ -149,6 +142,7 @@ $validation = Validator::make($request->all(), [
         $values = [];
         $results = $import->failures();
         $importErrors = [];
+
         foreach($results->all() as $result)
         {
             $row[] = $result->row();
@@ -164,7 +158,8 @@ $validation = Validator::make($request->all(), [
             ];
 
         }
-        if(! empty($importErrors))
+
+        if(!empty($importErrors))
         {
             $errorArray = [];
             $valueArray = [];
@@ -185,14 +180,10 @@ $validation = Validator::make($request->all(), [
                 "valueArray" => $valueArray,
             ]);
 
-        } else
-        {
+        } else{
             return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
 
         }
-//
-//
-//        return redirect('/manufacturers')->with('success', 'All good!');
     }
 
 }
