@@ -13,6 +13,11 @@
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Manufacturers</a>
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+            <a href="/exportmanufacturers" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
+
         </div>
     </div>
 
@@ -25,7 +30,8 @@
     @endif
 
     <section>
-        <p class="mb-4">Below are different tiles, one for each manufacturers stored in the management system. Each tile has different manufacturers information that can be created, updated, and deleted.</p>
+        <p class="mb-4">Below are different tiles, one for each manufacturers stored in the management system. Each tile
+            has different manufacturers information that can be created, updated, and deleted.</p>
 
         <div class="row">
             @foreach($manufacturers as $manufacturer)
@@ -34,13 +40,16 @@
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold">{{ $manufacturer->name}}</h6>
                             <div class="dropdown no-arrow">
-                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                   data-toggle="dropdown"
                                    aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                     aria-labelledby="dropdownMenuLink">
                                     <a class="dropdown-item" href="manufacturers/edit/{{$manufacturer->id}}">Edit</a>
-                                    <form id="form{{$manufacturer->id}}" action="/manufacturers/delete/{{$manufacturer->id}}" method="POST">
+                                    <form id="form{{$manufacturer->id}}"
+                                          action="/manufacturers/delete/{{$manufacturer->id}}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <a class="dropdown-item deleteBtn" data-id="{{$manufacturer->id}}">Delete</a>
@@ -52,7 +61,8 @@
                             <div class="row no-gutters">
                                 <div class="col mr-2">
                                     <div class="mb-1">
-                                        <p><a href="{{ $manufacturer->supportUrl }}">{{ $manufacturer->supportUrl }}</a></p>
+                                        <p><a href="{{ $manufacturer->supportUrl }}">{{ $manufacturer->supportUrl }}</a>
+                                        </p>
                                         <p>Tel: {{ $manufacturer->supportPhone }}</p>
                                         <p>Email: {{ $manufacturer->supportEmail }}</p>
                                     </div>
@@ -77,7 +87,8 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeManufacturerModalLabel">Are you sure you want to delete this Location?</h5>
+                    <h5 class="modal-title" id="removeManufacturerModalLabel">Are you sure you want to delete this
+                        Location?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -85,7 +96,8 @@
                 <div class="modal-body">
                     <input id="manufacturer-id" type="hidden" value="">
                     <p>Select "Delete" to remove this location from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assets assigned to this location will become available.</small>
+                    <small class="text-danger">**Warning this is permanent. All assets assigned to this location will
+                        become available.</small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -94,20 +106,55 @@
             </div>
         </div>
     </div>
+    //import
+    <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
+         aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/importmanufacturer" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <p>Select "import" to add Manufacturers to the system.</p>
+                    <input  class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                           type="file" placeholder="Upload here" name="csv" >
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+
+                        <button type="submit" class="btn btn-success" type="button" id="confirmBtn">
+                            Import
+                        </button>
+                        @csrf
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
     <script>
-        $('.deleteBtn').click(function() {
+        $('.deleteBtn').click(function () {
             $('#manufacturer-id').val($(this).data('id'))
             //showModal
             $('#removeManufacturerModal').modal('show')
         });
 
-        $('#confirmBtn').click(function() {
-            var form = '#'+'form'+$('#manufacturer-id').val();
+        $('#confirmBtn').click(function () {
+            var form = '#' + 'form' + $('#manufacturer-id').val();
             $(form).submit();
         });
+        // import
 
+        $('#import').click(function () {
+            $('#manufacturer-id-test').val($(this).data('id'))
+            //showModal
+            $('#importManufacturerModal').modal('show')
+        });
     </script>
 @endsection

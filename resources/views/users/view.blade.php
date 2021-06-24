@@ -13,6 +13,8 @@
                 class="fas fa-plus fa-sm text-white-50"></i> Add New User</a>
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        <a href="/exportusers" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
     </div>
 </div>
 
@@ -35,7 +37,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th> 
+                            <th>Name</th>
                             <th>Email Address</th>
                             <th>Admin</th>
                             <th>Permissions</th>
@@ -131,7 +133,7 @@
             //showModal
             $('#removeUserModal').modal('show')
         });
-        
+
         $('#confirmBtn').click(function() {
             var form = '#'+'form'+$('#user-id').val();
             $(form).submit();

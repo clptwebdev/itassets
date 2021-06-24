@@ -17,7 +17,8 @@
         "maatwebsite/excel": "^3.1",
         "milon/barcode": "^8.0",
         "socialiteproviders/microsoft-azure": "^4.2",
-        "socialiteproviders/zoho": "^4.1"
+        "socialiteproviders/zoho": "^4.1",
+      "ext-json": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

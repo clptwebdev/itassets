@@ -13,8 +13,8 @@
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-            <a href="export" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Generate Csv</a>
+            <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
         </div>
     </div>
 
@@ -82,9 +82,9 @@
                                 <td data-sort="{{ strtotime($asset->purchased_date)}}"">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                                 <td class="text-center">
                                     £{{ $asset->purchased_cost }}<br>
-                                    @php 
-                                    $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date); 
-                                    $percentage = floor($age)*33.333; 
+                                    @php
+                                    $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
+                                    $percentage = floor($age)*33.333;
                                     $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
                                     @endphp
                                     <small>(*£{{ number_format($dep, 2)}})</small>
