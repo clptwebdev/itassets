@@ -27,27 +27,6 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
     {
 
     }
-//    public function onFailure(Failure ...$failures)
-//    {
-//       return $failures;
-//    }
-//    public function onFailure(Failure ...$failures)
-//    {
-//        $results = [];
-//        foreach($failures as $failure)
-//        {
-//
-//            $results[] = [
-//                'row' => $failure->row(),
-//                'attributes' => $failure->attribute(),
-//                'errors' => $failure->errors(),
-//                'value' => $failure->values(),
-//            ];
-//
-//        }
-//        return ($results);
-//    }
-
     public function rules(): array
     {
 
@@ -55,18 +34,21 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
             'name' => [
                 'required',
                 'string',
+                "unique:manufacturers,name",
             ],
             'supporturl' => [
                 'required',
-                'string',
+                'url',
             ],
             'supportphone' => [
                 'required',
+                'max:14',
                 'string',
             ],
             'supportemail' => [
                 'required',
                 'email:rfc,dns,spoof,filter',
+                'unique:manufacturers,supportEmail',
             ],
         ];
 

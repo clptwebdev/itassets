@@ -23,7 +23,7 @@ class ManufacturerFactory extends Factory
     {
         return [
             "name"=>$this->faker->company,
-            "supportUrl"=>$this->faker->slug(),
+            "supportUrl"=>$this->faker->url,
             "supportPhone"=>$this->faker->unique()->phoneNumber,
             "supportEmail"=>$this->faker->unique()->safeEmail,
             "photoId"=>$this->faker->unique()->imageUrl()

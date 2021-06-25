@@ -86,26 +86,6 @@ class ManufacturerController extends Controller {
 
     public function createMany(Request $request)
     {
-$validation = Validator::make($request->all(), [
-    "name.*" => "unique:manufacturers,name|required|max:255",
-    "supportPhone.*" => "required|max:14",
-    "supportUrl.*" => "required",
-    "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
-
-]);
-//        $validation = \Validator::make($request->all(),[
-//            "name" => "required|unique:manufacturers,name|max:255",
-//            "supportPhone" => "required|max:14",
-//            "supportUrl" => "required",
-//            "supportEmail" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
-//        ]);
-
-        if($validation->fails()){
-//            return redirect('/manufacturers')->withInput($request->all());
-            return  view('Manufacturers.view', [
-               "names" => $request->name,
-            ]);
-        }
 
         for($i = 0; $i < count($request->name); $i++)
         {
@@ -119,6 +99,7 @@ $validation = Validator::make($request->all(), [
         }
         session()->flash('success_message', $i . ' has been created successfully');
         return redirect('/manufacturers');
+
     }
 
     public function destroy(Manufacturer $manufacturers)
