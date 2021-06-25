@@ -171,6 +171,11 @@
                             </div>
                             @endif
 
+                            <div id="categories" class="border border-light p-2 mb-3">
+                                <h4>Categories</h4>
+                                <span class="text-warning">No Categories Selected</span>
+                            </div>
+
                             <div class="form-row">
                                 <label for="status">Current Status</label><span class="text-danger">*</span>
                                 <select type="text"

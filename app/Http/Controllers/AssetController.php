@@ -137,6 +137,7 @@ class AssetController extends Controller
             "manufacturers"=>Manufacturer::all(),
             'models'=>AssetModel::all(),
             'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
         ]);
     }
 

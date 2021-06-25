@@ -89,7 +89,7 @@
                                     @endphp
                                     <small>(*£{{ number_format($dep, 2)}})</small>
                                 </td>
-                                <td class="text-center">{{ \Illuminate\Support\Str::of($asset->supplier->name)->limit(5) }}</td>
+                                <td class="text-center">{{ $asset->supplier->name?? 'N/A' }}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
                                 <td class="text-center" data-sort="{{ $warranty_end }}">
                                     {{ $asset->warranty }} Months

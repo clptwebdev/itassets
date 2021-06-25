@@ -73,6 +73,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::Post("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "store"]);
         Route::Post("manufacturers/create/import", [\App\Http\Controllers\ManufacturerController::class, "createMany"]);
         Route::Get("manufacturers/create/import", [\App\Http\Controllers\ManufacturerController::class, "createMany"]);
+        Route::Post("manufacturers/create/ajax", [\App\Http\Controllers\ManufacturerController::class, "ajaxMany"]);
 
         //This needs fixing its trying to get variable array from import
         Route::Post("manufacturers/import-fail", [\App\Http\Controllers\ManufacturerController::class,"import"]);

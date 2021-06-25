@@ -23,38 +23,18 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     use  importable ,SkipsFailures ,SkipsErrors;
-    public function onError(\Throwable $error)
+        public function onError(\Throwable $error)
     {
 
     }
-//    public function onFailure(Failure ...$failures)
-//    {
-//       return $failures;
-//    }
-//    public function onFailure(Failure ...$failures)
-//    {
-//        $results = [];
-//        foreach($failures as $failure)
-//        {
-//
-//            $results[] = [
-//                'row' => $failure->row(),
-//                'attributes' => $failure->attribute(),
-//                'errors' => $failure->errors(),
-//                'value' => $failure->values(),
-//            ];
-//
-//        }
-//        return ($results);
-//    }
 
     public function rules(): array
     {
-
         return [
             'name' => [
                 'required',
                 'string',
+                "unique:manufacturers,name",
             ],
             'supporturl' => [
                 'required',
@@ -62,15 +42,15 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
             ],
             'supportphone' => [
                 'required',
+                'max:14',
                 'string',
             ],
             'supportemail' => [
                 'required',
                 'email:rfc,dns,spoof,filter',
+                'unique:manufacturers,supportEmail',
             ],
         ];
-
-
     }
 
     public function model(array $row)

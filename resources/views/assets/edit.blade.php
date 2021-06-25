@@ -84,7 +84,7 @@
                                 <div class="form-group">
                                     <label for="asset_model">Asset Model Select</label><span
                                         class="text-danger">*</span>
-                                        @php if(old('asset_model')){$id=old('assetModel');}else{ $id= $asset->model->id;} @endphp
+                                        @php if(old('asset_model')){$id=old('asset_model');}else{ $id= $asset->model->id;} @endphp
                                     <select type="dropdown" class="form-control" name="asset_model" id="asset_model"
                                         required onchange="getFields(this);" autocomplete="off">
                                         <option value="0">Please Select a Model</option>
@@ -166,17 +166,23 @@
                                     class="form-contol">{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id]}}</textarea>
                                 @break
                                 @case('Select')
-                                <?php if(old('$field->name')){$id = old($field->name);}else{ $id = $field_array[$field->id];}?>
+                                <?php if(old(str_replace(' ', '_', strtolower($field->name)))){$vid = old(str_replace(' ', '_', strtolower($field->name)));}else{ $vid = $field_array[$field->id];}?>
                                 <?php $array = explode("\r\n", $field->value);?>
                                 <select name="{{str_replace(' ', '_', strtolower($field->name))}}" class="form-control">
                                     @foreach($array as $id=>$key)
-                                    <option value="{{ $key }}" @if($id == $key){{ 'selected'}}@endif>{{ $key }}</option>
+                                    <option value="{{ $key }}" @if($vid == $key){{ 'selected'}}@endif>{{ $key }}</option>
                                     @endforeach
                                 </select>
                                 @break
                                 @case('Checkbox')
                                 <?php $array = explode("\r\n", $field->value);?>
-                                <?php $values = explode(",", $field_array[$field->id]);?>
+                                <?php 
+                                    if(old(str_replace(' ', '_', strtolower($field->name)))){ 
+                                        $values = old(str_replace(' ', '_', strtolower($field->name)));
+                                    }else{ 
+                                        $values = explode(",", $field_array[$field->id]);
+                                    }
+                                ?>
                                 @foreach($array as $id=>$key)
                                 <br><input type="checkbox" name="{{str_replace(' ', '_', strtolower($field->name))}}[]" value="{{ $key }}" 
                                 @if(in_array($key, $values)){{ 'checked'}}@endif>
@@ -190,12 +196,17 @@
                             </div>
                             @endforeach
                         </div>
+                        
                         <div class="form-row">
                             <label for="status">Current Status</label><span class="text-danger">*</span>
-                            <select type="text"
-                                class="form-control mb-3 <?php if ($errors->has('status')) {?>border-danger<?php }?>"
-                                name="status" id="status" value="Stored" required>
-                                <option value="0">Stored</option>
+                            <select type="text" class="form-control mb-3 <?php if ($errors->has('status')) {?>border-danger<?php }?>"
+                                name="status_id" id="status_id" value="Stored">
+                                <?php $status_id = old('status_id') ?? $asset->status_id;?>
+                                <option value="0" @if($status_id==0){{'selected'}}@endif>Unset</option>
+                                @foreach($statuses as $status)
+                                <option value="{{ $status->id }}" @if($status_id==$status->id){{'selected'}}@endif>{{ $status->name}}
+                                </option>
+                                @endforeach
                             </select>
                         </div>
 
