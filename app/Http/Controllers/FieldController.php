@@ -36,7 +36,7 @@ class FieldController extends Controller
      */
     public function store(Request $request)
     {
-        Field::create($request->only('name', 'format', 'type', 'value', 'help'))->save();
+        Field::create($request->only('name', 'format', 'type', 'required', 'value', 'help'))->save();
         session()->flash('sucess_message', $request->name.' has been added to the system');
         return redirect(route('fields.index'));
     }
@@ -72,7 +72,7 @@ class FieldController extends Controller
      */
     public function update(Request $request, Field $field)
     {
-        $field->fill($request->only('name', 'format', 'type', 'value', 'help'))->save();
+        $field->fill($request->only('name', 'format', 'type', 'required', 'value', 'help'))->save();
         session()->flash('sucess_message', $request->name.' has been updated on the system');
         return redirect(route('fields.index'));
     }

@@ -67,6 +67,14 @@
                                 <option value="url">URL</option>
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <p>Is this field required?</p>
+                            <input type="radio" id="field_required_yes" name="required" value="1">
+                            <label for="field_required_yes">Yes</label><br>
+                            <input type="radio" id="field_required_no" name="required" value="0">
+                            <label for="field_required_no">No</label>
+                        </div>
                         
                         <div id="value-div" class="form-group" style="display: none;">
                             <label for="value">Values</label>

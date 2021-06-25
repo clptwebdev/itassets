@@ -87,6 +87,20 @@ class ManufacturerController extends Controller {
     public function createMany(Request $request)
     {
 
+        $validation = Validator::make($request->all(), [
+            "name.*" => "unique:manufacturers,name|required|max:255",
+            "supportPhone.*" => "required|max:14",
+            "supportUrl.*" => "required",
+            "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
+
+        ]);
+
+        if($validation->fails()){
+            return  view('Manufacturers.view', [
+               "names" => $request->name,
+            ]);
+        }
+
         for($i = 0; $i < count($request->name); $i++)
         {
             Manufacturer::Create([
@@ -130,6 +144,7 @@ class ManufacturerController extends Controller {
         $values = [];
         $results = $import->failures();
         $importErrors = [];
+
         foreach($results->all() as $result)
         {
             $row[] = $result->row();
@@ -145,7 +160,8 @@ class ManufacturerController extends Controller {
             ];
 
         }
-        if(! empty($importErrors))
+
+        if(!empty($importErrors))
         {
             $errorArray = [];
             $valueArray = [];
@@ -166,14 +182,10 @@ class ManufacturerController extends Controller {
                 "valueArray" => $valueArray,
             ]);
 
-        } else
-        {
+        } else{
             return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
 
         }
-//
-//
-//        return redirect('/manufacturers')->with('success', 'All good!');
     }
 
 }

@@ -17,10 +17,10 @@
 
 <!-- Content Row -->
 
-<div class="row">
+<div class="row row-eq-height">
 
     <!-- Area Chart -->
-    <div class="col-xl-7 col-lg-6">
+    <div class="col-xl-7 col-lg-6 h-100">
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div
@@ -44,14 +44,14 @@
             <!-- Card Body -->
             <div class="card-body">
                 <div class="chart-area">
-                    <canvas id="myAreaChart"></canvas>
+                    <canvas id="myBarChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Pie Chart -->
-    <div class="col-xl-5 col-lg-6">
+    <div class="col-xl-5 col-lg-6 h-100">
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div
@@ -75,7 +75,7 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                <div class="chart-pie pt-4 pb-2">
+                <div class="pt-4 pb-2">
                     <canvas id="myPieChart" style="width: 400px; height: 400px;"></canvas>
                 </div>
                 <div class="mt-4 text-center small">
@@ -136,70 +136,16 @@
 
         <!-- Color System -->
         <div class="row">
+            @foreach($locations as $location)
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card shadow" style="background-color: #001b54; color: #FFF">
                     <div class="card-body">
-                        Heath Park
+                        {{ $location->name}}
                         <div class="text-white-50 small">#001b54</div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card shadow" style="background-color: #72277f; color: #FFF">
-                    <div class="card-body">
-                        Moseley Park
-                        <div class="text-white-50 small">#72277f</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card shadow" style="background-color: #774b96; color: #FFF">
-                    <div class="card-body">
-                        Coppice School
-                        <div class="text-white-50 small">#774b96</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-warning text-white shadow">
-                    <div class="card-body">
-                        Warning
-                        <div class="text-white-50 small">#f6c23e</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-danger text-white shadow">
-                    <div class="card-body">
-                        Danger
-                        <div class="text-white-50 small">#e74a3b</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-secondary text-white shadow">
-                    <div class="card-body">
-                        Secondary
-                        <div class="text-white-50 small">#858796</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-light text-black shadow">
-                    <div class="card-body">
-                        Light
-                        <div class="text-black-50 small">#f8f9fc</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-dark text-white shadow">
-                    <div class="card-body">
-                        Dark
-                        <div class="text-white-50 small">#5a5c69</div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
 
     </div>
@@ -283,13 +229,7 @@
 
 @section('js')
 <script src="{{ asset('js/chart.js') }}"></script>
-<script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
-<?php 
-    $jsonArray = '';
-    foreach(\App\Models\Location::all() as $location){
-        $jsonArray .= 'Heath Park,';
-    }
-?>
+<script src="{{ asset('js/demo/chart-bar-demo.js') }}"></script>
 <script>
     $(document).ready(function () {
         showGraph();
@@ -303,7 +243,6 @@
             url: 'chart/pie/locations',
             success: function(data) {
                 var as = JSON.parse(data);
-                alert(as);
                 var name = [];
                 var icon = [];
                 var assets = [];
@@ -315,23 +254,25 @@
                 }
 
                 var chartdata = {
-                    labels: name,
-                    datasets: [{
-                        label: 'Asset Sources',
-                        backgroundColor: icon,
-                        borderColor: '#46d5f1',
-                        hoverBackgroundColor: '#CCCCCC',
-                        hoverBorderColor: '#666666',
-                        data: assets
-                    }]
+                    
                 };
 
-                var graphTarget = $("#myPieChart");
-                
-                var barGraph = new Chart(graphTarget, {
+                var ctx = document.getElementById("myPieChart");
+                var myPieChart = new Chart(ctx, {
                     type: 'doughnut',
-                    data: chartdata,
+                    data: {
+                        labels: name,
+                        datasets: [{
+                            label: 'Asset Sources',
+                            backgroundColor: icon,
+                            borderColor: '#46d5f1',
+                            hoverBackgroundColor: '#CCCCCC',
+                            hoverBorderColor: '#666666',
+                            data: assets
+                        }],
+                    },
                 });
+
             },
             error: function(){
                 console.log('Eror');

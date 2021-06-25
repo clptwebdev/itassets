@@ -48,24 +48,24 @@
 
                                     <div class="form-group">
                                         <label for="asset_tag">Asset Tag Number</label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>" name="asset_tag"
-                                            id="asset_tag" placeholder="" required>
+                                        <input type="text" class="form-control <?php if ($errors->has('asset_tag')) {?>border-danger<?php }?>" name="asset_tag"
+                                            id="asset_tag" placeholder="" value="{{ old('asset_tag')}}">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="serial_no">Serial Number</label><span class="text-danger">*</span>
                                         <input type="text" class="form-control <?php if ($errors->has('serial_no')) {?>border-danger<?php }?>" name="serial_no"
-                                            id="serial_no" placeholder="" required>
+                                            id="serial_no" placeholder="" value="{{ old('serial_no')}}">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="School Location">School Location</label><span class="text-danger">*</span>
                                         <select type="text"
                                             class="form-control mb-3 <?php if ($errors->has('location_id')) {?>border-danger<?php }?>"
-                                            name="location_id" id="location_id" required>
-                                            <option value="0" selected>Please select a Location</option>
+                                            name="location_id" id="location_id">
+                                            <option value="0" @if(old('location_id') == 0){{'selected'}}@endif>Unallocated</option>
                                             @foreach($locations as $location)
-                                            <option value="{{$location->id}}">{{$location->name}}</option>
+                                            <option value="{{$location->id}}" @if(old('location_id') == $location->id){{'selected'}}@endif>{{$location->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -73,15 +73,15 @@
                                     <div class="form-group">
                                         <label for="audit_date">Audit Date</label>
                                         <input type="date" class="form-control <?php if ($errors->has('audit_date')) {?>border-danger<?php }?>"
-                                            name="audit_date" id="audit_date">
+                                            name="audit_date" id="audit_date" value="{{ old('audit_date') ?? \Carbon\Carbon::now()->addYear()->format('Y-m-d')}}">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="asset_model">Asset Model Select</label><span class="text-danger">*</span>
-                                        <select type="dropdown" class="form-control" name="asset_model" id="asset_model" required onchange="getFields(this);" autocomplete="off">
-                                            <option value="0">Please Select a Model</option>
+                                        <select type="dropdown" class="form-control" name="asset_model" id="asset_model" onchange="getFields(this);" autocomplete="off" required>
+                                            <option value="0" @if(old('asset_model') == 0){{'selected'}}@endif>Please Select a Model</option>
                                             @foreach($models as $model)
-                                            <option value="{{ $model->id }}">{{ $model->name }}</option>
+                                            <option value="{{ $model->id }}" @if(old('asset_model') == $model->id){{'selected'}}@endif>{{ $model->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -92,47 +92,94 @@
                                     <div class="form-group">
                                         <label for="order_no">Order No</label>
                                         <input type="text" class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                            name="order_no" id="order_no">
+                                            name="order_no" id="order_no" value="{{ old('order_no')}}">
                                     </div>
                                     <div class="form-group">
-                                        <label for="purchased_date">Purchased Date</label>
+                                        <label for="purchased_date">Purchased Date<span class="text-danger">*</span></label>
                                         <input type="date"
                                             class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
-                                            name="purchased_date" id="purchased_date">
+                                            name="purchased_date" id="purchased_date" value="{{ old('purchased_date') ?? \Carbon\Carbon::now()->format('Y-m-d')}}">
                                     </div>
                                     <div class="form-group">
-                                        <label for="purchased_cost">Purchased Cost</label>
+                                        <label for="purchased_cost">Purchased Cost<span class="text-danger">*</span></label>
                                         <input type="text"
                                             class="form-control <?php if ($errors->has('purchased_cost')) {?>border-danger<?php }?>"
-                                            name="purchased_cost" id="purchased_cost" placeholder="£">
+                                            name="purchased_cost" id="purchased_cost" value="{{ old('purchased_cost')}}" placeholder="£">
                                     </div>
                                     <div class="form-group">
                                         <label for="purchased_cost">Supplier</label>
                                         <select name="supplier_id" class="form-control <?php if ($errors->has('supplier')) {?>border-danger<?php }?>">
-                                            <option value="0">No Supplier</option>
+                                            <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif>No Supplier</option>
                                             @foreach($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}">{{ $supplier->name}}</option>
+                                                <option value="{{ $supplier->id }}" @if(old('supplier_id') == $supplier->id){{'selected'}}@endif>{{ $supplier->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="purchased_date">Warranty (Months)</label>
                                         <input type="number" class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
-                                            name="warranty" id="warranty">
+                                            name="warranty" id="warranty" value="{{ old('warranty') ?? 24}}">
                                     </div>
                                 </div>
                             </div>
 
-                            <div id="additional-fields" style="display: none;" class="border border-secondary p-2 mb-3">
-                                Asset Additional Fields Here
+
+                            @if(old('asset_model') !== null && $model = \App\Models\AssetModel::find(old('asset_model')))
+                            <div id="additional-fields" class="border border-secondary p-2 mb-3">
+                                                          
+                                @foreach($model->fieldset->fields as $field)
+                                
+                                <div class="form-group">
+                                    <label for="{{str_replace(' ', '_', strtolower($field->name))}}">{{$field->name}}</label>
+                                    @switch($field->type)
+                                    @case('Text'):
+                                    <input type="text" class="form-control <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>" name="{{str_replace(' ', '_', strtolower($field->name))}}"
+                                     value="{{ old(str_replace(' ', '_', strtolower($field->name)))}}">
+                                    @break
+                                    @case('Textarea')
+                                    <textarea name="{{str_replace(' ', '_', strtolower($field->name))}}" id="" cols="30" rows="10"
+                                        class="form-contol <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>">{{ old(str_replace(' ', '_', strtolower($field->name)))}}</textarea>
+                                    @break
+                                    @case('Select')
+                                    <?php $array = explode("\r\n", $field->value);?>
+                                    <select name="{{str_replace(' ', '_', strtolower($field->name))}}" class="form-control <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>">
+                                        @foreach($array as $id=>$key)
+                                        <option value="{{ $key }}" @if(old(str_replace(' ', '_', strtolower($field->name))) == $key){{ 'selected'}}@endif>{{ $key }}</option>
+                                        @endforeach
+                                    </select>
+                                    @break
+                                    @case('Checkbox')
+                                    <?php $array = explode("\r\n", $field->value);?>
+                                    <?php $values = explode(",", old(str_replace(' ', '_', strtolower($field->name))));?>
+                                    @foreach($array as $id=>$key)
+                                    <br><input type="checkbox" name="{{str_replace(' ', '_', strtolower($field->name))}}[]" value="{{ $key }}"
+                                        @if(in_array($key, $values)){{ 'checked'}}@endif>
+                                    <label>&nbsp;{{ $key }}</label>
+                                    @endforeach
+                                    @break
+                                    @default
+                                    <input type="text" class="form-control <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>" name="{{str_replace(' ', '_', strtolower($field->name))}}"
+                                        placeholder="{{ $field->name }}" value="{{ old(str_replace(' ', '_', strtolower($field->name)))}}">
+                                    @endswitch
+                                </div>
+                                @endforeach
+
                             </div>
+                            @else
+                            <div id="additional-fields" style="display: none;" class="border border-secondary p-2 mb-3">
+                                <span class="text-warning">No Additional Fields Required</span>
+                            </div>
+                            @endif
 
                             <div class="form-row">
                                 <label for="status">Current Status</label><span class="text-danger">*</span>
                                 <select type="text"
                                     class="form-control mb-3 <?php if ($errors->has('status')) {?>border-danger<?php }?>"
-                                    name="status" id="status" value="Stored" required>
-                                    <option value="0">Stored</option>
+                                    name="status_id" id="status_id" value="Stored">
+                                    <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset</option>
+                                    @foreach($statuses as $status)
+                                    <option value="{{ $status->id }}" @if(old('status_id') == $status->id){{'selected'}}@endif>{{ $status->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             
@@ -141,6 +188,7 @@
                 </div>
             </div>
         </section>
+    </form>
     @endsection
 
     @section('modals')

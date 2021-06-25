@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Providers;
 
 use App\Models\Asset;
@@ -24,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->share("assetAmount" ,count(Asset::all()));
+        view()->share("assetAmount" ,count(\App\Models\Asset::all()));
     }
 }

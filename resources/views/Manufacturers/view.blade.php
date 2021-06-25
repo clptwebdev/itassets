@@ -106,7 +106,7 @@
             </div>
         </div>
     </div>
-    //import
+    <!-- import-->
     <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
          aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">

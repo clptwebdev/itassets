@@ -128,6 +128,12 @@
                                 <input type="text"
                                        class="form-control <?php if ($errors->has('Warranty')) {?>border-danger<?php }?>"
                                        id="Warranty" name="Warranty" >
+                            </div> <div class="form-group col-md-12">
+                                <label for="Warranty">Manufacturer</label>
+                                <select
+                                       class="form-control <?php if ($errors->has('Warranty')) {?>border-danger<?php }?>"
+                                       id="Warranty" name="Warranty" >
+                                </select>
                             </div>
                         </div>
                     </div>

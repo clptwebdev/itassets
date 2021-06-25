@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Component;
 use App\Models\Location;
+use App\Models\Status;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class ComponentController extends Controller
@@ -16,16 +18,14 @@ class ComponentController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         return view('ComponentsDir.create', [
-            "Locations" => Location::all(),
-            "Status" => Status::all(),
+            "locations" => Location::all(),
+            "status" => Status::all(),
+            "supplier" => Supplier::all(),
+            "S" => Status::all(),
         ]);
     }
 

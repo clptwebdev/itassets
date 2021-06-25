@@ -8,6 +8,7 @@ use App\Models\Fieldset;
 use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Supplier;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use App\Exports\AssetExport;
 use Maatwebsite\Excel\Excel;
@@ -30,6 +31,7 @@ class AssetController extends Controller
             "manufacturers"=>Manufacturer::all(),
             'models'=>AssetModel::all(),
             'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
         ]);
     }
 
@@ -41,29 +43,79 @@ class AssetController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validate_fieldet = [];
+        //Validate and Collect the Additional Fieldsets
+        if($request->asset_model != 0){
+            $assetModel = AssetModel::find($request->asset_model);
+            if($assetModel->fieldset_id != 0 && $fieldset = Fieldset::findOrFail($assetModel->fieldset_id)){
+                $fields = $fieldset->fields;
+                $array = [];
+                foreach($fields as $field){
+                    $name = str_replace(' ', '_', strtolower($field->name));
+                    $val_string = '';
+                    if($field->required == 1){
+                        $val_string .= "required";
+                    }
+
+                    if($field->type == 'Text'){
+                        $val_string .= "|";
+                        switch($field->format){
+                            case("alpha"):
+                                $val_string .= "alpha";
+                                break;
+                            case('alpha_num'):
+                                $val_string .= "alpha_num";
+                                break;
+                            case('num'):
+                                $val_string .= "numeric";
+                                break;
+                            case('date'):
+                                $val_string .= "date";
+                                break;
+                            case('url'):
+                                $val_string .= "url";
+                                break;
+                            default:
+                                $val_string .= "alpha_num";
+                                break;
+                        }
+                    }
+
+                    $validate_fieldet[$name] = $val_string;
+
+                    if(is_array($request->$name)){
+                        $values = implode(',', $request->$name);
+                    }else{
+                        $values = $request->$name;
+                    }
+                    $array[$field->id] = ['value' => $values];                
+                }
+            }
+        }
+
+        if(!empty($validate_fieldet)){ $v = array_merge($validate_fieldet, [
             'asset_tag' => 'required',
-        ]);
+            'serial_no' => 'required',
+            'purchased_date' => 'required|date',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'warranty' => 'required|numeric',
+        ]);}else{
+            $v = [
+            'asset_tag' => 'required',
+            'serial_no' => 'required',
+            'purchased_date' => 'required|date',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'warranty' => 'required|numeric',
+            ];
+        }
+
+        $validated = $request->validate($v);
+
         $asset = Asset::create(array_merge($request->only(
             'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]));
-
-        $assetModel = AssetModel::findOrFail($request->asset_model);
-        if($assetModel->fieldset_id != 0 && $fieldset = Fieldset::findOrFail($assetModel->fieldset_id)){
-            $fields = $fieldset->fields;
-            $array = [];
-            foreach($fields as $field){
-                $name = str_replace(' ', '_', strtolower($field->name));
-                if(is_array($request->$name)){
-                    $values = implode(',', $request->$name);
-                }else{
-                    $values = $request->$name;
-                }
-                $array[$field->id] = ['value' => $values];        
-            }
-            $asset->fields()->attach($array);
-        }
-
+        $asset->fields()->attach($array);
+                
         session()->flash('success_message', $request->name.' has been created successfully');
         return redirect(route('assets.index'));
 
@@ -97,19 +149,45 @@ class AssetController extends Controller
      */
     public function update(Request $request, Asset $asset)
     {
-        $validated = $request->validate([
-            'asset_tag' => 'required',
-        ]);
-        $asset->fill(array_merge($request->only(
-            'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
-        ), ['user_id' => auth()->user()->id]))->save();
-       
+        $validate_fieldet = [];
+        //Validate and Collect the Additional Fieldsets
         $assetModel = AssetModel::findOrFail($request->asset_model);
         if($assetModel->fieldset_id != 0 && $fieldset = Fieldset::findOrFail($assetModel->fieldset_id)){
             $fields = $fieldset->fields;
             $array = [];
             foreach($fields as $field){
                 $name = str_replace(' ', '_', strtolower($field->name));
+                $val_string = '';
+                if($field->required == 1){
+                    $val_string .= "required";
+                }
+
+                if($field->type == 'Text'){
+                    $val_string .= "|";
+                    switch($field->format){
+                        case("alpha"):
+                            $val_string .= "alpha";
+                            break;
+                        case('alpha_num'):
+                            $val_string .= "alpha_num";
+                            break;
+                        case('num'):
+                            $val_string .= "numeric";
+                            break;
+                        case('date'):
+                            $val_string .= "date";
+                            break;
+                        case('url'):
+                            $val_string .= "url";
+                            break;
+                        default:
+                            $val_string .= "alpha_num";
+                            break;
+                    }
+                }
+
+                $validate_fieldet[$name] = $val_string;
+
                 if(is_array($request->$name)){
                     $values = implode(',', $request->$name);
                 }else{
@@ -117,8 +195,29 @@ class AssetController extends Controller
                 }
                 $array[$field->id] = ['value' => $values];                
             }
-            $asset->fields()->sync($array);
         }
+        
+        if(!empty($validate_fieldet)){ $v = array_merge($validate_fieldet, [
+            'asset_tag' => 'required',
+            'serial_no' => 'required',
+            'purchased_date' => 'required|date',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'warranty' => 'required|numeric',
+        ]);}else{
+            $v = [
+            'asset_tag' => 'required',
+            'serial_no' => 'required',
+            'purchased_date' => 'required|date',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'warranty' => 'required|numeric',
+            ];
+        }
+
+        $validated = $request->validate($v);
+        $asset->fill(array_merge($request->only(
+            'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+        ), ['user_id' => auth()->user()->id]))->save();
+        $asset->fields()->sync($array);
         
         session()->flash('success_message', $request->name.' has been updated successfully');
         return redirect(route('assets.index'));
@@ -145,6 +244,6 @@ class AssetController extends Controller
    {
        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
 
-   }
+    }
 
 }
