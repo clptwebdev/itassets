@@ -26,4 +26,7 @@ class AssetModel extends Model
     public function fieldset(){
         return $this->belongsTo(Fieldset::class);
     }
+    public function component(){
+        return $this->belongsTo(Component::class);
+    }
 }

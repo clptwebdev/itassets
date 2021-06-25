@@ -61,10 +61,10 @@
                                            id="order_no" name="order_no" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="purchase_cost">Purchased Cost</label>
+                                    <label for="purchased_cost">Purchased Cost</label>
                                     <input type="text"
                                            class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
-                                           id="purchase_cost" name="purchase_cost" required>
+                                           id="purchased_cost" name="purchased_cost" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_date">Purchased Date</label>
@@ -76,18 +76,30 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+
                                     <label for="suppliers">Supplier</label>
                                     <select type="text"
                                             class="form-control <?php if ($errors->has('supplier_id')) {?>border-danger<?php }?>"
                                             id="supplier_id" name="supplier_id" required>
+                                        <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif>No Supplier
+                                        </option>
+                                        @foreach($suppliers as $supplier)
+                                            <option
+                                                value="{{ $supplier->id }}" @if(old('supplier_id') == $supplier->id){{'selected'}}@endif>{{ $supplier->name}}</option>
+                                        @endforeach
                                     </select>
+
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="status">Status</label>
                                     <select
                                         class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
-                                        id="status_id" name="status_id" >
-
+                                        id="status_id" name="status_id">
+                                        <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset</option>
+                                        @foreach($statuses as $status)
+                                            <option
+                                                value="{{ $status->id }}" @if(old('status_id') == $status->id){{'selected'}}@endif>{{ $status->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -120,19 +132,32 @@
                                 <select
                                     class="form-control <?php if ($errors->has('location_id')) {?>border-danger<?php }?>"
                                     id="location_id" name="location_id" required>
+                                    <option value="0" @if(old('location_id') == 0){{'selected'}}@endif>Unallocated
+                                    </option>
+                                    @foreach($locations as $location)
+                                        <option
+                                            value="{{$location->id}}" @if(old('location_id') == $location->id){{'selected'}}@endif>{{$location->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="Warranty">Warranty</label>
+                                <label for="warranty">Warranty</label>
                                 <input type="text"
-                                       class="form-control <?php if ($errors->has('Warranty')) {?>border-danger<?php }?>"
-                                       id="Warranty" name="Warranty" >
-                            </div> <div class="form-group col-md-12">
+                                       class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
+                                       id="warranty" name="warranty">
+                            </div>
+                            <div class="form-group col-md-12">
                                 <label for="Warranty">Manufacturer</label>
                                 <select
-                                       class="form-control <?php if ($errors->has('Warranty')) {?>border-danger<?php }?>"
-                                       id="Warranty" name="Warranty" >
+                                    class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
+                                    id="manufacturer_id" name="manufacturer_id">
+                                    <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
+                                    </option>
+                                    @foreach($manufacturers as $manufacturer)
+                                        <option
+                                            value="{{$manufacturer->id}}" @if(old('manufacturer_id') == $manufacturer->id){{'selected'}}@endif>{{$manufacturer->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -142,101 +167,101 @@
 
         </section>
     </form>
-    @endsection
+@endsection
 
-    @section('modals')
-        <!-- Profile Image Modal-->
-            <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog"
-                 aria-labelledby="imgModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header bg-primary-blue text-white">
-                            <h5 class="modal-title" id="imgModalLabel">Select Image</h5>
-                            <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Select an image below:.</p>
-                            <?php $photos = App\Models\Photo::all();?>
-                            <img src="{{ asset('images/svg/location-image.svg') }}" width="80px" alt="Default Picture"
-                                 onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">
-                            @foreach($photos as $photo)
-                                <img src="{{ asset($photo->path) }}" width="80px" alt="{{ $photo->name }}"
-                                     onclick="selectPhoto('{{ $photo->id }}', '{{ asset($photo->path) }}');">
-                            @endforeach
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
-                                    data-target="#uploadModal">Upload
-                                file
-                            </button>
-                        </div>
-                    </div>
+@section('modals')
+    <!-- Profile Image Modal-->
+    <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog"
+         aria-labelledby="imgModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary-blue text-white">
+                    <h5 class="modal-title" id="imgModalLabel">Select Image</h5>
+                    <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Select an image below:.</p>
+                    <?php $photos = App\Models\Photo::all();?>
+                    <img src="{{ asset('images/svg/location-image.svg') }}" width="80px" alt="Default Picture"
+                         onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">
+                    @foreach($photos as $photo)
+                        <img src="{{ asset($photo->path) }}" width="80px" alt="{{ $photo->name }}"
+                             onclick="selectPhoto('{{ $photo->id }}', '{{ asset($photo->path) }}');">
+                    @endforeach
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                            data-target="#uploadModal">Upload
+                        file
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Upload Modal -->
-            <div id="uploadModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
 
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="imgUploadLabel">Upload Media</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Form -->
-                            <form id="imageUpload">
-                                Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
-                                Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                                <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
-                            </form>
-                        </div>
-
-                    </div>
-
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imgUploadLabel">Upload Media</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
+                <div class="modal-body">
+                    <!-- Form -->
+                    <form id="imageUpload">
+                        Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
+                        Select file : <input type='file' name='file' id='file' class='form-control'><br>
+                        <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
+                    </form>
+                </div>
+
             </div>
-        @endsection
 
-        @section('js')
-            <script>
-                function selectPhoto(id, src) {
-                    document.getElementById("profileImage").src = src;
-                    document.getElementById("photo_id").value = id;
-                    $('#imgModal').modal('hide');
-                }
+        </div>
+    </div>
+@endsection
 
-                $(document).ready(function () {
-                    $("form#imageUpload").submit(function (e) {
-                        e.preventDefault();
-                        var formData = new FormData(this);
-                        var urlto = '/photo/upload';
-                        var route = '{{asset("/")}}';
-                        $.ajaxSetup({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            }
-                        });
-                        // AJAX request
-                        $.ajax({
-                            url: urlto,
-                            method: 'POST',
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function (data) {
-                                $('#uploadModal').modal('hide');
-                                document.getElementById("profileImage").src = route + data.path;
-                                document.getElementById("photo_id").value = data.id;
-                            }
-                        });
-                    });
+@section('js')
+    <script>
+        function selectPhoto(id, src) {
+            document.getElementById("profileImage").src = src;
+            document.getElementById("photo_id").value = id;
+            $('#imgModal').modal('hide');
+        }
+
+        $(document).ready(function () {
+            $("form#imageUpload").submit(function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                var urlto = '/photo/upload';
+                var route = '{{asset("/")}}';
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
                 });
-            </script>
+                // AJAX request
+                $.ajax({
+                    url: urlto,
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        $('#uploadModal').modal('hide');
+                        document.getElementById("profileImage").src = route + data.path;
+                        document.getElementById("photo_id").value = data.id;
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

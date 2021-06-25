@@ -37,7 +37,6 @@
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Serial_no</th>
                             <th>Order_no</th>
                             <th>Supplier</th>
                             <th>Purchased Date</th>
@@ -45,14 +44,13 @@
                             <th>Status</th>
                             <th>Warranty</th>
                             <th>Location</th>
-                            <th>Notes</th>
+                            <th>Manufacturers</th>
                             <th class="text-center">Options</th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
                             <th>Name</th>
-                            <th>Serial_no</th>
                             <th>Order_no</th>
                             <th>Supplier</th>
                             <th>Purchased Date</th>
@@ -60,41 +58,44 @@
                             <th>Status</th>
                             <th>Warranty</th>
                             <th>Location</th>
-                            <th>Notes</th>
+                            <th>Manufacturers</th>
                             <th class="text-center">Options</th>
                         </tr>
                         </tfoot>
                         <tbody>
-{{--                        @foreach($users as $user)--}}
-{{--                            <tr>--}}
-{{--                                <th>Name</th>--}}
-{{--                                <th>Serial_no</th>--}}
-{{--                                <th>Order_no</th>--}}
-{{--                                <th>Supplier</th>--}}
-{{--                                <th>Purchased Date</th>--}}
-{{--                                <th>Purchased Cost</th>--}}
-{{--                                <th>Status</th>--}}
-{{--                                <th>Warranty</th>--}}
-{{--                                <th>Location</th>--}}
-{{--                                <th>Notes</th>--}}
-{{--                                <td class="text-center">--}}
-{{--                                    <form id="form{{$user->id}}" action="{{ route('users.destroy', $user->id) }}"--}}
-{{--                                          method="POST">--}}
-{{--                                        <a href="{{ route('users.show', $user->id) }}"--}}
-{{--                                           class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>--}}
-{{--                                            View</a>&nbsp;--}}
-{{--                                        <a href="{{route('users.edit', $user->id) }}"--}}
-{{--                                           class="btn-sm btn-secondary text-white"><i--}}
-{{--                                                class="fas fa-pencil-alt"></i></a>&nbsp;--}}
+                        @foreach($components as $component)
+                            <tr>
+                                <td>{{$component->name}}
+                                    <br>
+                                    <small>{{$component->serial_no}}</small>
+                                </td>
+                                <td>{{$component->order_no}}</td>
+                                <td>{{$component->supplier->name}}</td>
+                                <td>{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
+                                <td>{{$component->purchased_cost}}</td>
+                                <td>{{$component->status->name ??'N/A'}}</td>
+                                <td>{{$component->warranty??"N/A"}}</td>
+                                <td>{{$component->location->name}}</td>
+                                <td>{{$component->manufacturer->name ?? "N/A"}}</td>
+                                <td class="text-center">
+                                    <form id="form{{$component->id}}"
+                                          action="{{ route('users.destroy', $component->id) }}"
+                                          method="POST">
+                                        <a href="{{ route('Components.show', $component->id) }}"
+                                           class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
+                                            View</a>&nbsp;
+                                        <a href="{{route('Components.edit', $component->id) }}"
+                                           class="btn-sm btn-secondary text-white"><i
+                                                class="fas fa-pencil-alt"></i></a>&nbsp;
 
-{{--                                        @csrf--}}
-{{--                                        @method('DELETE')--}}
-{{--                                        <a class="btn-sm btn-danger text-white deleteBtn" href="#"--}}
-{{--                                           data-id="{{$user->id}}"><i class=" fas fa-trash"></i></a>--}}
-{{--                                    </form>--}}
-{{--                                </td>--}}
-{{--                            </tr>--}}
-{{--                        @endforeach--}}
+                                        @csrf
+                                        @method('DELETE')
+                                        <a class="btn-sm btn-danger text-white deleteBtn" href="#"
+                                           data-id="{{$component->id}}"><i class=" fas fa-trash"></i></a>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>

@@ -24,7 +24,7 @@ class CreateComponentsTable extends Migration
             $table->foreignId("supplier_id")->nullable()->default(0);
             $table->foreignId("manufacturer_id")->nullable()->default(0);
             $table->string("order_no")->nullable();
-            $table->string("warranty")->default("0");
+            $table->string("warranty")->default("0")->nullable();
             $table->foreignId("location_id");
             $table->string("notes")->nullable();
 
