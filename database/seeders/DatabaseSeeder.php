@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
         \App\Models\AssetModel::factory(20)->create();
         \App\Models\Field::factory(20)->create();
         \App\Models\Fieldset::factory(20)->create();
+        \App\Models\Component::factory(20)->create();
+        \App\Models\Status::factory(20)->create();
         for ($i = 0; $i < 10; $i++) {
         DB::table('field_fieldset')->insert(
             [

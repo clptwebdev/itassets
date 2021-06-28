@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Field;
+use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class FieldFactory extends Factory
+class StatusFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Field::class;
+    protected $model = Status::class;
 
     /**
      * Define the model's default state.
@@ -22,11 +22,8 @@ class FieldFactory extends Factory
     public function definition()
     {
         return [
-            "name"=>$this->faker->domainWord,
-            "type"=>"select",
-            "format"=>"alpha",
-            "help"=>$this->faker->sentence,
-            "required"=>$this->faker->numberBetween([0],[1]),
+            "name"=>$this->faker->word,
+            "deployable"=>$this->faker->numberBetween([1,0]),
         ];
     }
 }

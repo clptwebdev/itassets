@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Asset;
 use App\Models\Location;
 use App\Models\Manufacturer;
+use App\Models\Status;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -29,7 +30,7 @@ class AssetFactory extends Factory
             "asset_model"=>$this->faker->randomDigit,
             "asset_tag"=>$this->faker->unique()->randomNumber(),
             "serial_no"=>$this->faker->numberBetween([1000],[9000]),
-            "status_id"=>$this->faker->numberBetween([1000],[9000]),
+            "status_id"=>Status::factory("status_id"),
             "purchased_date"=>$this->faker->dateTimeThisYear(),
             "purchased_cost"=>$this->faker->numberBetween([5],[1000]),
             "supplier_id"=>Supplier::factory("suppliers_id"),

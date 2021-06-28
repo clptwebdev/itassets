@@ -50,7 +50,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::resource('/status', 'App\Http\Controllers\StatusController');
-        Route::resource('/Components', 'App\Http\Controllers\ComponentController');
+        Route::resource('/components', 'App\Http\Controllers\ComponentController');
 
 
 
@@ -62,6 +62,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
         Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
         Route::get("/exportusers", [\App\Http\Controllers\UserController::class, "export"]);
+        Route::get("/exportcomponents", [\App\Http\Controllers\ComponentController::class, "export"]);
 //
         Route::post("/importmanufacturer", [\App\Http\Controllers\ManufacturerController::class, "import"]);
 

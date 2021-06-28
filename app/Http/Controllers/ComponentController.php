@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AssetExport;
+use App\Exports\ComponentsExport;
+use App\Models\Asset;
 use App\Models\AssetModel;
 use App\Models\Component;
 use App\Models\Location;
@@ -56,21 +59,26 @@ class ComponentController extends Controller {
             session()->flash('success_message', request("name") . ' has been created successfully'),
         ]);
 
-        return redirect(route("Components.index"));
+        return redirect(route("components.index"));
 
     }
 
     public function show(Component $component)
     {
         return view('ComponentsDir.show', [
-            "Components" => $component,
+            "component" => $component,
+
         ]);
     }
 
     public function edit(Component $component)
     {
         return view('ComponentsDir.edit', [
-            "Components" => $component,
+            "component" => $component,
+            "locations" => Location::all(),
+            "statuses" => Status::all(),
+            "suppliers" => Supplier::all(),
+            "manufacturers" => Manufacturer::all(),
         ]);
     }
 
@@ -99,7 +107,7 @@ class ComponentController extends Controller {
             "manufacturer_id" => request("manufacturer_id"),
             "notes" => request("notes")])->save();
         session()->flash('success_message', request("name") . ' has been created successfully');
-        return redirect(route("Components.index"));
+        return redirect(route("components.index"));
     }
 
     public function destroy(Component $component)
@@ -108,7 +116,12 @@ class ComponentController extends Controller {
         $component->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
 
-        return view("ComponentsDir.view");
+        return redirect(route('components.index'));
+
+    }
+    public function export(Component $component)
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new ComponentsExport, 'components.csv');
 
     }
 

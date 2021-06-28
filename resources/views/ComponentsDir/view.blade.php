@@ -9,11 +9,11 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Components</h1>
         <div>
-            <a href="{{ route('Components.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+            <a href="{{ route('components.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Component</a>
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
         </div>
     </div>
@@ -70,7 +70,7 @@
                                     <small>{{$component->serial_no}}</small>
                                 </td>
                                 <td>{{$component->order_no}}</td>
-                                <td>{{$component->supplier->name}}</td>
+                                <td>{{$component->supplier->name ?? 'N/A'}}</td>
                                 <td>{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
                                 <td>{{$component->purchased_cost}}</td>
                                 <td>{{$component->status->name ??'N/A'}}</td>
@@ -78,13 +78,11 @@
                                 <td>{{$component->location->name}}</td>
                                 <td>{{$component->manufacturer->name ?? "N/A"}}</td>
                                 <td class="text-center">
-                                    <form id="form{{$component->id}}"
-                                          action="{{ route('users.destroy', $component->id) }}"
-                                          method="POST">
-                                        <a href="{{ route('Components.show', $component->id) }}"
+                                    <form id="form{{$component->id}}" action="{{ route('components.destroy', $component->id) }}" method="POST">
+                                        <a href="{{ route('components.show', $component->id) }}"
                                            class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
                                             View</a>&nbsp;
-                                        <a href="{{route('Components.edit', $component->id) }}"
+                                        <a href="{{route('components.edit', $component->id) }}"
                                            class="btn-sm btn-secondary text-white"><i
                                                 class="fas fa-pencil-alt"></i></a>&nbsp;
 
@@ -104,7 +102,7 @@
 
         <div class="card shadow mb-3">
             <div class="card-body">
-                <h4>Help with Suppliers</h4>
+                <h4>Help with Components</h4>
                 <p>This area can be minimised and will contain a little help on the page that the Component is currently
                     on.</p>
             </div>
