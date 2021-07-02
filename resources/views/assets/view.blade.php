@@ -9,8 +9,10 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Assets</h1>
         <div>
+            @can('create', \App\Models\Asset::class)
             <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
+            @endcan
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
             <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
@@ -26,10 +28,87 @@
         <div class="alert alert-success"> {{ session('success_message')}} </div>
     @endif
 
-    <section>
+    <section class="position-relative">
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
+        <div class="d-flex flex-row-reverse mb-2">
+            <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-secondary">Filter</a>
+        </div>
+        <div id="filter" class="card shadow mb-4">
+            <div class="card-header d-flex justify-content-between"><h6>Filter Results</h6><a class="btn-sm btn-secondary" onclick="javascript:toggleFilter();"><i class="fa fa-times" aria-hidden="true"></i></a></div>
+            <div class="card-body">
+                <form action="{{ route('assets.filter')}}" method="POST">
+                    <div id="accordion" class="mb-4">
+                        <div class="option">
+                          <div class="option-header" id="statusHeader">
+                            <h5 class="mb-0">
+                              <a class="" data-toggle="collapse" data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader">
+                                Status Type
+                              </a>
+                            </h5>
+                          </div>
+                          @csrf
+                          <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader" data-parent="#accordion">
+                            <div class="option-body">
+                                @foreach($statuses as $status)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="status[]" value="{{ $status->id}}" id="{{'status'.$status->id}}">
+                                        <label class="form-check-label" for="{{'status'.$status->id}}">{{ $status->name }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="option">
+                            <div class="option-header" id="categoryHeader">
+                              <h5 class="mb-0">
+                                <a class="collapsed" data-toggle="collapse" data-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryHeader">
+                                  Category
+                                </a>
+                              </h5>
+                            </div>
+                        
+                            <div id="categoryCollapse" class="collapse" aria-labelledby="categoryHeader" data-parent="#accordion">
+                                <div class="option-body">
+                                    @foreach($categories as $category)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="category[]" value="{{ $category->id}}" id="{{'category'.$category->id}}">
+                                        <label class="form-check-label" for="{{'category'.$category->id}}">{{ $category->name }}</label>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                          </div>
+
+                          <div class="option">
+                            <div class="option-header" id="locationHeader">
+                              <h5 class="mb-0">
+                                <a class="collapsed" data-toggle="collapse" data-target="#locationCollapse" aria-expanded="true" aria-controls="locationHeader">
+                                  Location
+                                </a>
+                              </h5>
+                            </div>
+                        
+                            <div id="locationCollapse" class="collapse" aria-labelledby="locationHeader" data-parent="#accordion">
+                                <div class="option-body">
+                                    @foreach($locations as $location)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="locations[]" value="{{ $location->id}}" id="{{'location'.$location->id}}">
+                                        <label class="form-check-label" for="{{'location'.$location->id}}">{{ $location->name }}</label>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                          </div>
+                    </div>
+
+                    <button type="submit" class="btn-sm btn-success text-right">Apply Filter</button>
+                </form>
+            </div>
+        </div>
+
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
@@ -71,7 +150,7 @@
                                 <td>{{ $asset->model->name ?? 'No Model'}}<br><small>{{ $asset->serial_no }}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
-                                        '<img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}"/>'
+                                        '<img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>'
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'">'
                                             .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -89,7 +168,7 @@
                                     @endphp
                                     <small>(*£{{ number_format($dep, 2)}})</small>
                                 </td>
-                                <td class="text-center">{{ $asset->supplier->name?? 'N/A' }}</td>
+                                <td class="text-center">{{ $asset->supplier->name ?? 'N/A' }}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
                                 <td class="text-center" data-sort="{{ $warranty_end }}">
                                     {{ $asset->warranty }} Months
@@ -109,18 +188,23 @@
                                         @endswitch
                                     @endif
                                 </td>
-                                <td class="text-center">
+                                <td class="text-right">
                                     <form id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
                                           method="POST">
                                         <a href="{{ route('assets.show', $asset->id) }}"
                                            class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i></a>&nbsp;
+                                           @can('edit', $asset)
                                         <a href="{{route('assets.edit', $asset->id) }}"
                                            class="btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
-
+                                            @endcan
+                                            
                                         @csrf
                                         @method('DELETE')
+
+                                        @can('delete', $asset)
                                         <a class="btn-sm btn-danger text-white deleteBtn" href="#"
                                            data-id="{{$asset->id}}"><i class=" fas fa-trash"></i></a>
+                                           @endcan
                                     </form>
                                 </td>
                             </tr>
@@ -173,6 +257,17 @@
 @section('js')
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
+        function toggleFilter(){
+            if($('#filter').hasClass('show')){
+                $('#filter').removeClass('show');
+                $('#filter').css('right', '-100%');
+            }else{
+                $('#filter').addClass('show');
+                $('#filter').css('right', '0%');
+            }
+        }
+
+
         $('.deleteBtn').click(function() {
         $('#supplier-id').val($(this).data('id'))
         //showModal

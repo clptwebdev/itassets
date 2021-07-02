@@ -11,7 +11,7 @@
                             Assets Value(Total)</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                             @php
-                            $assets = \App\Models\Asset::all();
+                            $assets = auth()->user()->location_assets;
                             $total = 0; $depreciation = 0;
                             foreach($assets as $asset){
                                 $total = $total + $asset->purchased_cost;
@@ -41,7 +41,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             Assets(Total)</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{($assetAmount) ?? null}}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{(auth()->user()->location_assets()->count()) ?? null}}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-laptop fa-2x text-gray-300"></i>

@@ -42,4 +42,13 @@ class Asset extends Model {
         return $this->hasOne(Status::class);
     }
 
+    public function category(){
+        return $this->morphToMany(Category::class, 'cattable');
+    }
+
+    public function categories()
+    {
+        return $this->hasManyDeepFromRelations($this->posts(), (new Post)->comments());
+    }
+
 }

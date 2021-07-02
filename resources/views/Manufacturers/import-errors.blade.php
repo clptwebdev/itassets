@@ -77,9 +77,7 @@
                                     </td>
                                     <td>
                                         <input type="text"
-                                               class="form-control <?php if (in_array('supportphone', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
+                                               class="form-control <?php if (in_array('supportphone', $errors)) {?>border-danger<?php }?>"
                                                name="supportPhone[]"
                                                id="supportPhone" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['supportphone'] }}" required>
@@ -88,9 +86,7 @@
                                     </td>
                                     <td>
                                         <input type="text"
-                                               class="form-control <?php if (in_array('supportemail', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
+                                               class="form-control <?php if (in_array('supportemail', $errors)) {?>border-danger<?php }?>"
                                                name="supportEmail[]"
                                                id="supportEmail" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['supportemail'] }}" required>

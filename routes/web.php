@@ -22,7 +22,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/', function(){
         return view('dashboard',
             [
-                'locations' => \App\Models\Location::all(),
+                'locations' => auth()->user()->locations,
             ]
     );
     })->name('home');
@@ -30,7 +30,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/dashboard', function(){
         return view('dashboard',
             [
-                'locations' => \App\Models\Location::all(),
+                'locations' => auth()->user()->locations,
             ]
     );
     })->name('dashboard');
@@ -49,6 +49,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
+        Route::post('/assets/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
         Route::resource('/status', 'App\Http\Controllers\StatusController');
 
 
