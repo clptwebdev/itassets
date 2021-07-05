@@ -159,7 +159,7 @@
                                 </td>
                                 <td>{{ $asset->asset_tag }}</td>
                                 <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
-                                <td data-sort="{{ strtotime($asset->purchased_date)}}"">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
+                                <td data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                                 <td class="text-center">
                                     £{{ $asset->purchased_cost }}<br>
                                     @php
@@ -169,7 +169,11 @@
                                     @endphp
                                     <small>(*£{{ number_format($dep, 2)}})</small>
                                 </td>
+<<<<<<< HEAD
                                 <td class="text-center">{{ $asset->supplier->name ?? 'N/A' }}</td>
+=======
+                                <td class="text-center">{{$asset->supplier->name ?? "N/A"}}</td>
+>>>>>>> 36f4d77aeae77abd2663bef73b4c749b5e994500
                                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
                                 <td class="text-center" data-sort="{{ $warranty_end }}">
                                     {{ $asset->warranty }} Months

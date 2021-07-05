@@ -86,6 +86,25 @@ class ManufacturerController extends Controller {
 
     public function createMany(Request $request)
     {
+<<<<<<< HEAD
+=======
+
+        $validation = Validator::make($request->all(), [
+            "name.*" => "unique:manufacturers,name|required|max:255",
+            "supportPhone.*" => "required|max:14",
+            "supportUrl.*" => "required",
+            "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
+
+        ]);
+
+        if($validation->fails())
+        {
+            return view('Manufacturers.view', [
+                "names" => $request->name,
+            ]);
+        }
+
+>>>>>>> 36f4d77aeae77abd2663bef73b4c749b5e994500
         for($i = 0; $i < count($request->name); $i++)
         {
             Manufacturer::Create([
@@ -97,7 +116,9 @@ class ManufacturerController extends Controller {
             ]);
         }
         session()->flash('success_message', $i . ' has been created successfully');
+
         return redirect('/manufacturers');
+
     }
 
     public function ajaxMany(Request $request)
@@ -173,7 +194,12 @@ class ManufacturerController extends Controller {
             ];
 
         }
+<<<<<<< HEAD
         if(!empty($importErrors))
+=======
+
+        if(! empty($importErrors))
+>>>>>>> 36f4d77aeae77abd2663bef73b4c749b5e994500
         {
             $errorArray = [];
             $valueArray = [];
@@ -210,7 +236,8 @@ class ManufacturerController extends Controller {
                 "errorValues" => $errorValues,
             ]);
 
-        } else{
+        } else
+        {
             return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
 
         }

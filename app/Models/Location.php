@@ -18,4 +18,7 @@ class Location extends Model
     public function asset(){
         return $this->hasMany(Asset::class);
     }
+    public function component(){
+        return $this->hasMany(Component::class);
+    }
 }

@@ -24,7 +24,7 @@ Route::group(['middleware'=>'auth'], function(){
             [
                 'locations' => auth()->user()->locations,
             ]
-    );
+        );
     })->name('home');
 
     Route::get('/dashboard', function(){
@@ -32,7 +32,7 @@ Route::group(['middleware'=>'auth'], function(){
             [
                 'locations' => auth()->user()->locations,
             ]
-    );
+        );
     })->name('dashboard');
 
 
@@ -51,6 +51,8 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
         Route::resource('/status', 'App\Http\Controllers\StatusController');
+        Route::resource('/components', 'App\Http\Controllers\ComponentController');
+
 
 
 
@@ -61,8 +63,11 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
         Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
         Route::get("/exportusers", [\App\Http\Controllers\UserController::class, "export"]);
+        Route::get("/exportcomponents", [\App\Http\Controllers\ComponentController::class, "export"]);
 //
         Route::post("/importmanufacturer", [\App\Http\Controllers\ManufacturerController::class, "import"]);
+        Route::post("/importcomponents", [\App\Http\Controllers\ComponentController::class, "import"]);
+        Route::Post("components/create/import", [\App\Http\Controllers\ComponentController::class, "createMany"]);
 
 
         Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);

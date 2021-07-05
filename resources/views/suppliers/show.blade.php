@@ -36,7 +36,7 @@
 
     <div class="row">
         <div class="col-12 col-sm-4 col-md-3 col-xl-2">
-            <img src="{{ asset($supplier->photo->path) }}" width="100%" alt="{{ $supplier->name }}"
+            <img src="{{ asset($supplier->photo->path ?? '')}}" width="100%" alt="{{ $supplier->name }}"
                 title="{{ $supplier->name }}">
         </div>
         <div class="col-12 col-sm-8 col-md-9 col-xl-10">

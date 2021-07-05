@@ -26,6 +26,7 @@ class FieldFactory extends Factory
             "type"=>"select",
             "format"=>"alpha",
             "help"=>$this->faker->sentence,
+            "required"=>$this->faker->numberBetween([0],[1]),
         ];
     }
 }
