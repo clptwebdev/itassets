@@ -13,7 +13,8 @@
             <div class="alert alert-danger">You have several errors Within your Import in rows {{$errorRows}}</div>
             <div>
                 <a href="/manufacturers" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Back to Manufacturers</a>
+                        class="fas fa-plus fa-sm te
+                        xt-white-50"></i> Back to Manufacturers</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>

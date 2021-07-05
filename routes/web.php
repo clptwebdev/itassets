@@ -65,6 +65,8 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get("/exportcomponents", [\App\Http\Controllers\ComponentController::class, "export"]);
 //
         Route::post("/importmanufacturer", [\App\Http\Controllers\ManufacturerController::class, "import"]);
+        Route::post("/importcomponents", [\App\Http\Controllers\ComponentController::class, "import"]);
+        Route::Post("components/create/import", [\App\Http\Controllers\ComponentController::class, "createMany"]);
 
 
         Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);

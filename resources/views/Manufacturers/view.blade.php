@@ -121,7 +121,7 @@
                 <div class="modal-body">
                     <p>Select "import" to add Manufacturers to the system.</p>
                     <input  class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                           type="file" placeholder="Upload here" name="csv" >
+                           type="file" placeholder="Upload here" name="csv" accept=".csv" >
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>

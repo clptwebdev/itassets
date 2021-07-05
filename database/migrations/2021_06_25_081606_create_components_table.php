@@ -20,14 +20,13 @@ class CreateComponentsTable extends Migration
             $table->string("name");
             $table->foreignId("status_id")->nullable();
             $table->date("purchased_date")->nullable();
-            $table->string("purchased_cost")->nullable();
+            $table->decimal("purchased_cost",11,2)->nullable();
             $table->foreignId("supplier_id")->nullable()->default(0);
             $table->foreignId("manufacturer_id")->nullable()->default(0);
             $table->string("order_no")->nullable();
             $table->string("warranty")->default("0")->nullable();
             $table->foreignId("location_id");
-            $table->string("notes")->nullable();
-
+            $table->text("notes")->nullable();
         });
     }
 

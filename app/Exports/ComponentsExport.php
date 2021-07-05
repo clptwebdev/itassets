@@ -34,9 +34,9 @@ class ComponentsExport implements FromArray, WithHeadings
         {
             $array = [];
             $array["name"] = $component->name;
-            $array["status_id"] = $component->status->name ;
+            $array["status_id"] = $component->status->name ?? 'N/A';
             $array["supplier_id"] = $component->supplier->name;
-            $array["manufacturer_id"] = $component->manufacturer->name;
+            $array["manufacturer_id"] = $component->manufacturer->name ?? 'N/A';
             $array["location_id"] = $component->location->name;
             $array["order_no"] = $component->order_no;
             $array["serial_no"] = $component->serial_no;

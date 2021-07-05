@@ -95,9 +95,10 @@ class ManufacturerController extends Controller {
 
         ]);
 
-        if($validation->fails()){
-            return  view('Manufacturers.view', [
-               "names" => $request->name,
+        if($validation->fails())
+        {
+            return view('Manufacturers.view', [
+                "names" => $request->name,
             ]);
         }
 
@@ -112,6 +113,7 @@ class ManufacturerController extends Controller {
             ]);
         }
         session()->flash('success_message', $i . ' has been created successfully');
+
         return redirect('/manufacturers');
 
     }
@@ -161,7 +163,7 @@ class ManufacturerController extends Controller {
 
         }
 
-        if(!empty($importErrors))
+        if(! empty($importErrors))
         {
             $errorArray = [];
             $valueArray = [];
@@ -182,7 +184,8 @@ class ManufacturerController extends Controller {
                 "valueArray" => $valueArray,
             ]);
 
-        } else{
+        } else
+        {
             return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
 
         }
