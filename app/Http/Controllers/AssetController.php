@@ -261,16 +261,25 @@ class AssetController extends Controller
     }
 
     public function filter(Request $request){
-        return dd(auth()->user()->location_assets->whereIn('location_id', $request->locations)->whereIn('status_id', $request->status));
-       
-        /* >whereIn('id', [1, 2, 3])
+        $locations = auth()->user()->locations->pluck('id');
+        $assets = Asset::locationFilter($locations);
+        if(!empty($request->locations)){
+            $assets->locationFilter($request->locations);
+        }
+        if(!empty($request->status)){
+            $assets->statusFilter($request->status);
+        }
+        if(!empty($request->category)){
+            $assets->categoryFilter($request->category);
+        }
         return view('assets.view', [
-            "assets"=>auth()->user()->location_assets,
+            "assets"=>$assets->get(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
             "locations"=>auth()->user()->locations,
-        ]); */
+            "filter" => 'Filter',
+        ]);
     }
 
 }

@@ -33,7 +33,8 @@
             different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
         <div class="d-flex flex-row-reverse mb-2">
-            <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-secondary">Filter</a>
+            @if(isset($filter))<a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear Filter</a>@endif
+            <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-secondary p-2 shadow-sm">Filter</a>
         </div>
         <div id="filter" class="card shadow mb-4">
             <div class="card-header d-flex justify-content-between"><h6>Filter Results</h6><a class="btn-sm btn-secondary" onclick="javascript:toggleFilter();"><i class="fa fa-times" aria-hidden="true"></i></a></div>

@@ -46,9 +46,20 @@ class Asset extends Model {
         return $this->morphToMany(Category::class, 'cattable');
     }
 
-    public function categories()
-    {
-        return $this->hasManyDeepFromRelations($this->posts(), (new Post)->comments());
+    public function scopeLocationFilter($query, $locations){
+        return $query->whereIn('location_id', $locations);
+    }
+
+    public function scopeStatusFilter($query, $status){
+        return $query->whereIn('status_id', $status);
+    }
+
+    public function scopeCategoryFilter($query, $category){
+        $pivot = $this->category()->getTable();
+
+        $query->whereHas('category', function ($q) use ($category, $pivot) {
+            $q->whereIn("{$pivot}.category_id", $category);
+        });
     }
 
 }
