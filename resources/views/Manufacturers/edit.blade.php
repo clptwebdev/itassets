@@ -18,8 +18,6 @@
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
-                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
             </div>
         </div>
 

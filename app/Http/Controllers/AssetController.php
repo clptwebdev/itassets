@@ -9,10 +9,12 @@ use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Supplier;
 use App\Models\Status;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Exports\AssetExport;
 use Maatwebsite\Excel\Excel;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
+
 
 class AssetController extends Controller
 {
@@ -20,18 +22,24 @@ class AssetController extends Controller
     public function index()
     {
         return view('assets.view', [
-            "assets"=>Asset::all(),
+            "assets"=>auth()->user()->location_assets,
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations"=>auth()->user()->locations,
         ]);
     }
 
     public function create()
     {
+        $this->authorize('create', Asset::class);
         return view('assets.create', [
-            "locations"=>Location::all(),
+            "locations"=>auth()->user()->locations,
             "manufacturers"=>Manufacturer::all(),
             'models'=>AssetModel::all(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
+            'categories' => Category::all(),
         ]);
     }
 
@@ -43,6 +51,7 @@ class AssetController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Asset::class);
         $validate_fieldet = [];
         //Validate and Collect the Additional Fieldsets
         if($request->asset_model != 0){
@@ -115,6 +124,7 @@ class AssetController extends Controller
             'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]));
         $asset->fields()->attach($array);
+        $asset->category()->attach($request->category);
                 
         session()->flash('success_message', $request->name.' has been created successfully');
         return redirect(route('assets.index'));
@@ -131,12 +141,14 @@ class AssetController extends Controller
 
     public function edit(Asset $asset)
     {
+        $this->authorize('edit', $asset);
         return view('assets.edit', [
             "asset"=>$asset,
-            "locations"=>Location::all(),
+            "locations"=>auth()->user()->locations,
             "manufacturers"=>Manufacturer::all(),
             'models'=>AssetModel::all(),
             'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
         ]);
     }
 
@@ -213,6 +225,8 @@ class AssetController extends Controller
             ];
         }
 
+        $this->authorize('update');
+
         $validated = $request->validate($v);
         $asset->fill(array_merge($request->only(
             'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
@@ -244,6 +258,19 @@ class AssetController extends Controller
    {
        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
 
+    }
+
+    public function filter(Request $request){
+        return dd(auth()->user()->location_assets->whereIn('location_id', $request->locations)->whereIn('status_id', $request->status));
+       
+        /* >whereIn('id', [1, 2, 3])
+        return view('assets.view', [
+            "assets"=>auth()->user()->location_assets,
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations"=>auth()->user()->locations,
+        ]); */
     }
 
 }

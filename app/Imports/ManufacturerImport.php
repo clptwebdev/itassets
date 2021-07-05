@@ -23,13 +23,13 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     use  importable ,SkipsFailures ,SkipsErrors;
-    public function onError(\Throwable $error)
+        public function onError(\Throwable $error)
     {
 
     }
+
     public function rules(): array
     {
-
         return [
             'name' => [
                 'required',
@@ -51,8 +51,6 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
                 'unique:manufacturers,supportEmail',
             ],
         ];
-
-
     }
 
     public function model(array $row)

@@ -9,8 +9,8 @@ class ChartController extends Controller
 {
     //
     public function getPieChart(){
-        $locations = \App\Models\Location::all();
-        $assets = \App\Models\Asset::count();
+        $locations = auth()->user()->locations;
+        $assets = auth()->user()->location_assets()->count();
         $data = array();
 
         foreach ($locations as $location) {

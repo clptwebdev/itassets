@@ -11316,3 +11316,36 @@ body.sidebar-toggled footer.sticky-footer {
 .clickable{
   cursor: pointer;
 }
+
+#filter{
+  position: absolute;
+  top: 0px;
+  right: -100%;
+  width: 33%;
+  max-height: 100%;
+  z-index: 9;
+  transition: .4s;
+  border-left: solid 5px #474775;
+}
+
+.option{
+  
+}
+
+.option-header{
+  background-color: #474775;
+  color: #FFF;
+  padding: 10px;
+  border-bottom: solid 1px #39395e;
+}
+
+.option-header a{
+  text-decoration: none;
+  color: #FFF;
+  font-size: 0.9rem;
+}
+
+.option-body{
+  border: solid 1px #474775;
+  padding: 20px;
+}

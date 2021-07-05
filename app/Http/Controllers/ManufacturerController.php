@@ -118,6 +118,35 @@ class ManufacturerController extends Controller {
 
     }
 
+    public function ajaxMany(Request $request)
+    {
+        if($request->ajax()){
+            $validation = Validator::make($request->all(), [
+                "name.*" => "required|unique:manufacturers,name|max:255",
+                "supportPhone.*" => "required|max:14",
+                "supportUrl.*" => "required",
+                "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
+            ]);
+
+            if($validation->fails()){
+                return $validation->errors();
+            }else{
+                for($i = 0; $i < count($request->name); $i++){
+                    Manufacturer::Create([
+                        "name" => $request->name[$i],
+                        "supportPhone" => $request->supportPhone[$i],
+                        "supportUrl" => $request->supportUrl[$i],
+                        "supportEmail" => $request->supportEmail[$i],
+
+                    ]);
+                }
+                session()->flash('success_message', 'You can successfully added the Manufacturers');
+                return 'Success';
+            }
+        }
+
+    }
+
     public function destroy(Manufacturer $manufacturers)
     {
         $name = $manufacturers->name;
@@ -162,11 +191,13 @@ class ManufacturerController extends Controller {
             ];
 
         }
-
         if(! empty($importErrors))
+
         {
             $errorArray = [];
             $valueArray = [];
+            $errorValues = [];
+
             foreach($importErrors as $error)
             {
                 if(array_key_exists($error['row'], $errorArray))
@@ -177,11 +208,25 @@ class ManufacturerController extends Controller {
                     $errorArray[$error['row']] = $error['attributes'];
                 }
                 $valueArray[$error['row']] = $error['value'];
+
+                if(array_key_exists($error['row'], $errorValues))
+                {
+                    $array = $errorValues[$error['row']];
+                }else{
+                    $array = [];
+                }
+
+                foreach($error['errors'] as $e){
+                    $array[$error['attributes']] = $e;
+                }
+                $errorValues[$error['row']] = $array;
+
             }
 
             return view('Manufacturers.import-errors', [
                 "errorArray" => $errorArray,
                 "valueArray" => $valueArray,
+                "errorValues" => $errorValues,
             ]);
 
         } else

@@ -11,11 +11,11 @@
         <div>
             <a href="/manufacturers/create" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Manufacturers</a>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm  disabled"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-            <a href="/exportmanufacturers" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a href="/exportmanufacturers" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm "><i
                     class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
 
         </div>

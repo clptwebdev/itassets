@@ -14,7 +14,7 @@
                    class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Assets</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
-                        class="far fa-save fa-sm text-white-50"></i> Save
+                        class="far fa-save fa-sm text-white-50"></i> Save 
                 </button>
             </div>
         </div>
@@ -170,6 +170,16 @@
                                 <span class="text-warning">No Additional Fields Required</span>
                             </div>
                             @endif
+
+                            <div id="categories" class="border border-light p-2 mb-3">
+                                <h4 class="h6 mb-4 text-center">Categories</h4>
+                                @foreach($categories as $category)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}">
+                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
+                                </div>
+                                @endforeach
+                            </div>
 
                             <div class="form-row">
                                 <label for="status">Current Status</label><span class="text-danger">*</span>
