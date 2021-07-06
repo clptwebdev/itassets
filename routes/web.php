@@ -68,6 +68,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post("/importmanufacturer", [\App\Http\Controllers\ManufacturerController::class, "import"]);
         Route::post("/importcomponents", [\App\Http\Controllers\ComponentController::class, "import"]);
         Route::Post("components/create/import", [\App\Http\Controllers\ComponentController::class, "createMany"]);
+        Route::Post("components/create/ajax", [\App\Http\Controllers\ComponentController::class, "ajaxMany"]);
 
 
         Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);

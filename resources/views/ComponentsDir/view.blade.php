@@ -80,7 +80,8 @@
                                 <td>{{$component->location->name}}</td>
                                 <td>{{$component->manufacturer->name ?? "N/A"}}</td>
                                 <td class="text-center">
-                                    <form id="form{{$component->id}}" action="{{ route('components.destroy', $component->id) }}" method="POST">
+                                    <form id="form{{$component->id}}"
+                                          action="{{ route('components.destroy', $component->id) }}" method="POST">
                                         <a href="{{ route('components.show', $component->id) }}"
                                            class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
                                             View</a>&nbsp;
@@ -153,13 +154,18 @@
                 <form action="/importcomponents" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add components to the system.</p>
-                        <input  class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                                type="file" placeholder="Upload here" name="csv" accept=".csv">
+                        <input id="importEmpty" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                               type="file" placeholder="Upload here" name="csv" accept=".csv">
+
                     </div>
+
                     <div class="modal-footer">
+                        @if(session('import-error'))
+                            <div class="alert text-warning"> {{ session('import-error')}} </div>
+                        @endif
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtn">
+                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
                             Import
                         </button>
                     @csrf
@@ -168,6 +174,7 @@
         </div>
     </div>
     </div>
+    <?php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');?>
 @endsection
 
 @section('js')
@@ -199,7 +206,16 @@
             $('#manufacturer-id-test').val($(this).data('id'))
             //showModal
             $('#importManufacturerModal').modal('show')
+
         });
+
+        // file input empty
+        $("#confirmBtnImport").click(":submit", function (e) {
+
+            if (!$('#importEmpty').val()) {
+                e.preventDefault();
+            }
+        })
     </script>
 
 @endsection

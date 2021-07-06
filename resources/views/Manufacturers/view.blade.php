@@ -121,12 +121,12 @@
                 <div class="modal-body">
                     <p>Select "import" to add Manufacturers to the system.</p>
                     <input  class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                           type="file" placeholder="Upload here" name="csv" accept=".csv" >
+                           type="file" placeholder="Upload here" name="csv" accept=".csv"id="importEmpty" >
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtn">
+                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
                             Import
                         </button>
                         @csrf
@@ -156,5 +156,15 @@
             //showModal
             $('#importManufacturerModal').modal('show')
         });
+
+        // file input empty
+        $("#confirmBtnImport").click(":submit", function (e) {
+
+            if (!$('#importEmpty').val()) {
+                e.preventDefault();
+                <?php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');?>
+            }else{
+                <?php session()->flash('import-error', '');?>            }
+        })
     </script>
 @endsection
