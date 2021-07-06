@@ -67,7 +67,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
             'name' => $row["name"],
             'serial_no' => $row["serial_no"],
             'status_id' => $row["status_id"],
-            'purchased_date' => \Carbon\Carbon::parse($row["purchased_date"])->format("Y-m-d") ,
+            'purchased_date' => \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d"),
             'purchased_cost' => $row["purchased_cost"],
             'supplier_id' => $row["supplier_id"],
             'manufacturer_id' => $row["manufacturer_id"],

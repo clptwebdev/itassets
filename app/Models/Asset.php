@@ -62,4 +62,34 @@ class Asset extends Model {
         });
     }
 
+    public function scopePurchaseFilter($query, $start, $end){
+        $query->whereBetween('purchased_date', [$start, $end]);
+    }
+
+    public function scopeAuditFilter($query, $date){
+        switch($date){
+            case 1:
+                $query->whereAuditDate('audit_date', '<', \Carbon\Carbon::now()->toDateString());
+                break;
+            case 2:
+                $date = \Carbon\Carbon::now()->addDays(30);
+                $query->whereBetween('audit_date', [\Carbon\Carbon::now(), $date]);
+                break;
+            case 3:
+                $date = \Carbon\Carbon::now()->addMonths(3);
+                $query->whereBetween('audit_date', [\Carbon\Carbon::now(), $date]);
+                break;
+            case 4:
+                $date = \Carbon\Carbon::now()->addMonths(6);
+                $query->whereBetween('audit_date', [\Carbon\Carbon::now(), $date]);
+                break;
+        }
+    }
+
+    public function scopeCostFilter($query, $amount){
+        $amount = str_replace('£', '', $amount);
+        $amount = explode(' - ', $amount);
+        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
+    }
+
 }

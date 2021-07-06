@@ -86,8 +86,6 @@ class ManufacturerController extends Controller {
 
     public function createMany(Request $request)
     {
-<<<<<<< HEAD
-=======
 
         $validation = Validator::make($request->all(), [
             "name.*" => "unique:manufacturers,name|required|max:255",
@@ -104,7 +102,6 @@ class ManufacturerController extends Controller {
             ]);
         }
 
->>>>>>> 36f4d77aeae77abd2663bef73b4c749b5e994500
         for($i = 0; $i < count($request->name); $i++)
         {
             Manufacturer::Create([
@@ -194,12 +191,8 @@ class ManufacturerController extends Controller {
             ];
 
         }
-<<<<<<< HEAD
-        if(!empty($importErrors))
-=======
 
         if(! empty($importErrors))
->>>>>>> 36f4d77aeae77abd2663bef73b4c749b5e994500
         {
             $errorArray = [];
             $valueArray = [];

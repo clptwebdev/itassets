@@ -11326,15 +11326,29 @@ body.sidebar-toggled footer.sticky-footer {
   z-index: 9;
   transition: .4s;
   border-left: solid 5px #474775;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
 }
+
+@media (max-width: 575px) {
+    #filter{
+      width: 100%;
+    }
+}
+@media (min-width: 576px) and (max-width: 991px) {
+  #filter{
+    width: 75%;
+  }
+}
+
 
 .option{
   
 }
 
 .option-header{
-  background-color: #474775;
-  color: #FFF;
+  background-color: #b087bc;
+  color: #333;
   padding: 10px;
   border-bottom: solid 1px #39395e;
 }
@@ -11348,4 +11362,8 @@ body.sidebar-toggled footer.sticky-footer {
 .option-body{
   border: solid 1px #474775;
   padding: 20px;
+}
+
+.pointer{
+  cursor: pointer;
 }

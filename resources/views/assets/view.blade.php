@@ -2,6 +2,8 @@
 
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css" integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
 
 @section('content')
@@ -28,6 +30,10 @@
         <div class="alert alert-success"> {{ session('success_message')}} </div>
     @endif
 
+    @php
+        $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();  
+        $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();  
+    @endphp
     <section class="position-relative">
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
@@ -37,17 +43,13 @@
             <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-secondary p-2 shadow-sm">Filter</a>
         </div>
         <div id="filter" class="card shadow mb-4">
-            <div class="card-header d-flex justify-content-between"><h6>Filter Results</h6><a class="btn-sm btn-secondary" onclick="javascript:toggleFilter();"><i class="fa fa-times" aria-hidden="true"></i></a></div>
+            <div class="card-header d-flex justify-content-between align-items-center text-white" style="background-color: #474775; border-top-left-radius: 0px;"><h6>Filter Results</h6><a class="btn-sm btn-secondary" onclick="javascript:toggleFilter();"><i class="fa fa-times" aria-hidden="true"></i></a></div>
             <div class="card-body">
                 <form action="{{ route('assets.filter')}}" method="POST">
                     <div id="accordion" class="mb-4">
                         <div class="option">
-                          <div class="option-header" id="statusHeader">
-                            <h5 class="mb-0">
-                              <a class="" data-toggle="collapse" data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader">
-                                Status Type
-                              </a>
-                            </h5>
+                          <div class="option-header pointer collapsed" id="statusHeader" data-toggle="collapse" data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader"> 
+                            <small>Status Type</small>
                           </div>
                           @csrf
                           <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader" data-parent="#accordion">
@@ -63,12 +65,8 @@
                         </div>
 
                         <div class="option">
-                            <div class="option-header" id="categoryHeader">
-                              <h5 class="mb-0">
-                                <a class="collapsed" data-toggle="collapse" data-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryHeader">
-                                  Category
-                                </a>
-                              </h5>
+                            <div class="option-header collapsed pointer" id="categoryHeader" data-toggle="collapse" data-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryHeader">
+                                <small>Category</small>
                             </div>
                         
                             <div id="categoryCollapse" class="collapse" aria-labelledby="categoryHeader" data-parent="#accordion">
@@ -84,12 +82,8 @@
                           </div>
 
                           <div class="option">
-                            <div class="option-header" id="locationHeader">
-                              <h5 class="mb-0">
-                                <a class="collapsed" data-toggle="collapse" data-target="#locationCollapse" aria-expanded="true" aria-controls="locationHeader">
-                                  Location
-                                </a>
-                              </h5>
+                            <div class="option-header collapsed pointer" id="locationHeader" data-toggle="collapse" data-target="#locationCollapse" aria-expanded="true" aria-controls="locationHeader">
+                                <small>Location</small>
                             </div>
                         
                             <div id="locationCollapse" class="collapse" aria-labelledby="locationHeader" data-parent="#accordion">
@@ -103,6 +97,63 @@
                                 </div>
                             </div>
                           </div>
+
+                          <div class="option">
+                            <div class="option-header collapsed pointer" id="purchasedDateHeader" data-toggle="collapse" data-target="#purchasedDateCollapse" aria-expanded="true" aria-controls="purchasedDateHeader">
+                                <small>Purchased Date</small>
+                            </div>
+                        
+                            <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader" data-parent="#accordion">
+                                <div class="option-body">
+                                    <div class="form-row">
+                                        <label for="start" class="p-0 m-0 mb-1"><small>Start</small></label>
+                                        <input class="form-control" type="date" name="start" value="" placeholder="DD/MM/YYYY" />
+                                    </div>
+                                    <div class="form-row">
+                                    <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
+                                        <input class="form-control" type="date" name="end" value="" placeholder="DD/MM/YYYY" />
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+
+                          
+
+                          <div class="option">
+                            <div class="option-header collapsed pointer" id="costHeader" data-toggle="collapse" data-target="#costCollapse" aria-expanded="true" aria-controls="costHeader">
+                                <small>Purchased Cost</small>
+                            </div>
+                        
+                            <div id="costCollapse" class="collapse" aria-labelledby="costHeader" data-parent="#accordion">
+                                <div class="option-body" style="padding-bottom: 60px;">
+                                    <div class="form-control">
+                                        <label for="amount">Price range:</label>
+                                        <input type="text" id="amount" name="amount" readonly style="border:0; color:#b087bc; font-weight:bold; margin-bottom: 20px;">
+                                        <div id="slider-range"></div>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+
+                          <div class="option">
+                            <div class="option-header pointer collapsed" id="auditDateHeader" data-toggle="collapse" data-target="#auditDateCollapse" aria-expanded="true" aria-controls="auditDateHeader">
+                                <small>Audit Date</small>
+                            </div>
+                            <div id="auditDateCollapse" class="collapse" aria-labelledby="auditDateHeader" data-parent="#accordion">
+                                <div class="option-body">
+                                    <div class="form-row">
+                                        <select name="audit" class="form-control">
+                                            <option value="0">All</option>
+                                            <option value="1">Overdue Audits</option>
+                                            <option value="2">In next 30 days</option>
+                                            <option value="3">In next 3 months</option>
+                                            <option value="4">In next 6 months</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                        
                     </div>
 
                     <button type="submit" class="btn-sm btn-success text-right">Apply Filter</button>
@@ -169,11 +220,7 @@
                                     @endphp
                                     <small>(*£{{ number_format($dep, 2)}})</small>
                                 </td>
-<<<<<<< HEAD
-                                <td class="text-center">{{ $asset->supplier->name ?? 'N/A' }}</td>
-=======
                                 <td class="text-center">{{$asset->supplier->name ?? "N/A"}}</td>
->>>>>>> 36f4d77aeae77abd2663bef73b4c749b5e994500
                                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
                                 <td class="text-center" data-sort="{{ $warranty_end }}">
                                     {{ $asset->warranty }} Months
@@ -261,6 +308,7 @@
 
 @section('js')
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         function toggleFilter(){
             if($('#filter').hasClass('show')){
@@ -283,6 +331,20 @@
         var form = '#'+'form'+$('#supplier-id').val();
         $(form).submit();
         });
+
+        $( function() {
+            $( "#slider-range" ).slider({
+            range: true,
+            min: {{ floor($floor)}},
+            max: {{ round($limit)}},
+            values: [ {{ floor($floor)}}, {{ round($limit)}} ],
+            slide: function( event, ui ) {
+                $( "#amount" ).val( "£" + ui.values[ 0 ] + " - £" + ui.values[ 1 ] );
+            }
+            });
+            $( "#amount" ).val( "£" + $( "#slider-range" ).slider( "values", 0 ) +
+            " - £" + $( "#slider-range" ).slider( "values", 1 ) );
+        } );
 
         $(document).ready( function () {
             $('#assetsTable').DataTable({

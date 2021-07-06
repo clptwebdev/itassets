@@ -272,6 +272,20 @@ class AssetController extends Controller
         if(!empty($request->category)){
             $assets->categoryFilter($request->category);
         }
+        if($request->start != '' && $request->end != ''){
+            $assets->purchaseFilter($request->start, $request->end);
+        }
+
+        if($request->audit != 0){
+            $assets->auditFilter($request->audit);
+        }
+
+        if($request->warranty != 0){
+            $assets->warrantyFilter($request->warranty);
+        }
+
+        $assets->costFilter($request->amount);
+
         return view('assets.view', [
             "assets"=>$assets->get(),
             'suppliers' => Supplier::all(),
@@ -279,6 +293,22 @@ class AssetController extends Controller
             'categories' => Category::all(),
             "locations"=>auth()->user()->locations,
             "filter" => 'Filter',
+            "amount" => $request->amount,
+        ]);
+    }
+
+    public function status(Status $status){
+        $array = [];
+        $array[] = $status->id;
+        $locations = auth()->user()->locations->pluck('id');
+        $assets = Asset::locationFilter($locations);
+        $assets->statusFilter($array);
+        return view('assets.view', [
+            "assets"=> $assets->get(),
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations"=>auth()->user()->locations,
         ]);
     }
 
