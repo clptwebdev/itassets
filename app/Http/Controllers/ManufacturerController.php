@@ -195,13 +195,11 @@ class ManufacturerController extends Controller {
                     "value" => $result->values(),
                 ];
 
-            }
-            if(! empty($importErrors))
-
-            {
-                $errorArray = [];
-                $valueArray = [];
-                $errorValues = [];
+        if(! empty($importErrors))
+        {
+            $errorArray = [];
+            $valueArray = [];
+            $errorValues = [];
 
                 foreach($importErrors as $error)
                 {
@@ -234,16 +232,15 @@ class ManufacturerController extends Controller {
                     "errorValues" => $errorValues,
                 ]);
 
-            } else
-            {
+        } else{
                 return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
 
             }
-        }else{
-            session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV"!');
+        }}else{
+                session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV"!');
 
-            return redirect(route('components.index'));
-        }
+            return redirect('/manufacturers');
+            }
 
     }
 

@@ -102,7 +102,6 @@
                             <div class="option-header collapsed pointer" id="purchasedDateHeader" data-toggle="collapse" data-target="#purchasedDateCollapse" aria-expanded="true" aria-controls="purchasedDateHeader">
                                 <small>Purchased Date</small>
                             </div>
-
                             <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader" data-parent="#accordion">
                                 <div class="option-body">
                                     <div class="form-row">
@@ -116,14 +115,10 @@
                                 </div>
                             </div>
                           </div>
-
-
-
                           <div class="option">
                             <div class="option-header collapsed pointer" id="costHeader" data-toggle="collapse" data-target="#costCollapse" aria-expanded="true" aria-controls="costHeader">
                                 <small>Purchased Cost</small>
                             </div>
-
                             <div id="costCollapse" class="collapse" aria-labelledby="costHeader" data-parent="#accordion">
                                 <div class="option-body" style="padding-bottom: 60px;">
                                     <div class="form-control">
@@ -153,7 +148,6 @@
                                 </div>
                             </div>
                           </div>
-
                     </div>
 
                     <button type="submit" class="btn-sm btn-success text-right">Apply Filter</button>

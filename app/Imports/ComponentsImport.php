@@ -80,6 +80,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
     public function model(array $row)
     {
+
         $component = new Component;
         $component->name = $row["name"];
 
@@ -159,7 +160,6 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         $component->notes = $row["notes"];
         $component->save();
-
     }
 
     public function batchSize(): int
