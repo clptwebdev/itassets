@@ -124,6 +124,9 @@
                            type="file" placeholder="Upload here" name="csv" accept=".csv"id="importEmpty" >
                 </div>
                 <div class="modal-footer">
+                    @if(session('import-error'))
+                        <div class="alert text-warning"> {{ session('import-error')}} </div>
+                    @endif
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
 
                         <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
@@ -136,7 +139,7 @@
         </div>
     </div>
 @endsection
-
+<?php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');?>
 @section('js')
     <script>
         $('.deleteBtn').click(function () {
