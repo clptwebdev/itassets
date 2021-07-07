@@ -27,7 +27,6 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
     {
 
     }
-
     public function rules(): array
     {
         return [

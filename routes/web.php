@@ -50,6 +50,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
+        Route::get('/status/{status}/assets', 'App\Http\Controllers\AssetController@status')->name('assets.status');
         Route::resource('/status', 'App\Http\Controllers\StatusController');
         Route::resource('/components', 'App\Http\Controllers\ComponentController');
 

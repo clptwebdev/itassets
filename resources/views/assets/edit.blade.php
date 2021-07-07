@@ -215,7 +215,7 @@
             </div>
         </div>
     </section>
-    </form
+    </form>
     @endsection
 
     @section('modals')
@@ -223,7 +223,7 @@
     @endsection
 
     @section('js')
-    <script>
+    <script type="text/javascript">
         function getFields(obj){
             $.ajax({
                 url: `/assets/${obj.value}/model`,

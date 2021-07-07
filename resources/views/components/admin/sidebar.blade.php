@@ -25,68 +25,56 @@
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <a class="collapse-item" href="{{ route('assets.index')}}"><i class="far fa-circle text-secondary"></i> All Assets ({{($assetAmount) ?? null}})</a>
-                <a class="collapse-item" href="buttons.html"><i class="far fa-circle text-success"></i> Deployed (649)</a>
-                <a class="collapse-item" href="buttons.html"><i class="far fa-circle text-danger"></i> Undeployable (143)</a>
-                <a class="collapse-item" href="buttons.html"><i class="fas fa-check text-success"></i> Requestable (211)</a>
-                <a class="collapse-item" href="buttons.html"><i class="fas fa-check text-warning"></i> Audit Due (211)</a>
-                <a class="collapse-item" href="buttons.html"><i class="fas fa-check text-danger"></i> Audit Overdue (211)</a>
+                @php
+                $statuses = App\Models\Status::all();
+                @endphp
+                @foreach($statuses as $status)
+                <a href="{{ route('assets.status', $status->id)}}" title="Add New Asset" class="collapse-item"><i class="far fa-circle @if($status->deployable == 1){{ 'text-success'}}@else{{ 'text-danger'}}@endif"></i> {{ $status->name}}</a>
+                @endforeach
                 <hr>
-                <a href="/asset/create" title="Add New Asset" class="collapse-item">Add New Asset</a>
-                <a href="/asset/create" title="Add New Asset" class="collapse-item">Import Assets</a>
+                <a href="{{ route('assets.create')}}" title="Add New Asset" class="collapse-item">Add New Asset</a>
+                <a href="#" title="Import Assets" class="collapse-item">Import Assets</a>
 
         </div>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-            aria-expanded="true" aria-controls="collapseUtilities">
-            <i class="far fa-fw fa-hdd sidebar-icon"></i>
+        <a class="nav-link collapsed" href="{{ route('components.index')}}" data-toggle="collapse" data-target="#componentsDD" aria-expanded="true"
+            aria-controls="componentsDD">
+            <i class="far fa-fw fa-hdd sidebar-icon" data-toggle="tooltip" data-placement="right" title="Components"></i>
             <span class="sidebar-title">Components</span>
         </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Custom Utilities:</h6>
-                <a class="collapse-item" href="{{ route('components.index')}}">All Components</a>
-                <a class="collapse-item" href="utilities-border.html">Borders</a>
-                <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                <a class="collapse-item" href="utilities-other.html">Other</a>
-            </div>
+        <div id="componentsDD" class="collapse" aria-labelledby="componentsTitle" data-parent="#accordionSidebar">
+                <a class="collapse-item" href="{{ route('components.index')}}">View All</a>
+                <a class="collapse-item" href="buttons.html"> Add New Component</a>
+                <a class="collapse-item" href="buttons.html"> Import Components</a>
         </div>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true"
-            aria-controls="collapseUtilities">
-            <i class="fas fa-fw fa-keyboard sidebar-icon"></i>
+        <a class="nav-link collapsed" href="{{ route('components.index')}}" data-toggle="collapse" data-target="#accessoryDD" aria-expanded="true"
+            aria-controls="accessoryDD">
+            <i class="fas fa-fw fa-keyboard sidebar-icon" data-toggle="tooltip" data-placement="right" title="Accessories"></i>
             <span class="sidebar-title">Accessories</span>
         </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Custom Utilities:</h6>
-                <a class="collapse-item" href="utilities-color.html">Colors</a>
-                <a class="collapse-item" href="utilities-border.html">Borders</a>
-                <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                <a class="collapse-item" href="utilities-other.html">Other</a>
-            </div>
+        <div id="accessoryDD" class="collapse" aria-labelledby="accessoryTitle" data-parent="#accordionSidebar">
+                <a class="collapse-item" href="#">View All</a>
+                <a class="collapse-item" href="buttons.html"> Add New Accessory</a>
+                <a class="collapse-item" href="buttons.html"> Import Accessories</a>
         </div>
     </li>
-    <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true"
-            aria-controls="collapseUtilities">
-            <i class="fas fa-fw fa-tint sidebar-icon"></i>
+        <a class="nav-link collapsed" href="{{ route('components.index')}}" data-toggle="collapse" data-target="#consumableDD" aria-expanded="true"
+            aria-controls="consumableDD">
+            <i class="fas fa-fw fa-tint sidebar-icon" data-toggle="tooltip" data-placement="right" title="Consumables"></i>
             <span class="sidebar-title">Consumables</span>
         </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Custom Utilities:</h6>
-                <a class="collapse-item" href="utilities-color.html">Colors</a>
-                <a class="collapse-item" href="utilities-border.html">Borders</a>
-                <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                <a class="collapse-item" href="utilities-other.html">Other</a>
-            </div>
+        <div id="consumableDD" class="collapse" aria-labelledby="consumableTitle" data-parent="#accordionSidebar">
+                <a class="collapse-item" href="#">View All</a>
+                <a class="collapse-item" href="buttons.html"> Add New Consumable</a>
+                <a class="collapse-item" href="buttons.html"> Import Consumables</a>
         </div>
     </li>
     <!-- Divider -->

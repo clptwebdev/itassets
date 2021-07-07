@@ -261,16 +261,55 @@ class AssetController extends Controller
     }
 
     public function filter(Request $request){
-        return dd(auth()->user()->location_assets->whereIn('location_id', $request->locations)->whereIn('status_id', $request->status));
-       
-        /* >whereIn('id', [1, 2, 3])
+        $locations = auth()->user()->locations->pluck('id');
+        $assets = Asset::locationFilter($locations);
+        if(!empty($request->locations)){
+            $assets->locationFilter($request->locations);
+        }
+        if(!empty($request->status)){
+            $assets->statusFilter($request->status);
+        }
+        if(!empty($request->category)){
+            $assets->categoryFilter($request->category);
+        }
+        if($request->start != '' && $request->end != ''){
+            $assets->purchaseFilter($request->start, $request->end);
+        }
+
+        if($request->audit != 0){
+            $assets->auditFilter($request->audit);
+        }
+
+        if($request->warranty != 0){
+            $assets->warrantyFilter($request->warranty);
+        }
+
+        $assets->costFilter($request->amount);
+
         return view('assets.view', [
-            "assets"=>auth()->user()->location_assets,
+            "assets"=>$assets->get(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
             "locations"=>auth()->user()->locations,
-        ]); */
+            "filter" => 'Filter',
+            "amount" => $request->amount,
+        ]);
+    }
+
+    public function status(Status $status){
+        $array = [];
+        $array[] = $status->id;
+        $locations = auth()->user()->locations->pluck('id');
+        $assets = Asset::locationFilter($locations);
+        $assets->statusFilter($array);
+        return view('assets.view', [
+            "assets"=> $assets->get(),
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations"=>auth()->user()->locations,
+        ]);
     }
 
 }
