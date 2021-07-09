@@ -268,6 +268,7 @@
                     }],
                 },
             });
+            ctx.height = 500;
 
         },
         error: function(){
@@ -316,6 +317,7 @@
                         }
                     }
                 });
+                ctx.height = 500;
             },
             error: function(){
                 console.log('Eror');
@@ -360,7 +362,7 @@
                     }
                 });
 
-                $('#pieChart').height('100%');
+                ctx.height = 500;
             },
             error: function(){
                 console.log('Eror');
