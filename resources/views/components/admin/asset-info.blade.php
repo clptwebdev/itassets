@@ -2,7 +2,7 @@
 <div class="row">
 
     <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-2 col-md-3 mb-4">
+    <div class="col-xl-2 col-md-4 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -27,14 +27,14 @@
                         </div>
                     </div>
                     <div class="col-auto">
-                        <i class="fas fa-pound-sign fa-2x text-gray-300"></i>
+                        <i class="fas fa-pound-sign fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-2 col-md-3 mb-4">
+    <div class="col-xl-2 col-md-4 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -44,7 +44,7 @@
                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{(auth()->user()->location_assets()->count()) ?? null}}</div>
                     </div>
                     <div class="col-auto">
-                        <i class="fas fa-laptop fa-2x text-gray-300"></i>
+                        <i class="fas fa-laptop fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
     </div>
 
     <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-2 col-md-3 mb-4">
+    <div class="col-xl-2 col-md-4 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -62,7 +62,7 @@
                         <div class="h5 mb-0 font-weight-bold text-gray-800">7</div>
                     </div>
                     <div class="col-auto">
-                        <i class="fas fa-question fa-2x text-gray-300"></i>
+                        <i class="fas fa-question fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
     </div>
 
     <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-2 col-md-3 mb-4">
+    <div class="col-xl-2 col-md-4 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -90,7 +90,7 @@
                         </div>
                     </div>
                     <div class="col-auto">
-                        <i class="fas fa-skull-crossbones fa-2x text-gray-300"></i>
+                        <i class="fas fa-skull-crossbones fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
             </div>
@@ -109,7 +109,7 @@
     @endif
     @endforeach
 
-    <div class="col-xl-2 col-md-3 mb-4">
+    <div class="col-xl-2 col-md-4 mb-4">
         <div class="card border-left-warning shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -119,14 +119,14 @@
                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $audits_due }}</div>
                     </div>
                     <div class="col-auto">
-                        <i class="fas fa-tools fa-2x text-gray-300"></i>
+                        <i class="fas fa-tools fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-2 col-md-3 mb-4">
+    <div class="col-xl-2 col-md-4 mb-4">
         <div class="card border-left-danger shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -136,7 +136,7 @@
                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $audits_over }}</div>
                     </div>
                     <div class="col-auto">
-                        <i class="fas fa-tools text-gray-300 fa-2x"></i>
+                        <i class="fas fa-tools text-gray-300 fa-2x d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
             </div>

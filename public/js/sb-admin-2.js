@@ -5,8 +5,8 @@
   $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
     $("body").toggleClass("sidebar-toggled");
     $(".sidebar").toggleClass("toggled");
-    $(".sidebar-title").toggleClass('d-none');
-    $(".sidebar-icon").toggleClass('fa-2x');
+    $(".sidebar-title").addClass('d-none');
+    $(".sidebar-icon").addClass('fa-2x');
     if ($(".sidebar").hasClass("toggled")) {
       $('.sidebar .collapse').collapse('hide');
     };
@@ -14,16 +14,33 @@
 
   // Close any open menu accordions when window is resized below 768px
   $(window).resize(function() {
-    if ($(window).width() < 768) {
+    if ($(window).width() >= 768) {
+      $("body").removeClass("sidebar-toggled");
+      $(".sidebar").removeClass("toggled");
+      $(".sidebar-title").removeClass('d-none');
+      $(".sidebar-icon").removeClass('fa-2x');
+    };
+
+    if ($(window).width() > 480 && $(window).width() < 768) {  
+      $(".sidebar-title").addClass('d-none');
+      $(".sidebar-icon").addClass('fa-2x');
       $('.sidebar .collapse').collapse('hide');
     };
     
     // Toggle the side navigation when window is resized below 480px
-    if ($(window).width() < 480 && !$(".sidebar").hasClass("toggled")) {
+    if ($(window).width() <= 480 && !$(".sidebar").hasClass("toggled")) {
       $("body").addClass("sidebar-toggled");
       $(".sidebar").addClass("toggled");
+      
+    };
+
+    if ($(window).width() < 480){
+      $(".sidebar").addClass("toggled");
+      $(".sidebar-title").addClass('d-none');
+      $(".sidebar-icon").addClass('fa-2x');
       $('.sidebar .collapse').collapse('hide');
     };
+
   });
 
   // Prevent the content wrapper from scrolling when the fixed side navigation hovered over

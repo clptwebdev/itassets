@@ -51,6 +51,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
         Route::get('/status/{status}/assets', 'App\Http\Controllers\AssetController@status')->name('assets.status');
+        Route::get('/location/{location}/assets', 'App\Http\Controllers\AssetController@location')->name('assets.location');
         Route::resource('/status', 'App\Http\Controllers\StatusController');
         Route::resource('/components', 'App\Http\Controllers\ComponentController');
 
@@ -87,6 +88,8 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get("manufacturers/import-fail", [\App\Http\Controllers\ManufacturerController::class,"import"]);
 
         Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');
+        Route::get('chart/asset/values', 'App\Http\Controllers\ChartController@getAssetValueChart');
+        Route::get('chart/asset/audits', 'App\Http\Controllers\ChartController@getAssetAuditChart');
 
         //
     });

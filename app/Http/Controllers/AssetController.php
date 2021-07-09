@@ -254,10 +254,10 @@ class AssetController extends Controller
             return false;
         }
     }
-   public function export(Asset $asset)
-   {
-       return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
 
+    public function export(Asset $asset)
+    {
+       return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
     }
 
     public function filter(Request $request){
@@ -303,6 +303,19 @@ class AssetController extends Controller
         $locations = auth()->user()->locations->pluck('id');
         $assets = Asset::locationFilter($locations);
         $assets->statusFilter($array);
+        return view('assets.view', [
+            "assets"=> $assets->get(),
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations"=>auth()->user()->locations,
+        ]);
+    }
+
+    public function location(Location $location){
+        $locations = auth()->user()->locations->pluck('id');
+        $assets = Asset::locationFilter($locations);
+        $assets->locationFilter([$location->id]);
         return view('assets.view', [
             "assets"=> $assets->get(),
             'suppliers' => Supplier::all(),

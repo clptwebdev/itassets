@@ -167,39 +167,39 @@
                     <table id="assetsTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th><small>Item</small></th>
-                            <th><small>Location</small></th>
-                            <th><small>Tag</small></th>
-                            <th><small>Manufacturer</small></th>
-                            <th><small>Date</small></th>
-                            <th><small>Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="col-auto"><small>Warranty (M)</small></th>
-                            <th class="col-auto text-center"><small>Audit Due</small></th>
-                            <th class="text-right col-auto"><small>Options</small></th>
+                            <th class="text-center  d-none d-md-table-cell"><input type="checkbox"></th>
+                            <th class="col-9 col-md-auto"><small>Item</small></th>
+                            <th class="col-1 col-md-auto"><small>Location</small></th>
+                            <th class="col-1 col-md-auto"><small>Tag</small></th>
+                            <th class="d-none d-lg-table-cell"><small>Manufacturer</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Date</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Cost</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class="col-auto d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                            <th class="col-auto text-center d-none d-md-table-cell"><small>Audit Due</small></th>
+                            <th class="text-right col-1 col-md-auto"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
+                            <th class="text-center  d-none d-md-table-cell"><input type="checkbox"></th>
                             <th><small>Item</small></th>
                             <th><small>Location</small></th>
                             <th><small>Tag</small></th>
-                            <th><small>Manufacturer</small></th>
-                            <th><small>Date</small></th>
-                            <th><small>Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th><small>Warranty (M)</small></th>
-                            <th class="text-center"><small>Audit Due</small></th>
+                            <th class="d-none d-lg-table-cell"><small>Manufacturer</small></th>
+                            <th class=" d-none d-xl-table-cell"><small>Date</small></th>
+                            <th class=" d-none d-xl-table-cell"><small>Cost</small></th>
+                            <th class=" d-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class=" d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                            <th class="text-center  d-none d-md-table-cell"><small>Audit Due</small></th>
                             <th class="text-right"><small>Options</small></th>
                         </tr>
                         </tfoot>
                         <tbody>
                         @foreach($assets as $asset)
                             <tr>
-                                <td class="text-center"><input type="checkbox"></td>
-                                <td>{{ $asset->model->name ?? 'No Model'}}<br><small>{{ $asset->serial_no }}</small></td>
+                                <td class="text-center  d-none d-md-table-cell"><input type="checkbox"></td>
+                                <td>{{ $asset->model->name ?? 'No Model'}}<br><small class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
                                         '<img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>'
@@ -209,9 +209,9 @@
                                     @endif
                                 </td>
                                 <td>{{ $asset->asset_tag }}</td>
-                                <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
-                                <td data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
-                                <td class="text-center">
+                                <td class="text-center d-none d-lg-table-cell">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
+                                <td class=" d-none d-md-table-cell" data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
+                                <td class="text-center  d-none d-xl-table-cell">
                                     £{{ $asset->purchased_cost }}<br>
                                     @php
                                     $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
@@ -220,14 +220,14 @@
                                     @endphp
                                     <small>(*£{{ number_format($dep, 2)}})</small>
                                 </td>
-                                <td class="text-center">{{$asset->supplier->name ?? "N/A"}}</td>
+                                <td class="text-center  d-none d-xl-table-cell">{{$asset->supplier->name ?? "N/A"}}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
-                                <td class="text-center" data-sort="{{ $warranty_end }}">
+                                <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
                                     {{ $asset->warranty }} Months
 
                                     <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
                                 </td>
-                                <td class="text-center" data-sort="{{ strtotime($asset->audit_date)}}">
+                                <td class="text-center  d-none d-xl-table-cell" data-sort="{{ strtotime($asset->audit_date)}}">
                                     @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
                                         <span class="text-danger">{{\Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span><br><small>Audit Overdue</small>
                                     @else
@@ -247,15 +247,15 @@
                                            class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i></a>&nbsp;
                                            @can('edit', $asset)
                                         <a href="{{route('assets.edit', $asset->id) }}"
-                                           class="btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
+                                           class="btn-sm btn-secondary text-white  d-none d-md-inline-block"><i class="fas fa-pencil-alt"></i></a>&nbsp;
                                             @endcan
                                             
                                         @csrf
                                         @method('DELETE')
 
                                         @can('delete', $asset)
-                                        <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                           data-id="{{$asset->id}}"><i class=" fas fa-trash"></i></a>
+                                        <a class="btn-sm btn-danger text-white deleteBtn d-none d-md-inline-block" href="#"
+                                           data-id="{{$asset->id}}"><i class=" fas fa-trash "></i></a>
                                            @endcan
                                     </form>
                                 </td>
@@ -348,6 +348,8 @@
 
         $(document).ready( function () {
             $('#assetsTable').DataTable({
+                "autoWidth": false,
+                "pageLength": 25,
                 "columnDefs": [ {
                 "targets": [0, 10],
                 "orderable": false,

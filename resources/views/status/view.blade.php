@@ -66,7 +66,12 @@
                             <td class="text-center"><input type="checkbox"></td>
                             <td>{{ $status->name }}</td>
                             <td class="text-center">@if($status->deployable == 1){!! '<i class="fas fa-check text-success"></i>'!!}@else{!!'<i class="fas fa-times text-danger"></i>'!!}@endif</td>
-                        <td class="text-center">{{ $status->assets->count() }}</td>
+                            <td class="text-center">
+                                @php
+                                    $assets = auth()->user()->location_assets()->statusFilter([$status->id]);
+                                @endphp
+                                {{ $assets->count() }}
+                            </td>
                             <td class="text-center">N/A</td>
                             <td class="text-center">N/A</td>
                             <td class="text-center">N/A</td>
