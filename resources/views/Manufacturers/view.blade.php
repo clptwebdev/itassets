@@ -117,24 +117,23 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="/importmanufacturer" method="POST" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <p>Select "import" to add Manufacturers to the system.</p>
-                    <input  class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                           type="file" placeholder="Upload here" name="csv" accept=".csv"id="importEmpty" >
-                </div>
-                <div class="modal-footer">
-                    @if(session('import-error'))
-                        <div class="alert text-warning"> {{ session('import-error')}} </div>
-                    @endif
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <form action="/importasset" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <p>Select "import" to add Assets to the system.</p>
+                        <input class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                               type="file" placeholder="Upload here" name="csv" accept=".csv" id="importEmpty">
+                    </div>
+                    <div class="modal-footer">
+                        @if(session('import-error'))
+                            <div class="alert text-warning"> {{ session('import-error')}} </div>
+                        @endif
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
 
                         <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
                             Import
                         </button>
-                        @csrf
-                    </form>
-                </div>
+                    @csrf
+                </form>
             </div>
         </div>
     </div>
@@ -166,7 +165,7 @@
             if (!$('#importEmpty').val()) {
                 e.preventDefault();
                 <?php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');?>
-            }else{
+            } else {
                 <?php session()->flash('import-error', '');?>            }
         })
     </script>

@@ -36,7 +36,7 @@ class AssetExport implements FromArray, WithHeadings {
 
     public function array(): array
     {
-        $assets = Asset::all();
+        $assets = auth()->user()->location_assets;
         $object =  [];
         foreach($assets as $asset){
             $array =  [];

@@ -352,14 +352,11 @@ class ComponentController extends Controller {
 
     public function import(Request $request)
     {
-//        $request->validate([
-//            'file' => 'required|mimes:csv'
-//        ]);
         $extensions = array("csv");
-//
+
         $result = array($request->file('csv')->getClientOriginalExtension());
-//
-//
+
+
         if(in_array($result[0],$extensions)){
             $path = $request->file("csv")->getRealPath();
             $import = new ComponentsImport;

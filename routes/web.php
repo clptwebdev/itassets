@@ -71,6 +71,10 @@ Route::group(['middleware'=>'auth'], function(){
         Route::Post("components/create/import", [\App\Http\Controllers\ComponentController::class, "createMany"]);
         Route::Post("components/create/ajax", [\App\Http\Controllers\ComponentController::class, "ajaxMany"]);
 
+        Route::post("/importassets", [\App\Http\Controllers\AssetController::class, "import"]);
+        Route::Post("assets/create/import", [\App\Http\Controllers\AssetController::class, "createMany"]);
+        Route::Post("assets/create/ajax", [\App\Http\Controllers\AssetController::class, "ajaxMany"]);
+
 
         Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);
         Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "create"]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\AssetImport;
 use App\Models\Asset;
 use App\Models\AssetModel;
 use App\Models\Fieldset;
@@ -10,8 +11,10 @@ use App\Models\Manufacturer;
 use App\Models\Supplier;
 use App\Models\Status;
 use App\Models\Category;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Exports\AssetExport;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Excel;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 
@@ -97,7 +100,7 @@ class AssetController extends Controller
                     }else{
                         $values = $request->$name;
                     }
-                    $array[$field->id] = ['value' => $values];                
+                    $array[$field->id] = ['value' => $values];
                 }
             }
         }
@@ -125,7 +128,7 @@ class AssetController extends Controller
         ), ['user_id' => auth()->user()->id]));
         $asset->fields()->attach($array);
         $asset->category()->attach($request->category);
-                
+
         session()->flash('success_message', $request->name.' has been created successfully');
         return redirect(route('assets.index'));
 
@@ -205,10 +208,10 @@ class AssetController extends Controller
                 }else{
                     $values = $request->$name;
                 }
-                $array[$field->id] = ['value' => $values];                
+                $array[$field->id] = ['value' => $values];
             }
         }
-        
+
         if(!empty($validate_fieldet)){ $v = array_merge($validate_fieldet, [
             'asset_tag' => 'required',
             'serial_no' => 'required',
@@ -232,7 +235,7 @@ class AssetController extends Controller
             'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]))->save();
         $asset->fields()->sync($array);
-        
+
         session()->flash('success_message', $request->name.' has been updated successfully');
         return redirect(route('assets.index'));
     }
@@ -257,6 +260,304 @@ class AssetController extends Controller
    public function export(Asset $asset)
    {
        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
+
+    }
+    public function import(Request $request)
+    {
+        $extensions = array("csv");
+
+        $result = array($request->file('csv')->getClientOriginalExtension());
+
+
+        if(in_array($result[0],$extensions)){
+            $path = $request->file("csv")->getRealPath();
+            $import = new AssetImport;
+            $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
+            $row = [];
+            $attributes = [];
+            $errors = [];
+            $values = [];
+            $results = $import->failures();
+            $importErrors = [];
+            foreach($results->all() as $result)
+            {
+                $row[] = $result->row();
+                $attributes[] = $result->attribute();
+                $errors[] = $result->errors();
+                $values[] = $result->values();
+                $importErrors[] = [
+
+                    "row" => $result->row(),
+                    "attributes" => $result->attribute(),
+                    "errors" => $result->errors(),
+                    "value" => $result->values(),
+                ];
+
+            }
+
+            if(! empty($importErrors))
+            {
+                $errorArray = [];
+                $valueArray = [];
+                $errorValues = [];
+
+                foreach($importErrors as $error)
+                {
+                    if(array_key_exists($error['row'], $errorArray))
+                    {
+                        $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
+                    } else
+                    {
+                        $errorArray[$error['row']] = $error['attributes'];
+                    }
+                    $valueArray[$error['row']] = $error['value'];
+
+                    if(array_key_exists($error['row'], $errorValues))
+                    {
+                        $array = $errorValues[$error['row']];
+                    }else{
+                        $array = [];
+                    }
+
+                    foreach($error['errors'] as $e){
+                        $array[$error['attributes']] = $e;
+                    }
+                    $errorValues[$error['row']] = $array;
+
+                }
+
+
+                return view('assets.import-errors', [
+                    "errorArray" => $errorArray,
+                    "valueArray" => $valueArray,
+                    "errorValues" => $errorValues,
+                ]);
+
+            } else
+            {
+
+                return redirect('/assets')->with('success_message', 'All Assets were added correctly!');
+
+            }
+        }else{
+            session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+
+            return redirect(route('assets.index'));
+        }
+    }
+    public function ajaxMany(Request $request)
+    {
+        if($request->ajax()){
+            $validation = Validator::make($request->all(), [
+                "name.*" => "required|max:255",
+                'order_no.*' => 'required',
+                'serial_no.*' => 'required',
+                'warranty.*' => 'int',
+                'purchased_date.*' => 'nullable|date',
+                'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            ]);
+
+            if($validation->fails()){
+                return $validation->errors();
+            }else{
+                for($i = 0; $i < count($request->name); $i++)
+                {
+                    $asset = new Asset;
+
+                    $asset->name = $request->name[$i];
+
+                    $asset->serial_no = $request->serial_no[$i];
+
+                    //check for already existing Status upon import if else create
+                    if($status = Status::where(["name" => $request->status_id[$i]])->first())
+                    {
+
+                    } else
+                    {
+                        $status = new Status;
+
+                        $status->name = $request->status_id[$i];
+                        $status->deployable = 1;
+
+                        $status->save();
+                    }
+                    $asset->status_id = $status->id;
+
+                    $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
+                    $asset->purchased_cost = $request->purchased_cost[$i];
+
+                    //check for already existing Suppliers upon import if else create
+                    if($supplier = Supplier::where(["name" => $request->supplier_id[$i]])->first())
+                    {
+
+                    } else
+                    {
+                        $supplier = new Supplier;
+
+                        $supplier->name = $request->supplier_id[$i];
+                        $supplier->email = 'info@' . str_replace(' ', '', strtolower($request->supplier_id[$i])) . '.com';
+                        $supplier->url = 'www.' . str_replace(' ', '', strtolower($request->supplier_id[$i])) . '.com';
+                        $supplier->telephone = "Unknown";
+                        $supplier->save();
+                    }
+
+                    $asset->supplier_id = $supplier->id;
+
+                    //check for already existing Manufacturers upon import if else create
+                    if($manufacturer = Manufacturer::where(["name" => $request->manufacturer_id[$i]])->first())
+                    {
+
+                    } else
+                    {
+                        $manufacturer = new Manufacturer;
+
+                        $manufacturer->name = $request->manufacturer_id[$i];
+                        $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($request->manufacturer_id[$i])) . '.com';
+                        $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($request->manufacturer_id[$i])) . '.com';
+                        $manufacturer->supportPhone = "Unknown";
+                        $manufacturer->save();
+                    }
+                    $asset->manufacturer_id = $manufacturer->id;
+                    $asset->order_no = $request->order_no[$i];
+                    $asset->warranty = $request->warranty[$i];
+                    //check for already existing Locations upon import if else create
+                    if($location = Location::where(["name" => $request->location_id[$i]])->first())
+                    {
+
+                    } else
+                    {
+                        $location = new Location;
+
+                        $location->name = $request->location_id[$i];
+                        $location->email = 'enquiries@' . str_replace(' ', '', strtolower($request->location_id[$i])) . '.co.uk';
+                        $location->telephone = "01902556360";
+                        $location->address_1 = "Unknown";
+                        $location->city = "Unknown";
+                        $location->postcode = "Unknown";
+                        $location->county = "West Midlands";
+                        $location->icon = "#222222";
+                        $location->save();
+                    }
+                    $asset->location_id = $location->id;
+
+                    $asset->notes = $request->notes[$i];
+                    $asset->save();
+                }
+
+                session()->flash('success_message', 'You can successfully added the Manufacturers');
+                return 'Success';
+            }
+        }
+
+    }
+    public function createMany(Request $request)
+    {
+
+        $validation = Validator::make($request->all(), [
+            "name.*" => "required|max:255",
+            'order_no.*' => 'required',
+            'serial_no.*' => 'required',
+            'warranty.*' => 'int',
+            'purchased_date.*' => 'nullable|date',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+
+        ]);
+
+        for($i = 0; $i < count($request->name); $i++)
+        {
+            $asset = new asset;
+
+            $asset->name = $request->name[$i];
+
+            $asset->serial_no = $request->serial_no[$i];
+
+            //check for already existing Status upon import if else create
+            if($status = Status::where(["name" => $request->status_id[$i]])->first())
+            {
+
+            } else
+            {
+                $status = new Status;
+
+                $status->name = $request->status_id[$i];
+                $status->deployable = 1;
+
+                $status->save();
+            }
+            $asset->status_id = $status->id;
+
+            $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
+            $asset->purchased_cost = $request->purchased_cost[$i];
+
+            //check for already existing Suppliers upon import if else create
+            if($supplier = Supplier::where(["name" => $request->supplier_id[$i]])->first())
+            {
+
+            } else
+            {
+                $supplier = new Supplier;
+
+                $supplier->name = $request->supplier_id[$i];
+                $supplier->email = 'info@' . str_replace(' ', '', strtolower($request->supplier_id[$i])) . '.com';
+                $supplier->url = 'www.' . str_replace(' ', '', strtolower($request->supplier_id[$i])) . '.com';
+                $supplier->telephone = "Unknown";
+                $supplier->save();
+            }
+
+            $asset->supplier_id = $supplier->id;
+
+            //check for already existing Manufacturers upon import if else create
+            if($manufacturer = Manufacturer::where(["name" => $request->manufacturer_id[$i]])->first())
+            {
+
+            } else
+            {
+                $manufacturer = new Manufacturer;
+
+                $manufacturer->name = $request->manufacturer_id[$i];
+                $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($request->manufacturer_id[$i])) . '.com';
+                $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($request->manufacturer_id[$i])) . '.com';
+                $manufacturer->supportPhone = "Unknown";
+                $manufacturer->save();
+            }
+            $asset->manufacturer_id = $manufacturer->id;
+            $asset->order_no = $request->order_no[$i];
+            $asset->warranty = $request->warranty[$i];
+            //check for already existing Locations upon import if else create
+            if($location = Location::where(["name" => $request->location_id[$i]])->first())
+            {
+
+            } else
+            {
+                $location = new Location;
+
+                $location->name = $request->location_id[$i];
+                $location->email = 'enquiries@' . str_replace(' ', '', strtolower($request->location_id[$i])) . '.co.uk';
+                $location->telephone = "01902556360";
+                $location->address_1 = "Unknown";
+                $location->city = "Unknown";
+                $location->postcode = "Unknown";
+                $location->county = "West Midlands";
+                $location->icon = "#222222";
+                $location->save();
+            }
+            $asset->location_id = $location->id;
+
+            $asset->notes = $request->notes[$i];
+            $asset->save();
+        }
+
+        if($validation->fails())
+        {
+            return view('assets.view', [
+                "names" => $request->name,
+            ]);
+        }
+
+
+        session()->flash('success_message', $i . ' has been created successfully');
+
+        return redirect('/assets');
 
     }
 
