@@ -29,13 +29,13 @@
                 $statuses = App\Models\Status::all();
                 @endphp
                 <a href="#statusMenu" class="sub-link collapse-item collapsed d-none d-sm-block" data-toggle="collapse" data-parent="#statusMenu"><i class="fas fa-shield-alt fa-xs"></i> By Status</a>
-                <div class="collapse p-2 d-none d-sm-block" id="statusMenu">
+                <div class="collapse p-2" id="statusMenu">
                     @foreach($statuses as $status)
                     <a href="{{ route('assets.status', $status->id)}}" title="Add New Asset" class="collapse-item"><i class="far fa-circle @if($status->deployable == 1){{ 'text-success'}}@else{{ 'text-danger'}}@endif"></i> {{ $status->name}}</a>
                     @endforeach
                 </div>
                 <a href="#locationMenu" class="sub-link collapse-item collapsed d-none d-sm-block" data-toggle="collapse" data-parent="#locationMenu"><i class="fas fa-school fa-xs"></i> By Location</a>
-                <div class="collapse p-2 d-none d-sm-block" id="locationMenu">
+                <div class="collapse p-2" id="locationMenu">
                     @foreach(auth()->user()->locations as $location)
                     <a href="{{ route('assets.location', $location->id)}}" class="collapse-item" data-parent="#SubSubMenu1"><i class="far fa-circle" style="color:{{$location->icon}};"></i> {{ $location->name}}</a>
                     @endforeach

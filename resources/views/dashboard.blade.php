@@ -20,9 +20,8 @@
 <div class="row row-eq-height mb-4">
 
     <!-- Area Chart -->
-    <div class="col-12 col-xl-7 h-100">
-        <div class="h-100 bg-white">
-            <div class="card shadow h-100 mb-4">
+    <div id="areaChart" class="col-12 col-xl-7">
+            <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Asset Value</h6>
@@ -48,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card shadow h-100">
+            <div class="card shadow ">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
@@ -74,13 +73,10 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
-    <!-- Pie Chart -->
-    <div class="col-12 col-xl-5 h-100">
-        <div class="h-100">
-            <div class="card shadow h-100">
+    <div id="pieChart" class="col-12 col-xl-5">
+            <div class="card shadow">
             <!-- Card Header - Dropdown -->
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -105,20 +101,8 @@
             <div class="card-body">
                 <div class="pt-4 pb-2">
                     <canvas id="myPieChart" style="width: 400px; height: 400px;"></canvas>
-                </div>{{-- 
-                <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-primary"></i> Heath Park
-                    </span>
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-success"></i> Moseley Park
-                    </span>
-                    <span class="mr-2">
-                        <i class="fas fa-circle" style></i> Coppice
-                    </span>
-                </div> --}}
+                </div>
             </div>
-        </div>
         </div>
     </div>
 </div>
@@ -128,7 +112,6 @@
 
     <!-- Content Column -->
     <div class="col-xl-6 mb-4">
-
         <!-- Project Card Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -376,6 +359,8 @@
                         }
                     }
                 });
+
+                $('#pieChart').height('100%');
             },
             error: function(){
                 console.log('Eror');
