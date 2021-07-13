@@ -123,7 +123,7 @@
 
                             </td>
                              <td>
-                                <input type="number"
+                                <input type="text"
                                        class="form-control <?php if (in_array('purchased_cost', $errors)) {?>border-danger<?php }?>
                                        {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
                                            "

@@ -373,7 +373,7 @@ class AssetController extends Controller
                     $asset = new Asset;
 
                     $asset->asset_tag = $request->asset_tag[$i];
-
+                    $asset->user = auth()->user()->id;
                     $asset->serial_no = $request->serial_no[$i];
 
                     //check for already existing Status upon import if else create
@@ -410,8 +410,8 @@ class AssetController extends Controller
                     }
 
                     $asset->supplier_id = $supplier->id;
-                    $asset->order_no = $request->order_no;
-                    $asset->warranty = $request->warranty;
+                    $asset->order_no = $request->order_no[$i];
+                    $asset->warranty = $request->warranty[$i];
 
                     //check for already existing Locations upon import if else create
                     if($location = Location::where(["name" => $request->location_id[$i]])->first())
