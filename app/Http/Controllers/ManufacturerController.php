@@ -84,40 +84,6 @@ class ManufacturerController extends Controller {
         return redirect('/manufacturers');
     }
 
-    public function createMany(Request $request)
-    {
-
-        $validation = Validator::make($request->all(), [
-            "name.*" => "unique:manufacturers,name|required|max:255",
-            "supportPhone.*" => "required|max:14",
-            "supportUrl.*" => "required",
-            "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
-
-        ]);
-
-        if($validation->fails())
-        {
-            return view('Manufacturers.view', [
-                "names" => $request->name,
-            ]);
-        }
-
-        for($i = 0; $i < count($request->name); $i++)
-        {
-            Manufacturer::Create([
-                "name" => $request->name[$i],
-                "supportPhone" => $request->supportPhone[$i],
-                "supportUrl" => $request->supportUrl[$i],
-                "supportEmail" => $request->supportEmail[$i],
-
-            ]);
-        }
-        session()->flash('success_message', $i . ' has been created successfully');
-
-        return redirect('/manufacturers');
-
-    }
-
     public function ajaxMany(Request $request)
     {
         if($request->ajax()){

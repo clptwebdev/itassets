@@ -117,7 +117,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="/importasset" method="POST" enctype="multipart/form-data">
+                <form action="/importmanufacturer" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add Assets to the system.</p>
                         <input class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"

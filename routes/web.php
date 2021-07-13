@@ -68,11 +68,9 @@ Route::group(['middleware'=>'auth'], function(){
 //
         Route::post("/importmanufacturer", [\App\Http\Controllers\ManufacturerController::class, "import"]);
         Route::post("/importcomponents", [\App\Http\Controllers\ComponentController::class, "import"]);
-        Route::Post("components/create/import", [\App\Http\Controllers\ComponentController::class, "createMany"]);
         Route::Post("components/create/ajax", [\App\Http\Controllers\ComponentController::class, "ajaxMany"]);
 
         Route::post("/importassets", [\App\Http\Controllers\AssetController::class, "import"]);
-        Route::Post("assets/create/import", [\App\Http\Controllers\AssetController::class, "createMany"]);
         Route::Post("assets/create/ajax", [\App\Http\Controllers\AssetController::class, "ajaxMany"]);
 
 
@@ -84,12 +82,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "list"]);
         Route::Post("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "store"]);
         Route::Post("manufacturers/create/import", [\App\Http\Controllers\ManufacturerController::class, "createMany"]);
-        Route::Get("manufacturers/create/import", [\App\Http\Controllers\ManufacturerController::class, "createMany"]);
         Route::Post("manufacturers/create/ajax", [\App\Http\Controllers\ManufacturerController::class, "ajaxMany"]);
-
-        //This needs fixing its trying to get variable array from import
-        Route::Post("manufacturers/import-fail", [\App\Http\Controllers\ManufacturerController::class,"import"]);
-        Route::get("manufacturers/import-fail", [\App\Http\Controllers\ManufacturerController::class,"import"]);
 
         Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');
 

@@ -3,18 +3,26 @@
 namespace App\Imports;
 
 use App\Models\Asset;
+use App\Models\AssetModel;
 use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithUpserts;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Validators\Failure;
 
-class AssetImport implements ToModel
+class AssetImport implements ToModel , WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError
 {
     /**
      * @param array     $row
@@ -32,10 +40,9 @@ class AssetImport implements ToModel
     {
 
         return [
-            'name' => [
+            'asset_tag' => [
                 'required',
-                'string',
-
+                'unique:assets'
             ],
             'purchased_cost' => [
                 'required',
@@ -43,13 +50,9 @@ class AssetImport implements ToModel
             ],
             'order_no' => [
                 'required',
-
             ],
             'serial_no' => [
                 'required',
-            ],
-            'notes' => [
-
             ],
             'status_id' => [
                 'string',
@@ -57,26 +60,25 @@ class AssetImport implements ToModel
             'purchased_date' => [
                 'string',
             ],
+            'audit_date' => [
+                'string',
+            ],
             'supplier_id' => [
                 'string',
             ],
             'location_id' => [
-
-            ],
-            'manufacturer_id' => [
-                'string',
-            ],
-
+            ]
         ];
 
 
     }
 
+
     public function model(array $row)
     {
 
         $asset = new Asset;
-        $asset->name = $row["name"];
+        $asset->asset_tag = $row["asset_tag"];
 
         $asset->serial_no = $row["serial_no"];
 
@@ -116,20 +118,6 @@ class AssetImport implements ToModel
         $asset->supplier_id = $supplier->id;
 
         //check for already existing Manufacturers upon import if else create
-        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->first())
-        {
-
-        } else
-        {
-            $manufacturer = new Manufacturer;
-
-            $manufacturer->name = $row["manufacturer_id"];
-            $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
-            $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
-            $manufacturer->supportPhone = "Unknown";
-            $manufacturer->save();
-        }
-        $asset->manufacturer_id = $manufacturer->id;
         $asset->order_no = $row["order_no"];
         $asset->warranty = $row["warranty"];
         //check for already existing Locations upon import if else create
@@ -152,7 +140,15 @@ class AssetImport implements ToModel
         }
         $asset->location_id = $location->id;
 
-        $asset->notes = $row["notes"];
+        if($asset_model = AssetModel::where(["name" => $row["asset_model_id"]])->first())
+        {
+            $asset->asset_model = $asset_model->id;
+        } else
+        {
+            $asset->asset_model = 0;
+        }
+
+
         $asset->save();
     }
 
@@ -163,7 +159,7 @@ class AssetImport implements ToModel
 
     public function uniqueBy()
     {
-        return 'name';
+        return 'asset_tag';
     }
 
 }

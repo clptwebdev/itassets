@@ -3,10 +3,10 @@
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
-
 @section('content')
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import
+
             Failures</h1>@php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
         <div class="alert alert-danger">You have several errors Within your Import in rows {{$errorRows}}</div>
         <div>
@@ -45,11 +45,9 @@
                             <th>Purchased Date</th>
                             <th>Purchased Cost</th>
                             <th>Supplier</th>
-                            <th>manufacturer</th>
                             <th>Order_no</th>
                             <th>Warranty</th>
                             <th>Location</th>
-                            <th>User</th>
                             <th>Audit Date</th>
                         </tr>
                         </thead>
@@ -62,11 +60,9 @@
                             <th>Purchased Date</th>
                             <th>Purchased Cost</th>
                             <th>Supplier</th>
-                            <th>Manufacturers</th>
                             <th>Order_no</th>
                             <th>Warranty</th>
                             <th>Location</th>
-                            <th>User</th>
                             <th>Audit Date</th>
                         </tr>
                         </tfoot>
@@ -76,7 +72,7 @@
                         <?php $errors = explode(",", $error); ?>
                         <tr>
                             <td>
-                                <input type="text"
+                                <input type="number"  maxlength="11"
                                        class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>
                                                    "
                                        name="asset_tag[]"
@@ -95,44 +91,42 @@
                                 @if(array_key_exists('serial_no', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['serial_no']}}</small>@endif
                             </td>
                             <td>
-                                <div class="form-group">
-                                    <label for="asset_model">Asset Model Select</label><span class="text-danger">*</span>
-                                    <select type="dropdown" class="form-control" name="asset_model" id="asset_model" onchange="getFields(this);" autocomplete="off" required >
-                                        <option value="0" @if(old('asset_model') == 0){{'selected'}}@endif>Please Select a Model</option>
-                                        @foreach($models as $model)
-                                            <option value="{{ $model->id }}" @if(old('asset_model') == $model->id){{'selected'}}@endif>{{ $model->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @if(array_key_exists('serial_no', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['serial_no']}}</small>@endif
-                                </div>
-                            </td>
-                            <td>
-                                <input type="text"
-                                       class="form-control <?php if (in_array('status_id', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
-                                       name="status_id[]"
-                                       id="status_id" placeholder="This Row is Empty Please Fill!"
-                                       value="{{ $valueArray[$row]['status_id'] }}" required>
-                                @if(array_key_exists('status_id', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['status_id']}}</small>@endif
 
+
+                                <div class="form-group">
+                                <select type="dropdown" class="form-control" name="asset_model[]" id="asset_model" onchange="getFields(this);" autocomplete="off" required>
+                                    <option value="0" @if($valueArray[$row]['asset_model_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
+                                    @foreach($models as $model)
+                                        <option value="{{ $model->id }}" @if( $valueArray[$row]['asset_model_id'] == $model->name){{'selected'}}@endif>{{ $model->name }}</option>
+                                    @endforeach
+                                </select>
+                </div>
                             </td>
                             <td>
-                                <input type="text"
+                                <select type="dropdown" class="form-control" name="status_id[]" id="status_id" onchange="getFields(this);" autocomplete="off" required>
+                                    <option value="0" @if($valueArray[$row]['status_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
+                                    @foreach($statuses as $status)
+                                        <option value="{{ $valueArray[$row]['status_id'] }}" @if( $valueArray[$row]['status_id'] == $status->name){{'selected'}}@endif>{{ $status->name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+
+                                <input type="date"
                                        class="form-control <?php if (in_array('purchased_date', $errors)) {?>border-danger<?php }?>
                                                {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
                                                    "
                                        name="purchased_date[]"
                                        id="purchased_date" placeholder="This Row is Empty Please Fill!"
-                                       value="{{ $valueArray[$row]['purchased_date'] }}" required>
+                                       value="{{ \Carbon\Carbon::parse(str_replace('/','-',$valueArray[$row]['purchased_date']))->format("Y-m-d")}}" required>
                                 @if(array_key_exists('purchased_date', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['purchased_date']}}</small>@endif
 
                             </td>
-                            <td>
-                                <input type="text"
+                             <td>
+                                <input type="number"
                                        class="form-control <?php if (in_array('purchased_cost', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
+                                       {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
+                                           "
                                        name="purchased_cost[]"
                                        id="purchased_cost" placeholder="This Row is Empty Please Fill!"
                                        value="{{ $valueArray[$row]['purchased_cost'] }}" required>
@@ -140,27 +134,14 @@
 
                             </td>
                             <td>
-                                <input type="text"
-                                       class="form-control <?php if (in_array('supplier', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
-                                       name="supplier[]"
-                                       id="supplier" placeholder="This Row is Empty Please Fill!"
-                                       value="{{ $valueArray[$row]['supplier'] }}" required>
-                                @if(array_key_exists('supplier', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['supplier']}}</small>@endif
-
+                                <select type="dropdown" class="form-control" name="supplier_id[]" id="supplier_id" onchange="getFields(this);" autocomplete="off" required>
+                                    <option value="0" @if($valueArray[$row]['supplier_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
+                                    @foreach($suppliers as $supplier)
+                                        <option value="{{ $valueArray[$row]['supplier_id'] }}" @if( $valueArray[$row]['supplier_id'] == $supplier->name){{'selected'}}@endif>{{ $supplier->name }}</option>
+                                    @endforeach
+                                </select>
                             </td>
-                            <td>
-                                <input type="text"
-                                       class="form-control <?php if (in_array('manufacturer', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
-                                       name="manufacturer[]"
-                                       id="manufacturer" placeholder="This Row is Empty Please Fill!"
-                                       value="{{ $valueArray[$row]['manufacturer'] }}" required>
-                                @if(array_key_exists('manufacturer', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['manufacturer']}}</small>@endif
-
-                            </td><td>
+                           <td>
                                 <input type="text"
                                        class="form-control <?php if (in_array('order_no', $errors)) {?>border-danger<?php }?>
                                                {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
@@ -182,35 +163,21 @@
 
                             </td>
                             <td>
-                                <input type="text"
-                                       class="form-control <?php if (in_array('location', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
-                                       name="location[]"
-                                       id="location" placeholder="This Row is Empty Please Fill!"
-                                       value="{{ $valueArray[$row]['location'] }}" required>
-                                @if(array_key_exists('location', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['location']}}</small>@endif
-
+                                <select type="dropdown" class="form-control" name="location_id[]" id="location_id" onchange="getFields(this);" autocomplete="off" required>
+                                    <option value="0" @if($valueArray[$row]['location_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
+                                    @foreach($locations as $location)
+                                        <option value="{{ $valueArray[$row]['location_id'] }}" @if( $valueArray[$row]['location_id'] == $location->name){{'selected'}}@endif>{{ $location->name }}</option>
+                                    @endforeach
+                                </select>
                             </td>
                             <td>
-                                <input type="text"
-                                       class="form-control <?php if (in_array('user_id', $errors)) {?>border-danger<?php }?>
-                                       {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                           "
-                                       name="user_id[]"
-                                       id="user_id" placeholder="This Row is Empty Please Fill!"
-                                       value="{{ $valueArray[$row]['user_id'] }}" required>
-                                @if(array_key_exists('user_id', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['user_id']}}</small>@endif
-
-                            </td>
-                            <td>
-                                <input type="text"
+                                <input type="date"
                                        class="form-control <?php if (in_array('audit_date', $errors)) {?>border-danger<?php }?>
                                        {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
                                            "
                                        name="audit_date[]"
                                        id="audit_date" placeholder="This Row is Empty Please Fill!"
-                                       value="{{ $valueArray[$row]['audit_date'] }}" required>
+                                       value="{{ \Carbon\Carbon::parse(str_replace('/','-',$valueArray[$row]['audit_date']))->format("Y-m-d")}}" required>
                                 @if(array_key_exists('audit_date', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['audit_date']}}</small>@endif
 
                             </td>
@@ -233,26 +200,6 @@
 @section('js')
 <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script>
-    $('.deleteBtn').click(function () {
-        $('#deleteForm').attr('action', $(this).data('route'));
-        //showModal
-        $('#removeCategoryModal').modal('show');
-    });
-
-    $('#confirmBtn').click(function () {
-        $('#deleteForm').submit();
-    });
-
-    $('.updateBtn').click(function () {
-        var val = $(this).data('id');
-        var name = $(this).data('name');
-        var route = $(this).data('route');
-        $('[name="name"]').val(name);
-        $('#updateForm').attr('action', route);
-        $('#updateCategoryModal').modal('show');
-    });
-
-
     $(document).ready(function () {
         $('#categoryTable').DataTable({
             "columnDefs": [{
@@ -282,13 +229,13 @@
         });
 
         //Phone
-        var astInputs = $("input[name='asset_model[]']").get();
+        var astInputs = $("select[name='asset_model[]']").get();
         astInputs.forEach(element => {
             data.append('asset_model[]', element.value);
         });
 
         //Email
-        var maInputs = $("input[name='status_id[]']").get();
+        var maInputs = $("select[name='status_id[]']").get();
         maInputs.forEach(element => {
             data.append('status_id[]', element.value);
         });
@@ -303,15 +250,11 @@
             data.append('purchased_cost[]', element.value);
         });
 
-        var supInputs = $("input[name='supplier[]']").get();
+        var supInputs = $("select[name='supplier_id[]']").get();
         supInputs.forEach(element => {
-            data.append('supplier[]', element.value);
+            data.append('supplier_id[]', element.value);
         });
 
-        var manInputs = $("input[name='manufacturer[]']").get();
-        manInputs.forEach(element => {
-            data.append('manufacturer[]', element.value);
-        });
 
         var odInputs = $("input[name='order_no[]']").get();
         odInputs.forEach(element => {
@@ -323,19 +266,14 @@
             data.append('warranty[]', element.value);
         });
 
-        var loInputs = $("input[name='location[]']").get();
+        var loInputs = $("select[name='location_id[]']").get();
         loInputs.forEach(element => {
-            data.append('location[]', element.value);
-        });
-        var usInputs = $("input[name='user_id[]']").get();
-        usInputs.forEach(element => {
-            data.append('user_id[]', element.value);
+            data.append('location_id[]', element.value);
         });
         var adtInputs = $("input[name='audit_date[]']").get();
         adtInputs.forEach(element => {
             data.append('audit_date[]', element.value);
         });
-
         $.ajax({
             url: '/assets/create/ajax',
             type: 'POST',

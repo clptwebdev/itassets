@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Exports\AssetExport;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Excel;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 
@@ -294,7 +295,6 @@ class AssetController extends Controller
                 ];
 
             }
-
             if(! empty($importErrors))
             {
                 $errorArray = [];
@@ -331,6 +331,10 @@ class AssetController extends Controller
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
+                    "models"=>AssetModel::all(),
+                    "statuses"=>Status::all(),
+                    "suppliers"=>Supplier::all(),
+                    "locations"=>Location::all(),
                 ]);
 
             } else
@@ -340,31 +344,35 @@ class AssetController extends Controller
 
             }
         }else{
-            session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+            return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-            return redirect(route('assets.index'));
         }
     }
     public function ajaxMany(Request $request)
     {
         if($request->ajax()){
             $validation = Validator::make($request->all(), [
-                "name.*" => "required|max:255",
                 'order_no.*' => 'required',
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+                'asset_tag.*' => 'required',Rule::unique('assets'),
+                'status_id.*' => 'string|nullable',
+                'audit_date.*' => 'string|nullable',
+                'supplier_id.*' => 'string',
+                'location_id.*' => 'string',
+                'asset_model.*' => 'nullable',
             ]);
 
             if($validation->fails()){
                 return $validation->errors();
             }else{
-                for($i = 0; $i < count($request->name); $i++)
+                for($i = 0; $i < count($request->asset_tag); $i++)
                 {
                     $asset = new Asset;
 
-                    $asset->name = $request->name[$i];
+                    $asset->asset_tag = $request->asset_tag[$i];
 
                     $asset->serial_no = $request->serial_no[$i];
 
@@ -402,24 +410,9 @@ class AssetController extends Controller
                     }
 
                     $asset->supplier_id = $supplier->id;
+                    $asset->order_no = $request->order_no;
+                    $asset->warranty = $request->warranty;
 
-                    //check for already existing Manufacturers upon import if else create
-                    if($manufacturer = Manufacturer::where(["name" => $request->manufacturer_id[$i]])->first())
-                    {
-
-                    } else
-                    {
-                        $manufacturer = new Manufacturer;
-
-                        $manufacturer->name = $request->manufacturer_id[$i];
-                        $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($request->manufacturer_id[$i])) . '.com';
-                        $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($request->manufacturer_id[$i])) . '.com';
-                        $manufacturer->supportPhone = "Unknown";
-                        $manufacturer->save();
-                    }
-                    $asset->manufacturer_id = $manufacturer->id;
-                    $asset->order_no = $request->order_no[$i];
-                    $asset->warranty = $request->warranty[$i];
                     //check for already existing Locations upon import if else create
                     if($location = Location::where(["name" => $request->location_id[$i]])->first())
                     {
@@ -439,8 +432,8 @@ class AssetController extends Controller
                         $location->save();
                     }
                     $asset->location_id = $location->id;
+                    $asset->asset_model = $request->asset_model[$i];
 
-                    $asset->notes = $request->notes[$i];
                     $asset->save();
                 }
 
@@ -450,116 +443,7 @@ class AssetController extends Controller
         }
 
     }
-    public function createMany(Request $request)
-    {
 
-        $validation = Validator::make($request->all(), [
-            "name.*" => "required|max:255",
-            'order_no.*' => 'required',
-            'serial_no.*' => 'required',
-            'warranty.*' => 'int',
-            'purchased_date.*' => 'nullable|date',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-
-        ]);
-
-        for($i = 0; $i < count($request->name); $i++)
-        {
-            $asset = new asset;
-
-            $asset->name = $request->name[$i];
-
-            $asset->serial_no = $request->serial_no[$i];
-
-            //check for already existing Status upon import if else create
-            if($status = Status::where(["name" => $request->status_id[$i]])->first())
-            {
-
-            } else
-            {
-                $status = new Status;
-
-                $status->name = $request->status_id[$i];
-                $status->deployable = 1;
-
-                $status->save();
-            }
-            $asset->status_id = $status->id;
-
-            $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
-            $asset->purchased_cost = $request->purchased_cost[$i];
-
-            //check for already existing Suppliers upon import if else create
-            if($supplier = Supplier::where(["name" => $request->supplier_id[$i]])->first())
-            {
-
-            } else
-            {
-                $supplier = new Supplier;
-
-                $supplier->name = $request->supplier_id[$i];
-                $supplier->email = 'info@' . str_replace(' ', '', strtolower($request->supplier_id[$i])) . '.com';
-                $supplier->url = 'www.' . str_replace(' ', '', strtolower($request->supplier_id[$i])) . '.com';
-                $supplier->telephone = "Unknown";
-                $supplier->save();
-            }
-
-            $asset->supplier_id = $supplier->id;
-
-            //check for already existing Manufacturers upon import if else create
-            if($manufacturer = Manufacturer::where(["name" => $request->manufacturer_id[$i]])->first())
-            {
-
-            } else
-            {
-                $manufacturer = new Manufacturer;
-
-                $manufacturer->name = $request->manufacturer_id[$i];
-                $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($request->manufacturer_id[$i])) . '.com';
-                $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($request->manufacturer_id[$i])) . '.com';
-                $manufacturer->supportPhone = "Unknown";
-                $manufacturer->save();
-            }
-            $asset->manufacturer_id = $manufacturer->id;
-            $asset->order_no = $request->order_no[$i];
-            $asset->warranty = $request->warranty[$i];
-            //check for already existing Locations upon import if else create
-            if($location = Location::where(["name" => $request->location_id[$i]])->first())
-            {
-
-            } else
-            {
-                $location = new Location;
-
-                $location->name = $request->location_id[$i];
-                $location->email = 'enquiries@' . str_replace(' ', '', strtolower($request->location_id[$i])) . '.co.uk';
-                $location->telephone = "01902556360";
-                $location->address_1 = "Unknown";
-                $location->city = "Unknown";
-                $location->postcode = "Unknown";
-                $location->county = "West Midlands";
-                $location->icon = "#222222";
-                $location->save();
-            }
-            $asset->location_id = $location->id;
-
-            $asset->notes = $request->notes[$i];
-            $asset->save();
-        }
-
-        if($validation->fails())
-        {
-            return view('assets.view', [
-                "names" => $request->name,
-            ]);
-        }
-
-
-        session()->flash('success_message', $i . ' has been created successfully');
-
-        return redirect('/assets');
-
-    }
 
     public function filter(Request $request){
         $locations = auth()->user()->locations->pluck('id');
