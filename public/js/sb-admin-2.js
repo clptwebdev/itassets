@@ -5,8 +5,8 @@
   $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
     $("body").toggleClass("sidebar-toggled");
     $(".sidebar").toggleClass("toggled");
-    $(".sidebar-title").addClass('d-none');
-    $(".sidebar-icon").addClass('fa-2x');
+    $(".sidebar-title").toggleClass('d-none');
+    $(".sidebar-icon").toggleClass('fa-2x');
     if ($(".sidebar").hasClass("toggled")) {
       $('.sidebar .collapse').collapse('hide');
     };

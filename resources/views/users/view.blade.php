@@ -61,8 +61,12 @@
                             <td>{{ $user->id }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ $user->role_id }}</td>
+                            <td>
+                                @foreach($user->locations as $location)
+                                <small class="rounded p-1 m-1 text-white" style="background-color: {{$location->icon}}">{{$location->name}}</small>
+                                @endforeach
+                            </td>
                             <td class="text-center">
                                 <form id="form{{$user->id}}" action="{{ route('users.destroy', $user->id) }}"
                                     method="POST">

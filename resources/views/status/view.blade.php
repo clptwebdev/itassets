@@ -64,7 +64,7 @@
                         @foreach($statuses as $status)
                         <tr>
                             <td class="text-center"><input type="checkbox"></td>
-                            <td>{{ $status->name }}</td>
+                            <td><i class="{{$status->icon}}" style="color: {{$status->colour}};"></i> {{ $status->name }}</td>
                             <td class="text-center">@if($status->deployable == 1){!! '<i class="fas fa-check text-success"></i>'!!}@else{!!'<i class="fas fa-times text-danger"></i>'!!}@endif</td>
                             <td class="text-center">
                                 @php
@@ -82,7 +82,7 @@
                                     View</a>&nbsp;
                                 <a href="#" class="btn-sm btn-secondary text-white updateBtn"
                                     data-id="{{$status->id}}" data-name="{{ $status->name}}"
-                                    data-route="{{ route('status.update', $status->id)}}" data-deploy="{{$status->deployable}}"><i
+                                    data-route="{{ route('status.update', $status->id)}}" data-deploy="{{$status->deployable}}" data-icon="{{$status->icon}}" data-colour="{{$status->colour}}"><i
                                         class="fas fa-pencil-alt"></i></a>&nbsp;
                                 <a class="btn-sm btn-danger text-white deleteBtn" href="#"
                                     data-route="{{ route('status.destroy', $status->id)}}"><i
@@ -127,6 +127,21 @@
                         <input type="radio" id="deployable_no" name="deployable" value="0">
                         <label for="deployable_no">No</label>
                     </div>
+                    <div class="form-group">
+                        <label for="colour">Icon Colour</label>
+                        <input type="color" name="colour" value="#666">
+                    </div>
+                    <div class="form-group">
+                        <label for="icon">Icon</label>
+                        <select name="icon" class="form-control">
+                            <option value="far fa-circle"><i class="far fa-circle"></i> Doughnut</option>
+                            <option value="fas fa-circle"><i class="fas fa-circle"></i> Circle</option>
+                            <option value="fas fa-check"><i class="fas fa-check"></i> Tick</option>
+                            <option value="fas fa-times"><i class="fas fa-times"></i> Times</option>
+                            <option value="fas fa-skull-crossbones"><i class="fas fa-skull-crossbones"></i> Cross Bones</option>
+                            <option value="fas fa-tools"><i class="fas fa-tools"></i> Tools</option>
+                        </select>
+                    </div>
                     <small class="text-info">**You will be able to assign this Status to any assets on the system. These
                         can act as a filter.</small>
                 </div>
@@ -165,6 +180,21 @@
                         <label for="deployable_yes">Yes</label><br>
                         <input type="radio" id="update_deployable_no" name="deployable" value="0">
                         <label for="deployable_no">No</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="colour">Icon Colour</label>
+                        <input type="color" name="colour" value="#666" id="update_colour">
+                    </div>
+                    <div class="form-group">
+                        <label for="icon">Icon</label>
+                        <select name="icon" class="form-control" id="update_icon">
+                            <option value="far fa-circle"><i class="far fa-circle"></i> Doughnut</option>
+                            <option value="fas fa-circle"><i class="fas fa-circle"></i> Circle</option>
+                            <option value="fas fa-check"><i class="fas fa-check"></i> Tick</option>
+                            <option value="fas fa-times"><i class="fas fa-times"></i> Times</option>
+                            <option value="fas fa-skull-crossbones"><i class="fas fa-skull-crossbones"></i> Cross Bones</option>
+                            <option value="fas fa-tools"><i class="fas fa-tools"></i> Tools</option>
+                        </select>
                     </div>
                     <small class="text-info">**You will be able to assign categories to any assets on the system. These
                         can act as a filter.</small>
@@ -232,7 +262,11 @@
         }
         var name = $(this).data('name');
         var route = $(this).data('route');
+        var colour = $(this).data('colour');
+        var icon = $(this).data('icon');
         $('#update_name').val(name);
+        $('#update_colour').val(colour);
+        $('#update_icon').val(icon);
         $('#updateForm').attr('action', route); 
         $('#updateStatusModal').modal('show');
     });

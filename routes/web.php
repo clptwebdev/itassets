@@ -45,6 +45,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
+        Route::resource('/depreciation', 'App\Http\Controllers\DepreciationController');
         Route::resource('/fieldsets', 'App\Http\Controllers\FieldsetController');
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');

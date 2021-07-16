@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\UserExport;
+use App\Models\Depreciation;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Location;
 
-class UserController extends Controller
+class DepreciationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view ('users.view');
+        $depreciation  = Depreciation::all();
+        return view('depreciation.view', compact('depreciation'));
     }
 
     /**
@@ -26,10 +25,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-
     {
-        $locations = auth()->user()->locations;
-        return view ('users.create', compact('locations'));
+        //
     }
 
     /**
@@ -40,6 +37,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        Depreciation::create($request->only('name', 'years'))->save();
+        session()->flash('success_message', $request->name.' has been added to the system');
+        return redirect(route('depreciation.index'));
     }
 
     /**
@@ -48,20 +48,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Depreciation $depreciation)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return $depreciation->models;
     }
 
     /**
@@ -71,9 +60,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Depreciation $depreciation)
     {
-        //
+        $depreciation->fill($request->only('name', 'years'))->save();
+        session()->flash('success_message', $request->name.' has been updated to the system');
+        return redirect(route('depreciation.index'));
     }
 
     /**
@@ -82,13 +73,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Depreciation $depreciation)
     {
-        //
-    }
-    public function export(User $user)
-    {
-        return \Maatwebsite\Excel\Facades\Excel::download(new UserExport, 'users.csv');
-
+        $name=$depreciation->name;
+        $depreciation->delete();
+        session()->flash('danger_message', $name . ' was deleted from the system');
+        return redirect(route('depreciation.index'));
     }
 }

@@ -31,10 +31,15 @@ class ChartController extends Controller
                 $y = \Carbon\Carbon::now()->addYears($i);
                 $yv = 0;
                 foreach($locations->asset as $asset){
-                    $age = $y->floatDiffInYears($asset->purchased_date);
-                    $percentage = floor($age)*33.333;
-                    $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
-                    $yv += round($dep);
+                    $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                    if($eol->isPast()){}else{
+                        $age = $y->floatDiffInYears($asset->purchased_date);
+                        $percent = 100 / $asset->model->depreciation->years;
+                        $percentage = floor($age)*$percent;
+                        $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                        if($dep < 0){ $dep = 0;}
+                        $yv += round($dep);
+                    }
                 }
                 $yearValues[$y->year] = $yv;
                 unset($age);

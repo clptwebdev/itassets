@@ -15,10 +15,13 @@
                             $total = 0; $depreciation = 0;
                             foreach($assets as $asset){
                                 $total = $total + $asset->purchased_cost;
-                                $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date); 
-                                $percentage = floor($age)*33.333; 
-                                $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
-                                $depreciation += $dep; 
+                                $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                                if($eol->isPast()){}else{
+                                    $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date); 
+                                    $percentage = floor($age)*33.333; 
+                                    $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                                    $depreciation += $dep;
+                                } 
                             }
                             
                             @endphp

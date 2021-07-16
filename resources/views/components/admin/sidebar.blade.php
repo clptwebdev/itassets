@@ -31,7 +31,7 @@
                 <a href="#statusMenu" class="sub-link collapse-item collapsed d-none d-sm-block" data-toggle="collapse" data-parent="#statusMenu"><i class="fas fa-shield-alt fa-xs"></i> By Status</a>
                 <div class="collapse p-2" id="statusMenu">
                     @foreach($statuses as $status)
-                    <a href="{{ route('assets.status', $status->id)}}" title="Add New Asset" class="collapse-item"><i class="far fa-circle @if($status->deployable == 1){{ 'text-success'}}@else{{ 'text-danger'}}@endif"></i> {{ $status->name}}</a>
+                    <a href="{{ route('assets.status', $status->id)}}" title="Add New Asset" class="collapse-item"><i class="{{$status->icon}} fa-xs" style="color: {{$status->colour}};"></i> {{ $status->name}}</a>
                     @endforeach
                 </div>
                 <a href="#locationMenu" class="sub-link collapse-item collapsed d-none d-sm-block" data-toggle="collapse" data-parent="#locationMenu"><i class="fas fa-school fa-xs"></i> By Location</a>
@@ -130,7 +130,7 @@
         </a>
         <div id="settingPages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <a class="collapse-item" href="{{ route('asset-models.index')}}">Asset Models</a>
-                <a class="collapse-item" href="login.html">Depreciation</a>
+                <a class="collapse-item" href="{{ route('depreciation.index')}}">Depreciation</a>
                 <a class="collapse-item" href="{{ route('category.index')}}">Categories</a>
                 <a class="collapse-item" href="{{ route('fieldsets.index')}}">Fieldsets</a>
                 <a class="collapse-item" href="{{ route('fields.index')}}">Custom Fields</a>

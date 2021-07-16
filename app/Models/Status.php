@@ -10,7 +10,7 @@ class Status extends Model
     use HasFactory;
 
     protected $table = 'status';
-    protected $fillable = ['name', 'deployable'];
+    protected $fillable = ['name', 'deployable', 'icon', 'colour'];
 
     public function assets(){
         return $this->hasMany(Asset::class);
