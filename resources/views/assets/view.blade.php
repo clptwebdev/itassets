@@ -23,7 +23,7 @@
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
             <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
         </div>
     </div>
@@ -361,8 +361,11 @@
                     </div>
                     <div class="modal-footer">
                         @if(session('import-error'))
-                            <div class="alert text-warning"> {{ session('import-error')}} </div>
+                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
                         @endif
+                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/Eb2RbyCNk_hOuTfMOufGpMsBl0yUs1ZpeCjkCm6YnLfN9Q?e=4t5BVO" target="_blank" class="btn btn-info" >
+                                Download Import Template
+                            </a>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
 
                         <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
@@ -374,7 +377,7 @@
         </div>
     </div>
 @endsection
-<?php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');?>
+<?php session()->flash('import-error', 'Select a file to be uploaded before continuing!');?>
 
 @section('js')
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>

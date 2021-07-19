@@ -36,23 +36,24 @@ class AssetExport implements FromArray, WithHeadings {
 
     public function array(): array
     {
+
         $assets = auth()->user()->location_assets;
         $object =  [];
         foreach($assets as $asset){
             $array =  [];
-            $array['asset_tag'] = $asset->asset_tag;
-            $array['serial_no'] = $asset->serial_no;
+            $array['asset_tag'] = $asset->asset_tag ;
+            $array['serial_no'] = $asset->serial_no ?? 'Unknown';
             $array['asset_model'] = $asset->model->name ?? 'Unknown';
-            $array['status_id'] ="Booked out"; //$asset->status->name;
-            $array['purchased_date'] = $asset->purchased_date;
-            $array['purchased_cost'] = $asset->purchased_cost;
-            $array['supplier_id'] = $asset->supplier->name;
+            $array['status_id'] = $asset->status->name ?? 'Unknown';
+            $array['purchased_date'] = $asset->purchased_date ?? 'Unknown';
+            $array['purchased_cost'] = $asset->purchased_cost ?? 'Unknown';
+            $array['supplier_id'] = $asset->supplier->name ?? 'Unknown';
             $array['manufacturer_id'] = $asset->model->manufacturer->name ?? 'Unknown';
-            $array['order_no'] = $asset->order_no;
-            $array['warranty'] = $asset->warranty;
-            $array['location_id'] = $asset->location->name;
-            $array['user_id'] = $asset->user->name;
-            $array['audit_date'] = $asset->audit_date;
+            $array['order_no'] = $asset->order_no ?? 'Unknown';
+            $array['warranty'] = $asset->warranty ?? 'Unknown';
+            $array['location_id'] = $asset->location->name ?? 'Unknown';
+            $array['user_id'] = $asset->user->name ?? 'Unknown';
+            $array['audit_date'] = $asset->audit_date ?? 'Unknown';
             $object[] = $array;
 
         }
@@ -60,21 +61,7 @@ class AssetExport implements FromArray, WithHeadings {
         return $object;
 
     }
-//
-//        return DB::table("assets")->select(
-//            "asset_tag",
-//            "serial_no",
-//            "asset_model",
-//            "status_id",
-//            "purchased_date",
-//            "purchased_cost",
-//            \App\M,
-//            "manufacturer_id",
-//             "order_no",
-//             "warranty",
-//             "location_id",
-//             "user_id",
-//             "audit_date")->get();
+
 
 
 }

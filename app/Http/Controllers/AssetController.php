@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\assetErrorsExport;
 use App\Imports\AssetImport;
 use App\Models\Asset;
 use App\Models\AssetModel;
@@ -17,30 +18,31 @@ use App\Exports\AssetExport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Excel;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+use phpDocumentor\Reflection\Types\String_;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 
-
-class AssetController extends Controller
-{
+class AssetController extends Controller {
 
     public function index()
     {
         return view('assets.view', [
-            "assets"=>auth()->user()->location_assets,
+            "assets" => auth()->user()->location_assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations"=>auth()->user()->locations,
+            "locations" => auth()->user()->locations,
         ]);
     }
 
     public function create()
     {
         $this->authorize('create', Asset::class);
+
         return view('assets.create', [
-            "locations"=>auth()->user()->locations,
-            "manufacturers"=>Manufacturer::all(),
-            'models'=>AssetModel::all(),
+            "locations" => auth()->user()->locations,
+            "manufacturers" => Manufacturer::all(),
+            'models' => AssetModel::all(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
@@ -50,7 +52,7 @@ class AssetController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -58,21 +60,27 @@ class AssetController extends Controller
         $this->authorize('create', Asset::class);
         $validate_fieldet = [];
         //Validate and Collect the Additional Fieldsets
-        if($request->asset_model != 0){
+        if($request->asset_model != 0)
+        {
             $assetModel = AssetModel::find($request->asset_model);
-            if($assetModel->fieldset_id != 0 && $fieldset = Fieldset::findOrFail($assetModel->fieldset_id)){
+            if($assetModel->fieldset_id != 0 && $fieldset = Fieldset::findOrFail($assetModel->fieldset_id))
+            {
                 $fields = $fieldset->fields;
                 $array = [];
-                foreach($fields as $field){
+                foreach($fields as $field)
+                {
                     $name = str_replace(' ', '_', strtolower($field->name));
                     $val_string = '';
-                    if($field->required == 1){
+                    if($field->required == 1)
+                    {
                         $val_string .= "required";
                     }
 
-                    if($field->type == 'Text'){
+                    if($field->type == 'Text')
+                    {
                         $val_string .= "|";
-                        switch($field->format){
+                        switch($field->format)
+                        {
                             case("alpha"):
                                 $val_string .= "alpha";
                                 break;
@@ -96,9 +104,11 @@ class AssetController extends Controller
 
                     $validate_fieldet[$name] = $val_string;
 
-                    if(is_array($request->$name)){
+                    if(is_array($request->$name))
+                    {
                         $values = implode(',', $request->$name);
-                    }else{
+                    } else
+                    {
                         $values = $request->$name;
                     }
                     $array[$field->id] = ['value' => $values];
@@ -106,19 +116,23 @@ class AssetController extends Controller
             }
         }
 
-        if(!empty($validate_fieldet)){ $v = array_merge($validate_fieldet, [
-            'asset_tag' => 'required',
-            'serial_no' => 'required',
-            'purchased_date' => 'required|date',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'warranty' => 'required|numeric',
-        ]);}else{
+        if(! empty($validate_fieldet))
+        {
+            $v = array_merge($validate_fieldet, [
+                'asset_tag' => 'required',
+                'serial_no' => 'required',
+                'purchased_date' => 'required|date',
+                'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+                'warranty' => 'required|numeric',
+            ]);
+        } else
+        {
             $v = [
-            'asset_tag' => 'required',
-            'serial_no' => 'required',
-            'purchased_date' => 'required|date',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'warranty' => 'required|numeric',
+                'asset_tag' => 'required',
+                'serial_no' => 'required',
+                'purchased_date' => 'required|date',
+                'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+                'warranty' => 'required|numeric',
             ];
         }
 
@@ -130,7 +144,8 @@ class AssetController extends Controller
         $asset->fields()->attach($array);
         $asset->category()->attach($request->category);
 
-        session()->flash('success_message', $request->name.' has been created successfully');
+        session()->flash('success_message', $request->name . ' has been created successfully');
+
         return redirect(route('assets.index'));
 
     }
@@ -138,19 +153,19 @@ class AssetController extends Controller
     public function show(Asset $asset)
     {
         return view('assets.show', [
-            "asset"=>$asset,
+            "asset" => $asset,
         ]);
     }
-
 
     public function edit(Asset $asset)
     {
         $this->authorize('edit', $asset);
+
         return view('assets.edit', [
-            "asset"=>$asset,
-            "locations"=>auth()->user()->locations,
-            "manufacturers"=>Manufacturer::all(),
-            'models'=>AssetModel::all(),
+            "asset" => $asset,
+            "locations" => auth()->user()->locations,
+            "manufacturers" => Manufacturer::all(),
+            'models' => AssetModel::all(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
         ]);
@@ -159,8 +174,8 @@ class AssetController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Asset $asset)
@@ -168,19 +183,24 @@ class AssetController extends Controller
         $validate_fieldet = [];
         //Validate and Collect the Additional Fieldsets
         $assetModel = AssetModel::findOrFail($request->asset_model);
-        if($assetModel->fieldset_id != 0 && $fieldset = Fieldset::findOrFail($assetModel->fieldset_id)){
+        if($assetModel->fieldset_id != 0 && $fieldset = Fieldset::findOrFail($assetModel->fieldset_id))
+        {
             $fields = $fieldset->fields;
             $array = [];
-            foreach($fields as $field){
+            foreach($fields as $field)
+            {
                 $name = str_replace(' ', '_', strtolower($field->name));
                 $val_string = '';
-                if($field->required == 1){
+                if($field->required == 1)
+                {
                     $val_string .= "required";
                 }
 
-                if($field->type == 'Text'){
+                if($field->type == 'Text')
+                {
                     $val_string .= "|";
-                    switch($field->format){
+                    switch($field->format)
+                    {
                         case("alpha"):
                             $val_string .= "alpha";
                             break;
@@ -204,28 +224,34 @@ class AssetController extends Controller
 
                 $validate_fieldet[$name] = $val_string;
 
-                if(is_array($request->$name)){
+                if(is_array($request->$name))
+                {
                     $values = implode(',', $request->$name);
-                }else{
+                } else
+                {
                     $values = $request->$name;
                 }
                 $array[$field->id] = ['value' => $values];
             }
         }
 
-        if(!empty($validate_fieldet)){ $v = array_merge($validate_fieldet, [
-            'asset_tag' => 'required',
-            'serial_no' => 'required',
-            'purchased_date' => 'required|date',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'warranty' => 'required|numeric',
-        ]);}else{
+        if(! empty($validate_fieldet))
+        {
+            $v = array_merge($validate_fieldet, [
+                'asset_tag' => 'required',
+                'serial_no' => 'required',
+                'purchased_date' => 'required|date',
+                'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+                'warranty' => 'required|numeric',
+            ]);
+        } else
+        {
             $v = [
-            'asset_tag' => 'required',
-            'serial_no' => 'required',
-            'purchased_date' => 'required|date',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'warranty' => 'required|numeric',
+                'asset_tag' => 'required',
+                'serial_no' => 'required',
+                'purchased_date' => 'required|date',
+                'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+                'warranty' => 'required|numeric',
             ];
         }
 
@@ -237,40 +263,47 @@ class AssetController extends Controller
         ), ['user_id' => auth()->user()->id]))->save();
         $asset->fields()->sync($array);
 
-        session()->flash('success_message', $request->name.' has been updated successfully');
+        session()->flash('success_message', $request->name . ' has been updated successfully');
+
         return redirect(route('assets.index'));
     }
 
-
     public function destroy(Asset $asset)
     {
-        $name=$asset->asset_tag;
+        $name = $asset->asset_tag;
         $asset->delete();
-        session()->flash('danger_message', "#". $name . ' was deleted from the system');
+        session()->flash('danger_message', "#" . $name . ' was deleted from the system');
+
         return redirect("/assets");
     }
 
-    public function model(AssetModel $model){
-        if($model->fieldset_id != 0){
+    public function model(AssetModel $model)
+    {
+        if($model->fieldset_id != 0)
+        {
             $fieldset = Fieldset::findOrFail($model->fieldset_id);
+
             return view('assets.fields', compact('model', 'fieldset'));
-        }else{
+        } else
+        {
             return false;
         }
     }
-   public function export(Asset $asset)
-   {
-       return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
+
+    public function export(Asset $asset)
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport(), 'assets.csv');
 
     }
+
     public function import(Request $request)
     {
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());
 
-
-        if(in_array($result[0],$extensions)){
+        if(in_array($result[0], $extensions))
+        {
             $path = $request->file("csv")->getRealPath();
             $import = new AssetImport;
             $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
@@ -295,6 +328,7 @@ class AssetController extends Controller
                 ];
 
             }
+
             if(! empty($importErrors))
             {
                 $errorArray = [];
@@ -315,26 +349,27 @@ class AssetController extends Controller
                     if(array_key_exists($error['row'], $errorValues))
                     {
                         $array = $errorValues[$error['row']];
-                    }else{
+                    } else
+                    {
                         $array = [];
                     }
 
-                    foreach($error['errors'] as $e){
+                    foreach($error['errors'] as $e)
+                    {
                         $array[$error['attributes']] = $e;
                     }
                     $errorValues[$error['row']] = $array;
 
                 }
 
-
                 return view('assets.import-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
-                    "models"=>AssetModel::all(),
-                    "statuses"=>Status::all(),
-                    "suppliers"=>Supplier::all(),
-                    "locations"=>Location::all(),
+                    "models" => AssetModel::all(),
+                    "statuses" => Status::all(),
+                    "suppliers" => Supplier::all(),
+                    "locations" => Location::all(),
                 ]);
 
             } else
@@ -343,21 +378,32 @@ class AssetController extends Controller
                 return redirect('/assets')->with('success_message', 'All Assets were added correctly!');
 
             }
-        }else{
+        } else
+        {
             return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
         }
     }
+
+    public function importErrors(Request $request)
+    {
+        $export = $request['asset_tag'];
+        $code = (htmlspecialchars_decode($export));
+        $export = json_decode($code);
+       return \Maatwebsite\Excel\Facades\Excel::download(new assetErrorsExport($export), 'AssetImportErrors.csv');
+    }
+
     public function ajaxMany(Request $request)
     {
-        if($request->ajax()){
+        if($request->ajax())
+        {
             $validation = Validator::make($request->all(), [
-                'order_no.*' => 'required',
+                'order_no.*' => 'nullable',
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-                'asset_tag.*' => 'required',Rule::unique('assets'),
+                'asset_tag.*' => 'required', Rule::unique('assets'),
                 'status_id.*' => 'string|nullable',
                 'audit_date.*' => 'string|nullable',
                 'supplier_id.*' => 'string',
@@ -365,15 +411,17 @@ class AssetController extends Controller
                 'asset_model.*' => 'nullable',
             ]);
 
-            if($validation->fails()){
+            if($validation->fails())
+            {
                 return $validation->errors();
-            }else{
+            } else
+            {
                 for($i = 0; $i < count($request->asset_tag); $i++)
                 {
                     $asset = new Asset;
 
                     $asset->asset_tag = $request->asset_tag[$i];
-                    $asset->user = auth()->user()->id;
+                    $asset->user_id = auth()->user()->id;
                     $asset->serial_no = $request->serial_no[$i];
 
                     //check for already existing Status upon import if else create
@@ -391,7 +439,7 @@ class AssetController extends Controller
                     }
                     $asset->status_id = $status->id;
 
-                    $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
+                    $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
                     $asset->purchased_cost = $request->purchased_cost[$i];
 
                     //check for already existing Suppliers upon import if else create
@@ -437,63 +485,72 @@ class AssetController extends Controller
                     $asset->save();
                 }
 
-                session()->flash('success_message', 'You can successfully added the Manufacturers');
+                session()->flash('success_message', 'You can successfully added the Assets');
+
                 return 'Success';
             }
         }
 
     }
 
-
-    public function filter(Request $request){
+    public function filter(Request $request)
+    {
         $locations = auth()->user()->locations->pluck('id');
         $assets = Asset::locationFilter($locations);
-        if(!empty($request->locations)){
+        if(! empty($request->locations))
+        {
             $assets->locationFilter($request->locations);
         }
-        if(!empty($request->status)){
+        if(! empty($request->status))
+        {
             $assets->statusFilter($request->status);
         }
-        if(!empty($request->category)){
+        if(! empty($request->category))
+        {
             $assets->categoryFilter($request->category);
         }
-        if($request->start != '' && $request->end != ''){
+        if($request->start != '' && $request->end != '')
+        {
             $assets->purchaseFilter($request->start, $request->end);
         }
 
-        if($request->audit != 0){
+        if($request->audit != 0)
+        {
             $assets->auditFilter($request->audit);
         }
 
-        if($request->warranty != 0){
+        if($request->warranty != 0)
+        {
             $assets->warrantyFilter($request->warranty);
         }
 
         $assets->costFilter($request->amount);
 
         return view('assets.view', [
-            "assets"=>$assets->get(),
+            "assets" => $assets->get(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations"=>auth()->user()->locations,
+            "locations" => auth()->user()->locations,
             "filter" => 'Filter',
             "amount" => $request->amount,
         ]);
     }
 
-    public function status(Status $status){
+    public function status(Status $status)
+    {
         $array = [];
         $array[] = $status->id;
         $locations = auth()->user()->locations->pluck('id');
         $assets = Asset::locationFilter($locations);
         $assets->statusFilter($array);
+
         return view('assets.view', [
-            "assets"=> $assets->get(),
+            "assets" => $assets->get(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations"=>auth()->user()->locations,
+            "locations" => auth()->user()->locations,
         ]);
     }
 

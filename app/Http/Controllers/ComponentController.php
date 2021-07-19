@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\AssetExport;
+use App\Exports\componentErrorsExport;
 use App\Exports\ComponentsExport;
 use App\Imports\ComponentsImport;
 use App\Models\Asset;
@@ -68,6 +69,14 @@ class ComponentController extends Controller {
 
         return redirect(route("components.index"));
 
+    }
+    public function importErrors(Request $request)
+    {
+
+        $export = $request['name'];
+        $code = (htmlspecialchars_decode($export));
+        $export = json_decode($code);
+        return \Maatwebsite\Excel\Facades\Excel::download(new componentErrorsExport($export), 'ComponentImportErrors.csv');
     }
     public function ajaxMany(Request $request)
     {
@@ -168,7 +177,7 @@ class ComponentController extends Controller {
                     $component->save();
                 }
 
-                session()->flash('success_message', 'You can successfully added the Manufacturers');
+                session()->flash('success_message', 'You have successfully added all Components!');
                 return 'Success';
             }
         }
@@ -308,6 +317,10 @@ class ComponentController extends Controller {
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
+                    "statuses"=>Status::all(),
+                    "suppliers"=>Supplier::all(),
+                    "locations"=>Location::all(),
+                    "manufacturers"=>Manufacturer::all(),
                 ]);
 
             } else

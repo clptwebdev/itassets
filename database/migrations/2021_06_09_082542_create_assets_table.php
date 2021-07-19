@@ -18,7 +18,7 @@ class CreateAssetsTable extends Migration
             $table->timestamps();
             $table->foreignId("asset_model");
             $table->integer("asset_tag")->unique();
-            $table->integer("serial_no");
+            $table->string("serial_no");
             $table->foreignId("status_id");
             $table->dateTime("purchased_date")->nullable();;
             $table->string("purchased_cost")->nullable();

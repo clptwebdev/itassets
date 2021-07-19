@@ -69,8 +69,11 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post("/importmanufacturer", [\App\Http\Controllers\ManufacturerController::class, "import"]);
         Route::post("/importcomponents", [\App\Http\Controllers\ComponentController::class, "import"]);
         Route::Post("components/create/ajax", [\App\Http\Controllers\ComponentController::class, "ajaxMany"]);
+        Route::Post("components/export-import-errors", [\App\Http\Controllers\ComponentController::class, "importErrors"])->name("componentexport.import");
+
 
         Route::post("/importassets", [\App\Http\Controllers\AssetController::class, "import"]);
+        Route::Post("/export-import-errors", [\App\Http\Controllers\AssetController::class, "importErrors"])->name("export.import");
         Route::Post("assets/create/ajax", [\App\Http\Controllers\AssetController::class, "ajaxMany"]);
 
 

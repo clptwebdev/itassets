@@ -21,6 +21,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Validators\Failure;
+use function PHPUnit\Framework\isEmpty;
 
 class AssetImport implements ToModel , WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError
 {
@@ -49,25 +50,24 @@ class AssetImport implements ToModel , WithValidation, WithHeadingRow, WithBatch
                 'regex:/^\d+(\.\d{1,2})?$/',
             ],
             'order_no' => [
-                'required',
+                'nullable',
             ],
             'serial_no' => [
                 'required',
             ],
-            'status_id' => [
-                'string',
-            ],
             'purchased_date' => [
                 'string',
+
             ],
             'audit_date' => [
                 'string',
             ],
             'supplier_id' => [
-                'string',
             ],
             'location_id' => [
             ]
+            ,'status_id' => [
+            ],
         ];
 
 
@@ -79,7 +79,7 @@ class AssetImport implements ToModel , WithValidation, WithHeadingRow, WithBatch
 
         $asset = new Asset;
         $asset->asset_tag = $row["asset_tag"];
-
+        $asset->user_id = auth()->user()->id;
         $asset->serial_no = $row["serial_no"];
 
         //check for already existing Status upon import if else create
@@ -88,14 +88,17 @@ class AssetImport implements ToModel , WithValidation, WithHeadingRow, WithBatch
 
         } else
         {
-            $status = new Status;
+            if(isset($row["status_id"])){
+                $status = new Status;
 
-            $status->name = $row["status_id"];
-            $status->deployable = 1;
+                $status->name = $row["status_id"];
+                $status->deployable = 1;
 
-            $status->save();
+                $status->save();
+            }else
+                $asset->status_id =0;
         }
-        $asset->status_id = $status->id;
+        $asset->status_id = $status->id ?? 0;
 
         $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
         $asset->purchased_cost = $row["purchased_cost"];
@@ -106,39 +109,47 @@ class AssetImport implements ToModel , WithValidation, WithHeadingRow, WithBatch
 
         } else
         {
-            $supplier = new Supplier;
+            if(isset($row["supplier_id"])){
+                $supplier = new Supplier;
 
-            $supplier->name = $row["supplier_id"];
-            $supplier->email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
-            $supplier->url = 'www.' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
-            $supplier->telephone = "Unknown";
-            $supplier->save();
+                $supplier->name = $row["supplier_id"];
+                $supplier->email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+                $supplier->url = 'www.' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+                $supplier->telephone = "Unknown";
+                $supplier->save();
+
+            }else
+                $asset->supplier_id = 0;
+
         }
-
-        $asset->supplier_id = $supplier->id;
-
+        $asset->supplier_id = $supplier->id ?? 0;
         //check for already existing Manufacturers upon import if else create
         $asset->order_no = $row["order_no"];
         $asset->warranty = $row["warranty"];
-        //check for already existing Locations upon import if else create
+        //check for already existing Locations upon import if else create if blank dont assign it to a location
         if($location = Location::where(["name" => $row["location_id"]])->first())
         {
 
         } else
         {
-            $location = new Location;
+            if(isset($row["location_id"]))
+            {
+                $location = new Location;
 
-            $location->name = $row["location_id"];
-            $location->email = 'enquiries@' . str_replace(' ', '', strtolower($row["location_id"])) . '.co.uk';
-            $location->telephone = "01902556360";
-            $location->address_1 = "Unknown";
-            $location->city = "Unknown";
-            $location->postcode = "Unknown";
-            $location->county = "West Midlands";
-            $location->icon = "#222222";
-            $location->save();
+                $location->name = $row["location_id"];
+                $location->email = 'enquiries@' . str_replace(' ', '', strtolower($row["location_id"])) . '.co.uk';
+                $location->telephone = "01902556360";
+                $location->address_1 = "Unknown";
+                $location->city = "Unknown";
+                $location->postcode = "Unknown";
+                $location->county = "West Midlands";
+                $location->icon = "#222222";
+                $location->save();
+            }else
+                $asset->location_id = 0;
+
         }
-        $asset->location_id = $location->id;
+        $asset->location_id = $location->id ?? 0;
 
         if($asset_model = AssetModel::where(["name" => $row["asset_model_id"]])->first())
         {

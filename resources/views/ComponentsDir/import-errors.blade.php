@@ -10,14 +10,33 @@
         <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
             <h1 class="h3 mb-0 text-gray-800">Import
                 Failures</h1>@php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
-            <div class="alert alert-danger">You have several errors Within your Import in rows {{$errorRows}}</div>
+            <div class="m-3 alert alert-danger">You have several errors Within your Import in rows
+                <div class="col-md-12">
+                    <div id="summary">
+                        <p class="collapse" id="collapseSummary">{{$errorRows}}</p>
+                        <a class="collapsed" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+                           aria-controls="collapseSummary"></a>
+                    </div>
+                </div>
+            </div>
             <div>
-                <a href="/components" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-plus fa-sm te
+                <form action="components/export-import-errors" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <input type="hidden" class="form-control " name="name"
+                               id="name" placeholder="" value="{{htmlspecialchars(json_encode($valueArray))}}">
+                    </div>
+                    <button type="submit" class="d-inline-block btn btn-sm btn-warning shadow-sm"><i
+                            class="far fa-save fa-sm text-white-50"></i> Save All Errors as Excel
+                    </button>
+
+                    <a href="/components" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                            class="fas fa-plus fa-sm te
                         xt-white-50"></i> Back to Components</a>
-                <button onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
-                        class="far fa-save fa-sm text-white-50"></i> Save
-                </button>
+                    <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+                            class="far fa-save fa-sm text-white-50"></i> Save
+                    </a>
+                </form>
             </div>
         </div>
 
@@ -84,45 +103,41 @@
                                         @if(array_key_exists('name', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['name']}}</small>@endif
                                     </td>
                                     <td>
-                                        <input type="text"
-                                               class="form-control <?php if (in_array('status_id', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
-                                               name="status_id[]"
-                                               id="support_id" value="{{ $valueArray[$row]['status_id'] }}"
-                                               placeholder="This Row is Empty Please Fill!" required>
+                                        <select type="dropdown" class="form-control" name="status_id[]" id="status_id" onchange="getFields(this);" autocomplete="off" required>
+                                            <option value="0" @if($valueArray[$row]['status_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
+                                            @foreach($statuses as $status)
+                                                <option value="{{ $valueArray[$row]['status_id'] }}" @if( $valueArray[$row]['status_id'] == $status->name){{'selected'}}@endif>{{ $status->name }}</option>
+                                            @endforeach
+                                        </select>
                                         @if(array_key_exists('status_id', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['status_id']}}</small>@endif
                                     </td>
                                     <td>
-                                        <input type="text"
-                                               class="form-control <?php if (in_array('supplier_id', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
-                                               name="supplier_id[]"
-                                               id="supplier_id" placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['supplier_id'] }}" required>
+                                        <select type="dropdown" class="form-control" name="supplier_id[]" id="supplier_id" onchange="getFields(this);" autocomplete="off" required>
+                                            <option value="0" @if($valueArray[$row]['supplier_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
+                                            @foreach($suppliers as $supplier)
+                                                <option value="{{ $valueArray[$row]['supplier_id'] }}" @if( $valueArray[$row]['supplier_id'] == $supplier->name){{'selected'}}@endif>{{ $supplier->name }}</option>
+                                            @endforeach
+                                        </select>
                                         @if(array_key_exists('supplier_id', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['supplier_id']}}</small>@endif
 
                                     </td>
                                     <td>
-                                        <input type="text"
-                                               class="form-control <?php if (in_array('manufacturer_id', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
-                                               name="manufacturer_id[]"
-                                               id="manufacturer_id" placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['manufacturer_id'] }}" required>
+                                        <select type="dropdown" class="form-control" name="manufacturer_id[]" id="manufacturer_id" onchange="getFields(this);" autocomplete="off" required>
+                                            <option value="0" @if($valueArray[$row]['manufacturer_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
+                                            @foreach($manufacturers as $manufacturer)
+                                                <option value="{{ $valueArray[$row]['manufacturer_id'] }}" @if( $valueArray[$row]['manufacturer_id'] == $manufacturer->name){{'selected'}}@endif>{{ $manufacturer->name }}</option>
+                                            @endforeach
+                                        </select>
                                         @if(array_key_exists('manufacturer_id', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['manufacturer_id']}}</small>@endif
 
                                     </td>
                                     <td>
-                                        <input type="text"
-                                               class="form-control <?php if (in_array('location_id', $errors)) {?>border-danger<?php }?>
-                                               {{--                                    <?php if ($errors->has('name')) {?>border-danger<?php }?>--}}
-                                                   "
-                                               name="location_id[]"
-                                               id="location_id" placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['location_id'] }}" required>
+                                        <select type="dropdown" class="form-control" name="location_id[]" id="location_id" onchange="getFields(this);" autocomplete="off" required>
+                                            <option value="0" @if($valueArray[$row]['location_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
+                                            @foreach($locations as $location)
+                                                <option value="{{ $valueArray[$row]['location_id'] }}" @if( $valueArray[$row]['location_id'] == $location->name){{'selected'}}@endif>{{ $location->name }}</option>
+                                            @endforeach
+                                        </select>
                                         @if(array_key_exists('location_id', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['location_id']}}</small>@endif
 
                                     </td>
@@ -253,24 +268,24 @@
         });
 
             //status
-            var stInputs = $("input[name='status_id[]']").get();
+            var stInputs = $("select[name='status_id[]']").get();
             stInputs.forEach(element => {
             data.append('status_id[]', element.value);
         });
 
             //Phone
-            var supInputs = $("input[name='supplier_id[]']").get();
+            var supInputs = $("select[name='supplier_id[]']").get();
             supInputs.forEach(element => {
             data.append('supplier_id[]', element.value);
         });
 
             //Email
-            var maInputs = $("input[name='manufacturer_id[]']").get();
+            var maInputs = $("select[name='manufacturer_id[]']").get();
             maInputs.forEach(element => {
             data.append('manufacturer_id[]', element.value);
         });
 
-            var loInputs = $("input[name='location_id[]']").get();
+            var loInputs = $("select[name='location_id[]']").get();
             loInputs.forEach(element => {
             data.append('location_id[]', element.value);
         });

@@ -92,14 +92,17 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         } else
         {
-            $status = new Status;
+            if(isset($row["status_id"])){
+                $status = new Status;
 
-            $status->name = $row["status_id"];
-            $status->deployable = 1;
+                $status->name = $row["status_id"];
+                $status->deployable = 1;
 
-            $status->save();
+                $status->save();
+            }else
+                $component->status_id =0;
         }
-        $component->status_id = $status->id;
+        $component->status_id = $status->id ?? 0;
 
         $component->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
         $component->purchased_cost = $row["purchased_cost"];
@@ -110,16 +113,20 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         } else
         {
-            $supplier = new Supplier;
+            if(isset($row["supplier_id"])){
+                $supplier = new Supplier;
 
-            $supplier->name = $row["supplier_id"];
-            $supplier->email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
-            $supplier->url = 'www.' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
-            $supplier->telephone = "Unknown";
-            $supplier->save();
+                $supplier->name = $row["supplier_id"];
+                $supplier->email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+                $supplier->url = 'www.' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+                $supplier->telephone = "Unknown";
+                $supplier->save();
+
+            }else
+                $component->supplier_id = 0;
         }
 
-        $component->supplier_id = $supplier->id;
+        $component->supplier_id = $supplier->id ?? 0;
 
         //check for already existing Manufacturers upon import if else create
         if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->first())
@@ -127,6 +134,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         } else
         {
+            if(isset($row["manufacturer_id"])){
             $manufacturer = new Manufacturer;
 
             $manufacturer->name = $row["manufacturer_id"];
@@ -134,8 +142,12 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
             $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
             $manufacturer->supportPhone = "Unknown";
             $manufacturer->save();
+        }else
+                $component->supplier_id = 0;
+
         }
-        $component->manufacturer_id = $manufacturer->id;
+        $component->manufacturer_id = $manufacturer->id ?? 0;
+
         $component->order_no = $row["order_no"];
         $component->warranty = $row["warranty"];
         //check for already existing Locations upon import if else create
@@ -144,19 +156,23 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         } else
         {
-            $location = new Location;
+            if(isset($row["location_id"]))
+            {
+                $location = new Location;
 
-            $location->name = $row["location_id"];
-            $location->email = 'enquiries@' . str_replace(' ', '', strtolower($row["location_id"])) . '.co.uk';
-            $location->telephone = "01902556360";
-            $location->address_1 = "Unknown";
-            $location->city = "Unknown";
-            $location->postcode = "Unknown";
-            $location->county = "West Midlands";
-            $location->icon = "#222222";
-            $location->save();
+                $location->name = $row["location_id"];
+                $location->email = 'enquiries@' . str_replace(' ', '', strtolower($row["location_id"])) . '.co.uk';
+                $location->telephone = "01902556360";
+                $location->address_1 = "Unknown";
+                $location->city = "Unknown";
+                $location->postcode = "Unknown";
+                $location->county = "West Midlands";
+                $location->icon = "#222222";
+                $location->save();
+            }else
+                $component->location_id = 0;
         }
-        $component->location_id = $location->id;
+        $component->location_id = $location->id ?? 0;
 
         $component->notes = $row["notes"];
         $component->save();

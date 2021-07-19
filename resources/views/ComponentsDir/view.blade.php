@@ -161,8 +161,11 @@
 
                     <div class="modal-footer">
                         @if(session('import-error'))
-                            <div class="alert text-warning"> {{ session('import-error')}} </div>
+                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
                         @endif
+                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b" target="_blank" class="btn btn-info" >
+                                Download Import Template
+                            </a>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
 
                         <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
@@ -174,7 +177,7 @@
         </div>
     </div>
     </div>
-    <?php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');?>
+    <?php session()->flash('import-error', ' Select a file to be uploaded before continuing!');?>
 @endsection
 
 @section('js')
