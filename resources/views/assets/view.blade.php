@@ -2,8 +2,12 @@
 
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css" integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
+          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 @endsection
 
 @section('content')
@@ -12,13 +16,15 @@
         <h1 class="h3 mb-0 text-gray-800">Assets</h1>
         <div>
             @can('create', \App\Models\Asset::class)
-            <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
+                <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+                        class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
             @endcan
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
             <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
         </div>
     </div>
 
@@ -31,115 +37,137 @@
     @endif
 
     @php
-        $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();  
-        $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();  
+        $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+        $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
     @endphp
     <section class="position-relative">
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
         <div class="d-flex flex-row-reverse mb-2">
-            @if(isset($filter))<a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear Filter</a>@endif
+            @if(isset($filter))<a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear
+                Filter</a>@endif
             <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-secondary p-2 shadow-sm">Filter</a>
         </div>
         <div id="filter" class="card shadow mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center text-white" style="background-color: #474775; border-top-left-radius: 0px;"><h6>Filter Results</h6><a class="btn-sm btn-secondary" onclick="javascript:toggleFilter();"><i class="fa fa-times" aria-hidden="true"></i></a></div>
+            <div class="card-header d-flex justify-content-between align-items-center text-white"
+                 style="background-color: #474775; border-top-left-radius: 0px;"><h6>Filter Results</h6><a
+                    class="btn-sm btn-secondary" onclick="javascript:toggleFilter();"><i class="fa fa-times"
+                                                                                         aria-hidden="true"></i></a>
+            </div>
             <div class="card-body">
                 <form action="{{ route('assets.filter')}}" method="POST">
                     <div id="accordion" class="mb-4">
                         <div class="option">
-                          <div class="option-header pointer collapsed" id="statusHeader" data-toggle="collapse" data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader"> 
-                            <small>Status Type</small>
-                          </div>
-                          @csrf
-                          <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader" data-parent="#accordion">
-                            <div class="option-body">
-                                @foreach($statuses as $status)
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="status[]" value="{{ $status->id}}" id="{{'status'.$status->id}}">
-                                        <label class="form-check-label" for="{{'status'.$status->id}}">{{ $status->name }}</label>
-                                    </div>
-                                @endforeach
+                            <div class="option-header pointer collapsed" id="statusHeader" data-toggle="collapse"
+                                 data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader">
+                                <small>Status Type</small>
                             </div>
-                          </div>
+                            @csrf
+                            <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader"
+                                 data-parent="#accordion">
+                                <div class="option-body">
+                                    @foreach($statuses as $status)
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="status[]"
+                                                   value="{{ $status->id}}" id="{{'status'.$status->id}}">
+                                            <label class="form-check-label"
+                                                   for="{{'status'.$status->id}}">{{ $status->name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
 
                         <div class="option">
-                            <div class="option-header collapsed pointer" id="categoryHeader" data-toggle="collapse" data-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryHeader">
+                            <div class="option-header collapsed pointer" id="categoryHeader" data-toggle="collapse"
+                                 data-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryHeader">
                                 <small>Category</small>
                             </div>
-                        
-                            <div id="categoryCollapse" class="collapse" aria-labelledby="categoryHeader" data-parent="#accordion">
+
+                            <div id="categoryCollapse" class="collapse" aria-labelledby="categoryHeader"
+                                 data-parent="#accordion">
                                 <div class="option-body">
                                     @foreach($categories as $category)
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="category[]" value="{{ $category->id}}" id="{{'category'.$category->id}}">
-                                        <label class="form-check-label" for="{{'category'.$category->id}}">{{ $category->name }}</label>
-                                    </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="category[]"
+                                                   value="{{ $category->id}}" id="{{'category'.$category->id}}">
+                                            <label class="form-check-label"
+                                                   for="{{'category'.$category->id}}">{{ $category->name }}</label>
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
-                          </div>
+                        </div>
 
-                          <div class="option">
-                            <div class="option-header collapsed pointer" id="locationHeader" data-toggle="collapse" data-target="#locationCollapse" aria-expanded="true" aria-controls="locationHeader">
+                        <div class="option">
+                            <div class="option-header collapsed pointer" id="locationHeader" data-toggle="collapse"
+                                 data-target="#locationCollapse" aria-expanded="true" aria-controls="locationHeader">
                                 <small>Location</small>
                             </div>
-                        
-                            <div id="locationCollapse" class="collapse" aria-labelledby="locationHeader" data-parent="#accordion">
+
+                            <div id="locationCollapse" class="collapse" aria-labelledby="locationHeader"
+                                 data-parent="#accordion">
                                 <div class="option-body">
                                     @foreach($locations as $location)
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="locations[]" value="{{ $location->id}}" id="{{'location'.$location->id}}">
-                                        <label class="form-check-label" for="{{'location'.$location->id}}">{{ $location->name }}</label>
-                                    </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="locations[]"
+                                                   value="{{ $location->id}}" id="{{'location'.$location->id}}">
+                                            <label class="form-check-label"
+                                                   for="{{'location'.$location->id}}">{{ $location->name }}</label>
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
-                          </div>
+                        </div>
 
-                          <div class="option">
-                            <div class="option-header collapsed pointer" id="purchasedDateHeader" data-toggle="collapse" data-target="#purchasedDateCollapse" aria-expanded="true" aria-controls="purchasedDateHeader">
+                        <div class="option">
+                            <div class="option-header collapsed pointer" id="purchasedDateHeader" data-toggle="collapse"
+                                 data-target="#purchasedDateCollapse" aria-expanded="true"
+                                 aria-controls="purchasedDateHeader">
                                 <small>Purchased Date</small>
                             </div>
-                        
-                            <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader" data-parent="#accordion">
+                            <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader"
+                                 data-parent="#accordion">
                                 <div class="option-body">
                                     <div class="form-row">
                                         <label for="start" class="p-0 m-0 mb-1"><small>Start</small></label>
-                                        <input class="form-control" type="date" name="start" value="" placeholder="DD/MM/YYYY" />
+                                        <input class="form-control" type="date" name="start" value=""
+                                               placeholder="DD/MM/YYYY"/>
                                     </div>
                                     <div class="form-row">
-                                    <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
-                                        <input class="form-control" type="date" name="end" value="" placeholder="DD/MM/YYYY" />
+                                        <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
+                                        <input class="form-control" type="date" name="end" value=""
+                                               placeholder="DD/MM/YYYY"/>
                                     </div>
                                 </div>
                             </div>
-                          </div>
-
-                          
-
-                          <div class="option">
-                            <div class="option-header collapsed pointer" id="costHeader" data-toggle="collapse" data-target="#costCollapse" aria-expanded="true" aria-controls="costHeader">
+                        </div>
+                        <div class="option">
+                            <div class="option-header collapsed pointer" id="costHeader" data-toggle="collapse"
+                                 data-target="#costCollapse" aria-expanded="true" aria-controls="costHeader">
                                 <small>Purchased Cost</small>
                             </div>
-                        
-                            <div id="costCollapse" class="collapse" aria-labelledby="costHeader" data-parent="#accordion">
+                            <div id="costCollapse" class="collapse" aria-labelledby="costHeader"
+                                 data-parent="#accordion">
                                 <div class="option-body" style="padding-bottom: 60px;">
                                     <div class="form-control">
                                         <label for="amount">Price range:</label>
-                                        <input type="text" id="amount" name="amount" readonly style="border:0; color:#b087bc; font-weight:bold; margin-bottom: 20px;">
+                                        <input type="text" id="amount" name="amount" readonly
+                                               style="border:0; color:#b087bc; font-weight:bold; margin-bottom: 20px;">
                                         <div id="slider-range"></div>
                                     </div>
                                 </div>
                             </div>
-                          </div>
+                        </div>
 
-                          <div class="option">
-                            <div class="option-header pointer collapsed" id="auditDateHeader" data-toggle="collapse" data-target="#auditDateCollapse" aria-expanded="true" aria-controls="auditDateHeader">
+                        <div class="option">
+                            <div class="option-header pointer collapsed" id="auditDateHeader" data-toggle="collapse"
+                                 data-target="#auditDateCollapse" aria-expanded="true" aria-controls="auditDateHeader">
                                 <small>Audit Date</small>
                             </div>
-                            <div id="auditDateCollapse" class="collapse" aria-labelledby="auditDateHeader" data-parent="#accordion">
+                            <div id="auditDateCollapse" class="collapse" aria-labelledby="auditDateHeader"
+                                 data-parent="#accordion">
                                 <div class="option-body">
                                     <div class="form-row">
                                         <select name="audit" class="form-control">
@@ -152,8 +180,7 @@
                                     </div>
                                 </div>
                             </div>
-                          </div>
-                        
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-sm btn-success text-right">Apply Filter</button>
@@ -199,10 +226,13 @@
                         @foreach($assets as $asset)
                             <tr>
                                 <td class="text-center"><input type="checkbox"></td>
-                                <td>{{ $asset->model->name ?? 'No Model'}}<br><small>{{ $asset->serial_no }}</small></td>
+                                <td>{{ $asset->model->name ?? 'No Model'}}<br><small>{{ $asset->serial_no }}</small>
+                                </td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
-                                        '<img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>'
+                                        '<img src="{{ asset($asset->location->photo->path)}}" height="30px"
+                                              alt="{{$asset->location->name}}"
+                                              title="{{ $asset->location->name ?? 'Unnassigned'}}"/>'
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'">'
                                             .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -214,9 +244,9 @@
                                 <td class="text-center">
                                     £{{ $asset->purchased_cost }}<br>
                                     @php
-                                    $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
-                                    $percentage = floor($age)*33.333;
-                                    $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                                        $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
+                                        $percentage = floor($age)*33.333;
+                                        $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
                                     @endphp
                                     <small>(*£{{ number_format($dep, 2)}})</small>
                                 </td>
@@ -225,18 +255,25 @@
                                 <td class="text-center" data-sort="{{ $warranty_end }}">
                                     {{ $asset->warranty }} Months
 
-                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
+                                        Remaining</small>
                                 </td>
                                 <td class="text-center" data-sort="{{ strtotime($asset->audit_date)}}">
                                     @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
-                                        <span class="text-danger">{{\Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span><br><small>Audit Overdue</small>
+                                        <span
+                                            class="text-danger">{{\Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
+                                        <br><small>Audit Overdue</small>
                                     @else
                                         <?php $age = Carbon\Carbon::now()->floatDiffInDays($asset->audit_date);?>
                                         @switch(true)
-                                            @case($age < 31) <span class="text-warning">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span><br><small>Audit Due Soon</small>
-                                                @break
+                                            @case($age < 31) <span
+                                                class="text-warning">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
+                                            <br><small>Audit Due Soon</small>
+                                            @break
                                             @default
-                                                <span class="text-secondary">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span><br><small>Audit due in {{floor($age)}} days</small>
+                                            <span
+                                                class="text-secondary">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
+                                            <br><small>Audit due in {{floor($age)}} days</small>
                                         @endswitch
                                     @endif
                                 </td>
@@ -245,18 +282,19 @@
                                           method="POST">
                                         <a href="{{ route('assets.show', $asset->id) }}"
                                            class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i></a>&nbsp;
-                                           @can('edit', $asset)
-                                        <a href="{{route('assets.edit', $asset->id) }}"
-                                           class="btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
-                                            @endcan
-                                            
+                                        @can('edit', $asset)
+                                            <a href="{{route('assets.edit', $asset->id) }}"
+                                               class="btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>
+                                            &nbsp;
+                                        @endcan
+
                                         @csrf
                                         @method('DELETE')
 
                                         @can('delete', $asset)
-                                        <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                           data-id="{{$asset->id}}"><i class=" fas fa-trash"></i></a>
-                                           @endcan
+                                            <a class="btn-sm btn-danger text-white deleteBtn" href="#"
+                                               data-id="{{$asset->id}}"><i class=" fas fa-trash"></i></a>
+                                        @endcan
                                     </form>
                                 </td>
                             </tr>
@@ -304,56 +342,110 @@
             </div>
         </div>
     </div>
+{{--//import--}}
+    <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
+         aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/importassets" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <p>Select "import" to add Assets to the system.</p>
+                        <input class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                               type="file" placeholder="Upload here" name="csv" accept=".csv" id="importEmpty">
+                    </div>
+                    <div class="modal-footer">
+                        @if(session('import-error'))
+                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
+                        @endif
+                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/Eb2RbyCNk_hOuTfMOufGpMsBl0yUs1ZpeCjkCm6YnLfN9Q?e=4t5BVO" target="_blank" class="btn btn-info" >
+                                Download Import Template
+                            </a>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+
+                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
+                            Import
+                        </button>
+                    @csrf
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
+<?php session()->flash('import-error', 'Select a file to be uploaded before continuing!');?>
 
 @section('js')
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        function toggleFilter(){
-            if($('#filter').hasClass('show')){
+        function toggleFilter() {
+            if ($('#filter').hasClass('show')) {
                 $('#filter').removeClass('show');
                 $('#filter').css('right', '-100%');
-            }else{
+            } else {
                 $('#filter').addClass('show');
                 $('#filter').css('right', '0%');
             }
         }
 
 
-        $('.deleteBtn').click(function() {
-        $('#supplier-id').val($(this).data('id'))
-        //showModal
-        $('#removeSupplierModal').modal('show')
+        $('.deleteBtn').click(function () {
+            $('#supplier-id').val($(this).data('id'))
+            //showModal
+            $('#removeSupplierModal').modal('show')
         });
 
-        $('#confirmBtn').click(function() {
-        var form = '#'+'form'+$('#supplier-id').val();
-        $(form).submit();
+        $('#confirmBtn').click(function () {
+            var form = '#' + 'form' + $('#supplier-id').val();
+            $(form).submit();
         });
 
-        $( function() {
-            $( "#slider-range" ).slider({
-            range: true,
-            min: {{ floor($floor)}},
-            max: {{ round($limit)}},
-            values: [ {{ floor($floor)}}, {{ round($limit)}} ],
-            slide: function( event, ui ) {
-                $( "#amount" ).val( "£" + ui.values[ 0 ] + " - £" + ui.values[ 1 ] );
-            }
+        $(function () {
+            $("#slider-range").slider({
+                range: true,
+                min: {{ floor($floor)}},
+                max: {{ round($limit)}},
+                values: [{{ floor($floor)}}, {{ round($limit)}}],
+                slide: function (event, ui) {
+                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
+                }
             });
-            $( "#amount" ).val( "£" + $( "#slider-range" ).slider( "values", 0 ) +
-            " - £" + $( "#slider-range" ).slider( "values", 1 ) );
-        } );
+            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
+                " - £" + $("#slider-range").slider("values", 1));
+        });
 
-        $(document).ready( function () {
+        $(document).ready(function () {
             $('#assetsTable').DataTable({
-                "columnDefs": [ {
-                "targets": [0, 10],
-                "orderable": false,
-                } ],
-                "order": [[ 1, "asc"]]
+                "columnDefs": [{
+                    "targets": [0, 10],
+                    "orderable": false,
+                }],
+                "order": [[1, "asc"]]
             });
         });
+        // import
+
+        $('#import').click(function () {
+            $('#manufacturer-id-test').val($(this).data('id'))
+            //showModal
+            $('#importManufacturerModal').modal('show')
+        });
+
+        // file input empty
+        $("#confirmBtnImport").click(":submit", function (e) {
+
+            if (!$('#importEmpty').val()) {
+                e.preventDefault();
+                <?php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');?>
+            }else{
+                <?php session()->flash('import-error', '');?>            }
+        })
     </script>
 @endsection

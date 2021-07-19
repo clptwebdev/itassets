@@ -84,40 +84,6 @@ class ManufacturerController extends Controller {
         return redirect('/manufacturers');
     }
 
-    public function createMany(Request $request)
-    {
-
-        $validation = Validator::make($request->all(), [
-            "name.*" => "unique:manufacturers,name|required|max:255",
-            "supportPhone.*" => "required|max:14",
-            "supportUrl.*" => "required",
-            "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
-
-        ]);
-
-        if($validation->fails())
-        {
-            return view('Manufacturers.view', [
-                "names" => $request->name,
-            ]);
-        }
-
-        for($i = 0; $i < count($request->name); $i++)
-        {
-            Manufacturer::Create([
-                "name" => $request->name[$i],
-                "supportPhone" => $request->supportPhone[$i],
-                "supportUrl" => $request->supportUrl[$i],
-                "supportEmail" => $request->supportEmail[$i],
-
-            ]);
-        }
-        session()->flash('success_message', $i . ' has been created successfully');
-
-        return redirect('/manufacturers');
-
-    }
-
     public function ajaxMany(Request $request)
     {
         if($request->ajax()){
@@ -127,7 +93,7 @@ class ManufacturerController extends Controller {
                 "supportUrl.*" => "required",
                 "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
             ]);
-            
+
             if($validation->fails()){
                 return $validation->errors();
             }else{
@@ -144,7 +110,7 @@ class ManufacturerController extends Controller {
                 return 'Success';
             }
         }
-        
+
     }
 
     public function destroy(Manufacturer $manufacturers)
@@ -165,75 +131,83 @@ class ManufacturerController extends Controller {
 
     public function import(Request $request)
     {
-        $path = $request->file("csv")->getRealPath();
-        $import = new ManufacturerImport;
-        $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
-        $errors = $import->failures();
-        $row = [];
-        $attributes = [];
-        $errors = [];
-        $values = [];
-        $results = $import->failures();
-        $importErrors = [];
+        $extensions = array("csv");
 
-        foreach($results->all() as $result)
-        {
-            $row[] = $result->row();
-            $attributes[] = $result->attribute();
-            $errors[] = $result->errors();
-            $values[] = $result->values();
-            $importErrors[] = [
+        $result = array($request->file('csv')->getClientOriginalExtension());
 
-                "row" => $result->row(),
-                "attributes" => $result->attribute(),
-                "errors" => $result->errors(),
-                "value" => $result->values(),
-            ];
+        if(in_array($result[0],$extensions)){
+            $path = $request->file("csv")->getRealPath();
+            $import = new ManufacturerImport;
+            $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
+            $errors = $import->failures();
+            $row = [];
+            $attributes = [];
+            $errors = [];
+            $values = [];
+            $results = $import->failures();
+            $importErrors = [];
 
-        }
+            foreach($results->all() as $result)
+            {
+                $row[] = $result->row();
+                $attributes[] = $result->attribute();
+                $errors[] = $result->errors();
+                $values[] = $result->values();
+                $importErrors[] = [
+
+                    "row" => $result->row(),
+                    "attributes" => $result->attribute(),
+                    "errors" => $result->errors(),
+                    "value" => $result->values(),
+                ];
 
         if(! empty($importErrors))
         {
             $errorArray = [];
             $valueArray = [];
             $errorValues = [];
-            
-            foreach($importErrors as $error)
-            {
-                if(array_key_exists($error['row'], $errorArray))
-                {
-                    $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
-                } else
-                {
-                    $errorArray[$error['row']] = $error['attributes'];
-                }
-                $valueArray[$error['row']] = $error['value'];
 
-                if(array_key_exists($error['row'], $errorValues))
+                foreach($importErrors as $error)
                 {
-                    $array = $errorValues[$error['row']];
-                }else{
-                    $array = [];
+                    if(array_key_exists($error['row'], $errorArray))
+                    {
+                        $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
+                    } else
+                    {
+                        $errorArray[$error['row']] = $error['attributes'];
+                    }
+                    $valueArray[$error['row']] = $error['value'];
+
+                    if(array_key_exists($error['row'], $errorValues))
+                    {
+                        $array = $errorValues[$error['row']];
+                    }else{
+                        $array = [];
+                    }
+
+                    foreach($error['errors'] as $e){
+                        $array[$error['attributes']] = $e;
+                    }
+                    $errorValues[$error['row']] = $array;
+
                 }
-                
-                foreach($error['errors'] as $e){
-                    $array[$error['attributes']] = $e; 
-                }
-                $errorValues[$error['row']] = $array;
-               
+
+                return view('Manufacturers.import-errors', [
+                    "errorArray" => $errorArray,
+                    "valueArray" => $valueArray,
+                    "errorValues" => $errorValues,
+                ]);
+
+        } else{
+                return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
+
+            }
+        }}else{
+                session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV"!');
+
+            return redirect('/manufacturers');
             }
 
-            return view('Manufacturers.import-errors', [
-                "errorArray" => $errorArray,
-                "valueArray" => $valueArray,
-                "errorValues" => $errorValues,
-            ]);
-
-        } else
-        {
-            return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
-
-        }
     }
 
 }

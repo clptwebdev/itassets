@@ -1,0 +1,57 @@
+asset_tag,serial_no,asset_model_id,status_id,purchased_date,purchased_cost,supplier_id,manufacturer_id,order_no,warranty,location_id,audit_date
+2520,BL1,Optiplex 9020,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,11/10/1990
+2519,BL2,Optiplex 9020,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,12/10/1990
+2529,BL3,Optiplex 9020,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,13/10/1990
+2534,BL4,Optiplex 9020,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,14/10/1990
+2535,BL5,Optiplex 9020,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,15/10/1990
+2528,BL6,Optiplex 9020,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,16/10/1990
+2512,BL7,Optiplex 9020,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,17/10/1990
+2516,BL8,Optiplex 9020,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,18/10/1990
+2511,BL9,Optiplex 9020,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,19/10/1990
+2524,BL10,Optiplex 9020,Booked out,5.11.13,683.09,,Dell,,3,Heath park,20/10/1990
+2533,BL11,565,Booked out,5.11.13,683.09,,NUC,,3,Heath park,21/10/1990
+2539,BL12,566,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,22/10/1990
+2540,BL13,567,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,23/10/1990
+2536,BL14,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,24/10/1990
+2527,BL15,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,25/10/1990
+2537,BL16,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,26/10/1990
+2538,BL17,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,27/10/1990
+2517,BL18,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,28/10/1990
+2523,BL19,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,29/10/1990
+2525,BL20,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,30/10/1990
+2532,BL21,EliteDesktop 800 G2,Booked out,27.3.14,683.09,,Lenovo,,3,Heath park,31/10/1990
+2526,BL22,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,01/11/1990
+2530,BL23,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,02/11/1990
+2521,BL24,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,03/11/1990
+2509,BL25,EliteDesktop 800 G2,Booked out,27.3.14,683.09,,Lenovo,,3,Heath park,04/11/1990
+2487,BL26,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,05/11/1990
+2496,BL27,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,06/11/1990
+2508,BL28,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,07/11/1990
+2486,BL29,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,08/11/1990
+2507,BL30,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,09/11/1990
+2494,BL31,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,10/11/1990
+2493,BL32,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,11/11/1990
+2504,BL33,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,12/11/1990
+2505,BL34,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,13/11/1990
+2506,BL35,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,NUC,,3,Heath park,14/11/1990
+2502,BL36,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,15/11/1990
+2491,BL37,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,16/11/1990
+2498,BL38,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,17/11/1990
+2485,BL39,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,18/11/1990
+2497,BL40,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,NUC,,3,Heath park,19/11/1990
+2488,BL41,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,NUC,,3,Heath park,20/11/1990
+2501,BL42,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,21/11/1990
+2510,BL43,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,22/11/1990
+2483,BL44,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,23/11/1990
+2500,BL45,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,24/11/1990
+2503,BL46,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,25/11/1990
+2490,BL47,EliteDesktop 800 G2,Booked out,5.11.13,683.09,,Lenovo,,3,Heath park,26/11/1990
+2489,BL48,EliteDesktop 800 G2,Booked out,1.9.14,683.09,,Lenovo,,3,Heath park,27/11/1990
+2492,BL49,EliteDesktop 800 G2,Booked out,1.9.15,683.09,,Lenovo,,3,Heath park,28/11/1990
+2499,BL50,EliteDesktop 800 G2,Booked out,1.9.16,683.09,,Lenovo,,3,Heath park,29/11/1990
+2495,BL51,EliteDesktop 800 G2,Booked out,1.9.17,683.09,,Lenovo,,3,Heath park,30/11/1990
+2484,BL52,EliteDesktop 800 G2,Booked out,1.9.18,683.09,,Lenovo,,3,Heath park,01/12/1990
+2513,BL53,EliteDesktop 800 G2,Booked out,1.9.19,683.09,,Lenovo,,3,Heath park,02/12/1990
+2515,BL54,EliteDesktop 800 G2,Booked out,1.9.20,683.09,,Lenovo,,3,Heath park,03/12/1990
+2522,BL55,EliteDesktop 800 G2,Booked out,1.9.21,683.09,,Lenovo,,3,Heath park,04/12/1990
+2531,BL56,EliteDesktop 800 G2,Booked out,1.9.22,683.09,,Lenovo,,3,Heath park,05/12/1990
