@@ -15,9 +15,11 @@ class Location extends Model
     {
         return $this->belongsTo(Photo::class);
     }
+    
     public function asset(){
         return $this->hasMany(Asset::class);
     }
+
     public function component(){
         return $this->hasMany(Component::class);
     }

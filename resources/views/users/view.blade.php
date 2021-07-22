@@ -36,12 +36,12 @@
                 <table id="usersTable" class="table table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email Address</th>
-                            <th>Admin</th>
-                            <th>Permissions</th>
-                            <th class="text-center">Options</th>
+                            <th class="col-1">ID</th>
+                            <th class="col-1">Name</th>
+                            <th class="col-2">Email Address</th>
+                            <th class="col-1">Admin</th>
+                            <th class="col-5">Permissions</th>
+                            <th class="text-right col-2">Options</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -55,19 +55,46 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                        <?php $users = App\Models\User::all();?>
                         @foreach($users as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->role_id }}</td>
+                            <td class="text-center">
+                                @php
+                                switch($user->role_id){
+                                    case 0:
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-danger text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="No Access Permitted">No Access</small>';
+                                        break;
+                                    case 1:
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-primary text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="Full Control:<br>Full User Permissions<br>Full Location Permissions">Super Admin</small>';
+                                        break;
+                                    case 2:
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-info text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="Administrator:<br>Location Based User Permissions<br>Set Location Permissions">Administrator</small>';
+                                        break;
+                                    case 3:
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-success text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="User Manager:<br>No User Permissions<br>Location Based Permissions">User Manager</small>';
+                                        break;
+                                    case 4:
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-secondary text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="User:<br>No User Permissions<br>View Only - Assets">User</small>';
+                                        break;
+                                }    
+
+                                @endphp
+                            </td>
                             <td>
-                                @foreach($user->locations as $location)
-                                <small class="rounded p-1 m-1 text-white" style="background-color: {{$location->icon}}">{{$location->name}}</small>
+                                @php 
+                                if($user->role_id == 1){
+                                    $locations = App\Models\Location::all();
+                                }else{
+                                    $locations = $user->locations;
+                                }
+                                @endphp
+                                @foreach($locations as $location)
+                                <small data-toggle="tooltip" data-html="true" data-placement="left" title="{{ $location->name }}<br>{{ $location->address1}}" class="rounded p-1 m-1 mb-2 text-white d-inline-block pointer" style="background-color: {{$location->icon}}">{{$location->name}}</small>
                                 @endforeach
                             </td>
-                            <td class="text-center">
+                            <td class="text-right">
                                 <form id="form{{$user->id}}" action="{{ route('users.destroy', $user->id) }}"
                                     method="POST">
                                     <a href="{{ route('users.show', $user->id) }}"
@@ -79,8 +106,12 @@
 
                                     @csrf
                                     @method('DELETE')
+                                    @if($user->role_id == 0 || auth()->user()->role_id == 1 || auth()->user()->role_id <= $user->role_id && $user->id != auth()->user()->id)
                                     <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                        data-id="{{$user->id}}"><i class=" fas fa-trash"></i></a>
+                                        data-id="{{$user->id}}"><i class=" fas fa-trash"></i></a>    
+                                    @else
+                                    <a class="btn-sm btn-secondary text-white" disabled data-toggle="tooltip" data-placement="left" title="Permission Denied"><i class="fas fa-trash"></i></a>   
+                                    @endif
                                 </form>
                             </td>
                         </tr>
@@ -109,7 +140,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this Supplier?
+                <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this User?
                 </h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>

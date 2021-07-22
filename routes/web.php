@@ -35,13 +35,23 @@ Route::group(['middleware'=>'auth'], function(){
         );
     })->name('dashboard');
 
+    //Super Admmin
+
+    //Super Admin or Admin
+    Route::group(['middleware'=>'admin.role'], function(){
+        Route::resource('/users', 'App\Http\Controllers\UserController');
+    });
+
+    //User Manager
+
+    //User
 
 
     //Administrator Permissions Middleware
     Route::group(['middleware'=>'role:1'], function(){
         Route::resource('/location', 'App\Http\Controllers\LocationController');
         Route::resource('/category', 'App\Http\Controllers\CategoryController');
-        Route::resource('/users', 'App\Http\Controllers\UserController');
+        Route::post('permissions/users', 'App\Http\Controllers\UserController@permissions');
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
