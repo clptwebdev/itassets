@@ -48,7 +48,6 @@ Route::group(['middleware'=>'auth'], function(){
 
 
     //Administrator Permissions Middleware
-    Route::group(['middleware'=>'role:1'], function(){
         Route::resource('/location', 'App\Http\Controllers\LocationController');
         Route::resource('/category', 'App\Http\Controllers\CategoryController');
         Route::post('permissions/users', 'App\Http\Controllers\UserController@permissions');
@@ -102,6 +101,4 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('chart/asset/values', 'App\Http\Controllers\ChartController@getAssetValueChart');
         Route::get('chart/asset/audits', 'App\Http\Controllers\ChartController@getAssetAuditChart');
 
-        //
-    });
 });

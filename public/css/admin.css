@@ -11397,7 +11397,14 @@ body.sidebar-toggled footer.sticky-footer {
   width: 14rem;
 }
 
+.auto-width{
+  width: 75%;
+}
+
 @media (max-width: 768px) {
+  .auto-width{
+    width: 100%;
+  }
 
   #statusMenu.collapse, #locationMenu.collapse {
     position: absolute;

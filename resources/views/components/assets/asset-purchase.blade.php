@@ -1,5 +1,5 @@
 @props(["asset"])
-<div class="col-12 col-sm-4 mb-4">
+<div class="col-12 col-lg-4 mb-4">
     <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid ;">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold" style="">Purchase Information</h6>

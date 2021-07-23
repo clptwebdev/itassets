@@ -9,9 +9,9 @@
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Add New User</h1>
 
-            <div>
+            <div class="mt-4 mt-md-0">
                 <a href="{{ route('users.index')}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                   class="d-inline-block btn btn-sm btn-secondary shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Users</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save 
@@ -25,7 +25,7 @@
                 the 'Save' button. Or click the 'Back' button
                 to return the Assets page.
             </p>
-            <div class="row row-eq-height container m-auto">
+            <div class="row row-eq-height auto-width m-auto">
                 <div class="col-12">
                     <div class="card shadow h-100">
                         <div class="card-body">

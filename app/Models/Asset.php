@@ -92,4 +92,8 @@ class Asset extends Model {
         $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
     }
 
+    public function logs(){
+        return $this->morphMany(Log::class, 'loggable');
+    }
+
 }

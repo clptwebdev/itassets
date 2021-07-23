@@ -1,7 +1,7 @@
 @if(count($ids) != 0)
 @foreach($ids as $id)
     @if($location = \App\Models\Location::find($id))
-    <div class="col-4 p-2 h-100">
+    <div class="col-12 col-md-6 col-lg-4 p-2 h-100">
         <div class="card h-100">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between h-100">
                 @if ($location->photo()->exists())

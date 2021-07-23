@@ -34,6 +34,7 @@ class User extends Authenticatable {
      */
     protected $casts = ['email_verified_at' => 'datetime',];
 
+
     public function photo()
     {
         return $this->belongsTo('App\Models\Photo');
@@ -45,12 +46,22 @@ class User extends Authenticatable {
     }
 
     public function locations(){
-        return $this->belongsToMany(Location::class);
+        return $this->belongsToMany(Location::class)
+            ->using(LocationUser::class);
     }
 
 
     public function location_assets(){
         return $this->hasManyDeep(Asset::class, ['location_user', Location::class]);
+    }
+
+    public function logs(){
+        return $this->morphMany(Log::class, 'loggable');
+    }
+
+    public function activity()
+    {
+        return $this->hasMany(Log::class);
     }
 
 }

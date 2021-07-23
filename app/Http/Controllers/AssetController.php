@@ -225,7 +225,7 @@ class AssetController extends Controller
             ];
         }
 
-        $this->authorize('update');
+        $this->authorize('update', $asset);
 
         $validated = $request->validate($v);
         $asset->fill(array_merge($request->only(

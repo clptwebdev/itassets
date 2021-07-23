@@ -8,12 +8,12 @@
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Users</h1>
-    <div>
-        <a href="{{ route('users.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+    <div class="mt-4 mt-sm-0">
+        <a href="{{ route('users.create')}}" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New User</a>
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-        <a href="/exportusers" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        <a href="/exportusers" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
     </div>
 </div>
@@ -33,34 +33,37 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <table id="usersTable" class="table table-striped">
+                <table id="usersTable" class="table table-striped w-100">
                     <thead>
                         <tr>
-                            <th class="col-1">ID</th>
-                            <th class="col-1">Name</th>
-                            <th class="col-2">Email Address</th>
-                            <th class="col-1">Admin</th>
-                            <th class="col-5">Permissions</th>
-                            <th class="text-right col-2">Options</th>
+                            <th class="col-1 d-none d-md-table-cell"><small>ID</small></th>
+                            <th class="col-1"><small>Name</small></th>
+                            <th class="col-2 d-none d-md-table-cell"><small>Email Address</small></th>
+                            <th class="col-1 d-none d-md-table-cell"><small>Admin</small></th>
+                            <th class="col-5 d-none d-md-table-cell"><small>Permissions</small></th>
+                            <th class="text-right col-2"><small>Options</small></th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Admin</th>
-                            <th>Permissions</th>
-                            <th class="text-center">Options</th>
+                            <th class="col-1 d-none d-md-table-cell"><small>ID</small></th>
+                            <th class="col-1"><small>Name</small></th>
+                            <th class="col-2 d-none d-md-table-cell"><small>Email Address</small></th>
+                            <th class="col-1 d-none d-md-table-cell"><small>Admin</small></th>
+                            <th class="col-5 d-none d-md-table-cell"><small>Permissions</small></th>
+                            <th class="text-right col-2"><small>Options</small></th>
                         </tr>
                     </tfoot>
                     <tbody>
                         @foreach($users as $user)
                         <tr>
-                            <td>{{ $user->id }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td class="text-center">
+                            <td class="text-center d-none d-md-table-cell">{{ $user->id }}</td>
+                            <td>
+                                {{ $user->name }}
+                                <span class="d-block d-md-none">{{ $user->email }}</span>
+                            </td>
+                            <td class="d-none d-md-table-cell">{{ $user->email }}</td>
+                            <td class="text-center d-none d-md-table-cell">
                                 @php
                                 switch($user->role_id){
                                     case 0:
@@ -82,7 +85,7 @@
 
                                 @endphp
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 @php 
                                 if($user->role_id == 1){
                                     $locations = App\Models\Location::all();
@@ -95,8 +98,10 @@
                                 @endforeach
                             </td>
                             <td class="text-right">
+                                <a href="{{ route('users.show', $user->id) }}"
+                                    class="btn-sm btn-secondary text-white d-inline-block d-md-none p-3"><i class="far fa-eye"></i></a>&nbsp;
                                 <form id="form{{$user->id}}" action="{{ route('users.destroy', $user->id) }}"
-                                    method="POST">
+                                    method="POST" class="d-none d-md-inline-block">
                                     <a href="{{ route('users.show', $user->id) }}"
                                         class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
                                         View</a>&nbsp;

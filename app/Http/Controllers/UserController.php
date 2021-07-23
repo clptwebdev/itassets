@@ -83,9 +83,22 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        echo 'Hello';
+        
+        $permission = 0;
+        foreach(auth()->user()->locations->pluck('id')->toArray() as $id => $key){
+            if(in_array($key, $user->locations->pluck('id')->toArray())){
+                $permission++;
+            }
+        }
+        if($permission != 0 || auth()->user()->role_id == 1){
+            $location = Location::find($user->location_id);
+            return view('users.show', compact('user', 'location'));
+        }else{
+            return redirect('/permissions');
+        }
+        
     }
 
     /**
@@ -146,11 +159,16 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $name=$user->name;
-        $user->delete();
-        session()->flash('danger_message', $name . ' was deleted from the system');
-        return redirect(route('users.index'));
+        if(auth()->user()->role_id == 1 || auth()->user()->role_id <= $user->role_id){
+            $name=$user->name;
+            $user->delete();
+            session()->flash('danger_message', $name . ' was deleted from the system');
+            return redirect(route('users.index'));
+        }else{
+            return redirect('/permissions');
+        }
     }
+
     public function export(User $user)
     {
         return \Maatwebsite\Excel\Facades\Excel::download(new UserExport, 'users.csv');

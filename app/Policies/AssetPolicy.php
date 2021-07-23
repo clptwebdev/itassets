@@ -6,6 +6,8 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\Asset;
 use App\Models\User;
 
+use Illuminate\Auth\Access\Response;
+
 class AssetPolicy
 {
     use HandlesAuthorization;
@@ -46,7 +48,7 @@ class AssetPolicy
 
     public function edit(User $user)
     {
-        return $user->role_id === 1;
+        return auth()->user()->role_id == 1;
     }
 
     /**
@@ -56,9 +58,11 @@ class AssetPolicy
      * @param  \App\Models\asset  $asset
      * @return mixed
      */
-    public function update(User $user, asset $asset)
+    public function update(User $user, Asset $asset)
     {
-        return $user->role_id == 1;
+        return auth()->user()->role_id <= 3
+                    ? Response::allow()
+                    : $error = 'You do not have permissions to update Asset - '.$asset->asset_tag.'. You have READ_ONLY.'; response(view('errors.403'), compact('error'));
     }
 
     /**
@@ -70,7 +74,7 @@ class AssetPolicy
      */
     public function delete(User $user, asset $asset)
     {
-        return $user->role_id == 1;
+        return auth()->user()->role_id == 1;
     }
 
     /**
