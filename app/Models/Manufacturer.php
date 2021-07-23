@@ -25,4 +25,11 @@ class Manufacturer extends Model {
         return $this->hasMany(AssetModel::class, 'manufacturer_id');
     }
 
+    public function accessory(){
+        return $this->hasMany(Accessory::class);
+    }
+    public function consumable(){
+        return $this->hasMany(Consumable::class);
+    }
+
 }

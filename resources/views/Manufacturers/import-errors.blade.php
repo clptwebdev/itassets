@@ -15,6 +15,8 @@
         <div>
             <a href="/manufacturers" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i class="fas fa-plus fa-sm text-white-50">
                 </i> Back to Manufacturers</a>
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
             <button onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm">
                 <i class="far fa-save fa-sm text-white-50"></i> Save
             </button>
@@ -107,12 +109,48 @@
 @endsection
 
 @section('modals')
-
+    <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
+         aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data Help</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/importmanufacturer" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <h2 class="h3 mb-0 text-gray-800">Requirements needed to finish your import</h2>
+                        <ol>
+                            <li>The Required fields are: Name, Supplier,Location and serial num.</li>
+                            <li>All Correct rows skip this page and import straight to the database so please don't re-import your file!</li>
+                            <li>Struggling to Pass this stage are all your data fields in the correct format?</li>
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <p>For Anymore information please email Apollo@clpt.co.uk</p>
+                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERE4_YTdj09OgTKDE0rqW5cBA2GpiFOsH-ziakd4zeYYwA?e=JBx4b4" target="_blank" class="btn btn-info" >
+                            Download Import Template
+                        </a>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    @csrf
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
 
     <script type="text/javascript">
+
+        $('#import').click(function () {
+            $('#manufacturer-id-test').val($(this).data('id'))
+            //showModal
+            $('#importManufacturerModal').modal('show')
+
+        })
         function checkErrors(obj) {
 
             var token = $("[name='_token']").val();

@@ -423,68 +423,20 @@ class AssetController extends Controller {
                     $asset->asset_tag = $request->asset_tag[$i];
                     $asset->user_id = auth()->user()->id;
                     $asset->serial_no = $request->serial_no[$i];
-
-                    //check for already existing Status upon import if else create
-                    if($status = Status::where(["name" => $request->status_id[$i]])->first())
-                    {
-
-                    } else
-                    {
-                        $status = new Status;
-
-                        $status->name = $request->status_id[$i];
-                        $status->deployable = 1;
-
-                        $status->save();
-                    }
-                    $asset->status_id = $status->id;
+                    $asset->status_id = $request->status_id[$i];
 
                     $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
                     $asset->purchased_cost = $request->purchased_cost[$i];
 
-                    //check for already existing Suppliers upon import if else create
-                    if($supplier = Supplier::where(["name" => $request->supplier_id[$i]])->first())
-                    {
-
-                    } else
-                    {
-                        $supplier = new Supplier;
-
-                        $supplier->name = $request->supplier_id[$i];
-                        $supplier->email = 'info@' . str_replace(' ', '', strtolower($request->supplier_id[$i])) . '.com';
-                        $supplier->url = 'www.' . str_replace(' ', '', strtolower($request->supplier_id[$i])) . '.com';
-                        $supplier->telephone = "Unknown";
-                        $supplier->save();
-                    }
-
-                    $asset->supplier_id = $supplier->id;
+                    $asset->supplier_id = $request->supplier_id[$i];
                     $asset->order_no = $request->order_no[$i];
                     $asset->warranty = $request->warranty[$i];
 
-                    //check for already existing Locations upon import if else create
-                    if($location = Location::where(["name" => $request->location_id[$i]])->first())
-                    {
-
-                    } else
-                    {
-                        $location = new Location;
-
-                        $location->name = $request->location_id[$i];
-                        $location->email = 'enquiries@' . str_replace(' ', '', strtolower($request->location_id[$i])) . '.co.uk';
-                        $location->telephone = "01902556360";
-                        $location->address_1 = "Unknown";
-                        $location->city = "Unknown";
-                        $location->postcode = "Unknown";
-                        $location->county = "West Midlands";
-                        $location->icon = "#222222";
-                        $location->save();
-                    }
-                    $asset->location_id = $location->id;
+                    $asset->location_id = $request->location_id[$i];
                     $asset->asset_model = $request->asset_model[$i];
 
                     $asset->save();
                 }
-
                 session()->flash('success_message', 'You can successfully added the Assets');
 
                 return 'Success';

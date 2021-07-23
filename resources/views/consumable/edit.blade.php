@@ -5,14 +5,14 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('components.store', $component->id) }}" method="POST">
+    <form action="{{ route('consumables.update', $consumable->id) }}" method="POST">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Add New Component</h1>
+            <h1 class="h3 mb-0 text-gray-800">Add New Consumable</h1>
 
             <div>
-                <a href="{{ route('components.index') }}"
+                <a href="{{ route('consumables.index') }}"
                    class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Components</a>
+                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Consumables</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
@@ -20,10 +20,10 @@
         </div>
 
         <section>
-            <p class="mb-4">edit a existing Component to the asset management system. Enter in the following information
+            <p class="mb-4">edit a existing Consumable to the asset management system. Enter in the following information
                 and
                 click the 'Save' button. Or click the 'Back' button
-                to return the Components page.
+                to return the Consumables page.
             </p>
             <div class="row row-eq-height">
                 <div class="col-12 col-md-8 col-lg-9">
@@ -40,79 +40,79 @@
                                 </div>
                             @endif
 
-                                @csrf
+                            @csrf
+                            {{ method_field('PATCH') }}
 
-
-                                <div class="form-group">
-                                    <label for="name">Name</label>
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text"
+                                       class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
+                                       name="name" id="name" placeholder="consumable Name" value="{{$consumable->name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="serial_no">Serial_no</label>
+                                <input type="text"
+                                       class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
+                                       name="serial_no" id="serial_no" value="{{$consumable->serial_no}}" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="order_no">Order_no</label>
                                     <input type="text"
-                                           class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                           name="name" id="name" placeholder="Component Name" value="{{$component->name}}">
+                                           class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
+                                           id="order_no" name="order_no"  value="{{$consumable->order_no}}" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="serial_no">Serial_no</label>
+                                <div class="form-group col-md-4">
+                                    <label for="purchased_cost">Purchased Cost</label>
                                     <input type="text"
-                                           class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                           name="serial_no" id="serial_no" value="{{$component->serial_no}}" required>
+                                           class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
+                                           id="purchased_cost" name="purchased_cost" value="{{$consumable->purchased_cost}}" required>
                                 </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-4">
-                                        <label for="order_no">Order_no</label>
-                                        <input type="text"
-                                               class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                               id="order_no" name="order_no"  value="{{$component->order_no}}" required>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="purchased_cost">Purchased Cost</label>
-                                        <input type="text"
-                                               class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
-                                               id="purchased_cost" name="purchased_cost" value="{{$component->purchased_cost}}" required>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="purchased_date">Purchased Date</label>
-                                        <input type="date"
-                                               class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
-                                               id="purchased_date" name="purchased_date" value="{{ \Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')}}" required>
-                                    </div>
+                                <div class="form-group col-md-4">
+                                    <label for="purchased_date">Purchased Date</label>
+                                    <input type="date"
+                                           class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
+                                           id="purchased_date" name="purchased_date" value="{{ \Carbon\Carbon::parse($consumable->purchased_date)->format('Y-m-d')}}" required>
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+
+                                    <label for="suppliers">Supplier</label>
+                                    <select type="text"
+                                            class="form-control <?php if ($errors->has('supplier_id')) {?>border-danger<?php }?>"
+                                            id="supplier_id" name="supplier_id" required>
+                                        <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif >No
+                                            Supplier
+                                        </option>
+                                        @foreach($suppliers as $supplier)
+                                            <option
+                                                value="{{$supplier->id}}" @isset($consumable->supplier->id) @if($consumable->supplier->id == $supplier->id){{'selected'}} @endif @endisset >{{ $supplier->name}}</option>
+                                        @endforeach
+                                    </select>
 
                                 </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-
-                                        <label for="suppliers">Supplier</label>
-                                        <select type="text"
-                                                class="form-control <?php if ($errors->has('supplier_id')) {?>border-danger<?php }?>"
-                                                id="supplier_id" name="supplier_id" required>
-                                            <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif >No
-                                                Supplier
-                                            </option>
-                                            @foreach($suppliers as $supplier)
-                                                <option
-                                                    value="{{ $supplier->id }}"@isset($component->supplier->id) @if($component->supplier->id == $supplier->id){{'selected'}}@endif @endisset>{{ $supplier->name}}</option>
-                                            @endforeach
-                                        </select>
-
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="status">Status</label>
-                                        <select
-                                            class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
-                                            id="status_id" name="status_id">
-                                            <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
-                                            </option>
-                                            @foreach($statuses as $status)
-                                                <option
-                                                    value="{{ $status->id }}" @isset($component->status->id)@if($component->status->id == $status->id){{'selected'}}@endif @endisset>{{ $status->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <div class="form-group col-md-6">
+                                    <label for="status">Status</label>
+                                    <select
+                                        class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
+                                        id="status_id" name="status_id">
+                                        <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
+                                        </option>
+                                        @foreach($statuses as $status)
+                                            <option
+                                                value="{{ $status->id }}"@isset($consumable->status->id) @if($consumable->status->id == $status->id){{'selected'}}@endif @endisset>{{ $status->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <div class="form-row">
-                                </div>
-                                <div class="form-group">
-                                    <label for="notes">Notes</label>
-                                    <textarea name="notes" id="notes" class="form-control" rows="10">{{$component->notes}}</textarea>
-                                </div>
+                            </div>
+                            <div class="form-row">
+                            </div>
+                            <div class="form-group">
+                                <label for="notes">Notes</label>
+                                <textarea name="notes" id="notes" class="form-control" rows="10">{{$consumable->notes}}</textarea>
+                            </div>
 
                         </div>
                     </div>
@@ -141,7 +141,7 @@
                                     </option>
                                     @foreach($locations as $location)
                                         <option
-                                            value="{{ $location->id }}" @if($component->location->id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
+                                            value="{{ $location->id }}" @if($consumable->location->id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -150,7 +150,7 @@
                                 <label for="warranty">Warranty</label>
                                 <input type="text"
                                        class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
-                                       id="warranty" name="warranty" value="{{$component->warranty}}">
+                                       id="warranty" name="warranty" value="{{$consumable->warranty}}">
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="Warranty">Manufacturer</label>
@@ -161,7 +161,7 @@
                                     </option>
                                     @foreach($manufacturers as $manufacturer)
                                         <option
-                                            value="{{$manufacturer->id}}"@isset($component->manufacturer->id) @if($component->manufacturer->id == $manufacturer->id){{'selected'}}@endif @endisset>{{$manufacturer->name}}</option>
+                                            value="{{$manufacturer->id}}"@isset($consumable->manufacturer->id) @if($consumable->manufacturer->id == $manufacturer->id){{'selected'}}@endif @endisset>{{$manufacturer->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -270,3 +270,4 @@
         });
     </script>
 @endsection
+

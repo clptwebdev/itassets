@@ -1,43 +1,35 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Exports\AssetExport;
-use App\Exports\componentErrorsExport;
-use App\Exports\ComponentsExport;
-use App\Imports\ComponentsImport;
-use App\Models\Asset;
-use App\Models\AssetModel;
-use App\Models\Component;
+use App\Exports\accessoryErrorsExport;
+use App\Exports\accessoryExport;
+use App\Imports\accessoryImport;
+use App\Models\Accessory;
 use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Ramsey\Uuid\Type\Integer;
-use function PHPUnit\Framework\isEmpty;
 
-class ComponentController extends Controller {
-
+class AccessoryController extends Controller
+{
     public function index()
     {
-        return view('ComponentsDir.view', [
-            "components" => Component::all(),
+        return view('accessory.view', [
+            "accessories" => Accessory::all(),
         ]);
     }
 
     public function create()
     {
-        return view('ComponentsDir.create', [
-            "locations" => Location::all(),
-            "statuses" => Status::all(),
-            "suppliers" => Supplier::all(),
-            "manufacturers" => Manufacturer::all(),
-        ]);
+        return view('accessory.create', [
+        "locations" => Location::all(),
+        "statuses" => Status::all(),
+        "suppliers" => Supplier::all(),
+        "manufacturers" => Manufacturer::all(),
+    ]);
     }
 
     public function store(Request $request)
@@ -54,10 +46,11 @@ class ComponentController extends Controller {
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-        Component::create([
+
+        Accessory::create([
             "name" => request("name"),
-            "serial_no" => request("serial_no"),
             "status_id" => request("status_id"),
+            "serial_no" => request("serial_no"),
             "purchased_date" => request("purchased_date"),
             "purchased_cost" => request("purchased_cost"),
             "supplier_id" => request("supplier_id"),
@@ -69,7 +62,7 @@ class ComponentController extends Controller {
             session()->flash('success_message', request("name") . ' has been created successfully'),
         ]);
 
-        return redirect(route("components.index"));
+        return redirect(route("accessories.index"));
 
     }
     public function importErrors(Request $request)
@@ -78,7 +71,7 @@ class ComponentController extends Controller {
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
-        return \Maatwebsite\Excel\Facades\Excel::download(new componentErrorsExport($export), 'ComponentImportErrors.csv');
+        return \Maatwebsite\Excel\Facades\Excel::download(new accessoryErrorsExport($export), 'AccessoryImportErrors.csv');
     }
     public function ajaxMany(Request $request)
     {
@@ -99,40 +92,40 @@ class ComponentController extends Controller {
             }else{
                 for($i = 0; $i < count($request->name); $i++)
                 {
-                    $component = new Component;
-                    $component->name = $request->name[$i];
-                    $component->serial_no = $request->serial_no[$i];
-                    $component->status_id = $request->status_id[$i];
-                    $component->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
-                    $component->purchased_cost = $request->purchased_cost[$i];
-                    $component->supplier_id = $request->supplier_id[$i];
-                    $component->manufacturer_id = $request->manufacturer_id[$i];
-                    $component->order_no = $request->order_no[$i];
-                    $component->warranty = $request->warranty[$i];
-                    $component->location_id = $request->location_id[$i];
-                    $component->notes = $request->notes[$i];
-                    $component->save();
+                    $accessory = new Accessory;
+                    $accessory->name = $request->name[$i];
+                    $accessory->serial_no = $request->serial_no[$i];
+                    $accessory->status_id = $request->status_id[$i];
+                    $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
+                    $accessory->purchased_cost = $request->purchased_cost[$i];
+                    $accessory->supplier_id = $request->supplier_id[$i];
+                    $accessory->manufacturer_id = $request->manufacturer_id[$i];
+                    $accessory->order_no = $request->order_no[$i];
+                    $accessory->warranty = $request->warranty[$i];
+                    $accessory->location_id = $request->location_id[$i];
+                    $accessory->notes = $request->notes[$i];
+                    $accessory->save();
                 }
 
-                session()->flash('success_message', 'You have successfully added all Components!');
+                session()->flash('success_message', 'You have successfully added all Accessories!');
                 return 'Success';
             }
         }
 
     }
 
-    public function show(Component $component)
+    public function show(Accessory $accessory)
     {
-        return view('ComponentsDir.show', [
-            "component" => $component,
+        return view('accessory.show', [
+            "accessory" => $accessory,
 
         ]);
     }
 
-    public function edit(Component $component)
+    public function edit(Accessory $accessory)
     {
-        return view('ComponentsDir.edit', [
-            "component" => $component,
+        return view('accessory.edit', [
+            "accessory" => $accessory,
             "locations" => Location::all(),
             "statuses" => Status::all(),
             "suppliers" => Supplier::all(),
@@ -140,24 +133,23 @@ class ComponentController extends Controller {
         ]);
     }
 
-    public function update(Request $request, Component $component)
+    public function update(Request $request, Accessory $accessory)
     {
         $request->validate([
             "name" => "required|max:255",
             "supplier_id" => "required",
             "location_id" => "required",
             "notes" => "nullable",
-            "status_id" => "nullable",
             'order_no' => 'required',
             'serial_no' => 'required',
             'warranty' => 'int|nullable',
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-        $component->fill([
+        $accessory->fill([
             "name" => request("name"),
-            "serial_no" => request("serial_no"),
             "status_id" => request("status_id"),
+            "serial_no" => request("serial_no"),
             "purchased_date" => request("purchased_date"),
             "purchased_cost" => request("purchased_cost"),
             "supplier_id" => request("supplier_id"),
@@ -166,24 +158,24 @@ class ComponentController extends Controller {
             "location_id" => request("location_id"),
             "manufacturer_id" => request("manufacturer_id"),
             "notes" => request("notes")])->save();
-        session()->flash('success_message', request("name") . ' has been created successfully');
+        session()->flash('success_message', request("name") . ' has been Updated successfully');
 
-        return redirect(route("components.index"));
+        return redirect(route("accessories.index"));
     }
 
-    public function destroy(Component $component)
+    public function destroy(Accessory $accessory)
     {
-        $name = $component->name;
-        $component->delete();
+        $name = $accessory->name;
+        $accessory->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
 
-        return redirect(route('components.index'));
+        return redirect(route('accessories.index'));
 
     }
 
-    public function export(Component $component)
+    public function export(Accessory $accessory)
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new ComponentsExport, 'components.csv');
+        return \Maatwebsite\Excel\Facades\Excel::download(new accessoryExport, 'Accessories.csv');
 
     }
 
@@ -196,7 +188,7 @@ class ComponentController extends Controller {
 
         if(in_array($result[0],$extensions)){
             $path = $request->file("csv")->getRealPath();
-            $import = new ComponentsImport;
+            $import = new accessoryImport;
             $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
             $row = [];
             $attributes = [];
@@ -252,7 +244,7 @@ class ComponentController extends Controller {
                 }
 
 
-                return view('ComponentsDir.import-errors', [
+                return view('accessory.import-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
@@ -265,15 +257,15 @@ class ComponentController extends Controller {
             } else
             {
 
-                return redirect('/components')->with('success_message', 'All Components were added correctly!');
+                return redirect('/accessories')->with('success_message', 'All Accessories were added correctly!');
 
             }
         }else{
             session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-            return redirect(route('components.index'));
+            return redirect(route('accessories.index'));
         }
 
 
 
-}}
+    }}

@@ -1,0 +1,5 @@
+asset_tag,serial_no,asset_model,status_id,purchased_date,purchased_cost,supplier_id,manufacturer_id,order_no,warranty,location_id,audit_date
+223274,1,Mikayla Kessler,Booked out,24/05/2021 16:13,1,McDermott Inc,Kautzer and Sons,267,1 Years,"Marks, Batz and Kiehn",11/10/1990
+8,1,Miller Cruickshank I,Booked out,08/02/2021 20:45,1,"Keeling, Hauck and Prohaska",Wisoky-Sauer,365,1 Years,Romaguera-Nader,26/03/2007
+86749128,1,Unknown,Booked out,14/05/2021 18:41,1,Kertzmann LLC,Unknown,979,1 Years,Reichel Inc,22/10/1982
+869,1,Mikayla Kessler,Booked out,10/05/2021 10:20,1,Dach-Weber,Kautzer and Sons,412,1 Years,"Hessel, Thiel and O'Conner",12/06/2006
