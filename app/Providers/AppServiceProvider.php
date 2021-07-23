@@ -23,6 +23,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->share("assetAmount" ,count(\App\Models\Asset::all()));
     }
 }
