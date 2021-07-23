@@ -53,6 +53,8 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('/status/{status}/assets', 'App\Http\Controllers\AssetController@status')->name('assets.status');
         Route::resource('/status', 'App\Http\Controllers\StatusController');
         Route::resource('/components', 'App\Http\Controllers\ComponentController');
+        Route::resource('/accessories', 'App\Http\Controllers\AccessoryController');
+        Route::resource('/consumables', 'App\Http\Controllers\ConsumableController');
 
 
 
@@ -60,16 +62,24 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
 //      exports
         Route::get("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
+        Route::get("/exportconsumables", [\App\Http\Controllers\ConsumableController::class, "export"]);
         Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
         Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
         Route::get("/exportusers", [\App\Http\Controllers\UserController::class, "export"]);
         Route::get("/exportcomponents", [\App\Http\Controllers\ComponentController::class, "export"]);
+        Route::get("/exportaccessories", [\App\Http\Controllers\AccessoryController::class, "export"]);
 //
         Route::post("/importmanufacturer", [\App\Http\Controllers\ManufacturerController::class, "import"]);
         Route::post("/importcomponents", [\App\Http\Controllers\ComponentController::class, "import"]);
+        Route::post("/importacessories", [\App\Http\Controllers\AccessoryController::class, "import"]);
+        Route::post("/importconsumables", [\App\Http\Controllers\ConsumableController::class, "import"]);
         Route::Post("components/create/ajax", [\App\Http\Controllers\ComponentController::class, "ajaxMany"]);
+        Route::Post("accessories/create/ajax", [\App\Http\Controllers\AccessoryController::class, "ajaxMany"]);
+        Route::Post("consumables/create/ajax", [\App\Http\Controllers\ConsumableController::class, "ajaxMany"]);
         Route::Post("components/export-import-errors", [\App\Http\Controllers\ComponentController::class, "importErrors"])->name("componentexport.import");
+        Route::Post("accessories/export-import-errors", [\App\Http\Controllers\AccessoryController::class, "importErrors"])->name("accessoryexport.import");
+        Route::Post("consumables/export-import-errors", [\App\Http\Controllers\ConsumableController::class, "importErrors"])->name("consumableexport.import");
 
 
         Route::post("/importassets", [\App\Http\Controllers\AssetController::class, "import"]);

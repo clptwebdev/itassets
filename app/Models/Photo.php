@@ -29,9 +29,18 @@ class Photo extends Model
     public function assetModel()
     {
         return $this->hasOne(AssetModel::class);
-    } public function component()
+    }
+    public function component()
     {
         return $this->hasOne(Component::class);
+    }
+    public function accessory()
+    {
+        return $this->hasOne(Accessory::class);
+    }
+    public function consumable()
+    {
+        return $this->hasOne(Consumable::class);
     }
 
     public function setPathAttribute($value)

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Component extends Model
+class Accessory extends Model
 {
     use HasFactory;
 
@@ -24,9 +24,9 @@ class Component extends Model
     {
         return $this->belongsTo(Location::class);
     } public function status()
-    {
-        return $this->belongsTo(Status::class);
-    }
+{
+    return $this->belongsTo(Status::class);
+}
 
     public function manufacturer(){
         return $this->belongsTo(Manufacturer::class, 'manufacturer_id');

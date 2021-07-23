@@ -26,8 +26,9 @@ class DatabaseSeeder extends Seeder
         \App\Models\Field::factory(20)->create();
         \App\Models\Fieldset::factory(20)->create();
         \App\Models\Component::factory(20)->create();
+        \App\Models\Accessory::factory(20)->create();
         \App\Models\Status::factory(20)->create();
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
         DB::table('field_fieldset')->insert(
             [
                 'field_id' => Field::select('id')->orderByRaw("RAND()")->first()->id,

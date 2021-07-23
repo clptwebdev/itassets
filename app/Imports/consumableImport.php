@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Component;
+use App\Models\Consumable;
 use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
@@ -20,7 +20,7 @@ use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Validators\Failure;
 
-class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
+class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
 
     /**
      * @param array     $row
@@ -64,8 +64,8 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 'string',
             ],
             'supplier_id' => [
-                'required',
                 'string',
+                'required'
             ],
             'location_id' => [
                 'string',
@@ -83,10 +83,10 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
     public function model(array $row)
     {
 
-        $component = new Component;
-        $component->name = $row["name"];
+        $consumable = new Consumable;
+        $consumable->name = $row["name"];
 
-        $component->serial_no = $row["serial_no"];
+        $consumable->serial_no = $row["serial_no"];
 
         //check for already existing Status upon import if else create
         if($status = Status::where(["name" => $row["status_id"]])->first())
@@ -102,12 +102,12 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
                 $status->save();
             }else
-                $component->status_id =0;
+                $consumable->status_id =0;
         }
-        $component->status_id = $status->id ?? 0;
+        $consumable->status_id = $status->id ?? 0;
 
-        $component->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
-        $component->purchased_cost = $row["purchased_cost"];
+        $consumable->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
+        $consumable->purchased_cost = $row["purchased_cost"];
 
         //check for already existing Suppliers upon import if else create
         if($supplier = Supplier::where(["name" => $row["supplier_id"]])->first())
@@ -125,10 +125,10 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 $supplier->save();
 
             }else
-                $component->supplier_id = 0;
+                $consumable->supplier_id = 0;
         }
 
-        $component->supplier_id = $supplier->id ?? 0;
+        $consumable->supplier_id = $supplier->id ?? 0;
 
         //check for already existing Manufacturers upon import if else create
         if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->first())
@@ -137,21 +137,21 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
         } else
         {
             if(isset($row["manufacturer_id"])){
-            $manufacturer = new Manufacturer;
+                $manufacturer = new Manufacturer;
 
-            $manufacturer->name = $row["manufacturer_id"];
-            $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
-            $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
-            $manufacturer->supportPhone = "Unknown";
-            $manufacturer->save();
-        }else
-                $component->supplier_id = 0;
+                $manufacturer->name = $row["manufacturer_id"];
+                $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
+                $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
+                $manufacturer->supportPhone = "Unknown";
+                $manufacturer->save();
+            }else
+                $consumable->supplier_id = 0;
 
         }
-        $component->manufacturer_id = $manufacturer->id ?? 0;
+        $consumable->manufacturer_id = $manufacturer->id ?? 0;
 
-        $component->order_no = $row["order_no"];
-        $component->warranty = $row["warranty"];
+        $consumable->order_no = $row["order_no"];
+        $consumable->warranty = $row["warranty"];
         //check for already existing Locations upon import if else create
         if($location = Location::where(["name" => $row["location_id"]])->first())
         {
@@ -172,12 +172,12 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 $location->icon = "#222222";
                 $location->save();
             }else
-                $component->location_id = 0;
+                $consumable->location_id = 0;
         }
-        $component->location_id = $location->id ?? 0;
+        $consumable->location_id = $location->id ?? 0;
 
-        $component->notes = $row["notes"];
-        $component->save();
+        $consumable->notes = $row["notes"];
+        $consumable->save();
     }
 
     public function batchSize(): int

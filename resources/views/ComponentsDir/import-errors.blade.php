@@ -33,6 +33,8 @@
                     <a href="/components" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                             class="fas fa-plus fa-sm te
                         xt-white-50"></i> Back to Components</a>
+                    <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                            class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
                     <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                             class="far fa-save fa-sm text-white-50"></i> Save
                     </a>
@@ -106,7 +108,7 @@
                                         <select type="dropdown" class="form-control" name="status_id[]" id="status_id" onchange="getFields(this);" autocomplete="off" required>
                                             <option value="0" @if($valueArray[$row]['status_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
                                             @foreach($statuses as $status)
-                                                <option value="{{ $valueArray[$row]['status_id'] }}" @if( $valueArray[$row]['status_id'] == $status->name){{'selected'}}@endif>{{ $status->name }}</option>
+                                                <option value="{{$status->id }}" @if( $valueArray[$row]['status_id'] == $status->name){{'selected'}}@endif>{{ $status->name }}</option>
                                             @endforeach
                                         </select>
                                         @if(array_key_exists('status_id', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['status_id']}}</small>@endif
@@ -115,7 +117,7 @@
                                         <select type="dropdown" class="form-control" name="supplier_id[]" id="supplier_id" onchange="getFields(this);" autocomplete="off" required>
                                             <option value="0" @if($valueArray[$row]['supplier_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
                                             @foreach($suppliers as $supplier)
-                                                <option value="{{ $valueArray[$row]['supplier_id'] }}" @if( $valueArray[$row]['supplier_id'] == $supplier->name){{'selected'}}@endif>{{ $supplier->name }}</option>
+                                                <option value="{{ $supplier->id }}" @if( $valueArray[$row]['supplier_id'] == $supplier->name){{'selected'}}@endif>{{ $supplier->name }}</option>
                                             @endforeach
                                         </select>
                                         @if(array_key_exists('supplier_id', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['supplier_id']}}</small>@endif
@@ -125,7 +127,7 @@
                                         <select type="dropdown" class="form-control" name="manufacturer_id[]" id="manufacturer_id" onchange="getFields(this);" autocomplete="off" required>
                                             <option value="0" @if($valueArray[$row]['manufacturer_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
                                             @foreach($manufacturers as $manufacturer)
-                                                <option value="{{ $valueArray[$row]['manufacturer_id'] }}" @if( $valueArray[$row]['manufacturer_id'] == $manufacturer->name){{'selected'}}@endif>{{ $manufacturer->name }}</option>
+                                                <option value="{{$manufacturer->id }}" @if( $valueArray[$row]['manufacturer_id'] == $manufacturer->name){{'selected'}}@endif>{{ $manufacturer->name }}</option>
                                             @endforeach
                                         </select>
                                         @if(array_key_exists('manufacturer_id', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['manufacturer_id']}}</small>@endif
@@ -135,7 +137,7 @@
                                         <select type="dropdown" class="form-control" name="location_id[]" id="location_id" onchange="getFields(this);" autocomplete="off" required>
                                             <option value="0" @if($valueArray[$row]['location_id'] == ''){{'selected'}}@endif>Please Select a Model</option>
                                             @foreach($locations as $location)
-                                                <option value="{{ $valueArray[$row]['location_id'] }}" @if( $valueArray[$row]['location_id'] == $location->name){{'selected'}}@endif>{{ $location->name }}</option>
+                                                <option value="{{ $location->id  }}" @if( $valueArray[$row]['location_id'] == $location->name){{'selected'}}@endif>{{ $location->name }}</option>
                                             @endforeach
                                         </select>
                                         @if(array_key_exists('location_id', $errorValues[$row]))<small class="text-danger text-capitalize">{{$errorValues[$row]['location_id']}}</small>@endif
@@ -219,12 +221,48 @@
 @endsection
 
 @section('modals')
-
+    <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
+         aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data Help</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/importmanufacturer" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <h2 class="h3 mb-0 text-gray-800">Requirements needed to finish your import</h2>
+                       <ol>
+                           <li>The Required fields are: Name, Supplier,Location and serial num.</li>
+                           <li>All Correct rows skip this page and import straight to the database so please don't re-import your file!</li>
+                           <li>Struggling to Pass this stage are all your data fields in the correct format?</li>
+                       </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <p>For Anymore information please email Apollo@clpt.co.uk</p>
+                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=CXfTdb" target="_blank" class="btn btn-info" >
+                            Download Import Template
+                        </a>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    @csrf
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
+        $('#import').click(function () {
+            $('#manufacturer-id-test').val($(this).data('id'))
+            //showModal
+            $('#importManufacturerModal').modal('show')
+
+        })
+
         $('.deleteBtn').click(function () {
             $('#deleteForm').attr('action', $(this).data('route'));
             //showModal

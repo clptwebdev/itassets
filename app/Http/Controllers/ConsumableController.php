@@ -2,37 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\AssetExport;
-use App\Exports\componentErrorsExport;
-use App\Exports\ComponentsExport;
-use App\Imports\ComponentsImport;
-use App\Models\Asset;
-use App\Models\AssetModel;
-use App\Models\Component;
+
+
+use App\Exports\consumableErrorsExport;
+use App\Exports\consumableExport;
+use App\Imports\consumableImport;
+use App\Models\Consumable;
 use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Ramsey\Uuid\Type\Integer;
-use function PHPUnit\Framework\isEmpty;
 
-class ComponentController extends Controller {
-
+class ConsumableController extends Controller
+{
     public function index()
     {
-        return view('ComponentsDir.view', [
-            "components" => Component::all(),
+        return view('consumable.view', [
+            "consumables" => Consumable::all(),
         ]);
     }
 
     public function create()
     {
-        return view('ComponentsDir.create', [
+        return view('consumable.create', [
             "locations" => Location::all(),
             "statuses" => Status::all(),
             "suppliers" => Supplier::all(),
@@ -54,7 +49,7 @@ class ComponentController extends Controller {
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-        Component::create([
+        Consumable::create([
             "name" => request("name"),
             "serial_no" => request("serial_no"),
             "status_id" => request("status_id"),
@@ -69,7 +64,7 @@ class ComponentController extends Controller {
             session()->flash('success_message', request("name") . ' has been created successfully'),
         ]);
 
-        return redirect(route("components.index"));
+        return redirect(route("consumables.index"));
 
     }
     public function importErrors(Request $request)
@@ -78,7 +73,7 @@ class ComponentController extends Controller {
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
-        return \Maatwebsite\Excel\Facades\Excel::download(new componentErrorsExport($export), 'ComponentImportErrors.csv');
+        return \Maatwebsite\Excel\Facades\Excel::download(new consumableErrorsExport($export), 'ConsumablesImportErrors.csv');
     }
     public function ajaxMany(Request $request)
     {
@@ -99,40 +94,40 @@ class ComponentController extends Controller {
             }else{
                 for($i = 0; $i < count($request->name); $i++)
                 {
-                    $component = new Component;
-                    $component->name = $request->name[$i];
-                    $component->serial_no = $request->serial_no[$i];
-                    $component->status_id = $request->status_id[$i];
-                    $component->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
-                    $component->purchased_cost = $request->purchased_cost[$i];
-                    $component->supplier_id = $request->supplier_id[$i];
-                    $component->manufacturer_id = $request->manufacturer_id[$i];
-                    $component->order_no = $request->order_no[$i];
-                    $component->warranty = $request->warranty[$i];
-                    $component->location_id = $request->location_id[$i];
-                    $component->notes = $request->notes[$i];
-                    $component->save();
+                    $consumable = new Consumable;
+                    $consumable->name = $request->name[$i];
+                    $consumable->serial_no = $request->serial_no[$i];
+                    $consumable->status_id = $request->status_id[$i];
+                    $consumable->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
+                    $consumable->purchased_cost = $request->purchased_cost[$i];
+                    $consumable->supplier_id = $request->supplier_id[$i];
+                    $consumable->manufacturer_id = $request->manufacturer_id[$i];
+                    $consumable->order_no = $request->order_no[$i];
+                    $consumable->warranty = $request->warranty[$i];
+                    $consumable->location_id = $request->location_id[$i];
+                    $consumable->notes = $request->notes[$i];
+                    $consumable->save();
                 }
 
-                session()->flash('success_message', 'You have successfully added all Components!');
+                session()->flash('success_message', 'You have successfully added all Consumables!');
                 return 'Success';
             }
         }
 
     }
 
-    public function show(Component $component)
+    public function show(Consumable $consumable)
     {
-        return view('ComponentsDir.show', [
-            "component" => $component,
+        return view('consumable.show', [
+            "consumable" => $consumable,
 
         ]);
     }
 
-    public function edit(Component $component)
+    public function edit(Consumable $consumable)
     {
-        return view('ComponentsDir.edit', [
-            "component" => $component,
+        return view('consumable.edit', [
+            "consumable" => $consumable,
             "locations" => Location::all(),
             "statuses" => Status::all(),
             "suppliers" => Supplier::all(),
@@ -140,7 +135,7 @@ class ComponentController extends Controller {
         ]);
     }
 
-    public function update(Request $request, Component $component)
+    public function update(Request $request, Consumable $consumable)
     {
         $request->validate([
             "name" => "required|max:255",
@@ -154,7 +149,7 @@ class ComponentController extends Controller {
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-        $component->fill([
+        $consumable->fill([
             "name" => request("name"),
             "serial_no" => request("serial_no"),
             "status_id" => request("status_id"),
@@ -166,24 +161,24 @@ class ComponentController extends Controller {
             "location_id" => request("location_id"),
             "manufacturer_id" => request("manufacturer_id"),
             "notes" => request("notes")])->save();
-        session()->flash('success_message', request("name") . ' has been created successfully');
+        session()->flash('success_message', request("name") . ' has been updated successfully');
 
-        return redirect(route("components.index"));
+        return redirect(route("consumables.index"));
     }
 
-    public function destroy(Component $component)
+    public function destroy(Consumable $consumable)
     {
-        $name = $component->name;
-        $component->delete();
+        $name = $consumable->name;
+        $consumable->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
 
-        return redirect(route('components.index'));
+        return redirect(route('consumables.index'));
 
     }
 
-    public function export(Component $component)
+    public function export(Consumable $consumable)
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new ComponentsExport, 'components.csv');
+        return \Maatwebsite\Excel\Facades\Excel::download(new consumableExport, 'consumables.csv');
 
     }
 
@@ -196,7 +191,7 @@ class ComponentController extends Controller {
 
         if(in_array($result[0],$extensions)){
             $path = $request->file("csv")->getRealPath();
-            $import = new ComponentsImport;
+            $import = new consumableImport;
             $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
             $row = [];
             $attributes = [];
@@ -252,7 +247,7 @@ class ComponentController extends Controller {
                 }
 
 
-                return view('ComponentsDir.import-errors', [
+                return view('consumable.import-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
@@ -265,15 +260,16 @@ class ComponentController extends Controller {
             } else
             {
 
-                return redirect('/components')->with('success_message', 'All Components were added correctly!');
+                return redirect('/consumables')->with('success_message', 'All Consumables were added correctly!');
 
             }
         }else{
             session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-            return redirect(route('components.index'));
+            return redirect(route('consumables.index'));
         }
 
 
 
-}}
+    }
+}
