@@ -16,8 +16,20 @@
                 class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin</a>
             @endcan
             @can('create', \App\Models\Asset::class)
-            <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
+                <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+                        class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
+            @endcan
+                <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                        class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
+                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                        class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
+            @can('generatePDF', \App\Models\Asset::class)
+                <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
+                    @csrf
+                    <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                </form>
             @endcan
             @can('generatePDF', \App\Models\Asset::class)
             <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
@@ -42,11 +54,11 @@
 
     @php
         if(auth()->user()->role_id == 1){
-            $limit = \App\Models\Asset::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();  
-            $floor = \App\Models\Asset::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first(); 
+            $limit = \App\Models\Asset::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
+            $floor = \App\Models\Asset::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first();
         }else{
-            $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();  
-            $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();  
+            $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
         }
     @endphp
     <section>
@@ -63,61 +75,61 @@
                 <form action="{{ route('assets.filter')}}" method="POST">
                     <div id="accordion" class="mb-4">
                         <div class="option">
-                          <div class="option-header pointer collapsed" id="statusHeader" data-toggle="collapse" data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader"> 
-                            <small>Status Type</small>
-                          </div>
-                          @csrf
-                          <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader" data-parent="#accordion">
-                            <div class="option-body">
-                                @foreach($statuses as $status)
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="status[]" value="{{ $status->id}}" id="{{'status'.$status->id}}">
-                                        <label class="form-check-label" for="{{'status'.$status->id}}">{{ $status->name }}</label>
-                                    </div>
-                                @endforeach
+                            <div class="option-header pointer collapsed" id="statusHeader" data-toggle="collapse" data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader">
+                                <small>Status Type</small>
                             </div>
-                          </div>
+                            @csrf
+                            <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader" data-parent="#accordion">
+                                <div class="option-body">
+                                    @foreach($statuses as $status)
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="status[]" value="{{ $status->id}}" id="{{'status'.$status->id}}">
+                                            <label class="form-check-label" for="{{'status'.$status->id}}">{{ $status->name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
 
                         <div class="option">
                             <div class="option-header collapsed pointer" id="categoryHeader" data-toggle="collapse" data-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryHeader">
                                 <small>Category</small>
                             </div>
-                        
+
                             <div id="categoryCollapse" class="collapse" aria-labelledby="categoryHeader" data-parent="#accordion">
                                 <div class="option-body">
                                     @foreach($categories as $category)
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="category[]" value="{{ $category->id}}" id="{{'category'.$category->id}}">
-                                        <label class="form-check-label" for="{{'category'.$category->id}}">{{ $category->name }}</label>
-                                    </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="category[]" value="{{ $category->id}}" id="{{'category'.$category->id}}">
+                                            <label class="form-check-label" for="{{'category'.$category->id}}">{{ $category->name }}</label>
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
-                          </div>
+                        </div>
 
-                          <div class="option">
+                        <div class="option">
                             <div class="option-header collapsed pointer" id="locationHeader" data-toggle="collapse" data-target="#locationCollapse" aria-expanded="true" aria-controls="locationHeader">
                                 <small>Location</small>
                             </div>
-                        
+
                             <div id="locationCollapse" class="collapse" aria-labelledby="locationHeader" data-parent="#accordion">
                                 <div class="option-body">
                                     @foreach($locations as $location)
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="locations[]" value="{{ $location->id}}" id="{{'location'.$location->id}}">
-                                        <label class="form-check-label" for="{{'location'.$location->id}}">{{ $location->name }}</label>
-                                    </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="locations[]" value="{{ $location->id}}" id="{{'location'.$location->id}}">
+                                            <label class="form-check-label" for="{{'location'.$location->id}}">{{ $location->name }}</label>
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
-                          </div>
+                        </div>
 
-                          <div class="option">
+                        <div class="option">
                             <div class="option-header collapsed pointer" id="purchasedDateHeader" data-toggle="collapse" data-target="#purchasedDateCollapse" aria-expanded="true" aria-controls="purchasedDateHeader">
                                 <small>Purchased Date</small>
                             </div>
-                        
+
                             <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader" data-parent="#accordion">
                                 <div class="option-body">
                                     <div class="form-row">
@@ -125,20 +137,20 @@
                                         <input class="form-control" type="date" name="start" value="" placeholder="DD/MM/YYYY" />
                                     </div>
                                     <div class="form-row">
-                                    <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
+                                        <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
                                         <input class="form-control" type="date" name="end" value="" placeholder="DD/MM/YYYY" />
                                     </div>
                                 </div>
                             </div>
-                          </div>
+                        </div>
 
-                          
 
-                          <div class="option">
+
+                        <div class="option">
                             <div class="option-header collapsed pointer" id="costHeader" data-toggle="collapse" data-target="#costCollapse" aria-expanded="true" aria-controls="costHeader">
                                 <small>Purchased Cost</small>
                             </div>
-                        
+
                             <div id="costCollapse" class="collapse" aria-labelledby="costHeader" data-parent="#accordion">
                                 <div class="option-body" style="padding-bottom: 60px;">
                                     <div class="form-control">
@@ -148,9 +160,9 @@
                                     </div>
                                 </div>
                             </div>
-                          </div>
+                        </div>
 
-                          <div class="option">
+                        <div class="option">
                             <div class="option-header pointer collapsed" id="auditDateHeader" data-toggle="collapse" data-target="#auditDateCollapse" aria-expanded="true" aria-controls="auditDateHeader">
                                 <small>Audit Date</small>
                             </div>
@@ -167,8 +179,8 @@
                                     </div>
                                 </div>
                             </div>
-                          </div>
-                        
+                        </div>
+
                     </div>
 
                     <button type="submit" class="btn-sm btn-success text-right">Apply Filter</button>
@@ -226,19 +238,19 @@
                                 <td class="text-center  d-none d-xl-table-cell">
                                     £{{ $asset->purchased_cost }}
                                     @if($asset->model)
-                                    <br>
-                                    @php
-                                    $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
-                                    if($eol->isPast()){
-                                        $dep = 0;
-                                    }else{
-                                        $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
-                                        $percent = 100 / $asset->model->depreciation->years;
-                                        $percentage = floor($age)*$percent;
-                                        $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
-                                    }
-                                    @endphp
-                                    <small>(*£{{ number_format($dep, 2)}})</small>
+                                        <br>
+                                        @php
+                                            $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                                            if($eol->isPast()){
+                                                $dep = 0;
+                                            }else{
+                                                $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
+                                                $percent = 100 / $asset->model->depreciation->years;
+                                                $percentage = floor($age)*$percent;
+                                                $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                                            }
+                                        @endphp
+                                        <small>(*£{{ number_format($dep, 2)}})</small>
                                     @endif
                                 </td>
                                 <td class="text-center d-none d-xl-table-cell">{{$asset->supplier->name ?? "N/A"}}</td>
@@ -255,9 +267,9 @@
                                         <?php $age = Carbon\Carbon::now()->floatDiffInDays($asset->audit_date);?>
                                         @switch(true)
                                             @case($age < 31) <span class="text-warning">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span><br><small>Audit Due Soon</small>
-                                                @break
+                                            @break
                                             @default
-                                                <span class="text-secondary">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span><br><small>Audit due in {{floor($age)}} days</small>
+                                            <span class="text-secondary">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span><br><small>Audit due in {{floor($age)}} days</small>
                                         @endswitch
                                     @endif
                                 </td>
@@ -303,6 +315,7 @@
 
     </section>
 @endsection
+<?php session()->flash('import-error', 'Select a file to be uploaded before continuing!');?>
 
 @section('modals')
     <!-- Delete Modal-->
@@ -329,10 +342,44 @@
             </div>
         </div>
     </div>
+    {{--//import--}}
+    <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
+         aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/importassets" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <p>Select "import" to add Assets to the system.</p>
+                        <input class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                               type="file" placeholder="Upload here" name="csv" accept=".csv" id="importEmpty">
+                    </div>
+                    <div class="modal-footer">
+                        @if(session('import-error'))
+                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
+                        @endif
+                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/Eb2RbyCNk_hOuTfMOufGpMsBl0yUs1ZpeCjkCm6YnLfN9Q?e=4t5BVO" target="_blank" class="btn btn-info" >
+                            Download Import Template
+                        </a>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+
+                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
+                            Import
+                        </button>
+                    @csrf
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
@@ -353,22 +400,22 @@
         });
 
         $('#confirmBtn').click(function() {
-        var form = '#'+'form'+$('#asset-id').val();
-        $(form).submit();
+            var form = '#'+'form'+$('#asset-id').val();
+            $(form).submit();
         });
 
         $( function() {
             $( "#slider-range" ).slider({
-            range: true,
-            min: {{ floor($floor)}},
-            max: {{ round($limit)}},
-            values: [ {{ floor($floor)}}, {{ round($limit)}} ],
-            slide: function( event, ui ) {
-                $( "#amount" ).val( "£" + ui.values[ 0 ] + " - £" + ui.values[ 1 ] );
-            }
+                range: true,
+                min: {{ floor($floor)}},
+                max: {{ round($limit)}},
+                values: [ {{ floor($floor)}}, {{ round($limit)}} ],
+                slide: function( event, ui ) {
+                    $( "#amount" ).val( "£" + ui.values[ 0 ] + " - £" + ui.values[ 1 ] );
+                }
             });
             $( "#amount" ).val( "£" + $( "#slider-range" ).slider( "values", 0 ) +
-            " - £" + $( "#slider-range" ).slider( "values", 1 ) );
+                " - £" + $( "#slider-range" ).slider( "values", 1 ) );
         } );
 
         $(document).ready( function () {
@@ -376,11 +423,28 @@
                 "autoWidth": false,
                 "pageLength": 25,
                 "columnDefs": [ {
-                "targets": [9],
-                "orderable": false
-                    }],
+                    "targets": [9],
+                    "orderable": false
+                }],
                 "order": [[ 1, "asc"]],
             });
         });
+        // import
+
+        $('#import').click(function () {
+            $('#manufacturer-id-test').val($(this).data('id'))
+            //showModal
+            $('#importManufacturerModal').modal('show')
+        });
+
+        // file input empty
+        $("#confirmBtnImport").click(":submit", function (e) {
+
+            if (!$('#importEmpty').val()) {
+                e.preventDefault();
+                <?php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');?>
+            }else{
+                <?php session()->flash('import-error', '');?>            }
+        })
     </script>
 @endsection

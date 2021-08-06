@@ -23,5 +23,12 @@ class Supplier extends Model
         return $this->hasOne(Component::class);
 
     }
+    public function accessory(){
+        return $this->hasOne(Accessory::class);
 
+    }
+    public function consumable(){
+        return $this->hasOne(Consumable::class);
+
+    }
 }

@@ -9,7 +9,7 @@ class Component extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'notes','manufacturer_id'];
+    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'notes','manufacturer_id'];
 
     public function photo()
     {

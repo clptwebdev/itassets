@@ -11346,7 +11346,7 @@ body.sidebar-toggled footer.sticky-footer {
 
 
 .option{
-  
+
 }
 
 .option-header{
@@ -11370,7 +11370,6 @@ body.sidebar-toggled footer.sticky-footer {
 .pointer{
   cursor: pointer;
 }
-
 .sub-link{
   border-bottom: solid 1px rgba(0, 0, 0, 0.1);
   border-top: solid 1px rgba(0, 0, 0, 0.1);
@@ -11388,7 +11387,7 @@ body.sidebar-toggled footer.sticky-footer {
   font-weight: 900;
   content: '\f107';
   font-family: 'Font Awesome 5 Free';
- 
+
 }
 .sub-link[data-toggle="collapse"].collapsed::after {
   content: '\f105';
@@ -11434,3 +11433,4 @@ tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
   }
 
 }
+

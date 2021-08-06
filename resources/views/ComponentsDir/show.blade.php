@@ -50,7 +50,7 @@
                                     <p><strong>Component Item Name: </strong>{{ $component->name }}</p>
                                     <p><strong>Serial Number: </strong>{{ $component->serial_no }}</p>
                                     <p><strong>Order Number: </strong>{{ $component->order_no }}</p>
-                                    <p><strong>Component Status: </strong>{{ $component->status_id->name ??'N/A'}}</p>
+                                    <p><strong>Component Status: </strong>{{ $component->status->name ??'N/A'}}</p>
                                     <p><strong>Purchase Date: </strong> {{\Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')}}</p>
                                     <p><strong>Purchase Cost: </strong> £{{ $component->purchased_cost }}</p>
                                 </div>
@@ -81,15 +81,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="removeLocationModalLabel">Are you sure you want to delete this
-                        Location?</h5>
+                        Component?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <input id="location-id" type="hidden" value="{{ $component->id }}">
-                    <p>Select "Delete" to remove this location from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assets assigned to this location will
+                    <p>Select "Delete" to remove this Component from the system.</p>
+                    <small class="text-danger">**Warning this is permanent. All assets assigned to this Component will
                         become available.</small>
                 </div>
                 <div class="modal-footer">

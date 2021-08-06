@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('components.store') }}" method="POST">
+    <form action="{{ route('components.store', $component->id) }}" method="POST">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Add New Component</h1>
 
@@ -40,7 +40,8 @@
                                 </div>
                             @endif
 
-                            @csrf
+                                @csrf
+
 
                                 <div class="form-group">
                                     <label for="name">Name</label>
@@ -87,7 +88,7 @@
                                             </option>
                                             @foreach($suppliers as $supplier)
                                                 <option
-                                                    value="{{ $supplier->id }}" @if($supplier->id == $supplier->id){{'selected'}}@endif>{{ $supplier->name}}</option>
+                                                    value="{{ $supplier->id }}"@isset($component->supplier->id) @if($component->supplier->id == $supplier->id){{'selected'}}@endif @endisset>{{ $supplier->name}}</option>
                                             @endforeach
                                         </select>
 
@@ -101,7 +102,7 @@
                                             </option>
                                             @foreach($statuses as $status)
                                                 <option
-                                                    value="{{ $status->id }}" @if(old('status_id') == $status->id){{'selected'}}@endif>{{ $status->name}}</option>
+                                                    value="{{ $status->id }}" @isset($component->status->id)@if($component->status->id == $status->id){{'selected'}}@endif @endisset>{{ $status->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -140,7 +141,7 @@
                                     </option>
                                     @foreach($locations as $location)
                                         <option
-                                            value="{{ $location->id }}" @if($location->id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
+                                            value="{{ $location->id }}" @if($component->location->id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -160,7 +161,7 @@
                                     </option>
                                     @foreach($manufacturers as $manufacturer)
                                         <option
-                                            value="{{$manufacturer->id}}" @if($manufacturer->id == $manufacturer->id){{'selected'}}@endif>{{$manufacturer->name}}</option>
+                                            value="{{$manufacturer->id}}"@isset($component->manufacturer->id) @if($component->manufacturer->id == $manufacturer->id){{'selected'}}@endif @endisset>{{$manufacturer->name}}</option>
                                     @endforeach
                                 </select>
                             </div>

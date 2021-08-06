@@ -1,0 +1,2 @@
+asset_tag,serial_no,asset_model_id,status_id,purchased_date,purchased_cost,supplier_id,manufacturer_id,order_no,warranty,location_id,audit_date
+4363,1234,Dr. Bradly Robel,Booked out,24/05/2021 00:00,1,McDermott Inc,Kautzer and Sons,267,2,"Marks, Batz and Kiehn",11/10/1990

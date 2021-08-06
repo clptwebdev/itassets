@@ -57,8 +57,8 @@
         </a>
         <div id="componentsDD" class="collapse" aria-labelledby="componentsTitle" data-parent="#accordionSidebar">
                 <a class="collapse-item" href="{{ route('components.index')}}">View All</a>
-                <a class="collapse-item" href="buttons.html"> Add New Component</a>
-                <a class="collapse-item" href="buttons.html"> Import Components</a>
+                <a class="collapse-item" href="{{route('components.create')}}"> Add New Component</a>
+                <a class="collapse-item" href="{{ route('components.index')}}"> Import Components</a>
         </div>
     </li>
 
@@ -70,21 +70,21 @@
             <span class="sidebar-title">Accessories</span>
         </a>
         <div id="accessoryDD" class="collapse" aria-labelledby="accessoryTitle" data-parent="#accordionSidebar">
-                <a class="collapse-item" href="#">View All</a>
-                <a class="collapse-item" href="buttons.html"> Add New Accessory</a>
-                <a class="collapse-item" href="buttons.html"> Import Accessories</a>
+                <a class="collapse-item" href="{{ route('accessories.index')}}">View All</a>
+                <a class="collapse-item" href="{{ route('accessories.create')}}"> Add New Accessory</a>
+                <a class="collapse-item" href="{{ route('accessories.index')}}"> Import Accessories</a>
         </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('components.index')}}" data-toggle="collapse" data-target="#consumableDD" aria-expanded="true"
+        <a class="nav-link collapsed" href="{{ route('consumables.index')}}" data-toggle="collapse" data-target="#consumableDD" aria-expanded="true"
             aria-controls="consumableDD">
             <i class="fas fa-fw fa-tint sidebar-icon" data-toggle="tooltip" data-placement="right" title="Consumables"></i>
             <span class="sidebar-title">Consumables</span>
         </a>
         <div id="consumableDD" class="collapse" aria-labelledby="consumableTitle" data-parent="#accordionSidebar">
-                <a class="collapse-item" href="#">View All</a>
-                <a class="collapse-item" href="buttons.html"> Add New Consumable</a>
-                <a class="collapse-item" href="buttons.html"> Import Consumables</a>
+                <a class="collapse-item" href="{{ route('consumables.index')}}">View All</a>
+                <a class="collapse-item" href="{{ route('consumables.create')}}"> Add New Consumable</a>
+                <a class="collapse-item" href="{{ route('consumables.index')}}"> Import Consumables</a>
         </div>
     </li>
     <!-- Divider -->

@@ -66,6 +66,7 @@
                         </tfoot>
                         <tbody>
                         @foreach($components as $component)
+
                             <tr>
                                 <td>{{$component->name}}
                                     <br>
@@ -80,7 +81,8 @@
                                 <td>{{$component->location->name}}</td>
                                 <td>{{$component->manufacturer->name ?? "N/A"}}</td>
                                 <td class="text-center">
-                                    <form id="form{{$component->id}}" action="{{ route('components.destroy', $component->id) }}" method="POST">
+                                    <form id="form{{$component->id}}"
+                                          action="{{ route('components.destroy', $component->id) }}" method="POST">
                                         <a href="{{ route('components.show', $component->id) }}"
                                            class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
                                             View</a>&nbsp;
@@ -121,7 +123,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this Supplier?
+                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this Component?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -153,13 +155,21 @@
                 <form action="/importcomponents" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add components to the system.</p>
-                        <input  class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                                type="file" placeholder="Upload here" name="csv" accept=".csv">
+                        <input id="importEmpty" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                               type="file" placeholder="Upload here" name="csv" accept=".csv">
+
                     </div>
+
                     <div class="modal-footer">
+                        @if(session('import-error'))
+                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
+                        @endif
+                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b" target="_blank" class="btn btn-info" >
+                                Download Import Template
+                            </a>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtn">
+                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
                             Import
                         </button>
                     @csrf
@@ -168,6 +178,7 @@
         </div>
     </div>
     </div>
+    <?php session()->flash('import-error', ' Select a file to be uploaded before continuing!');?>
 @endsection
 
 @section('js')
@@ -199,7 +210,16 @@
             $('#manufacturer-id-test').val($(this).data('id'))
             //showModal
             $('#importManufacturerModal').modal('show')
+
         });
+
+        // file input empty
+        $("#confirmBtnImport").click(":submit", function (e) {
+
+            if (!$('#importEmpty').val()) {
+                e.preventDefault();
+            }
+        })
     </script>
 
 @endsection
