@@ -86,7 +86,7 @@ Route::group(['middleware'=>'auth'], function(){
 
         Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
 //      exports
-        Route::get("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
+        Route::post("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
         Route::get("/exportconsumables", [\App\Http\Controllers\ConsumableController::class, "export"]);
         Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);

@@ -13,26 +13,41 @@
         <div>
             @can('recycleBin', \App\Models\Asset::class)
             <a href="{{ route('assets.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin</a>
+                class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Asset::onlyTrashed()->count()}})</a>
             @endcan
             @can('create', \App\Models\Asset::class)
                 <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
             @endcan
-                <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
-                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
             @can('generatePDF', \App\Models\Asset::class)
-            <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
-                @csrf
-                <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
-            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+            @if($assets->count() != 0)
+                @if ($assets->count() == 1)
+                <a href="{{ route('asset.showPdf', $assets[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-            </form>
+                @else
+                <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
+                    @csrf
+                    <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
+                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                </form>                
+                @endif
+            @endif
             @endcan
-            <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
-                    class="fas fa-download fa-sm text-dark-50"></i> Export</a>
+            @can('create', \App\Models\Asset::class)
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+                class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+            @endcan
+            @if($assets->count() > 1)
+                @can('generatePDF', \App\Models\Asset::class)
+                <form class="d-inline-block" action="/exportassets" method="POST">
+                    @csrf
+                    <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
+                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                        class="fas fa-download fa-sm text-dark-50"></i> Export</button>
+                </form>
+                @endcan
+            @endif
         </div>
     </div>
 

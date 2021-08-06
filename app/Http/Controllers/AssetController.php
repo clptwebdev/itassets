@@ -35,11 +35,11 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
         return view('assets.view', [
-            "assets" => auth()->user()->location_assets,
+            "assets" => $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations" => auth()->user()->locations,
+            "locations" => $locations,
         ]);
     }
 
@@ -331,9 +331,10 @@ class AssetController extends Controller {
     }
 
 
-    public function export(Asset $asset)
+    public function export(Request $request)
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport(), 'assets.csv');
+        $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
+        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport($assets), 'assets.csv');
 
     }
 
