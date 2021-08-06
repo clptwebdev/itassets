@@ -24,14 +24,6 @@
                 <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
             @can('generatePDF', \App\Models\Asset::class)
-                <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
-                    @csrf
-                    <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-                </form>
-            @endcan
-            @can('generatePDF', \App\Models\Asset::class)
             <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
                 @csrf
                 <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>

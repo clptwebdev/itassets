@@ -26,10 +26,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-<<<<<<< HEAD
-        view()->share("assetAmount" ,count(\App\Models\Asset::all()));
-=======
->>>>>>> 96349e0fc448fda34e2c28a04aa80b67a54dd585
         User::observe(\App\Observers\UserObserver::class);
         Asset::observe(\App\Observers\AssetObserver::class);
         Supplier::observe(\App\Observers\SupplierObserver::class);
@@ -38,9 +34,5 @@ class AppServiceProvider extends ServiceProvider
             'user' => 'App\Models\User',
             'asset' => 'App\Models\Asset',
         ]);
-<<<<<<< HEAD
-=======
-
->>>>>>> 96349e0fc448fda34e2c28a04aa80b67a54dd585
     }
 }
