@@ -66,6 +66,11 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('/assets/bin', 'App\Http\Controllers\AssetController@bin')->name('assets.bin');
         Route::post('/assets/pdf', 'App\Http\Controllers\AssetController@downloadPDF')->name('assets.pdf');
         Route::get('/asset/{asset}/pdf', 'App\Http\Controllers\AssetController@downloadShowPDF')->name('asset.showPdf');
+        Route::get('/asset/bin', 'App\Http\Controllers\AssetController@recycleBin')->name('assets.bin');
+        Route::get('/asset/{asset}/restore', 'App\Http\Controllers\AssetController@restore')->name('assets.restore');
+        Route::post('/asset/{asset}remove', 'App\Http\Controllers\AssetController@forceDelete')->name('assets.remove');
+
+
 
         Route::resource('/status', 'App\Http\Controllers\StatusController');
         Route::resource('/components', 'App\Http\Controllers\ComponentController');

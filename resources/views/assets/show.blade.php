@@ -11,11 +11,15 @@
         <div>
             <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+            @can('generatePDF', $asset)
             <a href="{{ route('asset.showPdf', $asset->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+            @endcan
+            @can('generatePDF', $asset)
             <a href="{{ route('assets.edit', $asset->id)}}"
                class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
+            @endcan
             <form class="d-inline-block" id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
                 method="POST">
             @csrf

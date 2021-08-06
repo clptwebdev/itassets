@@ -96,7 +96,7 @@ class AssetObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
             'loggable_id'=> $asset->id, 
-            'data'=> auth()->user()->name.' has removed the Asset: '.$name,
+            'data'=> auth()->user()->name.' has permanently removed the Asset: '.$name,
         ]);
     }
 }

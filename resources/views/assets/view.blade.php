@@ -11,18 +11,22 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Assets</h1>
         <div>
-            <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            @can('recycleBin', \App\Models\Asset::class)
+            <a href="{{ route('assets.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin</a>
+            @endcan
             @can('create', \App\Models\Asset::class)
             <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
             @endcan
+            @can('generatePDF', \App\Models\Asset::class)
             <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
                 @csrf
                 <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
             <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
             </form>
+            @endcan
             <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                     class="fas fa-download fa-sm text-dark-50"></i> Export</a>
         </div>
@@ -258,23 +262,28 @@
                                     @endif
                                 </td>
                                 <td class="text-right">
-                                    <form id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
-                                          method="POST">
-                                        <a href="{{ route('assets.show', $asset->id) }}"
-                                           class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i></a>&nbsp;
-                                           @can('edit', auth()->user(), $asset)
-                                        <a href="{{route('assets.edit', $asset->id) }}"
-                                           class="btn-sm btn-secondary text-white  d-none d-md-inline-block"><i class="fas fa-pencil-alt"></i></a>&nbsp;
+                                    <div class="dropdown no-arrow">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Asset Options:</div>
+                                            <a href="{{ route('assets.show', $asset->id) }}" class="dropdown-item">View</a>
+                                            @can('edit', $asset)
+                                            <a href="{{ route('assets.edit', $asset->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
-                                            
-                                        @csrf
-                                        @method('DELETE')
-
-                                        @can('delete', auth()->user(), $asset)
-                                        <a class="btn-sm btn-danger text-white deleteBtn d-none d-md-inline-block" href="#"
-                                           data-id="{{$asset->id}}"><i class=" fas fa-trash "></i></a>
-                                           @endcan
-                                    </form>
+                                            @can('delete', $asset)
+                                                <form id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}" method="POST" class="d-block p-0 m-0">
+                                                @csrf
+                                                @method('DELETE')
+                                                <a class="deleteBtn dropdown-item" href="#"
+                                                data-id="{{$asset->id}}">Delete</a>
+                                                </form>
+                                            @endcan
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -302,7 +311,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeassetModalLabel">Are you sure you want to delete this asset?
+                    <h5 class="modal-title" id="removeassetModalLabel">Are you sure you want to send this asset to the recycle bin?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -310,13 +319,12 @@
                 </div>
                 <div class="modal-body">
                     <input id="asset-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this asset from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assets assigned to this asset will be
-                        set to Null.</small>
+                    <p>Select "Send to Bin" to send this asset to the recycle binfrom the system.</p>
+                    <small class="text-danger">**This is not permanent and the Asset can be restored. Whilst in the Recycle Bin, the Asset will not be included in any statistics and data.</small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>
