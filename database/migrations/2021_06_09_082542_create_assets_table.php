@@ -28,6 +28,7 @@ class CreateAssetsTable extends Migration
             $table->foreignId("location_id");
             $table->foreignId("user_id")->nullable();
             $table->date("audit_date")->nullable();
+            $table->softDeletes();
         });
     }
 

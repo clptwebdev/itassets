@@ -40,7 +40,7 @@ class StatusController extends Controller
             'name' => 'required',
         ]);
 
-        Status::create($request->only('name', 'deployable'));
+        Status::create($request->only('name', 'deployable', 'icon', 'colour'));
         session()->flash('success_message', $request->name.' has been added to the statuses.');
         return redirect(route('status.index'));
     }
@@ -76,7 +76,13 @@ class StatusController extends Controller
      */
     public function update(Request $request, Status $status)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+        ]);
+
+        $status->fill($request->only('name', 'deployable', 'icon', 'colour'))->save();
+        session()->flash('success_message', $request->name.' has been updated successfully.');
+        return redirect(route('status.index'));
     }
 
     /**

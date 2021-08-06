@@ -70,10 +70,10 @@
                             <select
                                 class="form-control <?php if ($errors->has('depreciation_id')){?>border-danger<?php }?>"
                                 name="depreciation_id" id="depreciation_id" required>
-                                <option value="0">Please select a Depreciation Model</option>
-                                <option value="0">Desktop Computer</option>
-                                <option value="0">Laptop</option>
-                                <option value="0">IPad</option>
+                                <option value="0" @if($assetModel->depreciation_id == 0){{ 'selected'}}@endif>No Depreciation Set</option>
+                                @foreach($depreciation as $dep)
+                                    <option value="{{ $dep->id}}" @if($assetModel->depreciation_id == $dep->id){{ 'selected'}}@endif>{{ $dep->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">

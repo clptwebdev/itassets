@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssetModel;
+use App\Models\Depreciation;
 use App\Models\Fieldset;
 use App\Models\Manufacturer;
 use App\Http\Controllers\Controller;
@@ -29,7 +30,8 @@ class AssetModelController extends Controller
     {
         $mans = Manufacturer::all();
         $fieldsets = Fieldset::all();
-        return view('asset-models.create', compact('fieldsets', 'mans'));
+        $depreciation = Depreciation::all();
+        return view('asset-models.create', compact('fieldsets', 'mans', 'depreciation'));
     }
 
     /**
@@ -69,9 +71,10 @@ class AssetModelController extends Controller
      */
     public function edit(AssetModel $assetModel)
     {
+        $depreciation = Depreciation::all();
         $mans = Manufacturer::all();
         $fieldsets = Fieldset::all();
-        return view('asset-models.edit', compact('fieldsets', 'mans', 'assetModel'));
+        return view('asset-models.edit', compact('fieldsets', 'mans', 'assetModel', 'depreciation'));
     }
 
     /**
