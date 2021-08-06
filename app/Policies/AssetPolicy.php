@@ -13,7 +13,7 @@ class AssetPolicy
 {
     use HandlesAuthorization;
 
-    
+
     /**
      * Determine whether the user can view the model.
      *
@@ -24,7 +24,7 @@ class AssetPolicy
     public function view(User $user, Asset $asset)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 &&  $asset->location_id == 0 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+        if($user->role_id == 1 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -45,7 +45,7 @@ class AssetPolicy
     public function edit(User $user, Asset $asset)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 &&  $asset->location_id == 0 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+        if($user->role_id == 1 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -62,7 +62,7 @@ class AssetPolicy
     public function update(User $user, Asset $asset)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 &&  $asset->location_id == 0 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+        if($user->role_id == 1 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -79,12 +79,31 @@ class AssetPolicy
     public function delete(User $user, asset $asset)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 &&  $asset->location_id == 0 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+        if($user->role_id == 1 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
             return true;
         }else{
             return false;
         }
     }
+
+    public function recycleBin(User $user){
+        return $user->role_id <= 3;
+    }
+
+    public function generatePDF(User $user){
+        return $user->role_id <= 3;
+    }
+
+    public function generateAssetPDF(User $user, asset $asset){
+        $locations = $user->locations->pluck('id')->toArray();
+        if($user->role_id == 1 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
 
     /**
      * Determine whether the user can restore the model.
@@ -95,7 +114,12 @@ class AssetPolicy
      */
     public function restore(User $user, asset $asset)
     {
-        //
+        $locations = $user->locations->pluck('id')->toArray();
+        if($user->role_id == 1 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -107,6 +131,11 @@ class AssetPolicy
      */
     public function forceDelete(User $user, asset $asset)
     {
-        //
+        $locations = $user->locations->pluck('id')->toArray();
+        if($user->role_id == 1 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

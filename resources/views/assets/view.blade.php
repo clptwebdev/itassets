@@ -19,8 +19,6 @@
                 <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
             @endcan
-                <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
                 <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
             @can('generatePDF', \App\Models\Asset::class)
