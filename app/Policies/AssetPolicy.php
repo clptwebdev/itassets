@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Asset;
 use App\Models\User;
 
@@ -12,17 +13,7 @@ class AssetPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
-     */
-    public function viewAny(User $user)
-    {
-        //
-    }
-
+    
     /**
      * Determine whether the user can view the model.
      *
@@ -32,7 +23,12 @@ class AssetPolicy
      */
     public function view(User $user, Asset $asset)
     {
-        //User needs to have the permissions of that location
+        $locations = $user->locations->pluck('id')->toArray();
+        if($user->role_id == 1 &&  $asset->location_id == 0 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -43,12 +39,17 @@ class AssetPolicy
      */
     public function create(User $user)
     {
-        return $user->role_id === 1;
+        return $user->role_id <= 3;
     }
 
-    public function edit(User $user)
+    public function edit(User $user, Asset $asset)
     {
-        return auth()->user()->role_id == 1;
+        $locations = $user->locations->pluck('id')->toArray();
+        if($user->role_id == 1 &&  $asset->location_id == 0 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -60,9 +61,12 @@ class AssetPolicy
      */
     public function update(User $user, Asset $asset)
     {
-        return auth()->user()->role_id <= 3
-                    ? Response::allow()
-                    : $error = 'You do not have permissions to update Asset - '.$asset->asset_tag.'. You have READ_ONLY.'; response(view('errors.403'), compact('error'));
+        $locations = $user->locations->pluck('id')->toArray();
+        if($user->role_id == 1 &&  $asset->location_id == 0 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -74,7 +78,12 @@ class AssetPolicy
      */
     public function delete(User $user, asset $asset)
     {
-        return auth()->user()->role_id == 1;
+        $locations = $user->locations->pluck('id')->toArray();
+        if($user->role_id == 1 &&  $asset->location_id == 0 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**

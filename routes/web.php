@@ -58,12 +58,18 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/fieldsets', 'App\Http\Controllers\FieldsetController');
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
+        
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
         Route::get('/status/{status}/assets', 'App\Http\Controllers\AssetController@status')->name('assets.status');
         Route::get('/location/{location}/assets', 'App\Http\Controllers\AssetController@location')->name('assets.location');
+        Route::get('/assets/bin', 'App\Http\Controllers\AssetController@bin')->name('assets.bin');
+        Route::post('/assets/pdf', 'App\Http\Controllers\AssetController@downloadPDF')->name('assets.pdf');
+        Route::get('/asset/{asset}/pdf', 'App\Http\Controllers\AssetController@downloadShowPDF')->name('asset.showPdf');
+
         Route::resource('/status', 'App\Http\Controllers\StatusController');
         Route::resource('/components', 'App\Http\Controllers\ComponentController');
+        Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
 
 
 

@@ -13,9 +13,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        /* $this->middleware('auth');
-        $this->middleware('auth')->only(['functionName1', 'functionName2']);
-        $this->middleware('auth')->except(['functionName1', 'functionName2']); */
+
     }
 
     /**
@@ -85,20 +83,12 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        
-        $permission = 0;
-        foreach(auth()->user()->locations->pluck('id')->toArray() as $id => $key){
-            if(in_array($key, $user->locations->pluck('id')->toArray())){
-                $permission++;
-            }
-        }
-        if($permission != 0 || auth()->user()->role_id == 1){
-            $location = Location::find($user->location_id);
-            return view('users.show', compact('user', 'location'));
-        }else{
-            return redirect('/permissions');
+        if (auth()->user()->cant('view', $user)) {
+            return redirect(route('errors.forbidden', ['user', $user->id, 'view']));
         }
         
+        $location = Location::find($user->location_id);
+        return view('users.show', compact('user', 'location'));
     }
 
     /**
@@ -109,23 +99,15 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-
-        if(auth()->user()->role_id == 1){
-            $locations = Location::all();
-            return view('users.edit', compact('user', 'locations'));
+        if (auth()->user()->cant('edit', $user)) {
+            return redirect(route('errors.forbidden', ['user', $user->id, 'edit']));
         }else{
-            $permission = 0;
-            foreach(auth()->user()->locations->pluck('id')->toArray() as $id => $key){
-                if(in_array($key, $user->locations->pluck('id')->toArray())){
-                    $permission++;
-                }
-            }
-            if($permission != 0){
-                $locations = auth()->user()->locations;
-                return view('users.edit', compact('user', 'locations'));
+            if(auth()->user()->role_id == 1){
+                $locations = Location::all();
             }else{
-                return redirect('/permissions');
+                $locations = auth()->user()->locations;
             }
+            return view('users.edit', compact('user', 'locations'));
         }
         
     }
@@ -159,13 +141,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if(auth()->user()->role_id == 1 || auth()->user()->role_id <= $user->role_id){
-            $name=$user->name;
-            $user->delete();
-            session()->flash('danger_message', $name . ' was deleted from the system');
-            return redirect(route('users.index'));
+        if (auth()->user()->cant('delete', $user)) {
+            return redirect(route('errors.forbidden', ['user', $user->id, 'edit']));
         }else{
-            return redirect('/permissions');
+                $name=$user->name;
+                $user->delete();
+                session()->flash('danger_message', $name . ' was deleted from the system');
+                return redirect(route('users.index'));
         }
     }
 

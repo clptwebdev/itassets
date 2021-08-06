@@ -31,8 +31,8 @@ class LogSuccessfulLogin
         Log::create([
             'user_id'=>auth()->user()->id, 
             'log_date'=> Carbon::now(),
-            'log_type'=> 'auth', 
-            'log_id'=> auth()->user()->id, 
+            'loggable_type'=> 'auth', 
+            'loggable_id'=> auth()->user()->id, 
             'data'=>'User Logged in Successfully'
         ]);
     }

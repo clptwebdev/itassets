@@ -30,8 +30,8 @@ class LogSuccessfulLogout
     {
         Log::create([
             'user_id'=>auth()->user()->id, 
-            'log_date'=> Carbon::now(),
-            'log_type'=> 'auth', 
+            'loggable_date'=> Carbon::now(),
+            'loggable_type'=> 'auth', 
             'log_id'=> auth()->user()->id, 
             'data'=>'User Logged Out Successfully'
         ]);

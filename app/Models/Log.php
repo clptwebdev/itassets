@@ -11,7 +11,7 @@ class Log extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'log_type', 'log_id', 'data', 'created_at'];
+    protected $fillable = ['user_id', 'loggable_type', 'loggable_id', 'data', 'created_at'];
 
     public function user(){
         return $this->belongsTo(User::class);

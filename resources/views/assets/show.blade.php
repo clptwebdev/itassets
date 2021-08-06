@@ -8,21 +8,22 @@
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">View Asset</h1>
-        <form id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
-              method="POST">
+        <div>
             <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+            <a href="{{ route('asset.showPdf', $asset->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
             <a href="{{ route('assets.edit', $asset->id)}}"
                class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
+            <form class="d-inline-block" id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
+                method="POST">
             @csrf
             @method('DELETE')
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" data-id="{{$asset->id}}"><i
                     class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
-
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-        </form>
+            </form>  
+        </div>          
     </div>
 
     @if(session('danger_message'))

@@ -11321,13 +11321,16 @@ body.sidebar-toggled footer.sticky-footer {
   position: absolute;
   top: 0px;
   right: -100%;
-  width: 33%;
-  max-height: 100%;
+  width: 25%;
+  height: 100vh;
   z-index: 9;
   transition: .4s;
+  border: none;
   border-left: solid 5px #474775;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
+}
+
+#filter-header{
+  height: 4.375rem;
 }
 
 @media (max-width: 575px) {

@@ -24,7 +24,7 @@
             <span class="sidebar-title">Assets</span>
         </a>
         <div id="collapseTwo" class="collapse p-0" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i class="far fa-circle text-secondary"></i> All Assets ({{(auth()->user()->location_assets()->count()) ?? null}})</a>
+                <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i class="far fa-circle text-secondary"></i> All Assets (@if(auth()->user()->role_id == 1){{ \App\Models\Asset::all()->count()}}@else{{(auth()->user()->location_assets()->count()) ?? null}}@endif)</a>
                 @php
                 $statuses = App\Models\Status::all();
                 @endphp
@@ -40,6 +40,7 @@
                     <a href="{{ route('assets.location', $location->id)}}" class="collapse-item" data-parent="#SubSubMenu1"><i class="far fa-circle" style="color:{{$location->icon}};"></i> {{ $location->name}}</a>
                     @endforeach
                 </div>
+                <a href="{{ route('assets.bin')}}" title="Recycle Bin" class="collapse-item sub-link"><i class="fas fa-trash-alt fa-xs"></i> Recycle Bin</a>
                 <a href="{{ route('assets.create')}}" title="Add New Asset" class="collapse-item sub-link"><i class="fas fa-plus-circle fa-xs"></i> Add New Asset</a>
                 <a href="#" title="Import Assets" class="sub-link collapse-item">Import Assets</a>
                 

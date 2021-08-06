@@ -122,10 +122,10 @@
                     <table class="logs table table-striped ">
                         <thead>
                             <tr>
-                                <th>Log ID</th>
-                                <th class="text-center">Data</th>
-                                <th class="text-center">User</th>
-                                <th class="text-center">Date</th>
+                                <th class="col-1">Log ID</th>
+                                <th class="col-7 text-center">Data</th>
+                                <th class="col-2    text-center">User</th>
+                                <th class="col-2 text-center">Date</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -137,12 +137,13 @@
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach($user->logs as $log)
+                            @php($logs = $user->logs()->orderBy('created_at', 'desc')->get())
+                            @foreach($logs as $log)
                             <tr>
-                                <td>{{ $log->id }}</td>
+                                <td class="text-center">{{ $log->id }}</td>
                                 <td class="text-left">{{$log->data}}</td>
-                                <td class="text-left">{{ $log->user->name }}</td>
-                                <td class="text-left">{{ \Carbon\Carbon::parse($log->created_at)->format('d-m-Y h-m-s')}}</td>
+                                <td class="text-left">{{ $log->user->name ?? 'Unkown'}}</td>
+                                <td class="text-right" data-sort="{{ strtotime($log->created_at)}}">{{ \Carbon\Carbon::parse($log->created_at)->format('d-m-Y h:i:s')}}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -160,10 +161,10 @@
                     <table class="logs table table-striped">
                         <thead>
                             <tr>
-                                <th>Log ID</th>
-                                <th class="text-center">Type</th>
-                                <th class="text-center">Data</th>
-                                <th class="text-center">Date</th>
+                                <th class="col-1">Log ID</th>
+                                <th class="col-1 text-center">Type</th>
+                                <th class="col-7 text-center">Data</th>
+                                <th class="col-3 text-center">Date</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -175,12 +176,13 @@
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach($user->activity as $activity)
+                            @php($activities = $user->activity()->orderBy('id', 'desc')->get())
+                            @foreach($activities as $activity)
                             <tr>
                                 <td>{{ $activity->id }}</td>
                                 <td class="text-left">{{$activity->loggable_type}}</td>
                                 <td class="text-left">{{ $activity->data }}</td>
-                                <td class="text-left">{{ \Carbon\Carbon::parse($activity->created_at)->format('d-m-Y h-m-s')}}</td>
+                                <td class="text-left" data-sort="{{ strtotime($activity->created_at)}}">{{ \Carbon\Carbon::parse($activity->created_at)->format('d-m-Y h:i:s')}}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -240,7 +242,15 @@
 <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready( function () {
-        $('table.logs').DataTable();
+        $('table.logs').DataTable({
+                "autoWidth": false,
+                "pageLength": 10,
+                "columnDefs": [ {
+                    "targets": [1,2],
+                    "orderable": false
+                    }],
+                "order": [[ 3, "desc"]],
+            });
     } );
 </script>
 

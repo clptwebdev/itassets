@@ -19,8 +19,8 @@ class UserObserver
         Log::create([
             'user_id'=>auth()->user()->id, 
             'log_date'=> Carbon::now(),
-            'log_type'=> 'user',
-            'log_id'=> $user->id, 
+            'loggable_type'=> 'user',
+            'loggable_id'=> $user->id, 
             'data'=> auth()->user()->name.' created a new user with an Admin Role. Permissions were granted for [School Names]'
         ]);
     }
@@ -53,8 +53,8 @@ class UserObserver
         Log::create([
             'user_id'=>auth()->user()->id, 
             'log_date'=> Carbon::now(),
-            'log_type'=> 'user',
-            'log_id'=> $user->id, 
+            'loggable_type'=> 'user',
+            'loggable_id'=> $user->id, 
             'data'=> auth()->user()->name." updated user: {$user->name}. The Role of {$user->name} has been set to {$role}"
         ]);
     }
@@ -70,8 +70,8 @@ class UserObserver
         Log::create([
             'user_id'=>auth()->user()->id, 
             'log_date'=> Carbon::now(),
-            'log_type'=> 'user',
-            'log_id'=> $user->id, 
+            'loggable_type'=> 'user',
+            'loggable_id'=> $user->id, 
             'data'=> auth()->user()->name.' has deleted '.$user->name,
         ]);
     }

@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Exports\AssetExport;
 use Maatwebsite\Excel\Excel;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
+use PDF;
 
 
 class AssetController extends Controller
@@ -21,12 +22,19 @@ class AssetController extends Controller
 
     public function index()
     {
+        if(auth()->user()->role_id == 1){
+            $assets = Asset::all();
+            $locations = Location::all();
+        }else{
+            $assets = auth()->user()->location_assets;
+            $locations = auth()->user()->locations;
+        }
         return view('assets.view', [
-            "assets"=>auth()->user()->location_assets,
+            "assets"=> $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations"=>auth()->user()->locations,
+            "locations"=>$locations,
         ]);
     }
 
@@ -141,15 +149,20 @@ class AssetController extends Controller
 
     public function edit(Asset $asset)
     {
-        $this->authorize('edit', $asset);
-        return view('assets.edit', [
-            "asset"=>$asset,
-            "locations"=>auth()->user()->locations,
-            "manufacturers"=>Manufacturer::all(),
-            'models'=>AssetModel::all(),
-            'suppliers' => Supplier::all(),
-            'statuses' => Status::all(),
-        ]);
+        if (auth()->user()->cant('edit', $asset)) {
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
+        }else{
+            return view('assets.edit', [
+                "asset"=>$asset,
+                "locations"=>auth()->user()->locations,
+                "manufacturers"=>Manufacturer::all(),
+                'models'=>AssetModel::all(),
+                'suppliers' => Supplier::all(),
+                'statuses' => Status::all(),
+            ]);
+        }
+
+        
     }
 
     /**
@@ -161,6 +174,10 @@ class AssetController extends Controller
      */
     public function update(Request $request, Asset $asset)
     {
+        if (auth()->user()->cant('update', $asset)) {
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'update']));
+        }
+
         $validate_fieldet = [];
         //Validate and Collect the Additional Fieldsets
         $assetModel = AssetModel::findOrFail($request->asset_model);
@@ -240,6 +257,9 @@ class AssetController extends Controller
 
     public function destroy(Asset $asset)
     {
+        if (auth()->user()->cant('delete', $asset)) {
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
+        }
         $name=$asset->asset_tag;
         $asset->delete();
         session()->flash('danger_message', "#". $name . ' was deleted from the system');
@@ -261,7 +281,14 @@ class AssetController extends Controller
     }
 
     public function filter(Request $request){
-        $locations = auth()->user()->locations->pluck('id');
+        
+        if(auth()->user()->role_id != 1){
+            $locations = auth()->user()->locations->pluck('id');
+            $locs = auth()->user()->locations;
+        }else{
+            $locations = \App\Models\Location::all()->pluck('id');
+            $locs = \App\Models\Location::all();
+        }
         $assets = Asset::locationFilter($locations);
         if(!empty($request->locations)){
             $assets->locationFilter($request->locations);
@@ -291,7 +318,7 @@ class AssetController extends Controller
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations"=>auth()->user()->locations,
+            "locations"=> $locs,
             "filter" => 'Filter',
             "amount" => $request->amount,
         ]);
@@ -323,6 +350,21 @@ class AssetController extends Controller
             'categories' => Category::all(),
             "locations"=>auth()->user()->locations,
         ]);
+    }
+
+    public function downloadPDF(Request $request){
+        $assets = Asset::findMany(json_decode($request->assets));
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets'));
+        $pdf->setPaper('a4', 'landscape');
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        return $pdf->download("assets-{$date}.pdf");
+    }
+
+    public function downloadShowPDF(Asset $asset){
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.showPdf', compact('asset'));
+    
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        return $pdf->download("asset-{$asset->asset_tag}-{$date}.pdf");
     }
 
 }

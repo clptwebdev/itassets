@@ -20,7 +20,7 @@ class CheckAdminRole
         if($role <= 2 && $role !=0){
             return $next($request);
         }else{
-            return redirect('/permissions');
+            return redirect(route('errors.forbidden', ['area', $request->path(), 'view']));
         }        
     }
 }
