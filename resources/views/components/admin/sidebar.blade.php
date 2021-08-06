@@ -23,17 +23,27 @@
             <i class="fas fa-fw fa-tablet-alt sidebar-icon" data-toggle="tooltip" data-placement="right" title="Components"></i>
             <span class="sidebar-title">Assets</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <a class="collapse-item" href="{{ route('assets.index')}}"><i class="far fa-circle text-secondary"></i> All Assets ({{($assetAmount) ?? null}})</a>
+        <div id="collapseTwo" class="collapse p-0" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i class="far fa-circle text-secondary"></i> All Assets (@if(auth()->user()->role_id == 1){{ \App\Models\Asset::all()->count()}}@else{{(auth()->user()->location_assets()->count()) ?? null}}@endif)</a>
                 @php
                 $statuses = App\Models\Status::all();
                 @endphp
-                @foreach($statuses as $status)
-                <a href="{{ route('assets.status', $status->id)}}" title="Add New Asset" class="collapse-item"><i class="far fa-circle @if($status->deployable == 1){{ 'text-success'}}@else{{ 'text-danger'}}@endif"></i> {{ $status->name}}</a>
-                @endforeach
-                <hr>
-                <a href="{{ route('assets.create')}}" title="Add New Asset" class="collapse-item">Add New Asset</a>
-                <a href="#" title="Import Assets" class="collapse-item">Import Assets</a>
+                <a href="#statusMenu" class="sub-link collapse-item collapsed d-none d-sm-block" data-toggle="collapse" data-parent="#statusMenu"><i class="fas fa-shield-alt fa-xs"></i> By Status</a>
+                <div class="collapse p-2" id="statusMenu">
+                    @foreach($statuses as $status)
+                    <a href="{{ route('assets.status', $status->id)}}" title="Add New Asset" class="collapse-item"><i class="{{$status->icon}} fa-xs" style="color: {{$status->colour}};"></i> {{ $status->name}}</a>
+                    @endforeach
+                </div>
+                <a href="#locationMenu" class="sub-link collapse-item collapsed d-none d-sm-block" data-toggle="collapse" data-parent="#locationMenu"><i class="fas fa-school fa-xs"></i> By Location</a>
+                <div class="collapse p-2" id="locationMenu">
+                    @foreach(auth()->user()->locations as $location)
+                    <a href="{{ route('assets.location', $location->id)}}" class="collapse-item" data-parent="#SubSubMenu1"><i class="far fa-circle" style="color:{{$location->icon}};"></i> {{ $location->name}}</a>
+                    @endforeach
+                </div>
+                <a href="{{ route('assets.bin')}}" title="Recycle Bin" class="collapse-item sub-link"><i class="fas fa-trash-alt fa-xs"></i> Recycle Bin</a>
+                <a href="{{ route('assets.create')}}" title="Add New Asset" class="collapse-item sub-link"><i class="fas fa-plus-circle fa-xs"></i> Add New Asset</a>
+                <a href="#" title="Import Assets" class="sub-link collapse-item">Import Assets</a>
+                
 
         </div>
     </li>
@@ -121,7 +131,7 @@
         </a>
         <div id="settingPages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <a class="collapse-item" href="{{ route('asset-models.index')}}">Asset Models</a>
-                <a class="collapse-item" href="login.html">Depreciation</a>
+                <a class="collapse-item" href="{{ route('depreciation.index')}}">Depreciation</a>
                 <a class="collapse-item" href="{{ route('category.index')}}">Categories</a>
                 <a class="collapse-item" href="{{ route('fieldsets.index')}}">Fieldsets</a>
                 <a class="collapse-item" href="{{ route('fields.index')}}">Custom Fields</a>

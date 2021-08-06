@@ -35,26 +35,46 @@ Route::group(['middleware'=>'auth'], function(){
         );
     })->name('dashboard');
 
+    //Super Admmin
+
+    //Super Admin or Admin
+    Route::group(['middleware'=>'admin.role'], function(){
+        Route::resource('/users', 'App\Http\Controllers\UserController');
+    });
+
+    //User Manager
+
+    //User
 
 
     //Administrator Permissions Middleware
-    Route::group(['middleware'=>'role:1'], function(){
         Route::resource('/location', 'App\Http\Controllers\LocationController');
         Route::resource('/category', 'App\Http\Controllers\CategoryController');
-        Route::resource('/users', 'App\Http\Controllers\UserController');
+        Route::post('permissions/users', 'App\Http\Controllers\UserController@permissions');
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
+        Route::resource('/depreciation', 'App\Http\Controllers\DepreciationController');
         Route::resource('/fieldsets', 'App\Http\Controllers\FieldsetController');
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
+
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
         Route::get('/status/{status}/assets', 'App\Http\Controllers\AssetController@status')->name('assets.status');
+        Route::get('/location/{location}/assets', 'App\Http\Controllers\AssetController@location')->name('assets.location');
+        Route::get('/assets/bin', 'App\Http\Controllers\AssetController@bin')->name('assets.bin');
+        Route::post('/assets/pdf', 'App\Http\Controllers\AssetController@downloadPDF')->name('assets.pdf');
+        Route::get('/asset/{asset}/pdf', 'App\Http\Controllers\AssetController@downloadShowPDF')->name('asset.showPdf');
+
         Route::resource('/status', 'App\Http\Controllers\StatusController');
         Route::resource('/components', 'App\Http\Controllers\ComponentController');
+
         Route::resource('/accessories', 'App\Http\Controllers\AccessoryController');
         Route::resource('/consumables', 'App\Http\Controllers\ConsumableController');
+
+        Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
+
 
 
 
@@ -98,7 +118,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::Post("manufacturers/create/ajax", [\App\Http\Controllers\ManufacturerController::class, "ajaxMany"]);
 
         Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');
+        Route::get('chart/asset/values', 'App\Http\Controllers\ChartController@getAssetValueChart');
+        Route::get('chart/asset/audits', 'App\Http\Controllers\ChartController@getAssetAuditChart');
 
-        //
-    });
 });

@@ -1,5 +1,5 @@
 @props(["asset"])
-<div class="col-12 col-sm-8 mb-4">
+<div class="col-12 col-lg-8 mb-4">
     <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid ;">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold" style="">Asset Information</h6>
@@ -11,17 +11,17 @@
                     , the asset that is currently being Viewed and any request information attached.</p>
                 <hr>
                 </div>
-                <div class="col-3 p-2">
+                <div class="col-12 col-sm-5 col-md-3 p-2">
                     @if(isset($asset->model->photo->path))
                     <img src="{{ asset($asset->model->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->model->name}}">
                     @else
                     <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->model->name}}">
                     @endif
                     <hr>
-                    <img class="mb-4" src="{{ asset('images/barcode.gif')}}" width="100%" alt="Asset Tag {{$asset->asset_tag }}">
+                    {!! '<img width="100%" height="100px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39+',3,33) . '" alt="barcode"   />' !!}
                     <p class="text-center font-weight-bold mx-4">Asset Tag: #{{ $asset->asset_tag }}</p>
                 </div>
-                <div class="col-9 p-2">
+                <div class="col-12 col-sm-7 col-md-9 p-2">
                     <table class="table table-sm table-bordered table-striped">
                         <thead>
                             <tr>

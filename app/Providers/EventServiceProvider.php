@@ -22,6 +22,12 @@ class EventServiceProvider extends ServiceProvider
             // ... other providers
             'SocialiteProviders\\Azure\\AzureExtendSocialite@handle',
         ],
+        'Illuminate\Auth\Events\Login' => [
+            'App\Listeners\LogSuccessfulLogin',
+        ],
+         'Illuminate\Auth\Events\Logout' => [
+            'App\Listeners\LogSuccessfulLogout',
+        ],
     ];
 
     /**

@@ -15,6 +15,8 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Assets</h1>
         <div>
+            <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin</a>
             @can('create', \App\Models\Asset::class)
                 <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
@@ -25,6 +27,16 @@
                     class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
+
+            <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
+                @csrf
+                <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
+            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+            </form>
+            <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                    class="fas fa-download fa-sm text-dark-50"></i> Export</a>
+
         </div>
     </div>
 
@@ -37,10 +49,20 @@
     @endif
 
     @php
+<<<<<<< HEAD
         $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
         $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+=======
+        if(auth()->user()->role_id == 1){
+            $limit = \App\Models\Asset::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
+            $floor = \App\Models\Asset::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first();
+        }else{
+            $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+        }
+>>>>>>> 01b03857e91120b5f8a0b4fb5babf0ae7802cf60
     @endphp
-    <section class="position-relative">
+    <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
@@ -50,11 +72,15 @@
             <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-secondary p-2 shadow-sm">Filter</a>
         </div>
         <div id="filter" class="card shadow mb-4">
+<<<<<<< HEAD
             <div class="card-header d-flex justify-content-between align-items-center text-white"
                  style="background-color: #474775; border-top-left-radius: 0px;"><h6>Filter Results</h6><a
                     class="btn-sm btn-secondary" onclick="javascript:toggleFilter();"><i class="fa fa-times"
                                                                                          aria-hidden="true"></i></a>
             </div>
+=======
+            <div id="filter-header" class="card-header d-flex justify-content-between align-items-center text-white" style="background-color: #474775; border-top-left-radius: 0px;"><h6 class="m-0">Filter Results</h6><a class="btn-sm btn-secondary" onclick="javascript:toggleFilter();"><i class="fa fa-times" aria-hidden="true"></i></a></div>
+>>>>>>> 01b03857e91120b5f8a0b4fb5babf0ae7802cf60
             <div class="card-body">
                 <form action="{{ route('assets.filter')}}" method="POST">
                     <div id="accordion" class="mb-4">
@@ -194,40 +220,42 @@
                     <table id="assetsTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th><small>Item</small></th>
-                            <th><small>Location</small></th>
-                            <th><small>Tag</small></th>
-                            <th><small>Manufacturer</small></th>
-                            <th><small>Date</small></th>
-                            <th><small>Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="col-auto"><small>Warranty (M)</small></th>
-                            <th class="col-auto text-center"><small>Audit Due</small></th>
-                            <th class="text-right col-auto"><small>Options</small></th>
+                            <th class="col-9 col-md-2"><small>Item</small></th>
+                            <th class="col-1 col-md-auto"><small>Location</small></th>
+                            <th class="col-1 col-md-auto"><small>Tag</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Manufacturer</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Date</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Cost</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class="col-auto d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                            <th class="col-auto text-center d-none d-md-table-cell"><small>Audit Due</small></th>
+                            <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
                             <th><small>Item</small></th>
                             <th><small>Location</small></th>
                             <th><small>Tag</small></th>
-                            <th><small>Manufacturer</small></th>
-                            <th><small>Date</small></th>
-                            <th><small>Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th><small>Warranty (M)</small></th>
-                            <th class="text-center"><small>Audit Due</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Manufacturer</small></th>
+                            <th class=" d-none d-xl-table-cell"><small>Date</small></th>
+                            <th class=" d-none d-xl-table-cell"><small>Cost</small></th>
+                            <th class=" d-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class=" d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                            <th class="text-center  d-none d-md-table-cell"><small>Audit Due</small></th>
                             <th class="text-right"><small>Options</small></th>
                         </tr>
                         </tfoot>
                         <tbody>
                         @foreach($assets as $asset)
                             <tr>
+<<<<<<< HEAD
                                 <td class="text-center"><input type="checkbox"></td>
                                 <td>{{ $asset->model->name ?? 'No Model'}}<br><small>{{ $asset->serial_no }}</small>
                                 </td>
+=======
+                                <td>{{ $asset->model->name ?? 'No Model'}}<br><small class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
+>>>>>>> 01b03857e91120b5f8a0b4fb5babf0ae7802cf60
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
                                         '<img src="{{ asset($asset->location->photo->path)}}" height="30px"
@@ -239,26 +267,41 @@
                                     @endif
                                 </td>
                                 <td>{{ $asset->asset_tag }}</td>
-                                <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
-                                <td data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
-                                <td class="text-center">
-                                    £{{ $asset->purchased_cost }}<br>
+                                <td class="text-center d-none d-xl-table-cell">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
+                                <td class="d-none d-md-table-cell" data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
+                                <td class="text-center  d-none d-xl-table-cell">
+                                    £{{ $asset->purchased_cost }}
+                                    @if($asset->model)
+                                    <br>
                                     @php
+<<<<<<< HEAD
                                         $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
                                         $percentage = floor($age)*33.333;
                                         $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+=======
+                                    $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                                    if($eol->isPast()){
+                                        $dep = 0;
+                                    }else{
+                                        $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
+                                        $percent = 100 / $asset->model->depreciation->years;
+                                        $percentage = floor($age)*$percent;
+                                        $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                                    }
+>>>>>>> 01b03857e91120b5f8a0b4fb5babf0ae7802cf60
                                     @endphp
                                     <small>(*£{{ number_format($dep, 2)}})</small>
+                                    @endif
                                 </td>
-                                <td class="text-center">{{$asset->supplier->name ?? "N/A"}}</td>
+                                <td class="text-center d-none d-xl-table-cell">{{$asset->supplier->name ?? "N/A"}}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
-                                <td class="text-center" data-sort="{{ $warranty_end }}">
+                                <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
                                     {{ $asset->warranty }} Months
 
                                     <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
                                         Remaining</small>
                                 </td>
-                                <td class="text-center" data-sort="{{ strtotime($asset->audit_date)}}">
+                                <td class="text-center d-none d-xl-table-cell" data-sort="{{ strtotime($asset->audit_date)}}">
                                     @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
                                         <span
                                             class="text-danger">{{\Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
@@ -282,6 +325,7 @@
                                           method="POST">
                                         <a href="{{ route('assets.show', $asset->id) }}"
                                            class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i></a>&nbsp;
+<<<<<<< HEAD
                                         @can('edit', $asset)
                                             <a href="{{route('assets.edit', $asset->id) }}"
                                                class="btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>
@@ -295,6 +339,20 @@
                                             <a class="btn-sm btn-danger text-white deleteBtn" href="#"
                                                data-id="{{$asset->id}}"><i class=" fas fa-trash"></i></a>
                                         @endcan
+=======
+                                           @can('edit', auth()->user(), $asset)
+                                        <a href="{{route('assets.edit', $asset->id) }}"
+                                           class="btn-sm btn-secondary text-white  d-none d-md-inline-block"><i class="fas fa-pencil-alt"></i></a>&nbsp;
+                                            @endcan
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        @can('delete', auth()->user(), $asset)
+                                        <a class="btn-sm btn-danger text-white deleteBtn d-none d-md-inline-block" href="#"
+                                           data-id="{{$asset->id}}"><i class=" fas fa-trash "></i></a>
+                                           @endcan
+>>>>>>> 01b03857e91120b5f8a0b4fb5babf0ae7802cf60
                                     </form>
                                 </td>
                             </tr>
@@ -318,7 +376,7 @@
 
 @section('modals')
     <!-- Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeassetModal" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-lg" id="removeAssetModal" tabindex="-1" role="dialog"
          aria-labelledby="removeassetModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -380,10 +438,16 @@
 <?php session()->flash('import-error', 'Select a file to be uploaded before continuing!');?>
 
 @section('js')
+<<<<<<< HEAD
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
             integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+=======
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+>>>>>>> 01b03857e91120b5f8a0b4fb5babf0ae7802cf60
     <script>
         function toggleFilter() {
             if ($('#filter').hasClass('show')) {
@@ -395,6 +459,7 @@
             }
         }
 
+<<<<<<< HEAD
 
         $('.deleteBtn').click(function () {
             $('#supplier-id').val($(this).data('id'))
@@ -405,6 +470,17 @@
         $('#confirmBtn').click(function () {
             var form = '#' + 'form' + $('#supplier-id').val();
             $(form).submit();
+=======
+        $('.deleteBtn').click(function() {
+            $('#asset-id').val($(this).data('id'));
+            //showModal
+            $('#removeAssetModal').modal('show');
+        });
+
+        $('#confirmBtn').click(function() {
+        var form = '#'+'form'+$('#asset-id').val();
+        $(form).submit();
+>>>>>>> 01b03857e91120b5f8a0b4fb5babf0ae7802cf60
         });
 
         $(function () {
@@ -423,11 +499,21 @@
 
         $(document).ready(function () {
             $('#assetsTable').DataTable({
+<<<<<<< HEAD
                 "columnDefs": [{
                     "targets": [0, 10],
                     "orderable": false,
                 }],
                 "order": [[1, "asc"]]
+=======
+                "autoWidth": false,
+                "pageLength": 25,
+                "columnDefs": [ {
+                "targets": [9],
+                "orderable": false
+                    }],
+                "order": [[ 1, "asc"]],
+>>>>>>> 01b03857e91120b5f8a0b4fb5babf0ae7802cf60
             });
         });
         // import

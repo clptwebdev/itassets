@@ -60,7 +60,7 @@
                             <td>{{ $model->name }}</td>
                             <td>{{ 'Dell'}}</td>
                             <td>{{ $model->model_no }}</td>
-                            <td>{{ '36 Months' }}</td>
+                            <td>{{ $model->depreciation->name ?? 'No Depreciation Set' }}</td>
                             <td class="text-center">
                                 <form id="form{{$model->id}}" action="{{ route('asset-models.destroy', $model->id) }}"
                                     method="POST">
