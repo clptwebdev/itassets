@@ -14,8 +14,10 @@
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Accessory</a>
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+            @if($accessories->count() >1)
             <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
+                    class="fas fa-download fa-sm text-white-50"></i>Export</a>
+            @endif
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
         </div>

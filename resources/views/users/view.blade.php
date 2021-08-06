@@ -13,8 +13,10 @@
                 class="fas fa-plus fa-sm text-white-50"></i> Add New User</a>
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        @if($users->count() >1)
         <a href="/exportusers" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
+                class="fas fa-download fa-sm text-white-50"></i>Export</a>
+            @endif
     </div>
 </div>
 
@@ -81,12 +83,12 @@
                                     case 4:
                                         echo '<small class="rounded p-1 m-1 mb-2 bg-secondary text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="User:<br>No User Permissions<br>View Only - Assets">User</small>';
                                         break;
-                                }    
+                                }
 
                                 @endphp
                             </td>
                             <td class="d-none d-md-table-cell">
-                                @php 
+                                @php
                                 if($user->role_id == 1){
                                     $locations = App\Models\Location::all();
                                 }else{
@@ -113,9 +115,9 @@
                                     @method('DELETE')
                                     @if($user->role_id == 0 || auth()->user()->role_id == 1 || auth()->user()->role_id <= $user->role_id && $user->id != auth()->user()->id)
                                     <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                        data-id="{{$user->id}}"><i class=" fas fa-trash"></i></a>    
+                                        data-id="{{$user->id}}"><i class=" fas fa-trash"></i></a>
                                     @else
-                                    <a class="btn-sm btn-secondary text-white" disabled data-toggle="tooltip" data-placement="left" title="Permission Denied"><i class="fas fa-trash"></i></a>   
+                                    <a class="btn-sm btn-secondary text-white" disabled data-toggle="tooltip" data-placement="left" title="Permission Denied"><i class="fas fa-trash"></i></a>
                                     @endif
                                 </form>
                             </td>

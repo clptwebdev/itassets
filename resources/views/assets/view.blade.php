@@ -29,8 +29,10 @@
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                 </form>
             @endcan
+                @if($assets->count() >1)
             <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                     class="fas fa-download fa-sm text-dark-50"></i> Export</a>
+                    @endif
         </div>
     </div>
 
