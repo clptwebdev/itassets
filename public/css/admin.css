@@ -11403,6 +11403,15 @@ body.sidebar-toggled footer.sticky-footer {
   width: 75%;
 }
 
+tr.even:hover, .table-striped tbody tr:nth-of-type(2n+1):hover{
+  background-color: #47477527;
+  cursor: pointer;
+}
+
+tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
+  background-color: #474775;
+}
+
 @media (max-width: 768px) {
   .auto-width{
     width: 100%;

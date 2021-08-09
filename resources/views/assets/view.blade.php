@@ -12,8 +12,8 @@
         <h1 class="h3 mb-0 text-gray-800">Assets</h1>
         <div>
             @can('recycleBin', \App\Models\Asset::class)
-                <a href="{{ route('assets.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin</a>
+            <a href="{{ route('assets.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin</a>
             @endcan
             @can('create', \App\Models\Asset::class)
                 <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
@@ -22,12 +22,12 @@
                 <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
             @can('generatePDF', \App\Models\Asset::class)
-                <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
-                    @csrf
-                    <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-                </form>
+            <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
+                @csrf
+                <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
+            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+            </form>
             @endcan
                 @if($assets->count() >1)
             <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
@@ -268,22 +268,22 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
                                         <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                             aria-labelledby="dropdownMenuLink">
+                                            aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Asset Options:</div>
                                             <a href="{{ route('assets.show', $asset->id) }}" class="dropdown-item">View</a>
                                             @can('edit', $asset)
-                                                <a href="{{ route('assets.edit', $asset->id) }}" class="dropdown-item">Edit</a>
+                                            <a href="{{ route('assets.edit', $asset->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $asset)
                                                 <form id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}" method="POST" class="d-block p-0 m-0">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a class="deleteBtn dropdown-item" href="#"
-                                                       data-id="{{$asset->id}}">Delete</a>
+                                                @csrf
+                                                @method('DELETE')
+                                                <a class="deleteBtn dropdown-item" href="#"
+                                                data-id="{{$asset->id}}">Delete</a>
                                                 </form>
                                             @endcan
                                         </div>

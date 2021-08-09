@@ -34,6 +34,5 @@ class AppServiceProvider extends ServiceProvider
             'user' => 'App\Models\User',
             'asset' => 'App\Models\Asset',
         ]);
-
     }
 }
