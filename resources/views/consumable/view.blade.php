@@ -14,8 +14,10 @@
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Consumable</a>
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+            @if($consumables->count() >1)
             <a href="/exportconsumables" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
+                    class="fas fa-download fa-sm text-white-50"></i>Export</a>
+            @endif
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
         </div>
@@ -81,21 +83,29 @@
                                 <td>{{$consumable->warranty??"N/A"}}</td>
                                 <td>{{$consumable->location->name}}</td>
                                 <td>{{$consumable->manufacturer->name ?? "N/A"}}</td>
-                                <td class="text-center">
-                                    <form id="form{{$consumable->id}}"
-                                          action="{{ route('consumables.destroy', $consumable->id) }}" method="POST">
-                                        <a href="{{ route('consumables.show', $consumable->id) }}"
-                                           class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
-                                            View</a>&nbsp;
-                                        <a href="{{route('consumables.edit', $consumable->id) }}"
-                                           class="btn-sm btn-secondary text-white"><i
-                                                class="fas fa-pencil-alt"></i></a>&nbsp;
-
-                                        @csrf
-                                        @method('DELETE')
-                                        <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                           data-id="{{$consumable->id}}"><i class=" fas fa-trash"></i></a>
-                                    </form>
+                                <td class="text-right">
+                                    <div class="dropdown no-arrow">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">consumable Options:</div>
+                                            <a href="{{ route('consumables.show', $consumable->id) }}" class="dropdown-item">View</a>
+                                            @can('edit', $consumable)
+                                                <a href="{{ route('consumables.edit', $consumable->id) }}" class="dropdown-item">Edit</a>
+                                            @endcan
+                                            @can('delete', $consumable)
+                                                <form id="form{{$consumable->id}}" action="{{ route('consumables.destroy', $consumable->id) }}" method="POST" class="d-block p-0 m-0">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a class="deleteBtn dropdown-item" href="#"
+                                                       data-id="{{$consumable->id}}">Delete</a>
+                                                </form>
+                                            @endcan
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

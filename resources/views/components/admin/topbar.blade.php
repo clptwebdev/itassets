@@ -20,9 +20,11 @@
                     </form>
 
                     <!-- Quick Add Features -->
+                @php
+                    $logs= App\Models\Log::orderBy('created_at', 'desc')->take(10)->get();
+                @endphp
 
-
-
+{{--{{dd($logs)}}--}}
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
@@ -51,7 +53,7 @@
                         </li>
 
                         <li class="nav-item mx-1">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{route("assets.create")}}">
                                 <i class="fas fa-fw fa-tablet-alt" data-toggle="tooltip" data-placement="bottom"
                                 title="Add New Asset"></i>
                                 <span class="badge badge-success badge-counter">+</span>

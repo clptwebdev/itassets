@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\AssetModel;
+use App\Models\Depreciation;
 use App\Models\Fieldset;
 use App\Models\Manufacturer;
 use App\Models\Photo;
@@ -28,7 +29,7 @@ class AssetModelFactory extends Factory
             "manufacturer_id"=>Manufacturer::factory("manufacturer_id"),
             "name"=>$this->faker->name,
             "model_no"=>$this->faker->numerify(),
-            "depreciation_id"=>$this->faker->randomDigit(),
+            "depreciation_id"=>Depreciation::factory("depreciation_id"),
             "eol"=>$this->faker->randomDigit,
             "notes"=>$this->faker->paragraph,
             "fieldset_id"=>Fieldset::factory("fieldset_id"),

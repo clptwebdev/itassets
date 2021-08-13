@@ -19,6 +19,10 @@ class Asset extends Model {
     {
         return $this->belongsTo(Location::class);
     }
+    public function comment()
+    {
+        return $this->morphToMany(Comment::class, "commentables");
+    }
 
     public function supplier()
     {

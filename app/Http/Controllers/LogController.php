@@ -8,14 +8,12 @@ use Illuminate\Http\Request;
 
 class LogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        return view('components.admin.topbar', [
+            "logs" => Log::all(),
+        ]);
     }
 
     /**
@@ -47,7 +45,7 @@ class LogController extends Controller
      */
     public function show(Log $log)
     {
-        //
+      //
     }
 
     /**

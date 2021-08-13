@@ -61,7 +61,6 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
             'supportEmail' => $row["supportemail"],
 
         ]);
-
     }
 
     public function batchSize(): int

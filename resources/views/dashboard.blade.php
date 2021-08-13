@@ -12,6 +12,13 @@
 </div>
 
 <x-admin.asset-info/>
+@if(session('danger_message'))
+    <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+@endif
+
+@if(session('success_message'))
+    <div class="alert alert-success"> {{ session('success_message')}} </div>
+@endif
 
 <!-- Content Row -->
 <div id="coolImage"></div>
@@ -79,7 +86,7 @@
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Asset Allocation</h6>
-            
+
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -107,7 +114,7 @@
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Assets</h6>
             </div>
-            
+
             <div class="card-body">
                 @php
                     $total = $assets->count();
@@ -273,7 +280,7 @@
             }
 
             var chartdata = {
-                
+
             };
 
             var ctx = document.getElementById("myPieChart");

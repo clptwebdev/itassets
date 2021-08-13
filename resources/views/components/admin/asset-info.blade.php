@@ -33,7 +33,7 @@
                                     $depreciation += $asset->purchased_cost;
                                 }
                             }
-                            
+
                             @endphp
                             {{ '£'.round($total)}}
                             <small class="text-danger">(£{{ round($depreciation)}})</small>
@@ -118,7 +118,7 @@
         </div>
     </div>
     @php
-        $audits_due = 0; $audits_over = 0;   
+        $audits_due = 0; $audits_over = 0;
     @endphp
     <!-- Pending Requests Card Example -->
     @foreach($assets as $asset)

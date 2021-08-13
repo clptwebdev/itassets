@@ -160,53 +160,52 @@ class ManufacturerController extends Controller {
                     "errors" => $result->errors(),
                     "value" => $result->values(),
                 ];
+            }
 
-        if(! empty($importErrors))
-        {
-            $errorArray = [];
-            $valueArray = [];
-            $errorValues = [];
-
-                foreach($importErrors as $error)
+                if(! empty($importErrors))
                 {
-                    if(array_key_exists($error['row'], $errorArray))
-                    {
-                        $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
-                    } else
-                    {
-                        $errorArray[$error['row']] = $error['attributes'];
-                    }
-                    $valueArray[$error['row']] = $error['value'];
+                    $errorArray = [];
+                    $valueArray = [];
+                    $errorValues = [];
 
-                    if(array_key_exists($error['row'], $errorValues))
-                    {
-                        $array = $errorValues[$error['row']];
-                    }else{
-                        $array = [];
-                    }
+                        foreach($importErrors as $error)
+                        {
+                            if(array_key_exists($error['row'], $errorArray))
+                            {
+                                $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
+                            } else
+                            {
+                                $errorArray[$error['row']] = $error['attributes'];
+                            }
+                            $valueArray[$error['row']] = $error['value'];
 
-                    foreach($error['errors'] as $e){
-                        $array[$error['attributes']] = $e;
-                    }
-                    $errorValues[$error['row']] = $array;
+                            if(array_key_exists($error['row'], $errorValues))
+                            {
+                                $array = $errorValues[$error['row']];
+                            }else{
+                                $array = [];
+                            }
 
+                            foreach($error['errors'] as $e){
+                                $array[$error['attributes']] = $e;
+                            }
+                            $errorValues[$error['row']] = $array;
+
+                        }
+
+                        return view('Manufacturers.import-errors', [
+                            "errorArray" => $errorArray,
+                            "valueArray" => $valueArray,
+                            "errorValues" => $errorValues,
+                        ]);
+
+                }else{
+                        return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
                 }
-
-                return view('Manufacturers.import-errors', [
-                    "errorArray" => $errorArray,
-                    "valueArray" => $valueArray,
-                    "errorValues" => $errorValues,
-                ]);
-
-        } else{
-                return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
-
-            }
-        }}else{
-                session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV"!');
-
+        }else{
+            session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV"!');
             return redirect('/manufacturers');
-            }
+        }
 
     }
 

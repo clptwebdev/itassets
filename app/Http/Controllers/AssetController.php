@@ -15,6 +15,7 @@ use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Exports\AssetExport;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Excel;
@@ -55,6 +56,17 @@ class AssetController extends Controller {
             'statuses' => Status::all(),
             'categories' => Category::all(),
         ]);
+    }
+    public function newComment(Request $request){
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $asset = Asset::find($request->asset_id);
+        $asset->comment()->create(['title'=>$request->title, 'comment'=>$request->comment, 'user_id'=>auth()->user()->id]);
+        session()->flash('success_message', $request->title . ' has been created successfully');
+        return redirect(route('assets.show', $asset->id));
     }
 
     /**
@@ -333,8 +345,12 @@ class AssetController extends Controller {
 
     public function export(Request $request)
     {
+<<<<<<< HEAD
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
         return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport($assets), 'assets.csv');
+=======
+        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
+>>>>>>> 6a5e9699a865a1b39f7cb693d721a76772381ec5
 
     }
 

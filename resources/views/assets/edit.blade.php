@@ -153,7 +153,7 @@
 
 
                             @foreach($model->fieldset->fields as $field)
-                            
+
                             <div class="form-group">
                                 <label for="{{str_replace(' ', '_', strtolower($field->name))}}">{{$field->name}}</label>
                                 @switch($field->type)
@@ -176,15 +176,15 @@
                                 @break
                                 @case('Checkbox')
                                 <?php $array = explode("\r\n", $field->value);?>
-                                <?php 
-                                    if(old(str_replace(' ', '_', strtolower($field->name)))){ 
+                                <?php
+                                    if(old(str_replace(' ', '_', strtolower($field->name)))){
                                         $values = old(str_replace(' ', '_', strtolower($field->name)));
-                                    }else{ 
+                                    }else{
                                         $values = explode(",", $field_array[$field->id]);
                                     }
                                 ?>
                                 @foreach($array as $id=>$key)
-                                <br><input type="checkbox" name="{{str_replace(' ', '_', strtolower($field->name))}}[]" value="{{ $key }}" 
+                                <br><input type="checkbox" name="{{str_replace(' ', '_', strtolower($field->name))}}[]" value="{{ $key }}"
                                 @if(in_array($key, $values)){{ 'checked'}}@endif>
                                 <label>&nbsp;{{ $key }}</label>
                                 @endforeach
@@ -196,7 +196,7 @@
                             </div>
                             @endforeach
                         </div>
-                        
+
                         <div class="form-row">
                             <label for="status">Current Status</label><span class="text-danger">*</span>
                             <select type="text" class="form-control mb-3 <?php if ($errors->has('status')) {?>border-danger<?php }?>"
