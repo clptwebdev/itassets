@@ -15,6 +15,12 @@ class AssetExport implements FromArray, WithHeadings {
 
     use Exportable;
 
+    private $assets;
+    public function __construct($assets)
+    {
+        $this->assets = $assets;
+    }
+
     public function headings(): array
     {
         return [
@@ -36,10 +42,8 @@ class AssetExport implements FromArray, WithHeadings {
 
     public function array(): array
     {
-
-        $assets = auth()->user()->location_assets;
         $object =  [];
-        foreach($assets as $asset){
+        foreach($this->assets as $asset){
             $array =  [];
             $array['asset_tag'] = $asset->asset_tag ;
             $array['serial_no'] = $asset->serial_no ?? 'Unknown';

@@ -343,9 +343,11 @@ class AssetController extends Controller {
     }
 
 
-    public function export(Asset $asset)
+    public function export(Request $request)
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
+
+        $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
+        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport($assets), 'assets.csv');
 
     }
 

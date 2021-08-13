@@ -9,8 +9,6 @@
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
 </div>
 
 <x-admin.asset-info/>
@@ -23,7 +21,7 @@
 @endif
 
 <!-- Content Row -->
-
+<div id="coolImage"></div>
 <div class="row row-eq-height mb-4">
 
     <!-- Area Chart -->
@@ -83,8 +81,8 @@
     </div>
 
     <div id="pieChart" class="col-12 col-xl-5">
-            <div class="card shadow">
-            <!-- Card Header - Dropdown -->
+        <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Asset Allocation</h6>
@@ -111,6 +109,69 @@
                 </div>
             </div>
         </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Assets</h6>
+            </div>
+
+            <div class="card-body">
+                @php
+                    $total = $assets->count();
+                    $deployable = 0;
+                    foreach(\App\Models\Status::where('deployable', '=', 1)->get() as $status){
+                        $deployable += $status->assets->count();
+                    }
+                @endphp
+                <h4 class="small font-weight-bold">Asset Status<span class="float-right">{{round(($deployable / $total) * 100) ?? 0}}%</span></h4>
+                <div class="progress mb-1">
+                    @foreach(\App\Models\Status::all() as $status)
+                    @php
+                        $count = $status->assets->count();
+                        $percent = ($count / $total) * 100;
+                    @endphp
+                    <div class="progress-bar" role="progressbar" style="background-color: {{$status->colour}}; width: {{ round($percent)}}%" aria-valuenow="{{ $count }}" aria-valuemin="0"
+                        aria-valuemax="100" title="{{$status->name}} - {{ $count }}"></div>
+                    @endforeach
+                    <div class="progress-bar bg-gray-200" role="progressbar" style="width: auto" aria-valuenow="{{ round(100 - $percent) }}" aria-valuemin="0"
+                        aria-valuemax="100" title="Unset"></div>
+                </div>
+                <div class="mb-4">
+                <small>
+                    @foreach(\App\Models\Status::all() as $status)
+
+                    <i class="fas fa-circle" style="color: {{ $status->colour}}"></i> {{$status->name}}
+
+                    @endforeach
+                </small>
+                </div>
+                @php
+                    $audits_due = 0; $audits_over = 0;
+                @endphp
+                <!-- Pending Requests Card Example -->
+                @foreach($assets as $asset)
+                @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
+                    @php($audits_over++)
+                @else
+                    @php($age = Carbon\Carbon::now()->floatDiffInDays($asset->audit_date))
+                    @if($age < 31)@php($audits_due++)@endif
+                @endif
+                @endforeach
+                @php($completed  = $assets->count() - ($audits_due + $audits_over))
+                <h4 class="small font-weight-bold">Audit Status <span class="float-right">{{ round(($completed / $assets->count()) * 100)}}% Complete</span></h4>
+                <div class="progress mb-1">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width:{{ round(($audits_over / $assets->count()) * 100)}}%" aria-valuenow="{{ round(($audits_over / $assets->count()) * 100)}}" aria-valuemin="0"
+                        aria-valuemax="100"></div>
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ round(($audits_due / $assets->count()) * 100)}}%" aria-valuenow="{{ round(($audits_due / $assets->count()) * 100)}}" aria-valuemin="0"
+                        aria-valuemax="100"></div>
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ round(($completed / $assets->count()) * 100)}}%" aria-valuenow="{{ round(($completed / $assets->count())* 100)}}" aria-valuemin="0"
+                        aria-valuemax="100"></div>
+                </div>
+                <small>
+                <i class="fas fa-circle text-danger" style></i> Overdue Audit <i class="fas fa-circle text-warning" style></i> Audit Due <i
+                            class="fas fa-circle text-success" style></i> Audit Completed</small>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -120,43 +181,7 @@
     <!-- Content Column -->
     <div class="col-xl-6 mb-4">
         <!-- Project Card Example -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Assets</h6>
-            </div>
 
-            <div class="card-body">
-                <h4 class="small font-weight-bold">Asset Status<span class="float-right">85%</span></h4>
-                <div class="progress mb-1">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuenow="20" aria-valuemin="0"
-                        aria-valuemax="100"></div>
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: 10%" aria-valuenow="35" aria-valuemin="0"
-                        aria-valuemax="100"></div>
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 15%" aria-valuenow="45" aria-valuemin="0"
-                        aria-valuemax="100"></div>
-                </div>
-                <div class="mb-4">
-                <small>
-                    @foreach(\App\Models\Status::all() as $status)
-                    <i class="fas fa-circle text-success" style></i> {{$status->name}}
-                    @endforeach
-                </small>
-                </div>
-
-                <h4 class="small font-weight-bold">Audit Status <span class="float-right">45% Complete</span></h4>
-                <div class="progress mb-1">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0"
-                        aria-valuemax="100"></div>
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0"
-                        aria-valuemax="100"></div>
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 45%" aria-valuenow="45" aria-valuemin="0"
-                        aria-valuemax="100"></div>
-                </div>
-                <small>
-                <i class="fas fa-circle text-danger" style></i> Overdue Audit <i class="fas fa-circle text-warning" style></i> Audit Due <i
-                            class="fas fa-circle text-success" style></i> Audit Completed</small>
-            </div>
-        </div>
 
         <!-- Color System -->
         <div class="row row-eq-height">
@@ -274,6 +299,7 @@
                         data: assets
                     }],
                 },
+
             });
             ctx.height = 500;
 
@@ -320,7 +346,7 @@
                             },
                             y: {
                                 stacked: true
-                        }
+                            }
                         }
                     }
                 });

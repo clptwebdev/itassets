@@ -86,7 +86,7 @@ class AssetPolicy
             return false;
         }
     }
-    
+
     public function recycleBin(User $user){
         return $user->role_id <= 3;
     }
