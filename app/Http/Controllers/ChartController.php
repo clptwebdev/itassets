@@ -3,20 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Asset;
+use App\Models\Location;
 use Illuminate\Http\Request;
+use PDF;
 
 class ChartController extends Controller
 {
     //
     public function getPieChart(){
-        $locations = auth()->user()->locations;
-        $assets = auth()->user()->location_assets()->count();
+        if(auth()->user()->role_id == 1){
+            $locs = Location::all();
+            $assets = auth()->user()->location_assets()->count();
+        }else{
+            $locs = auth()->user()->locations;
+            $assets = auth()->user()->location_assets()->count();
+        }
         $data = array();
 
-        foreach ($locations as $location) {
+        foreach ($locs as $location) {
             $row['name'] = $location->name;
             $row['icon'] = $location->icon;
-            $row['asset'] = (count($location->asset) / $assets)* 100;
+            $row['asset'] = count($location->asset);
             $data[] = $row;
         }
 
@@ -24,36 +32,51 @@ class ChartController extends Controller
     }
 
     public function getAssetValueChart(){
+        if(auth()->user()->role_id == 1){
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
         $data = array();
-        foreach(auth()->user()->locations as $locations){
+        foreach($locations as $location){
             $yearValues = array();
             for($i=0; $i<4; $i++){
                 $y = \Carbon\Carbon::now()->addYears($i);
                 $yv = 0;
-                foreach($locations->asset as $asset){
-                    $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
-                    if($eol->isPast()){}else{
-                        $age = $y->floatDiffInYears($asset->purchased_date);
-                        $percent = 100 / $asset->model->depreciation->years;
-                        $percentage = floor($age)*$percent;
-                        $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
-                        if($dep < 0){ $dep = 0;}
-                        $yv += round($dep);
+                foreach($location->asset as $asset){
+                    if($asset->asset_model != 0){
+                        $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                        if($eol->isPast()){}else{
+                            $age = $y->floatDiffInYears($asset->purchased_date); 
+                            $percent = 100 / $asset->model->depreciation->years;
+                            $percentage = floor($age)*$percent; 
+                            $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                            if($dep < 0){ $dep = 0;}
+                            $yv += $dep;
+                        }
+                    }else{
+                        $yv += $asset->purchased_cost;
                     }
                 }
-                $yearValues[$y->year] = $yv;
+                $yearValues[$y->year] = round($yv);
                 unset($age);
                 unset($percentage);
                 unset($dep);
             }
-            $data[] = ['name' => $locations->name, 'icon' => $locations->icon, 'years'=> $yearValues ];
+            $data[] = ['name' => $location->name, 'icon' => $location->icon, 'years'=> $yearValues ];
         }
         return json_encode($data);
     }
 
     public function getAssetAuditChart(){
         $data = array();
-        foreach(auth()->user()->locations as $locations){
+        if(auth()->user()->role_id == 1){
+            $locs = Location::all();
+        }else{
+            $locs = auth()->user()->locations;
+        }
+
+        foreach($locs as $locations){
             $past = 0; $month = 0; $quarter = 0; $half = 0;
             foreach($locations->asset as $asset){
                 if(\Carbon\Carbon::parse($asset->audit_date)->isPast()){

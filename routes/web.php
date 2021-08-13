@@ -20,17 +20,33 @@ require __DIR__.'/auth.php';
 
 Route::group(['middleware'=>'auth'], function(){
     Route::get('/', function(){
+        if(auth()->user()->role_id == 1){
+            $locations = \App\Models\Location::all();
+            $assets = \App\Models\Asset::all();
+        }else{
+            $locations = auth()->user()->locations;
+            $assets = auth()->user()->location_assets;
+        }
         return view('dashboard',
             [
-                'locations' => auth()->user()->locations,
+                'locations' => $locations,
+                'assets' => $assets,
             ]
         );
     })->name('home');
 
     Route::get('/dashboard', function(){
+        if(auth()->user()->role_id == 1){
+            $locations = \App\Models\Location::all();
+            $assets = \App\Models\Asset::all();
+        }else{
+            $locations = auth()->user()->locations;
+            $assets = auth()->user()->location_assets;
+        }
         return view('dashboard',
             [
-                'locations' => auth()->user()->locations,
+                'locations' => $locations,
+                'assets' => $assets,
             ]
         );
     })->name('dashboard');
