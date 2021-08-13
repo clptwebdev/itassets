@@ -33,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
         Relation::morphMap([
             'user' => 'App\Models\User',
             'asset' => 'App\Models\Asset',
+            'consumable' => 'App\Models\Asset',
+            'accessory' => 'App\Models\Asset',
         ]);
     }
 }

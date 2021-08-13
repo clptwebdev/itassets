@@ -34,12 +34,13 @@
         <div class="alert alert-success"> {{ session('success_message')}} </div>
     @endif
     <section>
-        <p class="mb-4">Information regarding {{ $component->name }}, the assets that are currently assigned to the component and any request information.</p>
+        <p class="mb-4">Information regarding {{ $component->name }}, the assets that are currently assigned to the
+            component and any request information.</p>
 
         <div class="row">
 
             <div class="col-12 col-sm-8 col-md-9 col-xl-10">
-                <div class="card shadow h-100 pb-2" >
+                <div class="card shadow h-100 pb-2">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold">component Information</h6>
                     </div>
@@ -51,7 +52,9 @@
                                     <p><strong>Serial Number: </strong>{{ $component->serial_no }}</p>
                                     <p><strong>Order Number: </strong>{{ $component->order_no }}</p>
                                     <p><strong>Component Status: </strong>{{ $component->status->name ??'N/A'}}</p>
-                                    <p><strong>Purchase Date: </strong> {{\Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')}}</p>
+                                    <p><strong>Purchase
+                                            Date: </strong> {{\Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')}}
+                                    </p>
                                     <p><strong>Purchase Cost: </strong> £{{ $component->purchased_cost }}</p>
                                 </div>
                             </div>
@@ -63,6 +66,33 @@
                                     <i class="fas fa-school fa-2x text-gray-300"></i>
                                 @endif
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-10 p-0">
+            <div class="card shadow h-100 mt-3">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold">Comments</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row no-gutters">
+                        <div class="col mr-2">
+                            <div class="mb-1">
+                                <div class="row align-items-start">
+                                    @foreach($component->comment as $comment)
+                                        <x-comments.comment-layout :comment="$comment"/>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button id="commentModal" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm mb-3">
+                                Add New
+                                Comment
+                            </button>
+                            <i class="fas fa-comments fa-2x text-gray-300 pt-2"></i>
                         </div>
                     </div>
                 </div>
@@ -99,7 +129,47 @@
             </div>
         </div>
     </div>
+    <!-- comments Modal-->
+    <div class="modal fade bd-example-modal-lg" id="commentModalOpen" tabindex="-1" role="dialog"
+         aria-labelledby="commentModalOpen" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalOpen2">Creating a New comment for
+                        <strong>{{$component->name}}</strong></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{ route('component.comment') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="component_id" value="{{ $component->id }}">
+                    <div class="modal-body">
+                        <p>Fill Out the title Field and Body to continue...</p>
+                    </div>
+                    <div class="form-group pr-3 pl-3">
+                        <label class="font-weight-bold" for="title">Comment Title</label>
+                        <input type="text"
+                               class="form-control <?php if ($errors->has('title')) {?>border-danger<?php }?>"
+                               name="title" id="title" placeholder="Comment Title">
+                    </div>
+                    <div class="form-group pl-3 pr-3">
+                        <label
+                            class="font-weight-bold <?php if ($errors->has('comment')) {?>border-danger<?php }?>"
+                            for="comment_content">Notes</label>
+                        <textarea name="comment" id="content" class="form-control" rows="5"></textarea>
 
+                    </div>
+                    <div class="p-2 text-lg-right">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                            Save
+                        </button>
+                    </div>
+                    @csrf
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -115,6 +185,10 @@
             $(form).submit();
         });
 
+        $('#commentModal').click(function () {
+            //showModal
+            $('#commentModalOpen').modal('show')
+        });
     </script>
 
 @endsection

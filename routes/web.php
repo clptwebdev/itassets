@@ -49,6 +49,7 @@ Route::group(['middleware'=>'auth'], function(){
 
     //Administrator Permissions Middleware
         Route::resource('/location', 'App\Http\Controllers\LocationController');
+        Route::resource('/comment', 'App\Http\Controllers\CommentController');
         Route::resource('/category', 'App\Http\Controllers\CategoryController');
         Route::post('permissions/users', 'App\Http\Controllers\UserController@permissions');
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
@@ -68,7 +69,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('/asset/{asset}/pdf', 'App\Http\Controllers\AssetController@downloadShowPDF')->name('asset.showPdf');
         Route::get('/asset/bin', 'App\Http\Controllers\AssetController@recycleBin')->name('assets.bin');
         Route::get('/asset/{asset}/restore', 'App\Http\Controllers\AssetController@restore')->name('assets.restore');
-        Route::post('/asset/{asset}remove', 'App\Http\Controllers\AssetController@forceDelete')->name('assets.remove');
+        Route::post('/asset/{asset}/remove', 'App\Http\Controllers\AssetController@forceDelete')->name('assets.remove');
 
 
 
@@ -77,6 +78,11 @@ Route::group(['middleware'=>'auth'], function(){
 
         Route::resource('/accessories', 'App\Http\Controllers\AccessoryController');
         Route::resource('/consumables', 'App\Http\Controllers\ConsumableController');
+        Route::post('consumables/comment/create', [\App\Http\Controllers\ConsumableController::class, "newComment"])->name('consumable.comment');
+        Route::post('components/comment/create',[\App\Http\Controllers\ComponentController::class, "newComment"] )->name('component.comment');
+        Route::post('assets/comment/create',[\App\Http\Controllers\AssetController::class, "newComment"] )->name('asset.comment');
+        Route::post('accessories/comment/create',[\App\Http\Controllers\AccessoryController::class, "newComment"] )->name('accessory.comment');
+        Route::post('accessories/comment/create',[\App\Http\Controllers\AccessoryController::class, "newComment"] )->name('accessory.comment');
 
         Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
 

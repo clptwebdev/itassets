@@ -82,21 +82,29 @@
                                 <td>{{$component->warranty??"N/A"}}</td>
                                 <td>{{$component->location->name}}</td>
                                 <td>{{$component->manufacturer->name ?? "N/A"}}</td>
-                                <td class="text-center">
-                                    <form id="form{{$component->id}}"
-                                          action="{{ route('components.destroy', $component->id) }}" method="POST">
-                                        <a href="{{ route('components.show', $component->id) }}"
-                                           class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
-                                            View</a>&nbsp;
-                                        <a href="{{route('components.edit', $component->id) }}"
-                                           class="btn-sm btn-secondary text-white"><i
-                                                class="fas fa-pencil-alt"></i></a>&nbsp;
-
-                                        @csrf
-                                        @method('DELETE')
-                                        <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                           data-id="{{$component->id}}"><i class=" fas fa-trash"></i></a>
-                                    </form>
+                                <td class="text-right">
+                                    <div class="dropdown no-arrow">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Component Options:</div>
+                                            <a href="{{ route('assets.show', $component->id) }}" class="dropdown-item">View</a>
+                                            @can('edit', $component)
+                                                <a href="{{ route('assets.edit', $component->id) }}" class="dropdown-item">Edit</a>
+                                            @endcan
+                                            @can('delete', $component)
+                                                <form id="form{{$component->id}}" action="{{ route('component.destroy', $component->id) }}" method="POST" class="d-block p-0 m-0">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a class="deleteBtn dropdown-item" href="#"
+                                                       data-id="{{$component->id}}">Delete</a>
+                                                </form>
+                                            @endcan
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -108,7 +116,7 @@
 
         <div class="card shadow mb-3">
             <div class="card-body">
-                <h4>Help with Components</h4>
+                <h4>Help with Components </h4>
                 <p>This area can be minimised and will contain a little help on the page that the Component is currently
                     on.</p>
             </div>

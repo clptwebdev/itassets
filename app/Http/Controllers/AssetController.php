@@ -36,11 +36,11 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
         return view('assets.view', [
-            "assets" => auth()->user()->location_assets,
+            "assets" => $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations" => auth()->user()->locations,
+            "locations" => $locations,
         ]);
     }
 
@@ -56,6 +56,17 @@ class AssetController extends Controller {
             'statuses' => Status::all(),
             'categories' => Category::all(),
         ]);
+    }
+    public function newComment(Request $request){
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $asset = Asset::find($request->asset_id);
+        $asset->comment()->create(['title'=>$request->title, 'comment'=>$request->comment, 'user_id'=>auth()->user()->id]);
+        session()->flash('success_message', $request->title . ' has been created successfully');
+        return redirect(route('assets.show', $asset->id));
     }
 
     /**
@@ -334,7 +345,7 @@ class AssetController extends Controller {
 
     public function export(Asset $asset)
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport(), 'assets.csv');
+        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
 
     }
 

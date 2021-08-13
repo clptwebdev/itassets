@@ -17,10 +17,10 @@ class UserObserver
     public function created(User $user)
     {
         Log::create([
-            'user_id'=>auth()->user()->id, 
+            'user_id'=>auth()->user()->id,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'user',
-            'loggable_id'=> $user->id, 
+            'loggable_id'=> $user->id,
             'data'=> auth()->user()->name.' created a new user with an Admin Role. Permissions were granted for [School Names]'
         ]);
     }
@@ -51,10 +51,10 @@ class UserObserver
                 break;
         }
         Log::create([
-            'user_id'=>auth()->user()->id, 
+            'user_id'=>auth()->user()->id,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'user',
-            'loggable_id'=> $user->id, 
+            'loggable_id'=> $user->id,
             'data'=> auth()->user()->name." updated user: {$user->name}. The Role of {$user->name} has been set to {$role}"
         ]);
     }
@@ -68,10 +68,10 @@ class UserObserver
     public function deleted(User $user)
     {
         Log::create([
-            'user_id'=>auth()->user()->id, 
+            'user_id'=>auth()->user()->id,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'user',
-            'loggable_id'=> $user->id, 
+            'loggable_id'=> $user->id,
             'data'=> auth()->user()->name.' has deleted '.$user->name,
         ]);
     }
@@ -95,6 +95,6 @@ class UserObserver
      */
     public function forceDeleted(User $user)
     {
-        
+
     }
 }

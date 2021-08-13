@@ -14,6 +14,13 @@
 </div>
 
 <x-admin.asset-info/>
+@if(session('danger_message'))
+    <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+@endif
+
+@if(session('success_message'))
+    <div class="alert alert-success"> {{ session('success_message')}} </div>
+@endif
 
 <!-- Content Row -->
 
@@ -81,7 +88,7 @@
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Asset Allocation</h6>
-            
+
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -117,7 +124,7 @@
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Assets</h6>
             </div>
-            
+
             <div class="card-body">
                 <h4 class="small font-weight-bold">Asset Status<span class="float-right">85%</span></h4>
                 <div class="progress mb-1">
@@ -131,7 +138,7 @@
                 <div class="mb-4">
                 <small>
                     @foreach(\App\Models\Status::all() as $status)
-                    <i class="fas fa-circle text-success" style></i> {{$status->name}} 
+                    <i class="fas fa-circle text-success" style></i> {{$status->name}}
                     @endforeach
                 </small>
                 </div>
@@ -250,7 +257,7 @@
             }
 
             var chartdata = {
-                
+
             };
 
             var ctx = document.getElementById("myPieChart");

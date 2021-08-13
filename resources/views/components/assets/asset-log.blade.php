@@ -12,7 +12,7 @@
                                 class="font-weight-bold btn btn-sm btn-secondary shadow-sm p-1"><small>#{{ $asset->asset_tag }}</small></strong>
                             , view history and activity regarding the selected asset.</p>
                             <table class="logs table table-striped ">
-                                
+
                                 <tbody>
                                     @foreach($asset->logs()->orderBy('created_at', 'desc')->take(5)->get() as $log)
                                     <tr>
@@ -21,7 +21,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                        
+
                     </div>
                 </div>
             </div>

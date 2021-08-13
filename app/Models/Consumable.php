@@ -16,6 +16,7 @@ class Consumable extends Model
         return $this->belongsTo(Photo::class, 'photoId');
     }
 
+
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
@@ -31,4 +32,9 @@ class Consumable extends Model
     public function manufacturer(){
         return $this->belongsTo(Manufacturer::class, 'manufacturer_id');
     }
+    public function comment()
+    {
+        return $this->morphToMany(Comment::class, 'commentables');
+    }
+
 }

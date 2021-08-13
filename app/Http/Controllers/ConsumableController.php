@@ -18,6 +18,17 @@ use Illuminate\Support\Facades\Validator;
 
 class ConsumableController extends Controller
 {
+    public function newComment(Request $request){
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $consumable = Consumable::find($request->consumable_id);
+        $consumable->comment()->create(['title'=>$request->title, 'comment'=>$request->comment, 'user_id'=>auth()->user()->id]);
+        return redirect(route('consumables.show', $consumable->id));
+    }
+
     public function index()
     {
         return view('consumable.view', [

@@ -236,6 +236,7 @@
                                             if($eol->isPast()){
                                                 $dep = 0;
                                             }else{
+
                                                 $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
                                                 $percent = 100 / $asset->model->depreciation->years;
                                                 $percentage = floor($age)*$percent;

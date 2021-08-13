@@ -83,21 +83,29 @@
                                 <td>{{$accessory->warranty??"N/A"}}</td>
                                 <td>{{$accessory->location->name}}</td>
                                 <td>{{$accessory->manufacturer->name ?? "N/A"}}</td>
-                                <td class="text-center">
-                                    <form id="form{{$accessory->id}}"
-                                          action="{{ route('accessories.destroy', $accessory->id) }}" method="POST">
-                                        <a href="{{ route('accessories.show', $accessory->id) }}"
-                                           class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
-                                            View</a>&nbsp;
-                                        <a href="{{route('accessories.edit', $accessory->id) }}"
-                                           class="btn-sm btn-secondary text-white"><i
-                                                class="fas fa-pencil-alt"></i></a>&nbsp;
-
-                                        @csrf
-                                        @method('DELETE')
-                                        <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                           data-id="{{$accessory->id}}"><i class=" fas fa-trash"></i></a>
-                                    </form>
+                                <td class="text-right">
+                                    <div class="dropdown no-arrow">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">accessory Options:</div>
+                                            <a href="{{ route('accessories.show', $accessory->id) }}" class="dropdown-item">View</a>
+                                            @can('edit', $accessory)
+                                                <a href="{{ route('accessories.edit', $accessory->id) }}" class="dropdown-item">Edit</a>
+                                            @endcan
+                                            @can('delete', $accessory)
+                                                <form id="form{{$accessory->id}}" action="{{ route('accessories.destroy', $accessory->id) }}" method="POST" class="d-block p-0 m-0">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a class="deleteBtn dropdown-item" href="#"
+                                                       data-id="{{$accessory->id}}">Delete</a>
+                                                </form>
+                                            @endcan
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
