@@ -80,12 +80,13 @@ class AssetPolicy
     {
         $locations = $user->locations->pluck('id')->toArray();
         if($user->role_id == 1 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+
             return true;
         }else{
             return false;
         }
     }
-
+    
     public function recycleBin(User $user){
         return $user->role_id <= 3;
     }

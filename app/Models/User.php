@@ -39,6 +39,10 @@ class User extends Authenticatable {
     {
         return $this->belongsTo('App\Models\Photo');
     }
+    public function comment()
+    {
+        return $this->hasMany(Comment::class);
+    }
 
     public function asset()
     {

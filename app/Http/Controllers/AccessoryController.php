@@ -31,6 +31,16 @@ class AccessoryController extends Controller
         "manufacturers" => Manufacturer::all(),
     ]);
     }
+    public function newComment(Request $request){
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $accessory = Accessory::find($request->accessory_id);
+        $accessory->comment()->create(['title'=>$request->title, 'comment'=>$request->comment, 'user_id'=>auth()->user()->id]);
+        return redirect(route('accessories.show', $accessory->id));
+    }
 
     public function store(Request $request)
     {

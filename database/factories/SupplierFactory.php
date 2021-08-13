@@ -29,7 +29,7 @@ class SupplierFactory extends Factory
             "telephone"=>$this->faker->numberBetween([102373633],[92373633]),
             "fax"=>$this->faker->creditCardNumber,
             "email"=>$this->faker->safeEmail,
-            "url"=>$this->faker->url,
+            "url"=>$this->faker->unique->url,
             "photo_id"=>Photo::factory("photo_id"),
             "notes"=>$this->faker->paragraph,
         ];

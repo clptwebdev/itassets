@@ -36,11 +36,11 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
         return view('assets.view', [
-            "assets" => auth()->user()->location_assets,
+            "assets" => $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations" => auth()->user()->locations,
+            "locations" => $locations,
         ]);
     }
 
@@ -56,6 +56,17 @@ class AssetController extends Controller {
             'statuses' => Status::all(),
             'categories' => Category::all(),
         ]);
+    }
+    public function newComment(Request $request){
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $asset = Asset::find($request->asset_id);
+        $asset->comment()->create(['title'=>$request->title, 'comment'=>$request->comment, 'user_id'=>auth()->user()->id]);
+        session()->flash('success_message', $request->title . ' has been created successfully');
+        return redirect(route('assets.show', $asset->id));
     }
 
     /**
@@ -272,8 +283,6 @@ class AssetController extends Controller {
             ];
         }
 
-        $this->authorize('update', $asset);
-
         $validated = $request->validate($v);
         $asset->fill(array_merge($request->only(
             'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
@@ -294,8 +303,29 @@ class AssetController extends Controller {
         $name=$asset->asset_tag;
 
         $asset->delete();
-        session()->flash('danger_message', "#" . $name . ' was deleted from the system');
+        session()->flash('danger_message', "#". $name . ' was sent to the Recycle Bin');
+        return redirect("/assets");
+    }
 
+    public function restore($id){
+        $asset = Asset::withTrashed()->where('id', $id)->first();
+        if (auth()->user()->cant('delete', $asset)) {
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
+        }
+        $name=$asset->asset_tag;
+        $asset->restore();
+        session()->flash('success_message', "#". $name . ' has been restored.');
+        return redirect("/assets");
+    }
+
+    public function forceDelete($id){
+        $asset = Asset::withTrashed()->where('id', $id)->first();
+        if (auth()->user()->cant('delete', $asset)) {
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
+        }
+        $name=$asset->asset_tag;
+        $asset->forceDelete();
+        session()->flash('danger_message', "#". $name . ' was deleted permanently');
         return redirect("/assets");
     }
 
@@ -315,7 +345,7 @@ class AssetController extends Controller {
 
     public function export(Asset $asset)
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport(), 'assets.csv');
+        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport, 'assets.csv');
 
     }
 
@@ -548,7 +578,7 @@ class AssetController extends Controller {
     }
 
     public function downloadPDF(Request $request){
-        $assets = Asset::findMany(json_decode($request->assets));
+        $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets'));
         $pdf->setPaper('a4', 'landscape');
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
@@ -560,6 +590,24 @@ class AssetController extends Controller {
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         return $pdf->download("asset-{$asset->asset_tag}-{$date}.pdf");
+    }
+
+    public function recycleBin()
+    {
+        if(auth()->user()->role_id == 1){
+            $assets = Asset::onlyTrashed()->get();
+            $locations = Location::all();
+        }else{
+            $assets = auth()->user()->location_assets()->onlyTrashed();
+            $locations = auth()->user()->locations;
+        }
+        return view('assets.bin', [
+            "assets"=> $assets,
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations"=>$locations,
+        ]);
     }
 
 }

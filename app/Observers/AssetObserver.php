@@ -19,10 +19,10 @@ class AssetObserver
         $name = $asset->model->name.' ['.$asset->asset_tag.']' ?? $asset->asset_tag;
         $location = 'It has been assigned to '.$asset->location->name ?? 'It has not been assigned to a location.';
         Log::create([
-            'user_id'=>auth()->user()->id, 
+            'user_id'=>auth()->user()->id,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
-            'loggable_id'=> $asset->id, 
+            'loggable_id'=> $asset->id,
             'data'=> auth()->user()->name.' has added a new asset: '.$name.'. '.$location,
         ]);
     }
@@ -38,10 +38,10 @@ class AssetObserver
         $name = $asset->model->name.' ['.$asset->asset_tag.']' ?? $asset->asset_tag;
         $location = 'It has been assigned to '.$asset->location->name ?? 'It has not been assigned to a location.';
         Log::create([
-            'user_id'=>auth()->user()->id, 
+            'user_id'=>auth()->user()->id,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
-            'loggable_id'=> $asset->id, 
+            'loggable_id'=> $asset->id,
             'data'=> auth()->user()->name.' has added a new asset: '.$name.'. '.$location,
         ]);
     }
@@ -56,10 +56,10 @@ class AssetObserver
     {
         $name = $asset->model->name.' ['.$asset->asset_tag.']' ?? $asset->asset_tag;
         Log::create([
-            'user_id'=>auth()->user()->id, 
+            'user_id'=>auth()->user()->id,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
-            'loggable_id'=> $asset->id, 
+            'loggable_id'=> $asset->id,
             'data'=> auth()->user()->name.' has placed the Asset: '.$name.' into the recycling bin',
         ]);
     }
@@ -74,10 +74,10 @@ class AssetObserver
     {
         $name = $asset->model->name.' ['.$asset->asset_tag.']' ?? $asset->asset_tag;
         Log::create([
-            'user_id'=>auth()->user()->id, 
+            'user_id'=>auth()->user()->id,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
-            'loggable_id'=> $asset->id, 
+            'loggable_id'=> $asset->id,
             'data'=> auth()->user()->name.' has restored the Asset: '.$name,
         ]);
     }
@@ -92,11 +92,11 @@ class AssetObserver
     {
         $name = $asset->model->name.' ['.$asset->asset_tag.']' ?? $asset->asset_tag;
         Log::create([
-            'user_id'=>auth()->user()->id, 
+            'user_id'=>auth()->user()->id,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
-            'loggable_id'=> $asset->id, 
-            'data'=> auth()->user()->name.' has removed the Asset: '.$name,
+            'loggable_id'=> $asset->id,
+            'data'=> auth()->user()->name.' has permanently removed the Asset: '.$name,
         ]);
     }
 }

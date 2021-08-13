@@ -15,10 +15,10 @@ class SupplierObserver
     public function created(supplier $supplier)
     {
         Log::create([
-            'user_id'=>auth()->user()->id, 
+            'user_id'=>auth()->user()->id,
             'log_date'=> Carbon::now(),
             'log_type'=> 'App\Models\User',
-            'log_id'=> $user->id, 
+            'log_id'=> $user->id,
             'data'=> auth()->user()->name.' created a new user with an Admin Role. Permissions were granted for [School Names]'
         ]);
     }

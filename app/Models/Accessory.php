@@ -15,6 +15,10 @@ class Accessory extends Model
     {
         return $this->belongsTo(Photo::class, 'photoId');
     }
+    public function comment()
+    {
+        return $this->morphToMany(Comment::class, 'commentables');
+    }
 
     public function supplier()
     {

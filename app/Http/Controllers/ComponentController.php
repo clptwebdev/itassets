@@ -125,6 +125,7 @@ class ComponentController extends Controller {
     {
         return view('ComponentsDir.show', [
             "component" => $component,
+//            "comments"=> Component::all
 
         ]);
     }
@@ -139,7 +140,16 @@ class ComponentController extends Controller {
             "manufacturers" => Manufacturer::all(),
         ]);
     }
+    public function newComment(Request $request){
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
 
+        $component = Component::find($request->component_id);
+        $component->comment()->create(['title'=>$request->title, 'comment'=>$request->comment, 'user_id'=>auth()->user()->id]);
+        return redirect(route('components.show', $component->id));
+    }
     public function update(Request $request, Component $component)
     {
         $request->validate([

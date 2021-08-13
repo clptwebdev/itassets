@@ -13,8 +13,10 @@
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Manufacturers</a>
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm "><i
                     class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+            @if($manufacturers->count() >1)
             <a href="/exportmanufacturers" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm "><i
-                    class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
+                    class="fas fa-download fa-sm text-white-50"></i>Export</a>
+            @endif
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
 

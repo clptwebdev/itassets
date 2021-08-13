@@ -11,6 +11,7 @@ class CreateAssetsTable extends Migration
      *
      * @return void
      */
+
     public function up()
     {
         Schema::create('assets', function (Blueprint $table) {
