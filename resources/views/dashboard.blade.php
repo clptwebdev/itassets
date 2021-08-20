@@ -5,13 +5,6 @@
 @endsection
 
 @section('content')
-
-<!-- Page Heading -->
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-</div>
-
-<x-admin.asset-info/>
 @if(session('danger_message'))
     <div class="alert alert-danger"> {{ session('danger_message')}} </div>
 @endif
@@ -19,6 +12,13 @@
 @if(session('success_message'))
     <div class="alert alert-success"> {{ session('success_message')}} </div>
 @endif
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+</div>
+
+<x-admin.asset-info/>
+
 
 <!-- Content Row -->
 <div id="coolImage"></div>

@@ -20,7 +20,7 @@
         </div>
 
         <section>
-            <p class="mb-4">Adding a new Accessory to the asset management system. Enter in the following information
+            <p class="mb-4">Adding a new Accessory to the Apollo Asset Management System. Enter in the following required information
                 and
                 click the 'Save' button. Or click the 'Back' button
                 to return the accessories page.
@@ -45,7 +45,7 @@
                                 <label for="name">Name</label>
                                 <input type="text"
                                        class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name" id="name" placeholder="accessory Name">
+                                       name="name" id="name" placeholder="Name">
                             </div>
                             <div class="form-group">
                                 <label for="serial_no">Serial_no</label>
@@ -103,8 +103,18 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-row">
+                            
+                            <h4 class="h6 text-left pb-0">Categories</h4>
+                            <div id="categories" class="border border-gray p-2 mb-3 rounded">
+                                
+                                @foreach($categories as $category)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}">
+                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
+                                </div>
+                                @endforeach
                             </div>
+
                             <div class="form-group">
                                 <label for="notes">Notes</label>
                                 <textarea name="notes" id="notes" class="form-control" rows="10"></textarea>
@@ -118,9 +128,9 @@
                         <div class="card-body">
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
-                                    <h4 class="h6 mb-3">Location Image</h4>
+                                    <h4 class="h6 mb-3">Image</h4>
                                     <img id="profileImage"
-                                         src="{{ asset('images/svg/location-image.svg') }}"
+                                         src="{{ asset('images/svg/accessory_image.svg') }}"
                                          width="100%"
                                          alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">

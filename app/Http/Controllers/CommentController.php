@@ -98,9 +98,9 @@ class CommentController extends Controller {
     {
         $name = $comment->title;
         $comment->delete();
-        session()->flash('danger_message', $name . ' was deleted from the system');
+        session()->flash('danger_message', 'The Comment - '.$name . ' was deleted from the system');
 
-        return redirect('/');
+        return back();
     }
 
 }

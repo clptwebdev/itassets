@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Apollo Asset Management | {{ $page ?? 'Dashboard'}}</title>
+    <title>@yield('title') - Apollo Asset Management</title>
 
     <!-- Custom styles for this template-->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">

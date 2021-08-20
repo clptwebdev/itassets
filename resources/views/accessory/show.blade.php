@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
-@section('css')
+@section('title', 'View Accessory')
 
+@section('css')
+<link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
 
 @section('content')
@@ -10,18 +12,24 @@
         @method('DELETE')
 
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">View Accessories</h1>
+            <h1 class="h3 mb-0 text-gray-800">View Accessory</h1>
             <div>
                 <a href="{{ route('accessories.index')}}"
                    class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+                @can('delete', $accessory)
                 <a class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" href="#"
-                   data-id="{{$accessory->id}}"><i class=" fas fa-trash fa-sm text-white-50"></i>Delete</a>
+                   data-id="{{$accessory->id}}"><i class=" fas fa-trash fa-sm text-white-50"></i> Delete</a>
+                @endcan
+                @can('update', $accessory)
                 <a href="{{ route('accessories.edit', $accessory->id)}}"
                    class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
-                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                        class="fas fa-edit fa-sm text-white-50"></i> Edit</a>
+                @endcan
+                @can('export', $accessory)
+                <a href="{{ route('accessories.showPdf', $accessory->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -33,68 +41,30 @@
     @if(session('success_message'))
         <div class="alert alert-success"> {{ session('success_message')}} </div>
     @endif
-    <section>
-        <p class="mb-4">Information regarding {{ $accessory->name }}, the assets that are currently assigned to the accessory and any request information.</p>
+    <section class="m-auto">
+        <p class="mb-4">Information regarding {{ $accessory->name }} including the location and any comments made by staff. </p>
 
-        <div class="row">
+        <div class="row row-eq-height">
+            <x-accessories.accessory-info :accessory="$accessory" />
+            <x-accessories.accessory-purchase :accessory="$accessory" />
+        </div>
 
-            <div class="col-12 col-sm-8 col-md-9 col-xl-10">
-                <div class="card shadow h-100 pb-2" >
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold">accessory Information</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row no-gutters">
-                            <div class="col mr-2">
-                                <div class="mb-1">
-                                    <p><strong>accessory Item Name: </strong>{{ $accessory->name }}</p>
-                                    <p><strong>Serial Number: </strong>{{ $accessory->serial_no }}</p>
-                                    <p><strong>Order Number: </strong>{{ $accessory->order_no }}</p>
-                                    <p><strong>accessory Status: </strong>{{ $accessory->status->name ??'N/A'}}</p>
-                                    <p><strong>Purchase Date: </strong> {{\Carbon\Carbon::parse($accessory->purchased_date)->format('Y-m-d')}}</p>
-                                    <p><strong>Purchase Cost: </strong> £{{ $accessory->purchased_cost }}</p>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                @if ($accessory->photo()->exists())
-                                    <img src="{{ $accessory->photo->path ?? 'null' }}"
-                                         alt="{{ $accessory->name}}" width="60px">
-                                @else
-                                    <i class="fas fa-school fa-2x text-gray-300"></i>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="row row-eq-height">
+            <div class="col-12 col-lg-8 mb-4">
+                <x-locations.location-modal :asset="$accessory"/>
+            </div>
+            <div class="col-12 col-lg-4 mb-4">
+                <x-manufacturers.manufacturer-modal :asset="$accessory"/>
             </div>
         </div>
-        <div class="col-xl-10 p-0">
-            <div class="card shadow h-100 mt-3">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold">Comments</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row no-gutters">
-                        <div class="col mr-2">
-                            <div class="mb-1">
-                                <div class="row align-items-start">
-                                    @foreach($accessory->comment as $comment)
-                                        <x-comments.comment-layout :comment="$comment"/>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <button id="commentModal" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm mb-3">
-                                Add New
-                                Comment
-                            </button>
-                            <i class="fas fa-comments fa-2x text-gray-300 pt-2"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+        <div class="row row-eq-height">
+            <x-accessories.accessory-log :accessory="$accessory"/>
+            <div class="col-12 col-lg-6 mb-4">
+                <x-comments.comment-layout :asset="$accessory"/>
+            </div>   
         </div>
+        
     </section>
 
 @endsection
@@ -107,17 +77,15 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeLocationModalLabel">Are you sure you want to delete this
-                        Accessory?</h5>
+                    <h5 class="modal-title" id="removeLocationModalLabel">Are you sure you want to send this accessory to the Recycle Bin?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <input id="location-id" type="hidden" value="{{ $accessory->id }}">
-                    <p>Select "Delete" to remove this Accessory from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assets assigned to this accessory will
-                        become available.</small>
+                    <p>Select "Send to Bin" to send this accessory to the Recycle Bin.</p>
+                    <small class="text-danger">**This is not permanent and the accessory can be restored in the accessories Recycle Bin. </small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -132,16 +100,15 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="commentModalOpen2">Creating a New comment for
+                    <h5 class="modal-title" id="commentModalOpenLabel">Creating a New comment for
                         <strong>{{$accessory->name}}</strong></h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('accessory.comment') }}" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="accessory_id" value="{{ $accessory->id }}">
+                <form action="{{ route('accessory.comment', $accessory->id) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
-                        <p>Fill Out the title Field and Body to continue...</p>
+                        <p>Fill Out the Title Field and Body to continue...</p>
                     </div>
                     <div class="form-group pr-3 pl-3">
                         <label class="font-weight-bold" for="title">Comment Title</label>
@@ -152,8 +119,8 @@
                     <div class="form-group pl-3 pr-3">
                         <label
                             class="font-weight-bold <?php if ($errors->has('comment')) {?>border-danger<?php }?>"
-                            for="comment">Notes</label>
-                        <textarea name="comment" id="content" class="form-control" rows="5"></textarea>
+                            for="comment_content">Notes</label>
+                        <textarea name="comment" id="comment" class="form-control" rows="5"></textarea>
 
                     </div>
                     <div class="p-2 text-lg-right">
@@ -170,6 +137,7 @@
 @endsection
 
 @section('js')
+    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
         $('.deleteBtn').click(function () {
             $('#location-id').val($(this).data('id'))
@@ -181,13 +149,25 @@
             var form = '#' + 'form' + $('#location-id').val();
             $(form).submit();
         });
-        // Create comment , Ignore the ID's
 
         $('#commentModal').click(function () {
             //showModal
             $('#commentModalOpen').modal('show')
         });
 
+        $(document).ready( function () {
+            $('#comments').DataTable({
+                "autoWidth": false,
+                "pageLength": 10,
+                "searching": false,
+                "bLengthChange": false,
+                "columnDefs": [ {
+                    "targets": [1],
+                    "orderable": false
+                }],
+                "order": [[ 0, "desc"]],
+            });
+        });
     </script>
 
 @endsection

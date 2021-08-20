@@ -19,11 +19,6 @@
                 <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
             @endcan
-<<<<<<< HEAD
-=======
-                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
->>>>>>> 6a5e9699a865a1b39f7cb693d721a76772381ec5
             @can('generatePDF', \App\Models\Asset::class)
             @if($assets->count() != 0)
                 @if ($assets->count() == 1)
@@ -43,7 +38,6 @@
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
             @endcan
-<<<<<<< HEAD
             @if($assets->count() > 1)
                 @can('generatePDF', \App\Models\Asset::class)
                 <form class="d-inline-block" action="/exportassets" method="POST">
@@ -54,12 +48,6 @@
                 </form>
                 @endcan
             @endif
-=======
-                @if($assets->count() >1)
-            <a href="/exportassets" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
-                    class="fas fa-download fa-sm text-dark-50"></i> Export</a>
-                    @endif
->>>>>>> 6a5e9699a865a1b39f7cb693d721a76772381ec5
         </div>
     </div>
 
@@ -245,7 +233,7 @@
                                 <td>{{ $asset->model->name ?? 'No Model'}}<br><small class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
-                                        '<img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>'
+                                        <img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'">'
                                             .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}

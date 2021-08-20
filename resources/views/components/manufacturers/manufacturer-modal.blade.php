@@ -1,6 +1,6 @@
 @props(["asset"])
-<?php $manufacturer = $asset->model->manufacturer; ?>
-<div class="col-12 col-lg-4">
+<?php $manufacturer = $asset->manufacturer; ?>
+
     <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid #666;">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold">Manufacturer
@@ -52,11 +52,11 @@
                                 </tr>
                             </tbody>
                         </table>
-
-                        <button class="btn btn-sm btn-primary"><i class="far fa-envelope"></i> Email Manufacturer</button>
+                        @if($manufacturer->supportEmail && $manufacturer->supportEmail != "")
+                        <a href="mailto:{{ $manufacturer->supportEmail}}"><button class="btn btn-sm btn-primary"><i class="far fa-envelope"></i> Email Manufacturer</button></a>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>

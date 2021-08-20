@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
-@section('css')
+@section('title', "View Asset {$asset->asset_tag}")
 
+@section('css')
+<link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
 
 @section('content')
@@ -12,15 +14,15 @@
             <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @can('generatePDF', $asset)
-            <a href="{{ route('asset.showPdf', $asset->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+            <a href="{{ route('asset.showPdf', $asset->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
             @endcan
             @can('edit', $asset)
             <a href="{{ route('assets.edit', $asset->id)}}"
                class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
+                    class="fas fa-edit fa-sm text-white-50"></i> Edit</a>
             @endcan
-            <form class="d-inline-block" id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
+            <form class="d-inline-block id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
                 method="POST">
             @csrf
             @method('DELETE')
@@ -43,43 +45,56 @@
         <x-assets.asset-purchase :asset="$asset" />
     </div>
 
-    <div class="row row-eq-height ">
-        <x-locations.location-modal :asset="$asset"/>
-        <x-manufacturers.manufacturer-modal :asset="$asset"/>
-        <x-assets.asset-log :asset="$asset"/>
-    </div>
-    <div class="col-xl-12 p-0">
-        <div class="card shadow h-100 mt-3">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold">Comments</h6>
-            </div>
-            <div class="card-body">
-                <div class="row no-gutters">
-                    <div class="col mr-2">
-                        <div class="mb-1">
-                            <div class="row align-items-start">
-                                @foreach($asset->comment as $comment)
-                                    <x-comments.comment-layout :comment="$comment"/>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <button id="commentModal" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm mb-3">
-                            Add New
-                            Comment
-                        </button>
-                        <i class="fas fa-comments fa-2x text-gray-300 pt-2"></i>
-                    </div>
-                </div>
-            </div>
+    <div class="row row-eq-height">
+        <div class="col-12 col-lg-8 mb-4">
+            <x-locations.location-modal :asset="$asset"/>
         </div>
+        
+        <div class="col-12 col-lg-4 mb-4">
+            <x-manufacturers.manufacturer-modal :asset="$asset->model"/>
+        </div>
+        
     </div>
+    <div class="row row-eq-height">
+        <x-assets.asset-log :asset="$asset"/>
+        <div class="col-12 col-lg-6 mb-4">
+            <x-comments.comment-layout :asset="$asset"/>
+        </div>   
+    </div>
+    
 
 @endsection
 
 @section('modals')
-
+    <!-- asset Status Model Modal-->
+    <div class="modal fade bd-example-modal-lg" id="assetModalStatus" tabindex="-1" role="dialog"
+         aria-labelledby="assetModalStatusLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assetModalStatusLabel">Are you sure you want to delete this item?
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{ route('assets.status', $asset->id)}}" method="post">
+                <div class="modal-body">
+                    @csrf
+                    <select name="status" class="form-control">
+                        @foreach(\App\Models\Status::all() as $status)
+                        <option value="{{ $status->id}}" @if($status->id == $asset->status_id){{ 'selected'}}@endif>{{ $status->name }}</option>  
+                        @endforeach  
+                    </select> 
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success" type="submit">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- asset Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeassetModal" tabindex="-1" role="dialog"
          aria-labelledby="removeassetModalLabel" aria-hidden="true">
@@ -163,20 +178,25 @@
             $(form).submit();
         });
 
-        $(document).ready(function () {
-            $('#assetsTable').DataTable({
-                "columnDefs": [{
-                    "targets": [0, 5],
-                    "orderable": false,
-                }],
-                "order": [[1, "asc"]]
-            });
-        });
-        //comments create show
         $('#commentModal').click(function () {
             //showModal
             $('#commentModalOpen').modal('show')
         });
+
+        $(document).ready( function () {
+            $('#comments').DataTable({
+                "autoWidth": false,
+                "pageLength": 10,
+                "searching": false,
+                "bLengthChange": false,
+                "columnDefs": [ {
+                    "targets": [1],
+                    "orderable": false
+                }],
+                "order": [[ 0, "desc"]],
+            });
+        });
+            
 
     </script>
 

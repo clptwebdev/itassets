@@ -259,22 +259,21 @@
             </tr>
         </table>
     </div>
+    @if($asset->location)
     <hr>
     <div class="w-100 d-block">
-        @if($asset->location)
+        
         <table class="table table-bordered table-striped" width="100%">
             <tr style="background-color: #454777; padding: 10px; color: #fff;"><td>Location Information</td></tr>
+            @if(isset($asset->location->photo))
             <tr>
                 <td class="text-center p-1">
                     <div style="width: 150px; overflow:hidden; margin-left: auto; margin-right: auto;">
-                    @if(isset($asset->location->photo->path))
-                        <img src="{{ asset($asset->location->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%">
-                    @else
-                        <img src="{{asset('images/svg/location-image.svg')}}" width="100%">
-                    @endif
+                        <img src="{{ asset($asset->location->photo->path)}}" width="100%" title="{{ $asset->location->name}}">
                     </div>
                 </td>
             </tr>
+            @endif
             <tr><td style="color: {{$asset->location->icon}};"><strong>{{ $asset->location->name }}</strong></td></tr>
             <tr><td>{{ $asset->location->address_1 }}</strong></td></tr>
             @if($asset->location->address_2 != "")
@@ -284,11 +283,29 @@
             <tr><td>{{ $asset->location->county }}</td></tr>
             <tr><td>{{ $asset->location->postcode }}</td></tr>
         </table>
-        @endif
+
     </div>
+    @endif
 </section>
+
+@if(count($asset->comment) != 0)
 <div class="page-break"></div>
 <p>Comments</p>
+<table class="table table-bordered table-striped ">
+    <thead>
+        <tr style="background-color: #454777; padding: 10px; color: #fff;"><th>Recent Actvity</th></tr>    
+    </thead>                      
+    <tbody>
+        
+        @foreach($asset->comment as $comment)
+        <tr>
+            <td class="text-left"><strong>{{$comment->title}}</strong><br>{{ $comment->comment }}<br><span class="text-info">{{ $comment->user->name }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $comment->created_at, 'Europe/London');}}</span></td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+@endif
+@if(count($asset->logs) != 0)
 <div class="page-break"></div>
 <table class="table table-bordered table-striped ">
     <thead>
@@ -302,5 +319,6 @@
         @endforeach
     </tbody>
 </table>
+@endif
 </body>
 </html>

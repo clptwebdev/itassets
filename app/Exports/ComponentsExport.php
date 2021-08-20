@@ -28,7 +28,11 @@ class ComponentsExport implements FromArray, WithHeadings
 
     public function array(): array
     {
-        $components = \App\Models\Component::all();
+        if(auth()->user()->role_id == 1){
+            $components = Component::all();
+        }else{
+            $components = auth()->user()->location_components;
+        } 
         $object = [];
         foreach($components as $component)
         {

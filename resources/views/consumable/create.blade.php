@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Create New Consumable')
+
 @section('css')
 
 @endsection
@@ -51,7 +53,7 @@
                                 <label for="serial_no">Serial_no</label>
                                 <input type="text"
                                        class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                       name="serial_no" id="serial_no" required>
+                                       name="serial_no" id="serial_no">
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
@@ -103,8 +105,18 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-row">
+                            
+                            <h4 class="h6 text-left pb-0">Categories</h4>
+                            <div id="categories" class="border border-gray p-2 mb-3 rounded">
+                                
+                                @foreach($categories as $category)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}">
+                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
+                                </div>
+                                @endforeach
                             </div>
+
                             <div class="form-group">
                                 <label for="notes">Notes</label>
                                 <textarea name="notes" id="notes" class="form-control" rows="10"></textarea>

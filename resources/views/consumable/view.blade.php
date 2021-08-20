@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'View Consumables')
+
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
@@ -10,16 +12,35 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Consumables</h1>
         <div>
-            <a href="{{ route('consumables.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Add New Consumable</a>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-            @if($consumables->count() >1)
-            <a href="/exportconsumables" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            @can('recycleBin', \App\Models\Consumable::class)
+            <a href="{{ route('consumables.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <i class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Consumable::onlyTrashed()->count()}})</a>
+            @endcan
+            @can('create', \App\Models\Consumable::class)
+            <a href="{{ route('consumables.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+                <i class="fas fa-plus fa-sm text-white-50"></i> Add New Consumable</a>
+            @endcan
+            @can('generatePDF', \App\Models\Consumable::class)
+                @if ($consumables->count() == 1)
+                    <a href="{{ route('consumables.showPdf', $consumables[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                    @else
+                    <form class="d-inline-block" action="{{ route('consumables.pdf')}}" method="POST">
+                        @csrf
+                        <input type="hidden" value="{{ json_encode($consumables->pluck('id'))}}" name="consumables"/>
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                    </form>                
+                @endif
+                @if($consumables->count() >1)
+                <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i>Export</a>
-            @endif
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
+                @endif
+            @endcan
+            @can('import', \App\Models\Consumable::class)
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+                <i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+            @endcan
         </div>
     </div>
 
@@ -41,48 +62,56 @@
                     <table id="usersTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Order_no</th>
-                            <th>Supplier</th>
-                            <th>Purchased Date</th>
-                            <th>Purchased Cost</th>
-                            <th>Status</th>
-                            <th>Warranty</th>
-                            <th>Location</th>
-                            <th>Manufacturers</th>
-                            <th class="text-center">Options</th>
+                            <th><small>Name</small></th>
+                            <th class="text-center"><small>Location</small></th>
+                            <th class="text-center"><small>Manufacturers</small></th>
+                            <th><small>Purchased Date</small></th>
+                            <th><small>Purchased Cost</small></th>
+                            <th><small>Supplier</small></th>
+                            <th class="text-center"><small>Status</small></th>
+                            <th class="text-center"><small>Warranty</small></th>
+                            <th class="text-right"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
-                        <tr>
-                            <th>Name</th>
-                            <th>Order_no</th>
-                            <th>Supplier</th>
-                            <th>Purchased Date</th>
-                            <th>Purchased Cost</th>
-                            <th>Status</th>
-                            <th>Warranty</th>
-                            <th>Location</th>
-                            <th>Manufacturers</th>
-                            <th class="text-center">Options</th>
-                        </tr>
+                            <tr>
+                                <th><small>Name</small></th>
+                                <th class="text-center"><small>Location</small></th>
+                                <th class="text-center"><small>Manufacturers</small></th>
+                                <th><small>Purchased Date</small></th>
+                                <th><small>Purchased Cost</small></th>
+                                <th><small>Supplier</small></th>
+                                <th class="text-center"><small>Status</small></th>
+                                <th class="text-center"><small>Warranty</small></th>
+                                <th class="text-right"><small>Options</small></th>
+                            </tr>
                         </tfoot>
                         <tbody>
                         @foreach($consumables as $consumable)
-
                             <tr>
                                 <td>{{$consumable->name}}
                                     <br>
                                     <small>{{$consumable->serial_no}}</small>
                                 </td>
-                                <td>{{$consumable->order_no}}</td>
-                                <td>{{$consumable->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center">
+                                    @if($consumable->location->photo()->exists())
+                                        <img src="{{ asset($consumable->location->photo->path)}}" height="30px" alt="{{$consumable->location->name}}" title="{{ $consumable->location->name ?? 'Unnassigned'}}"/>'
+                                    @else
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($consumable->location->icon ?? '#666').'">'
+                                            .strtoupper(substr($consumable->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                    @endif    
+                                </td>  
+                                <td class="text-center">{{$consumable->manufacturer->name ?? "N/A"}}</td>
                                 <td>{{\Carbon\Carbon::parse($consumable->purchased_date)->format("d/m/Y")}}</td>
-                                <td>{{$consumable->purchased_cost}}</td>
-                                <td>{{$consumable->status->name ??'N/A'}}</td>
-                                <td>{{$consumable->warranty??"N/A"}}</td>
-                                <td>{{$consumable->location->name}}</td>
-                                <td>{{$consumable->manufacturer->name ?? "N/A"}}</td>
+                                <td>£{{$consumable->purchased_cost}}</td>
+                                <td>{{$consumable->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center">{{$consumable->status->name ??'N/A'}}</td>
+                                @php $warranty_end = \Carbon\Carbon::parse($consumable->purchased_date)->addMonths($consumable->warranty);@endphp
+                                <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
+                                    {{ $consumable->warranty }} Months
+
+                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                </td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -91,9 +120,11 @@
                                         </a>
                                         <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                              aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">consumable Options:</div>
+                                            <div class="dropdown-header">Consumable Options:</div>
+                                            @can('view', $consumable)
                                             <a href="{{ route('consumables.show', $consumable->id) }}" class="dropdown-item">View</a>
-                                            @can('edit', $consumable)
+                                            @endcan
+                                            @can('update', $consumable)
                                                 <a href="{{ route('consumables.edit', $consumable->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $consumable)
@@ -134,7 +165,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this Consumable?
+                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this Consumable to the Recycle Bin?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -142,12 +173,12 @@
                 </div>
                 <div class="modal-body">
                     <input id="user-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this Consumable from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. </small>
+                    <p>Select "Send to Bin" to send this Consumable to the Recycle Bin.</p>
+                    <small class="text-danger">**Warning this is not permanent. The consumable can be restored in the Recycle Bin </small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>

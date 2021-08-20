@@ -191,7 +191,7 @@
                 "autoWidth": false,
                 "pageLength": 25,
                 "columnDefs": [ {
-                "targets": [9],
+                "targets": [7],
                 "orderable": false
                     }],
                 "order": [[ 1, "asc"]],
