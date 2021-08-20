@@ -15,7 +15,7 @@
             <a href="{{ route('asset.showPdf', $asset->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
             @endcan
-            @can('generatePDF', $asset)
+            @can('edit', $asset)
             <a href="{{ route('assets.edit', $asset->id)}}"
                class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Edit</a>

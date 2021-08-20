@@ -20,17 +20,33 @@ require __DIR__.'/auth.php';
 
 Route::group(['middleware'=>'auth'], function(){
     Route::get('/', function(){
+        if(auth()->user()->role_id == 1){
+            $locations = \App\Models\Location::all();
+            $assets = \App\Models\Asset::all();
+        }else{
+            $locations = auth()->user()->locations;
+            $assets = auth()->user()->location_assets;
+        }
         return view('dashboard',
             [
-                'locations' => auth()->user()->locations,
+                'locations' => $locations,
+                'assets' => $assets,
             ]
         );
     })->name('home');
 
     Route::get('/dashboard', function(){
+        if(auth()->user()->role_id == 1){
+            $locations = \App\Models\Location::all();
+            $assets = \App\Models\Asset::all();
+        }else{
+            $locations = auth()->user()->locations;
+            $assets = auth()->user()->location_assets;
+        }
         return view('dashboard',
             [
-                'locations' => auth()->user()->locations,
+                'locations' => $locations,
+                'assets' => $assets,
             ]
         );
     })->name('dashboard');
@@ -92,7 +108,7 @@ Route::group(['middleware'=>'auth'], function(){
 
         Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
 //      exports
-        Route::get("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
+        Route::post("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
         Route::get("/exportconsumables", [\App\Http\Controllers\ConsumableController::class, "export"]);
         Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);

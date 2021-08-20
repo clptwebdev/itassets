@@ -1,6 +1,12 @@
 <!-- Content Row -->
 <div class="row">
-
+    @php
+    if(auth()->user()->role_id == 1){
+        $assets = \App\Models\Asset::all();
+    }else{
+        $assets = auth()->user()->location_assets;
+    }
+    @endphp
     <!-- Earnings (Monthly) Card Example -->
     <div class="col-xl-2 col-md-4 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
@@ -11,16 +17,21 @@
                             Assets Value(Total)</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                             @php
-                            $assets = auth()->user()->location_assets;
                             $total = 0; $depreciation = 0;
                             foreach($assets as $asset){
                                 $total = $total + $asset->purchased_cost;
-                                $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years ?? 0);
-                                if($eol->isPast()){}else{
-                                    $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
-                                    $percentage = floor($age)*33.333;
-                                    $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
-                                    $depreciation += $dep;
+
+                                if($asset->asset_model != 0){
+                                    $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                                    if($eol->isPast()){}else{
+                                        $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
+                                        $percent = 100 / $asset->model->depreciation->years;
+                                        $percentage = floor($age)*$percent;
+                                        $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                                        $depreciation += $dep;
+                                    }
+                                }else{
+                                    $depreciation += $asset->purchased_cost;
                                 }
                             }
 
@@ -44,7 +55,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             Assets(Total)</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{(auth()->user()->location_assets()->count()) ?? null}}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{$assets->count() ?? null}}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-laptop fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
@@ -82,12 +93,22 @@
                         </div>
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
-                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">51</div>
+                                @php
+                                    $ud = 0; $total = $assets->count();
+                                    foreach($assets as $asset){
+                                        if($asset->status_id != 0 && $asset->status->deployable == 0){
+                                            $ud++;
+                                        }
+                                    }
+                                @endphp
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $ud}}</div>
                             </div>
                             <div class="col">
                                 <div class="progress progress-sm mr-2">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 50%"
-                                        aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    @if(!$ud === 0 )
+
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: {{ ($ud/$total) * 100 }}%"
+                                        aria-valuenow="{{ ($ud/$total) * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>@endif
                                 </div>
                             </div>
                         </div>

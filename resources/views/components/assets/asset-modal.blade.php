@@ -62,12 +62,12 @@
                     <table class="table table-sm table-bordered table-striped">
                         <thead>
                         <tr>
-                            <th colspan="3">Status</th>
+                            <th colspan="3">Status </th>
                         </tr>
                         </thead>
                         <tr>
                             <td>Device Status: </td>
-                            <td><strong>Booked</strong></td>
+                            <td><strong>{{ $asset->status->name }}</strong></td>
                             <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold">Change Status</button></td>
                         </tr>
                         <tr>
