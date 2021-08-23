@@ -22,7 +22,7 @@
                     <h3 class="centred d-block">
                         Sign In To Your Account
                     </h3>
-                    <a href="#" class="d-block text-center button padding-25-height font20">
+                    <a href="{{ route('users.login')}}" class="d-block text-center button padding-25-height font20">
                         Login
                     </a>
                     <div>

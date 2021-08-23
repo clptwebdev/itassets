@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('login/microsoft', 'App\Http\Controllers\OfficeLoginController@redirectToProvider');
 Route::get('login/microsoft/callback', 'App\Http\Controllers\OfficeLoginController@handleProviderCallback');
-Route::get('microsoft/callback', 'App\Http\Controllers\OfficeLoginController@handleProviderCallback');
 
 require __DIR__.'/auth.php';
 

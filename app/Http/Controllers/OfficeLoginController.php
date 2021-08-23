@@ -33,10 +33,10 @@ class OfficeLoginController extends Controller
         if($authUser = User::whereEmail($user->email)->first()){
 
         }else{
-            $unhash = 'Test123';
+            $unhash = random_password(12);
             $password = Hash::make($unhash);
             $authUser = User::create([
-                'name' => $user->name,
+                'name' => $user->name,  
                 'email' => $user->email,
                 'password' => $password,
             ]);
@@ -49,6 +49,6 @@ class OfficeLoginController extends Controller
         }
         auth()->login($authUser, false);
 
-        return redirect('/dashboard');
+        return redirect('https://apollo.clpt.co.uk');
     }
 }
