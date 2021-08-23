@@ -49,6 +49,6 @@ class OfficeLoginController extends Controller
         }
         auth()->login($authUser, false);
 
-        return redirect('https://apollo.clpt.co.uk');
+        return redirect('/dashboard');
     }
 }
