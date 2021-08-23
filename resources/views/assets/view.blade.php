@@ -25,42 +25,35 @@
                         class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
             @endcan
             @can('generatePDF', \App\Models\Asset::class)
-                @if($assets->count() != 0)
-                    @if ($assets->count() == 1)
-                        <a href="{{ route('asset.showPdf', $assets[0]->id)}}"
-                           class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                                class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
-                            @else
-                                <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
-                                    @csrf
-                                    <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
-                                    <button type="submit"
-                                            class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report
-                                    </button>
-                                </form>
-                            @endif
-                            @endif
-                            @endcan
-                            @can('create', \App\Models\Asset::class)
-                                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                                        class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
-                            @endcan
-
-                            @if($assets->count() > 1)
-                                @can('generatePDF', \App\Models\Asset::class)
-                                    <form class="d-inline-block" action="/exportassets" method="POST">
-                                        @csrf
-                                        <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}"
-                                               name="assets"/>
-                                        <button type="submit"
-                                                class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
-                                                class="fas fa-download fa-sm text-dark-50"></i> Export
-                                        </button>
-                                    </form>
-                    @endcan
+            @if($assets->count() != 0)
+                @if ($assets->count() == 1)
+                <a href="{{ route('asset.showPdf', $assets[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                @else
+                <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
+                    @csrf
+                    <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
+                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                </form>
                 @endif
+            @endif
+            @endcan
+            @can('create', \App\Models\Asset::class)
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+                class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+            @endcan
 
+            @if($assets->count() > 1)
+                @can('generatePDF', \App\Models\Asset::class)
+                <form class="d-inline-block" action="/exportassets" method="POST">
+                    @csrf
+                    <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
+                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                        class="fas fa-download fa-sm text-dark-50"></i> Export</button>
+                </form>
+                @endcan
+            @endif
         </div>
     </div>
 

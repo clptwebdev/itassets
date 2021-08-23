@@ -198,6 +198,7 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 
     <!-- Content Row -->
     <div class="row">
@@ -229,6 +230,36 @@
                                         @endif
                                     </div>
                                 </div>
+=======
+</div>
+
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Content Column -->
+    <div class="col-xl-6 mb-4">
+        <!-- Project Card Example -->
+
+
+        <!-- Color System -->
+        <div class="row row-eq-height">
+            @foreach($locations as $location)
+            <div class="col-md-12 col-xl-6 mb-4 h-100">
+                <div class="card shadow" style="background-color: {{$location->icon}}; color: #FFF">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-md-9">
+                                {{ $location->name}}
+                                <div class="text-white-50 small">{{$location->icon}}</div>
+                            </div>
+                            <div class="col-12 col-md-3" background>
+                                @if(isset($location->photo->path))
+                                    '<img src="{{ asset($location->photo->path)}}" height="50px" alt="{{$location->name}}" title="{{ $location->name ?? 'Unnassigned'}}"/>'
+                                @else
+                                    {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($location->icon ?? '#666').'">'
+                                        .strtoupper(substr($location->name ?? 'u', 0, 1)).'</span>' !!}
+                                @endif
+>>>>>>> main
                             </div>
                         </div>
                     </div>
@@ -282,6 +313,7 @@
 @endsection
 
 @section('js')
+<<<<<<< HEAD
     <script src="{{ asset('js/chart.js') }}"></script>
     <script src="{{ asset('js/demo/chart-bar-demo.js') }}"></script>
     <script>
@@ -289,6 +321,60 @@
             showGraph();
             showValueGraph();
             showAssetGraph();
+=======
+<script src="{{ asset('js/chart.js') }}"></script>
+<script src="{{ asset('js/demo/chart-bar-demo.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        showGraph();
+        showValueGraph();
+        showAssetGraph();
+    });
+
+
+    function showGraph()
+    {
+        $.ajax({
+        url: 'chart/pie/locations',
+        success: function(data) {
+            var as = JSON.parse(data);
+            var name = [];
+            var icon = [];
+            var assets = [];
+
+            for (var i in as) {
+                name.push(as[i].name);
+                icon.push(as[i].icon);
+                assets.push(as[i].asset);
+            }
+
+            var chartdata = {
+
+            };
+
+            var ctx = document.getElementById("myPieChart");
+            var myPieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: name,
+                    datasets: [{
+                        label: 'Asset Sources',
+                        backgroundColor: icon,
+                        borderColor: '#46d5f1',
+                        hoverBackgroundColor: '#CCCCCC',
+                        hoverBorderColor: '#666666',
+                        data: assets
+                    }],
+                },
+
+            });
+            ctx.height = 500;
+
+        },
+        error: function(){
+            console.log('Eror');
+        },
+>>>>>>> main
         });
 
 

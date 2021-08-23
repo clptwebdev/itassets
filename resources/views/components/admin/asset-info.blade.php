@@ -20,7 +20,6 @@
                             $total = 0; $depreciation = 0;
                             foreach($assets as $asset){
                                 $total = $total + $asset->purchased_cost;
-
                                 if($asset->asset_model != 0){
                                     $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
                                     if($eol->isPast()){}else{
