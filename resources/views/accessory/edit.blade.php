@@ -7,12 +7,12 @@
 @section('content')
     <form action="{{ route('accessories.update', $accessory->id) }}" method="POST">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Add New accessory</h1>
+            <h1 class="h3 mb-0 text-gray-800">Edit Accessory</h1>
 
             <div>
                 <a href="{{ route('accessories.index') }}"
                    class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to accessories</a>
+                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Accessories</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
@@ -20,10 +20,8 @@
         </div>
 
         <section>
-            <p class="mb-4">edit a existing accessory to the asset management system. Enter in the following information
-                and
-                click the 'Save' button. Or click the 'Back' button
-                to return the accessories page.
+            <p class="mb-4">Edit {{ $accessory->name}} and change any of the following information. Click the 'Save' button. Or click the 'Back' button
+                to return the Accessories page.
             </p>
             <div class="row row-eq-height">
                 <div class="col-12 col-md-8 col-lg-9">
@@ -53,7 +51,7 @@
                                 <label for="serial_no">Serial_no</label>
                                 <input type="text"
                                        class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                       name="serial_no" id="serial_no" value="{{$accessory->serial_no}}" required>
+                                       name="serial_no" id="serial_no" value="{{$accessory->serial_no}}">
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
@@ -107,7 +105,19 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-row">
+                            @php( $cat_array = [])
+                            @foreach($accessory->category as $cc)
+                            @php( $cat_array[] = $cc->id)
+                            
+                            @endforeach
+                            <div id="categories" class="border border-gray p-2 mb-3">
+                                <h4 class="h6 mb-4 text-center">Categories</h4>
+                                @foreach($categories as $category)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}" @if(in_array($category->id, $cat_array)){{ 'checked'}}@endif>
+                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
+                                </div>
+                                @endforeach
                             </div>
                             <div class="form-group">
                                 <label for="notes">Notes</label>
@@ -123,11 +133,15 @@
                         <div class="card-body">
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
-                                    <h4 class="h6 mb-3">Location Image</h4>
+                                    <h4 class="h6 mb-3">Image</h4>
+                                    @if($accessory->photo()->exists())
+                                        <img id="profileImage" src="{{ asset($accessory->photo->path) ?? asset('images/svg/accessory_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal"> 
+                                    @else
                                     <img id="profileImage"
-                                         src="{{ asset('images/svg/location-image.svg') }}"
+                                         src="{{ asset('images/svg/accessory_image.svg') }}"
                                          width="100%"
                                          alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                    @endif
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>
                             </div>

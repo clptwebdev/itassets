@@ -75,36 +75,54 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('/fieldsets', 'App\Http\Controllers\FieldsetController');
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
-
+    // Asset Routes
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
         Route::get('/status/{status}/assets', 'App\Http\Controllers\AssetController@status')->name('assets.status');
         Route::get('/location/{location}/assets', 'App\Http\Controllers\AssetController@location')->name('assets.location');
-        Route::get('/assets/bin', 'App\Http\Controllers\AssetController@bin')->name('assets.bin');
         Route::post('/assets/pdf', 'App\Http\Controllers\AssetController@downloadPDF')->name('assets.pdf');
         Route::get('/asset/{asset}/pdf', 'App\Http\Controllers\AssetController@downloadShowPDF')->name('asset.showPdf');
         Route::get('/asset/bin', 'App\Http\Controllers\AssetController@recycleBin')->name('assets.bin');
         Route::get('/asset/{asset}/restore', 'App\Http\Controllers\AssetController@restore')->name('assets.restore');
         Route::post('/asset/{asset}/remove', 'App\Http\Controllers\AssetController@forceDelete')->name('assets.remove');
+        Route::post('/asset/{asset}/status', 'App\Http\Controllers\AssetController@changeStatus')->name('assets.status');
+    //Component Routes
+        Route::resource('/components', 'App\Http\Controllers\ComponentController');
+        Route::get('/component/bin', 'App\Http\Controllers\ComponentController@recycleBin')->name('components.bin');
+        Route::get('/component/{component}/restore', 'App\Http\Controllers\ComponentController@restore')->name('components.restore');
+        Route::post('/component/{component}/remove', 'App\Http\Controllers\ComponentController@forceDelete')->name('components.remove');
+        Route::post('/components/pdf', 'App\Http\Controllers\ComponentController@downloadPDF')->name('components.pdf');
+        Route::get('/components/{component}/pdf', 'App\Http\Controllers\ComponentController@downloadShowPDF')->name('components.showPdf');
+        Route::post('components/{component}/comment/create', '\App\Http\Controllers\ComponentController@newComment')->name('component.comment');
+    //Accessory Routes
+        Route::resource('/accessories', 'App\Http\Controllers\AccessoryController');
+        Route::get('/accessory/bin', 'App\Http\Controllers\AccessoryController@recycleBin')->name('accessories.bin');
+        Route::get('/accessory/{accessory}/restore', 'App\Http\Controllers\AccessoryController@restore')->name('accessories.restore');
+        Route::post('/accessory/{accessory}/remove', 'App\Http\Controllers\AccessoryController@forceDelete')->name('accessories.remove');
+        Route::post('/accessory/pdf', 'App\Http\Controllers\AccessoryController@downloadPDF')->name('accessories.pdf');
+        Route::get('/accessory/{accessory}/pdf', 'App\Http\Controllers\AccessoryController@downloadShowPDF')->name('accessories.showPdf');
+        Route::post('accessory/{accessory}/comment/create', '\App\Http\Controllers\AccessoryController@newComment')->name('accessories.comment');
+    //Consumable Routes
+        Route::resource('/consumables', 'App\Http\Controllers\ConsumableController');
+        Route::get('/consumable/bin', 'App\Http\Controllers\ConsumableController@recycleBin')->name('consumables.bin');
+        Route::get('/consumable/{consumable}/restore', 'App\Http\Controllers\ConsumableController@restore')->name('consumables.restore');
+        Route::post('/consumable/{consumable}/remove', 'App\Http\Controllers\ConsumableController@forceDelete')->name('consumables.remove');
+        Route::post('/consumable/pdf', 'App\Http\Controllers\ConsumableController@downloadPDF')->name('consumables.pdf');
+        Route::get('/consumable/{consumable}/pdf', 'App\Http\Controllers\ConsumableController@downloadShowPDF')->name('consumables.showPdf');
+        Route::post('consumables/comment/create', 'App\Http\Controllers\ConsumableController@newComment')->name('consumables.comment');
+        Route::post('/consumable/{consumable}/status', 'App\Http\Controllers\ConsumableController@changeStatus')->name('consumables.status');
 
 
 
         Route::resource('/status', 'App\Http\Controllers\StatusController');
-        Route::resource('/components', 'App\Http\Controllers\ComponentController');
+        
 
-        Route::resource('/accessories', 'App\Http\Controllers\AccessoryController');
-        Route::resource('/consumables', 'App\Http\Controllers\ConsumableController');
-        Route::post('consumables/comment/create', [\App\Http\Controllers\ConsumableController::class, "newComment"])->name('consumable.comment');
-        Route::post('components/comment/create',[\App\Http\Controllers\ComponentController::class, "newComment"] )->name('component.comment');
+        
+        
+        
         Route::post('assets/comment/create',[\App\Http\Controllers\AssetController::class, "newComment"] )->name('asset.comment');
-        Route::post('accessories/comment/create',[\App\Http\Controllers\AccessoryController::class, "newComment"] )->name('accessory.comment');
-        Route::post('accessories/comment/create',[\App\Http\Controllers\AccessoryController::class, "newComment"] )->name('accessory.comment');
 
         Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
-
-
-
-
 
         Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
 //      exports

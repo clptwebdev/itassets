@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'View Components')
+
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
@@ -9,16 +11,29 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Components</h1>
         <div>
+            @can('recycleBin', \App\Models\Component::class)
+            <a href="{{ route('components.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Component::onlyTrashed()->count()}})</a>
+            @endcan
+            @can('create' , \App\Models\Component::class)
             <a href="{{ route('components.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Component</a>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+            @endcan
+            @can('export', \App\Models\Component::class)
+            <form class="d-inline-block" action="{{ route('components.pdf')}}" method="POST">
+                @csrf
+                <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="components"/>
+            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+            </form> 
             @if($components->count() >1)
-            <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i> Export</a>
             @endif
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
+            @endcan
+            @can('import' , \App\Models\Component::class)
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+            @endcan
         </div>
     </div>
 
@@ -40,30 +55,28 @@
                     <table id="usersTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Order_no</th>
-                            <th>Supplier</th>
-                            <th>Purchased Date</th>
-                            <th>Purchased Cost</th>
-                            <th>Status</th>
-                            <th>Warranty</th>
-                            <th>Location</th>
-                            <th>Manufacturers</th>
-                            <th class="text-center">Options</th>
+                            <th><small>Name</small></th>
+                            <th class="text-center"><small>Location</small></th>
+                            <th class="text-center"><small>Manufacturers</small></th>
+                            <th><small>Purchased Date</small></th>
+                            <th><small>Purchased Cost</small></th>
+                            <th><small>Supplier</small></th>
+                            <th class="text-center"><small>Status</small></th>
+                            <th class="text-center"><small>Warranty</small></th>
+                            <th class="text-right"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
-                            <th>Name</th>
-                            <th>Order_no</th>
-                            <th>Supplier</th>
-                            <th>Purchased Date</th>
-                            <th>Purchased Cost</th>
-                            <th>Status</th>
-                            <th>Warranty</th>
-                            <th>Location</th>
-                            <th>Manufacturers</th>
-                            <th class="text-center">Options</th>
+                            <th><small>Name</small></th>
+                            <th class="text-center"><small>Location</small></th>
+                            <th class="text-center"><small>Manufacturers</small></th>
+                            <th><small>Purchased Date</small></th>
+                            <th><small>Purchased Cost</small></th>
+                            <th><small>Supplier</small></th>
+                            <th class="text-center"><small>Status</small></th>
+                            <th class="text-center"><small>Warranty</small></th>
+                            <th class="text-right"><small>Options</small></th>
                         </tr>
                         </tfoot>
                         <tbody>
@@ -74,14 +87,25 @@
                                     <br>
                                     <small>{{$component->serial_no}}</small>
                                 </td>
-                                <td>{{$component->order_no}}</td>
-                                <td>{{$component->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center">
+                                    @if(isset($component->location->photo->path))
+                                        <img src="{{ asset($component->location->photo->path)}}" height="30px" alt="{{$component->location->name}}" title="{{ $component->location->name ?? 'Unnassigned'}}"/>'
+                                    @else
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($component->location->icon ?? '#666').'">'
+                                            .strtoupper(substr($component->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                    @endif    
+                                </td>
+                                <td class="text-center">{{$component->manufacturer->name ?? "N/A"}}</td>
                                 <td>{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
                                 <td>{{$component->purchased_cost}}</td>
-                                <td>{{$component->status->name ??'N/A'}}</td>
-                                <td>{{$component->warranty??"N/A"}}</td>
-                                <td>{{$component->location->name}}</td>
-                                <td>{{$component->manufacturer->name ?? "N/A"}}</td>
+                                <td>{{$component->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center">{{$component->status->name ??'N/A'}}</td>
+                                @php $warranty_end = \Carbon\Carbon::parse($component->purchased_date)->addMonths($component->warranty);@endphp
+                                <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
+                                    {{ $component->warranty }} Months
+
+                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                </td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -91,12 +115,12 @@
                                         <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                              aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Component Options:</div>
-                                            <a href="{{ route('assets.show', $component->id) }}" class="dropdown-item">View</a>
+                                            <a href="{{ route('components.show', $component->id) }}" class="dropdown-item">View</a>
                                             @can('edit', $component)
-                                                <a href="{{ route('assets.edit', $component->id) }}" class="dropdown-item">Edit</a>
+                                                <a href="{{ route('components.edit', $component->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $component)
-                                                <form id="form{{$component->id}}" action="{{ route('component.destroy', $component->id) }}" method="POST" class="d-block p-0 m-0">
+                                                <form id="form{{$component->id}}" action="{{ route('components.destroy', $component->id) }}" method="POST" class="d-block p-0 m-0">
                                                     @csrf
                                                     @method('DELETE')
                                                     <a class="deleteBtn dropdown-item" href="#"
@@ -133,7 +157,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this Component?
+                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this Component to the Recycle Bin?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -141,12 +165,12 @@
                 </div>
                 <div class="modal-body">
                     <input id="user-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this Component from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. </small>
+                    <p>Select "Send to Bin" to send this Component to the Recycle Bin.</p>
+                    <small class="text-danger">**This is not permanent and the component can be restored in the Components Recycle Bin. </small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>
@@ -208,10 +232,10 @@
         $(document).ready(function () {
             $('#usersTable').DataTable({
                 "columnDefs": [{
-                    "targets": [3, 4, 5],
+                    "targets": [8],
                     "orderable": false,
                 }],
-                "order": [[1, "asc"]]
+                "order": [[4, "desc"]]
             });
         });
         // import

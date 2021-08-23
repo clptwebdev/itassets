@@ -55,9 +55,24 @@ class User extends Authenticatable {
     }
 
 
+    //Permissions
     public function location_assets(){
         return $this->hasManyDeep(Asset::class, ['location_user', Location::class]);
     }
+
+    public function location_components(){
+        return $this->hasManyDeep(Component::class, ['location_user', Location::class]);
+    }
+
+    public function location_accessories(){
+        return $this->hasManyDeep(Accessory::class, ['location_user', Location::class]);
+    }
+
+    public function location_consumables(){
+        return $this->hasManyDeep(Consumable::class, ['location_user', Location::class]);
+    }
+
+    
 
     public function logs(){
         return $this->morphMany(Log::class, 'loggable');

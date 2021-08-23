@@ -67,8 +67,8 @@
                         </thead>
                         <tr>
                             <td>Device Status: </td>
-                            <td><strong>{{ $asset->status->name }}</strong></td>
-                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold">Change Status</button></td>
+                            <td><strong>{{ $asset->status->name ?? 'No Status Set'}}</strong></td>
+                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#assetModalStatus">Change Status</button></td>
                         </tr>
                         <tr>
                             <td>Audit Date: </td>
@@ -139,15 +139,17 @@
                             </tr>
                         </tbody>
                     </table>
-
+                    @if(count($asset->category) != 0)
                     <table class="table table-sm table-bordered">
                         <tr>
-                            <td><strong
-                                class="font-weight-bold d-inline-block btn-sm btn-light shadow-sm p-1 m-2"><small>Students</small></strong><strong
-                                    class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1 m-2"><small>Ipads</small></strong><strong
-                                        class="font-weight-bold d-inline-block btn-sm btn-dark shadow-sm p-1 m-2"><small>Tablets</small></strong></td>
+                            <td>
+                                @foreach($asset->category as $category)
+                                <strong class="font-weight-bold d-inline-block btn-sm btn-light shadow-sm p-1 m-2"><small>{{ $category->name}}</small></strong>
+                                @endforeach
+                            </td>
                         </tr>
                     </table>
+                    @endif
                 </div>
             </div>
         </div>

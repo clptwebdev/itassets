@@ -159,14 +159,14 @@
                                 @switch($field->type)
                                 @case('Text')
                                 <input type="text" class="form-control" name="{{str_replace(' ', '_', strtolower($field->name))}}"
-                                    placeholder="{{ $field->name }}" value="{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id]}}">
+                                    placeholder="{{ $field->name }}" value="{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''}}">
                                 @break
                                 @case('Textarea')
                                 <textarea name="{{str_replace(' ', '_', strtolower($field->name))}}" id="" cols="30" rows="10"
-                                    class="form-contol">{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id]}}</textarea>
+                                    class="form-contol">{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''}}</textarea>
                                 @break
                                 @case('Select')
-                                <?php if(old(str_replace(' ', '_', strtolower($field->name)))){$vid = old(str_replace(' ', '_', strtolower($field->name)));}else{ $vid = $field_array[$field->id];}?>
+                                <?php if(count($field_array) != 0){ if(old(str_replace(' ', '_', strtolower($field->name)))){$vid = old(str_replace(' ', '_', strtolower($field->name)));}else{ $vid = $field_array[$field->id];}}else{ $vid = 0;}?>
                                 <?php $array = explode("\r\n", $field->value);?>
                                 <select name="{{str_replace(' ', '_', strtolower($field->name))}}" class="form-control">
                                     @foreach($array as $id=>$key)

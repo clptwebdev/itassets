@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Consumable')
+
 @section('css')
 
 @endsection
@@ -7,7 +9,7 @@
 @section('content')
     <form action="{{ route('consumables.update', $consumable->id) }}" method="POST">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Add New Consumable</h1>
+            <h1 class="h3 mb-0 text-gray-800">Edit Consumable</h1>
 
             <div>
                 <a href="{{ route('consumables.index') }}"
@@ -20,7 +22,7 @@
         </div>
 
         <section>
-            <p class="mb-4">edit a existing Consumable to the asset management system. Enter in the following information
+            <p class="mb-4">Edit a existing Consumable to the asset management system. Enter in the following information
                 and
                 click the 'Save' button. Or click the 'Back' button
                 to return the Consumables page.
@@ -53,7 +55,7 @@
                                 <label for="serial_no">Serial_no</label>
                                 <input type="text"
                                        class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                       name="serial_no" id="serial_no" value="{{$consumable->serial_no}}" required>
+                                       name="serial_no" id="serial_no" value="{{$consumable->serial_no}}">
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
@@ -107,7 +109,19 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-row">
+                            @php( $cat_array = [])
+                            @foreach($consumable->category as $cc)
+                            @php( $cat_array[] = $cc->id)
+                            
+                            @endforeach
+                            <div id="categories" class="border border-gray p-2 mb-3">
+                                <h4 class="h6 mb-4 text-center">Categories</h4>
+                                @foreach($categories as $category)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}" @if(in_array($category->id, $cat_array)){{ 'checked'}}@endif>
+                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
+                                </div>
+                                @endforeach
                             </div>
                             <div class="form-group">
                                 <label for="notes">Notes</label>
@@ -124,10 +138,14 @@
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Location Image</h4>
+                                    @if($consumable->photo()->exists())
+                                        <img id="profileImage" src="{{ asset($consumable->photo->path) ?? asset('images/svg/accessory_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal"> 
+                                    @else
                                     <img id="profileImage"
-                                         src="{{ asset('images/svg/location-image.svg') }}"
+                                         src="{{ asset('images/svg/accessory_image.svg') }}"
                                          width="100%"
                                          alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                    @endif
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>
                             </div>

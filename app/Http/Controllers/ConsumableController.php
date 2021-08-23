@@ -9,16 +9,20 @@ use App\Exports\consumableExport;
 use App\Imports\consumableImport;
 use App\Models\Consumable;
 use App\Models\Location;
+use App\Models\Category;
 use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class ConsumableController extends Controller
 {
-    public function newComment(Request $request){
+    
+    public function newComment(Request $request)
+    {
         $request->validate([
             "title" => "required|max:255",
             "comment" => "nullable",
@@ -31,23 +35,43 @@ class ConsumableController extends Controller
 
     public function index()
     {
-        return view('consumable.view', [
-            "consumables" => Consumable::all(),
-        ]);
+        
+
+        if(auth()->user()->role_id == 1){
+            $consumables = Consumable::all();
+        }else{
+            $consumables = auth()->user()->location_consumables;
+        } 
+        return view('consumable.view', compact('consumables'));
     }
 
     public function create()
     {
+        if (auth()->user()->cant('create', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Consumables', 'create']));
+        }
+
+        if(auth()->user()->role_id == 1){
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        } 
+
         return view('consumable.create', [
-            "locations" => Location::all(),
+            "locations" => $locations,
             "statuses" => Status::all(),
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
+            'categories' => Category::all(),
         ]);
     }
 
     public function store(Request $request)
     {
+        if (auth()->user()->cant('create', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Consumables', 'create']));
+        }
+
         $request->validate([
             "name" => "required|max:255",
             "supplier_id" => "required",
@@ -55,26 +79,15 @@ class ConsumableController extends Controller
             "notes" => "nullable",
             "status_id" => "nullable",
             'order_no' => 'required',
-            'serial_no' => 'required',
             'warranty' => 'int|nullable',
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-        Consumable::create([
-            "name" => request("name"),
-            "serial_no" => request("serial_no"),
-            "status_id" => request("status_id"),
-            "purchased_date" => request("purchased_date"),
-            "purchased_cost" => request("purchased_cost"),
-            "supplier_id" => request("supplier_id"),
-            "order_no" => request("order_no"),
-            "warranty" => request("warranty"),
-            "location_id" => request("location_id"),
-            "notes" => request("notes"),
-            "manufacturer_id" => request("manufacturer_id"),
-            session()->flash('success_message', request("name") . ' has been created successfully'),
-        ]);
-
+        
+        $consumable = Consumable::create($request->only(
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
+        ));
+        $consumable->category()->attach($request->category);
         return redirect(route("consumables.index"));
 
     }
@@ -86,6 +99,7 @@ class ConsumableController extends Controller
         $export = json_decode($code);
         return \Maatwebsite\Excel\Facades\Excel::download(new consumableErrorsExport($export), 'ConsumablesImportErrors.csv');
     }
+
     public function ajaxMany(Request $request)
     {
         if($request->ajax()){
@@ -129,25 +143,39 @@ class ConsumableController extends Controller
 
     public function show(Consumable $consumable)
     {
-        return view('consumable.show', [
-            "consumable" => $consumable,
-
-        ]);
+        if (auth()->user()->cant('create', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'view']));
+        }
+        return view('consumable.show', ["consumable" => $consumable]);
     }
 
     public function edit(Consumable $consumable)
     {
+        if (auth()->user()->cant('edit', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'update']));
+        }
+
+        if(auth()->user()->role_id == 1){
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
         return view('consumable.edit', [
             "consumable" => $consumable,
-            "locations" => Location::all(),
+            "locations" => $locations,
             "statuses" => Status::all(),
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
+            "categories" => Category::all(),
         ]);
     }
 
     public function update(Request $request, Consumable $consumable)
     {
+        if (auth()->user()->cant('update', $consumable)) {
+            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'update']));
+        }
+
         $request->validate([
             "name" => "required|max:255",
             "supplier_id" => "required",
@@ -155,33 +183,28 @@ class ConsumableController extends Controller
             "notes" => "nullable",
             "status_id" => "nullable",
             'order_no' => 'required',
-            'serial_no' => 'required',
             'warranty' => 'int|nullable',
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-        $consumable->fill([
-            "name" => request("name"),
-            "serial_no" => request("serial_no"),
-            "status_id" => request("status_id"),
-            "purchased_date" => request("purchased_date"),
-            "purchased_cost" => request("purchased_cost"),
-            "supplier_id" => request("supplier_id"),
-            "order_no" => request("order_no"),
-            "warranty" => request("warranty"),
-            "location_id" => request("location_id"),
-            "manufacturer_id" => request("manufacturer_id"),
-            "notes" => request("notes")])->save();
-        session()->flash('success_message', request("name") . ' has been updated successfully');
+
+        $consumable->fill($request->only(
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
+        ))->save();
+        $consumable->category()->sync($request->category);
+        session()->flash('success_message', $consumable->name. ' has been updated successfully');
 
         return redirect(route("consumables.index"));
     }
 
     public function destroy(Consumable $consumable)
     {
+        if (auth()->user()->cant('delete', $consumable)) {
+            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'delete']));
+        }
         $name = $consumable->name;
         $consumable->delete();
-        session()->flash('danger_message', $name . ' was deleted from the system');
+        session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
         return redirect(route('consumables.index'));
 
@@ -189,12 +212,19 @@ class ConsumableController extends Controller
 
     public function export(Consumable $consumable)
     {
+        if (auth()->user()->cant('export', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['area', 'consumables', 'export']));
+        }
         return \Maatwebsite\Excel\Facades\Excel::download(new consumableExport, 'consumables.csv');
 
     }
 
     public function import(Request $request)
     {
+        if (auth()->user()->cant('create', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'import']));
+        }
+
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());
@@ -282,5 +312,74 @@ class ConsumableController extends Controller
 
 
 
+    }
+
+    public function downloadPDF(Request $request)
+    {
+        if (auth()->user()->cant('export', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['area', 'consumables', 'export pdf']));
+        }
+        $consumables = Consumable::withTrashed()->whereIn('id', json_decode($request->consumables))->get();
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('consumable.pdf', compact('consumables'));
+        $pdf->setPaper('a4', 'landscape');
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        return $pdf->download("consumables-{$date}.pdf");
+    }
+
+    public function downloadShowPDF(Consumable $consumable)
+    {
+        if (auth()->user()->cant('export', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['area', 'consumables', 'export pdf']));
+        }
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('consumable.showPdf', compact('consumable'));
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        return $pdf->download("consumable-{$consumable->id}-{$date}.pdf");
+    }
+
+    //Restore and Force Delete Function Need to be Created
+
+    public function recycleBin()
+    {
+        if (auth()->user()->cant('recycleBin', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['area', 'consumables', 'recycle bin']));
+        }
+
+        if(auth()->user()->role_id == 1){
+            $consumables = Consumable::onlyTrashed()->get();
+        }else{
+            $consumables = auth()->user()->location_consumables()->onlyTrashed();
+        }
+        return view('consumable.bin', compact('consumables'));
+    }
+
+    public function restore($id)
+    {
+        $consumable = Consumable::withTrashed()->where('id', $id)->first();
+        if (auth()->user()->cant('delete', $consumable)) {
+            return redirect(route('errors.forbidden', ['consumable', $consumable->id, 'restore']));
+        }
+        $consumable->restore();
+        session()->flash('success_message', "#". $consumable->name . ' has been restored.');
+        return redirect("/consumables");
+    }
+
+    public function forceDelete($id)
+    {
+        $consumable = Consumable::withTrashed()->where('id', $id)->first();
+        if (auth()->user()->cant('delete', $consumable)) {
+            return redirect(route('errors.forbidden', ['consumable', $consumable->id, 'remove']));
+        }
+        $name=$consumable->name;
+        $consumable->forceDelete();
+        session()->flash('danger_message', "Consumable - ". $name . ' was deleted permanently');
+        return redirect("/consumable/bin");
+    }
+
+    public function changeStatus(Consumable $consumable, Request $request)
+    {
+        $consumable->status_id = $request->status;
+        $consumable->save();
+        session()->flash('success_message', $consumable->name . ' has had its status changed successfully');
+        return redirect(route('consumables.show', $consumable->id));
     }
 }

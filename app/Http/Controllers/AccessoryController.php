@@ -5,6 +5,7 @@ use App\Exports\accessoryErrorsExport;
 use App\Exports\accessoryExport;
 use App\Imports\accessoryImport;
 use App\Models\Accessory;
+use App\Models\Category;
 use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
@@ -12,26 +13,46 @@ use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class AccessoryController extends Controller
 {
     public function index()
     {
-        return view('accessory.view', [
-            "accessories" => Accessory::all(),
-        ]);
+        if (auth()->user()->cant('view', Accessory::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Accessory', 'view']));
+        }
+
+        if(auth()->user()->role_id == 1){
+            $accessories = Accessory::all();
+        }else{
+            $accessories = auth()->user()->location_accessories;
+        } 
+        return view('accessory.view', compact('accessories'));
     }
 
     public function create()
     {
+        if (auth()->user()->cant('create', $accesory)) {
+            return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'create']));
+        }
+        
+        if(auth()->user()->role_id == 1){
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
         return view('accessory.create', [
-        "locations" => Location::all(),
-        "statuses" => Status::all(),
-        "suppliers" => Supplier::all(),
-        "manufacturers" => Manufacturer::all(),
-    ]);
+            "locations" => $locations,
+            "statuses" => Status::all(),
+            "suppliers" => Supplier::all(),
+            "manufacturers" => Manufacturer::all(),
+            'categories' => Category::all(),
+        ]);
     }
-    public function newComment(Request $request){
+
+    public function newComment(Request $request)
+    {
         $request->validate([
             "title" => "required|max:255",
             "comment" => "nullable",
@@ -44,6 +65,10 @@ class AccessoryController extends Controller
 
     public function store(Request $request)
     {
+        if (auth()->user()->cant('create', $accesory)) {
+            return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'create']));
+        }
+        
         $request->validate([
             "name" => "required|max:255",
             "supplier_id" => "required",
@@ -57,32 +82,21 @@ class AccessoryController extends Controller
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
 
-        Accessory::create([
-            "name" => request("name"),
-            "status_id" => request("status_id"),
-            "serial_no" => request("serial_no"),
-            "purchased_date" => request("purchased_date"),
-            "purchased_cost" => request("purchased_cost"),
-            "supplier_id" => request("supplier_id"),
-            "order_no" => request("order_no"),
-            "warranty" => request("warranty"),
-            "location_id" => request("location_id"),
-            "notes" => request("notes"),
-            "manufacturer_id" => request("manufacturer_id"),
-            session()->flash('success_message', request("name") . ' has been created successfully'),
-        ]);
-
+        $accessory = Accessory::create($request->only(
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
+        ));
+        $accessory->category()->attach($request->category);
         return redirect(route("accessories.index"));
-
     }
+
     public function importErrors(Request $request)
     {
-
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
         return \Maatwebsite\Excel\Facades\Excel::download(new accessoryErrorsExport($export), 'AccessoryImportErrors.csv');
     }
+
     public function ajaxMany(Request $request)
     {
         if($request->ajax()){
@@ -128,23 +142,37 @@ class AccessoryController extends Controller
     {
         return view('accessory.show', [
             "accessory" => $accessory,
-
         ]);
     }
 
     public function edit(Accessory $accessory)
     {
+        if (auth()->user()->cant('update', $accessory)) {
+            return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'edit']));
+        }
+
+        if(auth()->user()->role_id == 1){
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
+
         return view('accessory.edit', [
             "accessory" => $accessory,
-            "locations" => Location::all(),
+            "locations" => $locations,
             "statuses" => Status::all(),
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
+            'categories' => Category::all(),
         ]);
     }
 
     public function update(Request $request, Accessory $accessory)
     {
+        if (auth()->user()->cant('update', $accessory)) {
+            return redirect(route('errors.forbidden', ['component', $accessory->id, 'update']));
+        }
+
         $request->validate([
             "name" => "required|max:255",
             "supplier_id" => "required",
@@ -156,41 +184,41 @@ class AccessoryController extends Controller
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-        $accessory->fill([
-            "name" => request("name"),
-            "status_id" => request("status_id"),
-            "serial_no" => request("serial_no"),
-            "purchased_date" => request("purchased_date"),
-            "purchased_cost" => request("purchased_cost"),
-            "supplier_id" => request("supplier_id"),
-            "order_no" => request("order_no"),
-            "warranty" => request("warranty"),
-            "location_id" => request("location_id"),
-            "manufacturer_id" => request("manufacturer_id"),
-            "notes" => request("notes")])->save();
-        session()->flash('success_message', request("name") . ' has been Updated successfully');
 
+        $accessory->fill($request->only(
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
+        ))->save();
+        session()->flash('success_message', $accessory->name.' has been Updated successfully');
+        $accessory->category()->sync($request->category);
         return redirect(route("accessories.index"));
     }
 
     public function destroy(Accessory $accessory)
     {
-        $name = $accessory->name;
-        $accessory->delete();
-        session()->flash('danger_message', $name . ' was deleted from the system');
+        if (auth()->user()->cant('delete', $accessory)) {
+            return redirect(route('errors.forbidden', ['component', $accessory->id, 'delete']));
+        }else{
+            $name = $accessory->name;
+            $accessory->delete();
+            session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
-        return redirect(route('accessories.index'));
-
+            return redirect(route('accessories.index'));
+        }
     }
 
     public function export(Accessory $accessory)
     {
+        if (auth()->user()->cant('view', Accessory::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Accessory', 'export']));
+        }
         return \Maatwebsite\Excel\Facades\Excel::download(new accessoryExport, 'Accessories.csv');
-
     }
 
     public function import(Request $request)
     {
+        if (auth()->user()->cant('view', Accessory::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Accessory', 'import']));
+        }
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());
@@ -278,4 +306,55 @@ class AccessoryController extends Controller
 
 
 
-    }}
+    }
+
+    public function downloadPDF(Request $request){
+        $accessories = Accessory::withTrashed()->whereIn('id', json_decode($request->accessories))->get();
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('accessory.pdf', compact('accessories'));
+        $pdf->setPaper('a4', 'landscape');
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        return $pdf->download("accessories-{$date}.pdf");
+    }
+
+    public function downloadShowPDF(Accessory $accessory){
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('accessory.showPdf', compact('accessory'));
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        return $pdf->download("accessory-{$accessory->id}-{$date}.pdf");
+    }
+
+    //Restore and Force Delete Function Need to be Created
+
+    public function recycleBin()
+    {
+        if(auth()->user()->role_id == 1){
+            $accessories = Accessory::onlyTrashed()->get();
+        }else{
+            $accessories = auth()->user()->location_accessories()->onlyTrashed();
+        }
+        return view('accessory.bin', compact('accessories'));
+    }
+
+    public function restore($id)
+    {
+        $accessory = Accessory::withTrashed()->where('id', $id)->first();
+        if (auth()->user()->cant('delete', $accessory)) {
+            return redirect(route('errors.forbidden', ['component', $accessory->id, 'restore']));
+        }
+        $accessory->restore();
+        session()->flash('success_message', "#". $accessory->name . ' has been restored.');
+        return redirect("/accessories");
+    }
+
+    public function forceDelete($id)
+    {
+        $accessory = Accessory::withTrashed()->where('id', $id)->first();
+        if (auth()->user()->cant('delete', $accessory)) {
+            return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'Force Delete']));
+        }
+        $name=$accessory->name;
+        $accessory->forceDelete();
+        session()->flash('danger_message', "Accessory - ". $name . ' was deleted permanently');
+        return redirect("/accessory/bin");
+    }
+
+}

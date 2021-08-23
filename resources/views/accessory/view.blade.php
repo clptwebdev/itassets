@@ -10,16 +10,35 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Accessories</h1>
         <div>
+            @can('recycleBin', \App\Models\Accessory::class)
+            <a href="{{ route('accessories.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Accessory::onlyTrashed()->count()}})</a>
+            @endcan
+            @can('create', \App\Models\Accessory::class)
             <a href="{{ route('accessories.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Accessory</a>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-            @if($accessories->count() >1)
-            <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            @endcan
+            @can('generatePDF', \App\Models\Accessory::class)
+                @if ($accessories->count() == 1)
+                    <a href="{{ route('accessories.showPdf', $accessories[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                    @else
+                    <form class="d-inline-block" action="{{ route('accessories.pdf')}}" method="POST">
+                        @csrf
+                        <input type="hidden" value="{{ json_encode($accessories->pluck('id'))}}" name="accessories"/>
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                    </form>                
+                @endif
+                @if($accessories->count() >1)
+                <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50"></i>Export</a>
-            @endif
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
+                @endif
+            @endcan
+            @can('import', \App\Models\Accessory::class)
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+            @endcan
         </div>
     </div>
 
@@ -41,31 +60,29 @@
                     <table id="usersTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Order_no</th>
-                            <th>Supplier</th>
-                            <th>Purchased Date</th>
-                            <th>Purchased Cost</th>
-                            <th>Status</th>
-                            <th>Warranty</th>
-                            <th>Location</th>
-                            <th>Manufacturers</th>
-                            <th class="text-center">Options</th>
+                            <th><small>Name</small></th>
+                            <th class="text-center"><small>Location</small></th>
+                            <th class="text-center"><small>Manufacturers</small></th>
+                            <th><small>Date</small></th>
+                            <th><small>Cost</small></th>
+                            <th><small>Supplier</small></th>
+                            <th class="text-center"><small>Status</small></th>
+                            <th class="text-center"><small>Warranty</small></th>
+                            <th class="text-right"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
-                        <tr>
-                            <th>Name</th>
-                            <th>Order_no</th>
-                            <th>Supplier</th>
-                            <th>Purchased Date</th>
-                            <th>Purchased Cost</th>
-                            <th>Status</th>
-                            <th>Warranty</th>
-                            <th>Location</th>
-                            <th>Manufacturers</th>
-                            <th class="text-center">Options</th>
-                        </tr>
+                            <tr>
+                                <th><small>Name</small></th>
+                                <th class="text-center"><small>Location</small></th>
+                                <th class="text-center"><small>Manufacturers</small></th>
+                                <th><small>Purchased Date</small></th>
+                                <th><small>Purchased Cost</small></th>
+                                <th><small>Supplier</small></th>
+                                <th class="text-center"><small>Status</small></th>
+                                <th class="text-center"><small>Warranty</small></th>
+                                <th class="text-right"><small>Options</small></th>
+                            </tr>
                         </tfoot>
                         <tbody>
                         @foreach($accessories as $accessory)
@@ -75,14 +92,26 @@
                                     <br>
                                     <small>{{$accessory->serial_no}}</small>
                                 </td>
-                                <td>{{$accessory->order_no}}</td>
-                                <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center">
+                                    @if($accessory->location->photo()->exists())
+                                        <img src="{{ asset($accessory->location->photo->path)}}" height="30px" alt="{{$accessory->location->name}}" title="{{ $accessory->location->name ?? 'Unnassigned'}}"/>
+                                    @else
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($accessory->location->icon ?? '#666').'">'
+                                            .strtoupper(substr($accessory->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                    @endif  
+                                </td>
+                                <td class="text-center">{{$accessory->manufacturer->name ?? "N/A"}}</td>
                                 <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
-                                <td>{{$accessory->purchased_cost}}</td>
-                                <td>{{$accessory->status->name ??'N/A'}}</td>
-                                <td>{{$accessory->warranty??"N/A"}}</td>
-                                <td>{{$accessory->location->name}}</td>
-                                <td>{{$accessory->manufacturer->name ?? "N/A"}}</td>
+                                <td>£{{$accessory->purchased_cost}}</td>
+                                <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center"  style="color: {{$accessory->status->colour}};">
+                                    <i class="{{$accessory->status->icon}}"></i> {{ $accessory->status->name }}
+                                </td>
+                                @php $warranty_end = \Carbon\Carbon::parse($accessory->purchased_date)->addMonths($accessory->warranty);@endphp
+                                <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
+                                    {{ $accessory->warranty }} Months
+
+                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small></td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -92,8 +121,10 @@
                                         <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                              aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">accessory Options:</div>
+                                            @can('view', $accessory)
                                             <a href="{{ route('accessories.show', $accessory->id) }}" class="dropdown-item">View</a>
-                                            @can('edit', $accessory)
+                                            @endcan
+                                            @can('update', $accessory)
                                                 <a href="{{ route('accessories.edit', $accessory->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $accessory)
@@ -134,7 +165,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this Accessory?
+                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this Accessory to the Recycle Bin?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -142,12 +173,12 @@
                 </div>
                 <div class="modal-body">
                     <input id="user-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this accessory from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. </small>
+                    <p>Select "Send to Bin" to send this accessory to the Recycle Bin.</p>
+                    <small class="text-danger">**Warning this is not permanent and the Accessory can be restored from the Recycle Bin. </small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>

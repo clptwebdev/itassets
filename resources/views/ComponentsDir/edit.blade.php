@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('components.store', $component->id) }}" method="POST">
+    <form action="{{ route('components.update', $component->id) }}" method="POST">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Add New Component</h1>
 
@@ -19,8 +19,18 @@
             </div>
         </div>
 
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <section>
-            <p class="mb-4">edit a existing Component to the asset management system. Enter in the following information
+            <p class="mb-4">Edit {{ $component->name}}, Component stored in the Apollo Asset Management System. Change the information
                 and
                 click the 'Save' button. Or click the 'Back' button
                 to return the Components page.
@@ -29,91 +39,91 @@
                 <div class="col-12 col-md-8 col-lg-9">
                     <div class="card shadow h-100">
                         <div class="card-body">
+                            @csrf
+                            @method('PATCH')
 
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text"
+                                        class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
+                                        name="name" id="name" placeholder="Component Name" value="{{$component->name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="serial_no">Serial_no</label>
+                                <input type="text"
+                                        class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
+                                        name="serial_no" id="serial_no" value="{{$component->serial_no}}" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="order_no">Order_no</label>
+                                    <input type="text"
+                                            class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
+                                            id="order_no" name="order_no"  value="{{$component->order_no}}" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="purchased_cost">Purchased Cost</label>
+                                    <input type="text"
+                                            class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
+                                            id="purchased_cost" name="purchased_cost" value="{{$component->purchased_cost}}" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="purchased_date">Purchased Date</label>
+                                    <input type="date"
+                                            class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
+                                            id="purchased_date" name="purchased_date" value="{{ \Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')}}" required>
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+
+                                    <label for="suppliers">Supplier</label>
+                                    <select type="text"
+                                            class="form-control <?php if ($errors->has('supplier_id')) {?>border-danger<?php }?>"
+                                            id="supplier_id" name="supplier_id" required>
+                                        <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif >No
+                                            Supplier
+                                        </option>
+                                        @foreach($suppliers as $supplier)
+                                            <option
+                                                value="{{ $supplier->id }}"@isset($component->supplier->id) @if($component->supplier->id == $supplier->id){{'selected'}}@endif @endisset>{{ $supplier->name}}</option>
                                         @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-
-                                @csrf
-
-
-                                <div class="form-group">
-                                    <label for="name">Name</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                           name="name" id="name" placeholder="Component Name" value="{{$component->name}}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="serial_no">Serial_no</label>
-                                    <input type="text"
-                                           class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                           name="serial_no" id="serial_no" value="{{$component->serial_no}}" required>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-4">
-                                        <label for="order_no">Order_no</label>
-                                        <input type="text"
-                                               class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                               id="order_no" name="order_no"  value="{{$component->order_no}}" required>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="purchased_cost">Purchased Cost</label>
-                                        <input type="text"
-                                               class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
-                                               id="purchased_cost" name="purchased_cost" value="{{$component->purchased_cost}}" required>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="purchased_date">Purchased Date</label>
-                                        <input type="date"
-                                               class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
-                                               id="purchased_date" name="purchased_date" value="{{ \Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')}}" required>
-                                    </div>
+                                    </select>
 
                                 </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-
-                                        <label for="suppliers">Supplier</label>
-                                        <select type="text"
-                                                class="form-control <?php if ($errors->has('supplier_id')) {?>border-danger<?php }?>"
-                                                id="supplier_id" name="supplier_id" required>
-                                            <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif >No
-                                                Supplier
-                                            </option>
-                                            @foreach($suppliers as $supplier)
-                                                <option
-                                                    value="{{ $supplier->id }}"@isset($component->supplier->id) @if($component->supplier->id == $supplier->id){{'selected'}}@endif @endisset>{{ $supplier->name}}</option>
-                                            @endforeach
-                                        </select>
-
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="status">Status</label>
-                                        <select
-                                            class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
-                                            id="status_id" name="status_id">
-                                            <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
-                                            </option>
-                                            @foreach($statuses as $status)
-                                                <option
-                                                    value="{{ $status->id }}" @isset($component->status->id)@if($component->status->id == $status->id){{'selected'}}@endif @endisset>{{ $status->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <div class="form-group col-md-6">
+                                    <label for="status">Status</label>
+                                    <select
+                                        class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
+                                        id="status_id" name="status_id">
+                                        <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
+                                        </option>
+                                        @foreach($statuses as $status)
+                                            <option
+                                                value="{{ $status->id }}" @isset($component->status->id)@if($component->status->id == $status->id){{'selected'}}@endif @endisset>{{ $status->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <div class="form-row">
+                            </div>
+                            @php( $cat_array = [])
+                            @foreach($component->category as $cc)
+                            @php( $cat_array[] = $cc->id)
+                            
+                            @endforeach
+                            <div id="categories" class="border border-gray p-2 mb-3">
+                                <h4 class="h6 mb-4 text-center">Categories</h4>
+                                @foreach($categories as $category)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}" @if(in_array($category->id, $cat_array)){{ 'checked'}}@endif>
+                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
                                 </div>
-                                <div class="form-group">
-                                    <label for="notes">Notes</label>
-                                    <textarea name="notes" id="notes" class="form-control" rows="10">{{$component->notes}}</textarea>
-                                </div>
-
+                                @endforeach
+                            </div>
+                            <div class="form-group">
+                                <label for="notes">Notes</label>
+                                <textarea name="notes" id="notes" class="form-control" rows="10">{{$component->notes}}</textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -124,10 +134,14 @@
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Location Image</h4>
+                                    @if($component->photo()->exists())
+                                        <img id="profileImage" src="{{ asset($component->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal> 
+                                    @else
                                     <img id="profileImage"
                                          src="{{ asset('images/svg/location-image.svg') }}"
                                          width="100%"
                                          alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                    @endif
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>
                             </div>

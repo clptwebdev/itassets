@@ -103,12 +103,20 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-row">
+                            <div id="categories" class="border border-light p-2 mb-3">
+                                <h4 class="h6 mb-4 text-center">Categories</h4>
+                                @foreach($categories as $category)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}">
+                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
+                                </div>
+                                @endforeach
                             </div>
                             <div class="form-group">
                                 <label for="notes">Notes</label>
                                 <textarea name="notes" id="notes" class="form-control" rows="10"></textarea>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

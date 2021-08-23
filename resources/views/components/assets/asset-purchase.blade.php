@@ -49,7 +49,9 @@
                                 class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>Laptop and Tablet</small></strong></p></td>
                         </tr>
                     </table>
-                    <button class="btn btn-sm btn-primary"><i class="far fa-envelope"></i> Email Supplier</button>
+                    @if($asset->supplier && $asset->supplier->email != "")
+                    <a href="mailto:{{$asset->supplier->email}}"><button class="btn btn-sm btn-primary"><i class="far fa-envelope"></i> Email Supplier</button></a>
+                    @endif
                 </div>
             </div>
         </div>

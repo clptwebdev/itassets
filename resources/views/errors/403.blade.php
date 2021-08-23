@@ -84,6 +84,11 @@ h2{
           $message = "You don't have permission to '".strtoupper($method)."' Asset - {$name} ($asset->asset_tag)";
           $link = "/assets";
           break;
+        case 'component':
+          $component = \App\Models\Component::find($id);
+          $message = "You don't have permission to '".strtoupper($method)."' Component - {$component->name}";
+          $link = "/components";
+          break;
         case 'user':
           $user = \App\Models\User::find($id);
           $name = $user->name;

@@ -24,7 +24,7 @@ class AssetPolicy
     public function view(User $user, Asset $asset)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($asset->location_id, $locations)){
+        if($user->role_id == 1 || $user->role_id <= 4 && in_array($asset->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -88,7 +88,7 @@ class AssetPolicy
     }
 
     public function recycleBin(User $user){
-        return $user->role_id <= 3;
+        return $user->role_id <= 4;
     }
 
     public function generatePDF(User $user){

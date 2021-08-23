@@ -1,30 +1,36 @@
 @extends('layouts.app')
 
-@section('css')
+@section('title', "View Consumable")
 
+@section('css')
+<link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
 
 @section('content')
-    <form id="form{{$consumable->id}}" action="{{ route('consumables.destroy', $consumable->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
 
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">View consumables</h1>
-            <div>
-                <a href="{{ route('consumables.index')}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
-                <a class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" href="#"
-                   data-id="{{$consumable->id}}"><i class=" fas fa-trash fa-sm text-white-50"></i>Delete</a>
-                <a href="{{ route('consumables.edit', $consumable->id)}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
-                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-            </div>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">View Consumables</h1>
+        <div>
+            <a href="{{ route('consumables.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+            @can('generatePDF', $consumable)
+            <a href="{{ route('consumables.showPdf', $consumable->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
+            @endcan
+            @can('edit', $consumable)
+            <a href="{{ route('consumables.edit', $consumable->id)}}"
+               class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                    class="fas fa-edit fa-sm text-white-50"></i> Edit</a>
+            @endcan
+            <form class="d-inline-block id="form{{$consumable->id}}" action="{{ route('consumables.destroy', $consumable->id) }}"
+                method="POST">
+            @csrf
+            @method('DELETE')
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" data-id="{{$consumable->id}}"><i
+                    class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
+            </form>
         </div>
-    </form>
+    </div>
 
     @if(session('danger_message'))
         <div class="alert alert-danger"> {{ session('danger_message')}} </div>
@@ -33,115 +39,98 @@
     @if(session('success_message'))
         <div class="alert alert-success"> {{ session('success_message')}} </div>
     @endif
-    <section>
-        <p class="mb-4">Information regarding {{ $consumable->name }}, the assets that are currently assigned to the
-            consumable and any request information.</p>
 
-        <div class="row">
+    <div class="row row-eq-height">
+        <x-consumables.consumable-info :consumable="$consumable" />
+        <x-consumables.consumable-purchase :consumable="$consumable" />
+    </div>
 
-            <div class="col-12 col-sm-8 col-md-9 col-xl-10">
-                <div class="card shadow h-100 pb-2">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold">consumable Information</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row no-gutters">
-                            <div class="col mr-2">
-                                <div class="mb-1">
-                                    <p><strong>consumable Item Name: </strong>{{ $consumable->name }}</p>
-                                    <p><strong>Serial Number: </strong>{{ $consumable->serial_no }}</p>
-                                    <p><strong>Order Number: </strong>{{ $consumable->order_no }}</p>
-                                    <p><strong>consumable Status: </strong>{{ $consumable->status->name ??'N/A'}}</p>
-                                    <p><strong>Purchase
-                                            Date: </strong> {{\Carbon\Carbon::parse($consumable->purchased_date)->format('Y-m-d')}}
-                                    </p>
-                                    <p><strong>Purchase Cost: </strong> £{{ $consumable->purchased_cost }}</p>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                @if ($consumable->photo()->exists())
-                                    <img src="{{ $consumable->photo->path ?? 'null' }}"
-                                         alt="{{ $consumable->name}}" width="60px">
-                                @else
-                                    <i class="fas fa-school fa-2x text-gray-300"></i>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="row row-eq-height">
+        <div class="col-12 col-lg-8 mb-4">
+            <x-locations.location-modal :asset="$consumable"/>
         </div>
-        <div class="col-xl-10 p-0">
-            <div class="card shadow h-100 mt-3">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold">Comments</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row no-gutters">
-                        <div class="col mr-2">
-                            <div class="mb-1">
-                                <div class="row align-items-start">
-                                    @foreach($consumable->comment as $comment)
-                                        <x-comments.comment-layout :comment="$comment"/>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <button id="commentModal" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm mb-3">
-                                Add New
-                                Comment
-                            </button>
-                            <i class="fas fa-comments fa-2x text-gray-300 pt-2"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
+        <div class="col-12 col-lg-4 mb-4">
+            <x-manufacturers.manufacturer-modal :asset="$consumable"/>
         </div>
-    </section>
+        
+    </div>
+    <div class="row row-eq-height">
+        <x-consumables.consumable-log :consumable="$consumable"/>
+        <div class="col-12 col-lg-6 mb-4">
+            <x-comments.comment-layout :asset="$consumable"/>
+        </div>   
+    </div>
+    
 
 @endsection
 
 @section('modals')
-
-    <!-- User Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeLocationModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeLocationModalLabel" aria-hidden="true">
+    <!-- consumable Status Model Modal-->
+    <div class="modal fade bd-example-modal-lg" id="consumableStatus" tabindex="-1" role="dialog"
+         aria-labelledby="consumableStatusLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeLocationModalLabel">Are you sure you want to delete this
-                        Consumable?</h5>
+                    <h5 class="modal-title" id="consumableStatusLabel">Are you sure you want to delete this item?
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{ route('consumables.status', $consumable->id)}}" method="post">
+                <div class="modal-body">
+                    @csrf
+                    <select name="status" class="form-control">
+                        @foreach(\App\Models\Status::all() as $status)
+                        <option value="{{ $status->id}}" @if($status->id == $consumable->status_id){{ 'selected'}}@endif>{{ $status->name }}</option>  
+                        @endforeach  
+                    </select> 
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success" type="submit">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- consumable Delete Modal-->
+    <div class="modal fade bd-example-modal-lg" id="removeconsumableModal" tabindex="-1" role="dialog"
+         aria-labelledby="removeconsumableModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeconsumableModalLabel">Are you sure you want to send this Consumable to the Recycle Bin?
+                    </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input id="location-id" type="hidden" value="{{ $consumable->id }}">
-                    <p>Select "Delete" to remove this Consumable from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assets assigned to this location will
-                        become available.</small>
+                    <input id="consumable-id" type="hidden" value="">
+                    <p>Select "Send to Bin" to send this item to the Recycle Bin.</p>
+                    <small class="text-danger">**Warning this is not permanent. This Consumable can be restored inside the Recycle Bin.</small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>
     </div>
     <!-- comments Modal-->
-    <div class="modal fade bd-example-modal-lg" id="commentModalOpen" tabindex="-1" role="dialog"
-         aria-labelledby="commentModalOpen" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="newCommentModal" tabindex="-1" role="dialog"aria-labelledby="commentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="commentModalOpen2">Creating a New comment for
+                    <h5 class="modal-title" id="commentModalLabel">Creating a New comment for
                         <strong>{{$consumable->name}}</strong></h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('consumable.comment') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('consumables.comment') }}" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="consumable_id" value="{{ $consumable->id }}">
                     <div class="modal-body">
                         <p>Fill Out the title Field and Body to continue...</p>
@@ -174,23 +163,24 @@
 @endsection
 
 @section('js')
+    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
         $('.deleteBtn').click(function () {
-            $('#location-id').val($(this).data('id'))
+            $('#consumable-id').val($(this).data('id'))
             //showModal
-            $('#removeLocationModal').modal('show')
+            $('#removeconsumableModal').modal('show')
         });
 
         $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#location-id').val();
+            var form = '#' + 'form' + $('#consumable-id').val();
             $(form).submit();
         });
-        // Create comment , Ignore the ID's
 
         $('#commentModal').click(function () {
             //showModal
-            $('#commentModalOpen').modal('show')
+            $('#newCommentModal').modal('show')
         });
+            
 
     </script>
 

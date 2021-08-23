@@ -50,6 +50,20 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('components.index')}}" data-toggle="collapse" data-target="#accessoryDD" aria-expanded="true"
+            aria-controls="accessoryDD">
+            <i class="fas fa-fw fa-keyboard sidebar-icon" data-toggle="tooltip" data-placement="right" title="Accessories"></i>
+            <span class="sidebar-title">Accessories</span>
+        </a>
+        <div id="accessoryDD" class="collapse" aria-labelledby="accessoryTitle" data-parent="#accordionSidebar">
+                <a class="collapse-item" href="{{ route('accessories.index')}}">View All</a>
+                <a class="collapse-item" href="{{ route('accessories.create')}}"> Add New Accessory</a>
+                <a class="collapse-item" href="{{ route('accessories.index')}}"> Import Accessories</a>
+        </div>
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('components.index')}}" data-toggle="collapse" data-target="#componentsDD" aria-expanded="true"
             aria-controls="componentsDD">
             <i class="far fa-fw fa-hdd sidebar-icon" data-toggle="tooltip" data-placement="right" title="Components"></i>
@@ -62,19 +76,6 @@
         </div>
     </li>
 
-    <!-- Nav Item - Utilities Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('components.index')}}" data-toggle="collapse" data-target="#accessoryDD" aria-expanded="true"
-            aria-controls="accessoryDD">
-            <i class="fas fa-fw fa-keyboard sidebar-icon" data-toggle="tooltip" data-placement="right" title="Accessories"></i>
-            <span class="sidebar-title">Accessories</span>
-        </a>
-        <div id="accessoryDD" class="collapse" aria-labelledby="accessoryTitle" data-parent="#accordionSidebar">
-                <a class="collapse-item" href="{{ route('accessories.index')}}">View All</a>
-                <a class="collapse-item" href="{{ route('accessories.create')}}"> Add New Accessory</a>
-                <a class="collapse-item" href="{{ route('accessories.index')}}"> Import Accessories</a>
-        </div>
-    </li>
     <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('consumables.index')}}" data-toggle="collapse" data-target="#consumableDD" aria-expanded="true"
             aria-controls="consumableDD">

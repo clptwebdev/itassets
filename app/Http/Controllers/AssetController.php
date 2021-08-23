@@ -49,8 +49,13 @@ class AssetController extends Controller {
     {
         $this->authorize('create', Asset::class);
 
+        if(auth()->user()->role_id == 1){
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
         return view('assets.create', [
-            "locations" => auth()->user()->locations,
+            "locations" => $locations,
             "manufacturers" => Manufacturer::all(),
             'models' => AssetModel::all(),
             'suppliers' => Supplier::all(),
@@ -58,6 +63,7 @@ class AssetController extends Controller {
             'categories' => Category::all(),
         ]);
     }
+
     public function newComment(Request $request){
         $request->validate([
             "title" => "required|max:255",
@@ -70,12 +76,6 @@ class AssetController extends Controller {
         return redirect(route('assets.show', $asset->id));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $this->authorize('create', Asset::class);
@@ -184,9 +184,14 @@ class AssetController extends Controller {
         if (auth()->user()->cant('edit', $asset)) {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
         }else{
+            if(auth()->user()->role_id == 1){
+                $locations = Location::all();
+            }else{
+                $locations = auth()->user()->locations;
+            }
             return view('assets.edit', [
                 "asset"=>$asset,
-                "locations"=>auth()->user()->locations,
+                "locations"=>$locations,
                 "manufacturers"=>Manufacturer::all(),
                 'models'=>AssetModel::all(),
                 'suppliers' => Supplier::all(),
@@ -196,13 +201,6 @@ class AssetController extends Controller {
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Asset $asset)
     {
         if (auth()->user()->cant('update', $asset)) {
@@ -308,7 +306,8 @@ class AssetController extends Controller {
         return redirect("/assets");
     }
 
-    public function restore($id){
+    public function restore($id)
+    {
         $asset = Asset::withTrashed()->where('id', $id)->first();
         if (auth()->user()->cant('delete', $asset)) {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
@@ -319,7 +318,8 @@ class AssetController extends Controller {
         return redirect("/assets");
     }
 
-    public function forceDelete($id){
+    public function forceDelete($id)
+    {
         $asset = Asset::withTrashed()->where('id', $id)->first();
         if (auth()->user()->cant('delete', $asset)) {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
@@ -346,7 +346,6 @@ class AssetController extends Controller {
 
     public function export(Request $request)
     {
-
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
         return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport($assets), 'assets.csv');
 
@@ -501,7 +500,8 @@ class AssetController extends Controller {
         }
     }
 
-    public function filter(Request $request){
+    public function filter(Request $request)
+    {
 
         if(auth()->user()->role_id != 1){
             $locations = auth()->user()->locations->pluck('id');
@@ -568,7 +568,8 @@ class AssetController extends Controller {
         ]);
     }
 
-    public function location(Location $location){
+    public function location(Location $location)
+    {
         $locations = auth()->user()->locations->pluck('id');
         $assets = Asset::locationFilter($locations);
         $assets->locationFilter([$location->id]);
@@ -581,7 +582,8 @@ class AssetController extends Controller {
         ]);
     }
 
-    public function downloadPDF(Request $request){
+    public function downloadPDF(Request $request)
+    {
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets'));
         $pdf->setPaper('a4', 'landscape');
@@ -589,7 +591,8 @@ class AssetController extends Controller {
         return $pdf->download("assets-{$date}.pdf");
     }
 
-    public function downloadShowPDF(Asset $asset){
+    public function downloadShowPDF(Asset $asset)
+    {
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.showPdf', compact('asset'));
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
@@ -612,6 +615,14 @@ class AssetController extends Controller {
             'categories' => Category::all(),
             "locations"=>$locations,
         ]);
+    }
+
+    public function changeStatus(Asset $asset, Request $request)
+    {
+        $asset->status_id = $request->status;
+        $asset->save();
+        session()->flash('success_message', $asset->model->name . ' has had its status changed successfully');
+        return redirect(route('assets.show', $asset->id));
     }
 
 }

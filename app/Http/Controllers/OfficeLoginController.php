@@ -18,7 +18,7 @@ class OfficeLoginController extends Controller
      */
     public function redirectToProvider()
     {
-        return Socialite::driver('azure')->redirect();
+        return Socialite::driver('azure')->with(['url' => 'apollo'])->redirect();
     }
 
     /**
@@ -33,10 +33,10 @@ class OfficeLoginController extends Controller
         if($authUser = User::whereEmail($user->email)->first()){
 
         }else{
-            $unhash = 'Test123';
+            $unhash = random_password(12);
             $password = Hash::make($unhash);
             $authUser = User::create([
-                'name' => $user->name,
+                'name' => $user->name,  
                 'email' => $user->email,
                 'password' => $password,
             ]);

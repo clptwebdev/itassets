@@ -5,13 +5,17 @@
 @endsection
 
 @section('content')
+@if(session('danger_message'))
+    <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+@endif
 
+<<<<<<< HEAD
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
     </div>
 
-    <x-admin.asset-info/>
+
     @if(session('danger_message'))
         <div class="alert alert-danger"> {{ session('danger_message')}} </div>
     @endif
@@ -19,7 +23,7 @@
     @if(session('success_message'))
         <div class="alert alert-success"> {{ session('success_message')}} </div>
     @endif
-
+<x-admin.asset-info/>
     <!-- Content Row -->
     <div id="coolImage"></div>
     <div class="row row-eq-height mb-4">
@@ -159,6 +163,25 @@
                     @php
                         $audits_due = 0; $audits_over = 0;
                     @endphp
+<<<<<<< HEAD
+=======
+                    <div class="progress-bar" role="progressbar" style="background-color: {{$status->colour}}; width: {{ round($percent)}}%" aria-valuenow="{{ $count }}" aria-valuemin="0"
+                        aria-valuemax="100" title="{{$status->name}} - {{ $count }}"></div>
+                    @endforeach
+                    <div class="progress-bar bg-gray-200" role="progressbar" style="width: auto" aria-valuenow="{{ round(100 - $percent) }}" aria-valuemin="0"
+                        aria-valuemax="100" title="Unset"></div>
+                </div>
+                <div class="mb-4">
+                <small>
+                    @foreach(\App\Models\Status::all() as $status)
+                    <i class="fas fa-circle" style="color: {{ $status->colour}}"></i> {{$status->name}}
+                    @endforeach
+                </small>
+                </div>
+                @php
+                    $audits_due = 0; $audits_over = 0;
+                @endphp
+>>>>>>> dfe8c206e1eb1e4c58e08559652bd74cb19b25ed
                 <!-- Pending Requests Card Example -->
                     @foreach($assets as $asset)
                         @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())

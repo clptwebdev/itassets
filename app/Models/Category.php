@@ -13,5 +13,13 @@ class Category extends Model
 
     public function assets(){
         return $this->morphedByMany(Asset::class, 'cattable');
-   }
+    }
+
+    public function components(){
+        return $this->morphedByMany(Component::class, 'cattable');
+    }
+
+    public function accessories(){
+        return $this->morphedByMany(Accessory::class, 'cattable');
+    }
 }

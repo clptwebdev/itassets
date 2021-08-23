@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
-@section('css')
+@section('title', 'View Component')
 
+@section('css')
+<link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
 
 @section('content')
@@ -10,18 +12,24 @@
         @method('DELETE')
 
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">View components</h1>
+            <h1 class="h3 mb-0 text-gray-800">View Component</h1>
             <div>
                 <a href="{{ route('components.index')}}"
                    class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+                @can('delete', $component)
                 <a class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" href="#"
                    data-id="{{$component->id}}"><i class=" fas fa-trash fa-sm text-white-50"></i>Delete</a>
+                @endcan
+                @can('edit', $component)
                 <a href="{{ route('components.edit', $component->id)}}"
                    class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
-                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                        class="fas fa-edit fa-sm text-white-50"></i> Edit</a>
+                @endcan
+                @can('export', $component)
+                <a href="{{ route('components.showPdf', $component->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -33,71 +41,30 @@
     @if(session('success_message'))
         <div class="alert alert-success"> {{ session('success_message')}} </div>
     @endif
-    <section>
-        <p class="mb-4">Information regarding {{ $component->name }}, the assets that are currently assigned to the
-            component and any request information.</p>
+    <section class="m-auto">
+        <p class="mb-4">Information regarding {{ $component->name }} including the location and any comments made by staff. </p>
 
-        <div class="row">
+        <div class="row row-eq-height">
+            <x-components.component-info :component="$component" />
+            <x-components.component-purchase :component="$component" />
+        </div>
 
-            <div class="col-12 col-sm-8 col-md-9 col-xl-10">
-                <div class="card shadow h-100 pb-2">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold">component Information</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row no-gutters">
-                            <div class="col mr-2">
-                                <div class="mb-1">
-                                    <p><strong>Component Item Name: </strong>{{ $component->name }}</p>
-                                    <p><strong>Serial Number: </strong>{{ $component->serial_no }}</p>
-                                    <p><strong>Order Number: </strong>{{ $component->order_no }}</p>
-                                    <p><strong>Component Status: </strong>{{ $component->status->name ??'N/A'}}</p>
-                                    <p><strong>Purchase
-                                            Date: </strong> {{\Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')}}
-                                    </p>
-                                    <p><strong>Purchase Cost: </strong> £{{ $component->purchased_cost }}</p>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                @if ($component->photo()->exists())
-                                    <img src="{{ $component->photo->path ?? 'null' }}"
-                                         alt="{{ $component->name}}" width="60px">
-                                @else
-                                    <i class="fas fa-school fa-2x text-gray-300"></i>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="row row-eq-height">
+            <div class="col-12 col-lg-8 mb-4">
+                <x-locations.location-modal :asset="$component"/>
+            </div>
+            <div class="col-12 col-lg-4 mb-4">
+                <x-manufacturers.manufacturer-modal :asset="$component"/>
             </div>
         </div>
-        <div class="col-xl-10 p-0">
-            <div class="card shadow h-100 mt-3">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold">Comments</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row no-gutters">
-                        <div class="col mr-2">
-                            <div class="mb-1">
-                                <div class="row align-items-start">
-                                    @foreach($component->comment as $comment)
-                                        <x-comments.comment-layout :comment="$comment"/>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <button id="commentModal" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm mb-3">
-                                Add New
-                                Comment
-                            </button>
-                            <i class="fas fa-comments fa-2x text-gray-300 pt-2"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+        <div class="row row-eq-height">
+            <x-components.component-log :component="$component"/>
+            <div class="col-12 col-lg-6 mb-4">
+                <x-comments.comment-layout :asset="$component"/>
+            </div>   
         </div>
+        
     </section>
 
 @endsection
@@ -110,17 +77,15 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeLocationModalLabel">Are you sure you want to delete this
-                        Component?</h5>
+                    <h5 class="modal-title" id="removeLocationModalLabel">Are you sure you want to send this Component to the Recycle Bin?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <input id="location-id" type="hidden" value="{{ $component->id }}">
-                    <p>Select "Delete" to remove this Component from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assets assigned to this Component will
-                        become available.</small>
+                    <p>Select "Send to Bin" to send this Component to the Recycle Bin.</p>
+                    <small class="text-danger">**This is not permanent and the component can be restored in the Components Recycle Bin. </small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -135,16 +100,15 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="commentModalOpen2">Creating a New comment for
+                    <h5 class="modal-title" id="commentModalOpenLabel">Creating a New comment for
                         <strong>{{$component->name}}</strong></h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('component.comment') }}" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="component_id" value="{{ $component->id }}">
+                <form action="{{ route('component.comment', $component->id) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
-                        <p>Fill Out the title Field and Body to continue...</p>
+                        <p>Fill Out the Title Field and Body to continue...</p>
                     </div>
                     <div class="form-group pr-3 pl-3">
                         <label class="font-weight-bold" for="title">Comment Title</label>
@@ -156,7 +120,7 @@
                         <label
                             class="font-weight-bold <?php if ($errors->has('comment')) {?>border-danger<?php }?>"
                             for="comment_content">Notes</label>
-                        <textarea name="comment" id="content" class="form-control" rows="5"></textarea>
+                        <textarea name="comment" id="comment" class="form-control" rows="5"></textarea>
 
                     </div>
                     <div class="p-2 text-lg-right">
@@ -173,6 +137,7 @@
 @endsection
 
 @section('js')
+    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
         $('.deleteBtn').click(function () {
             $('#location-id').val($(this).data('id'))
@@ -188,6 +153,20 @@
         $('#commentModal').click(function () {
             //showModal
             $('#commentModalOpen').modal('show')
+        });
+
+        $(document).ready( function () {
+            $('#comments').DataTable({
+                "autoWidth": false,
+                "pageLength": 10,
+                "searching": false,
+                "bLengthChange": false,
+                "columnDefs": [ {
+                    "targets": [1],
+                    "orderable": false
+                }],
+                "order": [[ 0, "desc"]],
+            });
         });
     </script>
 

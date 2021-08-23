@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+
 use App\Models\Supplier;
 use App\Models\Log;
 use Carbon\Carbon;
