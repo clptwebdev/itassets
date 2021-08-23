@@ -26,9 +26,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        User::observe(\App\Observers\UserObserver::class);
-        Asset::observe(\App\Observers\AssetObserver::class);
-        Supplier::observe(\App\Observers\SupplierObserver::class);
+//        User::observe(\App\Observers\UserObserver::class);
+//        Asset::observe(\App\Observers\AssetObserver::class);
+//        Supplier::observe(\App\Observers\SupplierObserver::class);
 
         Relation::morphMap([
             'user' => 'App\Models\User',

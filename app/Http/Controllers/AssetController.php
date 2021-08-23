@@ -23,6 +23,7 @@ use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\Types\String_;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PDF;
+use function PHPUnit\Framework\isEmpty;
 
 class AssetController extends Controller {
 
@@ -383,7 +384,6 @@ class AssetController extends Controller {
                 ];
 
             }
-
             if(! empty($importErrors))
             {
                 $errorArray = [];
@@ -433,11 +433,13 @@ class AssetController extends Controller {
                 return redirect('/assets')->with('success_message', 'All Assets were added correctly!');
 
             }
+
         } else
         {
             return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
         }
+
     }
 
     public function importErrors(Request $request)
