@@ -8,8 +8,6 @@
 @if(session('danger_message'))
     <div class="alert alert-danger"> {{ session('danger_message')}} </div>
 @endif
-
-<<<<<<< HEAD
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
@@ -163,25 +161,7 @@
                     @php
                         $audits_due = 0; $audits_over = 0;
                     @endphp
-<<<<<<< HEAD
-=======
-                    <div class="progress-bar" role="progressbar" style="background-color: {{$status->colour}}; width: {{ round($percent)}}%" aria-valuenow="{{ $count }}" aria-valuemin="0"
-                        aria-valuemax="100" title="{{$status->name}} - {{ $count }}"></div>
-                    @endforeach
-                    <div class="progress-bar bg-gray-200" role="progressbar" style="width: auto" aria-valuenow="{{ round(100 - $percent) }}" aria-valuemin="0"
-                        aria-valuemax="100" title="Unset"></div>
-                </div>
-                <div class="mb-4">
-                <small>
-                    @foreach(\App\Models\Status::all() as $status)
-                    <i class="fas fa-circle" style="color: {{ $status->colour}}"></i> {{$status->name}}
-                    @endforeach
-                </small>
-                </div>
-                @php
-                    $audits_due = 0; $audits_over = 0;
-                @endphp
->>>>>>> dfe8c206e1eb1e4c58e08559652bd74cb19b25ed
+
                 <!-- Pending Requests Card Example -->
                     @foreach($assets as $asset)
                         @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
@@ -221,41 +201,6 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-
-    <!-- Content Row -->
-    <div class="row">
-
-        <!-- Content Column -->
-        <div class="col-xl-6 mb-4">
-            <!-- Project Card Example -->
-
-
-            <!-- Color System -->
-            <div class="row row-eq-height">
-                @foreach($locations as $location)
-                    <div class="col-md-12 col-xl-6 mb-4 h-100">
-                        <div class="card shadow" style="background-color: {{$location->icon}}; color: #FFF">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12 col-md-9">
-                                        {{ $location->name}}
-                                        <div class="text-white-50 small">{{$location->icon}}</div>
-                                    </div>
-                                    <div class="col-12 col-md-3" background>
-                                        @if(isset($location->photo->path))
-                                            '<img src="{{ asset($location->photo->path)}}" height="50px"
-                                                  alt="{{$location->name}}"
-                                                  title="{{ $location->name ?? 'Unnassigned'}}"/>'
-                                        @else
-                                            {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($location->icon ?? '#666').'">'
-                                                .strtoupper(substr($location->name ?? 'u', 0, 1)).'</span>' !!}
-                                        @endif
-                                    </div>
-                                </div>
-=======
-</div>
-
 <!-- Content Row -->
 <div class="row">
 
@@ -336,15 +281,6 @@
 @endsection
 
 @section('js')
-<<<<<<< HEAD
-    <script src="{{ asset('js/chart.js') }}"></script>
-    <script src="{{ asset('js/demo/chart-bar-demo.js') }}"></script>
-    <script>
-        $(document).ready(function () {
-            showGraph();
-            showValueGraph();
-            showAssetGraph();
-=======
 <script src="{{ asset('js/chart.js') }}"></script>
 <script src="{{ asset('js/demo/chart-bar-demo.js') }}"></script>
 <script>
@@ -397,7 +333,6 @@
         error: function(){
             console.log('Eror');
         },
->>>>>>> main
         });
 
 

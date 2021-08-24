@@ -115,11 +115,11 @@ Route::group(['middleware'=>'auth'], function(){
 
 
         Route::resource('/status', 'App\Http\Controllers\StatusController');
-        
 
-        
-        
-        
+
+
+
+
         Route::post('assets/comment/create',[\App\Http\Controllers\AssetController::class, "newComment"] )->name('asset.comment');
 
         Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
