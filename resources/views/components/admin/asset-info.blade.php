@@ -82,7 +82,7 @@
         </div>
     </div>
 
-    <!-- Earnings (Monthly) Card Example -->
+    @if($assets->count() != 0)
     <div class="col-xl-2 col-md-4 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
@@ -102,6 +102,7 @@
                                 @endphp
                                 <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $ud}}</div>
                             </div>
+
                             <div class="col">
                                 <div class="progress progress-sm mr-2">
                                     <div class="progress-bar bg-info" role="progressbar" style="width: {{ ($ud/$total) * 100 }}%"
@@ -117,6 +118,7 @@
             </div>
         </div>
     </div>
+  
     @php
         $audits_due = 0; $audits_over = 0;
     @endphp
@@ -164,3 +166,4 @@
         </div>
     </div>
 </div>
+@endif

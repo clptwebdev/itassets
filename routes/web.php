@@ -85,7 +85,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('/asset/bin', 'App\Http\Controllers\AssetController@recycleBin')->name('assets.bin');
         Route::get('/asset/{asset}/restore', 'App\Http\Controllers\AssetController@restore')->name('assets.restore');
         Route::post('/asset/{asset}/remove', 'App\Http\Controllers\AssetController@forceDelete')->name('assets.remove');
-        Route::post('/asset/{asset}/status', 'App\Http\Controllers\AssetController@changeStatus')->name('assets.status');
+        Route::post('/asset/{asset}/status', 'App\Http\Controllers\AssetController@changeStatus')->name('change.status');
     //Component Routes
         Route::resource('/components', 'App\Http\Controllers\ComponentController');
         Route::get('/component/bin', 'App\Http\Controllers\ComponentController@recycleBin')->name('components.bin');

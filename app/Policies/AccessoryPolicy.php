@@ -11,29 +11,30 @@ class AccessoryPolicy
     use HandlesAuthorization;
 
     
-    public function view(User $user)
+    public function viewAll(User $user)
     {
-        $locations = $user->locations->pluck('id')->toArray( );
-        if($user->role_id == 1 || $user->role_id <= 4 && in_array($accessory->location_id, $locations)){
+        return $user->role_id != 0 && $user->role_id <= 4;
+    }
+
+    public function view(User $user, Accessory $accessory)
+    {
+        $locations = $user->locations->pluck('id')->toArray();
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
-        }
+        } 
     }
 
     public function create(User $user)
     {
-        if($user->role_id <= 3){
-            return true;
-        }else{
-            return false;
-        }
+        return $user->role_id != 0 && $user->role_id <= 3;
     }
 
     public function update(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($accessory->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -43,7 +44,7 @@ class AccessoryPolicy
     public function delete(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($accessory->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -53,7 +54,7 @@ class AccessoryPolicy
     public function restore(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($accessory->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -63,7 +64,7 @@ class AccessoryPolicy
     public function forceDelete(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($accessory->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -72,28 +73,28 @@ class AccessoryPolicy
 
     public function recycleBin(User $user)
     {
-        return $user->role_id <= 4;
+        return $user->role_id != 0 && $user->role_id <= 4;
     }
 
     public function import(User $user,)
     {
-        return $user->role_id <= 3;
+        return $user->role_id != 0 && $user->role_id <= 3;
     }
 
     public function export(User $user, Accessory $accessory)
     {
-        return $user->role_id <= 4;
+        return $user->role_id != 0 && $user->role_id <= 4;
     }
 
     public function generatePDF(User $user)
     {
-        return $user->role_id <= 4;
+        return $user->role_id != 0 && $user->role_id <= 4;
     }
 
     public function generateAccessoryPDF(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($accessory->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;

@@ -28,6 +28,10 @@ class AssetController extends Controller {
 
     public function index()
     {
+        if (auth()->user()->cant('viewAll', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Assets', 'view']));
+        }
+
         if(auth()->user()->role_id == 1){
             $assets = Asset::all();
             $locations = Location::all();
@@ -46,7 +50,9 @@ class AssetController extends Controller {
 
     public function create()
     {
-        $this->authorize('create', Asset::class);
+        if (auth()->user()->cant('create', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset', 'create']));
+        }
 
         if(auth()->user()->role_id == 1){
             $locations = Location::all();
@@ -77,7 +83,10 @@ class AssetController extends Controller {
 
     public function store(Request $request)
     {
-        $this->authorize('create', Asset::class);
+        if (auth()->user()->cant('create', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset', 'create']));
+        }
+
         $validate_fieldet = [];
         //Validate and Collect the Additional Fieldsets
         if($request->asset_model != 0)
@@ -172,6 +181,10 @@ class AssetController extends Controller {
 
     public function show(Asset $asset)
     {
+        if (auth()->user()->cant('view', $asset)) {
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'view']));
+        }
+
         return view('assets.show', [
             "asset" => $asset,
         ]);
@@ -180,23 +193,24 @@ class AssetController extends Controller {
     public function edit(Asset $asset)
     {
 
-        if (auth()->user()->cant('edit', $asset)) {
+        if (auth()->user()->cant('update', $asset)) {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
-        }else{
-            if(auth()->user()->role_id == 1){
-                $locations = Location::all();
-            }else{
-                $locations = auth()->user()->locations;
-            }
-            return view('assets.edit', [
-                "asset"=>$asset,
-                "locations"=>$locations,
-                "manufacturers"=>Manufacturer::all(),
-                'models'=>AssetModel::all(),
-                'suppliers' => Supplier::all(),
-                'statuses' => Status::all(),
-            ]);
         }
+
+        if(auth()->user()->role_id == 1){
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
+        return view('assets.edit', [
+            "asset"=>$asset,
+            "locations"=>$locations,
+            "manufacturers"=>Manufacturer::all(),
+            'models'=>AssetModel::all(),
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+        ]);
+        
 
     }
 
@@ -298,6 +312,7 @@ class AssetController extends Controller {
         if (auth()->user()->cant('delete', $asset)) {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
         }
+
         $name=$asset->asset_tag;
 
         $asset->delete();
@@ -309,7 +324,7 @@ class AssetController extends Controller {
     {
         $asset = Asset::withTrashed()->where('id', $id)->first();
         if (auth()->user()->cant('delete', $asset)) {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'restore']));
         }
         $name=$asset->asset_tag;
         $asset->restore();
@@ -321,7 +336,7 @@ class AssetController extends Controller {
     {
         $asset = Asset::withTrashed()->where('id', $id)->first();
         if (auth()->user()->cant('delete', $asset)) {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'force delete']));
         }
         $name=$asset->asset_tag;
         $asset->forceDelete();
@@ -342,9 +357,11 @@ class AssetController extends Controller {
         }
     }
 
-
     public function export(Request $request)
     {
+        if (auth()->user()->cant('viewAll', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Assets', 'export']));
+        }
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
         return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport($assets), 'assets.csv');
 
@@ -352,6 +369,10 @@ class AssetController extends Controller {
 
     public function import(Request $request)
     {
+        if (auth()->user()->cant('create', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Assets', 'import']));
+        }
+
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());
@@ -582,6 +603,9 @@ class AssetController extends Controller {
 
     public function downloadPDF(Request $request)
     {
+        if (auth()->user()->cant('viewAll', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
+        }
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets'));
         $pdf->setPaper('a4', 'landscape');
@@ -591,6 +615,9 @@ class AssetController extends Controller {
 
     public function downloadShowPDF(Asset $asset)
     {
+        if (auth()->user()->cant('view', $asset)) {
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'View PDF']));
+        }
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.showPdf', compact('asset'));
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
@@ -599,6 +626,10 @@ class AssetController extends Controller {
 
     public function recycleBin()
     {
+        if (auth()->user()->cant('viewAll', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset', 'Recycle Bin']));
+        }
+
         if(auth()->user()->role_id == 1){
             $assets = Asset::onlyTrashed()->get();
             $locations = Location::all();

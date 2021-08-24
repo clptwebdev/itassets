@@ -10,10 +10,15 @@ class ComponentPolicy
 {
     use HandlesAuthorization;
 
+    public function viewAll(User $user)
+    {
+        return $user->role_id != 0 && $user->role_id <= 4;
+    }
+
     public function view(User $user, Component $component)
     {
         $locations = $user->locations->pluck('id')->toArray( );
-        if($user->role_id == 1 || $user->role_id <= 4 && in_array($component->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($component->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -22,27 +27,13 @@ class ComponentPolicy
 
     public function create(User $user)
     {
-        if($user->role_id <= 3){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    public function edit(User $user, Component $component)
-    {
-        $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($component->location_id, $locations)){
-            return true;
-        }else{
-            return false;
-        }
+        return $user->role_id != 0 && $user->role_id <= 3;
     }
 
     public function update(User $user, Component $component)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($component->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($component->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -52,7 +43,7 @@ class ComponentPolicy
     public function delete(User $user, Component $component)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($component->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($component->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -62,7 +53,7 @@ class ComponentPolicy
     public function restore(User $user, Component $component)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($component->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($component->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -72,7 +63,7 @@ class ComponentPolicy
     public function forceDelete(User $user, Component $component)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($component->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($component->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -81,28 +72,28 @@ class ComponentPolicy
 
     public function recycleBin(User $user)
     {
-        return $user->role_id <= 4;
+        return $user->role_id != 0 && $user->role_id <= 4;
     }
 
-    public function import(User $user,)
+    public function import(User $user)
     {
-        return $user->role_id <= 3;
+        return $user->role_id != 0 && $user->role_id <= 3;
     }
 
-    public function export(User $user,)
+    public function export(User $user)
     {
-        return $user->role_id <= 3;
+        return $user->role_id != 0 && $user->role_id <= 4;
     }
 
     public function generatePDF(User $user)
     {
-        return $user->role_id <= 3;
+        return $user->role_id != 0 && $user->role_id <= 4;
     }
 
-    public function generateComponentPDF(User $user, asset $asset)
+    public function generateComponentPDF(User $user, Component $component)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || $user->role_id <= 3 && in_array($component->location_id, $locations)){
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($component->location_id, $locations)){
             return true;
         }else{
             return false;

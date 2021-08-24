@@ -36,7 +36,14 @@
                 </div>
                 <a href="#locationMenu" class="sub-link collapse-item collapsed d-none d-sm-block" data-toggle="collapse" data-parent="#locationMenu"><i class="fas fa-school fa-xs"></i> By Location</a>
                 <div class="collapse p-2" id="locationMenu">
-                    @foreach(auth()->user()->locations as $location)
+                    @php
+                        if(auth()->user()->role_id == 1){
+                            $locations = \App\Models\Location::all();
+                        }else {
+                            $locations = auth()->user()->locations;
+                        }
+                    @endphp
+                    @foreach($locations as $location)
                     <a href="{{ route('assets.location', $location->id)}}" class="collapse-item" data-parent="#SubSubMenu1"><i class="far fa-circle" style="color:{{$location->icon}};"></i> {{ $location->name}}</a>
                     @endforeach
                 </div>

@@ -33,13 +33,14 @@ class OfficeLoginController extends Controller
         if($authUser = User::whereEmail($user->email)->first()){
 
         }else{
-            $unhash = random_password(12);
+            $authUser = new User;
+            $unhash = $authUser->random_password(12);
             $password = Hash::make($unhash);
-            $authUser = User::create([
+            $authUser->fill([
                 'name' => $user->name,  
                 'email' => $user->email,
                 'password' => $password,
-            ]);
+            ])->save();
             
             Mail::to('stuartcorns@outlook.com')->send(new \App\Mail\NewUserPassword($authUser, $unhash));
 
@@ -47,6 +48,7 @@ class OfficeLoginController extends Controller
                 $message->to('stuartcorns@outlook.com', 'Stuart')->subject('Email with Laravel and AWS');
             }); */
         }
+        
         auth()->login($authUser, false);
 
         return redirect('/dashboard');

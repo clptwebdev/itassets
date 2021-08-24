@@ -17,11 +17,11 @@ class UserObserver
     public function created(User $user)
     {
         Log::create([
-            'user_id'=>auth()->user()->id,
+            'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'user',
             'loggable_id'=> $user->id,
-            'data'=> auth()->user()->name.' created a new user with an Admin Role. Permissions were granted for [School Names]'
+            'data'=> "{auth()->user()->id ?? 'User'}created a new user with an Admin Role. Permissions were granted for [School Names]"
         ]);
     }
 
