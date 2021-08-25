@@ -23,12 +23,12 @@
                                 if($asset->asset_model != 0){
                                     $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
                                     if($eol->isPast()){}else{
-                                        $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date); 
+                                        $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
                                         $percent = 100 / $asset->model->depreciation->years;
-                                        $percentage = floor($age)*$percent; 
+                                        $percentage = floor($age)*$percent;
                                         $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
                                         $depreciation += $dep;
-                                    } 
+                                    }
                                 }else{
                                     $depreciation += $asset->purchased_cost;
                                 }
@@ -105,8 +105,10 @@
 
                             <div class="col">
                                 <div class="progress progress-sm mr-2">
+                                    @if(!$ud === 0 )
+
                                     <div class="progress-bar bg-info" role="progressbar" style="width: {{ ($ud/$total) * 100 }}%"
-                                        aria-valuenow="{{ ($ud/$total) * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        aria-valuenow="{{ ($ud/$total) * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>@endif
                                 </div>
                             </div>
                         </div>

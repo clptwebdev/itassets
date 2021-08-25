@@ -65,7 +65,13 @@ class LocationController extends Controller
      */
     public function edit(Location $location)
     {
-        return view('locations.edit', compact('location'));
+        if(auth()->user()->role_id==1){
+            $locations =Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
+
+        return view('locations.edit', compact('location','locations'));
     }
     /**
      * Update the specified resource in storage.

@@ -206,7 +206,7 @@
                         @if(session('import-error'))
                             <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
                         @endif
-                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b" target="_blank" class="btn btn-info" >
+                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/EWmxI4Q89eVMjPBSGed7QVQBa6Vk_gZFq_xPip9bTUx5rQ?e=8FQRHP" target="_blank" class="btn btn-info" >
                             Download Import Template
                         </a>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>

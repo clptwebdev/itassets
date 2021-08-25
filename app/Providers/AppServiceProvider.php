@@ -23,13 +23,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         Relation::morphMap([
             'user' => 'App\Models\User',
             'asset' => 'App\Models\Asset',
             'consumable' => 'App\Models\Consumable',
             'accessory' => 'App\Models\Accessory',
-            'component' => 'App\Models\Component',
-            'consumable' => 'App\Models\Consumable',
         ]);
     }
 }

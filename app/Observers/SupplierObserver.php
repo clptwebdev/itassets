@@ -2,7 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\supplier;
+
+use App\Models\Supplier;
 use App\Models\Log;
 use Carbon\Carbon;
 
@@ -17,10 +18,10 @@ class SupplierObserver
     public function created(supplier $supplier)
     {
         Log::create([
-            'user_id'=>auth()->user()->id,
+            'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
-            'loggable_type'=> 'App\Models\User',
-            'loggable_id'=> $user->id,
+            'loggable_type'=> 'App\Models\Supplier',
+            'loggable_id'=> $supplier->id ?? 0,
             'data'=> auth()->user()->name.' created a new user with an Admin Role. Permissions were granted for [School Names]'
         ]);
     }

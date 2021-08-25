@@ -101,7 +101,7 @@ class UserObserver
     {
         Log::create([
             'user_id'=>auth()->user()->id,
-            'log_date'=> Carbon::now(),
+            'loggable_date'=> Carbon::now(),
             'loggable_type'=> 'user',
             'loggable_id'=> $user->id,
             'data'=> auth()->user()->name.' has deleted '.$user->name,

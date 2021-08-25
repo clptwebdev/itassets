@@ -36,7 +36,6 @@
                     <table id="suppliersTable" class="table table-striped">
                         <thead>
                             <tr>
-                                <th class="text-center"><input type="checkbox"></th>
                                 <th>Name</th>
                                 <th>Location</th>
                                 <th>Telephone</th>
@@ -46,7 +45,6 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th class="text-center"><input type="checkbox"></th>
                                 <th>Name</th>
                                 <th>Location</th>
                                 <th>Tel</th>
@@ -58,20 +56,36 @@
                             <?php $suppliers = App\Models\Supplier::all();?>
                             @foreach($suppliers as $supplier)
                             <tr>
-                                <td class="text-center"><input type="checkbox"></td>
                                 <td>{{ $supplier->name }}</td>
                                 <td>{{ $supplier->city }}</td>
                                 <td>{{ $supplier->telephone }}</td>
                                 <td>{{ $supplier->email }}</td>
-                                <td class="text-center">
-                                    <form id="form{{$supplier->id}}" action="{{ route('supplier.destroy', $supplier->id) }}" method="POST">
-                                    <a href="{{ route('supplier.show', $supplier->id) }}" class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i> View</a>&nbsp;
-                                    <a href="{{route('supplier.edit', $supplier->id) }}" class="btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
-
-                                        @csrf
-                                        @method('DELETE')
-                                        <a class="btn-sm btn-danger text-white deleteBtn" href="#" data-id="{{$supplier->id}}"><i class=" fas fa-trash"></i></a>
-                                    </form>
+                                <td class="text-right">
+                                    <div class="dropdown no-arrow">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                           id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div
+                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Supplier Options:</div>
+                                            <a href="{{ route('supplier.show', $supplier->id) }}"
+                                               class="dropdown-item">View</a>
+                                            @can('edit', $supplier)
+                                                <a href="{{ route('supplier.edit', $supplier->id) }}" class="dropdown-item">Edit</a>
+                                            @endcan
+                                            @can('delete', $supplier)
+                                                <form id="form{{$supplier->id}}" action="{{ route('supplier.destroy', $supplier->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a class="deleteBtn dropdown-item" href="#"
+                                                       data-id="{{$supplier->id}}">Delete</a>
+                                                </form>
+                                            @endcan
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach

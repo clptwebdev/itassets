@@ -75,7 +75,7 @@ class AssetObserver
         $name = $asset->model->name.' ['.$asset->asset_tag.']' ?? $asset->asset_tag;
         Log::create([
             'user_id'=>auth()->user()->id,
-            'log_date'=> Carbon::now(),
+            'loggable_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
             'loggable_id'=> $asset->id,
             'data'=> auth()->user()->name.' has restored the Asset: '.$name,
