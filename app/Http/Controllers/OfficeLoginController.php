@@ -18,7 +18,7 @@ class OfficeLoginController extends Controller
      */
     public function redirectToProvider()
     {
-        return Socialite::driver('azure')->with(['url' => 'apollo'])->redirect();
+        return Socialite::driver('azure')->redirect();
     }
 
     /**
