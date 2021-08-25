@@ -107,6 +107,9 @@
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <a class="collapse-item" href="{{ route('users.index')}}">View Users</a>
+            @can('permissions', \App\Models\User::class)
+                <a class="collapse-item" href="{{ route('user.permissions')}}">Permissions</a>
+            @endcan
             <a class="collapse-item" href="register.html">Register</a>
         </div>
     </li>

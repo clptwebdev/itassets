@@ -18,6 +18,10 @@ class UserController extends Controller
 
     public function index()
     {
+        if (auth()->user()->cant('viewAll', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Users', 'view']));
+        }
+
         if(auth()->user()->role_id == 1){
             $users = User::all();
         }else{
@@ -70,21 +74,25 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        if (auth()->user()->cant('edit', $user)) {
+        if (auth()->user()->cant('update', $user)) {
             return redirect(route('errors.forbidden', ['user', $user->id, 'edit']));
-        }else{
-            if(auth()->user()->role_id == 1){
-                $locations = Location::all();
-            }else{
-                $locations = auth()->user()->locations;
-            }
-            return view('users.edit', compact('user', 'locations'));
         }
+
+        if(auth()->user()->role_id == 1){
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
+        return view('users.edit', compact('user', 'locations'));
         
     }
 
     public function update(Request $request, User $user)
     {
+        if (auth()->user()->cant('update', $user)) {
+            return redirect(route('errors.forbidden', ['user', $user->id, 'edit']));
+        }
+
         $validated=$request->validate([
             'name'=>'required|max:255',
             'email'=>['required', \Illuminate\Validation\Rule::unique('users')->ignore($user->id), 'email:rfc,dns,spoof,filter'],
@@ -101,16 +109,20 @@ class UserController extends Controller
     {
         if (auth()->user()->cant('delete', $user)) {
             return redirect(route('errors.forbidden', ['user', $user->id, 'edit']));
-        }else{
-                $name=$user->name;
-                $user->delete();
-                session()->flash('danger_message', $name . ' was deleted from the system');
-                return redirect(route('users.index'));
         }
+
+        $name=$user->name;
+        $user->delete();
+        session()->flash('danger_message', $name . ' was deleted from the system');
+        return redirect(route('users.index'));
     }
 
     public function export(User $user)
     {
+        if (auth()->user()->cant('viewAll', User::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Users', 'export']));
+        }
+
         return \Maatwebsite\Excel\Facades\Excel::download(new UserExport, 'users.csv');
 
     }
@@ -123,6 +135,10 @@ class UserController extends Controller
         }else{
             return 'Not Ajax';
         }
+    }
+
+    public function userPermissions(){
+        return view('users.roles');
     }
 
 }

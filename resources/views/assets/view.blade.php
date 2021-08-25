@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'View all Assets')
+
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -73,7 +75,11 @@
             different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
         <div class="d-flex flex-row-reverse mb-2">
-            @if(isset($filter))<a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear Filter</a>@endif
+            
+            @if(isset($filter))
+            <p>Message</p>
+            <a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear Filter</a>
+            @endif
             <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-secondary p-2 shadow-sm">Filter</a>
         </div>
         <div id="filter" class="card shadow mb-4">

@@ -35,7 +35,9 @@ class ConsumableController extends Controller
 
     public function index()
     {
-        
+        if (auth()->user()->cant('viewAll', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Consumables', 'view']));
+        }
 
         if(auth()->user()->role_id == 1){
             $consumables = Consumable::all();
@@ -91,6 +93,7 @@ class ConsumableController extends Controller
         return redirect(route("consumables.index"));
 
     }
+
     public function importErrors(Request $request)
     {
 
@@ -143,7 +146,7 @@ class ConsumableController extends Controller
 
     public function show(Consumable $consumable)
     {
-        if (auth()->user()->cant('create', Consumable::class)) {
+        if (auth()->user()->cant('create', $consumable)) {
             return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'view']));
         }
         return view('consumable.show', ["consumable" => $consumable]);
@@ -151,7 +154,7 @@ class ConsumableController extends Controller
 
     public function edit(Consumable $consumable)
     {
-        if (auth()->user()->cant('edit', Consumable::class)) {
+        if (auth()->user()->cant('update', Consumable::class)) {
             return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'update']));
         }
 
@@ -316,7 +319,7 @@ class ConsumableController extends Controller
 
     public function downloadPDF(Request $request)
     {
-        if (auth()->user()->cant('export', Consumable::class)) {
+        if (auth()->user()->cant('viewAll', Consumable::class)) {
             return redirect(route('errors.forbidden', ['area', 'consumables', 'export pdf']));
         }
         $consumables = Consumable::withTrashed()->whereIn('id', json_decode($request->consumables))->get();

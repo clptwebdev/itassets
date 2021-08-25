@@ -13,49 +13,52 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function(){
+    if(auth()->user()->role_id == 1){
+        $locations = \App\Models\Location::all();
+        $assets = \App\Models\Asset::all();
+    }else{
+        $locations = auth()->user()->locations;
+        $assets = auth()->user()->location_assets;
+    }
+    return view('dashboard',
+        [
+            'locations' => $locations,
+            'assets' => $assets,
+        ]
+    );
+})->name('home');
+
+Route::get('/dashboard', function(){
+    if(auth()->user()->role_id == 1){
+        $locations = \App\Models\Location::all();
+        $assets = \App\Models\Asset::all();
+    }else{
+        $locations = auth()->user()->locations;
+        $assets = auth()->user()->location_assets;
+    }
+    return view('dashboard',
+        [
+            'locations' => $locations,
+            'assets' => $assets,
+        ]
+    );
+})->name('dashboard');
+
+
 Route::get('login/microsoft', 'App\Http\Controllers\OfficeLoginController@redirectToProvider');
 Route::get('login/microsoft/callback', 'App\Http\Controllers\OfficeLoginController@handleProviderCallback');
 
 require __DIR__.'/auth.php';
 
 Route::group(['middleware'=>'auth'], function(){
-    Route::get('/', function(){
-        if(auth()->user()->role_id == 1){
-            $locations = \App\Models\Location::all();
-            $assets = \App\Models\Asset::all();
-        }else{
-            $locations = auth()->user()->locations;
-            $assets = auth()->user()->location_assets;
-        }
-        return view('dashboard',
-            [
-                'locations' => $locations,
-                'assets' => $assets,
-            ]
-        );
-    })->name('home');
-
-    Route::get('/dashboard', function(){
-        if(auth()->user()->role_id == 1){
-            $locations = \App\Models\Location::all();
-            $assets = \App\Models\Asset::all();
-        }else{
-            $locations = auth()->user()->locations;
-            $assets = auth()->user()->location_assets;
-        }
-        return view('dashboard',
-            [
-                'locations' => $locations,
-                'assets' => $assets,
-            ]
-        );
-    })->name('dashboard');
-
+    
     //Super Admmin
 
     //Super Admin or Admin
     Route::group(['middleware'=>'admin.role'], function(){
         Route::resource('/users', 'App\Http\Controllers\UserController');
+        Route::get('/user/permissions', 'App\Http\Controllers\UserController@userPermissions')->name('user.permissions');
     });
 
     //User Manager

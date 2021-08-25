@@ -18,7 +18,7 @@
                     <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->model->name}}">
                     @endif
                     <hr>
-                    {!! '<img width="100%" height="100px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39+',3,33) . '" alt="barcode"   />' !!}
+                    {!! '<img width="100%" height="100px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   />' !!}
                     <p class="text-center font-weight-bold mx-4">Asset Tag: #{{ $asset->asset_tag }}</p>
                 </div>
                 <div class="col-12 col-sm-7 col-md-9 p-2">

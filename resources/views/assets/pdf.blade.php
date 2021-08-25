@@ -82,7 +82,7 @@
                 <td class="text-center"><span style="color: {{ $asset->location->icon ?? '#666'}}">{{$asset->location->name ?? 'Unassigned'}}</span>
                 </td>
                 <td align="center">
-                    {!! '<div id="barcode"><img width="120px" height="30px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39+',3,33) . '" alt="barcode"   /></div>' !!}
+                    {!! '<div id="barcode"><img width="120px" height="30px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   /></div>' !!}
                     <span style="font-weight: 800">{{ $asset->asset_tag }}</span></td>
                 <td class="text-center d-none d-xl-table-cell">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
                 <td class="d-none d-md-table-cell" data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>

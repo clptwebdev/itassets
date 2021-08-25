@@ -565,7 +565,7 @@ class AssetController extends Controller {
             'statuses' => Status::all(),
             'categories' => Category::all(),
             "locations"=> $locs,
-            "filter" => 'Filter',
+            "filter" => $request,
             "amount" => $request->amount,
         ]);
     }
