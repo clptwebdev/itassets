@@ -201,22 +201,7 @@
     aria-labelledby="ruserPermissionsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div id="permissions" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="userPermissionsModalLabel">Are you sure you want to delete this User?
-                </h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input id="user-id" type="hidden" value="">
-                <p>Select "Delete" to remove this User from the system.</p>
-                <small class="text-danger">**Warning this is permanent. </small>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-danger" type="button" id="confirmBtn">Save</button>
-            </div>
+            
         </div>
     </div>
 </div>
