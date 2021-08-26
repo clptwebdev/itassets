@@ -66,9 +66,10 @@
                             <td class="text-center">
                                 @php
                                     if(auth()->user()->role_id == 1){
-                                        $assets = App\Models\Asset::all()->statusFilter([$status->id]);
+                                        $assets = App\Models\Asset::all();
+                                        $assets->statusFilter([$status->id]);
                                     }else{
-                                        $assets = auth()->user()->location_assets()->statusFilter([$status->id]);
+                                        $assets = auth()->user()->location_assets();->statusFilter([$status->id]);
                                     }
                                 @endphp
                                 {{ $assets->count() }}
@@ -76,7 +77,8 @@
                             <td class="text-center">
                                 @php
                                     if($auth()->user()->role_id == 1){
-                                        $accessories = App\Models\Accessory::all()->statusFilter([$status->id]);
+                                        $accessories = App\Models\Accessory::all();
+                                        $accessories->statusFilter([$status->id]);
                                     }else{
                                         $accessories = auth()->user()->location_accessories()->statusFilter([$status->id]);
                                     }
