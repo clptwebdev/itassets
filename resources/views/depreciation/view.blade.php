@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', '')
+
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
 @endsection
@@ -32,26 +34,23 @@
                 <table id="depTable" class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="text-center col-auto"><input type="checkbox"></th>
-                            <th class="col-2">Name</th>
-                            <th class="col-1 text-center">Months</th>
-                            <th class="col-5">Models</th>
-                            <th class="text-right col-4">Options</th>
+                            <th class="col-4"><small>Name</small></th>
+                            <th class="col-1 text-center"><small>Months</small></th>
+                            <th class="col-6">Models</th>
+                            <th class="text-right col-1">Options</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th>Name</th>
-                            <th class="text-center">Months</th>
-                            <th>Models</th>
-                            <th class="text-right">Options</th>
+                            <th class="col-4"><small>Name</small></th>
+                            <th class="col-1 text-center"><small>Months</small></th>
+                            <th class="col-6"><small>Models</small></th>
+                            <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                     </tfoot>
                     <tbody>
                         @foreach($depreciation as $dep)
                         <tr>
-                            <td class="text-center"><input type="checkbox"></td>
                             <td>{{ $dep->name }}</td>
                             <td class="text-center">{{$dep->years * 12}}</td>
                             <td class="text-left   ">
@@ -61,13 +60,18 @@
                                 <small class="bg-light border border-secondary rounded p-1 m-1 text-secondary showBtn pointer" data-id="{{$dep->id}}" data-name="{{$dep->name}}" data-route="{{ route('depreciation.show', $dep->id)}}"><i class="fas fa-ellipsis-h"></i></small>
                             </td>                            
                             <td class="text-right">
-                               <a href="#" class="btn-sm btn-secondary text-white updateBtn"
-                                    data-id="{{$dep->id}}"
-                                    data-route="{{ route('depreciation.update', $dep->id)}}" data-name="{{$dep->name}}" data-years="{{$dep->years}}"><i
-                                        class="fas fa-pencil-alt"></i></a>&nbsp;
-                                <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                    data-route="{{ route('depreciation.destroy', $dep->id)}}"><i
-                                        class=" fas fa-trash"></i></a>
+                                <div class="dropdown no-arrow">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$dep->id}}Link"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$dep->id}}Link">
+                                        <div class="dropdown-header">Asset Options:</div>
+                                        <a href="#" class="dropdown-item updateBtn" data-id="{{$dep->id}}"
+                                        data-route="{{ route('depreciation.update', $dep->id)}}" data-name="{{$dep->name}}" data-years="{{$dep->years}}">Edit</a>
+                                        <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('depreciation.destroy', $dep->id)}}">Delete</a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -251,10 +255,10 @@
     $(document).ready( function () {
         $('#depTable').DataTable({
             "columnDefs": [ {
-                "targets": [0, 3, 4],
+                "targets": [2,3],
                 "orderable": false,
             } ],
-            "order": [[ 1, "asc"]]
+            "order": [[ 0, "asc"]]
         });
     } );
 </script>

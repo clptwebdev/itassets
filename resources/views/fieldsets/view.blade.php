@@ -137,10 +137,10 @@
     $(document).ready( function () {
         $('#fieldsetTable').DataTable({
             "columnDefs": [ {
-                "targets": [0, 2, 3],
+                "targets": [2, 3],
                 "orderable": false,
             } ],
-            "order": [[ 1, "asc"]]
+            "order": [[ 0, "asc"]]
         });
     } );
 </script>

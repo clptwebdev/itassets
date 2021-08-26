@@ -36,30 +36,27 @@
                 <table id="fieldsetTable" class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="text-center col-auto"><input type="checkbox"></th>
-                            <th class="col-3">Name</th>
-                            <th class="col-1">Required</th>
-                            <th class="col-1">Type</th>
-                            <th class="col-1">Format</th>
-                            <th class="col-4">Fielsets</th>
+                            <th class="col-3"><small>Name</small></th>
+                            <th class="col-1"><small>Required</small></th>
+                            <th class="col-1"><small>Type</small></th>
+                            <th class="col-1"><small>Format</small></th>
+                            <th class="col-5"><small>Fielsets</small></th>
                             <th class="text-right col-1">Options</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th>Name</th>
-                            <th>Required</th>
-                            <th>Type</th>
-                            <th>Format</th>
-                            <th>Fieldsets</th>
-                            <th class="text-right">Options</th>
+                            <th class="col-3"><small>Name</small></th>
+                            <th class="col-1"><small>Required</small></th>
+                            <th class="col-1"><small>Type</small></th>
+                            <th class="col-1"><small>Format</small></th>
+                            <th class="col-5"><small>Fielsets</small></th>
+                            <th class="text-right col-1">
                         </tr>
                     </tfoot>
                     <tbody>
                         @foreach($fields as $field)
                         <tr>
-                            <td class="text-center"><input type="checkbox"></td>
                             <td class="text-left">{{ $field->name }}</td>
                             <td class="text-center">@if($field->required == 1){!! '<i class="fas fa-check text-success"></i>'!!}@else{!!'<i
                                     class="fas fa-times text-danger"></i>'!!}@endif</td>
@@ -145,10 +142,10 @@
     $(document).ready( function () {
         $('#fieldsetTable').DataTable({
             "columnDefs": [ {
-                "targets": [0, 5],
+                "targets": [5],
                 "orderable": false,
             } ],
-            "order": [[ 1, "asc"]]
+            "order": [[ 0, "asc"]]
         });
     } );
 </script>
