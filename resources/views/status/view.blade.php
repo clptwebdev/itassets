@@ -66,16 +66,15 @@
                             <td class="text-center">
                                 @php
                                     if(auth()->user()->role_id == 1){
-                                        $assets = App\Models\Asset::all();
-                                        $assets->statusFilter([$status->id]);
+                                        $assets = App\Models\Asset::statusFilter([$status->id])->get();
                                     }else{
-                                        $assets = auth()->user()->location_assets();->statusFilter([$status->id]);
+                                        $assets = auth()->user()->location_assets()->statusFilter([$status->id]);
                                     }
                                 @endphp
                                 {{ $assets->count() }}
                             </td>
                             <td class="text-center">
-                                @php
+                               {{--  @php
                                     if($auth()->user()->role_id == 1){
                                         $accessories = App\Models\Accessory::all();
                                         $accessories->statusFilter([$status->id]);
@@ -83,7 +82,7 @@
                                         $accessories = auth()->user()->location_accessories()->statusFilter([$status->id]);
                                     }
                                 @endphp
-                                {{ $accessories->count() }}
+                                {{ $accessories->count() }} --}}
                             </td>
                             <td class="text-center">N/A</td>
                             <td class="text-center">N/A</td>
