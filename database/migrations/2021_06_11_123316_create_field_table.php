@@ -19,7 +19,7 @@ class CreateFieldTable extends Migration
             $table->string('type');
             $table->string('format');
             $table->integer('required');
-            $table->integer('value')->nullable();
+            $table->text('value')->nullable();
             $table->string('help')->nullable();
             $table->timestamps();
         });

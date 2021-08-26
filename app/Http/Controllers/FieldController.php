@@ -8,32 +8,16 @@ use Illuminate\Http\Request;
 
 class FieldController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+     public function index()
     {
         $fields = Field::all();
         return view('fields.view', compact('fields'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(){
         return view('fields.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         Field::create($request->only('name', 'format', 'type', 'required', 'value', 'help'))->save();

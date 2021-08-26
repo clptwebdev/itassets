@@ -9,7 +9,7 @@ class Field extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'type', 'format', 'value', 'help'];
+    protected $fillable = ['name', 'type', 'format', 'required', 'value', 'help'];
 
     public function fieldsets()
     {

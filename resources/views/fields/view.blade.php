@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Asset Fields')
+
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
 @endsection
@@ -39,8 +41,8 @@
                             <th class="col-1">Required</th>
                             <th class="col-1">Type</th>
                             <th class="col-1">Format</th>
-                            <th class="col-3">Fielsets</th>
-                            <th class="text-right col-2">Options</th>
+                            <th class="col-4">Fielsets</th>
+                            <th class="text-right col-1">Options</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -69,10 +71,23 @@
                                 @endforeach
                             </td>
                             <td class="text-right">
-                                <a href="{{route('fields.edit', $field->id) }}"
-                                    class="d-inline-block bg-secondary btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
-                                <a class="btn-sm btn-danger text-white deleteBtn" href="#" data-route="{{ route('fields.destroy', $field->id)}}"><i
-                                        class=" fas fa-trash"></i></a>
+                                
+                                <div class="dropdown no-arrow">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                        id="dropdownMenuLink"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div
+                                        class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                        aria-labelledby="dropdownMenuLink">
+                                        <div class="dropdown-header">Asset Options:</div>
+                                        <a href="{{route('fields.edit', $field->id) }}"
+                                            class="d-inline-block bg-secondary btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
+                                        <a class="btn-sm btn-danger text-white deleteBtn" href="#" data-route="{{ route('fields.destroy', $field->id)}}"><i
+                                                class=" fas fa-trash"></i></a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
