@@ -85,8 +85,13 @@
                     <div class="w-100">
                         <div class="formgroup mb-2 p-2">
                             <h4 class="h6 mb-3">Location Image</h4>
+                            @if($location->photo()->exists())
                             <img id="profileImage" src="{{ asset($location->photo->path) ?? asset('images/svg/location-image.svg') }}" width="100%"
                                 alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                            @else
+                            <img id="profileImage" src="asset('images/svg/location-image.svg') }}" width="100%"
+                                alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">       
+                            @endif
                             <input type="hidden" id="photo_id" name="photo_id" value="{{ $location->photo_id }}">
                         </div>
                     </div>
