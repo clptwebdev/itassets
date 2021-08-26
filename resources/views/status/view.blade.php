@@ -66,7 +66,7 @@
                             <td class="text-center">
                                 @php
                                     if(auth()->user()->role_id == 1){
-                                        $assets = App\Models\Assets::all()->statusFilter([$status->id]);
+                                        $assets = App\Models\Asset::all()->statusFilter([$status->id]);
                                     }else{
                                         $assets = auth()->user()->location_assets()->statusFilter([$status->id]);
                                     }
