@@ -82,10 +82,8 @@
                                         class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                         aria-labelledby="dropdownMenuLink">
                                         <div class="dropdown-header">Asset Options:</div>
-                                        <a href="{{route('fields.edit', $field->id) }}"
-                                            class="d-inline-block bg-secondary btn-sm btn-secondary text-white"><i class="fas fa-pencil-alt"></i></a>&nbsp;
-                                        <a class="btn-sm btn-danger text-white deleteBtn" href="#" data-route="{{ route('fields.destroy', $field->id)}}"><i
-                                                class=" fas fa-trash"></i></a>
+                                        <a href="{{route('fields.edit', $field->id) }}" class="dropdown-item">Edit</a>
+                                        <a class="dropdown-item" href="#" data-route="{{ route('fields.destroy', $field->id)}}">Delete</a>
                                     </div>
                                 </div>
                             </td>
