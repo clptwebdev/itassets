@@ -12,8 +12,6 @@
         <a href="#" data-toggle="modal" data-target="#addStatusModal"
             class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Status</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>
 
@@ -35,44 +33,54 @@
                 <table id="categoryTable" class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th class="col-4">Name</th>
-                            <th>Deployable</th>
-                            <th>Assets</th>
-                            <th>Components</th>
-                            <th>Consumables</th>
-                            <th>Accessories</th>
-                            <th>Miscellaneous</th>
-                            <th class="text-right col-3">Options</th>
+                            <th class="col-4"><small>Name</small></th>
+                            <th><small>Deployable</small></th>
+                            <th><small>Assets</small></th>
+                            <th><small>Accessories</small></th>
+                            <th><small>Components</small></th>
+                            <th><small>Consumables</small></th>
+                            <th><small>Miscellaneous</small></th>
+                            <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th>Name</th>
-                            <th>Deployable</th>
-                            <th>Assets</th>
-                            <th>Components</th>
-                            <th>Consumables</th>
-                            <th>Accessories</th>
-                            <th>Miscellaneous</th>
-                            <th class="text-right">Options</th>
+                            <th class="col-4"><small>Name</small></th>
+                            <th><small>Deployable</small></th>
+                            <th><small>Assets</small></th>
+                            <th><small>Accessories</small></th>
+                            <th><small>Components</small></th>
+                            <th><small>Consumables</small></th>
+                            <th><small>Miscellaneous</small></th>
+                            <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                     </tfoot>
                     <tbody>
                         <?php $statuses = App\Models\Status::all();?>
                         @foreach($statuses as $status)
                         <tr>
-                            <td class="text-center"><input type="checkbox"></td>
                             <td><i class="{{$status->icon}}" style="color: {{$status->colour}};"></i> {{ $status->name }}</td>
                             <td class="text-center">@if($status->deployable == 1){!! '<i class="fas fa-check text-success"></i>'!!}@else{!!'<i class="fas fa-times text-danger"></i>'!!}@endif</td>
                             <td class="text-center">
                                 @php
-                                    $assets = auth()->user()->location_assets()->statusFilter([$status->id]);
+                                    if($auth()->user()->role_id == 1){
+                                        $assets = App\Models\Assets::all()->statusFilter([$status->id]);
+                                    }else{
+                                        $assets = auth()->user()->location_assets()->statusFilter([$status->id]);
+                                    }
                                 @endphp
                                 {{ $assets->count() }}
                             </td>
-                            <td class="text-center">N/A</td>
+                            <td class="text-center">
+                                @php
+                                    if($auth()->user()->role_id == 1){
+                                        $accessories = App\Models\Accessory::all()->statusFilter([$status->id]);
+                                    }else{
+                                        $accessories = auth()->user()->location_accessories()->statusFilter([$status->id]);
+                                    }
+                                @endphp
+                                {{ $accessories->count() }}
+                            </td>
                             <td class="text-center">N/A</td>
                             <td class="text-center">N/A</td>
                             <td class="text-center">N/A</td>

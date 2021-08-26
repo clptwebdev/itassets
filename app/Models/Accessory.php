@@ -52,4 +52,8 @@ class Accessory extends Model
     {
         return $this->morphMany(Log::class, 'loggable');
     }
+
+    public function scopeStatusFilter($query, $status){
+        return $query->whereIn('status_id', $status);
+    }
 }
