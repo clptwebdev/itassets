@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Asset Statuses')
+
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
 @endsection
@@ -63,7 +65,7 @@
                             <td class="text-center">@if($status->deployable == 1){!! '<i class="fas fa-check text-success"></i>'!!}@else{!!'<i class="fas fa-times text-danger"></i>'!!}@endif</td>
                             <td class="text-center">
                                 @php
-                                    if($auth()->user()->role_id == 1){
+                                    if(auth()->user()->role_id == 1){
                                         $assets = App\Models\Assets::all()->statusFilter([$status->id]);
                                     }else{
                                         $assets = auth()->user()->location_assets()->statusFilter([$status->id]);
