@@ -72,7 +72,7 @@ class AssetModelController extends Controller
     public function downloadPDF(Request $request)
     {
         $models = AssetModel::all();
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.pdf', compact('assets'));
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.pdf', compact('models'));
         $pdf->setPaper('a4', 'landscape');
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         return $pdf->download("models-{$date}.pdf");
