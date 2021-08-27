@@ -78,7 +78,34 @@
         </div>
     </div>
 
-    
+    <div class="card shadow h-100 pb-2 m-2" style="border-left: 0.25rem solid 666;">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold">Assigned Assets</h6>
+        </div>
+        <div class="card-body">
+            <table id="assetsTable" class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="col-9 col-md-2"><small>Item</small></th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th><small>Item</small></th>
+                </tr>
+                </tfoot>
+                <tbody>
+                @foreach($assetModel->assets as $asset)
+                    <tr>
+                        <td>{{ $assetModel->name ?? 'No Model'}}<br><small
+                                class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
+                        
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
         
 </section>
 
