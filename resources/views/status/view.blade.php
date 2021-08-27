@@ -74,30 +74,34 @@
                                 {{ $assets->count() }}
                             </td>
                             <td class="text-center">
-                               {{--  @php
+                                @php
                                     if($auth()->user()->role_id == 1){
-                                        $accessories = App\Models\Accessory::all();
-                                        $accessories->statusFilter([$status->id]);
+                                        $accessories = App\Models\Accessory::statusFilter([$status->id]);
                                     }else{
                                         $accessories = auth()->user()->location_accessories()->statusFilter([$status->id]);
                                     }
                                 @endphp
-                                {{ $accessories->count() }} --}}
+                                {{ $accessories->count() }}
                             </td>
                             <td class="text-center">N/A</td>
                             <td class="text-center">N/A</td>
                             <td class="text-center">N/A</td>
                             <td class="text-right">
-                                <a href="{{ route('status.show', $status->id) }}"
-                                    class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
-                                    View</a>&nbsp;
-                                <a href="#" class="btn-sm btn-secondary text-white updateBtn"
-                                    data-id="{{$status->id}}" data-name="{{ $status->name}}"
-                                    data-route="{{ route('status.update', $status->id)}}" data-deploy="{{$status->deployable}}" data-icon="{{$status->icon}}" data-colour="{{$status->colour}}"><i
-                                        class="fas fa-pencil-alt"></i></a>&nbsp;
-                                <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                    data-route="{{ route('status.destroy', $status->id)}}"><i
-                                        class=" fas fa-trash"></i></a>
+                                <div class="dropdown no-arrow">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$status->id}}Link"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$status->id}}Link">
+                                        <div class="dropdown-header">Asset Options:</div>
+                                        <a href="{{ route('status.show', $status->id) }}" class="dropdown-item">View</a>
+                                        <a class="dropdown-item updateBtn" data-id="{{$status->id}}" data-name="{{ $status->name}}"
+                                            data-route="{{ route('status.update', $status->id)}}" data-deploy="{{$status->deployable}}" data-icon="{{$status->icon}}" data-colour="{{$status->colour}}">Edit</a>
+                                        <a class="dropdown-item" href="#" data-route="{{ route('status.destroy', $status->id)}}">Delete</a>
+                                    </div>
+                                </div>
+
+                                
                             </td>
                         </tr>
                         @endforeach

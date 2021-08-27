@@ -58,7 +58,7 @@
                         <tr>
                             <td>{{ $model->id }}</td>
                             <td>{{ $model->name }}</td>
-                            <td>{{ 'Dell'}}</td>
+                            <td>{{ $model->manufacturer->name}}</td>
                             <td>{{ $model->model_no }}</td>
                             <td>{{ $model->depreciation->name ?? 'No Depreciation Set' }}</td>
                             <td class="text-center">

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'View '.$location->name)
+@section('title', 'View '.$status->id)
 
 @section('css')
 
@@ -9,15 +9,15 @@
 @section('content')
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">View Location</h1>
+    <h1 class="h3 mb-0 text-gray-800">View Status</h1>
     <div>
-        <a href="{{ route('location.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+        <a href="{{ route('status.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
-        <a href="{{ route('location.edit', $location->id) }}" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+        <a href="{{ route('status.delete', $location->id) }}" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
                 class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
-        <a href="{{ route('location.edit', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+        <a href="{{ route('status.edit', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>
