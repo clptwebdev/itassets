@@ -113,10 +113,10 @@
                 </tr>
                 </tfoot>
                 <tbody>
-                    @php($assets = $assetModel->assets)
+                @php($assets = $assetModel->assets)
                 @foreach($assets as $asset)
                     <tr>
-                        <td>{{ $asset->model->name ?? 'No Model'}}<br><small
+                        <td>{{ $assetModel->name ?? 'No Model'}}<br><small
                                 class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
                         <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                             @if(isset($asset->location->photo->path))
@@ -134,10 +134,10 @@
                             data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                         <td class="text-center  d-none d-xl-table-cell">
                             £{{ $asset->purchased_cost }}
-                            @if($asset->model)
+                            @if($assetModel->depreciation()->exists())
                                 <br>
                                 @php
-                                    $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                                    $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($assetModel->depreciation->years);
                                     if($eol->isPast()){
                                         $dep = 0;
                                     }else{
