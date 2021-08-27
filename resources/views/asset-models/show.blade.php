@@ -94,12 +94,12 @@
                 <thead>
                 <tr>
                     <th class="col-9 col-md-2"><small>Item</small></th>
-                    <th class="col-1 col-md-auto"><small>Location</small></th>
+                    <th class="col-1 col-md-auto text-center"><small>Location</small></th>
                     <th class="col-1 col-md-auto"><small>Tag</small></th>
                     <th class="d-none d-xl-table-cell"><small>Date</small></th>
-                    <th class="d-none d-xl-table-cell"><small>Cost</small></th>
+                    <th class="d-none d-xl-table-cell text-center"><small>Cost</small></th>
                     <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
-                    <th class="col-auto d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                    <th class="col-auto d-none d-xl-table-cell text-center"><small>Warranty (M)</small></th>
                     <th class="col-auto text-center d-none d-md-table-cell"><small>Audit Due</small></th>
                     <th class="text-right col-1"><small>Options</small></th>
                 </tr>
@@ -107,12 +107,12 @@
                 <tfoot>
                 <tr>
                     <th><small>Item</small></th>
-                    <th><small>Location</small></th>
+                    <th class="text-center"><small>Location</small></th>
                     <th><small>Tag</small></th>
                     <th class=" d-none d-xl-table-cell"><small>Date</small></th>
                     <th class=" d-none d-xl-table-cell"><small>Cost</small></th>
-                    <th class=" d-none d-xl-table-cell"><small>Supplier</small></th>
-                    <th class=" d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                    <th class=" d-none d-xl-table-cell text-center"><small>Supplier</small></th>
+                    <th class=" d-none d-xl-table-cell text-center"><small>Warranty (M)</small></th>
                     <th class="text-center  d-none d-md-table-cell"><small>Audit Due</small></th>
                     <th class="text-right col-1"><small>Options</small></th>
                 </tr>
