@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Edit '.$assetModel->name)
+
 @section('css')
 
 @endsection

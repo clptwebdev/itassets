@@ -81,7 +81,7 @@ Route::group(['middleware'=>'auth'], function(){
 
     //Asset Model Routes
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
-        Route::post('/asset-models/pdf', 'App\Http\Controllers\AssetModelController@downloadPDF')->name('asset-model.pdf');
+        Route::post('/asset-models/pdf', 'App\Http\Controllers\AssetModelController@downloadPDF')->name('asset-models.pdf');
         Route::get('/asset-models/{model}/pdf', 'App\Http\Controllers\AssetModelController@downloadShowPDF')->name('asset-model.showPdf');
     // Asset Routes
         Route::resource('/assets', 'App\Http\Controllers\AssetController');

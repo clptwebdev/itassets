@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Add New Asset Model')
+
 @section('css')
 
 @endsection
