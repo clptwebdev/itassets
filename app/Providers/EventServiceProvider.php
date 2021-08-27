@@ -8,6 +8,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 
 use App\Models\Asset;
+use App\Models\AssetModel;
 use App\Models\User;
 use App\Models\Supplier;
 use App\Models\Component;
