@@ -97,8 +97,7 @@
                 </tr>
                 </thead>
                 <tr>
-                    @php($eol =\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol)->format('d/m/Y'))
-                    <td><strong>{{ $eol }}</strong></td>
+                    <td><strong>{{ $assetModel->eol }} Months</strong></td>
                 </tr>
             </table>
 
