@@ -116,9 +116,9 @@
 
         </div>
         <div style="width: 32%; padding-left: 3%;float: right; border-left: solid 3px #CCC;">
-            <?php $manufacturer = $assetModel->manufacturer(); ?>
+            <?php $manufacturer = $assetModel->manufacturer; ?>
             <div class="text-center">
-            @if($manufacturer->photo()->exists())
+            @if(isset($manufacturer->photo->path))
             <img src="{{ asset($manufacturer->photo->path)}}"
                 width="70%" alt="{{$manufacturer->name}}">
             @endif
