@@ -28,7 +28,7 @@ class AssetModel extends Model
     }
 
     public function manufacturer(){
-        return $this->belongsTo(Manufacturer::class, 'manufacturer_id', 'id');
+        return $this->belongsTo(Manufacturer::class);
     }
 
     public function fieldset(){
