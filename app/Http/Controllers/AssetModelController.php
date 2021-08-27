@@ -69,7 +69,7 @@ class AssetModelController extends Controller
         return redirect(route('asset-models.index'));
     }
 
-    public function downloadPDF(Request $request)
+    public function downloadPDF()
     {
         $models = AssetModel::all();
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.pdf', compact('models'));
