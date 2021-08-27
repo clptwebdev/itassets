@@ -140,7 +140,22 @@
                         </td>
                         <td class="text-center d-none d-xl-table-cell"
                             data-sort="{{ strtotime($asset->audit_date)}}">
-                           xx
+                            @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
+                                <span
+                                    class="text-danger">{{\Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
+                                <br><small>Audit Overdue</small>
+                            @else
+                                <?php $age = Carbon\Carbon::now()->floatDiffInDays($asset->audit_date);?>
+                                @switch(true)
+                                    @case($age < 31) 
+                                        <span class="text-warning">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
+                                        <br><small>Audit Due Soon</small>
+                                        @break
+                                    @default
+                                        <span class="text-secondary">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
+                                        <br><small>Audit due in {{floor($age)}} days</small>
+                                @endswitch
+                            @endif
                         </td>
                     </tr>
                 @endforeach
