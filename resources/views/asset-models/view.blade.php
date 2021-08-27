@@ -40,7 +40,7 @@
                             <th><small>Name</small></th>
                             <th><small>Manufacturer</small></th>
                             <th><small>Model No:</small></th>
-                            <th><small>Assets</small></th>
+                            <th class="text-center"><small>Assets</small></th>
                             <th><small>Depreciation</small></th>
                             <th class="text-right col-1"><small>Options</small></th>
                         </tr>
@@ -51,7 +51,7 @@
                             <th><small>Name</small></th>
                             <th><small>Manufacturer</small></th>
                             <th><small>Model No:</small></th>
-                            <th><small>Assets</small></th>
+                            <th class="text-center"><small>Assets</small></th>
                             <th><small>Depreciation</small></th>
                             <th class="text-right"><small>Options</small></th>
                         </tr>
@@ -64,7 +64,7 @@
                             <td>{{ $model->name }}</td>
                             <td>{{ $model->manufacturer->name}}</td>
                             <td>{{ $model->model_no }}</td>
-                            <td>{{ $model->assets->count() }}</td>
+                            <td class="text-center">{{ $model->assets->count() }}</td>
                             <td>{{ $model->depreciation->name ?? 'No Depreciation Set' }}</td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
@@ -80,7 +80,7 @@
                                             method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <a class="dropdown-item deleteBtn" href="#" data-id="{{$model->id}}" data-count="{{ $model->assets()->count()}}">Delete</a>
+                                            <a class="dropdown-item deleteBtn" href="#" data-id="{{$model->id}}" data-count="{{ $model->assets->count()}}">Delete</a>
                                         </form>
                                     </div>
                                 </div>
@@ -120,7 +120,7 @@
             </div>
             <div class="modal-body">
                 <input id="model-id" type="hidden" value="">
-                <p>There are currently <span id="asset_count">0</span> Assets linked with this Asset Model. These Assets will be unassigned and related data will be lost. 
+                <p>There are currently <span id="asset_count">0</span> Asset(s) linked with this Asset Model. These Assets will be unassigned and related data will be lost. 
                     If you wish to continue please Select "Delete" to remove this Asset Model from the system.</p>
                 <small class="text-danger">**Warning this is permanent. This will unassign any Assets that have this model. </small>
             </div>
@@ -138,7 +138,7 @@
 <script>
     $('.deleteBtn').click(function() {
             $('#model-id').val($(this).data('id'))
-            $('#asset_count').val($(this).data('count'))
+            $('#asset_count').innerHtml($(this).data('count'))
             //showModal
             $('#removeModelModal').modal('show')
         });
