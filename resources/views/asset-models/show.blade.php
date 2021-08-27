@@ -47,19 +47,21 @@
         </div>
         <div class="card-body">
             <div class="row no-gutters">
-                <div class="col-12 col-sm-4 col-md-3 col-xl-2">
+                <div class="col-12 col-sm-4 col-md-3 col-xl-2 p-2">
+                    <div class="border border-gray-100">
                     @if($assetModel->photo()->exists())
                     <img src="{{ asset($assetModel->photo->path) }}" width="100%" alt="{{ $assetModel->name }}" title="{{ $assetModel->name }}">
                     @else
                     <img src="{{ asset('images/svg/device-image.svg') }}" width="100%" alt="{{ $assetModel->name }}" title="{{ $assetModel->name }}">
                     @endif
+                    </div>
                 </div>
                 <div class="col-12 col-sm-8 col-md-9 col-xl-10"">
                     <div class="mb-1">
                         <table class="table table-striped">
                             <tr>
-                                <td>Name</td>
-                                <td>{{$assetModel->name}}</td>
+                                <td width="20%">Name</td>
+                                <td width="80%">{{$assetModel->name}}</td>
                             </tr>
                             <tr>
                                 <td>Manufacturer</td>
@@ -76,6 +78,10 @@
                             <tr>
                                 <td>EOL</td>
                                 <td>{{$assetModel->eol}} Months</td>
+                            </tr>
+                            <tr>
+                                <td>Notes</td>
+                                <td>{{$assetModel->notes}}</td>
                             </tr>
                         </table>
                         
@@ -245,9 +251,9 @@
     $(document).ready(function () {
             $('#assetsTable').DataTable({
                 "autoWidth": false,
-                "pageLength": 25,
+                "pageLength": 10,
                 "columnDefs": [{
-                    "targets": [9],
+                    "targets": [8],
                     "orderable": false
                 }],
                 "order": [[1, "asc"]],
