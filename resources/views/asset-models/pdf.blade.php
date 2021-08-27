@@ -77,7 +77,7 @@
                 <td>{{ $model->name}}</td>
                 <td class="text-left">{{ $model->manufacturer->name ?? 'N/A' }}</td>
                 <td class="text-center">{{$model->model_no}}</td>
-                <td class="text-center">{{$model->assets->count}}</td>
+                <td class="text-center">{{$model->assets->count()}}</td>
                 <td class="text-left">{{$model->notes}}</td>
             </tr>
         @endforeach
