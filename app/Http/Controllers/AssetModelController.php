@@ -14,7 +14,7 @@ class AssetModelController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->cant('viewAll', AssetModel::class)) {
+        if (auth()->user()->cant('viewAny', AssetModel::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset Model', 'View All']));
         }
         return view('asset-models.view');
