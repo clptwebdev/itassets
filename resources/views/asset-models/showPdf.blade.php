@@ -116,16 +116,7 @@
 
         </div>
         <div style="width: 32%; padding-left: 3%;float: right; border-left: solid 3px #CCC;">
-            <div class="text-center">
-            @if(isset($assetModel->manufacturer->photo->path))
-            <img src="{{ asset($assetModel->manufacturer->photo->path)}}"
-                width="70%" alt="{{$assetModel->manufacturer->name}}">
-            @endif
-            </div>
-            <p><strong>{{ $assetModel->manufacturer->name }}</strong></p>
-            <p>Tel: {{ $assetModel->manufacturer->supportPhone }}</p>
-            <p>Email: {{ $assetModel->manufacturer->supportEmail }}</p>
-            <p>URL: {{ $assetModel->manufacturer->supportUrl }}</p>
+            {{ $assetModel->manufacturer->name}}
         </div>
     </div>
     
