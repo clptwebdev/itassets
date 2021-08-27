@@ -15,9 +15,9 @@
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
         <a href="" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn"><i
                 class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
-        <a href="{{ route('asset-models.edit', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+        <a href="{{ route('asset-models.edit', $assetModel->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
-        <a href="{{ route('asset-model.showPdf', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+        <a href="{{ route('asset-model.showPdf', $assetModel->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>
@@ -42,9 +42,9 @@
             @endif
         </div>
         <div class="col-12 col-sm-8 col-md-9 col-xl-10">
-            <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid {{$location->icon}};">
+            <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid 666;">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold" style="color: {{$location->icon}};">Asset Model Information</h6>
+                    <h6 class="m-0 font-weight-bold">Asset Model Information</h6>
                 </div>
                 <div class="card-body">
                     <div class="row no-gutters">
