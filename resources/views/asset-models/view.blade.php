@@ -76,7 +76,7 @@
                                         <div class="dropdown-header">Asset Model Options:</div>
                                         <a href="{{ route('asset-models.show', $model->id) }}" class="dropdown-item">View</a>
                                         <a href="{{route('asset-models.edit', $model->id) }}" class="dropdown-item">Edit</a>
-                                        <form class="d-inline-block" id="form{{$model->id}}" action="{{ route('asset-models.destroy', $model->id) }}"
+                                        <form class="d-block" id="form{{$model->id}}" action="{{ route('asset-models.destroy', $model->id) }}"
                                             method="POST">
                                             @csrf
                                             @method('DELETE')
@@ -138,7 +138,7 @@
 <script>
     $('.deleteBtn').click(function() {
             $('#model-id').val($(this).data('id'))
-            $('#asset_count').innerHtml($(this).data('count'))
+            $('#asset_count').html($(this).data('count'))
             //showModal
             $('#removeModelModal').modal('show')
         });
