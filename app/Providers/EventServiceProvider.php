@@ -50,5 +50,6 @@ class EventServiceProvider extends ServiceProvider
         Supplier::observe(\App\Observers\SupplierObserver::class);
         Component::observe(\App\Observers\ComponentObserver::class);
         Consumable::observe(\App\Observers\ConsumableObserver::class);
+        AssetModel::observe(\App\Observers\AssetModelObserver::class);
     }
 }

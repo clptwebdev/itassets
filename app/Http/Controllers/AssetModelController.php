@@ -14,11 +14,17 @@ class AssetModelController extends Controller
 {
     public function index()
     {
+        if (auth()->user()->cant('viewAll', AssetModel::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset Model', 'View All']));
+        }
         return view('asset-models.view');
     }
 
     public function create()
     {
+        if (auth()->user()->cant('create', AssetModel::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset', 'create']));
+        }
         $mans = Manufacturer::all();
         $fieldsets = Fieldset::all();
         $depreciation = Depreciation::all();
@@ -27,6 +33,9 @@ class AssetModelController extends Controller
 
     public function store(Request $request)
     {
+        if (auth()->user()->cant('create', AssetModel::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset', 'create']));
+        }
         $validated = $request->validate([
             'name'=>'required|max:255',
             'model_no'=>'required',
@@ -39,11 +48,17 @@ class AssetModelController extends Controller
 
     public function show(AssetModel $assetModel)
     {
+        if (auth()->user()->cant('view', $assetModel)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset', 'view']));
+        }
         return view('asset-models.show', compact('assetModel'));
     }
 
     public function edit(AssetModel $assetModel)
     {
+        if (auth()->user()->cant('update', $assetModel)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset', 'edit']));
+        }
         $depreciation = Depreciation::all();
         $mans = Manufacturer::all();
         $fieldsets = Fieldset::all();
@@ -52,6 +67,9 @@ class AssetModelController extends Controller
 
     public function update(Request $request, AssetModel $assetModel)
     {
+        if (auth()->user()->cant('update', $assetModel)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset', 'edit']));
+        }
         $validated = $request->validate([
             'name'=>'required|max:255',
             'model_no'=>'required',
@@ -64,6 +82,9 @@ class AssetModelController extends Controller
 
     public function destroy(AssetModel $assetModel)
     {
+        if (auth()->user()->cant('delete', $assetModel)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset', 'delete']));
+        }
         $name = $assetModel->name;
         $assetModel->delete();
         session()->flash('danger_message', $name.' was deleted from the system');
@@ -72,6 +93,9 @@ class AssetModelController extends Controller
 
     public function downloadPDF()
     {
+        if (auth()->user()->cant('viewAll', AssetModel::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Asset Model', 'Download PDF']));
+        }
         $models = AssetModel::all();
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.pdf', compact('models'));
         $pdf->setPaper('a4', 'landscape');
@@ -79,11 +103,14 @@ class AssetModelController extends Controller
         return $pdf->download("models-{$date}.pdf");
     }
 
-    public function downloadShowPDF(Asset $asset)
+    public function downloadShowPDF(AssetModel $assetModel)
     {
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.showPdf', compact('asset'));
+        if (auth()->user()->cant('view', $assetModel)) {
+            return redirect(route('errors.forbidden', ['assetModel', $assetModel->id, 'Download PDF']));
+        }
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.showPdf', compact('assetModel'));
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("asset-{$asset->asset_tag}-{$date}.pdf");
+        return $pdf->download("model-{$assetModel->id}-{$date}.pdf");
     }
 }

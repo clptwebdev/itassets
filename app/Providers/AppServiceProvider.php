@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
             'asset' => 'App\Models\Asset',
             'consumable' => 'App\Models\Consumable',
             'accessory' => 'App\Models\Accessory',
+            'assetModel' => 'App\Models\AssetModel',
         ]);
     }
 }
