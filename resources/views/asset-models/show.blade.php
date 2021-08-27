@@ -3,6 +3,13 @@
 @section('title', 'View '.$assetModel->name)
 
 @section('css')
+<link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
+          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
 @endsection
 
@@ -94,6 +101,7 @@
                     <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
                     <th class="col-auto d-none d-xl-table-cell"><small>Warranty (M)</small></th>
                     <th class="col-auto text-center d-none d-md-table-cell"><small>Audit Due</small></th>
+                    <th class="text-right col-1"><small>Options</small></th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -106,6 +114,7 @@
                     <th class=" d-none d-xl-table-cell"><small>Supplier</small></th>
                     <th class=" d-none d-xl-table-cell"><small>Warranty (M)</small></th>
                     <th class="text-center  d-none d-md-table-cell"><small>Audit Due</small></th>
+                    <th class="text-right col-1"><small>Options</small></th>
                 </tr>
                 </tfoot>
                 <tbody>
@@ -157,6 +166,35 @@
                                 @endswitch
                             @endif
                         </td>
+                        <td class="text-right">
+                            <div class="dropdown no-arrow">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                   id="dropdownMenuLink"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div
+                                    class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Asset Options:</div>
+                                    <a href="{{ route('assets.show', $asset->id) }}"
+                                       class="dropdown-item">View</a>
+                                    @can('edit', $asset)
+                                        <a href="{{ route('assets.edit', $asset->id) }}" class="dropdown-item">Edit</a>
+                                    @endcan
+                                    @can('delete', $asset)
+                                        <form id="form{{$asset->id}}"
+                                              action="{{ route('assets.destroy', $asset->id) }}" method="POST"
+                                              class="d-block p-0 m-0">
+                                            @csrf
+                                            @method('DELETE')
+                                            <a class="deleteBtn dropdown-item" href="#"
+                                               data-id="{{$asset->id}}">Delete</a>
+                                        </form>
+                                    @endcan
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -199,6 +237,22 @@
 @endsection
 
 @section('js')
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+            $('#assetsTable').DataTable({
+                "autoWidth": false,
+                "pageLength": 25,
+                "columnDefs": [{
+                    "targets": [9],
+                    "orderable": false
+                }],
+                "order": [[1, "asc"]],
+            });
+        });
+</script>
 
 @endsection
