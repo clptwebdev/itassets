@@ -65,11 +65,11 @@
                             <td>{{ $model->depreciation->name ?? 'No Depreciation Set' }}</td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
-                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$status->id}}Link"
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$model->id}}Link"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                     </a>
-                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$status->id}}Link">
+                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$model->id}}Link">
                                         <div class="dropdown-header">Asset Model Options:</div>
                                         <a href="{{ route('asset-models.show', $model->id) }}" class="dropdown-item">View</a>
                                         <a href="{{route('asset-models.edit', $model->id) }}" class="dropdown-item">Edit</a>
