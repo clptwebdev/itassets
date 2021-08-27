@@ -140,8 +140,7 @@
                         </td>
                         <td class="text-center d-none d-xl-table-cell"
                             data-sort="{{ strtotime($asset->audit_date)}}">
-                            @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
-                            XX
+                           xx
                         </td>
                     </tr>
                 @endforeach
