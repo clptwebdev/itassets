@@ -20,7 +20,7 @@ class AssetModel extends Model
     }
 
     public function assets(){
-        return $this->hasMany(Model::class, 'id', 'asset_model');
+        return $this->hasMany(Asset::class, 'id', 'asset_model');
     }
 
     public function depreciation(){
