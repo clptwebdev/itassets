@@ -11,21 +11,11 @@ use Illuminate\Http\Request;
 
 class AssetModelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         return view('asset-models.view');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $mans = Manufacturer::all();
@@ -34,12 +24,6 @@ class AssetModelController extends Controller
         return view('asset-models.create', compact('fieldsets', 'mans', 'depreciation'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -47,28 +31,16 @@ class AssetModelController extends Controller
             'model_no'=>'required',
         ]);
 
-        AssetModel::create($request->only('name', 'manfacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'));
+        AssetModel::create($request->only('name', 'manufacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'));
         session()->flash('success_message', $request->name.' has been created successfully');
         return redirect(route('asset-models.index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(AssetModel $assetModel)
     {
-        //
+        return view('asset-models.show', compact('assetModel'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(AssetModel $assetModel)
     {
         $depreciation = Depreciation::all();
@@ -77,13 +49,6 @@ class AssetModelController extends Controller
         return view('asset-models.edit', compact('fieldsets', 'mans', 'assetModel', 'depreciation'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, AssetModel $assetModel)
     {
         $validated = $request->validate([
@@ -91,17 +56,11 @@ class AssetModelController extends Controller
             'model_no'=>'required',
         ]);
 
-        $assetModel->fill($request->only('name', 'manfacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'))->save();
+        $assetModel->fill($request->only('name', 'manufacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'))->save();
         session()->flash('success_message', $request->name.' has been updated successfully');
         return redirect(route('asset-models.index'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(AssetModel $assetModel)
     {
         $name = $assetModel->name;

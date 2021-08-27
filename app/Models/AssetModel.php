@@ -19,6 +19,10 @@ class AssetModel extends Model
         return $this->hasOne(Model::class, 'id', 'asset_model');
     }
 
+    public function assets(){
+        return $this->hasMany(Model::class, 'id', 'asset_model');
+    }
+
     public function depreciation(){
         return $this->belongsTo(Depreciation::class);
     }

@@ -36,48 +36,52 @@
                 <table id="modelsTable" class="table table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Manufacturer</th>
-                            <th>Model No:</th>
-                            <th>Deprciation</th>
-                            <th class="text-center">Options</th>
+                            <th class="text-center"><small>ID</small></th>
+                            <th><small>Name</small></th>
+                            <th><small>Manufacturer</small></th>
+                            <th><small>Model No:</small></th>
+                            <th><small>Depreciation</small></th>
+                            <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Manufacturer</th>
-                            <th>Model No:</th>
-                            <th>Depreciation</th>
-                            <th class="text-center">Options</th>
+                            <th class="text-center"><small>ID</small></th>
+                            <th><small>Name</small></th>
+                            <th><small>Manufacturer</small></th>
+                            <th><small>Model No:</small></th>
+                            <th><small>Depreciation</small></th>
+                            <th class="text-right"><small>Options</small></th>
                         </tr>
                     </tfoot>
                     <tbody>
                         <?php $models = App\Models\AssetModel::all();?>
                         @foreach($models as $model)
                         <tr>
-                            <td>{{ $model->id }}</td>
+                            <td class="text-center">{{ $model->id }}</td>
                             <td>{{ $model->name }}</td>
                             <td>{{ $model->manufacturer->name}}</td>
                             <td>{{ $model->model_no }}</td>
                             <td>{{ $model->depreciation->name ?? 'No Depreciation Set' }}</td>
-                            <td class="text-center">
-                                <form id="form{{$model->id}}" action="{{ route('asset-models.destroy', $model->id) }}"
-                                    method="POST">
-                                    <a href="{{ route('asset-models.show', $model->id) }}"
-                                        class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
-                                        View</a>&nbsp;
-                                    <a href="{{route('asset-models.edit', $model->id) }}"
-                                        class="btn-sm btn-secondary text-white"><i
-                                            class="fas fa-pencil-alt"></i></a>&nbsp;
-
-                                    @csrf
-                                    @method('DELETE')
-                                    <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                        data-id="{{$model->id}}"><i class=" fas fa-trash"></i></a>
-                                </form>
+                            <td class="text-right">
+                                <div class="dropdown no-arrow">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$status->id}}Link"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$status->id}}Link">
+                                        <div class="dropdown-header">Asset Model Options:</div>
+                                        <a href="{{ route('asset-models.show', $model->id) }}" class="dropdown-item">View</a>
+                                        <a href="{{route('asset-models.edit', $model->id) }}" class="dropdown-item">Edit</a>
+                                        <form class="d-inline-block" id="form{{$model->id}}" action="{{ route('asset-models.destroy', $model->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <a class="dropdown-item deleteBtn" href="#" data-id="{{$model->id}}" data-count="{{ $model->assets()->count()}}">Delete</a>
+                                        </form>
+                                    </div>
+                                </div>
+                                
                             </td>
                         </tr>
                         @endforeach
@@ -113,7 +117,8 @@
             </div>
             <div class="modal-body">
                 <input id="model-id" type="hidden" value="">
-                <p>Select "Delete" to remove this Asset Model from the system.</p>
+                <p>There are currently <span id="asset_count">0</span> Assets linked with this Asset Model. These Assets will be unassigned and related data will be lost. 
+                    If you wish to continue please Select "Delete" to remove this Asset Model from the system.</p>
                 <small class="text-danger">**Warning this is permanent. This will unassign any Assets that have this model. </small>
             </div>
             <div class="modal-footer">
@@ -130,6 +135,7 @@
 <script>
     $('.deleteBtn').click(function() {
             $('#model-id').val($(this).data('id'))
+            $('#asset_count').val($(this).data('count'))
             //showModal
             $('#removeModelModal').modal('show')
         });
