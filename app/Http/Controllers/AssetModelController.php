@@ -8,6 +8,7 @@ use App\Models\Fieldset;
 use App\Models\Manufacturer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use PDF;
 
 class AssetModelController extends Controller
 {
