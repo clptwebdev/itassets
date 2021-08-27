@@ -68,4 +68,21 @@ class AssetModelController extends Controller
         session()->flash('danger_message', $name.' was deleted from the system');
         return redirect(route('asset-models.index'));
     }
+
+    public function downloadPDF(Request $request)
+    {
+        $models = AssetModel::all();
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.pdf', compact('assets'));
+        $pdf->setPaper('a4', 'landscape');
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        return $pdf->download("models-{$date}.pdf");
+    }
+
+    public function downloadShowPDF(Asset $asset)
+    {
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.showPdf', compact('asset'));
+
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        return $pdf->download("asset-{$asset->asset_tag}-{$date}.pdf");
+    }
 }
