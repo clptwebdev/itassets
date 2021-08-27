@@ -87,11 +87,25 @@
                 <thead>
                 <tr>
                     <th class="col-9 col-md-2"><small>Item</small></th>
+                    <th class="col-1 col-md-auto"><small>Location</small></th>
+                    <th class="col-1 col-md-auto"><small>Tag</small></th>
+                    <th class="d-none d-xl-table-cell"><small>Date</small></th>
+                    <th class="d-none d-xl-table-cell"><small>Cost</small></th>
+                    <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
+                    <th class="col-auto d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                    <th class="col-auto text-center d-none d-md-table-cell"><small>Audit Due</small></th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
                     <th><small>Item</small></th>
+                    <th><small>Location</small></th>
+                    <th><small>Tag</small></th>
+                    <th class=" d-none d-xl-table-cell"><small>Date</small></th>
+                    <th class=" d-none d-xl-table-cell"><small>Cost</small></th>
+                    <th class=" d-none d-xl-table-cell"><small>Supplier</small></th>
+                    <th class=" d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                    <th class="text-center  d-none d-md-table-cell"><small>Audit Due</small></th>
                 </tr>
                 </tfoot>
                 <tbody>
@@ -99,7 +113,36 @@
                     <tr>
                         <td>{{ $assetModel->name ?? 'No Model'}}<br><small
                                 class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
-                        
+                        <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
+                            @if($asset->location->photo()->exists())
+                                <img src="{{ asset($asset->location->photo->path)}}" height="30px"
+                                      alt="{{$asset->location->name}}"
+                                      title="{{ $asset->location->name ?? 'Unnassigned'}}"/>
+                            @else
+                                {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'">'
+                                    .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}
+                            @endif
+                        </td>
+                        <td>{{ $asset->asset_tag }}</td>
+                        <td class="d-none d-md-table-cell"
+                            data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
+                        <td class="text-center  d-none d-xl-table-cell">
+                            £{{ $asset->purchased_cost }}
+                           
+                        </td>
+                        <td class="text-center d-none d-xl-table-cell">{{$asset->supplier->name ?? "N/A"}}</td>
+                        @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
+                        <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
+                            {{ $asset->warranty }} Months
+
+                            <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
+                                Remaining</small>
+                        </td>
+                        <td class="text-center d-none d-xl-table-cell"
+                            data-sort="{{ strtotime($asset->audit_date)}}">
+                            @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
+                            XX
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>
