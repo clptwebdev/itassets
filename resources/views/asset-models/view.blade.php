@@ -40,6 +40,7 @@
                             <th><small>Name</small></th>
                             <th><small>Manufacturer</small></th>
                             <th><small>Model No:</small></th>
+                            <th><small>Assets</small></th>
                             <th><small>Depreciation</small></th>
                             <th class="text-right col-1"><small>Options</small></th>
                         </tr>
@@ -50,6 +51,7 @@
                             <th><small>Name</small></th>
                             <th><small>Manufacturer</small></th>
                             <th><small>Model No:</small></th>
+                            <th><small>Assets</small></th>
                             <th><small>Depreciation</small></th>
                             <th class="text-right"><small>Options</small></th>
                         </tr>
@@ -62,6 +64,7 @@
                             <td>{{ $model->name }}</td>
                             <td>{{ $model->manufacturer->name}}</td>
                             <td>{{ $model->model_no }}</td>
+                            <td>{{ $model->assets->count() }}</td>
                             <td>{{ $model->depreciation->name ?? 'No Depreciation Set' }}</td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
