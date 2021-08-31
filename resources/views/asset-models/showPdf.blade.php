@@ -66,59 +66,7 @@
         </table>
     </header>
 
-        <div style="width: 62%; pading-right: 3%; float: left;">
-            @if($assetModel->photo()->exists())
-                <img src="{{ asset($assetModel->photo->path) ?? asset('images/svg/device-image.svg')}}" width="200px" class="p-3" alt="{{$assetModel->name}}">
-            @else
-                <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$assetModel->name}}">
-            @endif
-            <hr>
-            <table id="assetstable" class="table table-sm table-bordered table-striped">
-                <thead>
-                    <tr style="background-color: #454777; padding: 10px; color: #fff;">
-                        <th colspan="2">Device Information</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Name:</td>
-                    <td>{{ $assetModel->name }}</td>
-                </tr>
-                <tr>
-                <tr>
-                    <td>Device Model N<span class="">o</span></td>
-                    <td>{{ $assetModel->model_no }}</td>
-                </tr>
-            </table>
-
-            <table class="table table-sm table-bordered table-striped">
-                <thead>
-                <tr style="background-color: #454777; padding: 10px; color: #fff;">
-                    <th >EOL (End of Life) </th>
-                </tr>
-                </thead>
-                <tr>
-                    <td><strong>{{ $assetModel->eol }} Months</strong></td>
-                </tr>
-            </table>
-
-            <table class="table table-sm table-bordered table-striped">
-                <thead>
-                    <tr style="background-color: #454777; padding: 10px; color: #fff;">
-                        <th>Notes:</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ $assetModel->notes}}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-        </div>
-        <div style="width: 32%; padding-left: 3%;float: right; border-left: solid 3px #CCC;">
-            
-        </div>
-    </div>
+    
     
 
 @if($assetModel->assets()->exists())

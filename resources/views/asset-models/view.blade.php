@@ -11,10 +11,14 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Asset Models</h1>
     <div>
+        @can('create', \App\Models\AsseModel::class)
         <a href="{{ route('asset-models.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Asset Modal</a>
+        @endcan
+        @can('viewAny', \App\Models\AsseModel::class)
         <a href="{{ route('asset-model.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        @endcan
     </div>
 </div>
 
