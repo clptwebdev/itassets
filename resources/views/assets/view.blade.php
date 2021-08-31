@@ -265,13 +265,7 @@
                                         class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
-<<<<<<< HEAD
-                                        '<img src="{{ asset($asset->location->photo->path)}}" height="30px"
-                                              alt="{{$asset->location->name}}"
-                                              title="{{ $asset->location->name ?? 'Unnassigned'}}"/>'
-=======
                                         <img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>
->>>>>>> dfe8c206e1eb1e4c58e08559652bd74cb19b25ed
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'">'
                                             .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}

@@ -24,7 +24,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('backup:run  --only-db')
+            ->daily()
+            ->runInBackground()
+        ->onFailure(function(){
+            echo ("This has not been successful please try again later!");
+        })
+        ->onSuccess(function(){
+            echo ("This Database has backup has been created and stored in storage/app/Apollo---Asset-Manager Within your application");
+
+        });
+        $schedule->command('backup:clean')
+            ->lastDayOfMonth()
+            ->runInBackground();
     }
 
     /**

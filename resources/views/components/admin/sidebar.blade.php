@@ -110,7 +110,7 @@
     </li>
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="/manufacturers">
+        <a class="nav-link" href="{{route("manufacturers.index")}}">
             <i class="fas fa-fw fa-tools sidebar-icon"></i>
             <span class="sidebar-title">Manufacturers</span></a>
     </li>
@@ -137,6 +137,7 @@
                 <a class="collapse-item" href="{{ route('fieldsets.index')}}">Fieldsets</a>
                 <a class="collapse-item" href="{{ route('fields.index')}}">Custom Fields</a>
                 <a class="collapse-item" href="{{ route('status.index')}}">Status Fields</a>
+                <a class="collapse-item" href="/databasebackups">Database Backups</a>
                 <a class="collapse-item" href="login.html">Settings</a>
         </div>
     </li>
