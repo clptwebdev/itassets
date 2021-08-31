@@ -108,7 +108,6 @@ class AssetModelController extends Controller
         if (auth()->user()->cant('view', $assetModel)) {
             return redirect(route('errors.forbidden', ['assetModel', $assetModel->id, 'Download PDF']));
         }
-        return $assetModel;
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.showPdf', compact('assetModel'));
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
