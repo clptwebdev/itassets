@@ -136,17 +136,7 @@
                 <th class="d-none d-xl-table-cell"><small>Date</small></th>
                 <th class="d-none d-xl-table-cell text-center"><small>Cost</small>
             </tr>
-            @foreach($assetModel->assets as $asset)
-                <tr>
-                    <td>{{ $assetModel->name ?? 'No Model'}}<br><small>{{ $asset->serial_no }}</small></td>
-                    <td class="text-center">{{ $asset->location->name}}</td>
-                    <td>{{ $asset->asset_tag }}</td>
-                    <td>{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
-                    <td class="text-center">
-                        £{{ $asset->purchased_cost }}
-                    </td>
-                </tr>
-            @endforeach
+           
     </tbody>
 </table>
 @endif
