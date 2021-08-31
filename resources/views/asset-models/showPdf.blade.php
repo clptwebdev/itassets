@@ -94,6 +94,17 @@
             <table class="table table-sm table-bordered table-striped">
                 <thead>
                 <tr style="background-color: #454777; padding: 10px; color: #fff;">
+                    <th >Depreciation Model </th>
+                </tr>
+                </thead>
+                <tr>
+                    <td><strong>{{ $assetModel->depreciation->name }} Months</strong></td>
+                </tr>
+            </table>
+
+            <table class="table table-sm table-bordered table-striped">
+                <thead>
+                <tr style="background-color: #454777; padding: 10px; color: #fff;">
                     <th >EOL (End of Life) </th>
                 </tr>
                 </thead>
@@ -117,12 +128,6 @@
 
         </div>
         <div style="width: 32%; padding-left: 3%;float: right; border-left: solid 3px #CCC;">
-            @if($assetModel->photo()->exists())
-                <img src="{{ asset($assetModel->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="{{$assetModel->name}}">
-            @else
-                <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$assetModel->name}}">
-            @endif
-            <hr>
             <?php $manufacturer = $assetModel->manufacturer; ?>
             <div class="text-center">
             @if(isset($manufacturer->photo->path))
@@ -142,15 +147,15 @@
 <div class="page-break"></div>
 <table class="table table-bordered table-striped ">
     <thead>
-        <tr style="background-color: #454777; padding: 10px; color: #fff;"><th>Assigned Assets</th></tr>    
+        <tr style="background-color: #454777; padding: 10px; color: #fff;"><th colspan="5">Assigned Assets</th></tr>    
     </thead>                      
     <tbody>
             <tr>
-                <th class="col-9 col-md-2"><small>Item</small></th>
-                <th class="col-1 col-md-auto"><small>Tag</small></th>
-                <th class="col-1 col-md-auto"><small>Location</small></th>
-                <th class="d-none d-xl-table-cell"><small>Date</small></th>
-                <th class="d-none d-xl-table-cell text-center"><small>Cost</small>
+                <th width="30%"><small>Item</small></th>
+                <th width="10%"><small>Tag</small></th>
+                <th width="40%"><small>Location</small></th>
+                <th width="10%"><small>Date</small></th>
+                <th width="10%"><small>Cost</small></th>
             </tr>
             @foreach($assetModel->assets as $asset)
             <tr>
