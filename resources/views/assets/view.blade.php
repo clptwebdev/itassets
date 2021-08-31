@@ -342,7 +342,7 @@
                                             <div class="dropdown-header">Asset Options:</div>
                                             <a href="{{ route('assets.show', $asset->id) }}"
                                                class="dropdown-item">View</a>
-                                            @can('edit', $asset)
+                                            @can('update', $asset)
                                                 <a href="{{ route('assets.edit', $asset->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $asset)

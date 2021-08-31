@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'View Categories')
+
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
 @endsection
@@ -11,7 +13,7 @@
     <div>
         <a href="#" data-toggle="modal" data-target="#addCategoryModal" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Category</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>
@@ -34,48 +36,62 @@
                 <table id="categoryTable" class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th class="col-4">Name</th>
-                            <th>Assets</th>
-                            <th>Components</th>
-                            <th>Consumables</th>
-                            <th>Accessories</th>
-                            <th>Miscellaneous</th>
-                            <th class="text-center col-4">Options</th>
+                            <th class="col-6"><small>Name</small></th>
+                            <th class="text-center col-1"><small>Assets</small></th>
+                            <th class="text-center col-1"><small>Accessories</small></th>
+                            <th class="text-center col-1"><small>Components</small></th>
+                            <th class="text-center col-1"><small>Consumables</small></th>
+                            <th class="text-center col-1"><small>Miscellaneous</small></th>
+                            <th class="text-center col-1"><small>Options</small></th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th>Name</th>
-                            <th>Assets</th>
-                            <th>Components</th>
-                            <th>Consumables</th>
-                            <th>Accessories</th>
-                            <th>Miscellaneous</th>
-                            <th class="text-center">Options</th>
+                            <th><small>Name</small></th>
+                            <th class="text-center"><small>Assets</small></th>
+                            <th class="text-center"><small>Accessories</small></th>
+                            <th class="text-center"><small>Components</small></th>
+                            <th class="text-center"><small>Consumables</small></th>
+                            <th class="text-center"><small>Miscellaneous</small></th>
+                            <th class="text-center"><small>Options</small></th>
                         </tr>
                     </tfoot>
                     <tbody>
                         <?php $categories = App\Models\Category::all();?>
                         @foreach($categories as $category)
                         <tr>
-                            <td class="text-center"><input type="checkbox"></td>
                             <td>{{ $category->name }}</td>
-                            <td>123</td>
-                            <td>23</td>
-                            <td>64</td>
-                            <td>12</td>
-                            <td>1</td>
                             <td class="text-center">
-                                <a href="{{ route('category.show', $category->id) }}"
-                                    class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
-                                    View</a>&nbsp;
-                                <a href="#" class="btn-sm btn-secondary text-white updateBtn" 
-                                    data-id="{{$category->id}}" data-name="{{ $category->name}}" data-route="{{ route('category.update', $category->id)}}"><i
-                                        class="fas fa-pencil-alt"></i></a>&nbsp;
-                                <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                    data-route="{{ route('category.destroy', $category->id)}}"><i class=" fas fa-trash"></i></a>
+                                <?php $assets = \App\Models\Asset::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
+                                {{count($assets)}}
+                            </td>
+                            <td class="text-center">
+                                <?php $accessories = \App\Models\Accessory::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
+                                {{count($accessories)}}
+                            </td>
+                            <td class="text-center">
+                                <?php $components = \App\Models\Component::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
+                                {{count($components)}}
+                            </td>
+                            <td class="text-center">
+                                <?php $consumables = \App\Models\Consumable::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
+                                {{count($consumables)}}    
+                            </td>
+                            <td class="text-center">N/A</td>
+                            <td class="text-right">
+                                <div class="dropdown no-arrow">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$category->id}}Link"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$category->id}}Link">
+                                        <div class="dropdown-header">Category Options:</div>
+                                        <a href="{{ route('category.show', $category->id) }}" class="dropdown-item">View</a>
+                                        <a href="#" class="dropdown-item updateBtn" 
+                                        data-id="{{$category->id}}" data-name="{{ $category->name}}" data-route="{{ route('category.update', $category->id)}}">Edit</a>
+                                        <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('category.destroy', $category->id)}}">Delete</a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -207,10 +223,10 @@
     $(document).ready( function () {
         $('#categoryTable').DataTable({
             "columnDefs": [ {
-                "targets": [0, 5],
+                "targets": [6],
                 "orderable": false,
             } ],
-            "order": [[ 1, "asc"]]
+            "order": [[ 0, "asc"]]
         });
     } );
 </script>

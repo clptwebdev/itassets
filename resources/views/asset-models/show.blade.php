@@ -20,12 +20,18 @@
     <div>
         <a href="{{ route('asset-models.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+        @can('delete', $assetModel)
         <a href="" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn"><i
                 class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
+        @endcan
+        @can('update', $assetModel)
         <a href="{{ route('asset-models.edit', $assetModel->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
+        @endcan
+        @can('view', $assetModel)
         <a href="{{ route('asset-model.showPdf', $assetModel->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        @endcan
     </div>
 </div>
 

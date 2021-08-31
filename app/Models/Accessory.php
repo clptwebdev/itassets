@@ -56,4 +56,16 @@ class Accessory extends Model
     public function scopeStatusFilter($query, $status){
         return $query->whereIn('status_id', $status);
     }
+
+    public function scopeLocationFilter($query, $locations){
+        return $query->whereIn('location_id', $locations);
+    }
+
+    public function scopeCategoryFilter($query, $category){
+        $pivot = $this->category()->getTable();
+
+        $query->whereHas('category', function ($q) use ($category, $pivot) {
+            $q->whereIn("{$pivot}.category_id", $category);
+        });
+    }
 }

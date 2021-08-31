@@ -83,8 +83,26 @@
                                 @endphp
                                 {{ $accessories->count() }}
                             </td>
-                            <td class="text-center">N/A</td>
-                            <td class="text-center">N/A</td>
+                            <td class="text-center">
+                                @php
+                                if(auth()->user()->role_id == 1){
+                                    $components = App\Models\Component::statusFilter([$status->id]);
+                                }else{
+                                    $components = auth()->user()->location_components()->statusFilter([$status->id]);
+                                }
+                            @endphp
+                            {{ $components->count() }}
+                            </td>
+                            <td class="text-center">
+                                @php
+                                    if(auth()->user()->role_id == 1){
+                                        $consumables = App\Models\Consumable::statusFilter([$status->id]);
+                                    }else{
+                                        $consumables = auth()->user()->location_consumable()->statusFilter([$status->id]);
+                                    }
+                                @endphp
+                                {{ $consumables->count() }}
+                            </td>
                             <td class="text-center">N/A</td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
@@ -97,7 +115,7 @@
                                         <a href="{{ route('status.show', $status->id) }}" class="dropdown-item">View</a>
                                         <a class="dropdown-item updateBtn" data-id="{{$status->id}}" data-name="{{ $status->name}}"
                                             data-route="{{ route('status.update', $status->id)}}" data-deploy="{{$status->deployable}}" data-icon="{{$status->icon}}" data-colour="{{$status->colour}}">Edit</a>
-                                        <a class="dropdown-item" href="#" data-route="{{ route('status.destroy', $status->id)}}">Delete</a>
+                                        <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('status.destroy', $status->id)}}">Delete</a>
                                     </div>
                                 </div>
 

@@ -15,7 +15,7 @@ class AssetModelPolicy
         return $user->role_id != 0 && $user->role_id <= 4;
     }
 
-    public function view(User $user, AssetModel $assetModel)
+    public function view(User $user)
     {
         return $user->role_id != 0 && $user->role_id <= 4;
     }
@@ -25,22 +25,22 @@ class AssetModelPolicy
         return $user->role_id != 0 && $user->role_id <= 3;
     }
 
-    public function update(User $user, AssetModel $assetModel)
+    public function update(User $user)
     {
         return $user->role_id != 0 && $user->role_id <= 3;
     }
 
-    public function delete(User $user, AssetModel $assetModel)
+    public function delete(User $user)
     {
         return $user->role_id == 1;
     }
 
-    public function restore(User $user, AssetModel $assetModel)
+    public function restore(User $user)
     {
         return $user->role_id == 1;
     }
 
-    public function forceDelete(User $user, AssetModel $assetModel)
+    public function forceDelete(User $user)
     {
         return $user->role_id == 1;
     }

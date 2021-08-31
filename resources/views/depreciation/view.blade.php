@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Drepreciation Models')
+
 @section('title', '')
 
 @section('css')

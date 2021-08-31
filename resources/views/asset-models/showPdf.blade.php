@@ -98,7 +98,7 @@
                 </tr>
                 </thead>
                 <tr>
-                    <td><strong>{{ $assetModel->depreciation->name }} Months</strong></td>
+                    <td><strong>{{ $assetModel->depreciation->name }}</strong></td>
                 </tr>
             </table>
 

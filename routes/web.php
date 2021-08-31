@@ -69,7 +69,6 @@ Route::group(['middleware'=>'auth'], function(){
     //Administrator Permissions Middleware
         Route::resource('/location', 'App\Http\Controllers\LocationController');
         Route::resource('/comment', 'App\Http\Controllers\CommentController');
-        Route::resource('/category', 'App\Http\Controllers\CategoryController');
         Route::post('permissions/users', 'App\Http\Controllers\UserController@permissions');
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
@@ -120,8 +119,10 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('/consumable/{consumable}/pdf', 'App\Http\Controllers\ConsumableController@downloadShowPDF')->name('consumables.showPdf');
         Route::post('consumables/comment/create', 'App\Http\Controllers\ConsumableController@newComment')->name('consumables.comment');
         Route::post('/consumable/{consumable}/status', 'App\Http\Controllers\ConsumableController@changeStatus')->name('consumables.status');
-
-
+    //Category Routes
+        Route::resource('/category', 'App\Http\Controllers\CategoryController');
+        Route::post('/category/pdf', 'App\Http\Controllers\CategoryController@downloadPDF')->name('category.pdf');
+        Route::get('/category/{category}/pdf', 'App\Http\Controllers\CategoryController@downloadShowPDF')->name('category.showPdf');
 
         Route::resource('/status', 'App\Http\Controllers\StatusController');
         
