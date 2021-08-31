@@ -117,7 +117,23 @@
 
         </div>
         <div style="width: 32%; padding-left: 3%;float: right; border-left: solid 3px #CCC;">
-            
+            @if($assetModel->photo()->exists())
+                <img src="{{ asset($assetModel->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="{{$assetModel->name}}">
+            @else
+                <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$assetModel->name}}">
+            @endif
+            <hr>
+            <?php $manufacturer = $assetModel->manufacturer; ?>
+            <div class="text-center">
+            @if(isset($manufacturer->photo->path))
+            <img src="{{ asset($manufacturer->photo->path)}}"
+                width="70%" alt="{{$manufacturer->name}}">
+            @endif
+            </div>
+            <p><strong>{{ $manufacturer->name }}</strong></p>
+            <p>Tel: {{ $manufacturer->supportPhone }}</p>
+            <p>Email: {{ $manufacturer->supportEmail }}</p>
+            <p>URL: {{ $manufacturer->supportUrl }}</p>
         </div>
     </div>
     
