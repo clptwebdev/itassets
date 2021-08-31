@@ -68,7 +68,11 @@
     </header>
 
         <div style="width: 62%; pading-right: 3%; float: left;">
-            
+            @if($assetModel->photo()->exists())
+                <img src="{{ asset($assetModel->photo->path) ?? asset('images/svg/device-image.svg')}}" width="200px" class="p-3" alt="{{$assetModel->name}}">
+            @else
+                <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$assetModel->name}}">
+            @endif
             <hr>
             <table id="assetstable" class="table table-sm table-bordered table-striped">
                 <thead>
