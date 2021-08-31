@@ -75,7 +75,7 @@
                             </td>
                             <td class="text-center">
                                 @php
-                                    if($auth()->user()->role_id == 1){
+                                    if(auth()->user()->role_id == 1){
                                         $accessories = App\Models\Accessory::statusFilter([$status->id]);
                                     }else{
                                         $accessories = auth()->user()->location_accessories()->statusFilter([$status->id]);

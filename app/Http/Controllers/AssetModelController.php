@@ -93,7 +93,7 @@ class AssetModelController extends Controller
 
     public function downloadPDF()
     {
-        if (auth()->user()->cant('viewAll', AssetModel::class)) {
+        if (auth()->user()->cant('viewAny', AssetModel::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset Model', 'Download PDF']));
         }
         $models = AssetModel::all();
