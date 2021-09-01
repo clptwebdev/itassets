@@ -20,7 +20,7 @@
             <div class="container-middle-2  container-margin-login flex-size">
                 <div class="margin-centre">
                     <h3 class="centred d-block">
-                        Sign In To Your Account
+                        Sign In To Your Accounts
                     </h3>
                     <a href="{{ route('users.login')}}" class="d-block text-center button padding-25-height font20">
                         Login

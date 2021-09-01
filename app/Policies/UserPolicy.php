@@ -10,15 +10,10 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-    
+    public function viewAll(){
+        return $user->role_id != 0 && $user->role_id <= 2;
+    }
 
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
-     * @return mixed
-     */
     public function view(User $admin, User $user)
     {
         $permission = 0;
@@ -27,20 +22,14 @@ class UserPolicy
                 $permission++;
             }
         }
-        if($permission != 0 || $admin->role_id == 1){
+        if($permission != 0 && ($admin->role_id != 0 && $admin->role_id <= 2) || $admin->role_id == 1){
             return true;
         }else{
             return false;
         }
     }
 
-    /**
-     * Determine whether the user can create models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
-     */
-    public function edit(User $admin, User $user)
+    public function update(User $admin, User $user)
     {
         $permission = 0;
         foreach($admin->locations->pluck('id')->toArray() as $id => $key){
@@ -48,32 +37,13 @@ class UserPolicy
                 $permission++;
             }
         }
-        if($permission != 0 || $admin->role_id == 1){
+        if($permission != 0 && ($admin->role_id != 0 && $admin->role_id <= 2) || $admin->role_id == 1){
             return true;
         }else{
             return false;
         }
     }
 
-    /**
-     * Determine whether the user can update the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
-     * @return mixed
-     */
-    public function update(User $user, User $model)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
-     * @return mixed
-     */
     public function delete(User $admin, User $user)
     {
         $permission = 0;
@@ -89,27 +59,16 @@ class UserPolicy
         }
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
-     * @return mixed
-     */
     public function restore(User $user, User $model)
     {
         //
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
-     * @return mixed
-     */
     public function forceDelete(User $user, User $model)
     {
-        //
+    }
+
+    public function permissions(User $user){
+        return $user->role_id != 0 && $user->role_id <= 2;
     }
 }

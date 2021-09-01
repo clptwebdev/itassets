@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Asset Statuses')
+
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
 @endsection
@@ -12,8 +14,6 @@
         <a href="#" data-toggle="modal" data-target="#addStatusModal"
             class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Status</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>
 
@@ -35,58 +35,91 @@
                 <table id="categoryTable" class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th class="col-4">Name</th>
-                            <th>Deployable</th>
-                            <th>Assets</th>
-                            <th>Components</th>
-                            <th>Consumables</th>
-                            <th>Accessories</th>
-                            <th>Miscellaneous</th>
-                            <th class="text-right col-3">Options</th>
+                            <th class="col-4"><small>Name</small></th>
+                            <th><small>Deployable</small></th>
+                            <th><small>Assets</small></th>
+                            <th><small>Accessories</small></th>
+                            <th><small>Components</small></th>
+                            <th><small>Consumables</small></th>
+                            <th><small>Miscellaneous</small></th>
+                            <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th>Name</th>
-                            <th>Deployable</th>
-                            <th>Assets</th>
-                            <th>Components</th>
-                            <th>Consumables</th>
-                            <th>Accessories</th>
-                            <th>Miscellaneous</th>
-                            <th class="text-right">Options</th>
+                            <th class="col-4"><small>Name</small></th>
+                            <th><small>Deployable</small></th>
+                            <th><small>Assets</small></th>
+                            <th><small>Accessories</small></th>
+                            <th><small>Components</small></th>
+                            <th><small>Consumables</small></th>
+                            <th><small>Miscellaneous</small></th>
+                            <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                     </tfoot>
                     <tbody>
                         <?php $statuses = App\Models\Status::all();?>
                         @foreach($statuses as $status)
                         <tr>
-                            <td class="text-center"><input type="checkbox"></td>
                             <td><i class="{{$status->icon}}" style="color: {{$status->colour}};"></i> {{ $status->name }}</td>
                             <td class="text-center">@if($status->deployable == 1){!! '<i class="fas fa-check text-success"></i>'!!}@else{!!'<i class="fas fa-times text-danger"></i>'!!}@endif</td>
                             <td class="text-center">
                                 @php
-                                    $assets = auth()->user()->location_assets()->statusFilter([$status->id]);
+                                    if(auth()->user()->role_id == 1){
+                                        $assets = App\Models\Asset::statusFilter([$status->id])->get();
+                                    }else{
+                                        $assets = auth()->user()->location_assets()->statusFilter([$status->id]);
+                                    }
                                 @endphp
                                 {{ $assets->count() }}
                             </td>
-                            <td class="text-center">N/A</td>
-                            <td class="text-center">N/A</td>
-                            <td class="text-center">N/A</td>
+                            <td class="text-center">
+                                @php
+                                    if(auth()->user()->role_id == 1){
+                                        $accessories = App\Models\Accessory::statusFilter([$status->id]);
+                                    }else{
+                                        $accessories = auth()->user()->location_accessories()->statusFilter([$status->id]);
+                                    }
+                                @endphp
+                                {{ $accessories->count() }}
+                            </td>
+                            <td class="text-center">
+                                @php
+                                if(auth()->user()->role_id == 1){
+                                    $components = App\Models\Component::statusFilter([$status->id]);
+                                }else{
+                                    $components = auth()->user()->location_components()->statusFilter([$status->id]);
+                                }
+                            @endphp
+                            {{ $components->count() }}
+                            </td>
+                            <td class="text-center">
+                                @php
+                                    if(auth()->user()->role_id == 1){
+                                        $consumables = App\Models\Consumable::statusFilter([$status->id]);
+                                    }else{
+                                        $consumables = auth()->user()->location_consumable()->statusFilter([$status->id]);
+                                    }
+                                @endphp
+                                {{ $consumables->count() }}
+                            </td>
                             <td class="text-center">N/A</td>
                             <td class="text-right">
-                                <a href="{{ route('status.show', $status->id) }}"
-                                    class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
-                                    View</a>&nbsp;
-                                <a href="#" class="btn-sm btn-secondary text-white updateBtn"
-                                    data-id="{{$status->id}}" data-name="{{ $status->name}}"
-                                    data-route="{{ route('status.update', $status->id)}}" data-deploy="{{$status->deployable}}" data-icon="{{$status->icon}}" data-colour="{{$status->colour}}"><i
-                                        class="fas fa-pencil-alt"></i></a>&nbsp;
-                                <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                    data-route="{{ route('status.destroy', $status->id)}}"><i
-                                        class=" fas fa-trash"></i></a>
+                                <div class="dropdown no-arrow">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$status->id}}Link"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$status->id}}Link">
+                                        <div class="dropdown-header">Asset Options:</div>
+                                        <a href="{{ route('status.show', $status->id) }}" class="dropdown-item">View</a>
+                                        <a class="dropdown-item updateBtn" data-id="{{$status->id}}" data-name="{{ $status->name}}"
+                                            data-route="{{ route('status.update', $status->id)}}" data-deploy="{{$status->deployable}}" data-icon="{{$status->icon}}" data-colour="{{$status->colour}}">Edit</a>
+                                        <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('status.destroy', $status->id)}}">Delete</a>
+                                    </div>
+                                </div>
+
+                                
                             </td>
                         </tr>
                         @endforeach

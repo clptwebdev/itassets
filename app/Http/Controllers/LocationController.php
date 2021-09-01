@@ -9,30 +9,18 @@ use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index()
     {
         $locations=Location::orderBy('name', 'asc')->get();
         return view('locations.view', ['locations'=>$locations]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('locations.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validated=$request->validate([
@@ -41,7 +29,7 @@ class LocationController extends Controller
             'city'=>'required',
             'county'=>'required',
             'postcode'=>'required',
-            'email'=>'required|unique:locations|email:rfc,dns,spoof,filter',
+            'email'=>'required|unique:locations|email',
             'telephone'=>'required|max:14',
         ]);
 
@@ -49,20 +37,12 @@ class LocationController extends Controller
         session()->flash('success_message', $request->name.' has been created successfully');
         return redirect(route('location.index'));
     }
-    /**
-     * Display the specified resource.
-     * @param \App\Models\Location $location
-     * @return \Illuminate\Http\Response
-     */
+  
     public function show(Location $location)
     {
         return view('locations.show', compact('location'));
     }
-    /**
-     * Show the form for editing the specified resource.
-     * @param \App\Models\Location $location
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function edit(Location $location)
     {
         if(auth()->user()->role_id==1){
@@ -73,12 +53,7 @@ class LocationController extends Controller
 
         return view('locations.edit', compact('location','locations'));
     }
-    /**
-     * Update the specified resource in storage.
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Location     $location
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Location $location)
     {
         $validated=$request->validate([
@@ -87,7 +62,7 @@ class LocationController extends Controller
             'city'=>'required',
             'county'=>'required',
             'postcode'=>'required',
-            'email'=>['required', \Illuminate\Validation\Rule::unique('locations')->ignore($location->id), 'email:rfc,dns,spoof,filter'],
+            'email'=>['required', \Illuminate\Validation\Rule::unique('locations')->ignore($location->id), 'email'],
             'telephone'=>'required|max:14',
         ]);
 
@@ -95,11 +70,7 @@ class LocationController extends Controller
         session()->flash('success_message', $location->name . ' has been updated successfully');
         return redirect(route('location.index'));
     }
-    /**
-     * Remove the specified resource from storage.
-     * @param \App\Models\Location $location
-     * @return \Illuminate\Http\Response
-     */
+   
     public function destroy(Location $location)
     {
         $name=$location->name;
@@ -107,10 +78,10 @@ class LocationController extends Controller
         session()->flash('danger_message', $name . ' was deleted from the system');
         return redirect(route('location.index'));
     }
+
     public function export(Location $location)
     {
         return \Maatwebsite\Excel\Facades\Excel::download(new LocationsExport, 'Location.csv');
-
     }
 
 }

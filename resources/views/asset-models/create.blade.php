@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Add New Asset Model')
+
 @section('css')
 
 @endsection
@@ -45,7 +47,7 @@
                         <div class="form-group">
                             <label for="manufacturer">Manufacturer:</label>
                             <select class="form-control mb-3 <?php if ($errors->has('manufacturer_id')){?>border-danger<?php }?>"
-                                name="manfacturer_id" id="manufacturer_id" required>
+                                name="manufacturer_id" id="manufacturer_id" required>
                                 <option value="0">Please select a Manufacturer</option>
                                 @foreach($mans as $man)
                                 <option value="{{$man->id}}">{{ $man->name}}</option>

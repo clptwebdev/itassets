@@ -27,6 +27,10 @@ class ComponentController extends Controller {
 
     public function index()
     {
+        if (auth()->user()->cant('viewAll', Component::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Components', 'view']));
+        }
+
         if(auth()->user()->role_id == 1){
             $components = Component::all();
         }else{
@@ -37,7 +41,9 @@ class ComponentController extends Controller {
 
     public function create()
     {
-        $this->authorize('create', Component::class);
+        if (auth()->user()->cant('create', Component::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Components', 'create']));
+        }
 
         if(auth()->user()->role_id == 1){
             $locations = Location::all();
@@ -133,7 +139,7 @@ class ComponentController extends Controller {
 
     public function show(Component $component)
     {
-        if (auth()->user()->cant('edit', $component)) {
+        if (auth()->user()->cant('view', $component)) {
             return redirect(route('errors.forbidden', ['component', $component->id, 'view']));
         }
     
@@ -142,7 +148,7 @@ class ComponentController extends Controller {
 
     public function edit(Component $component)
     {
-        if (auth()->user()->cant('edit', $component)) {
+        if (auth()->user()->cant('update', $component)) {
             return redirect(route('errors.forbidden', ['component', $component->id, 'edit']));
         }
         if(auth()->user()->role_id == 1){
@@ -178,7 +184,7 @@ class ComponentController extends Controller {
 
     public function update(Request $request, Component $component)
     {
-        if (auth()->user()->cant('edit', $component)) {
+        if (auth()->user()->cant('update', $component)) {
             return redirect(route('errors.forbidden', ['component', $component->id, 'update']));
         }else{
             $request->validate([
@@ -216,10 +222,10 @@ class ComponentController extends Controller {
 
     }
 
-    public function export(Component $component)
+    public function export(Request $request)
     {
-        if (auth()->user()->cant('export', $component)) {
-            return redirect(route('errors.forbidden', ['component', $component->id, 'export']));
+        if (auth()->user()->cant('viewAll', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Components', 'export']));
         }else{
             return \Maatwebsite\Excel\Facades\Excel::download(new ComponentsExport, 'components.csv');
         }
@@ -227,97 +233,100 @@ class ComponentController extends Controller {
 
     public function import(Request $request)
     {
-        if (auth()->user()->cant('import', $component)) {
-            return redirect(route('errors.forbidden', ['component', $component->id, 'import']));
-        }else{
-            $extensions = array("csv");
-
-            $result = array($request->file('csv')->getClientOriginalExtension());
-
-            if(in_array($result[0],$extensions)){
-                $path = $request->file("csv")->getRealPath();
-                $import = new ComponentsImport;
-                $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
-                $row = [];
-                $attributes = [];
-                $errors = [];
-                $values = [];
-                $results = $import->failures();
-                $importErrors = [];
-                foreach($results->all() as $result)
-                {
-                    $row[] = $result->row();
-                    $attributes[] = $result->attribute();
-                    $errors[] = $result->errors();
-                    $values[] = $result->values();
-                    $importErrors[] = [
-
-                        "row" => $result->row(),
-                        "attributes" => $result->attribute(),
-                        "errors" => $result->errors(),
-                        "value" => $result->values(),
-                    ];
-
-                }
-
-                if(! empty($importErrors))
-                {
-                    $errorArray = [];
-                    $valueArray = [];
-                    $errorValues = [];
-
-                    foreach($importErrors as $error)
-                    {
-                        if(array_key_exists($error['row'], $errorArray))
-                        {
-                            $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
-                        } else
-                        {
-                            $errorArray[$error['row']] = $error['attributes'];
-                        }
-                        $valueArray[$error['row']] = $error['value'];
-
-                        if(array_key_exists($error['row'], $errorValues))
-                        {
-                            $array = $errorValues[$error['row']];
-                        }else{
-                            $array = [];
-                        }
-
-                        foreach($error['errors'] as $e){
-                            $array[$error['attributes']] = $e;
-                        }
-                        $errorValues[$error['row']] = $array;
-
-                    }
-
-
-                    return view('ComponentsDir.import-errors', [
-                        "errorArray" => $errorArray,
-                        "valueArray" => $valueArray,
-                        "errorValues" => $errorValues,
-                        "statuses"=>Status::all(),
-                        "suppliers"=>Supplier::all(),
-                        "locations"=>Location::all(),
-                        "manufacturers"=>Manufacturer::all(),
-                    ]);
-
-                } else
-                {
-
-                    return redirect('/components')->with('success_message', 'All Components were added correctly!');
-
-                }
-            }else{
-                session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
-
-                return redirect(route('components.index'));
-            }
+        if (auth()->user()->cant('create', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Components', 'import']));
         }
 
+        $extensions = array("csv");
+
+        $result = array($request->file('csv')->getClientOriginalExtension());
+
+        if(in_array($result[0],$extensions)){
+            $path = $request->file("csv")->getRealPath();
+            $import = new ComponentsImport;
+            $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
+            $row = [];
+            $attributes = [];
+            $errors = [];
+            $values = [];
+            $results = $import->failures();
+            $importErrors = [];
+            foreach($results->all() as $result)
+            {
+                $row[] = $result->row();
+                $attributes[] = $result->attribute();
+                $errors[] = $result->errors();
+                $values[] = $result->values();
+                $importErrors[] = [
+
+                    "row" => $result->row(),
+                    "attributes" => $result->attribute(),
+                    "errors" => $result->errors(),
+                    "value" => $result->values(),
+                ];
+
+            }
+
+            if(! empty($importErrors))
+            {
+                $errorArray = [];
+                $valueArray = [];
+                $errorValues = [];
+
+                foreach($importErrors as $error)
+                {
+                    if(array_key_exists($error['row'], $errorArray))
+                    {
+                        $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
+                    } else
+                    {
+                        $errorArray[$error['row']] = $error['attributes'];
+                    }
+                    $valueArray[$error['row']] = $error['value'];
+
+                    if(array_key_exists($error['row'], $errorValues))
+                    {
+                        $array = $errorValues[$error['row']];
+                    }else{
+                        $array = [];
+                    }
+
+                    foreach($error['errors'] as $e){
+                        $array[$error['attributes']] = $e;
+                    }
+                    $errorValues[$error['row']] = $array;
+
+                }
+
+
+                return view('ComponentsDir.import-errors', [
+                    "errorArray" => $errorArray,
+                    "valueArray" => $valueArray,
+                    "errorValues" => $errorValues,
+                    "statuses"=>Status::all(),
+                    "suppliers"=>Supplier::all(),
+                    "locations"=>Location::all(),
+                    "manufacturers"=>Manufacturer::all(),
+                ]);
+
+            } else
+            {
+
+                return redirect('/components')->with('success_message', 'All Components were added correctly!');
+
+            }
+        }else{
+            session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+
+            return redirect(route('components.index'));
+        }
     }
 
-    public function downloadPDF(Request $request){
+    public function downloadPDF(Request $request)
+    {
+        if (auth()->user()->cant('viewAll', Component::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Components', 'download pdf']));
+        }
         $components = Component::withTrashed()->whereIn('id', json_decode($request->components))->get();
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('ComponentsDir.pdf', compact('components'));
         $pdf->setPaper('a4', 'landscape');
@@ -325,7 +334,11 @@ class ComponentController extends Controller {
         return $pdf->download("components-{$date}.pdf");
     }
 
-    public function downloadShowPDF(Component $component){
+    public function downloadShowPDF(Component $component)
+    {
+        if (auth()->user()->cant('view', $component)) {
+            return redirect(route('errors.forbidden', ['components', $component->id, 'download pdf']));
+        }
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('ComponentsDir.showPdf', compact('component'));
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         return $pdf->download("component-{$component->id}-{$date}.pdf");
@@ -335,6 +348,9 @@ class ComponentController extends Controller {
 
     public function recycleBin()
     {
+        if (auth()->user()->cant('viewAll', Component::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Components', 'recycle bin']));
+        }
         if(auth()->user()->role_id == 1){
             $components = Component::onlyTrashed()->get();
             $locations = Location::all();

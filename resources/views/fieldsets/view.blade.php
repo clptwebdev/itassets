@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Asset Model Fieldsets')
+
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
 @endsection
@@ -31,42 +33,49 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <table id="fieldsetTable" class="table table-bordered table-striped">
+                <table id="fieldsetTable" class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="text-center col-auto"><input type="checkbox"></th>
-                            <th class="col-3">Name</th>
-                            <th class="col-2">Fields</th>
-                            <th class="col-4">Assets</th>
-                            <th class="col-2 text-right">Options</th>
+                            <th class="col-3"><small>Name</small></th>
+                            <th class="col-1"><small>Fields</small></th>
+                            <th class="col-7"><small>Assets</small></th>
+                            <th class="col-1 text-right"><small>Options</small></th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th>Name</th>
-                            <th>Fields</th>
-                            <th>Assets</th>
-                            <th class="text-right">Options</th>
+                            <th class="col-3"><small>Name</small></th>
+                            <th class="col-1"><small>Fields</small></th>
+                            <th class="col-7"><small>Assets</small></th>
+                            <th class="col-1 text-right"><small>Options</small></th>
                         </tr>
                     </tfoot>
                     <tbody>
                         @foreach($fieldsets as $fieldset)
                         <tr>
-                            <td class="text-center"><input type="checkbox"></td>
                             <td>{{ $fieldset->name }}</td>
                             <td>{{ $fieldset->fields->count()}}</td>
                             <td>
-                                <small class="p-1 bg-danger rounded text-white">HP Pro Desk 10.1</small>
-                                <small class="p-1 bg-primary rounded text-white">Surface Pro 7</small>
+                                @foreach($fieldset->models as $model)
+                                <small class="p-1 bg-secondary rounded text-white">{{ $model->name }}</small>
+                                @endforeach
                             </td>
                             <td class="text-right">
-                                <a href="{{ route('fieldsets.show', $fieldset->id) }}" class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i> View</a>&nbsp;
-                                <a href="{{route('fieldsets.edit', $fieldset->id) }}"
-                                    class="btn-sm btn-secondary text-white"><i
-                                        class="fas fa-pencil-alt"></i></a>&nbsp;
-                                <a class="btn-sm btn-danger text-white deleteBtn" href="#" data-route="{{ route('fieldsets.destroy', $fieldset->id)}}"><i
-                                        class=" fas fa-trash"></i></a>
+                                <div class="dropdown no-arrow">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                        id="dropdownMenuLink"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div
+                                        class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                        aria-labelledby="dropdownMenuLink">
+                                        <div class="dropdown-header">Asset Options:</div>
+                                        <a href="{{ route('fieldsets.show', $fieldset->id) }}" class="dropdown-item">View</a>
+                                        <a href="{{ route('fieldsets.edit', $fieldset->id) }}" class="dropdown-item">Edit</a>
+                                        <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('fieldsets.destroy', $fieldset->id)}}"">Delete</a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -128,10 +137,10 @@
     $(document).ready( function () {
         $('#fieldsetTable').DataTable({
             "columnDefs": [ {
-                "targets": [0, 2, 3],
+                "targets": [2, 3],
                 "orderable": false,
             } ],
-            "order": [[ 1, "asc"]]
+            "order": [[ 0, "asc"]]
         });
     } );
 </script>

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Edit '.$location->name)
+
 @section('css')
 
 @endsection
@@ -39,40 +41,40 @@
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>" name="name"
-                            id="name" placeholder="" value="{{ $location->name }}">
+                            id="name" placeholder="" value="{{ old('name') ?? $location->name }}">
                     </div>
                     <div class="form-group">
                         <label for="address2">Street Address</label>
                         <input type="text" class="form-control mb-3 <?php if ($errors->has('address_1') || $errors->has('address_2')) {?>border-danger<?php }?>" name="address_1"
-                            id="address_1" placeholder="Street Name" value="{{ $location->address_1}}" required>
-                        <input type="text" class="form-control" name="address_2" id="address_2" placeholder="Location" value="{{ $location->address_2 }}">
+                            id="address_1" placeholder="Street Name" value="{{ old('address_1') ?? $location->address_1}}" required>
+                        <input type="text" class="form-control" name="address_2" id="address_2" placeholder="Location" value="{{ old('address_2') ?? $location->address_2 }}">
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-3">
                             <label for="city">City</label>
                             <input type="text" class="form-control <?php if ($errors->has('city')) {?>border-danger<?php }?>" id="city"
-                                name="city" value="{{ $location->city }}" required>
+                                name="city" value="{{ old('city') ?? $location->city }}" required>
                         </div>
                         <div class="form-group col-md-3">
                             <label for="city">County</label>
                             <input type="text" class="form-control <?php if ($errors->has('county')) {?>border-danger<?php }?>" id="county"
-                                name="county" value="{{ $location->county }}" required>
+                                name="county" value="{{ old('county') ?? $location->county }}" required>
                         </div>
                         <div class="form-group col-md-3">
                             <label for="postcode">Zip</label>
                             <input type="text" class="form-control <?php if ($errors->has('postcode')) {?>border-danger<?php }?>"
-                                id="postcode" name="postcode" value="{{ $location->postcode }}" required>
+                                id="postcode" name="postcode" value="{{ old('postcode') ?? $location->postcode }}" required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="telephone">Telephone</label>
-                        <input type="text" class="form-control" name="telephone" id="telephone" placeholder="Telelphone" value="{{ $location->telephone }}">
+                        <input type="text" class="form-control" name="telephone" id="telephone" placeholder="Telelphone" value="{{ old('telephone') ?? $location->telephone }}">
                     </div>
 
                     <div class="form-group">
                         <label for="telephone">Email Address</label>
-                        <input type="text" class="form-control" name="email" id="email" placeholder="Email" value="{{ $location->email }}">
+                        <input type="text" class="form-control" name="email" id="email" placeholder="Email" value="{{ old('email') ?? $location->email }}">
                     </div>
 
                 </div>
@@ -85,14 +87,19 @@
                     <div class="w-100">
                         <div class="formgroup mb-2 p-2">
                             <h4 class="h6 mb-3">Location Image</h4>
+                            @if($location->photo()->exists())
                             <img id="profileImage" src="{{ asset($location->photo->path) ?? asset('images/svg/location-image.svg') }}" width="100%"
                                 alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                            @else
+                            <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}" width="100%"
+                                alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">       
+                            @endif
                             <input type="hidden" id="photo_id" name="photo_id" value="{{ $location->photo_id }}">
                         </div>
                     </div>
                     <hr>
                     <label for="icon">Select School Icon Colour:</label>
-                    <input class="form-control" type="color" id="icon" name="icon" value="{{ $location->icon }}">
+                    <input class="form-control" type="color" id="icon" name="icon" value="{{ old('icon') ?? $location->icon }}">
                 </div>
             </div>
         </div>

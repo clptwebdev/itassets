@@ -19,12 +19,16 @@ class AssetModel extends Model
         return $this->hasOne(Model::class, 'id', 'asset_model');
     }
 
+    public function assets(){
+        return $this->hasMany(Asset::class, 'asset_model');
+    }
+
     public function depreciation(){
         return $this->belongsTo(Depreciation::class);
     }
 
     public function manufacturer(){
-        return $this->belongsTo(Manufacturer::class, 'manufacturer_id', 'id');
+        return $this->belongsTo(Manufacturer::class);
     }
 
     public function fieldset(){

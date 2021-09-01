@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Edit '.$assetModel->name)
+
 @section('css')
 
 @endsection
@@ -47,7 +49,7 @@
                             <label for="manufacturer">Manufacturer:</label>
                             <select
                                 class="form-control mb-3 <?php if ($errors->has('manufacturer_id')){?>border-danger<?php }?>"
-                                name="manfacturer_id" id="manufacturer_id" required>
+                                name="manufacturer_id" id="manufacturer_id" required>
                                 <?php $mans = App\Models\Manufacturer::all();?>
                                 <option value="0">Please select a Manufacturer</option>
                                 @foreach($mans as $man)

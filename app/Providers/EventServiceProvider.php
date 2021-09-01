@@ -8,6 +8,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 
 use App\Models\Asset;
+use App\Models\AssetModel;
 use App\Models\User;
 use App\Models\Supplier;
 use App\Models\Component;
@@ -50,5 +51,6 @@ class EventServiceProvider extends ServiceProvider
         Supplier::observe(\App\Observers\SupplierObserver::class);
         Component::observe(\App\Observers\ComponentObserver::class);
         Consumable::observe(\App\Observers\ConsumableObserver::class);
+        AssetModel::observe(\App\Observers\AssetModelObserver::class);
     }
 }

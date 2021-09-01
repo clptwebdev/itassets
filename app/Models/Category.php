@@ -22,4 +22,8 @@ class Category extends Model
     public function accessories(){
         return $this->morphedByMany(Accessory::class, 'cattable');
     }
+
+    public function consumables(){
+        return $this->morphedByMany(Consumable::class, 'cattable');
+    }
 }

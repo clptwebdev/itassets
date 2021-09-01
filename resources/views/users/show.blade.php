@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'View '.$user->name)
+
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
@@ -48,7 +50,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12 col-md-6 col-lg-3 ">
-                            @if($user->photo)
+                            @if($user->photo()->exists())
                                 <img src="{{$user->photo->path ?? ''}}" alt="{{ $user->name.' Profile Image'}}" class="img-responsive"> 
                             @else
                                 <img src="{{ asset('images\profile.png')}}" alt="{{ $user->name.' Profile Image'}}" class="img-responsive" width="100%">
@@ -76,8 +78,15 @@
                                 }    
             
                                 @endphp
-                            <p><a href="mailto:{{$user->email}}">{{$user->email}}</a><br>
+                            
+                            <p>
+                            @if($user->email != "")
+                                <a href="mailto:{{$user->email}}">{{$user->email}}</a><br>
+                            @endif
+                            @if($user->telephone != "")
                                 {{$user->telephone}}</p>
+                            @endif
+                            @if($location)
                             <p>{{$location->name}}<br>
                                 {{ $location->address_1 }}<br>
                                 @if($location->address_2 != "")
@@ -86,6 +95,7 @@
                                 {{ $location->city }}<br>
                                 {{ $location->postcode }}
                             </p>
+                            @endif
                             
                         </div>
                     </div>

@@ -36,9 +36,10 @@ class BackupController extends Controller {
 
         return view('backup.view', ['files' => $zipFiles]);
     }
-    public function download($file_name){
-        $file = Storage::disk('storage/Apollo---Asset-Manager')->get($file_name);
-return "hello";
+
+    public function download(Request $request){
+        
+        Storage::download($request->file);
 //        return (new Response($file, 200))
 //            ->header('Content-Type', 'file/zip');
     }

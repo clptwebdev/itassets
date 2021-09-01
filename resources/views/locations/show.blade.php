@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'View '.$location->name)
+
 @section('css')
 
 @endsection

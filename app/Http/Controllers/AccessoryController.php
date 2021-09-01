@@ -19,7 +19,7 @@ class AccessoryController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->cant('view', Accessory::class)) {
+        if (auth()->user()->cant('viewAll', Accessory::class)) {
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'view']));
         }
 
@@ -65,8 +65,8 @@ class AccessoryController extends Controller
 
     public function store(Request $request)
     {
-        if (auth()->user()->cant('create', $accesory)) {
-            return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'create']));
+        if (auth()->user()->cant('create', Accessory::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Accessories', 'create']));
         }
         
         $request->validate([
@@ -140,6 +140,10 @@ class AccessoryController extends Controller
 
     public function show(Accessory $accessory)
     {
+        if (auth()->user()->cant('view', $accessory->id)) {
+            return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'view']));
+        }
+
         return view('accessory.show', [
             "accessory" => $accessory,
         ]);
@@ -170,7 +174,7 @@ class AccessoryController extends Controller
     public function update(Request $request, Accessory $accessory)
     {
         if (auth()->user()->cant('update', $accessory)) {
-            return redirect(route('errors.forbidden', ['component', $accessory->id, 'update']));
+            return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'update']));
         }
 
         $request->validate([
@@ -196,14 +200,14 @@ class AccessoryController extends Controller
     public function destroy(Accessory $accessory)
     {
         if (auth()->user()->cant('delete', $accessory)) {
-            return redirect(route('errors.forbidden', ['component', $accessory->id, 'delete']));
-        }else{
-            $name = $accessory->name;
-            $accessory->delete();
-            session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
-
-            return redirect(route('accessories.index'));
+            return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'delete']));
         }
+        
+        $name = $accessory->name;
+        $accessory->delete();
+        session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
+
+        return redirect(route('accessories.index'));
     }
 
     public function export(Accessory $accessory)
@@ -308,7 +312,11 @@ class AccessoryController extends Controller
 
     }
 
-    public function downloadPDF(Request $request){
+    public function downloadPDF(Request $request)
+    {
+        if (auth()->user()->cant('viewAll', Accessory::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Accessories', 'view pdf']));
+        }
         $accessories = Accessory::withTrashed()->whereIn('id', json_decode($request->accessories))->get();
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('accessory.pdf', compact('accessories'));
         $pdf->setPaper('a4', 'landscape');
@@ -316,7 +324,12 @@ class AccessoryController extends Controller
         return $pdf->download("accessories-{$date}.pdf");
     }
 
-    public function downloadShowPDF(Accessory $accessory){
+    public function downloadShowPDF(Accessory $accessory)
+    {
+        if (auth()->user()->cant('view', $accessory)) {
+            return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'view pdf']));
+        }
+
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('accessory.showPdf', compact('accessory'));
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         return $pdf->download("accessory-{$accessory->id}-{$date}.pdf");
@@ -326,6 +339,9 @@ class AccessoryController extends Controller
 
     public function recycleBin()
     {
+        if (auth()->user()->cant('viewAll', Accessory::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Accessories', 'Recycle Bin']));
+        }
         if(auth()->user()->role_id == 1){
             $accessories = Accessory::onlyTrashed()->get();
         }else{

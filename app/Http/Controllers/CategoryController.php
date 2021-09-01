@@ -16,7 +16,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('category.view');
+        if(auth()->user()->role_id == 1){
+            $locations = \App\Models\Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
+        return view('category.view', compact('locations'));
     }
 
     /**

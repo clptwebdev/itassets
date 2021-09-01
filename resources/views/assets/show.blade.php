@@ -78,7 +78,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('assets.status', $asset->id)}}" method="post">
+                <form action="{{ route('change.status', $asset->id)}}" method="post">
                 <div class="modal-body">
                     @csrf
                     <select name="status" class="form-control">

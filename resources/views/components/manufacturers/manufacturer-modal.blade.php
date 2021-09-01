@@ -18,7 +18,7 @@
                             <thead>
                                 <tr>
                                     <td class="text-center">
-                                        @if(isset($manufacturer->photo->path))
+                                        @if($manufacturer->photo()->exists())
                                         <img src="{{ asset($manufacturer->photo->path) ?? asset('images/svg/device-image.svg')}}"
                                             width="250px" alt="{{$manufacturer->name}}">
                                         @else

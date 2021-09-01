@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Route::get('login/microsoft', 'App\Http\Controllers\OfficeLoginController@redirectToProvider');
 Route::get('login/microsoft/callback', 'App\Http\Controllers\OfficeLoginController@handleProviderCallback');
 
@@ -63,6 +65,7 @@ Route::group(['middleware' => 'auth'], function() {
     //Super Admin or Admin
     Route::group(['middleware' => 'admin.role'], function() {
         Route::resource('/users', 'App\Http\Controllers\UserController');
+        Route::get('/user/permissions', 'App\Http\Controllers\UserController@userPermissions')->name('user.permissions');
     });
 
     //User Manager
@@ -70,6 +73,7 @@ Route::group(['middleware' => 'auth'], function() {
     //User
 
     //Administrator Permissions Middleware
+
     Route::resource('/location', 'App\Http\Controllers\LocationController');
     Route::resource('/comment', 'App\Http\Controllers\CommentController');
     Route::resource('/category', 'App\Http\Controllers\CategoryController');

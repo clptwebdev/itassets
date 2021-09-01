@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'View all Assets')
+
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
@@ -78,8 +80,11 @@
             different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
         <div class="d-flex flex-row-reverse mb-2">
-            @if(isset($filter))<a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear
-                Filter</a>@endif
+            
+            @if(isset($filter))
+            <p>Message</p>
+            <a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear Filter</a>
+            @endif
             <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-secondary p-2 shadow-sm">Filter</a>
         </div>
         <div id="filter" class="card shadow mb-4">
@@ -265,7 +270,13 @@
                                         class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
+<<<<<<< HEAD
+                                        '<img src="{{ asset($asset->location->photo->path)}}" height="30px"
+                                              alt="{{$asset->location->name}}"
+                                              title="{{ $asset->location->name ?? 'Unnassigned'}}"/>'
+=======
                                         <img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>
+>>>>>>> fcfe365a66b3bce438a491b42e24f1f2dc76d5a4
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'">'
                                             .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -335,7 +346,7 @@
                                             <div class="dropdown-header">Asset Options:</div>
                                             <a href="{{ route('assets.show', $asset->id) }}"
                                                class="dropdown-item">View</a>
-                                            @can('edit', $asset)
+                                            @can('update', $asset)
                                                 <a href="{{ route('assets.edit', $asset->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $asset)

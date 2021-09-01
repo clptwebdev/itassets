@@ -8,32 +8,16 @@ use Illuminate\Http\Request;
 
 class StatusController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return view('status.view');
+        if(auth()->user()->role_id == 1){
+            $locations = \App\Models\Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
+        return view('status.view', compact('locations'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -45,35 +29,16 @@ class StatusController extends Controller
         return redirect(route('status.index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Status  $status
-     * @return \Illuminate\Http\Response
-     */
     public function show(Status $status)
     {
-        //
+        if(auth()->user()->role_id == 1){
+            $locations = \App\Models\Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
+        return view('status.show', compact('status', 'locations'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Status  $status
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Status $status)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Status  $status
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Status $status)
     {
         $validated = $request->validate([
@@ -85,12 +50,6 @@ class StatusController extends Controller
         return redirect(route('status.index'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Status  $status
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Status $status)
     {
         $name = $status->name;
