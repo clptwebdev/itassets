@@ -43,7 +43,7 @@
                                 <div class="col mr-2">
                                     <div class="mb-1">
 
-                                      <a href="{{ route('download.backup', substr(str_replace('.zip', '', $file_name),23)) }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">Download This Zip</a>
+                                      <a href="{{ asset('storage/'.$file_name)}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">Download This Zip</a>
                                     </div>
                                 </div>
 
