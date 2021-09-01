@@ -19,7 +19,7 @@
         </div>
 
         <div>
-            <form action="/export-import-errors" method="POST">
+            <form action="assets/export-import-errors" method="POST">
                 @csrf
                 <div class="form-group">
                     <input type="hidden" class="form-control " name="asset_tag"

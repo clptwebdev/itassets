@@ -13,7 +13,7 @@
             Failures</h1>@php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
         <div class="alert alert-danger">You have several errors Within your Import in rows {{$errorRows}}</div>
         <div>
-            <a href="/manufacturers" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+            <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50">
                 </i> Back to Manufacturers</a>
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i

@@ -69,6 +69,15 @@ class AssetController extends Controller {
             'categories' => Category::all(),
         ]);
     }
+    public function search(Request $request ){
+
+if($asset = Asset::where("asset_tag", $request->asset_tag)->firstOrFail()){
+     return view('assets.show', compact('asset'));
+}else{
+    return("404");
+        }
+
+    }
 
     public function newComment(Request $request){
         $request->validate([

@@ -13,7 +13,7 @@ use phpDocumentor\Reflection\Location;
 
 class ManufacturerController extends Controller {
 
-    public function show()
+    public function index()
     {
         return view('Manufacturers.view', [
             "manufacturers" => Manufacturer::all(),
@@ -21,23 +21,18 @@ class ManufacturerController extends Controller {
 
     }
 
-    public function list()
+    public function create()
     {
         return view("Manufacturers.create", [
             "manufacturerAmount" => count(Manufacturer::all()),
         ]);
-    }
-
-    public function create()
-    {
-        return view('Manufacturers.create');
 
     }
 
-    public function edit(Manufacturer $manufacturers)
+    public function edit(Manufacturer $manufacturer)
     {
         return view('Manufacturers.edit', [
-            "manufacturer" => $manufacturers,
+            "manufacturer" => $manufacturer,
         ]);
 
     }
@@ -86,7 +81,8 @@ class ManufacturerController extends Controller {
 
     public function ajaxMany(Request $request)
     {
-        if($request->ajax()){
+        if($request->ajax())
+        {
             $validation = Validator::make($request->all(), [
                 "name.*" => "required|unique:manufacturers,name|max:255",
                 "supportPhone.*" => "required|max:14",
@@ -94,10 +90,13 @@ class ManufacturerController extends Controller {
                 "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
             ]);
 
-            if($validation->fails()){
+            if($validation->fails())
+            {
                 return $validation->errors();
-            }else{
-                for($i = 0; $i < count($request->name); $i++){
+            } else
+            {
+                for($i = 0; $i < count($request->name); $i++)
+                {
                     Manufacturer::Create([
                         "name" => $request->name[$i],
                         "supportPhone" => $request->supportPhone[$i],
@@ -107,26 +106,25 @@ class ManufacturerController extends Controller {
                     ]);
                 }
                 session()->flash('success_message', 'You can successfully added the Manufacturers');
+
                 return 'Success';
             }
         }
 
     }
 
-    public function destroy(Manufacturer $manufacturers)
+    public function destroy(Manufacturer $manufacturer)
     {
-        $name = $manufacturers->name;
-        $manufacturers->delete();
+        $name = $manufacturer->name;
+        $manufacturer->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
 
-        return redirect('/manufacturers');
-
+        return redirect(route("manufacturers.index"));
     }
 
     public function export(Manufacturer $manufacturer)
     {
         return \Maatwebsite\Excel\Facades\Excel::download(new ManufacturerExport, 'manufacturer.csv');
-
     }
 
     public function import(Request $request)
@@ -135,7 +133,8 @@ class ManufacturerController extends Controller {
 
         $result = array($request->file('csv')->getClientOriginalExtension());
 
-        if(in_array($result[0],$extensions)){
+        if(in_array($result[0], $extensions))
+        {
             $path = $request->file("csv")->getRealPath();
             $import = new ManufacturerImport;
             $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
@@ -162,48 +161,53 @@ class ManufacturerController extends Controller {
                 ];
             }
 
-                if(! empty($importErrors))
+            if(! empty($importErrors))
+            {
+                $errorArray = [];
+                $valueArray = [];
+                $errorValues = [];
+
+                foreach($importErrors as $error)
                 {
-                    $errorArray = [];
-                    $valueArray = [];
-                    $errorValues = [];
+                    if(array_key_exists($error['row'], $errorArray))
+                    {
+                        $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
+                    } else
+                    {
+                        $errorArray[$error['row']] = $error['attributes'];
+                    }
+                    $valueArray[$error['row']] = $error['value'];
 
-                        foreach($importErrors as $error)
-                        {
-                            if(array_key_exists($error['row'], $errorArray))
-                            {
-                                $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
-                            } else
-                            {
-                                $errorArray[$error['row']] = $error['attributes'];
-                            }
-                            $valueArray[$error['row']] = $error['value'];
+                    if(array_key_exists($error['row'], $errorValues))
+                    {
+                        $array = $errorValues[$error['row']];
+                    } else
+                    {
+                        $array = [];
+                    }
 
-                            if(array_key_exists($error['row'], $errorValues))
-                            {
-                                $array = $errorValues[$error['row']];
-                            }else{
-                                $array = [];
-                            }
+                    foreach($error['errors'] as $e)
+                    {
+                        $array[$error['attributes']] = $e;
+                    }
+                    $errorValues[$error['row']] = $array;
 
-                            foreach($error['errors'] as $e){
-                                $array[$error['attributes']] = $e;
-                            }
-                            $errorValues[$error['row']] = $array;
-
-                        }
-
-                        return view('Manufacturers.import-errors', [
-                            "errorArray" => $errorArray,
-                            "valueArray" => $valueArray,
-                            "errorValues" => $errorValues,
-                        ]);
-
-                }else{
-                        return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
                 }
-        }else{
+
+                return view('Manufacturers.import-errors', [
+                    "errorArray" => $errorArray,
+                    "valueArray" => $valueArray,
+                    "errorValues" => $errorValues,
+                ]);
+
+            } else
+            {
+                return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
+            }
+        } else
+        {
             session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV"!');
+
             return redirect('/manufacturers');
         }
 

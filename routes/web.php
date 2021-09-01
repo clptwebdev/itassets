@@ -18,17 +18,20 @@ use Illuminate\Support\Facades\Route;
 Route::get('login/microsoft', 'App\Http\Controllers\OfficeLoginController@redirectToProvider');
 Route::get('login/microsoft/callback', 'App\Http\Controllers\OfficeLoginController@handleProviderCallback');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
-Route::group(['middleware'=>'auth'], function(){
-    Route::get('/', function(){
-        if(auth()->user()->role_id == 1){
+Route::group(['middleware' => 'auth'], function() {
+    Route::get('/', function() {
+        if(auth()->user()->role_id == 1)
+        {
             $locations = \App\Models\Location::all();
             $assets = \App\Models\Asset::all();
-        }else{
+        } else
+        {
             $locations = auth()->user()->locations;
             $assets = auth()->user()->location_assets;
         }
+
         return view('dashboard',
             [
                 'locations' => $locations,
@@ -37,14 +40,17 @@ Route::group(['middleware'=>'auth'], function(){
         );
     })->name('home');
 
-    Route::get('/dashboard', function(){
-        if(auth()->user()->role_id == 1){
+    Route::get('/dashboard', function() {
+        if(auth()->user()->role_id == 1)
+        {
             $locations = \App\Models\Location::all();
             $assets = \App\Models\Asset::all();
-        }else{
+        } else
+        {
             $locations = auth()->user()->locations;
             $assets = auth()->user()->location_assets;
         }
+
         return view('dashboard',
             [
                 'locations' => $locations,
@@ -56,7 +62,7 @@ Route::group(['middleware'=>'auth'], function(){
     //Super Admmin
 
     //Super Admin or Admin
-    Route::group(['middleware'=>'admin.role'], function(){
+    Route::group(['middleware' => 'admin.role'], function() {
         Route::resource('/users', 'App\Http\Controllers\UserController');
         Route::get('/user/permissions', 'App\Http\Controllers\UserController@userPermissions')->name('user.permissions');
     });
@@ -64,7 +70,6 @@ Route::group(['middleware'=>'auth'], function(){
     //User Manager
 
     //User
-
 
     //Administrator Permissions Middleware
         Route::resource('/location', 'App\Http\Controllers\LocationController');
@@ -84,6 +89,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('/asset-model/{assetModel}/pdf', 'App\Http\Controllers\AssetModelController@downloadShowPDF')->name('asset-model.showPdf');
     // Asset Routes
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
+        Route::post('/assets/search',[\App\Http\Controllers\AssetController::class, "search"] )->name('assets.search');
         Route::post('/assets/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
         Route::get('/status/{status}/assets', 'App\Http\Controllers\AssetController@status')->name('assets.status');
         Route::get('/location/{location}/assets', 'App\Http\Controllers\AssetController@location')->name('assets.location');
@@ -157,14 +163,11 @@ Route::group(['middleware'=>'auth'], function(){
         Route::Post("/export-import-errors", [\App\Http\Controllers\AssetController::class, "importErrors"])->name("export.import");
         Route::Post("assets/create/ajax", [\App\Http\Controllers\AssetController::class, "ajaxMany"]);
 
+        //Database Backups Routes (Doesn't include import routes)
+        Route::resource('/databasebackups', \App\Http\Controllers\BackupController::class);
+        Route::post('backupdownload/', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
 
-        Route::get("manufacturers", [\App\Http\Controllers\ManufacturerController::class, "show"]);
-        Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "create"]);
-        Route::get("manufacturers/edit/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "edit"]);
-        Route::Put("manufacturers/edit/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "update"]);
-        Route::delete("manufacturers/delete/{manufacturers}", [\App\Http\Controllers\ManufacturerController::class, "destroy"]);
-        Route::get("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "list"]);
-        Route::Post("manufacturers/create", [\App\Http\Controllers\ManufacturerController::class, "store"]);
+        Route::resource('/manufacturers', \App\Http\Controllers\ManufacturerController::class);
         Route::Post("manufacturers/create/import", [\App\Http\Controllers\ManufacturerController::class, "createMany"]);
         Route::Post("manufacturers/create/ajax", [\App\Http\Controllers\ManufacturerController::class, "ajaxMany"]);
 
@@ -173,3 +176,5 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('chart/asset/audits', 'App\Http\Controllers\ChartController@getAssetAuditChart');
 
 });
+//403 redirects
+Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
