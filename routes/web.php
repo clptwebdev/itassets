@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -120,6 +121,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/consumable/{consumable}/status', 'App\Http\Controllers\ConsumableController@changeStatus')->name('consumables.status');
     //Database Backups Routes (Doesn't include import routes)
     Route::resource('/databasebackups', \App\Http\Controllers\BackupController::class);
+    Route::get('/databasebackups/create/dbbackup', [\App\Http\Controllers\BackupController::class, "createDB"])->name('backupdb.create');
+    Route::get('/databasebackups/create/backup', [\App\Http\Controllers\BackupController::class, "createFull"])->name('backup.create');
+    Route::get('/databasebackups/clean/backups', [\App\Http\Controllers\BackupController::class, "dbClean"])->name('backup.clean');
     Route::get('/databasebackupdownload/{$file_name}', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
 
 // Manufacturers Routes (Doesn't include import routes)
@@ -164,3 +168,5 @@ Route::group(['middleware' => 'auth'], function() {
 });
 //403 redirects
 Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
+
+

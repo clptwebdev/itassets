@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Backup;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
 class BackupController extends Controller {
@@ -42,14 +43,28 @@ return "hello";
 //            ->header('Content-Type', 'file/zip');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function createDB()
     {
-        //
+
+        Artisan::call("backup:run --only-db");
+
+
+        return redirect("/databasebackups")->with('success_message',  'A Backup of the database was completed!');
+
+    }
+    public function createFull()
+    {
+
+        Artisan::call("backup:run");
+
+        return redirect("/databasebackups")->with('success_message', 'A Backup of the Application was completed!');
+    }
+    public function dbClean()
+    {
+        $files = Storage::files('public/Apollo---Asset-Manager');
+        Storage::delete($files);
+        return redirect("/databasebackups")->with('success_message', 'Your database backups have been removed 0 Left!');
     }
 
     /**

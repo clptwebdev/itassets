@@ -116,14 +116,14 @@ return [
              * The disk names on which the backups will be stored.
              */
             'disks' => [
-                'local',
+                'localBackup',
             ],
         ],
 
         /*
          * The directory where the temporary files will be stored.
          */
-        'temporary_directory' => storage_path('app/backup-temp'),
+        'temporary_directory' => storage_path('app/public/backup-temp'),
 
         /*
          * The password to be used for archive encryption.
