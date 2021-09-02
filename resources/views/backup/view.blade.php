@@ -47,7 +47,7 @@
                                 <div class="col mr-2">
                                     <div class="mb-1">
                                         <a href="{{ asset('storage/'.$file_name)}}"
-                                           class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">Download
+                                           class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm backup">Download
                                             This Zip</a>
                                     </div>
                                 </div>
@@ -77,15 +77,7 @@
 @endsection
 @section('js')
     <script>
-        $('#backup1').click(function () {
-            //showModal
-            $('#backupModal').modal('show')
-        });
-        $('#backup2').click(function () {
-            //showModal
-            $('#backupModal').modal('show')
-        });
-        $('#backup3').click(function () {
+        $('.backup').click(function () {
             //showModal
             $('#backupModal').modal('show')
         });
