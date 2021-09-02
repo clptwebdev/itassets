@@ -165,6 +165,7 @@ return [
         Milon\Barcode\BarcodeServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
 
+
         /*
          * Package Service Providers...
          */
