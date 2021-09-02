@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'View Accessory')
+@section('title', 'View '.$accessory->name)
 
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
@@ -27,7 +27,7 @@
                         class="fas fa-edit fa-sm text-white-50"></i> Edit</a>
                 @endcan
                 @can('export', $accessory)
-                <a href="{{ route('accessories.showPdf', $accessory->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                <a href="{{ route('accessories.showPdf', $accessory->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                 @endcan
             </div>
@@ -35,11 +35,11 @@
     </form>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
     <section class="m-auto">
         <p class="mb-4">Information regarding {{ $accessory->name }} including the location and any comments made by staff. </p>
@@ -70,6 +70,16 @@
 @endsection
 
 @section('modals')
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"aria-hidden="true" id="loadingModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <button class="btn btn-primary" type="button" disabled style="background-color: #b087bc; color:#111;">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- User Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeLocationModal" tabindex="-1" role="dialog"
@@ -153,6 +163,11 @@
         $('#commentModal').click(function () {
             //showModal
             $('#commentModalOpen').modal('show')
+        });
+
+        $('.loading').click(function () {
+            //showModal
+            $('#loadingModal').modal('show')
         });
 
         $(document).ready( function () {

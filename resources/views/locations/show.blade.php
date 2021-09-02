@@ -17,17 +17,17 @@
                 class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
         <a href="{{ route('location.edit', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
-        <a href="{{ route('location.showPdf', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        <a href="{{ route('location.showPdf', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>
 
 @if(session('danger_message'))
-<div class="alert alert-danger"> {{ session('danger_message')}} </div>
+<div class="alert alert-danger"> {!! session('danger_message')!!} </div>
 @endif
 
 @if(session('success_message'))
-<div class="alert alert-success"> {{ session('success_message')}} </div>
+<div class="alert alert-success"> {!! session('success_message')!!} </div>
 @endif
 
 <section>
@@ -472,6 +472,17 @@
 
 @section('modals')
 
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"aria-hidden="true" id="loadingModal">
+    <div class="modal-dialog modal-sm">
+       <div class="modal-content">
+           <button class="btn" type="button" disabled style="background-color: #b087bc; color: #666;">
+               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+               Loading...
+           </button>
+       </div>
+    </div>
+</div>
+
 <!-- User Delete Modal-->
 <div class="modal fade bd-example-modal-lg" id="removeLocationModal" tabindex="-1" role="dialog"
     aria-labelledby="removeLocationModalLabel" aria-hidden="true">
@@ -503,6 +514,11 @@
 @section('js')
 <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script>
+    $('.loading').click(function () {
+        //showModal
+        $('#loadingModal').modal('show')
+    });
+
     $(document).ready( function () {
         $('table.logs').DataTable({
                 "autoWidth": false,

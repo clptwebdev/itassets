@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PDF;
+use Illuminate\Support\Facades\Storage;
 
 class LocationController extends Controller
 {
@@ -136,7 +137,12 @@ class LocationController extends Controller
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('locations.pdf', compact('locations'));
         $pdf->setPaper('a4', 'landscape');
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("locations-{$date}.pdf");
+        Storage::put("public/reports/locations-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/locations-{$date}.pdf");
+        return redirect(route('location.index'))
+            ->with('success_message', "Your Reprot has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
+
     }
 
     public function downloadShowPDF(Location $location)
@@ -147,7 +153,12 @@ class LocationController extends Controller
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('locations.showPdf', compact('location'));
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("{$location->name}-{$date}.pdf");
+        //return $pdf->download("{$location->name}-{$date}.pdf");
+        Storage::put("public/reports/{$location->name}-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/{$location->name}-{$date}.pdf");
+        return redirect(route('location.show', $location->id))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 
 }

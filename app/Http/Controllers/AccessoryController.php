@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PDF;
+use Illuminate\Support\Facades\Storage;
 
 class AccessoryController extends Controller
 {
@@ -140,7 +141,7 @@ class AccessoryController extends Controller
 
     public function show(Accessory $accessory)
     {
-        if (auth()->user()->cant('view', $accessory->id)) {
+        if (auth()->user()->cant('view', $accessory)) {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'view']));
         }
 
@@ -321,7 +322,11 @@ class AccessoryController extends Controller
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('accessory.pdf', compact('accessories'));
         $pdf->setPaper('a4', 'landscape');
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("accessories-{$date}.pdf");
+        Storage::put("public/reports/accessories-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/accessories-{$date}.pdf");
+        return redirect(route('accessories.index'))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 
     public function downloadShowPDF(Accessory $accessory)
@@ -332,7 +337,12 @@ class AccessoryController extends Controller
 
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('accessory.showPdf', compact('accessory'));
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("accessory-{$accessory->id}-{$date}.pdf");
+        Storage::put("public/reports/accessory-{$accessory->id}-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/accessory-{$accessory->id}-{$date}.pdf");
+        return redirect(route('accessories.show', $accessory->id))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
+        
     }
 
     //Restore and Force Delete Function Need to be Created

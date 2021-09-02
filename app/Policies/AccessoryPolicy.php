@@ -23,7 +23,7 @@ class AccessoryPolicy
             return true;
         }else{
             return false;
-        } 
+        }
     }
 
     public function create(User $user)

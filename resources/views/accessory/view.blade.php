@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Accessories')
+
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
@@ -26,7 +28,7 @@
                     <form class="d-inline-block" action="{{ route('accessories.pdf')}}" method="POST">
                         @csrf
                         <input type="hidden" value="{{ json_encode($accessories->pluck('id'))}}" name="accessories"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                     </form>                
                 @endif
@@ -43,11 +45,11 @@
     </div>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
 
     <section>
@@ -159,6 +161,18 @@
 @endsection
 
 @section('modals')
+
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"aria-hidden="true" id="loadingModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <button class="btn btn-primary" type="button" disabled style="background-color: #b087bc; color:#111;">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
          aria-labelledby="removeUserModalLabel" aria-hidden="true">
@@ -260,7 +274,12 @@
             if (!$('#importEmpty').val()) {
                 e.preventDefault();
             }
-        })
+        });
+
+        $('.loading').click(function () {
+            //showModal
+            $('#loadingModal').modal('show')
+        });
     </script>
 
 @endsection
