@@ -6,23 +6,40 @@ use App\Exports\LocationsExport;
 use App\Models\Location;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use PDF;
 
 class LocationController extends Controller
 {
     
     public function index()
     {
-        $locations=Location::orderBy('name', 'asc')->get();
+        if (auth()->user()->cant('viewAny', Location::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Locations', 'view']));
+        }
+
+        if(auth()->user()->role_id==1){
+            $locations =Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
         return view('locations.view', ['locations'=>$locations]);
     }
 
     public function create()
     {
+        if (auth()->user()->cant('create', Location::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Locations', 'create']));
+        }
+
         return view('locations.create');
     }
 
     public function store(Request $request)
     {
+        if (auth()->user()->cant('create', Location::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Locations', 'create']));
+        }
+
         $validated=$request->validate([
             'name'=>'required|max:255',
             'address_1'=>'required',
@@ -40,11 +57,19 @@ class LocationController extends Controller
   
     public function show(Location $location)
     {
+        if (auth()->user()->cant('view', $location)) {
+            return redirect(route('errors.forbidden', ['locations', $location->id, 'view']));
+        }
+
         return view('locations.show', compact('location'));
     }
  
     public function edit(Location $location)
     {
+        if (auth()->user()->cant('update', $location)) {
+            return redirect(route('errors.forbidden', ['locations', $location->id, 'edit']));
+        }
+
         if(auth()->user()->role_id==1){
             $locations =Location::all();
         }else{
@@ -56,6 +81,10 @@ class LocationController extends Controller
 
     public function update(Request $request, Location $location)
     {
+        if (auth()->user()->cant('update', $location)) {
+            return redirect(route('errors.forbidden', ['locations', $location->id, 'edit']));
+        }
+
         $validated=$request->validate([
             'name'=>'required|max:255',
             'address_1'=>'required',
@@ -73,6 +102,10 @@ class LocationController extends Controller
    
     public function destroy(Location $location)
     {
+        if (auth()->user()->cant('delete', $location)) {
+            return redirect(route('errors.forbidden', ['locations', $location->id, 'delete']));
+        }
+
         $name=$location->name;
         $location->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
@@ -81,7 +114,40 @@ class LocationController extends Controller
 
     public function export(Location $location)
     {
+        if (auth()->user()->cant('viewAny', Location::class)) {
+            return redirect(route('errors.forbidden', ['area', 'locations', 'export']));
+        }
+
         return \Maatwebsite\Excel\Facades\Excel::download(new LocationsExport, 'Location.csv');
+    }
+
+    public function downloadPDF(Request $request)
+    {
+        if (auth()->user()->cant('viewAny', Location::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Location', 'View PDF']));
+        }
+
+        if(auth()->user()->role_id==1){
+            $locations =Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
+
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('locations.pdf', compact('locations'));
+        $pdf->setPaper('a4', 'landscape');
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        return $pdf->download("locations-{$date}.pdf");
+    }
+
+    public function downloadShowPDF(Location $location)
+    {
+        if (auth()->user()->cant('view', $location)) {
+            return redirect(route('errors.forbidden', ['locations', $location->id, 'View PDF']));
+        }
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('locations.showPdf', compact('location'));
+
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        return $pdf->download("{$location->name}-{$date}.pdf");
     }
 
 }

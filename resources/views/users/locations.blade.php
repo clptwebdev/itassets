@@ -1,16 +1,23 @@
-<div class="modal-header">
-    <h5 class="modal-title" id="userPermissionsModalLabel">{{ $user->name}} has permissions for the following locations!
-    </h5>
-    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">×</span>
-    </button>
+@foreach($user->locations as $location)
+<div class="col-12 mb-2">
+    <div class="card shadow" style="background-color: {{$location->icon}}; color: #FFF">
+        <div class="card-body">
+            <div class="row d-flex">
+                <div>
+                    @if(isset($location->photo->path))
+                        <img src="{{ asset($location->photo->path)}}" height="50px" alt="{{$location->name}}" title="{{ $location->name ?? 'Unnassigned'}}"/>
+                    @else
+                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($location->icon ?? '#666').'">'
+                            .strtoupper(substr($location->name ?? 'u', 0, 1)).'</span>' !!}
+                    @endif
+                </div>
+                <div class="pl-3">
+                    {{ $location->name}}
+                    <div class="text-white-50 small">{{$location->icon}}</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
 </div>
-<div class="modal-body">
-    <input id="user-id" type="hidden" value="">
-    <p>Select "Delete" to remove this User from the system.</p>
-    <small class="text-danger">**Warning this is permanent. </small>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-    <button class="btn btn-danger" type="button" id="confirmBtn">Save</button>
-</div>
+@endforeach

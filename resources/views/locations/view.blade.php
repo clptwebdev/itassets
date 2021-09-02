@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Locations')
+
 @section('css')
 
 @endsection
@@ -9,15 +11,21 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Locations</h1>
     <div>
-        <a href="{{ route('location.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Add New Location</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        @can('create', \App\Models\Location::class)
+        <a href="{{ route('location.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add New Location
+        </a>
+        @endcan
+        @can('viewAny', \App\Models\Location::class)
+        <a href="{{ route('location.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+            <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+        </a>
         @if($locations->count() >1)
-            <a href="exportlocations" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i>Export</a>
-            @endif
-
+            <a href="exportlocations" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm">
+                <i class="fas fa-download fa-sm text-white-50"></i>Export
+            </a>
+        @endif
+        @endcan
     </div>
 </div>
 
@@ -49,7 +57,7 @@
                             <form id="form{{$location->id}}"action="{{ route('location.destroy', $location->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <a class="dropdown-item deleteBtn" data-id="{{$location->id}}">Delete</a>
+                                <a href="#" class="dropdown-item deleteBtn" data-id="{{$location->id}}">Delete</a>
                             </form>
 
                         </div>
@@ -111,20 +119,20 @@
 </div>
 
 @endsection
+
+
+@section('js')
 <script>
     $('.deleteBtn').click(function() {
-        $('#location-id').val($(this).data('id'))
+        $('#location-id').val($(this).data('id'));
         //showModal
-        $('#removeLocationModal').modal('show')
+        $('#removeLocationModal').modal('show');
     });
 
     $('#confirmBtn').click(function() {
         var form = '#'+'form'+$('#location-id').val();
         $(form).submit();
     });
-
 </script>
-@section('js')
-
 
 @endsection

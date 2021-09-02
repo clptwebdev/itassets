@@ -55,7 +55,7 @@
                                     <a class="dropdown-item" href="#">View</a>
                                     <a class="dropdown-item" href="#">Edit</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Location Permissions</a>
+                                    <a class="dropdown-item permission" data-id="{{$sup->id}}" data-name="{{$sup->name}}" href="#">Location Permissions</a>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +95,7 @@
                                     <a class="dropdown-item" href="#">View</a>
                                     <a class="dropdown-item" href="#">Edit</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Location Permissions</a>
+                                    <a class="dropdown-item permission" data-id="{{$sup->id}}" href="#">Location Permissions</a>
                                 </div>
                             </div>
                         </div>
@@ -137,7 +137,7 @@
                                     <a class="dropdown-item" href="#">View</a>
                                     <a class="dropdown-item" href="#">Edit</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Location Permissions</a>
+                                    <a class="dropdown-item permission" data-id="{{$sup->id}}" href="#">Location Permissions</a>
                                 </div>
                             </div>
                         </div>
@@ -174,8 +174,8 @@
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                     aria-labelledby="dropdownUser{{$sup->id}}Link">
                                     <div class="dropdown-header">User Options:</div>
-                                    <a class="dropdown-item" href="{{ route('users.show', $user->id) }}">View</a>
-                                    <a class="dropdown-item" href="{{ route('users.edit', $user->id) }}">Edit</a>
+                                    <a class="dropdown-item" href="{{ route('users.show', $sup->id) }}">View</a>
+                                    <a class="dropdown-item" href="{{ route('users.edit', $sup->id) }}">Edit</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item permission" data-id="{{$sup->id}}" href="#">Location Permissions</a>
                                 </div>
@@ -198,10 +198,18 @@
 @section('modals')
 <!-- Delete Modal-->
 <div class="modal fade bd-example-modal-lg" id="userPermissionsModal" tabindex="-1" role="dialog"
-    aria-labelledby="ruserPermissionsModalLabel" aria-hidden="true">
+    aria-labelledby="userPermissionsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
-        <div id="permissions" class="modal-content">
-            
+        <div  class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeUserModalLabel"><span id="user_name"></span> has access to the following locations.</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="permissions">
+                
+            </div>
         </div>
     </div>
 </div>
@@ -223,13 +231,19 @@
         ev.preventDefault();
         var data = ev.dataTransfer.getData("text");
         var id = ev.dataTransfer.getData("id");
+        var role = ev.target.dataset.role;
         ev.target.parentElement.prepend(document.getElementById(data));
         $('.drop-boxes').hide();
+
+        $.ajax({
+            url: `/users/${id}/role/${role}`,
+            type: 'GET',
+        });
     }
 
     $('.permission').click(function() {
         var id = $(this).data('id')
-        $('#user-name').val($(this).data('name'));
+        $('#user_name').html($(this).data('name'));
 
         $.ajax({
             url: `/users/${id}/locations`,
@@ -239,7 +253,7 @@
             },
         });
 
-        $('#removeUserModal').modal('show')
+        $('#userPermissionsModal').modal('show')
     });
 </script>
 @endsection

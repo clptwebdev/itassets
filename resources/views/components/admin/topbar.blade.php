@@ -178,16 +178,21 @@
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-block text-light small">{{ auth()->user()->name ?? 'Nobody Knows'}}</span>
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="text-right">
+                                    <span class="mr-2 d-none d-lg-block text-light small">{{ auth()->user()->name ?? 'Nobody Knows'}}</span>
                                 <span class="mr-2 d-none d-lg-block text-gray-600 small">{{ auth()->user()->email ?? 'Nobody Knows'}}</span>
-                                <img class="img-profile rounded-circle" src="{{ asset('images/profile.png')}}">
+                                </div>
+                                @if(auth()->user()->photo()->exists())
+                                <img class="img-profile rounded-circle" src="{{ asset(auth()->user()->photo->path) ?? asset('images/profile.png') }}">
+                                @else
+                                <img class="img-profile rounded-circle" src="{{ asset('images/profile.png') }}">
+                                @endif
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{route('user.details')}}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>

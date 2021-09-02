@@ -141,4 +141,37 @@ class UserController extends Controller
         return view('users.roles');
     }
 
+    public function changePermission($id, $role){
+        $user = User::findOrFail($id);
+
+        $user->role_id = $role;
+
+        $user->save();
+    }
+
+    public function getLocations($id){
+        $user = User::findOrFail($id);
+        return view('users.locations', compact('user'));
+    }
+
+    public function userDetails(){
+        return view('user.details');
+    } 
+
+    public function updateDetails(Request $request)
+    {
+
+        $validated=$request->validate([
+            'name'=>'required|max:255',
+            'email'=>['required', \Illuminate\Validation\Rule::unique('users')->ignore(auth()->user()->id), 'email:rfc,dns,spoof,filter'],
+        ]);
+
+        auth()->user()->fill($request->only('name', 'email', 'photo_id'))->save();
+        session()->flash('success_message', $request->name.', you have successfully updated your details.');
+        return redirect('/dashboard');
+    }
+
+    public function userPassword(){
+        return view('user.password');
+    } 
 }

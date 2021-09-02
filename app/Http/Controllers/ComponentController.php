@@ -169,7 +169,7 @@ class ComponentController extends Controller {
 
     public function newComment(Request $request, Component $component)
     {
-        if (auth()->user()->cant('edit', $component)) {
+        if (auth()->user()->cant('update', $component)) {
             return redirect(route('errors.forbidden', ['component', $component->id, 'comment']));
         }else{
             $request->validate([

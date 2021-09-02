@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class Location extends Model
 {
@@ -28,5 +29,10 @@ class Location extends Model
     }
     public function consumable(){
         return $this->hasMany(Consumable::class);
+    }
+
+    public function users(){
+        return $this->belongsToMany(User::class)
+            ->using(LocationUser::class);
     }
 }

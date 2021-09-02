@@ -112,6 +112,5 @@
             </tr>
             </tfoot>
     </table>
-    </table>
 </body>
 </html>

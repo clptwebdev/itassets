@@ -9,64 +9,58 @@ use Carbon\Carbon;
 
 class SupplierObserver
 {
-    /**
-     * Handle the supplier "created" event.
-     *
-     * @param  \App\Models\supplier  $supplier
-     * @return void
-     */
     public function created(supplier $supplier)
     {
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
-            'loggable_type'=> 'App\Models\Supplier',
+            'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name.' created a new user with an Admin Role. Permissions were granted for [School Names]'
+            'data'=> auth()->user()->name.' created a new supplier - '.$supplier->name,
         ]);
     }
 
-    /**
-     * Handle the supplier "updated" event.
-     *
-     * @param  \App\Models\supplier  $supplier
-     * @return void
-     */
     public function updated(supplier $supplier)
     {
-        //
+        Log::create([
+            'user_id'=>auth()->user()->id ?? 0,
+            'log_date'=> Carbon::now(),
+            'loggable_type'=> 'supplier',
+            'loggable_id'=> $supplier->id ?? 0,
+            'data'=> auth()->user()->name.' updated supplier - '.$supplier->name,
+        ]);
     }
 
-    /**
-     * Handle the supplier "deleted" event.
-     *
-     * @param  \App\Models\supplier  $supplier
-     * @return void
-     */
     public function deleted(supplier $supplier)
     {
-        //
+        Log::create([
+            'user_id'=>auth()->user()->id ?? 0,
+            'log_date'=> Carbon::now(),
+            'loggable_type'=> 'supplier',
+            'loggable_id'=> $supplier->id ?? 0,
+            'data'=> auth()->user()->name.' deleted supplier - '.$supplier->name,
+        ]);
     }
 
-    /**
-     * Handle the supplier "restored" event.
-     *
-     * @param  \App\Models\supplier  $supplier
-     * @return void
-     */
     public function restored(supplier $supplier)
     {
-        //
+        Log::create([
+            'user_id'=>auth()->user()->id ?? 0,
+            'log_date'=> Carbon::now(),
+            'loggable_type'=> 'supplier',
+            'loggable_id'=> $supplier->id ?? 0,
+            'data'=> auth()->user()->name.' restored supplier - '.$supplier->name,
+        ]);
     }
 
-    /**
-     * Handle the supplier "force deleted" event.
-     *
-     * @param  \App\Models\supplier  $supplier
-     * @return void
-     */
     public function forceDeleted(supplier $supplier)
     {
-        //
+        Log::create([
+            'user_id'=>auth()->user()->id ?? 0,
+            'log_date'=> Carbon::now(),
+            'loggable_type'=> 'supplier',
+            'loggable_id'=> $supplier->id ?? 0,
+            'data'=> auth()->user()->name.' permanently deleted supplier - '.$supplier->name,
+        ]);
     }
 }

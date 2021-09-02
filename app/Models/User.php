@@ -54,7 +54,6 @@ class User extends Authenticatable {
             ->using(LocationUser::class);
     }
 
-
     //Permissions
     public function location_assets(){
         return $this->hasManyDeep(Asset::class, ['location_user', Location::class]);

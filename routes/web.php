@@ -65,12 +65,17 @@ Route::group(['middleware' => 'auth'], function() {
     Route::group(['middleware' => 'admin.role'], function() {
         Route::resource('/users', 'App\Http\Controllers\UserController');
         Route::get('/user/permissions', 'App\Http\Controllers\UserController@userPermissions')->name('user.permissions');
+        Route::get('/users/{id}/role/{role}', 'App\Http\Controllers\UserController@changePermission')->name('change.permission'); 
+        Route::get('/users/{id}/locations', 'App\Http\Controllers\UserController@getLocations')->name('user.permission');
     });
 
     //User Manager
 
     //User
-
+        Route::get('/user/details', 'App\Http\Controllers\UserController@userDetails')->name('user.details');
+        Route::get('/user/password', 'App\Http\Controllers\UserController@userPassword')->name('user.password');
+        Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
+        Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
     //Administrator Permissions Middleware
         Route::resource('/location', 'App\Http\Controllers\LocationController');
         Route::resource('/comment', 'App\Http\Controllers\CommentController');
@@ -100,6 +105,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/asset/{asset}/remove', 'App\Http\Controllers\AssetController@forceDelete')->name('assets.remove');
         Route::post('/asset/{asset}/status', 'App\Http\Controllers\AssetController@changeStatus')->name('change.status');
         Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
+        Route::post('assets/comment/create',[\App\Http\Controllers\AssetController::class, "newComment"] )->name('asset.comment');
     //Component Routes
         Route::resource('/components', 'App\Http\Controllers\ComponentController');
         Route::get('/component/bin', 'App\Http\Controllers\ComponentController@recycleBin')->name('components.bin');
@@ -129,10 +135,17 @@ Route::group(['middleware' => 'auth'], function() {
         Route::resource('/category', 'App\Http\Controllers\CategoryController');
         Route::post('/category/pdf', 'App\Http\Controllers\CategoryController@downloadPDF')->name('category.pdf');
         Route::get('/category/{category}/pdf', 'App\Http\Controllers\CategoryController@downloadShowPDF')->name('category.showPdf');
+    //LocationControllers
+        Route::resource('/location', 'App\Http\Controllers\LocationController');
+        Route::get('/locations/pdf', 'App\Http\Controllers\LocationController@downloadPDF')->name('location.pdf');
+        Route::get('/locations/{location}/pdf', 'App\Http\Controllers\LocationController@downloadShowPDF')->name('location.showPdf');
+        Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
+        //Permission Routes
+        
 
         Route::resource('/status', 'App\Http\Controllers\StatusController');
         
-        Route::post('assets/comment/create',[\App\Http\Controllers\AssetController::class, "newComment"] )->name('asset.comment');
+        
 
         Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
 
@@ -140,7 +153,7 @@ Route::group(['middleware' => 'auth'], function() {
 //      exports
         Route::post("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
         Route::get("/exportconsumables", [\App\Http\Controllers\ConsumableController::class, "export"]);
-        Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
+        
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
         Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
         Route::get("/exportusers", [\App\Http\Controllers\UserController::class, "export"]);

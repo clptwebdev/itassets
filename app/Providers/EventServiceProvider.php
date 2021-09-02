@@ -14,6 +14,7 @@ use App\Models\Supplier;
 use App\Models\Component;
 use App\Models\Accessory;
 use App\Models\Consumable;
+use App\Models\Location;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -52,5 +53,6 @@ class EventServiceProvider extends ServiceProvider
         Component::observe(\App\Observers\ComponentObserver::class);
         Consumable::observe(\App\Observers\ConsumableObserver::class);
         AssetModel::observe(\App\Observers\AssetModelObserver::class);
+        Location::observe(\App\Observers\LocationObserver::class);
     }
 }

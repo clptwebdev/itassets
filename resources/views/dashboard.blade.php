@@ -198,7 +198,7 @@
                             </div>
                             <div class="col-12 col-md-3" background>
                                 @if(isset($location->photo->path))
-                                    '<img src="{{ asset($location->photo->path)}}" height="50px" alt="{{$location->name}}" title="{{ $location->name ?? 'Unnassigned'}}"/>'
+                                    <img src="{{ asset($location->photo->path)}}" height="50px" alt="{{$location->name}}" title="{{ $location->name ?? 'Unnassigned'}}"/>
                                 @else
                                     {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($location->icon ?? '#666').'">'
                                         .strtoupper(substr($location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -211,8 +211,8 @@
             @endforeach
         </div>
     </div>
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow mb-4">
+    <div class="col-lg-6 mb-4 h-100">
+        <div class="card shadow mb-4 h-100">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Categories</h6>
             </div>
