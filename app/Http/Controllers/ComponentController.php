@@ -225,7 +225,7 @@ class ComponentController extends Controller {
 
     public function export(Request $request)
     {
-        if (auth()->user()->cant('viewAll', Asset::class)) {
+        if (auth()->user()->cant('viewAll', Component::class)) {
             return redirect(route('errors.forbidden', ['area', 'Components', 'export']));
         }
             

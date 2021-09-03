@@ -116,7 +116,7 @@
                                              aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Component Options:</div>
                                             <a href="{{ route('components.show', $component->id) }}" class="dropdown-item">View</a>
-                                            @can('edit', $component)
+                                            @can('update', $component)
                                                 <a href="{{ route('components.edit', $component->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $component)

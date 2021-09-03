@@ -33,7 +33,7 @@
                     </form>
                 @endif
                 @if($consumables->count() >1)
-                <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
+                <a href="/exportconsumables" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
                     class="fas fa-download fa-sm text-white-50"></i>Export</a>
                 @endif
             @endcan
