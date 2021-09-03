@@ -376,6 +376,11 @@ class AssetController extends Controller {
         }
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
         return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport($assets), 'assets.csv');
+        Storage::put("public/reports/assets-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/assets-{$date}.pdf");
+        return redirect(route('assets.index'))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
 
     }
 
