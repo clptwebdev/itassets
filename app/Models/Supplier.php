@@ -19,6 +19,10 @@ class Supplier extends Model
         return $this->hasOne(Asset::class);
 
     }
+    public function miscellanea()
+    {
+        return $this->hasOne(miscellanea::class);
+    }
     public function component(){
         return $this->hasOne(Component::class);
 

@@ -149,56 +149,57 @@ Route::group(['middleware' => 'auth'], function() {
         
 
     //Database Backups Routes (Doesn't include import routes)
-        Route::resource('/databasebackups', \App\Http\Controllers\BackupController::class);
-        Route::get('/databasebackups/create/dbbackup', [\App\Http\Controllers\BackupController::class, "createDB"])->name('backupdb.create');
-        Route::get('/databasebackups/create/backup', [\App\Http\Controllers\BackupController::class, "createFull"])->name('backup.create');
-        Route::get('/databasebackups/clean/backups', [\App\Http\Controllers\BackupController::class, "dbClean"])->name('backup.clean');
-        Route::get('/databasebackupdownload/{$file_name}', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
+    Route::resource('/databasebackups', \App\Http\Controllers\BackupController::class);
+    Route::get('/databasebackups/create/dbbackup', [\App\Http\Controllers\BackupController::class, "createDB"])->name('backupdb.create');
+    Route::get('/databasebackups/create/backup', [\App\Http\Controllers\BackupController::class, "createFull"])->name('backup.create');
+    Route::get('/databasebackups/clean/backups', [\App\Http\Controllers\BackupController::class, "dbClean"])->name('backup.clean');
+    Route::get('/databasebackupdownload/{$file_name}', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
 
-        Route::resource('/status', 'App\Http\Controllers\StatusController');
-        
-        
+// Manufacturers Routes (Doesn't include import routes)
+    Route::resource('/manufacturers', \App\Http\Controllers\ManufacturerController::class);
 
-        Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
+// status Routes (Doesn't include import routes)
+    Route::resource('/status', 'App\Http\Controllers\StatusController');
 
-        
-//      exports
-        Route::post("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
-        Route::get("/exportconsumables", [\App\Http\Controllers\ConsumableController::class, "export"]);
-        
-        Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
-        Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
-        Route::get("/exportusers", [\App\Http\Controllers\UserController::class, "export"]);
-        Route::get("/exportcomponents", [\App\Http\Controllers\ComponentController::class, "export"]);
-        Route::get("/exportaccessories", [\App\Http\Controllers\AccessoryController::class, "export"]);
-//
-        Route::post("/importmanufacturer", [\App\Http\Controllers\ManufacturerController::class, "import"]);
-        Route::post("/importcomponents", [\App\Http\Controllers\ComponentController::class, "import"]);
-        Route::post("/importacessories", [\App\Http\Controllers\AccessoryController::class, "import"]);
-        Route::post("/importconsumables", [\App\Http\Controllers\ConsumableController::class, "import"]);
-        Route::Post("components/create/ajax", [\App\Http\Controllers\ComponentController::class, "ajaxMany"]);
-        Route::Post("accessories/create/ajax", [\App\Http\Controllers\AccessoryController::class, "ajaxMany"]);
-        Route::Post("consumables/create/ajax", [\App\Http\Controllers\ConsumableController::class, "ajaxMany"]);
-        Route::Post("components/export-import-errors", [\App\Http\Controllers\ComponentController::class, "importErrors"])->name("componentexport.import");
-        Route::Post("accessories/export-import-errors", [\App\Http\Controllers\AccessoryController::class, "importErrors"])->name("accessoryexport.import");
-        Route::Post("consumables/export-import-errors", [\App\Http\Controllers\ConsumableController::class, "importErrors"])->name("consumableexport.import");
+//asset Models
+    Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
 
+    //miscellaneous
+    Route::resource('/miscellaneous', "\App\Http\Controllers\MiscellaneaController");
 
-        Route::post("/importassets", [\App\Http\Controllers\AssetController::class, "import"]);
-        Route::Post("/export-import-errors", [\App\Http\Controllers\AssetController::class, "importErrors"])->name("export.import");
-        Route::Post("assets/create/ajax", [\App\Http\Controllers\AssetController::class, "ajaxMany"]);
+//exports
+    Route::post("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
+    Route::post("/exportmiscellaneous", [\App\Http\Controllers\MiscellaneaController::class, "export"]);
+    Route::get("/exportconsumables", [\App\Http\Controllers\ConsumableController::class, "export"]);
+    Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
+    Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
+    Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
+    Route::get("/exportusers", [\App\Http\Controllers\UserController::class, "export"]);
+    Route::get("/exportcomponents", [\App\Http\Controllers\ComponentController::class, "export"]);
+    Route::get("/exportaccessories", [\App\Http\Controllers\AccessoryController::class, "export"]);
+//Imports
+    Route::Post("manufacturers/create/ajax", [\App\Http\Controllers\ManufacturerController::class, "ajaxMany"]);
+    Route::post("/importassets", [\App\Http\Controllers\AssetController::class, "import"]);
+    Route::post("/importmanufacturer", [\App\Http\Controllers\ManufacturerController::class, "import"]);
+    Route::post("/importcomponents", [\App\Http\Controllers\ComponentController::class, "import"]);
+    Route::post("/importacessories", [\App\Http\Controllers\AccessoryController::class, "import"]);
+    Route::post("/importconsumables", [\App\Http\Controllers\ConsumableController::class, "import"]);
+    Route::post("/importmiscellaneous", [\App\Http\Controllers\MiscellaneaController::class, "import"]);
+    Route::Post("components/create/ajax", [\App\Http\Controllers\ComponentController::class, "ajaxMany"]);
+    Route::Post("accessories/create/ajax", [\App\Http\Controllers\AccessoryController::class, "ajaxMany"]);
+    Route::Post("consumables/create/ajax", [\App\Http\Controllers\ConsumableController::class, "ajaxMany"]);
+    Route::Post("assets/create/ajax", [\App\Http\Controllers\AssetController::class, "ajaxMany"]);
+    Route::Post("miscellaneous/create/ajax", [\App\Http\Controllers\MiscellaneaController::class, "ajaxMany"]);
+    Route::Post("components/export-import-errors", [\App\Http\Controllers\ComponentController::class, "importErrors"])->name("componentexport.import");
+    Route::Post("accessories/export-import-errors", [\App\Http\Controllers\AccessoryController::class, "importErrors"])->name("accessoryexport.import");
+    Route::Post("consumables/export-import-errors", [\App\Http\Controllers\ConsumableController::class, "importErrors"])->name("consumableexport.import");
+    Route::Post("assets/export-import-errors", [\App\Http\Controllers\AssetController::class, "importErrors"])->name("export.import");
+    Route::Post("miscellaneous/export-import-errors", [\App\Http\Controllers\MiscellaneaController::class, "importErrors"])->name("miscellaneaexport.import");
 
-        //Database Backups Routes (Doesn't include import routes)
-        Route::resource('/databasebackups', \App\Http\Controllers\BackupController::class);
-        Route::post('backupdownload/', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
-
-        Route::resource('/manufacturers', \App\Http\Controllers\ManufacturerController::class);
-        Route::Post("manufacturers/create/import", [\App\Http\Controllers\ManufacturerController::class, "createMany"]);
-        Route::Post("manufacturers/create/ajax", [\App\Http\Controllers\ManufacturerController::class, "ajaxMany"]);
-
-        Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');
-        Route::get('chart/asset/values', 'App\Http\Controllers\ChartController@getAssetValueChart');
-        Route::get('chart/asset/audits', 'App\Http\Controllers\ChartController@getAssetAuditChart');
+//Javascript pie charts for dashboard
+    Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');
+    Route::get('chart/asset/values', 'App\Http\Controllers\ChartController@getAssetValueChart');
+    Route::get('chart/asset/audits', 'App\Http\Controllers\ChartController@getAssetAuditChart');
 
 });
 //403 redirects

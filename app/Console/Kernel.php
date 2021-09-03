@@ -2,8 +2,10 @@
 
 namespace App\Console;
 
+use App\Http\Controllers\BackupController;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Storage;
 
 class Kernel extends ConsoleKernel
 {
@@ -34,7 +36,10 @@ class Kernel extends ConsoleKernel
             echo ("This Database has backup has been created and stored in storage/app/Apollo---Asset-Manager Within your application");
 
         });
-        $schedule->command('backup:clean')
+        $schedule->call(function(){
+            $files = Storage::files('public/Apollo---Asset-Manager');
+            Storage::delete($files);
+        })
             ->lastDayOfMonth()
             ->runInBackground();
     }

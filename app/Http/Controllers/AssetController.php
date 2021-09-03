@@ -222,7 +222,7 @@ class AssetController extends Controller {
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
         ]);
-        
+
 
     }
 
@@ -494,6 +494,7 @@ class AssetController extends Controller {
         {
             $validation = Validator::make($request->all(), [
                 'order_no.*' => 'nullable',
+                'name.*' => 'required|string',
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
                 'purchased_date.*' => 'nullable|date',
@@ -516,6 +517,7 @@ class AssetController extends Controller {
                     $asset = new Asset;
 
                     $asset->asset_tag = $request->asset_tag[$i];
+                    $asset->name = $request->name[$i];
                     $asset->user_id = auth()->user()->id;
                     $asset->serial_no = $request->serial_no[$i];
                     $asset->status_id = $request->status_id[$i];

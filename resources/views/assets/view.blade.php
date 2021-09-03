@@ -80,7 +80,7 @@
             different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
         <div class="d-flex flex-row-reverse mb-2">
-            
+
             @if(isset($filter))
             <p>Message</p>
             <a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear Filter</a>

@@ -30,6 +30,10 @@ class Comment extends Model {
     {
         return $this->morphedByMany(Consumable::class, 'commentables');
     }
+    public function miscellanea()
+    {
+        return $this->morphedByMany(miscellanea::class);
+    }
 
     public function asset()
     {

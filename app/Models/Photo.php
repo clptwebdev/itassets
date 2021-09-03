@@ -42,6 +42,10 @@ class Photo extends Model
     {
         return $this->hasOne(Consumable::class);
     }
+    public function miscellanea()
+    {
+        return $this->hasOne(miscellanea::class);
+    }
 
     public function setPathAttribute($value)
     {
