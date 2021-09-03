@@ -22,18 +22,18 @@
             @endcan
             @can('generatePDF', \App\Models\Consumable::class)
                 @if ($consumables->count() == 1)
-                    <a href="{{ route('consumables.showPdf', $consumables[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    <a href="{{ route('consumables.showPdf', $consumables[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                     @else
                     <form class="d-inline-block" action="{{ route('consumables.pdf')}}" method="POST">
                         @csrf
                         <input type="hidden" value="{{ json_encode($consumables->pluck('id'))}}" name="consumables"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                     </form>                
                 @endif
                 @if($consumables->count() >1)
-                <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
                     class="fas fa-download fa-sm text-white-50"></i>Export</a>
                 @endif
             @endcan
@@ -45,11 +45,11 @@
     </div>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
 
     <section>

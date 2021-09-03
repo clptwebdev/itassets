@@ -117,6 +117,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/components/pdf', 'App\Http\Controllers\ComponentController@downloadPDF')->name('components.pdf');
         Route::get('/components/{component}/pdf', 'App\Http\Controllers\ComponentController@downloadShowPDF')->name('components.showPdf');
         Route::post('components/{component}/comment/create', '\App\Http\Controllers\ComponentController@newComment')->name('component.comment');
+        Route::post('/component/{component}/status', 'App\Http\Controllers\ComponentController@changeStatus')->name('component.status');
     //Accessory Routes
         Route::resource('/accessories', 'App\Http\Controllers\AccessoryController');
         Route::get('/accessory/bin', 'App\Http\Controllers\AccessoryController@recycleBin')->name('accessories.bin');
@@ -125,6 +126,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/accessory/pdf', 'App\Http\Controllers\AccessoryController@downloadPDF')->name('accessories.pdf');
         Route::get('/accessory/{accessory}/pdf', 'App\Http\Controllers\AccessoryController@downloadShowPDF')->name('accessories.showPdf');
         Route::post('accessory/{accessory}/comment/create', '\App\Http\Controllers\AccessoryController@newComment')->name('accessories.comment');
+        Route::post('/accessory/{accessory}/status', 'App\Http\Controllers\AccessoryController@changeStatus')->name('accessories.status');
     //Consumable Routes
         Route::resource('/consumables', 'App\Http\Controllers\ConsumableController');
         Route::get('/consumable/bin', 'App\Http\Controllers\ConsumableController@recycleBin')->name('consumables.bin');

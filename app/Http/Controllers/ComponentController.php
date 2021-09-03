@@ -354,7 +354,7 @@ class ComponentController extends Controller {
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         Storage::put("public/reports/component-{$component->id}-{$date}.pdf", $pdf->output());
         $url = asset("storage/reports/component-{$component->id}-{$date}.pdf");
-        return redirect(route('components.index'))
+        return redirect(route('components.show', $component->id))
             ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
             ->withInput();
     }
@@ -398,5 +398,13 @@ class ComponentController extends Controller {
         $component->forceDelete();
         session()->flash('danger_message', "Component - ". $name . ' was deleted permanently');
         return redirect("/component/bin");
+    }
+
+    public function changeStatus(Component $component, Request $request)
+    {
+        $component->status_id = $request->status;
+        $component->save();
+        session()->flash('success_message', $component->name . ' has had its status changed successfully');
+        return redirect(route('components.show', $component->id));
     }
 }

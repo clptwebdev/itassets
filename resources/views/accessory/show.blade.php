@@ -70,6 +70,35 @@
 @endsection
 
 @section('modals')
+    <!-- Status Model Modal-->
+    <div class="modal fade bd-example-modal-lg" id="accessoryModalStatus" tabindex="-1" role="dialog"
+         aria-labelledby="accessoryModalStatusLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="accessoryModalStatusLabel">Change the Status
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{ route('accessories.status', $accessory->id)}}" method="post">
+                <div class="modal-body">
+                    @csrf
+                    <select name="status" class="form-control">
+                        @foreach(\App\Models\Status::all() as $status)
+                        <option value="{{ $status->id}}" @if($status->id == $accessory->status_id){{ 'selected'}}@endif>{{ $status->name }}</option>  
+                        @endforeach  
+                    </select> 
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success" type="submit">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- User Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeLocationModal" tabindex="-1" role="dialog"
@@ -199,7 +228,7 @@
         });
 
 
-        $('#editComment').click(function(event){
+        $('.editComment').click(function(event){
             event.preventDefault();
             $('#updateTitle').val($(this).data('title'));
             $('#updateComment').val($(this).data('comment'));

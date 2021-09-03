@@ -78,7 +78,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('change.status', $asset->id)}}" method="post">
+                <form action="{{ route('accessory.status', $accessory->id)}}" method="post">
                 <div class="modal-body">
                     @csrf
                     <select name="status" class="form-control">
@@ -224,7 +224,7 @@
             $('#commentModalOpen').modal('show')
         });
 
-        $('#editComment').click(function(event){
+        $('.editComment').click(function(event){
             event.preventDefault();
             $('#updateTitle').val($(this).data('title'));
             $('#updateComment').val($(this).data('comment'));

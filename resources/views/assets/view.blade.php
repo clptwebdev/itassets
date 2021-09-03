@@ -392,7 +392,7 @@
                 </div>
                 <div class="modal-body">
                     <input id="asset-id" type="hidden" value="">
-                    <p>Select "Send to Bin" to send this asset to the recycle binfrom the system.</p>
+                    <p>Select "Send to Bin" to send this asset to the recycle bin from the system.</p>
                     <small class="text-danger">**This is not permanent and the Asset can be restored. Whilst in the
                         Recycle Bin, the Asset will not be included in any statistics and data.</small>
                 </div>

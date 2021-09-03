@@ -67,7 +67,7 @@
                         </thead>
                         <tr>
                             <td>Device Status: </td>
-                            <td><strong>{{ $asset->status->name ?? 'No Status Set'}}</strong></td>
+                            <td><strong><i class="{{$asset->status->icon ?? 'fa fa-circle'}}" style="color: {{$asset->status->colour ?? '#666'}};"></i> {{ $asset->status->name ?? 'No Status Set'}}</strong></td>
                             <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#assetModalStatus">Change Status</button></td>
                         </tr>
                         <tr>

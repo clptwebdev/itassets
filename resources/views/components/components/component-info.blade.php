@@ -43,8 +43,8 @@
                         </thead>
                         <tr>
                             <td>Device Status: </td>
-                            <td><strong>{{ $component->status->name ?? 'No Status Set'}}</strong></td>
-                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#componentStatus">Change Status</button></td>
+                            <td><strong><i class="{{$component->status->icon ?? 'fa fa-circle'}}" style="color: {{$component->status->colour ?? '#666'}};"></i> {{ $component->status->name ?? 'No Status Set'}}</strong></td>
+                            <td class="text-right"><button class="btn btn-sm btn-secondary p-1 font-weight-bold" data-toggle="modal" data-target="#componentModalStatus">Change Status</button></td>
                         </tr>
                     </table>
 

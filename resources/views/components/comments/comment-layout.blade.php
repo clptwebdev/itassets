@@ -35,7 +35,7 @@
                                                 aria-labelledby="dropdownMenuLink">
                                                 <div class="dropdown-header">comment Options:</div>
                                                 @can('update', $comment)
-                                                <a href="#" id="editComment" class="dropdown-item" 
+                                                <a href="#" class="dropdown-item editComment" 
                                                     data-route="{{ route('comment.update', $comment->id)}}" 
                                                     data-id="{{ $comment->id}}" 
                                                     data-title="{{ $comment->title}}" 

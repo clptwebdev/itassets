@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PDF;
+use Illuminate\Support\Facades\Storage;
 
 class ConsumableController extends Controller
 {
@@ -326,7 +327,11 @@ class ConsumableController extends Controller
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('consumable.pdf', compact('consumables'));
         $pdf->setPaper('a4', 'landscape');
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("consumables-{$date}.pdf");
+        Storage::put("public/reports/consumables-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/consumables-{$date}.pdf");
+        return redirect(route('consumables.index'))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 
     public function downloadShowPDF(Consumable $consumable)
@@ -336,7 +341,11 @@ class ConsumableController extends Controller
         }
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('consumable.showPdf', compact('consumable'));
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("consumable-{$consumable->id}-{$date}.pdf");
+        Storage::put("public/reports/consumable-{$consumable->id}-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/consumable-{$consumable->id}-{$date}.pdf");
+        return redirect(route('consumables.show', $consumable->id))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 
     //Restore and Force Delete Function Need to be Created

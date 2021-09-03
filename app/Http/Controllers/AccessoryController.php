@@ -389,4 +389,12 @@ class AccessoryController extends Controller
         return redirect("/accessory/bin");
     }
 
+    public function changeStatus(Accessory $accessory, Request $request)
+    {
+        $accessory->status_id = $request->status;
+        $accessory->save();
+        session()->flash('success_message', $accessory->name . ' has had its status changed successfully');
+        return redirect(route('accessories.show', $accessory->id));
+    }
+
 }

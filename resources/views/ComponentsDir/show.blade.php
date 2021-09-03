@@ -70,7 +70,35 @@
 @endsection
 
 @section('modals')
-
+    <!-- asset Status Model Modal-->
+    <div class="modal fade bd-example-modal-lg" id="componentModalStatus" tabindex="-1" role="dialog"
+         aria-labelledby="assetModalStatusLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="componentModalStatusLabel">Are you sure you want to delete this item?
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{ route('component.status', $component->id)}}" method="post">
+                <div class="modal-body">
+                    @csrf
+                    <select name="status" class="form-control">
+                        @foreach(\App\Models\Status::all() as $status)
+                        <option value="{{ $status->id}}" @if($status->id == $component->status_id){{ 'selected'}}@endif>{{ $status->name }}</option>  
+                        @endforeach  
+                    </select> 
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success" type="submit">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- User Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeLocationModal" tabindex="-1" role="dialog"
          aria-labelledby="removeLocationModalLabel" aria-hidden="true">
@@ -134,6 +162,46 @@
             </div>
         </div>
     </div>
+    <!-- Edit Comment Modal-->
+    <div class="modal fade bd-example-modal-lg" id="commentModalEdit" tabindex="-1" role="dialog"
+         aria-labelledby="commentModalOpen" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalEditLabel">Update Comment for
+                        <strong>{{$component->name}}</strong></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="updateForm" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-body">
+                        <p>Fill Out the Title Field and Body to continue...</p>
+                        <input type="hidden" name="accessory_id"  value="{{ $component->id }}">
+                    </div>
+                    <div class="form-group pr-3 pl-3">
+                        <label class="font-weight-bold" for="title">Comment Title</label>
+                        <input type="text" class="form-control <?php if ($errors->has('title')) {?>border-danger<?php }?>" name="title" id="updateTitle" placeholder="Comment Title">
+                    </div>
+                    <div class="form-group pl-3 pr-3">
+                        <label
+                            class="font-weight-bold <?php if ($errors->has('comment')) {?>border-danger<?php }?>"
+                            for="comment_content">Notes</label>
+                        <textarea name="comment" id="updateComment" class="form-control" rows="5"></textarea>
+
+                    </div>
+                    <div class="p-2 text-lg-right">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -153,6 +221,15 @@
         $('#commentModal').click(function () {
             //showModal
             $('#commentModalOpen').modal('show')
+        });
+
+        $('.editComment').click(function(event){
+            event.preventDefault();
+            $('#updateTitle').val($(this).data('title'));
+            $('#updateComment').val($(this).data('comment'));
+            var route = $(this).data('route');
+            $('#updateForm').attr('action', route); 
+            $('#commentModalEdit').modal('show');
         });
 
         $(document).ready( function () {
