@@ -20,6 +20,10 @@ class Manufacturer extends Model {
     {
         return $this->hasMany(Asset::class);
     }
+    public function miscellanea()
+    {
+        return $this->hasMany(miscellanea::class);
+    }
 
     public function assetModel(){
         return $this->hasMany(AssetModel::class, 'manufacturer_id');

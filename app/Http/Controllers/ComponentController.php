@@ -35,7 +35,7 @@ class ComponentController extends Controller {
             $components = Component::all();
         }else{
             $components = auth()->user()->location_components;
-        } 
+        }
         return view('ComponentsDir.view', ["components" => $components]);
     }
 
@@ -50,7 +50,7 @@ class ComponentController extends Controller {
         }else{
             $locations = auth()->user()->locations;
         }
-        
+
         return view('ComponentsDir.create', [
             "locations" => $locations,
             "statuses" => Status::all(),
@@ -142,7 +142,7 @@ class ComponentController extends Controller {
         if (auth()->user()->cant('view', $component)) {
             return redirect(route('errors.forbidden', ['component', $component->id, 'view']));
         }
-    
+
         return view('ComponentsDir.show', ["component" => $component,]);
     }
 
@@ -156,7 +156,7 @@ class ComponentController extends Controller {
         }else{
             $locations = auth()->user()->locations;
         }
-            
+
         return view('ComponentsDir.edit', [
             "component" => $component,
             "locations" => $locations,
@@ -169,7 +169,7 @@ class ComponentController extends Controller {
 
     public function newComment(Request $request, Component $component)
     {
-        if (auth()->user()->cant('edit', $component)) {
+        if (auth()->user()->cant('update', $component)) {
             return redirect(route('errors.forbidden', ['component', $component->id, 'comment']));
         }else{
             $request->validate([

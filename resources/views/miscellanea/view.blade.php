@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'View Consumables')
+@section('title', 'View miscellaneous')
 
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
@@ -10,37 +10,37 @@
 
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Consumables</h1>
+        <h1 class="h3 mb-0 text-gray-800">miscellaneous</h1>
         <div>
-            @can('recycleBin', \App\Models\Consumable::class)
-            <a href="{{ route('consumables.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Consumable::onlyTrashed()->count()}})</a>
+            @can('recycleBin', \App\Models\miscellanea::class)
+                <a href="{{ route('miscellaneous.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\miscellanea::onlyTrashed()->count()}})</a>
             @endcan
-            @can('create', \App\Models\Consumable::class)
-            <a href="{{ route('consumables.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
-                <i class="fas fa-plus fa-sm text-white-50"></i> Add New Consumable</a>
+            @can('create', \App\Models\miscellanea::class)
+                <a href="{{ route('miscellaneous.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Add New miscellanea</a>
             @endcan
-            @can('generatePDF', \App\Models\Consumable::class)
-                @if ($consumables->count() == 1)
-                    <a href="{{ route('consumables.showPdf', $consumables[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-                    @else
-                    <form class="d-inline-block" action="{{ route('consumables.pdf')}}" method="POST">
-                        @csrf
-                        <input type="hidden" value="{{ json_encode($consumables->pluck('id'))}}" name="consumables"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+            @can('generatePDF', \App\Models\miscellanea::class)
+                @if ($miscellaneous->count() == 1)
+                    <a href="{{ route('miscellaneous.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-                    </form>
-                @endif
-                @if($consumables->count() >1)
-                <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50"></i>Export</a>
-                @endif
-            @endcan
-            @can('import', \App\Models\Consumable::class)
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
-                <i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
-            @endcan
+                        @else
+                            <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">
+                                @csrf
+                                <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
+                                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                            </form>
+                        @endif
+                        @if($miscellaneous->count() >1)
+                            <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                                    class="fas fa-download fa-sm text-white-50"></i>Export</a>
+                        @endif
+                        @endcan
+                        @can('import', \App\Models\miscellanea::class)
+                            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+                                <i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+                @endcan
         </div>
     </div>
 
@@ -53,7 +53,7 @@
     @endif
 
     <section>
-        <p class="mb-4">Below are the different Consumables stored in the management system. Each has
+        <p class="mb-4">Below are the different miscellaneous stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -74,43 +74,43 @@
                         </tr>
                         </thead>
                         <tfoot>
-                            <tr>
-                                <th><small>Name</small></th>
-                                <th class="text-center"><small>Location</small></th>
-                                <th class="text-center"><small>Manufacturers</small></th>
-                                <th><small>Purchased Date</small></th>
-                                <th><small>Purchased Cost</small></th>
-                                <th><small>Supplier</small></th>
-                                <th class="text-center"><small>Status</small></th>
-                                <th class="text-center"><small>Warranty</small></th>
-                                <th class="text-right"><small>Options</small></th>
-                            </tr>
+                        <tr>
+                            <th><small>Name</small></th>
+                            <th class="text-center"><small>Location</small></th>
+                            <th class="text-center"><small>Manufacturers</small></th>
+                            <th><small>Purchased Date</small></th>
+                            <th><small>Purchased Cost</small></th>
+                            <th><small>Supplier</small></th>
+                            <th class="text-center"><small>Status</small></th>
+                            <th class="text-center"><small>Warranty</small></th>
+                            <th class="text-right"><small>Options</small></th>
+                        </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($consumables as $consumable)
+                        @foreach($miscellaneous as $miscellanea)
                             <tr>
-                                <td>{{$consumable->name}}
+                                <td>{{$miscellanea->name}}
                                     <br>
-                                    <small>{{$consumable->serial_no}}</small>
+                                    <small>{{$miscellanea->serial_no}}</small>
                                 </td>
                                 <td class="text-center">
-                                    @if($consumable->location()->exists())
-                                    @if($consumable->location->photo()->exists())
-                                        <img src="{{ asset($consumable->location->photo->path)}}" height="30px" alt="{{$consumable->location->name}}" title="{{ $consumable->location->name ?? 'Unnassigned'}}"/>'
-                                    @else
-                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($consumable->location->icon ?? '#666').'">'
-                                            .strtoupper(substr($consumable->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                    @endif
+                                    @if($miscellanea->location()->exists())
+                                        @if($miscellanea->location->photo()->exists())
+                                            <img src="{{ asset($miscellanea->location->photo->path)}}" height="30px" alt="{{$miscellanea->location->name}}" title="{{ $miscellanea->location->name ?? 'Unnassigned'}}"/>'
+                                        @else
+                                            {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($miscellanea->location->icon ?? '#666').'">'
+                                                .strtoupper(substr($miscellanea->location->name ?? 'u', 0, 1)).'</span>' !!}
                                         @endif
+                                    @endif
                                 </td>
-                                <td class="text-center">{{$consumable->manufacturer->name ?? "N/A"}}</td>
-                                <td>{{\Carbon\Carbon::parse($consumable->purchased_date)->format("d/m/Y")}}</td>
-                                <td>£{{$consumable->purchased_cost}}</td>
-                                <td>{{$consumable->supplier->name ?? 'N/A'}}</td>
-                                <td class="text-center">{{$consumable->status->name ??'N/A'}}</td>
-                                @php $warranty_end = \Carbon\Carbon::parse($consumable->purchased_date)->addMonths($consumable->warranty);@endphp
+                                <td class="text-center">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
+                                <td>{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
+                                <td>£{{$miscellanea->purchased_cost}}</td>
+                                <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center">{{$miscellanea->status->name ??'N/A'}}</td>
+                                @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                    {{ $consumable->warranty }} Months
+                                    {{ $miscellanea->warranty }} Months
 
                                     <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
                                 </td>
@@ -122,19 +122,19 @@
                                         </a>
                                         <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                              aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Consumable Options:</div>
-                                            @can('view', $consumable)
-                                            <a href="{{ route('consumables.show', $consumable->id) }}" class="dropdown-item">View</a>
+                                            <div class="dropdown-header">miscellanea Options:</div>
+                                            @can('view', $miscellanea)
+                                                <a href="{{ route('miscellaneous.show', $miscellanea->id) }}" class="dropdown-item">View</a>
                                             @endcan
-                                            @can('update', $consumable)
-                                                <a href="{{ route('consumables.edit', $consumable->id) }}" class="dropdown-item">Edit</a>
+                                            @can('update', $miscellanea)
+                                                <a href="{{ route('miscellaneous.edit', $miscellanea->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
-                                            @can('delete', $consumable)
-                                                <form id="form{{$consumable->id}}" action="{{ route('consumables.destroy', $consumable->id) }}" method="POST" class="d-block p-0 m-0">
+                                            @can('delete', $miscellanea)
+                                                <form id="form{{$miscellanea->id}}" action="{{ route('miscellaneous.destroy', $miscellanea->id) }}" method="POST" class="d-block p-0 m-0">
                                                     @csrf
                                                     @method('DELETE')
                                                     <a class="deleteBtn dropdown-item" href="#"
-                                                       data-id="{{$consumable->id}}">Delete</a>
+                                                       data-id="{{$miscellanea->id}}">Delete</a>
                                                 </form>
                                             @endcan
                                         </div>
@@ -150,8 +150,8 @@
 
         <div class="card shadow mb-3">
             <div class="card-body">
-                <h4>Help with consumables</h4>
-                <p>This area can be minimised and will contain a little help on the page that the Consumable is currently
+                <h4>Help with miscellaneous</h4>
+                <p>This area can be minimised and will contain a little help on the page that the miscellanea is currently
                     on.</p>
             </div>
         </div>
@@ -167,7 +167,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this Consumable to the Recycle Bin?
+                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this miscellanea to the Recycle Bin?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -175,8 +175,8 @@
                 </div>
                 <div class="modal-body">
                     <input id="user-id" type="hidden" value="">
-                    <p>Select "Send to Bin" to send this Consumable to the Recycle Bin.</p>
-                    <small class="text-danger">**Warning this is not permanent. The consumable can be restored in the Recycle Bin </small>
+                    <p>Select "Send to Bin" to send this miscellanea to the Recycle Bin.</p>
+                    <small class="text-danger">**Warning this is not permanent. The miscellanea can be restored in the Recycle Bin </small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -196,9 +196,9 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="/importconsumables" method="POST" enctype="multipart/form-data">
+                <form action="/importmiscellaneous" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
-                        <p>Select "import" to add consumables to the system.</p>
+                        <p>Select "import" to add miscellaneous to the system.</p>
                         <input id="importEmpty" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                                type="file" placeholder="Upload here" name="csv" accept=".csv">
 

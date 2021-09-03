@@ -18,6 +18,10 @@ class Status extends Model
     public function component(){
         return $this->hasMany(Component::class);
     }
+    public function miscellanea()
+    {
+        return $this->hasMany(miscellanea::class);
+    }
     public function accessory(){
         return $this->hasMany(Accessory::class);
     }

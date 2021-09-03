@@ -20,7 +20,7 @@
             </div>
         </div>
         <div>
-            <form action="consumables/export-import-errors" method="POST">
+            <form action="miscellaneous/export-import-errors" method="POST">
                 @csrf
                 <div class="form-group">
                     <input type="hidden" class="form-control " name="name"
@@ -30,9 +30,9 @@
                         class="far fa-save fa-sm text-white-50"></i> Save All Errors as Excel
                 </button>
 
-                <a href="/consumables" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                <a href="/miscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                         class="fas fa-plus fa-sm te
-                        xt-white-50"></i> Back to Consumables</a>
+                        xt-white-50"></i> Back to miscellaneous</a>
                 <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
                 <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
@@ -51,7 +51,7 @@
     @endif
 
     <section>
-        <p class="mb-4">Below are the different Import Failures of all the different Consumables stored in the management
+        <p class="mb-4">Below are the different Import Failures of all the different miscellaneous stored in the management
             system. Each has
             displays the amount of different assets that are assigned the category.</p>
         <!-- DataTales Example -->
@@ -359,14 +359,14 @@
             });
 
             $.ajax({
-                url: '/consumables/create/ajax',
+                url: '/miscellanea/create/ajax',
                 type: 'POST',
                 data: data,
                 processData: false,
                 contentType: false,
                 success: function(response){
                     if(response === 'Success'){
-                        window.location.href = '/consumables';
+                        window.location.href = '/miscellaneous';
                     }else{
                         $('small.text-danger').remove();
                         $('input').removeClass('border-danger');

@@ -111,20 +111,20 @@
 </div>
 
 @endsection
-<script>
-    $('.deleteBtn').click(function() {
-        $('#location-id').val($(this).data('id'))
-        //showModal
-        $('#removeLocationModal').modal('show')
-    });
 
-    $('#confirmBtn').click(function() {
-        var form = '#'+'form'+$('#location-id').val();
-        $(form).submit();
-    });
-
-</script>
 @section('js')
+    <script>
+        $('.deleteBtn').click(function() {
+            $('#location-id').val($(this).data('id'))
+            //showModal
+            $('#removeLocationModal').modal('show')
+        });
 
+        $('#confirmBtn').click(function() {
+            var form = '#'+'form'+$('#location-id').val();
+            $(form).submit();
+        });
+
+    </script>
 
 @endsection

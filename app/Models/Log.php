@@ -26,4 +26,8 @@ class Log extends Model
     public function component(){
         return $this->belongsTo(Component::class);
     }
+    public function miscellanea()
+    {
+        return $this->belongsTo(miscellanea::class);
+    }
 }
