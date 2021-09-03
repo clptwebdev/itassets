@@ -1,65 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Assets Download</title>
-    <!-- Custom styles for this template-->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@extends('layouts.pdf-reports')
 
-        body{
-            font-size: 11px;
-            font-family: 'Roboto', sans-serif;
-        }
+@section('title', 'Asset Report')
 
-        #header{
-            background-color: #454777;
-            width: 100%;
-            margin-bottom: 30px;
-            color: #fff;
-            font-size: 14px;
-        }
+@section('page', 'Assets')
 
-        #logo{
-            max-height: 100px;
-        }
-
-        #assetsTable{
-            border: solid 1px #666;
-            border-collapse: collapse;
-        }
-
-        #assetsTable th{
-            padding: 5px;
-            background-color: #454777;
-            color: #FFF;
-            border: solid 1px #666;
-        }
-
-        #assetsTable td{
-            border: solid 1px #AAA;
-            padding: 5px;
-        }
-
-        .page-break {
-            page-break-after: always;
-        }
-        </style>
-</head>
-<body>
-    <header id="header">
-        <table width="100%"></i>
-            <tr>
-                <td align="left" style="padding-left:10px;"><img id="logo" src="{{ asset('images/apollo-logo.jpg') }}" alt="Apollo Assets Manager"></td>
-                <td align="left">Apollo Asset Manangement<br><small>A Central Learning Partnership Trust (CLPT) System &copy; 2021</small></td>
-                <td align="right" style="padding-right: 10px;">
-                    Report On: {{ \Carbon\Carbon::now()->format('d-m-Y at H:i')}}<br>Report by: {{auth()->user()->name;}}
-                </td>
-            </tr>
-        </table>
-    </header>
+@section('content')
     <table id="assetsTable" width="100%" class="table table-striped">
         <thead>
         <tr>
@@ -84,9 +29,9 @@
                 <td align="center">
                     {!! '<div id="barcode"><img width="120px" height="30px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   /></div>' !!}
                     <span style="font-weight: 800">{{ $asset->asset_tag }}</span></td>
-                <td class="text-center d-none d-xl-table-cell">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
-                <td class="d-none d-md-table-cell" data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
-                <td class="text-center  d-none d-xl-table-cell">
+                <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
+                <td>{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
+                <td class="text-center">
                     
                     @if($asset->model)
                     <br>
@@ -107,16 +52,16 @@
                     £{{ $asset->purchased_cost }}  
                     @endif                    
                 </td>
-                <td class="text-center d-none d-xl-table-cell">{{$asset->supplier->name ?? "N/A"}}</td>
+                <td class="text-center">{{$asset->supplier->name ?? "N/A"}}</td>
                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
-                <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
+                <td class="text-center" data-sort="{{ $warranty_end }}">
                     {{ $asset->warranty }} Months
                     @php
                         $remaining = round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end));
                     @endphp
                     <br><small style="color:@if($remaining <= 0 ){{'#dc3545'}}@elseif($remaining < 6){{ '#ffc107'}}@else{{'#28a745'}}@endif;">{{ $remaining }} Remaining</small>
                 </td>
-                <td class="text-center d-none d-xl-table-cell" data-sort="{{ strtotime($asset->audit_date)}}">
+                <td class="text-center" data-sort="{{ strtotime($asset->audit_date)}}">
                     @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
                         <span style="color: #dc3545">{{\Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}<br><small>Audit Overdue</small></span>
                     @else
@@ -137,14 +82,13 @@
                 <th><small>Item</small></th>
                 <th><small>Location</small></th>
                 <th><small>Tag</small></th>
-                <th class="d-none d-xl-table-cell"><small>Manufacturer</small></th>
-                <th class=" d-none d-xl-table-cell"><small>Date</small></th>
-                <th class=" d-none d-xl-table-cell"><small>Cost</small></th>
-                <th class=" d-none d-xl-table-cell"><small>Supplier</small></th>
-                <th class=" d-none d-xl-table-cell"><small>Warranty (M)</small></th>
-                <th class="text-center  d-none d-md-table-cell"><small>Audit Due</small></th>
+                <th><small>Manufacturer</small></th>
+                <th><small>Date</small></th>
+                <th><small>Cost</small></th>
+                <th><small>Supplier</small></th>
+                <th><small>Warranty (M)</small></th>
+                <th><small>Audit Due</small></th>
             </tr>
         </tfoot>
     </table>
-</body>
-</html>
+@endsection

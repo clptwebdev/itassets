@@ -116,12 +116,12 @@
                                     <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small></td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
-                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$accessory->id}}Link"
                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
                                         <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                             aria-labelledby="dropdownMenuLink">
+                                             aria-labelledby="dropdownMenu{{$accessory->id}}Link">
                                             <div class="dropdown-header">accessory Options:</div>
                                             @can('view', $accessory)
                                             <a href="{{ route('accessories.show', $accessory->id) }}" class="dropdown-item">View</a>
@@ -161,17 +161,6 @@
 @endsection
 
 @section('modals')
-
-    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"aria-hidden="true" id="loadingModal">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <button class="btn btn-primary" type="button" disabled style="background-color: #b087bc; color:#111;">
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    Loading...
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
@@ -276,10 +265,6 @@
             }
         });
 
-        $('.loading').click(function () {
-            //showModal
-            $('#loadingModal').modal('show')
-        });
     </script>
 
 @endsection

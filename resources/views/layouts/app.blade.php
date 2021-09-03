@@ -53,6 +53,16 @@
     <x-admin.scroll-btn />
 
     <x-admin.logout-modal />
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"aria-hidden="true" id="loadingModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <button class="btn btn-primary" type="button" disabled style="background-color: #b087bc; color:#111;">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+            </div>
+        </div>
+    </div>
     @yield('modals')
 
     <!-- Bootstrap core JavaScript-->
@@ -62,6 +72,11 @@
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
+
+        $('.loading').click(function () {
+            //showModal
+            $('#loadingModal').modal('show')
+        });
     </script>
     @yield('js')
 

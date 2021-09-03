@@ -9,6 +9,7 @@ use App\Models\Manufacturer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PDF;
+use Illuminate\Support\Facades\Storage;
 
 class AssetModelController extends Controller
 {
@@ -100,7 +101,11 @@ class AssetModelController extends Controller
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.pdf', compact('models'));
         $pdf->setPaper('a4', 'landscape');
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("models-{$date}.pdf");
+        Storage::put("public/reports/models-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/models-{$date}.pdf");
+        return redirect(route('asset-models.index'))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 
     public function downloadShowPDF(AssetModel $assetModel)
@@ -111,6 +116,10 @@ class AssetModelController extends Controller
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.showPdf', compact('assetModel'));
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("model-{$assetModel->id}-{$date}.pdf");
+        Storage::put("public/reports/model-{$assetModel->id}-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/model-{$assetModel->id}-{$date}.pdf");
+        return redirect(route('asset-models.show', $assetModel->id))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 }

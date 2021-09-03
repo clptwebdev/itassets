@@ -95,6 +95,12 @@ h2{
           $message = "You don't have permission to '".strtoupper($method)."' User - ".$name;
           $link = "/users";
           break;
+        case 'accessory':
+          $user = \App\Models\Accessory::find($id);
+          $name = $user->name;
+          $message = "You don't have permission to '".strtoupper($method)."' User - ".$name;
+          $link = "/accessories";
+          break;
         case 'area':
           $message = "You don't have permission to the '".strtoupper($id)."' Area.";
           $link = "/dashboard";

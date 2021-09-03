@@ -24,6 +24,7 @@ use phpDocumentor\Reflection\Types\String_;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PDF;
 use function PHPUnit\Framework\isEmpty;
+use Illuminate\Support\Facades\Storage;
 
 class AssetController extends Controller {
 
@@ -622,7 +623,11 @@ class AssetController extends Controller {
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets'));
         $pdf->setPaper('a4', 'landscape');
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("assets-{$date}.pdf");
+        Storage::put("public/reports/assets-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/assets-{$date}.pdf");
+        return redirect(route('assets.index'))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 
     public function downloadShowPDF(Asset $asset)
@@ -633,7 +638,11 @@ class AssetController extends Controller {
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.showPdf', compact('asset'));
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("asset-{$asset->asset_tag}-{$date}.pdf");
+        Storage::put("public/reports/asset-{$asset->asset_tag}-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/asset-{$asset->asset_tag}-{$date}.pdf");
+        return redirect(route('assets.show', $asset->id))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 
     public function recycleBin()

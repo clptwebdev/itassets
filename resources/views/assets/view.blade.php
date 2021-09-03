@@ -35,7 +35,7 @@
                 <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
                     @csrf
                     <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
-                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                 </form>
                 @endif
@@ -50,7 +50,7 @@
                 <form class="d-inline-block" action="/exportassets" method="POST">
                     @csrf
                     <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
-                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
                         class="fas fa-download fa-sm text-dark-50"></i> Export</button>
                 </form>
                 @endcan
@@ -59,11 +59,11 @@
     </div>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!!session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
 
     @php

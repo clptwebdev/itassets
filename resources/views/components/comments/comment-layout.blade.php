@@ -34,7 +34,15 @@
                                             <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                                 aria-labelledby="dropdownMenuLink">
                                                 <div class="dropdown-header">comment Options:</div>
-                                                <a href="{{ route('comment.edit', $comment->id) }}" class="dropdown-item">Edit</a>
+                                                @can('update', $comment)
+                                                <a href="#" id="editComment" class="dropdown-item" 
+                                                    data-route="{{ route('comment.update', $comment->id)}}" 
+                                                    data-id="{{ $comment->id}}" 
+                                                    data-title="{{ $comment->title}}" 
+                                                    data-comment="{{ $comment->comment}}"
+                                                >Edit</a>
+                                                @endcan
+                                                @can('delete', $comment)
                                                 <form id="form{{$comment->id}}" action="{{ route('comment.destroy', $comment->id) }}"
                                                     method="POST" class="d-block p-0 m-0">
                                                     @csrf
@@ -42,6 +50,7 @@
                                                     <a id="comment_button" class="deleteBtn dropdown-item" href="#"
                                                     data-id="{{$comment->id}}">Delete</a>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </div>
                                     </td>

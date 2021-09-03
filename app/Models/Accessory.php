@@ -20,7 +20,7 @@ class Accessory extends Model
 
     public function comment()
     {
-        return $this->morphToMany(Comment::class, 'commentables');
+        return $this->morphToMany(Comment::class, "commentables");
     }
 
     public function supplier()

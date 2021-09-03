@@ -70,16 +70,6 @@
 @endsection
 
 @section('modals')
-    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"aria-hidden="true" id="loadingModal">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <button class="btn btn-primary" type="button" disabled style="background-color: #b087bc; color:#111;">
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    Loading...
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- User Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeLocationModal" tabindex="-1" role="dialog"
@@ -104,6 +94,7 @@
             </div>
         </div>
     </div>
+
     <!-- comments Modal-->
     <div class="modal fade bd-example-modal-lg" id="commentModalOpen" tabindex="-1" role="dialog"
          aria-labelledby="commentModalOpen" aria-hidden="true">
@@ -116,9 +107,10 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('accessory.comment', $accessory->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('accessories.comment', $accessory->id) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Fill Out the Title Field and Body to continue...</p>
+                        <input type="hidden" name="accessory_id" value="{{ $accessory->id }}">
                     </div>
                     <div class="form-group pr-3 pl-3">
                         <label class="font-weight-bold" for="title">Comment Title</label>
@@ -144,6 +136,47 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Comment Modal-->
+    <div class="modal fade bd-example-modal-lg" id="commentModalEdit" tabindex="-1" role="dialog"
+         aria-labelledby="commentModalOpen" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalEditLabel">Update Comment for
+                        <strong>{{$accessory->name}}</strong></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="updateForm" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-body">
+                        <p>Fill Out the Title Field and Body to continue...</p>
+                        <input type="hidden" name="accessory_id"  value="{{ $accessory->id }}">
+                    </div>
+                    <div class="form-group pr-3 pl-3">
+                        <label class="font-weight-bold" for="title">Comment Title</label>
+                        <input type="text" class="form-control <?php if ($errors->has('title')) {?>border-danger<?php }?>" name="title" id="updateTitle" placeholder="Comment Title">
+                    </div>
+                    <div class="form-group pl-3 pr-3">
+                        <label
+                            class="font-weight-bold <?php if ($errors->has('comment')) {?>border-danger<?php }?>"
+                            for="comment_content">Notes</label>
+                        <textarea name="comment" id="updateComment" class="form-control" rows="5"></textarea>
+
+                    </div>
+                    <div class="p-2 text-lg-right">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -165,9 +198,14 @@
             $('#commentModalOpen').modal('show')
         });
 
-        $('.loading').click(function () {
-            //showModal
-            $('#loadingModal').modal('show')
+
+        $('#editComment').click(function(event){
+            event.preventDefault();
+            $('#updateTitle').val($(this).data('title'));
+            $('#updateComment').val($(this).data('comment'));
+            var route = $(this).data('route');
+            $('#updateForm').attr('action', route); 
+            $('#commentModalEdit').modal('show');
         });
 
         $(document).ready( function () {
@@ -183,6 +221,7 @@
                 "order": [[ 0, "desc"]],
             });
         });
+
     </script>
 
 @endsection

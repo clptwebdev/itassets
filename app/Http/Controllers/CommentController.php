@@ -13,70 +13,17 @@ use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller {
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+        public function index()
     {
         abort(404);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request, Comment $comment)
-    {
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\Comment $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Comment $comment)
-    {
-        //not needed
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\Comment $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comment $comment)
-    {
-        return view('comments.edit', [
-            "comment" => $comment,
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Comment      $comment
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Comment $comment)
     {
+        if (auth()->user()->cant('update', $comment)) {
+            return redirect(route('errors.forbidden', ['comment', $comment->id, 'update']));
+        }
+
         $request->validate([
             "title" => "required|max:255",
             "comment" => "nullable",
@@ -85,17 +32,15 @@ class CommentController extends Controller {
         ), ['user_id' => auth()->user()->id]))->save();
 
         session()->flash('success_message', request("title") . ' has been updated successfully');
-        return redirect("/");
+        return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\Comment $comment
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Comment $comment)
     {
+        if (auth()->user()->cant('delete', $comment)) {
+            return redirect(route('errors.forbidden', ['comment', $comment->id, 'delete']));
+        }
+
         $name = $comment->title;
         $comment->delete();
         session()->flash('danger_message', 'The Comment - '.$name . ' was deleted from the system');
