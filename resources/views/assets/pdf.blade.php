@@ -23,7 +23,7 @@
         <tbody>
         @foreach($assets as $asset)
             <tr>
-                <td>{{ $asset->model->name ?? 'No Model'}}<br><small class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
+                <td>{{ $asset->name }}<br><small>{{ $asset->model->name ?? 'No Model' }}</small></td>
                 <td class="text-center"><span style="color: {{ $asset->location->icon ?? '#666'}}">{{$asset->location->name ?? 'Unassigned'}}</span>
                 </td>
                 <td align="center">

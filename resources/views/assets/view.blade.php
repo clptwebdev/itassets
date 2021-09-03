@@ -266,8 +266,8 @@
                         <tbody>
                         @foreach($assets as $asset)
                             <tr>
-                                <td>{{ $asset->model->name ?? 'No Model'}}<br><small
-                                        class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
+                                <td>{{$asset->name}}<br><small
+                                        class="d-none d-md-inline-block">{{ $asset->model->name ?? 'No Model'}}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
                                         <img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>

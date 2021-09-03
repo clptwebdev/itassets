@@ -47,6 +47,12 @@
                                     <h3 class="h6 text-center mb-3">Device Information</h3>
 
                                     <div class="form-group">
+                                        <label for="asset_tag">Asset Name</label>
+                                        <input type="text" class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>" name="name"
+                                            id="name" placeholder="" value="{{ old('name')}}" required>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="asset_tag">Asset Tag Number</label><span class="text-danger">*</span>
                                         <input type="text" class="form-control <?php if ($errors->has('asset_tag')) {?>border-danger<?php }?>" name="asset_tag"
                                             id="asset_tag" placeholder="" value="{{ old('asset_tag')}}">

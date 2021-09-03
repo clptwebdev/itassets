@@ -74,11 +74,11 @@
                 </thead>
                 <tr>
                     <td>Device Name:</td>
-                    <td>{{ $asset->model->name }}</td>
+                    <td>{{ $asset->name }}</td>
                 </tr>
                 <tr>
                     <td>Device Model N<span class="">o</span></td>
-                    <td>{{ $asset->model->model_no }}</td>
+                    <td>{{$asset->model->name}}<br><small>{{ $asset->model->model_no }}</small></td>
                 </tr>
                 <tr>
                     <td>Device Serial N<span class="">o</span></td>

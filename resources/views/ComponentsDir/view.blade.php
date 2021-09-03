@@ -23,11 +23,11 @@
             <form class="d-inline-block" action="{{ route('components.pdf')}}" method="POST">
                 @csrf
                 <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="components"/>
-            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
                     class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
             </form> 
             @if($components->count() >1)
-            <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+            <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
                     class="fas fa-download fa-sm text-white-50"></i> Export</a>
             @endif
             @endcan
@@ -38,11 +38,11 @@
     </div>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
 
     <section>

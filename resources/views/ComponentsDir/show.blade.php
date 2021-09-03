@@ -27,7 +27,7 @@
                         class="fas fa-edit fa-sm text-white-50"></i> Edit</a>
                 @endcan
                 @can('export', $component)
-                <a href="{{ route('components.showPdf', $component->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                <a href="{{ route('components.showPdf', $component->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                 @endcan
             </div>
@@ -35,11 +35,11 @@
     </form>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
     <section class="m-auto">
         <p class="mb-4">Information regarding {{ $component->name }} including the location and any comments made by staff. </p>

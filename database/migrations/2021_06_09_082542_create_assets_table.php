@@ -18,6 +18,7 @@ class CreateAssetsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId("asset_model");
+            $table->text('name');
             $table->integer("asset_tag")->unique();
             $table->string("serial_no");
             $table->foreignId("status_id");

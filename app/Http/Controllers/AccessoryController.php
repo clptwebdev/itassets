@@ -213,10 +213,16 @@ class AccessoryController extends Controller
 
     public function export(Accessory $accessory)
     {
-        if (auth()->user()->cant('view', Accessory::class)) {
+        if (auth()->user()->cant('viewAll', Accessory::class)) {
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'export']));
         }
-        return \Maatwebsite\Excel\Facades\Excel::download(new accessoryExport, 'Accessories.csv');
+
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport, "/public/csv/accessories-ex-{$date}.csv");
+        $url = asset("storage/csv/accessories-ex-{$date}.csv");
+        return redirect(route('accessories.index'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput(); 
     }
 
     public function import(Request $request)

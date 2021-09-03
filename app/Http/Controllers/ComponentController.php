@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Type\Integer;
 use function PHPUnit\Framework\isEmpty;
 use PDF;
+use Illuminate\Support\Facades\Storage;
 
 class ComponentController extends Controller {
 
@@ -226,9 +227,15 @@ class ComponentController extends Controller {
     {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Components', 'export']));
-        }else{
-            return \Maatwebsite\Excel\Facades\Excel::download(new ComponentsExport, 'components.csv');
         }
+            
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new ComponentsExport, "/public/csv/components-ex-{$date}.csv");
+        $url = asset("storage/csv/components-ex-{$date}.csv");
+        return redirect(route('components.index'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput(); 
+    
     }
 
     public function import(Request $request)
@@ -331,7 +338,11 @@ class ComponentController extends Controller {
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('ComponentsDir.pdf', compact('components'));
         $pdf->setPaper('a4', 'landscape');
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("components-{$date}.pdf");
+        Storage::put("public/reports/components-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/components-{$date}.pdf");
+        return redirect(route('components.index'))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 
     public function downloadShowPDF(Component $component)
@@ -341,7 +352,11 @@ class ComponentController extends Controller {
         }
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('ComponentsDir.showPdf', compact('component'));
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("component-{$component->id}-{$date}.pdf");
+        Storage::put("public/reports/component-{$component->id}-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/component-{$component->id}-{$date}.pdf");
+        return redirect(route('components.index'))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 
     //Restore and Force Delete Function Need to be Created

@@ -180,7 +180,7 @@ class AssetController extends Controller {
         $validated = $request->validate($v);
 
         $asset = Asset::create(array_merge($request->only(
-            'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]));
         $asset->fields()->attach($array);
         $asset->category()->attach($request->category);
@@ -290,6 +290,7 @@ class AssetController extends Controller {
         if(! empty($validate_fieldet))
         {
             $v = array_merge($validate_fieldet, [
+                'name' => 'required',
                 'asset_tag' => 'required',
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
@@ -299,6 +300,7 @@ class AssetController extends Controller {
         } else
         {
             $v = [
+                'name' => 'required',
                 'asset_tag' => 'required',
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
@@ -309,7 +311,7 @@ class AssetController extends Controller {
 
         $validated = $request->validate($v);
         $asset->fill(array_merge($request->only(
-            'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]))->save();
         $asset->fields()->sync($array);
 
@@ -375,11 +377,11 @@ class AssetController extends Controller {
             return redirect(route('errors.forbidden', ['area', 'Assets', 'export']));
         }
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
-        return \Maatwebsite\Excel\Facades\Excel::download(new AssetExport($assets), 'assets.csv');
-        Storage::put("public/reports/assets-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/assets-{$date}.pdf");
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new AssetExport($assets), "/public/csv/assets-ex-{$date}.csv");
+        $url = asset("storage/csv/assets-ex-{$date}.csv");
         return redirect(route('assets.index'))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
 
     }
