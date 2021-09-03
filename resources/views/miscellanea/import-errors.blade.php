@@ -20,7 +20,7 @@
             </div>
         </div>
         <div>
-            <form action="miscellaneous/export-import-errors" method="POST">
+            <form action="{{route('miscellaneaexport.import')}}" method="POST">
                 @csrf
                 <div class="form-group">
                     <input type="hidden" class="form-control " name="name"

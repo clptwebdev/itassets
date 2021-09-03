@@ -95,6 +95,18 @@
                 <a class="collapse-item" href="{{ route('consumables.index')}}"> Import Consumables</a>
         </div>
     </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('miscellaneous.index')}}" data-toggle="collapse" data-target="#miscellaneousDD" aria-expanded="true"
+           aria-controls="miscellaneousDD">
+            <i class="fas fa-fw fa-tint sidebar-icon" data-toggle="tooltip" data-placement="right" title="Miscellaneous"></i>
+            <span class="sidebar-title">Miscellaneous</span>
+        </a>
+        <div id="miscellaneousDD" class="collapse" aria-labelledby="consumableTitle" data-parent="#accordionSidebar">
+            <a class="collapse-item" href="{{ route('miscellaneous.index')}}">View All</a>
+            <a class="collapse-item" href="{{ route('miscellaneous.create')}}"> Add New Miscellaneous</a>
+            <a class="collapse-item" href="{{ route('miscellaneous.index')}}"> Import Miscellaneous</a>
+        </div>
+    </li>
     <!-- Divider -->
     <hr class="sidebar-divider">
 

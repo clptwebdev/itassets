@@ -33,16 +33,14 @@ class MiscellaneaController extends Controller
 
     public function index()
     {
-        if (auth()->user()->cant('viewAll', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
-        }
+//        if (auth()->user()->cant('viewAll', Miscellanea::class)) {
+//            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
+//        }
+//
 
-        if(auth()->user()->role_id == 1){
-            $miscellaneous = Miscellanea::all();
-        }else{
-            $miscellaneous = auth()->user()->location_miscellaneous;
-        }
-        return view('miscellanea.view', compact('miscellaneous'));
+        return view('miscellanea.view',[
+            "miscellaneous"=>miscellanea::all(),
+        ]);
     }
 
     public function create()
@@ -68,7 +66,6 @@ class MiscellaneaController extends Controller
 
     public function store(Request $request)
     {
-        Mis
         if (auth()->user()->cant('create', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'create']));
         }
@@ -224,7 +221,7 @@ class MiscellaneaController extends Controller
     public function import(Request $request)
     {
         if (auth()->user()->cant('create', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'import']));
+            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'import']));
         }
 
         $extensions = array("csv");

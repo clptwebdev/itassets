@@ -21,6 +21,7 @@ private $export;
     {
         return [
             "asset_tag",
+            "name",
             "serial_no",
             "asset_model",
             "status_id",
@@ -44,6 +45,7 @@ private $export;
             foreach($this->export as $id => $exportError){
                 $array =  [];
                 $array['asset_tag'] = $exportError->asset_tag;
+                $array['name'] = $exportError->name;
                 $array['serial_no'] = $exportError->serial_no;
                 $array['asset_model'] = $exportError->asset_model_id;
                 $array['status_id'] = $exportError->status_id;

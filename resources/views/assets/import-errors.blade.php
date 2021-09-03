@@ -62,6 +62,7 @@
                         <thead>
                         <tr>
                             <th>Asset Tag</th>
+                            <th>Name</th>
                             <th>Serial Num</th>
                             <th>Asset_model</th>
                             <th>Status Id</th>
@@ -77,6 +78,7 @@
                         <tfoot>
                         <tr>
                             <th>Asset Tag</th>
+                            <th>Name</th>
                             <th>Serial Num</th>
                             <th>Asset_model</th>
                             <th>Status Id</th>
@@ -96,13 +98,23 @@
                             <tr>
                                 <td>
                                     <input type="number" maxlength="11"
-                                           class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>
+                                           class="form-control <?php if (in_array('assert_tag', $errors)) {?>border-danger<?php }?>
                                                "
                                            name="asset_tag[]"
                                            id="asset_tag" value="{{ $valueArray[$row]['asset_tag'] }}"
                                            placeholder="This Row is Empty Please Fill!" required>
                                     @if(array_key_exists('asset_tag', $errorValues[$row]))<small
                                         class="text-danger text-capitalize">{{$errorValues[$row]['asset_tag']}}</small>@endif
+                                </td>
+                                <td>
+                                    <input type="text" maxlength="11"
+                                           class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>
+                                               "
+                                           name="name[]"
+                                           id="asset_tag" value="{{ $valueArray[$row]['name'] }}"
+                                           placeholder="This Row is Empty Please Fill!" required>
+                                    @if(array_key_exists('name', $errorValues[$row]))<small
+                                        class="text-danger text-capitalize">{{$errorValues[$row]['name']}}</small>@endif
                                 </td>
                                 <td>
                                     <input type="text"

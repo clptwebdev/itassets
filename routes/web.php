@@ -139,8 +139,12 @@ Route::group(['middleware' => 'auth'], function() {
 //asset Models
     Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
 
+    //miscellaneous
+    Route::resource('/miscellaneous', "\App\Http\Controllers\MiscellaneaController");
+
 //exports
     Route::post("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
+    Route::post("/exportmiscellaneous", [\App\Http\Controllers\MiscellaneaController::class, "export"]);
     Route::get("/exportconsumables", [\App\Http\Controllers\ConsumableController::class, "export"]);
     Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
     Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
@@ -155,14 +159,17 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post("/importcomponents", [\App\Http\Controllers\ComponentController::class, "import"]);
     Route::post("/importacessories", [\App\Http\Controllers\AccessoryController::class, "import"]);
     Route::post("/importconsumables", [\App\Http\Controllers\ConsumableController::class, "import"]);
+    Route::post("/importmiscellaneous", [\App\Http\Controllers\MiscellaneaController::class, "import"]);
     Route::Post("components/create/ajax", [\App\Http\Controllers\ComponentController::class, "ajaxMany"]);
     Route::Post("accessories/create/ajax", [\App\Http\Controllers\AccessoryController::class, "ajaxMany"]);
     Route::Post("consumables/create/ajax", [\App\Http\Controllers\ConsumableController::class, "ajaxMany"]);
     Route::Post("assets/create/ajax", [\App\Http\Controllers\AssetController::class, "ajaxMany"]);
+    Route::Post("miscellaneous/create/ajax", [\App\Http\Controllers\MiscellaneaController::class, "ajaxMany"]);
     Route::Post("components/export-import-errors", [\App\Http\Controllers\ComponentController::class, "importErrors"])->name("componentexport.import");
     Route::Post("accessories/export-import-errors", [\App\Http\Controllers\AccessoryController::class, "importErrors"])->name("accessoryexport.import");
     Route::Post("consumables/export-import-errors", [\App\Http\Controllers\ConsumableController::class, "importErrors"])->name("consumableexport.import");
     Route::Post("assets/export-import-errors", [\App\Http\Controllers\AssetController::class, "importErrors"])->name("export.import");
+    Route::Post("miscellaneous/export-import-errors", [\App\Http\Controllers\MiscellaneaController::class, "importErrors"])->name("miscellaneaexport.import");
 
 //Javascript pie charts for dashboard
     Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');
