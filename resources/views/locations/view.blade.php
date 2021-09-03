@@ -130,7 +130,6 @@
 
 @endsection
 
-<<<<<<< HEAD
 
 @section('js')
 <script>
@@ -150,21 +149,5 @@
         $('#loadingModal').modal('show')
     });
 </script>
-=======
-@section('js')
-    <script>
-        $('.deleteBtn').click(function() {
-            $('#location-id').val($(this).data('id'))
-            //showModal
-            $('#removeLocationModal').modal('show')
-        });
-
-        $('#confirmBtn').click(function() {
-            var form = '#'+'form'+$('#location-id').val();
-            $(form).submit();
-        });
-
-    </script>
->>>>>>> ef0c5965bd1f6364a1c9ee63123649b187f75298
 
 @endsection
