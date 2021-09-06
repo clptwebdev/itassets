@@ -104,6 +104,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
             }else
                 $component->status_id =0;
         }
+        
         $component->status_id = $status->id ?? 0;
 
         $component->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");

@@ -88,14 +88,20 @@ class ComponentController extends Controller {
 
     public function importErrors(Request $request)
     {
-        if (auth()->user()->cant('create', $component)) {
-            return redirect(route('errors.forbidden', ['component', $component->id, 'import']));
-        }else{
             $export = $request['name'];
             $code = (htmlspecialchars_decode($export));
             $export = json_decode($code);
-            return \Maatwebsite\Excel\Facades\Excel::download(new componentErrorsExport($export), 'ComponentImportErrors.csv');
-        }
+
+            if (auth()->user()->cant('viewAll', Component::class)) {
+                return redirect(route('errors.forbidden', ['area', 'Components', 'export']));
+            }
+                
+            $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+            \Maatwebsite\Excel\Facades\Excel::store(new componentErrorsExport($export), "storage/csv/components-errors-{$date}.csv");
+            $url = asset("storage/csv/components-errors-{$date}.csv");
+            return redirect(route('components.index'))
+                ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+                ->withInput(); 
     }
 
     public function ajaxMany(Request $request)
@@ -240,7 +246,7 @@ class ComponentController extends Controller {
 
     public function import(Request $request)
     {
-        if (auth()->user()->cant('create', Asset::class)) {
+        if (auth()->user()->cant('create', Component::class)) {
             return redirect(route('errors.forbidden', ['area', 'Components', 'import']));
         }
 
