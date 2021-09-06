@@ -58,8 +58,8 @@
                         </thead>
                         <tr>
                             <td>Device Status: </td>
-                            <td><strong>{{ $consumable->status->name ?? 'No Status Set'}}</strong></td>
-                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#consumableStatus">Change Status</button></td>
+                            <td><strong><i class="{{$consumable->status->icon ?? 'fa fa-circle'}}" style="color: {{$consumable->status->colour ?? '#666'}};"></i> {{ $consumable->status->name ?? 'No Status Set'}}</strong></td>
+                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#consumableModalStatus">Change Status</button></td>
                         </tr>
                     </table>
 

@@ -36,7 +36,6 @@ class MiscellaneaController extends Controller
         if (auth()->user()->cant('viewAny', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
         }
-//
 
         return view('miscellanea.view',[
             "miscellaneous"=>miscellanea::all(),

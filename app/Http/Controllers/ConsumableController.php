@@ -219,7 +219,14 @@ class ConsumableController extends Controller
         if (auth()->user()->cant('export', Consumable::class)) {
             return redirect(route('errors.forbidden', ['area', 'consumables', 'export']));
         }
-        return \Maatwebsite\Excel\Facades\Excel::download(new consumableExport, 'consumables.csv');
+            
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new consumableExport, "/public/csv/consumables-ex-{$date}.csv");
+        $url = asset("storage/csv/consumables-ex-{$date}.csv");
+        return redirect(route('consumables.index'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput(); 
+    
 
     }
 

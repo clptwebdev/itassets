@@ -14,7 +14,7 @@
             <a href="{{ route('consumables.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @can('generatePDF', $consumable)
-            <a href="{{ route('consumables.showPdf', $consumable->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+            <a href="{{ route('consumables.showPdf', $consumable->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
             @endcan
             @can('edit', $consumable)
@@ -67,12 +67,12 @@
 
 @section('modals')
     <!-- consumable Status Model Modal-->
-    <div class="modal fade bd-example-modal-lg" id="consumableStatus" tabindex="-1" role="dialog"
-         aria-labelledby="consumableStatusLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="consumableModalStatus" tabindex="-1" role="dialog"
+         aria-labelledby="consumableModalStatusLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="consumableStatusLabel">Are you sure you want to delete this item?
+                    <h5 class="modal-title" id="consumableModalStatusLabel">Change Item Status
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -159,6 +159,45 @@
             </div>
         </div>
     </div>
+    <!-- Edit Comment Modal-->
+    <div class="modal fade bd-example-modal-lg" id="commentModalEdit" tabindex="-1" role="dialog"
+         aria-labelledby="commentModalOpen" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalEditLabel">Update Comment for
+                        <strong>{{$consumable->name}}</strong></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="updateForm" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-body">
+                        <p>Fill Out the Title Field and Body to continue...</p>
+                        <input type="hidden" name="accessory_id"  value="{{ $consumable->id }}">
+                    </div>
+                    <div class="form-group pr-3 pl-3">
+                        <label class="font-weight-bold" for="title">Comment Title</label>
+                        <input type="text" class="form-control <?php if ($errors->has('title')) {?>border-danger<?php }?>" name="title" id="updateTitle" placeholder="Comment Title">
+                    </div>
+                    <div class="form-group pl-3 pr-3">
+                        <label
+                            class="font-weight-bold <?php if ($errors->has('comment')) {?>border-danger<?php }?>"
+                            for="comment_content">Notes</label>
+                        <textarea name="comment" id="updateComment" class="form-control" rows="5"></textarea>
+
+                    </div>
+                    <div class="p-2 text-lg-right">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
 @endsection
 
@@ -181,7 +220,14 @@
             $('#newCommentModal').modal('show')
         });
             
-
+        $('.editComment').click(function(event){
+            event.preventDefault();
+            $('#updateTitle').val($(this).data('title'));
+            $('#updateComment').val($(this).data('comment'));
+            var route = $(this).data('route');
+            $('#updateForm').attr('action', route); 
+            $('#commentModalEdit').modal('show');
+        });
     </script>
 
 @endsection
