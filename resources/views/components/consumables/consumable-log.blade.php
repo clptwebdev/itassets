@@ -15,7 +15,7 @@
                             <tbody>
                                 @foreach($consumable->logs()->orderBy('created_at', 'desc')->take(5)->get() as $log)
                                 <tr>
-                                    <td class="text-left"><small>{{$log->data}}<br><span class="text-info">{{ $log->user->name }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $log->created_at, 'Europe/London');}}</span></small></td>
+                                    <td class="text-left"><small>{{$log->data}}<br><span class="text-info">{{ $log->user->name ?? 'N/a' }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $log->created_at, 'Europe/London')}}</span></small></td>
                                 </tr>
                                 @endforeach
                             </tbody>

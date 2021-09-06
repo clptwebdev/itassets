@@ -66,7 +66,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::group(['middleware' => 'admin.role'], function() {
         Route::resource('/users', 'App\Http\Controllers\UserController');
         Route::get('/user/permissions', 'App\Http\Controllers\UserController@userPermissions')->name('user.permissions');
-        Route::get('/users/{id}/role/{role}', 'App\Http\Controllers\UserController@changePermission')->name('change.permission'); 
+        Route::get('/users/{id}/role/{role}', 'App\Http\Controllers\UserController@changePermission')->name('change.permission');
         Route::get('/users/{id}/locations', 'App\Http\Controllers\UserController@getLocations')->name('user.permission');
     });
 
@@ -83,7 +83,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('permissions/users', 'App\Http\Controllers\UserController@permissions');
         Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
-        
+
         Route::resource('/depreciation', 'App\Http\Controllers\DepreciationController');
         Route::resource('/fieldsets', 'App\Http\Controllers\FieldsetController');
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
@@ -146,7 +146,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/locations/{location}/pdf', 'App\Http\Controllers\LocationController@downloadShowPDF')->name('location.showPdf');
         Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
     //Permission Routes
-        
+
 
     //Database Backups Routes (Doesn't include import routes)
     Route::resource('/databasebackups', \App\Http\Controllers\BackupController::class);
@@ -166,10 +166,18 @@ Route::group(['middleware' => 'auth'], function() {
 
     //miscellaneous
     Route::resource('/miscellaneous', "\App\Http\Controllers\MiscellaneaController");
+    Route::get('/miscellaneous/{miscellanea}', "\App\Http\Controllers\MiscellaneaController@status")->name('miscellanea.status');
+    Route::post('/miscellaneous/comment/create', '\App\Http\Controllers\MiscellaneaController@newComment')->name('miscellaneous.comment');
+    Route::get('/component/bin', 'App\Http\Controllers\MiscellaneaController@recycleBin')->name('miscellaneous.bin');
+    Route::get('/component/{component}/restore', 'App\Http\Controllers\MiscellaneaController@restore')->name('miscellaneous.restore');
+    Route::post('/component/{component}/remove', 'App\Http\Controllers\MiscellaneaController@forceDelete')->name('miscellaneous.remove');
+    Route::post('/miscellanea/pdf', 'App\Http\Controllers\MiscellaneaController@downloadPDF')->name('miscellanea.pdf');
+    Route::get('/miscellanea/{miscellanea}/pdf', 'App\Http\Controllers\MiscellaneaController@downloadShowPDF')->name('miscellanea.showPdf');
+
 
 //exports
     Route::post("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
-    Route::post("/exportmiscellaneous", [\App\Http\Controllers\MiscellaneaController::class, "export"]);
+    Route::get("/exportmiscellaneous", [\App\Http\Controllers\MiscellaneaController::class, "export"]);
     Route::get("/exportconsumables", [\App\Http\Controllers\ConsumableController::class, "export"]);
     Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
     Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);

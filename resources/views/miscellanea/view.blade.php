@@ -12,20 +12,20 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">miscellaneous</h1>
         <div>
-            @can('recycleBin', \App\Models\miscellanea::class)
+            @can('viewAny', \App\Models\Miscellanea::class)
                 <a href="{{ route('miscellaneous.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                    <i class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\miscellanea::onlyTrashed()->count()}})</a>
+                    <i class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Miscellanea::onlyTrashed()->count()}})</a>
             @endcan
-            @can('create', \App\Models\miscellanea::class)
+            @can('create', \App\Models\Miscellanea::class)
                 <a href="{{ route('miscellaneous.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
                     <i class="fas fa-plus fa-sm text-white-50"></i> Add New miscellanea</a>
             @endcan
-            @can('generatePDF', \App\Models\miscellanea::class)
+            @can('viewAny', \App\Models\Miscellanea::class)
                 @if ($miscellaneous->count() == 1)
-                    <a href="{{ route('miscellaneous.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    <a href="{{ route('miscellanea.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                         @else
-                            <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">
+                            <form class="d-inline-block" action="{{ route('miscellanea.pdf')}}" method="POST">
                                 @csrf
                                 <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
                                 <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
@@ -33,11 +33,11 @@
                             </form>
                         @endif
                         @if($miscellaneous->count() >1)
-                            <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                            <a href="/exportmiscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                                     class="fas fa-download fa-sm text-white-50"></i>Export</a>
                         @endif
                         @endcan
-                        @can('import', \App\Models\miscellanea::class)
+                        @can('create', \App\Models\Miscellanea::class)
                             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
                                 <i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
                 @endcan
@@ -130,7 +130,7 @@
                                                 <a href="{{ route('miscellaneous.edit', $miscellanea->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $miscellanea)
-                                                <form id="form{{$miscellanea->id}}" action="{{ route('miscellaneous.destroy', $miscellanea->id) }}" method="POST" class="d-block p-0 m-0">
+                                                <form id="form{{$miscellanea->id}}" action="{{ route('components.destroy', $miscellanea->id) }}" method="POST" class="d-block p-0 m-0">
                                                     @csrf
                                                     @method('DELETE')
                                                     <a class="deleteBtn dropdown-item" href="#"
@@ -167,7 +167,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this miscellanea to the Recycle Bin?
+                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this Component to the Recycle Bin?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -175,8 +175,8 @@
                 </div>
                 <div class="modal-body">
                     <input id="user-id" type="hidden" value="">
-                    <p>Select "Send to Bin" to send this miscellanea to the Recycle Bin.</p>
-                    <small class="text-danger">**Warning this is not permanent. The miscellanea can be restored in the Recycle Bin </small>
+                    <p>Select "Send to Bin" to send this Component to the Recycle Bin.</p>
+                    <small class="text-danger">**This is not permanent and the component can be restored in the Components Recycle Bin. </small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>

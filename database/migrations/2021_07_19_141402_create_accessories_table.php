@@ -26,7 +26,7 @@ class CreateAccessoriesTable extends Migration
             $table->string("order_no")->nullable();
             $table->string("warranty")->default("0")->nullable();
             $table->foreignId("location_id");
-            $table->foreignId("photo_id");
+            $table->foreignId("photo_id")->default("0");
             $table->text("notes")->nullable();
             $table->softDeletes();
         });

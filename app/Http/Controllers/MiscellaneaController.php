@@ -33,9 +33,9 @@ class MiscellaneaController extends Controller
 
     public function index()
     {
-//        if (auth()->user()->cant('viewAll', Miscellanea::class)) {
-//            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
-//        }
+        if (auth()->user()->cant('viewAny', Miscellanea::class)) {
+            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
+        }
 //
 
         return view('miscellanea.view',[
@@ -140,18 +140,18 @@ class MiscellaneaController extends Controller
 
     }
 
-    public function show(Miscellanea $miscellanea)
+    public function show(Miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('create', $miscellanea)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'view']));
+        if (auth()->user()->cant('create', $miscellaneou)) {
+            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'view']));
         }
-        return view('miscellanea.show', ["miscellanea" => $miscellanea]);
+        return view('miscellanea.show', ["miscellaneou" => $miscellaneou]);
     }
 
-    public function edit(Miscellanea $miscellanea)
+    public function edit(Miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('update', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'update']));
+        if (auth()->user()->cant('update', $miscellaneou)) {
+            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'update']));
         }
 
         if(auth()->user()->role_id == 1){
@@ -160,7 +160,7 @@ class MiscellaneaController extends Controller
             $locations = auth()->user()->locations;
         }
         return view('miscellanea.edit', [
-            "miscellanea" => $miscellanea,
+            "miscellanea" => $miscellaneou,
             "locations" => $locations,
             "statuses" => Status::all(),
             "suppliers" => Supplier::all(),

@@ -228,14 +228,14 @@ class ComponentController extends Controller {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Components', 'export']));
         }
-            
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new ComponentsExport, "/public/csv/components-ex-{$date}.csv");
         $url = asset("storage/csv/components-ex-{$date}.csv");
         return redirect(route('components.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
-            ->withInput(); 
-    
+            ->withInput();
+
     }
 
     public function import(Request $request)
