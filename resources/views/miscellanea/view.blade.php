@@ -33,7 +33,7 @@
                             </form>
                         @endif
                         @if($miscellaneous->count() >1)
-                            <a href="/exportmiscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                            <a href="/exportmiscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
                                     class="fas fa-download fa-sm text-white-50"></i>Export</a>
                         @endif
                         @endcan

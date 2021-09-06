@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\consumableExport;
 use App\Exports\miscellaneaErrorsExport;
 use App\Exports\miscellaneaExport;
 use App\Exports\miscellaneousErrorsExport;
@@ -213,8 +214,12 @@ class MiscellaneaController extends Controller
         if (auth()->user()->cant('export', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export']));
         }
-        return \Maatwebsite\Excel\Facades\Excel::download(new miscellaneousExport, 'miscellaneous.csv');
-
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport, "/public/csv/miscellaneous-ex-{$date}.csv");
+        $url = asset("storage/csv/miscellaneous-ex-{$date}.csv");
+        return redirect(route('miscellaneous.index'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
     }
 
     public function import(Request $request)
