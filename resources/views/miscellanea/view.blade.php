@@ -10,7 +10,7 @@
 
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">miscellaneous</h1>
+        <h1 class="h3 mb-0 text-gray-800">Miscellaneous</h1>
         <div>
             @can('viewAny', \App\Models\Miscellanea::class)
                 <a href="{{ route('miscellaneous.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
@@ -49,7 +49,7 @@
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!!session('success_message') !!}  </div>
     @endif
 
     <section>
@@ -130,7 +130,7 @@
                                                 <a href="{{ route('miscellaneous.edit', $miscellanea->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $miscellanea)
-                                                <form id="form{{$miscellanea->id}}" action="{{ route('components.destroy', $miscellanea->id) }}" method="POST" class="d-block p-0 m-0">
+                                                <form id="form{{$miscellanea->id}}" action="{{ route('miscellaneous.destroy', $miscellanea->id) }}" method="POST" class="d-block p-0 m-0">
                                                     @csrf
                                                     @method('DELETE')
                                                     <a class="deleteBtn dropdown-item" href="#"

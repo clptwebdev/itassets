@@ -13,7 +13,7 @@
             <a href="{{ route('miscellaneous.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @can('generatePDF', $miscellaneou)
-                <a href="{{ route('miscellaneous.showPdf', $miscellaneou->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                <a href="{{ route('miscellanea.showPdf', $miscellaneou->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
             @endcan
             @can('edit', $miscellaneou)

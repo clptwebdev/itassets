@@ -10,18 +10,18 @@
 
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Miscellaneous | Recycle Bin</h1>
+        <h1 class="h3 mb-0 text-gray-800">miscellaneous | Recycle Bin</h1>
         <div>
             <a href="{{ route('miscellaneous.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @can('generatePDF', \App\Models\miscellanea::class)
-                @if ($Miscellaneous->count() == 1)
-                    <a href="{{ route('miscellaneous.showPdf', $Miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                @if ($miscellaneous->count() == 1)
+                    <a href="{{ route('miscellanea.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
                 @else
-                    <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">
+                    <form class="d-inline-block" action="{{ route('miscellanea.pdf')}}" method="POST">
                         @csrf
-                        <input type="hidden" value="{{ json_encode($Miscellaneous->pluck('id'))}}" name="Miscellaneous"/>
+                        <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
                         <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                                 class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                     </form>
@@ -39,7 +39,7 @@
     @endif
 
     <section>
-        <p class="mb-4">Below are the different Miscellaneous stored in the management system. Each has
+        <p class="mb-4">Below are the different miscellaneous stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -73,7 +73,7 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($Miscellaneous as $miscellanea)
+                        @foreach($miscellaneous as $miscellanea)
 
                             <tr>
                                 <td>{{$miscellanea->name}}
@@ -131,7 +131,7 @@
 
         <div class="card shadow mb-3">
             <div class="card-body">
-                <h4>Help with Miscellaneous</h4>
+                <h4>Help with miscellaneous</h4>
                 <p>This area can be minimised and will contain a little help on the page that the miscellanea is currently
                     on.</p>
             </div>

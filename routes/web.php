@@ -168,7 +168,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('/miscellaneous', "\App\Http\Controllers\MiscellaneaController");
     Route::get('/miscellaneous/{miscellanea}', "\App\Http\Controllers\MiscellaneaController@status")->name('miscellanea.status');
     Route::post('/miscellaneous/comment/create', '\App\Http\Controllers\MiscellaneaController@newComment')->name('miscellaneous.comment');
-    Route::get('/miscellaneous/bin', 'App\Http\Controllers\MiscellaneaController@recycleBin')->name('miscellaneous.bin');
+    Route::get('/miscellanea/bin', 'App\Http\Controllers\MiscellaneaController@recycleBin')->name('miscellaneous.bin');
     Route::get('/miscellaneous/{miscellanea}/restore', 'App\Http\Controllers\MiscellaneaController@restore')->name('miscellaneous.restore');
     Route::post('/miscellaneous/{miscellanea}/remove', 'App\Http\Controllers\MiscellaneaController@forceDelete')->name('miscellaneous.remove');
     Route::post('/miscellanea/pdf', 'App\Http\Controllers\MiscellaneaController@downloadPDF')->name('miscellanea.pdf');

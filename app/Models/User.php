@@ -70,6 +70,9 @@ class User extends Authenticatable {
     public function location_consumables(){
         return $this->hasManyDeep(Consumable::class, ['location_user', Location::class]);
     }
+    public function location_miscellaneous(){
+        return $this->hasManyDeep(miscellanea::class, ['location_user', Location::class]);
+    }
 
     public function logs(){
         return $this->morphMany(Log::class, 'loggable');
@@ -94,7 +97,7 @@ class User extends Authenticatable {
             $password .= $characters[random_int(0, $characterListLength)];
         }
         return $password;
-        
+
     }
 
 }

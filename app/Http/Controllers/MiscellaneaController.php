@@ -17,6 +17,7 @@ use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class MiscellaneaController extends Controller
 {
@@ -196,13 +197,13 @@ class MiscellaneaController extends Controller
         return redirect(route("miscellaneous.index"));
     }
 
-    public function destroy(miscellanea $miscellanea)
+    public function destroy(miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('delete', $miscellanea)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'delete']));
+        if (auth()->user()->cant('delete', $miscellaneou)) {
+            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'delete']));
         }
-        $name = $miscellanea->name;
-        $miscellanea->delete();
+        $name = $miscellaneou->name;
+        $miscellaneou->delete();
         session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
         return redirect(route('miscellaneous.index'));
@@ -319,7 +320,7 @@ class MiscellaneaController extends Controller
 
     public function downloadPDF(Request $request)
     {
-        if (auth()->user()->cant('viewAll', Miscellanea::class)) {
+        if (auth()->user()->cant('viewAny', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export pdf']));
         }
         $miscellaneous = Miscellanea::withTrashed()->whereIn('id', json_decode($request->miscellaneous))->get();
