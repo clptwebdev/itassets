@@ -243,7 +243,7 @@
                     </div>
                     <div class="modal-footer">
                         <p>For Anymore information please email Apollo@clpt.co.uk</p>
-                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/EWmxI4Q89eVMjPBSGed7QVQBa6Vk_gZFq_xPip9bTUx5rQ?e=8FQRHP" target="_blank" class="btn btn-info" >
+                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/EbntKq_mlTVAgWc6TVyyomUBai1vGhqJFBJy9sULugmz_A?e=83Q40o" target="_blank" class="btn btn-info" >
                             Download Import Template
                         </a>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
