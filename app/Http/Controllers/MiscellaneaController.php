@@ -10,7 +10,7 @@ use App\Exports\miscellaneousExport;
 use App\Imports\miscellaneaImport;
 use App\Imports\miscellaneousImport;
 use App\Models\Category;
-use App\Models\miscellanea;
+use App\Models\Miscellanea;
 use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
