@@ -44,7 +44,7 @@ class Photo extends Model
     }
     public function miscellanea()
     {
-        return $this->hasOne(miscellanea::class);
+        return $this->hasOne(Miscellanea::class);
     }
 
     public function setPathAttribute($value)

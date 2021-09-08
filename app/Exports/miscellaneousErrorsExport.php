@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\miscellanea;
+use App\Models\Miscellanea;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;

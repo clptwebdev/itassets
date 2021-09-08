@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ConsumableController extends Controller
 {
-    
+
     public function newComment(Request $request)
     {
         $request->validate([
@@ -44,7 +44,7 @@ class ConsumableController extends Controller
             $consumables = Consumable::all();
         }else{
             $consumables = auth()->user()->location_consumables;
-        } 
+        }
         return view('consumable.view', compact('consumables'));
     }
 
@@ -58,7 +58,7 @@ class ConsumableController extends Controller
             $locations = Location::all();
         }else{
             $locations = auth()->user()->locations;
-        } 
+        }
 
         return view('consumable.create', [
             "locations" => $locations,
@@ -86,7 +86,7 @@ class ConsumableController extends Controller
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-        
+
         $consumable = Consumable::create($request->only(
             'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
         ));
@@ -104,13 +104,13 @@ class ConsumableController extends Controller
         if (auth()->user()->cant('viewAll', Consumable::class)) {
             return redirect(route('errors.forbidden', ['area', 'Consumables', 'export']));
         }
-            
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new consumableErrorsExport($export), "/public/csv/consumables-errors-{$date}.csv");
         $url = asset("storage/csv/consumables-errors-{$date}.csv");
         return redirect(route('consumables.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
-            ->withInput(); 
+            ->withInput();
     }
 
     public function ajaxMany(Request $request)
@@ -144,6 +144,8 @@ class ConsumableController extends Controller
                     $consumable->warranty = $request->warranty[$i];
                     $consumable->location_id = $request->location_id[$i];
                     $consumable->notes = $request->notes[$i];
+                    $consumable->photo_id =  0;
+
                     $consumable->save();
                 }
 
@@ -228,14 +230,14 @@ class ConsumableController extends Controller
         if (auth()->user()->cant('export', Consumable::class)) {
             return redirect(route('errors.forbidden', ['area', 'consumables', 'export']));
         }
-            
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new consumableExport, "/public/csv/consumables-ex-{$date}.csv");
         $url = asset("storage/csv/consumables-ex-{$date}.csv");
         return redirect(route('consumables.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
-            ->withInput(); 
-    
+            ->withInput();
+
 
     }
 

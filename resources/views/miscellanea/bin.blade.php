@@ -14,7 +14,7 @@
         <div>
             <a href="{{ route('miscellaneous.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
-            @can('generatePDF', \App\Models\miscellanea::class)
+            @can('generatePDF', \App\Models\Miscellanea::class)
                 @if ($miscellaneous->count() == 1)
                     <a href="{{ route('miscellanea.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>

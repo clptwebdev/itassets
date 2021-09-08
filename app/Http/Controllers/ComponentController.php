@@ -94,13 +94,13 @@ class ComponentController extends Controller {
             if (auth()->user()->cant('viewAll', Component::class)) {
                 return redirect(route('errors.forbidden', ['area', 'Components', 'export']));
             }
-                
+
             $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
             \Maatwebsite\Excel\Facades\Excel::store(new componentErrorsExport($export), "/public/csv/components-errors-{$date}.csv");
             $url = asset("storage/csv/components-errors-{$date}.csv");
             return redirect(route('components.index'))
                 ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
-                ->withInput(); 
+                ->withInput();
     }
 
     public function ajaxMany(Request $request)
@@ -115,6 +115,7 @@ class ComponentController extends Controller {
                 'supplier_id.*' => 'required|gt:0',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+
             ]);
 
             if($validation->fails()){
@@ -134,6 +135,7 @@ class ComponentController extends Controller {
                     $component->warranty = $request->warranty[$i];
                     $component->location_id = $request->location_id[$i];
                     $component->notes = $request->notes[$i];
+                    $component->photo_id =  0;
                     $component->save();
                 }
 

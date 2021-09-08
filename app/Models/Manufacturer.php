@@ -22,7 +22,7 @@ class Manufacturer extends Model {
     }
     public function miscellanea()
     {
-        return $this->hasMany(miscellanea::class);
+        return $this->hasMany(Miscellanea::class);
     }
 
     public function assetModel(){

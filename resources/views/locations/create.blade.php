@@ -8,7 +8,7 @@
 <form action="{{ route('location.store') }}" method="POST">
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Add New Location</h1>
-    
+
     <div>
         <a href="{{ route('location.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Locations</a>
@@ -35,7 +35,7 @@
                     @endif
 
                     @csrf
-                    
+
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>" name="name"
@@ -64,7 +64,7 @@
                                 id="postcode" name="postcode" required>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="telephone">Telephone</label>
                         <input type="text" class="form-control" name="telephone" id="telephone" placeholder="Telelphone">
@@ -100,8 +100,8 @@
 
     <div class="card shadow mt-4">
         <div class="card-header bg-primary-blue text-white">Information</div>
-        <div class="card-body"><p>There are currently X Locations on the System</p></div>
-        
+        <div class="card-body"><p>There are currently <?php $locationAmmount =\App\Models\Asset::all()->count() ?>{{$locationAmmount ?? 0}} Locations on the System</p></div>
+
     </div>
 </section>
 </form>
@@ -140,7 +140,7 @@
     <!-- Upload Modal -->
     <div id="uploadModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-    
+
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
@@ -157,9 +157,9 @@
                         <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
                     </form>
                 </div>
-    
+
             </div>
-    
+
         </div>
     </div>
 @endsection

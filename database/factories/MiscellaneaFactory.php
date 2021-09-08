@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Location;
 use App\Models\Manufacturer;
-use App\Models\miscellanea;
+use App\Models\Miscellanea;
 use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -16,7 +16,7 @@ class MiscellaneaFactory extends Factory
      *
      * @var string
      */
-    protected $model = miscellanea::class;
+    protected $model = Miscellanea::class;
 
     /**
      * Define the model's default state.

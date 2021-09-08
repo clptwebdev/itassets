@@ -71,7 +71,7 @@ class User extends Authenticatable {
         return $this->hasManyDeep(Consumable::class, ['location_user', Location::class]);
     }
     public function location_miscellaneous(){
-        return $this->hasManyDeep(miscellanea::class, ['location_user', Location::class]);
+        return $this->hasManyDeep(Miscellanea::class, ['location_user', Location::class]);
     }
 
     public function logs(){
