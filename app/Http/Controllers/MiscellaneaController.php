@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\consumableExport;
 use App\Exports\miscellaneaErrorsExport;
 use App\Exports\miscellaneaExport;
 use App\Exports\miscellaneousErrorsExport;
@@ -16,6 +17,7 @@ use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class MiscellaneaController extends Controller
 {
@@ -139,18 +141,18 @@ class MiscellaneaController extends Controller
 
     }
 
-    public function show(Miscellanea $miscellanea)
+    public function show(Miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('create', $miscellanea)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'view']));
+        if (auth()->user()->cant('create', $miscellaneou)) {
+            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'view']));
         }
-        return view('miscellanea.show', ["miscellanea" => $miscellanea]);
+        return view('miscellanea.show', ["miscellaneou" => $miscellaneou]);
     }
 
-    public function edit(Miscellanea $miscellanea)
+    public function edit(Miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('update', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'update']));
+        if (auth()->user()->cant('update', $miscellaneou)) {
+            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'update']));
         }
 
         if(auth()->user()->role_id == 1){
@@ -159,7 +161,7 @@ class MiscellaneaController extends Controller
             $locations = auth()->user()->locations;
         }
         return view('miscellanea.edit', [
-            "miscellanea" => $miscellanea,
+            "miscellanea" => $miscellaneou,
             "locations" => $locations,
             "statuses" => Status::all(),
             "suppliers" => Supplier::all(),
@@ -195,13 +197,13 @@ class MiscellaneaController extends Controller
         return redirect(route("miscellaneous.index"));
     }
 
-    public function destroy(miscellanea $miscellanea)
+    public function destroy(miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('delete', $miscellanea)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'delete']));
+        if (auth()->user()->cant('delete', $miscellaneou)) {
+            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'delete']));
         }
-        $name = $miscellanea->name;
-        $miscellanea->delete();
+        $name = $miscellaneou->name;
+        $miscellaneou->delete();
         session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
         return redirect(route('miscellaneous.index'));
@@ -213,8 +215,12 @@ class MiscellaneaController extends Controller
         if (auth()->user()->cant('export', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export']));
         }
-        return \Maatwebsite\Excel\Facades\Excel::download(new miscellaneousExport, 'miscellaneous.csv');
-
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport, "/public/csv/miscellaneous-ex-{$date}.csv");
+        $url = asset("storage/csv/miscellaneous-ex-{$date}.csv");
+        return redirect(route('miscellaneous.index'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
     }
 
     public function import(Request $request)
@@ -314,7 +320,7 @@ class MiscellaneaController extends Controller
 
     public function downloadPDF(Request $request)
     {
-        if (auth()->user()->cant('viewAll', Miscellanea::class)) {
+        if (auth()->user()->cant('viewAny', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export pdf']));
         }
         $miscellaneous = Miscellanea::withTrashed()->whereIn('id', json_decode($request->miscellaneous))->get();

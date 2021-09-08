@@ -25,7 +25,7 @@
                 <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="components"/>
             <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
                     class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-            </form> 
+            </form>
             @if($components->count() >1)
             <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
                     class="fas fa-download fa-sm text-white-50"></i> Export</a>
@@ -93,7 +93,7 @@
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($component->location->icon ?? '#666').'">'
                                             .strtoupper(substr($component->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                    @endif    
+                                    @endif
                                 </td>
                                 <td class="text-center">{{$component->manufacturer->name ?? "N/A"}}</td>
                                 <td>{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
@@ -175,7 +175,7 @@
             </div>
         </div>
     </div>
-
+//import modal
     <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
          aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">

@@ -28,7 +28,7 @@ class miscellaneousExport implements FromArray, WithHeadings
 
     public function array(): array
     {
-        $miscellaneous = \App\Models\miscellanea::all();
+        $miscellaneous = \App\Models\Miscellanea::all();
         $object = [];
         foreach($miscellaneous as $miscellanea)
         {

@@ -10,13 +10,13 @@ class MiscellaneaPolicy
 {
     use HandlesAuthorization;
 
-    
+
     public function viewAny(User $user)
     {
         return $user->role_id != 0 && $user->role_id <= 4;
     }
 
-    
+
     public function view(User $user, Miscellanea $miscellanea)
     {
         $locations = $user->locations->pluck('id')->toArray();
@@ -27,13 +27,13 @@ class MiscellaneaPolicy
         }
     }
 
-    
+
     public function create(User $user)
     {
         return $user->role_id != 0 && $user->role_id <= 3;
     }
 
-    
+
     public function update(User $user, Miscellanea $miscellanea)
     {
         $locations = $user->locations->pluck('id')->toArray();
@@ -44,7 +44,7 @@ class MiscellaneaPolicy
         }
     }
 
-    
+
     public function delete(User $user, Miscellanea $miscellanea)
     {
         $locations = $user->locations->pluck('id')->toArray();
@@ -55,7 +55,7 @@ class MiscellaneaPolicy
         }
     }
 
-    
+
     public function restore(User $user, Miscellanea $miscellanea)
     {
         $locations = $user->locations->pluck('id')->toArray();
@@ -66,11 +66,40 @@ class MiscellaneaPolicy
         }
     }
 
-    
+
     public function forceDelete(User $user, Miscellanea $miscellanea)
     {
         $locations = $user->locations->pluck('id')->toArray();
         if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($miscellanea->location_id, $locations)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+     public function recycleBin(User $user)
+    {
+        return $user->role_id != 0 && $user->role_id <= 4;
+    }
+
+    public function import(User $user)
+    {
+        return $user->role_id != 0 && $user->role_id <= 3;
+    }
+
+    public function export(User $user)
+    {
+        return $user->role_id != 0 && $user->role_id <= 4;
+    }
+
+    public function generatePDF(User $user)
+    {
+        return $user->role_id != 0 && $user->role_id <= 4;
+    }
+
+    public function generateConsumablePDF(User $user, Miscellanea $miscellanea)
+    {
+        $locations = $user->locations->pluck('id')->toArray();
+        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 4) && in_array($miscellanea->location_id, $locations)){
             return true;
         }else{
             return false;

@@ -8,48 +8,48 @@ use Carbon\Carbon;
 
 class LocationObserver
 {
-    
+
     public function created(location $location)
     {
         Log::create([
-            'user_id'=>auth()->user()->id,
+            'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ,
-            'data'=> auth()->user()->name.' created a new Location - '.$location->name
+            'loggable_id'=> $location->id ?? 0 ,
+            'data'=> auth()->user()->name ?? "Unknown".' created a new Location - '.$location->name
         ]);
     }
 
     public function updated(location $location)
     {
         Log::create([
-            'user_id'=>auth()->user()->id,
+            'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ,
-            'data'=> auth()->user()->name.' updated Location - '.$location->name
+            'loggable_id'=> $location->id ?? 0,
+            'data'=> auth()->user()->name ?? "Unknown".' updated Location - '.$location->name
         ]);
     }
 
     public function deleted(location $location)
     {
         Log::create([
-            'user_id'=>auth()->user()->id,
+            'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ,
-            'data'=> auth()->user()->name.' deleted Location - '.$location->name
+            'loggable_id'=> $location->id ?? 0,
+            'data'=> auth()->user()->name ?? "Unknown".' deleted Location - '.$location->name
         ]);
     }
 
     public function restored(location $location)
     {
         Log::create([
-            'user_id'=>auth()->user()->id,
+            'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ,
-            'data'=> auth()->user()->name.' restored Location - '.$location->name
+            'loggable_id'=> $location->id ?? 0,
+            'data'=> auth()->user()->name ?? "Unknown".' restored Location - '.$location->name
         ]);
     }
 
@@ -60,7 +60,7 @@ class LocationObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'location',
             'loggable_id'=> $location->id ,
-            'data'=> auth()->user()->name.' permanently removed Location - '.$location->name
+            'data'=> auth()->user()->name ?? "Unknown".' permanently removed Location - '.$location->name
         ]);
     }
 }

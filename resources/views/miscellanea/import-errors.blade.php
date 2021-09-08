@@ -359,7 +359,7 @@
             });
 
             $.ajax({
-                url: '/miscellanea/create/ajax',
+                url: '/miscellaneous/create/ajax',
                 type: 'POST',
                 data: data,
                 processData: false,

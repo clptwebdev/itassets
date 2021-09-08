@@ -64,11 +64,11 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
             ],
             'supplier_id' => [
                 'string',
-                'required'
+                'required',
             ],
             'location_id' => [
                 'string',
-                'required'
+                'required',
             ],
             'manufacturer_id' => [
 
@@ -93,15 +93,16 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
 
         } else
         {
-            if(isset($row["status_id"])){
+            if(isset($row["status_id"]))
+            {
                 $status = new Status;
 
                 $status->name = $row["status_id"];
                 $status->deployable = 1;
 
                 $status->save();
-            }else
-                $miscellanea->status_id =0;
+            } else
+                $miscellanea->status_id = 0;
         }
         $miscellanea->status_id = $status->id ?? 0;
 
@@ -114,7 +115,8 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
 
         } else
         {
-            if(isset($row["supplier_id"])){
+            if(isset($row["supplier_id"]))
+            {
                 $supplier = new Supplier;
 
                 $supplier->name = $row["supplier_id"];
@@ -123,7 +125,7 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
                 $supplier->telephone = "Unknown";
                 $supplier->save();
 
-            }else
+            } else
                 $miscellanea->supplier_id = 0;
         }
 
@@ -135,7 +137,8 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
 
         } else
         {
-            if(isset($row["manufacturer_id"])){
+            if(isset($row["manufacturer_id"]))
+            {
                 $manufacturer = new Manufacturer;
 
                 $manufacturer->name = $row["manufacturer_id"];
@@ -143,12 +146,12 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
                 $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
                 $manufacturer->supportPhone = "Unknown";
                 $manufacturer->save();
-            }else
+            } else
                 $miscellanea->supplier_id = 0;
 
         }
         $miscellanea->manufacturer_id = $manufacturer->id ?? 0;
-
+        $miscellanea->photo_id = 0;
         $miscellanea->order_no = $row["order_no"];
         $miscellanea->warranty = $row["warranty"];
         //check for already existing Locations upon import if else create
@@ -170,7 +173,7 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
                 $location->county = "West Midlands";
                 $location->icon = "#222222";
                 $location->save();
-            }else
+            } else
                 $miscellanea->location_id = 0;
         }
         $miscellanea->location_id = $location->id ?? 0;

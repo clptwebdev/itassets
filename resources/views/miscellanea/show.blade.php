@@ -7,26 +7,25 @@
 @endsection
 
 @section('content')
-
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">View miscellaneous</h1>
         <div>
             <a href="{{ route('miscellaneous.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
-            @can('generatePDF', $miscellanea)
-                <a href="{{ route('miscellaneous.showPdf', $miscellanea->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+            @can('generatePDF', $miscellaneou)
+                <a href="{{ route('miscellanea.showPdf', $miscellaneou->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
             @endcan
-            @can('edit', $miscellanea)
-                <a href="{{ route('miscellaneous.edit', $miscellanea->id)}}"
+            @can('edit', $miscellaneou)
+                <a href="{{ route('miscellaneous.edit', $miscellaneou->id)}}"
                    class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                         class="fas fa-edit fa-sm text-white-50"></i> Edit</a>
             @endcan
-            <form class="d-inline-block id="form{{$miscellanea->id}}" action="{{ route('miscellaneous.destroy', $miscellanea->id) }}"
+            <form id="form{{$miscellaneou->id}}" class="d-inline-block id=" action="{{ route('miscellaneous.destroy', $miscellaneou->id) }}"
             method="POST">
             @csrf
             @method('DELETE')
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" data-id="{{$miscellanea->id}}"><i
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" data-id="{{$miscellaneou->id}}"><i
                     class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
             </form>
         </div>
@@ -41,24 +40,24 @@
     @endif
 
     <div class="row row-eq-height">
-        <x-miscellaneous.miscellanea-info :miscellanea="$miscellanea" />
-        <x-miscellaneous.miscellanea-purchase :miscellanea="$miscellanea" />
+        <x-miscellaneous.miscellanea-info :miscellaneou="$miscellaneou" />
+        <x-miscellaneous.miscellanea-purchase :miscellaneou="$miscellaneou" />
     </div>
 
     <div class="row row-eq-height">
         <div class="col-12 col-lg-8 mb-4">
-            <x-locations.location-modal :asset="$miscellanea"/>
+            <x-locations.location-modal :asset="$miscellaneou"/>
         </div>
 
         <div class="col-12 col-lg-4 mb-4">
-            <x-manufacturers.manufacturer-modal :asset="$miscellanea"/>
+            <x-manufacturers.manufacturer-modal :asset="$miscellaneou"/>
         </div>
 
     </div>
     <div class="row row-eq-height">
-        <x-miscellaneous.miscellanea-log :miscellanea="$miscellanea"/>
+        <x-miscellaneous.miscellanea-log :miscellaneou="$miscellaneou"/>
         <div class="col-12 col-lg-6 mb-4">
-            <x-comments.comment-layout :asset="$miscellanea"/>
+            <x-comments.comment-layout :asset="$miscellaneou"/>
         </div>
     </div>
 
@@ -78,12 +77,12 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('miscellaneous.status', $miscellanea->id)}}" method="post">
+                <form action="{{ route('miscellanea.status', $miscellaneou->id)}}" method="post">
                     <div class="modal-body">
                         @csrf
                         <select name="status" class="form-control">
                             @foreach(\App\Models\Status::all() as $status)
-                                <option value="{{ $status->id}}" @if($status->id == $miscellanea->status_id){{ 'selected'}}@endif>{{ $status->name }}</option>
+                                <option value="{{ $status->id}}" @if($status->id == $miscellaneou->status_id){{ 'selected'}}@endif>{{ $status->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -125,13 +124,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="commentModalLabel">Creating a New comment for
-                        <strong>{{$miscellanea->name}}</strong></h5>
+                        <strong>{{$miscellaneou->name}}</strong></h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <form action="{{ route('miscellaneous.comment') }}" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="miscellanea_id" value="{{ $miscellanea->id }}">
+                    <input type="hidden" name="miscellanea_id" value="{{ $miscellaneou->id }}">
                     <div class="modal-body">
                         <p>Fill Out the title Field and Body to continue...</p>
                     </div>

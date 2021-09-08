@@ -29,14 +29,14 @@
                         class="far fa-save fa-sm text-white-50"></i> Save All Errors as Excel
                 </button>
 
-            <a href="/assets" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                    class="fas fa-plus fa-sm te
+                <a href="/assets" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                        class="fas fa-plus fa-sm te
                         xt-white-50"></i> Back to assets</a>
                 <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
-            <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm">
-                <i class="far fa-save fa-sm text-white-50"></i> Save
-            </a>
+                <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm">
+                    <i class="far fa-save fa-sm text-white-50"></i> Save
+                </a>
             </form>
         </div>
     </div>
@@ -53,7 +53,8 @@
         <p class="mb-4">Below are the different Import Failures of all the different assets stored in the management
             system. Each has
             displays the amount of different assets that are assigned the category.</p>
-        <p class="mb-4 alert-warning alert w-75 ">If There are many errors please go back and revise the changes in excel Using the export errors function.Else use editor below!</p>
+        <p class="mb-4 alert-warning alert w-75 ">If There are many errors please go back and revise the changes in
+            excel Using the export errors function.Else use editor below!</p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -98,7 +99,7 @@
                             <tr>
                                 <td>
                                     <input type="number" maxlength="11"
-                                           class="form-control <?php if (in_array('assert_tag', $errors)) {?>border-danger<?php }?>
+                                           class="form-control <?php if (in_array('asset_tag', $errors)) {?>border-danger<?php }?>
                                                "
                                            name="asset_tag[]"
                                            id="asset_tag" value="{{ $valueArray[$row]['asset_tag'] }}"
@@ -108,10 +109,9 @@
                                 </td>
                                 <td>
                                     <input type="text" maxlength="11"
-                                           class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>
-                                               "
+                                           class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>"
                                            name="name[]"
-                                           id="asset_tag" value="{{ $valueArray[$row]['name'] }}"
+                                           id="name" value="{{ $valueArray[$row]['name'] }}"
                                            placeholder="This Row is Empty Please Fill!" required>
                                     @if(array_key_exists('name', $errorValues[$row]))<small
                                         class="text-danger text-capitalize">{{$errorValues[$row]['name']}}</small>@endif
@@ -274,13 +274,16 @@
                         <h2 class="h3 mb-0 text-gray-800">Requirements needed to finish your import</h2>
                         <ol>
                             <li>The Required fields are: Name, Supplier,Location and serial num.</li>
-                            <li>All Correct rows skip this page and import straight to the database so please don't re-import your file!</li>
+                            <li>All Correct rows skip this page and import straight to the database so please don't
+                                re-import your file!
+                            </li>
                             <li>Struggling to Pass this stage are all your data fields in the correct format?</li>
                         </ol>
                     </div>
                     <div class="modal-footer">
                         <p>For Anymore information please email Apollo@clpt.co.uk</p>
-                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/Eb2RbyCNk_hOuTfMOufGpMsBl0yUs1ZpeCjkCm6YnLfN9Q?e=HDDCIp" target="_blank" class="btn btn-info" >
+                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/Eb2RbyCNk_hOuTfMOufGpMsBl0yUs1ZpeCjkCm6YnLfN9Q?e=HDDCIp"
+                           target="_blank" class="btn btn-info">
                             Download Import Template
                         </a>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -321,6 +324,11 @@
             var inputs = $("input[name='asset_tag[]']").get();
             inputs.forEach(element => {
                 data.append('asset_tag[]', element.value);
+            });
+            //Names
+            var nmeinputs = $("input[name='name[]']").get();
+            nmeinputs.forEach(element => {
+                data.append('name[]', element.value);
             });
 
             //status

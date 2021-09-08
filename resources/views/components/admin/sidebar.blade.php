@@ -98,7 +98,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('miscellaneous.index')}}" data-toggle="collapse" data-target="#miscellaneousDD" aria-expanded="true"
            aria-controls="miscellaneousDD">
-            <i class="fas fa-fw fa-tint sidebar-icon" data-toggle="tooltip" data-placement="right" title="Miscellaneous"></i>
+            <i class="fas fa-fw fa-question sidebar-icon" data-toggle="tooltip" data-placement="right" title="Miscellaneous"></i>
             <span class="sidebar-title">Miscellaneous</span>
         </a>
         <div id="miscellaneousDD" class="collapse" aria-labelledby="consumableTitle" data-parent="#accordionSidebar">

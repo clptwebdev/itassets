@@ -29,6 +29,7 @@ class AssetFactory extends Factory
         return [
             "asset_model"=>$this->faker->randomDigit,
             "asset_tag"=>$this->faker->unique()->randomNumber(),
+            "name"=>$this->faker->unique()->name,
             "serial_no"=>$this->faker->numberBetween([1000],[9000]),
             "status_id"=>Status::factory("status_id"),
             "purchased_date"=>$this->faker->dateTimeThisYear(),

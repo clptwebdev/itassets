@@ -16,7 +16,7 @@ class SupplierObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name.' created a new supplier - '.$supplier->name,
+            'data'=> auth()->user()->name ?? "Unknown".' created a new supplier - '.$supplier->name,
         ]);
     }
 
@@ -27,7 +27,7 @@ class SupplierObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name.' updated supplier - '.$supplier->name,
+            'data'=> auth()->user()->name ?? "Unknown".' updated supplier - '.$supplier->name,
         ]);
     }
 
@@ -38,7 +38,7 @@ class SupplierObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name.' deleted supplier - '.$supplier->name,
+            'data'=> auth()->user()->name ?? "Unknown".' deleted supplier - '.$supplier->name,
         ]);
     }
 
@@ -49,7 +49,7 @@ class SupplierObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name.' restored supplier - '.$supplier->name,
+            'data'=> auth()->user()->name ?? "Unknown".' restored supplier - '.$supplier->name,
         ]);
     }
 
@@ -60,7 +60,7 @@ class SupplierObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name.' permanently deleted supplier - '.$supplier->name,
+            'data'=> auth()->user()->name ?? "Unknown".' permanently deleted supplier - '.$supplier->name,
         ]);
     }
 }
