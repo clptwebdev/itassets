@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title', 'View Manufacturer Import errors')
 
+@section('title', 'Import Errors')
+
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
@@ -11,17 +13,27 @@
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import
-            Failures</h1>@php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
-        <div class="alert alert-danger">You have several errors Within your Import in rows {{$errorRows}}</div>
+            Failures</h1>
+        
         <div>
             <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50">
+                    class="fas fa-chevron-left fa-sm text-white-50">
                 </i> Back to Manufacturers</a>
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
             <button onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm">
                 <i class="far fa-save fa-sm text-white-50"></i> Save
             </button>
+        </div>
+    </div>
+    @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
+    <div class="m-3 alert alert-danger">You have several errors Within your Import in rows
+        <div class="col-md-12">
+            <div id="summary">
+                <p class="collapse" id="collapseSummary">{{$errorRows}}</p>
+                <a class="collapsed" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+                   aria-controls="collapseSummary"></a>
+            </div>
         </div>
     </div>
 
@@ -61,44 +73,48 @@
                         </tr>
                         </tfoot>
                         @csrf
+                        @php($line = 0)
                         @foreach($errorArray as $row =>$error)
                             <?php $errors = explode(",", $error); ?>
                             <tr>
                                 <td>
+                                    <span id="name{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>
                                                "
                                            name="name[]"
                                            id="name" value="{{ $valueArray[$row]['name'] }}"
-                                           placeholder="This Row is Empty Please Fill!" required>
-                                    @if(array_key_exists('name', $errorValues[$row]))<small
-                                        class="text-danger text-capitalize">{{$errorValues[$row]['name']}}</small>@endif
+                                           placeholder="This Row is Empty Please Fill!" required data-container='#name{{$line}}' data-placement='top'
+                                           @if(array_key_exists('name', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
+                                    </span>
                                 <td>
+                                    <span id="supporturl{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="form-control <?php if (in_array('supporturl', $errors)) {?>border-danger<?php }?>"
                                            name="supportUrl[]"
-                                           id="supportUrl" value="{{ $valueArray[$row]['supporturl'] }}"
-                                           placeholder="This Row is Empty Please Fill!" required>
-                                    @if(array_key_exists('supporturl', $errorValues[$row]))<small
-                                        class="text-danger text-capitalize">{{$errorValues[$row]['supporturl']}}</small>@endif
+                                           id="supportUrl" value="{{ $valueArray[$row]['supporturl'] }}" data-container='#supporturl{{$line}}' data-placement='top'
+                                           @if(array_key_exists('supporturl', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supporturl']}'" !!}@endif>
+                                    </span>
                                 </td>
                                 <td>
+                                    <span id="supportphone{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="form-control <?php if (in_array('supportphone', $errors)) {?>border-danger<?php }?>"
                                            name="supportPhone[]"
                                            id="supportPhone" placeholder="This Row is Empty Please Fill!"
-                                           value="{{ $valueArray[$row]['supportphone'] }}" required>
-                                    @if(array_key_exists('supportphone', $errorValues[$row]))<small
-                                        class="text-danger text-capitalize">{{$errorValues[$row]['supportphone']}}</small>@endif
+                                           value="{{ $valueArray[$row]['supportphone'] }}" required data-container='#supportphone{{$line}}' data-placement='top'
+                                           @if(array_key_exists('supportphone', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supportphone']}'" !!}@endif>
+                                    </span>
                                 </td>
                                 <td>
+                                    <span id="supportemail{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="form-control <?php if (in_array('supportemail', $errors)) {?>border-danger<?php }?>"
                                            name="supportEmail[]"
                                            id="supportEmail" placeholder="This Row is Empty Please Fill!"
-                                           value="{{ $valueArray[$row]['supportemail'] }}" required>
-                                    @if(array_key_exists('supportemail', $errorValues[$row]))<small
-                                        class="text-danger text-capitalize">{{$errorValues[$row]['supportemail']}}</small>@endif
+                                           value="{{ $valueArray[$row]['supportemail'] }}" required data-container='#supportemail{{$line}}' data-placement='top'
+                                           @if(array_key_exists('supportemail', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supportemail']}'" !!}@endif>
+                                    </span>
                                 </td>
                             </tr>
                         @endforeach
@@ -198,15 +214,19 @@
                     if (response === 'Success') {
                         window.location.href = '/manufacturers';
                     } else {
-                        $('small.text-danger').remove();
+                        $('.form-control').removeClass('border-danger');
+                        $('.form-control').tooltip('dispose');
                         $('input').removeClass('border-danger');
                         var i = 0;
                         Object.entries(response).forEach(entry => {
                             const [key, value] = entry;
                             res = key.split('.');
                             const error = value.toString().replace(key, res[0]);
-                            $(`input[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
-                            $(`input[name='${res[0]}[]']:eq(${res[1]})`).after(`<small class="text-danger text-capitalize">${error}</small>`);
+                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border');
+                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
+                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('data-toggle', 'tooltip');
+                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('title', error);
+                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip();
                             i++;
                         });
                         $('.alert.alert-danger').html(`There were ${i} errors in the following rows`);

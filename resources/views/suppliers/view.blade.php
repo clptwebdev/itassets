@@ -9,12 +9,16 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Suppliers</h1>
     <div>
+        @can('create', \App\Models\Supplier::class)
         <a href="{{ route('supplier.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Supplier</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        @endcan
+        @can('viewAny', \App\Models\Supplier::class)
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-        <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Download Csv</a>
+        <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                class="fas fa-download fa-sm text-white-50"></i> Export</a>
+        @endcan
     </div>
 </div>
 
@@ -36,20 +40,30 @@
                     <table id="suppliersTable" class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Location</th>
-                                <th>Telephone</th>
-                                <th>Email</th>
-                                <th class="text-center">Options</th>
+                                <th><small>Name</small></th>
+                                <th><small>Location</small></th>
+                                <th><small>Telephone</small></th>
+                                <th><small>Email</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Assets</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Accessories</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Components</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Consumables</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Miscellaneous</small></th>
+                                <th class="text-center"><small>Options</small></th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Name</th>
-                                <th>Location</th>
-                                <th>Tel</th>
-                                <th>Email</th>
-                                <th class="text-center">Options</th>
+                                <th><small>Name</small></th>
+                                <th><small>Location</small></th>
+                                <th><small>Telephone</small></th>
+                                <th><small>Email</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Assets</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Accessories</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Components</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Consumables</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Miscellaneous</small></th>
+                                <th class="text-center"><small>Options</small></th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -60,6 +74,11 @@
                                 <td>{{ $supplier->city }}</td>
                                 <td>{{ $supplier->telephone }}</td>
                                 <td>{{ $supplier->email }}</td>
+                                <td class="text-center d-none d-xl-table-cell">{{ $supplier->asset->count() }}                                </td>
+                                <td class="text-center d-none d-xl-table-cell">{{$supplier->accessory->count() ?? "N/A"}}</td>
+                                <td class="text-center d-none d-xl-table-cell">{{$supplier->component->count() ?? "N/A"}}</td>
+                                <td class="text-center d-none d-xl-table-cell">{{$supplier->consumable->count() ?? "N/A"}}</td>
+                                <td class="text-center d-none d-xl-table-cell">{{$supplier->miscellanea->count() ?? "N/A"}}</td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
@@ -71,9 +90,11 @@
                                             class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Supplier Options:</div>
+                                            @can('view', $supplier)
                                             <a href="{{ route('supplier.show', $supplier->id) }}"
                                                class="dropdown-item">View</a>
-                                            @can('edit', $supplier)
+                                            @endcan
+                                            @can('update', $supplier)
                                                 <a href="{{ route('supplier.edit', $supplier->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $supplier)

@@ -1,66 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Consumables Download</title>
-    <!-- Custom styles for this template-->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@extends('layouts.pdf-reports')
 
-        body{
-            font-size: 11px;
-            font-family: 'Roboto', sans-serif;
-        }
+@section('title', 'Consumables Report')
 
-        #header{
-            background-color: #454777;
-            width: 100%;
-            margin-bottom: 30px;
-            color: #fff;
-            font-size: 14px;
-        }
+@section('page', 'Consumables')
 
-        #logo{
-            max-height: 100px;
-        }
-
-        #assetsTable{
-            border: solid 1px #666;
-            border-collapse: collapse;
-        }
-
-        #assetsTable th{
-            padding: 5px;
-            background-color: #454777;
-            color: #FFF;
-            border: solid 1px #666;
-        }
-
-        #assetsTable td{
-            border: solid 1px #AAA;
-            padding: 5px;
-        }
-
-        .page-break {
-            page-break-after: always;
-        }
-        </style>
-</head>
-<body>
-    <header id="header">
-        <table width="100%"></i>
-            <tr>
-                <td align="left" style="padding-left:10px;"><img id="logo" src="{{ asset('images/apollo-logo.jpg') }}" alt="Apollo Assets Manager"></td>
-                <td align="left">Apollo Asset Manangement<br><small>A Central Learning Partnership Trust (CLPT) System &copy; 2021</small><br><strong>Consumables</strong>
-                </td>
-                <td align="right" style="padding-right: 10px;">
-                    Report On: {{ \Carbon\Carbon::now()->format('d-m-Y at H:i')}}<br>Report by: {{auth()->user()->name;}}
-                </td>
-            </tr>
-        </table>
-    </header>
+@section('content')
     <table id="assetsTable" class="table table-striped" width="100%">
         <thead>
         <tr>

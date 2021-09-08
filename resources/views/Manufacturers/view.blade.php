@@ -11,24 +11,27 @@
         <div>
             <a href="{{route("manufacturers.create")}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Manufacturers</a>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm "><i
-                    class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+            @can('viewAny', \App\Models\Manufacturer::class)
+            <a href="{{ route('manufacturer.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading">
+                <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+            </a>
             @if($manufacturers->count() >1)
-            <a href="/exportmanufacturers" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm "><i
-                    class="fas fa-download fa-sm text-white-50"></i>Export</a>
+            <a href="/exportmanufacturers" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
+                    class="fas fa-download fa-sm text-white-50"></i> Export</a>
             @endif
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import Csv</a>
+            @endcan
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
 
         </div>
     </div>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
 
     <section>
@@ -49,13 +52,20 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                      aria-labelledby="dropdownMenuLink">
+                                     @can('view', $manufacturer)
+                                     <a class="dropdown-item" href="{{ route('manufacturers.show', $manufacturer->id)}}">View</a>
+                                     @endcan
+                                     @can('update', $manufacturer)
                                     <a class="dropdown-item" href="{{route("manufacturers.edit",$manufacturer->id)}}">Edit</a>
+                                    @endcan
+                                    @can('delete', $manufacturer)
                                     <form id="form{{$manufacturer->id}}"
                                           action="{{route("manufacturers.destroy",$manufacturer->id)}}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <a class="dropdown-item deleteBtn" data-id="{{$manufacturer->id}}">Delete</a>
                                     </form>
+                                    @endcan
                                 </div>
                             </div>
                         </div>
@@ -71,6 +81,38 @@
                                 </div>
                                 <div class="col-auto">
                                     <img src="{{$manufacturer->photo->path ?? null}}" style="max-width: 50px">
+                                </div>
+                            </div>
+                            <div class="row no-gutters border-top border-info pt-4">
+                                <div class="col-12">
+                                    <table width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>As</small></span></th>
+                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Ac</small></span></th>
+                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Cm</small></span></th>
+                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Cn</small></span></th>
+                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Mi</small></span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">
+                                                    @php
+                                                        $total = 0;
+                                                        foreach($manufacturer->assetModel as $assetModel){
+                                                            $total += $assetModel->assets->count();
+                                                        }   
+                                                    @endphp
+                                                    {{ $total}}
+                                                </td>
+                                                <td class="text-center">{{$manufacturer->accessory->count() ?? "N/A"}}</td>
+                                                <td class="text-center">{{$manufacturer->component->count() ?? "N/A"}}</td>
+                                                <td class="text-center">{{$manufacturer->consumable->count() ?? "N/A"}}</td>
+                                                <td class="text-center">{{$manufacturer->miscellanea->count() ?? "N/A"}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

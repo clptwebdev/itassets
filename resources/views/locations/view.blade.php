@@ -83,6 +83,30 @@
                                 @endif
                         </div>
                     </div>
+                    <div class="row no-gutters border-top border-info pt-4">
+                        <div class="col-12">
+                            <table width="100%">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>As</small></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Ac</small></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Cm</small></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Cn</small></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Mi</small></span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center">{{$location->asset->count() ?? "N/A"}}</td>
+                                        <td class="text-center">{{$location->accessory->count() ?? "N/A"}}</td>
+                                        <td class="text-center">{{$location->component->count() ?? "N/A"}}</td>
+                                        <td class="text-center">{{$location->consumable->count() ?? "N/A"}}</td>
+                                        <td class="text-center">{{$location->miscellanea->count() ?? "N/A"}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,22 +8,23 @@
 @endsection
 
 @section('content')
-{{--    <form action="/components/create/import" method="POST">--}}
 
         <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
             <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
             @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
 
             <div>
-                <form action="components/export-import-errors" method="POST">
+                
                     @csrf
                     <div class="form-group">
                         <input type="hidden" class="form-control " name="name"
                                id="name" placeholder="" value="{{htmlspecialchars(json_encode($valueArray))}}">
                     </div>
+                    <form action="components/export-import-errors" method="POST" class="d-inline">
                     <button type="submit" class="d-inline-block btn btn-sm btn-warning shadow-sm loading"><i
                             class="far fa-save fa-sm text-white-50"></i> Download Errors
                     </button>
+                    </form>
 
                     <a href="/components" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                             class="fas fa-chevron-left fa-sm te
@@ -33,7 +34,6 @@
                     <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                             class="far fa-save fa-sm text-white-50"></i> Save
                     </a>
-                </form>
             </div>
         </div>
 
@@ -211,9 +211,8 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <span id="warranty{{$line}}" class="tooltip-danger">
-                                        <input type="text"
-                                               class="form-control @if(in_array('notes', $errors)){{'border-danger'}}"@endif
+                                        <span id="notes{{$line}}" class="tooltip-danger">
+                                        <input type="text" class="form-control @if(in_array('notes', $errors)){{'border-danger'}}@endif"
                                                name="notes[]"
                                                id="notes" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['notes'] }}" required
@@ -224,7 +223,6 @@
                                 </tr>
                                 @php($line++)
         @endforeach
-{{--    </form>--}}
     </tbody>
     </table>
     </div>

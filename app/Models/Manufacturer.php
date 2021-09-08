@@ -16,24 +16,29 @@ class Manufacturer extends Model {
         return $this->belongsTo(Photo::class, 'photoId');
     }
 
-    public function asset()
-    {
-        return $this->hasMany(Asset::class);
-    }
     public function miscellanea()
     {
         return $this->hasMany(Miscellanea::class);
     }
 
-    public function assetModel(){
+    public function assetModel()
+    {
         return $this->hasMany(AssetModel::class, 'manufacturer_id');
     }
 
-    public function accessory(){
+    public function accessory()
+    {
         return $this->hasMany(Accessory::class);
     }
-    public function consumable(){
+    
+    public function consumable()
+    {
         return $this->hasMany(Consumable::class);
+    }
+
+    public function component()
+    {
+        return $this->hasMany(Component::class);
     }
 
 }

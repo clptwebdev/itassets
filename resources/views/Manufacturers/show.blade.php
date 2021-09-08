@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'View '.$location->name)
+@section('title', 'View '.$manufacturer->name)
 
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
@@ -9,22 +9,20 @@
 @section('content')
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">View Location</h1>
+    <h1 class="h3 mb-0 text-gray-800">View Manufacturers</h1>
     <div>
-        <a href="{{ route('location.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+        <a href="{{ route('manufacturers.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
-        @can('delete', $location)
+        @can('delete', $manufacturer)
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn"><i
                 class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
         @endcan
-        @can('update', $location)
-        <a href="{{ route('location.edit', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+        @can('update', $manufacturer)
+        <a href="{{ route('manufacturers.edit', $manufacturer->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
         @endcan
-        @can('view', $location)
-        <a href="{{ route('location.showPdf', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
+        <a href="{{ route('manufacturer.showPdf', $manufacturer->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-        @endcan
     </div>
 </div>
 
@@ -37,32 +35,29 @@
 @endif
 
 <section>
-    <p class="mb-4">Information regarding {{ $location->name }}, the assets that are currently assigned to the location and any request information.</p>
+    <p class="mb-4">Information regarding {{ $manufacturer->name }}, the assets that are currently assigned to the location and any request information.</p>
 
     <div class="row pl-4 pr-2">
-        <div class="col-12 col-sm-4 col-md-3 col-xl-2 bg-white rounded overflow-hidden" style="border: solid 3px {{ $location->icon ?? '#666'}};">
-            @if($location->photo()->exists())
-            <img src="{{ asset($location->photo->path) }}" width="100%" alt="{{ $location->name }}" title="{{ $location->name }}">
+        <div class="col-12 col-sm-4 col-md-3 col-xl-2 bg-white rounded overflow-hidden d-flex align-items-middle" style="border: solid 3px #666;">
+            @if($manufacturer->photo()->exists())
+            <img src="{{ asset($manufacturer->photo->path) }}" width="100%" alt="{{ $manufacturer->name }}" title="{{ $manufacturer->name }}">
+            @else
+            <img src="{{asset('images/svg/manufacturer_image.svg')}}" width="100%" alt="{{ $manufacturer->name }}" title="{{ $manufacturer->name }}">
             @endif
         </div>
         <div class="col-12 col-sm-8 col-md-9 col-xl-10">
-            <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid {{$location->icon}};">
+            <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid #666;">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold" style="color: {{$location->icon}};">Location Information</h6>
+                    <h6 class="m-0 font-weight-bold">Location Information</h6>
                 </div>
                 <div class="card-body">
                     <div class="row no-gutters">
                         <div class="col mr-2">
                             <div class="mb-1">
-                                {{ $location->name }}<br>
-                                <p>{{ $location->address_1 }}<br>
-                                    @if($location->address_2 != "")
-                                    {{ $location->address_2 }}<br>
-                                    @endif
-                                    {{ $location->city }}<br>
-                                    {{ $location->postcode }}</p>
-                                <p>Tel: {{ $location->telephone }}</p>
-                                <p>Email: {{ $location->email }}</p>
+                                <p><strong>{{ $manufacturer->name }}</strong></p><br>
+                                <p>Tel: {{ $manufacturer->supportPhone }}</p>
+                                <p>Email: {{ $manufacturer->supportEmail }}</p>
+                                <p>URL: {{ $manufacturer->supportUrl }}</p>
                             </div>
                         </div>
                     </div>
@@ -85,7 +80,7 @@
                     <thead>
                     <tr>
                         <th class="col-9 col-md-2"><small>Item</small></th>
-                        <th class="col-1 col-md-auto text-center"><small>Manufacturer</small></th>
+                        <th class="col-1 col-md-auto text-center"><small>Location</small></th>
                         <th class="col-1 col-md-auto"><small>Tag</small></th>
                         <th class="d-none d-xl-table-cell"><small>Date</small></th>
                         <th class="d-none d-xl-table-cell text-center"><small>Cost</small></th>
@@ -98,7 +93,7 @@
                     <tfoot>
                     <tr>
                         <th><small>Item</small></th>
-                        <th class="text-center"><small>Manufacturer</small></th>
+                        <th class="text-center"><small>Location</small></th>
                         <th><small>Tag</small></th>
                         <th class=" d-none d-xl-table-cell"><small>Date</small></th>
                         <th class=" d-none d-xl-table-cell"><small>Cost</small></th>
@@ -109,13 +104,13 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    @foreach($location->asset as $asset)
+                    @foreach($manufacturer->assetModel as $assetModel)
+                    @foreach($assetModel->assets as $asset)
                         <tr>
-                            <td>{{ $asset->name ?? 'No Model'}}<br>
-                                {{ $asset->model->name ?? 'No Model'}}<br><small
+                            <td>{{ $asset->name }}<br>
+                                {{ $assetModel->name ?? 'No Model'}}<br><small
                                     class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
-                            <td class="text-center">{{ $asset->model->manufacturer->name ?? 'No Model'}}</td>
-                            </td>
+                            <td class="text-center" style="color: {{$asset->location->icon ?? '#666'}}">{{ $asset->location->name ?? 'Unallocated'}}</td>
                             <td>{{ $asset->asset_tag }}</td>
                             <td class="d-none d-md-table-cell"
                                 data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
@@ -181,6 +176,7 @@
                             </td>
                         </tr>
                     @endforeach
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -197,7 +193,7 @@
                     <thead>
                     <tr>
                         <th><small>Name</small></th>
-                        <th class="text-center"><small>Manufacturers</small></th>
+                        <th class="text-center"><small>Location</small></th>
                         <th><small>Date</small></th>
                         <th><small>Cost</small></th>
                         <th><small>Supplier</small></th>
@@ -209,7 +205,7 @@
                     <tfoot>
                         <tr>
                             <th><small>Name</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
+                            <th class="text-center"><small>Location</small></th>
                             <th><small>Purchased Date</small></th>
                             <th><small>Purchased Cost</small></th>
                             <th><small>Supplier</small></th>
@@ -219,14 +215,14 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                    @foreach($location->accessory as $accessory)
+                    @foreach($manufacturer->accessory as $accessory)
 
                         <tr>
                             <td>{{$accessory->name}}
                                 <br>
                                 <small>{{$accessory->serial_no}}</small>
                             </td>
-                            <td class="text-center">{{$accessory->manufacturer->name ?? "N/A"}}</td>
+                            <td class="text-center" style="color: {{$accessory->location->icon ?? '#666'}}">{{ $accessory->location->name ?? 'Unallocated'}}</td>
                             <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
                             <td>£{{$accessory->purchased_cost}}</td>
                             <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
@@ -282,7 +278,7 @@
                     <thead>
                     <tr>
                         <th><small>Name</small></th>
-                        <th class="text-center"><small>Manufacturers</small></th>
+                        <th class="text-center"><small>Location</small></th>
                         <th><small>Purchased Date</small></th>
                         <th><small>Purchased Cost</small></th>
                         <th><small>Supplier</small></th>
@@ -294,7 +290,7 @@
                     <tfoot>
                     <tr>
                         <th><small>Name</small></th>
-                        <th class="text-center"><small>Manufacturers</small></th>
+                        <th class="text-center"><small>Location</small></th>
                         <th><small>Purchased Date</small></th>
                         <th><small>Purchased Cost</small></th>
                         <th><small>Supplier</small></th>
@@ -304,14 +300,14 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    @foreach($location->component as $component)
+                    @foreach($manufacturer->component as $component)
 
                         <tr>
                             <td>{{$component->name}}
                                 <br>
                                 <small>{{$component->serial_no}}</small>
                             </td>
-                            <td class="text-center">{{$component->manufacturer->name ?? "N/A"}}</td>
+                            <td class="text-center" style="color: {{$component->location->icon ?? '#666'}}">{{ $component->location->name ?? 'Unallocated'}}</td>
                             <td>{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
                             <td>{{$component->purchased_cost}}</td>
                             <td>{{$component->supplier->name ?? 'N/A'}}</td>
@@ -364,7 +360,7 @@
                     <thead>
                     <tr>
                         <th><small>Name</small></th>
-                        <th class="text-center"><small>Manufacturers</small></th>
+                        <th class="text-center"><small>Location</small></th>
                         <th><small>Purchased Date</small></th>
                         <th><small>Purchased Cost</small></th>
                         <th><small>Supplier</small></th>
@@ -376,7 +372,7 @@
                     <tfoot>
                         <tr>
                             <th><small>Name</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
+                            <th class="text-center"><small>Location</small></th>
                             <th><small>Purchased Date</small></th>
                             <th><small>Purchased Cost</small></th>
                             <th><small>Supplier</small></th>
@@ -386,13 +382,13 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                    @foreach($location->consumable as $consumable)
+                    @foreach($manufacturer->consumable as $consumable)
                         <tr>
                             <td>{{$consumable->name}}
                                 <br>
                                 <small>{{$consumable->serial_no}}</small>
                             </td>
-                            <td class="text-center">{{$consumable->manufacturer->name ?? "N/A"}}</td>
+                            <td class="text-center" style="color: {{$consumable->location->icon ?? '#666'}}">{{ $consumable->location->name ?? 'Unallocated'}}</td>
                             <td>{{\Carbon\Carbon::parse($consumable->purchased_date)->format("d/m/Y")}}</td>
                             <td>£{{$consumable->purchased_cost}}</td>
                             <td>{{$consumable->supplier->name ?? 'N/A'}}</td>
@@ -447,7 +443,7 @@
                     <thead>
                     <tr>
                         <th><small>Name</small></th>
-                        <th class="text-center"><small>Manufacturer</small></th>
+                        <th class="text-center"><small>Location</small></th>
                         <th><small>Purchased Date</small></th>
                         <th><small>Purchased Cost</small></th>
                         <th><small>Supplier</small></th>
@@ -459,7 +455,7 @@
                     <tfoot>
                         <tr>
                             <th><small>Name</small></th>
-                            <th class="text-center"><small>Manufacturer</small></th>
+                            <th class="text-center"><small>Location</small></th>
                             <th><small>Purchased Date</small></th>
                             <th><small>Purchased Cost</small></th>
                             <th><small>Supplier</small></th>
@@ -469,13 +465,13 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                    @foreach($location->miscellanea as $miscellanea)
+                    @foreach($manufacturer->miscellanea as $miscellanea)
                         <tr>
                             <td>{{$miscellanea->name}}
                                 <br>
                                 <small>{{$miscellanea->serial_no}}</small>
                             </td>
-                            <td class="text-center">{{ $miscellanea->manufacturer->name ?? 'Unallocated'}}</td>
+                            <td class="text-center" style="color: {{$miscellanea->location->icon ?? '#666'}}">{{ $miscellanea->location->name ?? 'Unallocated'}}</td>
                             <td>{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
                             <td>£{{$miscellanea->purchased_cost}}</td>
                             <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
@@ -540,21 +536,20 @@
     aria-labelledby="removeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form action="{{ route('location.destroy', $location->id)}}" method="POST">
+            <form action="{{ route('manufacturers.destroy', $manufacturer->id)}}" method="POST">
+                @csrf
+                @method('DELETE')
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeModalLabel">Are you sure you want to delete this Location?
+                    <h5 class="modal-title" id="removeModalLabel">Are you sure you want to delete this Manufacturer?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    @csrf
-                    @method('DELETE')
-                    <input id="location-id" type="hidden" value="{{ $location->id }}">
-                    <p>Select "Delete" to remove this location from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assets assigned to this location will become
-                        available.</small>
+                    <input id="location-id" type="hidden" value="{{ $manufacturer->id }}">
+                    <p>Select "Delete" to remove this Manufacturer from the system.</p>
+                    <small class="text-danger">**Warning this is permanent. Everything that is linked and assigned to this Manufacturer will have the Manufacturer set to NULL</small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -570,16 +565,17 @@
 @section('js')
 <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script>
+
     $('.deleteBtn').click(function() {
         $('#removeModal').modal('show')
     });
 
     $(document).ready( function () {
         $('table.logs').DataTable({
-                "autoWidth": false,
-                "pageLength": 10,
-            });
-    } );
+            "autoWidth": false,
+            "pageLength": 10,
+        });
+    });
 </script>
 
 @endsection

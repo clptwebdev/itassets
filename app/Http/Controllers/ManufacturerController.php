@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use phpDocumentor\Reflection\Location;
+use PDF;
+use Illuminate\Support\Facades\Storage;
 
 class ManufacturerController extends Controller {
 
@@ -19,6 +21,15 @@ class ManufacturerController extends Controller {
             "manufacturers" => Manufacturer::all(),
         ]);
 
+    }
+
+    public function show(Manufacturer $manufacturer)
+    {
+        if (auth()->user()->cant('view', $manufacturer)) {
+            return redirect(route('errors.forbidden', ['Manufacturer', $manufacturer->id, 'view']));
+        }
+
+        return view('manufacturers.show', compact('manufacturer'));
     }
 
     public function create()
@@ -124,7 +135,16 @@ class ManufacturerController extends Controller {
 
     public function export(Manufacturer $manufacturer)
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new ManufacturerExport, 'manufacturer.csv');
+        if (auth()->user()->cant('viewAny', Manufacturer::class)) {
+            return redirect(route('errors.forbidden', ['area', 'manufacturers', 'export']));
+        }
+            
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new ManufacturerExport, "/public/csv/manufacturers-ex-{$date}.csv");
+        $url = asset("storage/csv/manufacturers-ex-{$date}.csv");
+        return redirect(route('manufacturers.index'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput(); 
     }
 
     public function import(Request $request)
@@ -211,6 +231,42 @@ class ManufacturerController extends Controller {
             return redirect('/manufacturers');
         }
 
+    }
+
+    public function downloadPDF()
+    {
+        if (auth()->user()->cant('viewAny', Manufacturer::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Manufacturers', 'View PDF']));
+        }
+
+        $manufacturers = Manufacturer::all();
+
+
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('manufacturers.pdf', compact('manufacturers'));
+        $pdf->setPaper('a4', 'landscape');
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        Storage::put("public/reports/manufacturers-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/manufacturers-{$date}.pdf");
+        return redirect(route('manufacturers.index'))
+            ->with('success_message', "Your Reprot has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
+
+    }
+
+    public function downloadShowPDF(Manufacturer $manufacturer)
+    {
+        if (auth()->user()->cant('view', Manufacturer::class)) {
+            return redirect(route('errors.forbidden', ['manufacturers', $manufacturer->id, 'View PDF']));
+        }
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('manufacturers.showPdf', compact('manufacturer'));
+
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        //return $pdf->download("{$location->name}-{$date}.pdf");
+        Storage::put("public/reports/{$manufacturer->name}-{$date}.pdf", $pdf->output());
+        $url = asset("storage/reports/{$manufacturer->name}-{$date}.pdf");
+        return redirect(route('manufacturers.show', $manufacturer->id))
+            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->withInput();
     }
 
 }
