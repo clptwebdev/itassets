@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '')
+@section('title', 'View Logs')
 
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
@@ -14,14 +14,14 @@
                 <a href="/" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Back to Dashboard</a>
             @if($logs->count() > 1)
-                @can('viewAny', auth()->user())
+{{--                @can('viewAny', auth()->user())--}}
                     <form class="d-inline-block" action="/exportlogs" method="POST">
                         @csrf
                         <input type="hidden" value="{{ json_encode($logs->pluck('id'))}}" name="logs"/>
                         <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
                                 class="fas fa-download fa-sm text-dark-50"></i> Export</button>
                     </form>
-                @endcan
+{{--                @endcan--}}
             @endif
         </div>
     </div>
