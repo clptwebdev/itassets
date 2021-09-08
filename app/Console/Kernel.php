@@ -36,13 +36,23 @@ class Kernel extends ConsoleKernel
             echo ("This Database has backup has been created and stored in storage/app/Apollo---Asset-Manager Within your application");
 
         });
+        //cleans all backups Monthly
         $schedule->call(function(){
             $files = Storage::files('public/Apollo---Asset-Manager');
             Storage::delete($files);
         })
             ->lastDayOfMonth()
             ->runInBackground();
+        //deletes all csv's Monthly
+        $schedule->call(function(){
+            $files = Storage::files('/public/csv');
+            Storage::delete($files);
+        })
+            ->weekly()
+            ->runInBackground();
+
     }
+
 
     /**
      * Register the commands for the application.
