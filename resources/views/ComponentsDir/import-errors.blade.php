@@ -365,7 +365,7 @@
                         window.location.href = '/components';
                     }else{
                         $('.form-control').removeClass('border-danger');
-                        $('.form-control').tooltip('disable');
+                        $('.form-control').tooltip('dispose');
                         $('input').removeClass('border-danger');
                         var i = 0;
                         Object.entries(response).forEach(entry => {
@@ -376,7 +376,7 @@
                             $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
                             $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('data-toggle', 'tooltip');
                             $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('title', error);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip('enable');
+                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip();
                             i++;
                         });
                         $('.alert.alert-danger').html(`There were ${i} errors in the following rows`);

@@ -60,7 +60,7 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
             'status_id' => [
             ],
             'purchased_date' => [
-                'string',
+                'date',
             ],
             'supplier_id' => [
                 'string',

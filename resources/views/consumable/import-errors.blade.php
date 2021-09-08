@@ -24,9 +24,9 @@
                             class="far fa-save fa-sm text-white-50"></i> Download Errors
                     </button>
 
-                    <a href="/components" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    <a href="{{ route('consumables.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                             class="fas fa-chevron-left fa-sm te
-                        xt-white-50"></i> Back to Components</a>
+                        xt-white-50"></i> Back to Consumables</a>
                     <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                             class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
                     <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
@@ -111,8 +111,9 @@
                                     </td>
                                     <td>
                                         <span id="status_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown" class="form-control @if(in_array('status_id', $errors)){{ 'border-danger'}}@endif" name="status_id[]" id="status_id" required
-                                        @if(array_key_exists('status_id', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#status_id".$line."' data-placement='top' title='{$errorValues[$row]['status_id']}'" !!}@endif
+                                        <select type="dropdown" class="form-control @if(in_array('status_id', $errors)){{ 'border-danger'}}@endif" name="status_id[]" id="status_id" 
+                                            required data-container='#status_id{{$line}}' data-placement='top'
+                                        @if(array_key_exists('status_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['status_id']}'" !!}@endif
                                         >
                                             <option value="0" @if($valueArray[$row]['status_id'] == ''){{'selected'}}@endif>Please Select a Status</option>
                                             @foreach($statuses as $status)
@@ -125,7 +126,8 @@
                                     <td>
                                         <span id="supplier_id{{$line}}" class="tooltip-danger">
                                         <select type="dropdown" class="form-control @if(in_array('supplier_id', $errors)){{ 'border-danger'}}@endif" name="supplier_id[]" required
-                                        @if(array_key_exists('supplier_id', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#supplier_id".$line."' data-placement='top' title='{$errorValues[$row]['supplier_id']}'" !!}@endif
+                                        data-container='#supplier_id{{$line}}' data-placement='top'
+                                        @if(array_key_exists('supplier_id', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['supplier_id']}'" !!}@endif
                                         >
                                             <option value="0" @if($valueArray[$row]['supplier_id'] == ''){{'selected'}}@endif>Please Select a Supplier</option>
                                             @foreach($suppliers as $supplier)
@@ -137,7 +139,8 @@
                                     <td>
                                         <span id="manufacturer_id{{$line}}" class="tooltip-danger">
                                         <select type="dropdown" class="form-control @if(in_array('manufacturer_id', $errors)){{ 'border-danger'}}@endif" name="manufacturer_id[]" required
-                                        @if(array_key_exists('manufacturer_id', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#manufacturer_id".$line."' data-placement='top' title='{$errorValues[$row]['manufacturer_id']}'" !!}@endif
+                                        data-container='#manufacturer_id{{$line}}' data-placement='top'
+                                        @if(array_key_exists('manufacturer_id', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['manufacturer_id']}'" !!}@endif
                                         >
                                             <option value="0" @if($valueArray[$row]['manufacturer_id'] == ''){{'selected'}}@endif>Please Select a Manufacturer</option>
                                             @foreach($manufacturers as $manufacturer)
@@ -149,7 +152,8 @@
                                     <td>
                                         <span id="location_id{{$line}}" class="tooltip-danger">
                                         <select type="dropdown" class="form-control @if(in_array('location_id', $errors)){{ 'border-danger'}}@endif" name="location_id[]" required
-                                        @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#location_id".$line."' data-placement='top' title='{$errorValues[$row]['location_id']}'" !!}@endif
+                                        data-container='#location_id{{$line}}' data-placement='top'
+                                        @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['location_id']}'" !!}@endif
                                         >
                                             <option value="0" @if($valueArray[$row]['location_id'] == ''){{'selected'}}@endif>Please Select a Location</option>
                                             @foreach($locations as $location)
@@ -161,8 +165,8 @@
                                     <td>
                                         <span id="order_no{{$line}}" class="tooltip-danger">
                                         <input type="text" class="form-control @if(in_array('order_no', $errors)){{ 'border-danger'}}@endif" name="order_no[]" id="order_no" placeholder="This Row is Empty Please Fill!"
-                                            value="{{ $valueArray[$row]['order_no'] }}" required
-                                            @if(array_key_exists('order_no', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#order_no".$line."' data-placement='top' title='{$errorValues[$row]['order_no']}'" !!}@endif       
+                                            value="{{ $valueArray[$row]['order_no'] }}" required data-container='#order_no{{$line}}' data-placement='top'
+                                            @if(array_key_exists('order_no', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['order_no']}'" !!}@endif       
                                         >
                                         </span>
                                     </td>
@@ -170,8 +174,8 @@
                                         <span id="serial_no{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="form-control @if(in_array('serial_no', $errors)){{ 'border-danger'}}@endif" name="serial_no[]" id="serial_no" placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['serial_no'] }}" required
-                                               @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#serial_no".$line."' data-placement='top' title='{$errorValues[$row]['serial_no']}'" !!}@endif       
+                                               value="{{ $valueArray[$row]['serial_no'] }}" required data-container='#serial_no{{$line}}' data-placement='top'
+                                               @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['serial_no']}'" !!}@endif       
                                         >
                                         </span>
                                     </td>
@@ -181,8 +185,8 @@
                                                class="form-control @if(in_array('purchased_cost', $errors)){{'border-danger'}}@endif"
                                                name="purchased_cost[]"
                                                id="purchased_cost" placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['purchased_cost'] }}" required
-                                               @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#purchased_cost".$line."' data-placement='top' title='{$errorValues[$row]['purchased_cost']}'" !!}@endif       
+                                               value="{{ $valueArray[$row]['purchased_cost'] }}" required data-container='#purchased_cost{{$line}}' data-placement='top'
+                                               @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['purchased_cost']}'" !!}@endif       
                                         >
                                         </span>
                                     </td>
@@ -204,8 +208,8 @@
                                                class="form-control @if(in_array('warranty', $errors)){{'border-danger'}}@endif"
                                                name="warranty[]"
                                                id="warranty" placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['warranty'] }}" required
-                                               @if(array_key_exists('warranty', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#warranty".$line."' data-placement='top' title='{$errorValues[$row]['warranty']}'" !!}@endif
+                                               value="{{ $valueArray[$row]['warranty'] }}" required data-container='#warranty{{$line}}' data-placement='top' 
+                                               @if(array_key_exists('warranty', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['warranty']}'" !!}@endif
                                         >
                                         </span>
                                     </td>
@@ -215,8 +219,8 @@
                                                class="form-control @if(in_array('notes', $errors)){{'border-danger'}}"@endif
                                                name="notes[]"
                                                id="notes" placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['notes'] }}" required
-                                               @if(array_key_exists('notes', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#notes".$line."' data-placement='top' title='{$errorValues[$row]['notes']}'" !!}@endif  
+                                               value="{{ $valueArray[$row]['notes'] }}" required data-container='#notes{{$line}}' data-placement='top'
+                                               @if(array_key_exists('notes', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['notes']}'" !!}@endif  
                                                >
                                         </span>
                                     </td>
@@ -362,10 +366,10 @@
                 contentType: false,
                 success: function(response){
                     if(response === 'Success'){
-                        window.location.href = '/components';
+                        window.location.href = '/consumables';
                     }else{
                         $('.form-control').removeClass('border-danger');
-                        $('.form-control').tooltip('disable');
+                        $('.form-control').tooltip('dispose');
                         $('input').removeClass('border-danger');
                         var i = 0;
                         Object.entries(response).forEach(entry => {
@@ -376,7 +380,7 @@
                             $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
                             $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('data-toggle', 'tooltip');
                             $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('title', error);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip('enable');
+                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip();
                             i++;
                         });
                         $('.alert.alert-danger').html(`There were ${i} errors in the following rows`);

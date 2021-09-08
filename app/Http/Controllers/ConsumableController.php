@@ -97,11 +97,20 @@ class ConsumableController extends Controller
 
     public function importErrors(Request $request)
     {
-
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
-        return \Maatwebsite\Excel\Facades\Excel::download(new consumableErrorsExport($export), 'ConsumablesImportErrors.csv');
+
+        if (auth()->user()->cant('viewAll', Consumable::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Consumables', 'export']));
+        }
+            
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new consumableErrorsExport($export), "/public/csv/consumables-errors-{$date}.csv");
+        $url = asset("storage/csv/consumables-errors-{$date}.csv");
+        return redirect(route('consumables.index'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput(); 
     }
 
     public function ajaxMany(Request $request)

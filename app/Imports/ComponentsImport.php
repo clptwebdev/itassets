@@ -61,7 +61,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
             ],
             'purchased_date' => [
-                'string',
+                'date',
             ],
             'supplier_id' => [
                 'required',
@@ -72,7 +72,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 'required'
             ],
             'manufacturer_id' => [
-
+                
             ],
 
         ];

@@ -97,7 +97,7 @@ class ComponentController extends Controller {
             }
                 
             $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-            \Maatwebsite\Excel\Facades\Excel::store(new componentErrorsExport($export), "storage/csv/components-errors-{$date}.csv");
+            \Maatwebsite\Excel\Facades\Excel::store(new componentErrorsExport($export), "/public/csv/components-errors-{$date}.csv");
             $url = asset("storage/csv/components-errors-{$date}.csv");
             return redirect(route('components.index'))
                 ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")

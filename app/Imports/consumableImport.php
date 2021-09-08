@@ -61,7 +61,7 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
             ],
             'purchased_date' => [
-                'string',
+                'date',
             ],
             'supplier_id' => [
                 'string',
