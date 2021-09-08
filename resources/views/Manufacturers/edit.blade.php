@@ -10,11 +10,11 @@
         @csrf
         @method("put")
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Edit {{$manufacturer->name}} Manufacturer Details</h1>
+            <h1 class="h3 mb-0 text-gray-800">Edit Manufacturer Details</h1>
 
             <div>
                 <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Back to Manufacturers</a>
+                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Manufacturers</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
@@ -74,8 +74,8 @@
                         <div class="card-body">
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
-                                    <h4 class="h6 mb-3">Location Image</h4>
-                                    <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
+                                    <h4 class="h6 mb-3">Manufacturer</h4>
+                                    <img id="profileImage" src="{{ asset('images/svg/manufacturer_image.svg') }}"
                                          width="100%"
                                          alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     <input type="hidden" id="photoId" name="photoId" value="0">

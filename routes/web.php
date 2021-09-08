@@ -145,6 +145,11 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/locations/pdf', 'App\Http\Controllers\LocationController@downloadPDF')->name('location.pdf');
         Route::get('/locations/{location}/pdf', 'App\Http\Controllers\LocationController@downloadShowPDF')->name('location.showPdf');
         Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
+    //Manufacturer Routes
+        Route::resource('/manufacturers', \App\Http\Controllers\ManufacturerController::class);
+        Route::get('/manufactuer/pdf', 'App\Http\Controllers\ManufacturerController@downloadPDF')->name('manufacturer.pdf');
+        Route::get('/manufacturer/{manufacturer}/pdf', 'App\Http\Controllers\ManufacturerController@downloadShowPDF')->name('manufacturer.showPdf');
+        Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
     //Permission Routes
 
 
@@ -156,7 +161,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/databasebackupdownload/{$file_name}', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
 
 // Manufacturers Routes (Doesn't include import routes)
-    Route::resource('/manufacturers', \App\Http\Controllers\ManufacturerController::class);
+    
 
 // status Routes (Doesn't include import routes)
     Route::resource('/status', 'App\Http\Controllers\StatusController');
@@ -180,7 +185,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get("/exportmiscellaneous", [\App\Http\Controllers\MiscellaneaController::class, "export"]);
     Route::get("/exportconsumables", [\App\Http\Controllers\ConsumableController::class, "export"]);
     Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
-    Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
     Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
     Route::get("/exportusers", [\App\Http\Controllers\UserController::class, "export"]);
     Route::get("/exportcomponents", [\App\Http\Controllers\ComponentController::class, "export"]);

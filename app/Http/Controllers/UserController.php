@@ -18,7 +18,7 @@ class UserController extends Controller
 
     public function index()
     {
-        if (auth()->user()->cant('viewAll', Consumable::class)) {
+        if (auth()->user()->cant('viewAll', User::class)) {
             return redirect(route('errors.forbidden', ['area', 'Users', 'view']));
         }
 

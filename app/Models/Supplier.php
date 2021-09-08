@@ -15,24 +15,32 @@ class Supplier extends Model
     {
         return $this->belongsTo(Photo::class);
     }
+
     public function asset(){
-        return $this->hasOne(Asset::class);
+        return $this->hasMany(Asset::class);
 
     }
+
     public function miscellanea()
     {
-        return $this->hasOne(miscellanea::class);
+        return $this->hasMany(miscellanea::class);
     }
-    public function component(){
-        return $this->hasOne(Component::class);
+
+    public function component()
+    {
+        return $this->hasMany(Component::class);
 
     }
-    public function accessory(){
-        return $this->hasOne(Accessory::class);
+
+    public function accessory()
+    {
+        return $this->hasMany(Accessory::class);
 
     }
-    public function consumable(){
-        return $this->hasOne(Consumable::class);
+
+    public function consumable()
+    {
+        return $this->hasMany(Consumable::class);
 
     }
 }
