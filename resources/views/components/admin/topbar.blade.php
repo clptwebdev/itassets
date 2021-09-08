@@ -88,7 +88,7 @@
                 @php
                     foreach($logs as $log){
                 @endphp
-                <a class="dropdown-item d-flex align-items-center" href="#">
+                <a class="dropdown-item d-flex align-items-center" href="{{route("logs.index")}}">
                     <div class="mr-3">
 
                         @php

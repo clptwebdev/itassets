@@ -16,7 +16,7 @@ class LogController extends Controller
             return redirect(route('errors.forbidden', ['area', 'Logs', 'view']));
         }
         return view('logs.view', [
-            "logs" => Log::all(),
+            "logs" => Log::Latest('created_at')->get(),
         ]);
     }
     public function export(Request $request)
