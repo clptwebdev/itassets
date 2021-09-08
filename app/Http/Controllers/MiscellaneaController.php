@@ -40,7 +40,7 @@ class MiscellaneaController extends Controller
         }
 
         return view('miscellanea.view',[
-            "miscellaneous"=>miscellanea::all(),
+            "miscellaneous"=>Miscellanea::all(),
         ]);
     }
 

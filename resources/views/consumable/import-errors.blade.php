@@ -216,7 +216,7 @@
                                     <td>
                                         <span id="warranty{{$line}}" class="tooltip-danger">
                                         <input type="text"
-                                               class="form-control @if(in_array('notes', $errors)){{'border-danger'}}"@endif
+                                               class="form-control @if(in_array('notes', $errors)){{'border-danger'}}@endif"
                                                name="notes[]"
                                                id="notes" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['notes'] }}" required data-container='#notes{{$line}}' data-placement='top'
