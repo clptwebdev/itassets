@@ -25,6 +25,7 @@ class AssetExport implements FromArray, WithHeadings {
     {
         return [
             "asset_tag",
+            "name",
             "serial_no",
             "asset_model",
             "status_id",
@@ -46,6 +47,7 @@ class AssetExport implements FromArray, WithHeadings {
         foreach($this->assets as $asset){
             $array =  [];
             $array['asset_tag'] = $asset->asset_tag ;
+            $array['name'] = $asset->name ;
             $array['serial_no'] = $asset->serial_no ?? 'Unknown';
             $array['asset_model'] = $asset->model->name ?? 'Unknown';
             $array['status_id'] = $asset->status->name ?? 'Unknown';

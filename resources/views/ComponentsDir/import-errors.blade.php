@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'View Components Import errors')
 
 @section('title', 'Import Errors')
 
@@ -11,7 +12,7 @@
         <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
             <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
             @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
-            
+
             <div>
                 
                     @csrf
@@ -119,7 +120,7 @@
                                                 <option value="{{$status->id }}" @if( $valueArray[$row]['status_id'] == $status->name){{'selected'}}@endif>{{ $status->name }}</option>
                                             @endforeach
                                         </select>
-                                       
+
                                         </span>
                                     </td>
                                     <td>
@@ -162,7 +163,7 @@
                                         <span id="order_no{{$line}}" class="tooltip-danger">
                                         <input type="text" class="form-control @if(in_array('order_no', $errors)){{ 'border-danger'}}@endif" name="order_no[]" id="order_no" placeholder="This Row is Empty Please Fill!"
                                             value="{{ $valueArray[$row]['order_no'] }}" required
-                                            @if(array_key_exists('order_no', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#order_no".$line."' data-placement='top' title='{$errorValues[$row]['order_no']}'" !!}@endif       
+                                            @if(array_key_exists('order_no', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#order_no".$line."' data-placement='top' title='{$errorValues[$row]['order_no']}'" !!}@endif
                                         >
                                         </span>
                                     </td>
@@ -171,7 +172,7 @@
                                         <input type="text"
                                                class="form-control @if(in_array('serial_no', $errors)){{ 'border-danger'}}@endif" name="serial_no[]" id="serial_no" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['serial_no'] }}" required
-                                               @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#serial_no".$line."' data-placement='top' title='{$errorValues[$row]['serial_no']}'" !!}@endif       
+                                               @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#serial_no".$line."' data-placement='top' title='{$errorValues[$row]['serial_no']}'" !!}@endif
                                         >
                                         </span>
                                     </td>
@@ -182,7 +183,7 @@
                                                name="purchased_cost[]"
                                                id="purchased_cost" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['purchased_cost'] }}" required
-                                               @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#purchased_cost".$line."' data-placement='top' title='{$errorValues[$row]['purchased_cost']}'" !!}@endif       
+                                               @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#purchased_cost".$line."' data-placement='top' title='{$errorValues[$row]['purchased_cost']}'" !!}@endif
                                         >
                                         </span>
                                     </td>
@@ -215,7 +216,7 @@
                                                name="notes[]"
                                                id="notes" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['notes'] }}" required
-                                               @if(array_key_exists('notes', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#notes".$line."' data-placement='top' title='{$errorValues[$row]['notes']}'" !!}@endif  
+                                               @if(array_key_exists('notes', $errorValues[$row])) {!! "data-toggle='tooltip' data-container='#notes".$line."' data-placement='top' title='{$errorValues[$row]['notes']}'" !!}@endif
                                                >
                                         </span>
                                     </td>
@@ -285,7 +286,7 @@
                 "order": [[1, "asc"]]
             });
         });
-        
+
         //validation
         function checkErrors(obj){
 

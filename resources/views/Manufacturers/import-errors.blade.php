@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'View Manufacturer Import errors')
 
 @section('title', 'Import Errors')
 
