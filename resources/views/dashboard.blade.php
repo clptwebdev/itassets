@@ -92,7 +92,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Assets</h6>
@@ -100,11 +100,11 @@
 
             <div class="card-body">
                 @php
-                    $total = $assets->count();
-                    $deployable = 0;
-                    foreach(\App\Models\Status::where('deployable', '=', 1)->get() as $status){
-                        $deployable += $status->assets->count();
-                    }
+                        $total = $assets->count();
+                        $deployable = 0;
+                        foreach(\App\Models\Status::where('deployable', '=', 1)->get() as $status){
+                            $deployable += $status->assets->count();
+                        }
                 @endphp
                 @if($deployable!=0)
                 <h4 class="small font-weight-bold">Asset Status<span class="float-right">{{round(($deployable / $total) * 100) ?? 0}}%</span></h4>
@@ -156,7 +156,7 @@
                 @if($completed != 0)
                 <h4 class="small font-weight-bold">Audit Status <span class="float-right">{{ round(($completed / $assets->count()) * 100)}}% Complete</span></h4>
                 @endif
-                
+
                 @if($audits_due !=0)
                 <div class="progress mb-1">
 
@@ -175,15 +175,15 @@
                 </div>
                 @endif
                 <small>
-                    <i class="fas fa-circle text-danger" style></i> Overdue Audit 
-                    <i class="fas fa-circle text-warning" style></i> Audit Due 
+                    <i class="fas fa-circle text-danger" style></i> Overdue Audit
+                    <i class="fas fa-circle text-warning" style></i> Audit Due
                     <i class="fas fa-circle text-success" style></i> Audit Completed
                 </small>
             </div>
         </div>
     </div>
 </div>
-    
+
 <div class="row">
     <div class="col-xl-6 mb-4">
         <div class="row row-eq-height">

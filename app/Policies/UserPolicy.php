@@ -10,7 +10,7 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-    public function viewAll(){
+    public function viewAll(User $user){
         return $user->role_id != 0 && $user->role_id <= 2;
     }
 

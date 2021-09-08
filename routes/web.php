@@ -185,6 +185,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get("/exportusers", [\App\Http\Controllers\UserController::class, "export"]);
     Route::get("/exportcomponents", [\App\Http\Controllers\ComponentController::class, "export"]);
     Route::get("/exportaccessories", [\App\Http\Controllers\AccessoryController::class, "export"]);
+    Route::Post("/exportlogs", [\App\Http\Controllers\LogController::class, "export"]);
 //Imports
     Route::Post("manufacturers/create/ajax", [\App\Http\Controllers\ManufacturerController::class, "ajaxMany"]);
     Route::post("/importassets", [\App\Http\Controllers\AssetController::class, "import"]);
@@ -212,5 +213,6 @@ Route::group(['middleware' => 'auth'], function() {
 });
 //403 redirects
 Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
-
+ //Logs View
+Route::get("/logs", [\App\Http\Controllers\LogController::class, "index"])->name("logs.index");
 

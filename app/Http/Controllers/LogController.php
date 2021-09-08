@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LogsExport;
 use App\Models\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,9 +12,26 @@ class LogController extends Controller
 
     public function index()
     {
-        return view('components.admin.topbar', [
+        if (auth()->user()->cant('viewAll', auth()->user())) {
+            return redirect(route('errors.forbidden', ['area', 'Logs', 'view']));
+        }
+        return view('logs.view', [
             "logs" => Log::all(),
         ]);
+    }
+    public function export(Request $request)
+    {
+        if (auth()->user()->cant('viewAll', auth()->user())) {
+            return redirect(route('errors.forbidden', ['area', 'Logs', 'export']));
+        }
+        $logs = Log::all()->whereIn('id', json_decode($request->logs));
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new LogsExport($logs), "/public/csv/logs-ex-{$date}.csv");
+        $url = asset("storage/csv/logs-ex-{$date}.csv");
+        return redirect(route('logs.index'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
+
     }
 
     /**
