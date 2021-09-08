@@ -11416,6 +11416,25 @@ tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
   transition: 5s;
 }
 
+.tooltip-danger .tooltip-inner {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #721c24;
+}
+
+.tooltip-danger .tooltip.bs-tooltip-top .arrow:before {
+  border-top-color: #721c24;
+}
+.tooltip-danger .tooltip.bs-tooltip-right .arrow:before {
+  border-right-color: #721c24;
+}
+.tooltip-danger .tooltip.bs-tooltip-bottom .arrow:before {
+  border-bottom-color: #721c24;
+}
+.tooltip-danger .tooltip.bs-tooltip-left .arrow:before {
+  border-left-color: #721c24;
+}
+
 
 @media (max-width: 768px) {
   .auto-width{

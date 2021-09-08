@@ -95,7 +95,17 @@ class AccessoryController extends Controller
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
-        return \Maatwebsite\Excel\Facades\Excel::download(new accessoryErrorsExport($export), 'AccessoryImportErrors.csv');
+
+        if (auth()->user()->cant('viewAll', Accessory::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Accessories', 'export']));
+        }
+            
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new accessoryErrorsExport($export), "/public/csv/accessories-errors-{$date}.csv");
+        $url = asset("storage/csv/accessories-errors-{$date}.csv");
+        return redirect(route('accessories.index'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
     }
 
     public function ajaxMany(Request $request)
@@ -227,7 +237,7 @@ class AccessoryController extends Controller
 
     public function import(Request $request)
     {
-        if (auth()->user()->cant('view', Accessory::class)) {
+        if (auth()->user()->cant('viewAll', Accessory::class)) {
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'import']));
         }
         $extensions = array("csv");
