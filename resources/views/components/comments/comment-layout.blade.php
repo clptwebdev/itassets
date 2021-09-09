@@ -43,11 +43,11 @@
                                                 >Edit</a>
                                                 @endcan
                                                 @can('delete', $comment)
-                                                <form id="form{{$comment->id}}" action="{{ route('comment.destroy', $comment->id) }}"
+                                                <form id="comment{{$comment->id}}" action="{{ route('comment.destroy', $comment->id) }}"
                                                     method="POST" class="d-block p-0 m-0">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <a id="comment_button" class="deleteBtn dropdown-item" href="#"
+                                                    <a id="comment_button" class="deleteComment dropdown-item" href="#"
                                                     data-id="{{$comment->id}}">Delete</a>
                                                 </form>
                                                 @endcan

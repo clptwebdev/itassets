@@ -59,7 +59,7 @@
                         <tr>
                             <td>Device Status: </td>
                             <td><strong>{{ $miscellaneou->status->name ?? 'No Status Set'}}</strong></td>
-                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#miscellaneaStatus">Change Status</button></td>
+                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#changeStatus">Change Status</button></td>
                         </tr>
                     </table>
 
