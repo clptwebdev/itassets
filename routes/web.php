@@ -18,8 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('login/microsoft', 'App\Http\Controllers\OfficeLoginController@redirectToProvider');
 Route::get('login/microsoft/callback', 'App\Http\Controllers\OfficeLoginController@handleProviderCallback');
-//Route::Post('apollo/login/user' ,[\App\Http\Controllers\Auth\ConfirmablePasswordController::class, "aut"] )->name("login.user");
-
 require __DIR__ . '/auth.php';
 
 Route::group(['middleware' => 'auth'], function() {
