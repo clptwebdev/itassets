@@ -47,7 +47,7 @@
                                                     method="POST" class="d-block p-0 m-0">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <a id="comment_button" class="deleteComment dropdown-item" href="#"
+                                                    <a class="dropdown-item deleteComment " href="#"
                                                     data-id="{{$comment->id}}">Delete</a>
                                                 </form>
                                                 @endcan

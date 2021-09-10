@@ -47,7 +47,6 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             ],'name' => [
                 'required',
                 'string',
-
             ],
             'purchased_cost' => [
                 'required',
@@ -60,11 +59,10 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 'required',
             ],
             'purchased_date' => [
-                'string',
-
+                'date_format:"d/m/Y"',
             ],
             'audit_date' => [
-                'nullable'
+                'date_format:"d/m/Y"'
             ],
             'supplier_id' => [
             ],
@@ -164,12 +162,12 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             {
                 $asset->asset_model = 0;
             }
-if($row["audit_date"] === null??0){
-    $asset->audit_date = null;
-}else{
-    $asset->audit_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["audit_date"]))->format("Y-m-d");
+            if($row["audit_date"] === null??0){
+                $asset->audit_date = null;
+            }else{
+                $asset->audit_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["audit_date"]))->format("Y-m-d");
 
-}
+            }
 
             $asset->save();
 

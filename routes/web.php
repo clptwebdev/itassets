@@ -81,7 +81,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::resource('/location', 'App\Http\Controllers\LocationController');
         Route::resource('/comment', 'App\Http\Controllers\CommentController');
         Route::post('permissions/users', 'App\Http\Controllers\UserController@permissions');
-        Route::resource('/supplier', 'App\Http\Controllers\SupplierController');
+        
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
 
         Route::resource('/depreciation', 'App\Http\Controllers\DepreciationController');
@@ -151,6 +151,13 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/manufacturer/{manufacturer}/pdf', 'App\Http\Controllers\ManufacturerController@downloadShowPDF')->name('manufacturer.showPdf');
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
     //Permission Routes
+
+    //Supplier
+        Route::resource('/suppliers', 'App\Http\Controllers\SupplierController');
+        Route::get('/supplier/pdf', 'App\Http\Controllers\SupplierController@downloadPDF')->name('suppliers.pdf');
+        Route::get('/supplier/{supplier}/pdf', 'App\Http\Controllers\SupplierController@downloadShowPDF')->name('suppliers.showPdf');
+        Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
+
 
 
     //Database Backups Routes (Doesn't include import routes)

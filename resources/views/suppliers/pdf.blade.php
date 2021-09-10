@@ -21,26 +21,18 @@
         </thead>
         
         <tbody>
-        @foreach($manufacturers as $manufacturer)
+        @foreach($suppliers as $supplier)
 
             <tr>
-                <td>{{ $manufacturer->name}}</td>
-                <td><small>{{ $manufacturer->supportUrl}}</small></td>
-                <td><small>{{ $manufacturer->supportEmail}}</small></td>
-                <td><small>{{ $manufacturer->supportPhone}}</small></td>
-                <td class="text-center">
-                    @php
-                        $total = 0;
-                        foreach($manufacturer->assetModel as $assetModel){
-                            $total += $assetModel->assets->count();
-                        }   
-                    @endphp
-                    {{ $total}}
-                </td>
-                <td class="text-center">{{$manufacturer->accessory->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$manufacturer->component->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$manufacturer->consumable->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$manufacturer->miscellanea->count() ?? "N/A"}}</td>
+                <td>{{ $supplier->name}}</td>
+                <td><small>{{ $supplier->address_1.', '.$supplier->address_2.', '.$supplier->city.', '.$supplier->county.', '.$supplier->postcode}}</small></td>
+                <td><small>{{ $supplier->email}}<br>{{ $supplier->telephone}}</small></td>
+                <td><small>{{ $supplier->url}}</small></td>
+                <td class="text-center"> {{ $supplier->asset->count() ?? 'N/A'}}</td>
+                <td class="text-center">{{$supplier->accessory->count() ?? "N/A"}}</td>
+                <td class="text-center">{{$supplier->component->count() ?? "N/A"}}</td>
+                <td class="text-center">{{$supplier->consumable->count() ?? "N/A"}}</td>
+                <td class="text-center">{{$supplier->miscellanea->count() ?? "N/A"}}</td>
             </tr>
         @endforeach
         </tbody>

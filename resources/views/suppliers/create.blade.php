@@ -1,16 +1,18 @@
 @extends('layouts.app')
 
+@section('title', 'Add a New Supplier')
+
 @section('css')
 
 @endsection
 
 @section('content')
-<form action="{{ route('supplier.store') }}" method="POST">
+<form action="{{ route('suppliers.store') }}" method="POST">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Add New Supplier</h1>
 
         <div>
-            <a href="{{ route('supplier.index') }}"
+            <a href="{{ route('suppliers.index') }}"
                 class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Suppliers</a>
             <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i

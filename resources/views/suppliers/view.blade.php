@@ -10,24 +10,24 @@
     <h1 class="h3 mb-0 text-gray-800">Suppliers</h1>
     <div>
         @can('create', \App\Models\Supplier::class)
-        <a href="{{ route('supplier.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+        <a href="{{ route('suppliers.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Supplier</a>
         @endcan
         @can('viewAny', \App\Models\Supplier::class)
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+        <a href="{{ route('suppliers.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-        <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+        <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Export</a>
         @endcan
     </div>
 </div>
 
 @if(session('danger_message'))
-<div class="alert alert-danger"> {{ session('danger_message')}} </div>
+<div class="alert alert-danger"> {!! session('danger_message')!!} </div>
 @endif
 
 @if(session('success_message'))
-<div class="alert alert-success"> {{ session('success_message')}} </div>
+<div class="alert alert-success"> {!! session('success_message')!!} </div>
 @endif
 
 <section>
@@ -91,14 +91,14 @@
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Supplier Options:</div>
                                             @can('view', $supplier)
-                                            <a href="{{ route('supplier.show', $supplier->id) }}"
+                                            <a href="{{ route('suppliers.show', $supplier->id) }}"
                                                class="dropdown-item">View</a>
                                             @endcan
                                             @can('update', $supplier)
-                                                <a href="{{ route('supplier.edit', $supplier->id) }}" class="dropdown-item">Edit</a>
+                                                <a href="{{ route('suppliers.edit', $supplier->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $supplier)
-                                                <form id="form{{$supplier->id}}" action="{{ route('supplier.destroy', $supplier->id) }}" method="POST">
+                                                <form id="form{{$supplier->id}}" action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <a class="deleteBtn dropdown-item" href="#"
