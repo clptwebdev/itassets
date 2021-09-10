@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('login/microsoft', 'App\Http\Controllers\OfficeLoginController@redirectToProvider');
 Route::get('login/microsoft/callback', 'App\Http\Controllers\OfficeLoginController@handleProviderCallback');
+//Route::Post('apollo/login/user' ,[\App\Http\Controllers\Auth\ConfirmablePasswordController::class, "aut"] )->name("login.user");
 
 require __DIR__ . '/auth.php';
 
@@ -161,7 +162,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/databasebackupdownload/{$file_name}', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
 
 // Manufacturers Routes (Doesn't include import routes)
-    
+
 
 // status Routes (Doesn't include import routes)
     Route::resource('/status', 'App\Http\Controllers\StatusController');
