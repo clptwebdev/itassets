@@ -52,8 +52,8 @@
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                     aria-labelledby="dropdownUser{{$sup->id}}Link">
                                     <div class="dropdown-header">User Options:</div>
-                                    <a class="dropdown-item" href="#">View</a>
-                                    <a class="dropdown-item" href="#">Edit</a>
+                                    <a class="dropdown-item" href="{{ route('users.show', $sup->id)}}">View</a>
+                                    <a class="dropdown-item" href="{{ route('users.edit', $sup->id)}}">Edit</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item permission" data-id="{{$sup->id}}" data-name="{{$sup->name}}" href="#">Location Permissions</a>
                                 </div>
@@ -92,8 +92,8 @@
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                     aria-labelledby="dropdownUser{{$sup->id}}Link">
                                     <div class="dropdown-header">User Options:</div>
-                                    <a class="dropdown-item" href="#">View</a>
-                                    <a class="dropdown-item" href="#">Edit</a>
+                                    <a class="dropdown-item" href="{{ route('users.show', $sup->id)}}">View</a>
+                                    <a class="dropdown-item" href="{{ route('users.edit', $sup->id)}}">Edit</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item permission" data-id="{{$sup->id}}" href="#">Location Permissions</a>
                                 </div>
@@ -134,8 +134,8 @@
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                     aria-labelledby="dropdownUser{{$sup->id}}Link">
                                     <div class="dropdown-header">User Options:</div>
-                                    <a class="dropdown-item" href="#">View</a>
-                                    <a class="dropdown-item" href="#">Edit</a>
+                                    <a class="dropdown-item" href="{{ route('users.show', $sup->id)}}">View</a>
+                                    <a class="dropdown-item" href="{{ route('users.edit', $sup->id)}}">Edit</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item permission" data-id="{{$sup->id}}" href="#">Location Permissions</a>
                                 </div>
@@ -174,8 +174,8 @@
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                     aria-labelledby="dropdownUser{{$sup->id}}Link">
                                     <div class="dropdown-header">User Options:</div>
-                                    <a class="dropdown-item" href="{{ route('users.show', $sup->id) }}">View</a>
-                                    <a class="dropdown-item" href="{{ route('users.edit', $sup->id) }}">Edit</a>
+                                    <a class="dropdown-item" href="{{ route('users.show', $sup->id)}}">View</a>
+                                    <a class="dropdown-item" href="{{ route('users.edit', $sup->id)}}">Edit</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item permission" data-id="{{$sup->id}}" href="#">Location Permissions</a>
                                 </div>
