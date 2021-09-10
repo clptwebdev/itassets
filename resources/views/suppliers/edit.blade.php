@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Supplier')
+
 @section('css')
 
 @endsection
@@ -10,7 +12,7 @@
         <h1 class="h3 mb-0 text-gray-800">Edit Supplier</h1>
 
         <div>
-            <a href="{{ route('supplier.index') }}"
+            <a href="{{ route('suppliers.index') }}"
                 class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Suppliers</a>
             <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i

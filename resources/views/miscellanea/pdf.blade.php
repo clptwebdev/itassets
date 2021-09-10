@@ -1,10 +1,11 @@
 @extends('layouts.pdf-reports')
 
-@section('title', 'Consumables Report')
+@section('title', 'Miscellaneous Report')
 
-@section('page', 'Consumables')
+@section('page', 'Miscellaneous')
 
 @section('content')
+
     <table id="assetsTable" class="table table-striped" width="100%">
         <thead>
         <tr>
@@ -20,22 +21,22 @@
         </thead>
         
         <tbody>
-        @foreach($consumables as $consumable)
+        @foreach($miscellaneous as $miscellanea)
 
             <tr>
-                <td>{{$consumable->name}}
+                <td>{{$miscellanea->name}}
                     <br>
-                    <small>{{$consumable->serial_no}}</small>
+                    <small>{{$miscellanea->serial_no}}</small>
                 </td>
-                <td class="text-center"><span style="color: {{ $consumable->location->icon ?? '#666'}}">{{$consumable->location->name ?? 'Unassigned'}}</span></td>
-                <td class="text-center">{{$consumable->manufacturer->name ?? "N/A"}}</td>
-                <td>{{\Carbon\Carbon::parse($consumable->purchased_date)->format("d/m/Y")}}</td>
-                <td>{{$consumable->purchased_cost}}</td>
-                <td>{{$consumable->supplier->name ?? 'N/A'}}</td>
-                <td class="text-center">{{$consumable->status->name ??'N/A'}}</td>
-                @php $warranty_end = \Carbon\Carbon::parse($consumable->purchased_date)->addMonths($consumable->warranty);@endphp
-                <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                    {{ $consumable->warranty }} Months
+                <td class="text-center"><span style="color: {{ $miscellanea->location->icon ?? '#666'}}">{{$miscellanea->location->name ?? 'Unassigned'}}</span></td>
+                <td class="text-center">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
+                <td>{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
+                <td>{{$miscellanea->purchased_cost}}</td>
+                <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
+                <td class="text-center">{{$miscellanea->status->name ??'N/A'}}</td>
+                @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
+                <td class="text-center" data-sort="{{ $warranty_end }}">
+                    {{ $miscellanea->warranty }} Months
 
                     <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
                 </td>

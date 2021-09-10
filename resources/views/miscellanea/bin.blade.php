@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'miscellaneous Recycle Bin')
+@section('title', 'Miscellaneous Recycle Bin')
 
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
@@ -10,32 +10,29 @@
 
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">miscellaneous | Recycle Bin</h1>
+        <h1 class="h3 mb-0 text-gray-800">Miscellaneous | Recycle Bin</h1>
         <div>
             <a href="{{ route('miscellaneous.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
-            @can('generatePDF', \App\Models\Miscellanea::class)
-                @if ($miscellaneous->count() == 1)
-                    <a href="{{ route('miscellanea.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
-                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
-                @else
-                    <form class="d-inline-block" action="{{ route('miscellanea.pdf')}}" method="POST">
-                        @csrf
-                        <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
-                        <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
-                                class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-                    </form>
-                @endif
+
+            @can('viewAny', \App\Models\Miscellanea::class)
+                <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">
+                    @csrf
+                    <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
+                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                </form>
+
             @endcan
         </div>
     </div>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
 
     <section>
@@ -109,15 +106,14 @@
                                         <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                              aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">miscellanea Options:</div>
+                                            @can('delete', $miscellanea)
                                             <a href="{{ route('miscellaneous.restore', $miscellanea->id) }}"
                                                class="dropdown-item">Restore</a>
                                             <form class="d-block" id="form{{$miscellanea->id}}" action="{{ route('miscellaneous.remove', $miscellanea->id) }}" method="POST">
                                                 @csrf
-                                                @can('delete', $miscellanea)
-                                                    <a class="deleteBtn dropdown-item" href="#"
-                                                       data-id="{{$miscellanea->id}}">Delete</a>
-                                                @endcan
+                                                <a class="deleteBtn dropdown-item" href="#" data-id="{{$miscellanea->id}}">Delete</a>
                                             </form>
+                                            @endcan
                                         </div>
                                     </div>
                                 </td>

@@ -72,13 +72,13 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="assetModalStatusLabel">Are you sure you want to delete this item?
+                    <h5 class="modal-title" id="assetModalStatusLabel">Change Status
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('accessory.status', $accessory->id)}}" method="post">
+                <form action="{{ route('change.status', $asset->id)}}" method="post">
                 <div class="modal-body">
                     @csrf
                     <select name="status" class="form-control">
@@ -95,13 +95,14 @@
             </div>
         </div>
     </div>
+
     <!-- asset Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeassetModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeassetModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="removeAssetModal" tabindex="-1" role="dialog"
+         aria-labelledby="removeAssetModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeassetModalLabel">Are you sure you want to delete this item?
+                    <h5 class="modal-title" id="removeAssetModalLabel">Are you sure you want to delete this item?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -120,9 +121,9 @@
             </div>
         </div>
     </div>
+
     <!-- comments Modal-->
-    <div class="modal fade bd-example-modal-lg" id="commentModalOpen" tabindex="-1" role="dialog"
-         aria-labelledby="commentModalOpen" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="commentModalOpen" tabindex="-1" role="dialog" aria-labelledby="commentModalOpen" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -133,30 +134,30 @@
                     </button>
                 </div>
                 <form action="{{ route('asset.comment') }}" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="asset_id" value="{{ $asset->id }}">
                     <div class="modal-body">
                         <p>Fill Out the title Field and Body to continue...</p>
-                    </div>
-                    <div class="form-group pr-3 pl-3">
-                        <label class="font-weight-bold" for="title">Comment Title</label>
-                        <input type="text"
-                               class="form-control <?php if ($errors->has('title')) {?>border-danger<?php }?>"
-                               name="title" id="title" placeholder="Comment Title">
-                    </div>
-                    <div class="form-group pl-3 pr-3">
-                        <label
-                            class="font-weight-bold <?php if ($errors->has('comment')) {?>border-danger<?php }?>"
-                            for="comment">Notes</label>
-                        <textarea name="comment" id="content" class="form-control" rows="5"></textarea>
+                        <input type="hidden" name="asset_id" value="{{ $asset->id }}">
+                        @csrf
+                        <div class="form-group pr-3 pl-3">
+                            <label class="font-weight-bold" for="title">Comment Title</label>
+                            <input type="text"
+                                class="form-control <?php if ($errors->has('title')) {?>border-danger<?php }?>"
+                                name="title" id="title" placeholder="Comment Title">
+                        </div>
+                        <div class="form-group pl-3 pr-3">
+                            <label
+                                class="font-weight-bold <?php if ($errors->has('comment')) {?>border-danger<?php }?>"
+                                for="comment">Notes</label>
+                            <textarea name="comment" id="content" class="form-control" rows="5"></textarea>
 
+                        </div>
+                        <div class="p-2 text-lg-right">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                                Save
+                            </button>
+                        </div>
                     </div>
-                    <div class="p-2 text-lg-right">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success" type="button" id="commentUpload">
-                            Save
-                        </button>
-                    </div>
-                    @csrf
                 </form>
             </div>
         </div>
@@ -175,30 +176,54 @@
                     </button>
                 </div>
                 <form id="updateForm" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PATCH')
                     <div class="modal-body">
                         <p>Fill Out the Title Field and Body to continue...</p>
+                        @csrf
+                        @method('PATCH')
                         <input type="hidden" name="accessory_id"  value="{{ $asset->id }}">
-                    </div>
-                    <div class="form-group pr-3 pl-3">
-                        <label class="font-weight-bold" for="title">Comment Title</label>
-                        <input type="text" class="form-control <?php if ($errors->has('title')) {?>border-danger<?php }?>" name="title" id="updateTitle" placeholder="Comment Title">
-                    </div>
-                    <div class="form-group pl-3 pr-3">
-                        <label
-                            class="font-weight-bold <?php if ($errors->has('comment')) {?>border-danger<?php }?>"
-                            for="comment_content">Notes</label>
-                        <textarea name="comment" id="updateComment" class="form-control" rows="5"></textarea>
+                        <div class="form-group pr-3 pl-3">
+                            <label class="font-weight-bold" for="title">Comment Title</label>
+                            <input type="text" class="form-control <?php if ($errors->has('title')) {?>border-danger<?php }?>" name="title" id="updateTitle" placeholder="Comment Title">
+                        </div>
+                        <div class="form-group pl-3 pr-3">
+                            <label
+                                class="font-weight-bold <?php if ($errors->has('comment')) {?>border-danger<?php }?>"
+                                for="comment_content">Notes</label>
+                            <textarea name="comment" id="updateComment" class="form-control" rows="5"></textarea>
 
-                    </div>
-                    <div class="p-2 text-lg-right">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success" type="button" id="commentUpload">
-                            Save
-                        </button>
+                        </div>
+                        <div class="p-2 text-lg-right">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                                Save
+                            </button>
+                        </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+     <!-- Comment Delete Modal-->
+     <div class="modal fade bd-example-modal-lg" id="removeComment" tabindex="-1" role="dialog" aria-labelledby="removeCommentLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeCommentLabel">Are you sure you want to delete this Comment?
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="comment-id" type="hidden" value="">
+                    <p>Select "Delete" to remove this comment.</p>
+                    <small class="text-danger">**Warning this is permanent. </small>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" type="button" id="confirmCommentBtn">Delete</button>
+                </div>
             </div>
         </div>
     </div>
@@ -231,6 +256,17 @@
             var route = $(this).data('route');
             $('#updateForm').attr('action', route); 
             $('#commentModalEdit').modal('show');
+        });
+
+        $('.deleteComment').click(function () {
+            $('#comment-id').val($(this).data('id'));
+            //showModal
+            $('#removeComment').modal('show');
+        });
+
+        $('#confirmCommentBtn').click(function () {
+            var form = '#' + 'comment' + $('#comment-id').val();
+            $(form).submit();
         });
 
         $(document).ready( function () {

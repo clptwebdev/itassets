@@ -316,7 +316,6 @@ class AccessoryController extends Controller
 
             } else
             {
-
                 return redirect('/accessories')->with('success_message', 'All Accessories were added correctly!');
 
             }

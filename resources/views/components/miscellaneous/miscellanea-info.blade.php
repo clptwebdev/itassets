@@ -2,7 +2,7 @@
 <div class="col-12 col-lg-8 mb-4">
     <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid ;">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold" style="">miscellanea Information</h6>
+            <h6 class="m-0 font-weight-bold" style="">Miscellanea Information</h6>
         </div>
         <div class="card-body">
             <div class="row no-gutters">
@@ -59,7 +59,7 @@
                         <tr>
                             <td>Device Status: </td>
                             <td><strong>{{ $miscellaneou->status->name ?? 'No Status Set'}}</strong></td>
-                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#miscellaneaStatus">Change Status</button></td>
+                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#changeStatus">Change Status</button></td>
                         </tr>
                     </table>
 

@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Type\Integer;
 use function PHPUnit\Framework\isEmpty;
 use PDF;
+use Illuminate\Support\Facades\Storage;
 
 class ComponentController extends Controller {
 

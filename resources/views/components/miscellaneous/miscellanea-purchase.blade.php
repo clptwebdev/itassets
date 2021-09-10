@@ -19,12 +19,16 @@
                         <tr>
                             <td>Supplier:</td>
                             <td>
+                                @if($miscellaneou->supplier()->exists())
                                 {{$miscellaneou->supplier->name}}<br>
                                 {{$miscellaneou->supplier->address_1 }}<br>
                                 {{$miscellaneou->supplier->address_2 }}<br>
                                 {{$miscellaneou->supplier->city }}<br>
                                 {{$miscellaneou->supplier->county }}<br>
                                 {{$miscellaneou->supplier->postcode }}<br>
+                                @else
+                                 <p>No Supplier Details</p>
+                                 @endif
                             </td>
                         </tr>
                         <tr>
