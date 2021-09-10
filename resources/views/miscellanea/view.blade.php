@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'View miscellaneous')
+@section('title', 'View Miscellaneous')
 
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
@@ -18,34 +18,34 @@
             @endcan
             @can('create', \App\Models\Miscellanea::class)
                 <a href="{{ route('miscellaneous.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
-                    <i class="fas fa-plus fa-sm text-white-50"></i> Add New miscellanea</a>
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Add New Miscellanea</a>
             @endcan
             @can('viewAny', \App\Models\Miscellanea::class)
                 @if ($miscellaneous->count() == 1)
-                    <a href="{{ route('miscellanea.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                    <a href="{{ route('miscellaneous.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm mr-1 loading"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-                        @else
-                            <form class="d-inline-block" action="{{ route('miscellanea.pdf')}}" method="POST">
-                                @csrf
-                                <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
-                                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-                            </form>
-                        @endif
-                        @if($miscellaneous->count() >1)
-                            <a href="/exportmiscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
-                                    class="fas fa-download fa-sm text-white-50"></i>Export</a>
-                        @endif
-                        @endcan
-                        @can('create', \App\Models\Miscellanea::class)
-                            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
-                                <i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
-                @endcan
+                @else
+                    <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">
+                        @csrf
+                        <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
+                        <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm mr-1 loading"><i
+                                class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                    </form>
+                @endif
+                @if($miscellaneous->count() >1)
+                    <a href="/exportmiscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
+                            class="fas fa-download fa-sm text-white-50"></i>Export</a>
+                @endif
+            @endcan
+            @can('create', \App\Models\Miscellanea::class)
+                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+                    <i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+            @endcan
         </div>
     </div>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))

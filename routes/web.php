@@ -168,15 +168,15 @@ Route::group(['middleware' => 'auth'], function() {
 //asset Models
     Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
 
-    //miscellaneous
+//Miscellaneous
     Route::resource('/miscellaneous', "\App\Http\Controllers\MiscellaneaController");
-    Route::get('/miscellaneous/{miscellanea}', "\App\Http\Controllers\MiscellaneaController@status")->name('miscellanea.status');
+    Route::post('/miscellaneous/{miscellanea}', "\App\Http\Controllers\MiscellaneaController@changeStatus")->name('miscellaneous.status');
     Route::post('/miscellaneous/comment/create', '\App\Http\Controllers\MiscellaneaController@newComment')->name('miscellaneous.comment');
     Route::get('/miscellanea/bin', 'App\Http\Controllers\MiscellaneaController@recycleBin')->name('miscellaneous.bin');
     Route::get('/miscellaneous/{miscellanea}/restore', 'App\Http\Controllers\MiscellaneaController@restore')->name('miscellaneous.restore');
     Route::post('/miscellaneous/{miscellanea}/remove', 'App\Http\Controllers\MiscellaneaController@forceDelete')->name('miscellaneous.remove');
-    Route::post('/miscellanea/pdf', 'App\Http\Controllers\MiscellaneaController@downloadPDF')->name('miscellanea.pdf');
-    Route::get('/miscellanea/{miscellanea}/pdf', 'App\Http\Controllers\MiscellaneaController@downloadShowPDF')->name('miscellanea.showPdf');
+    Route::post('/miscellanea/pdf', 'App\Http\Controllers\MiscellaneaController@downloadPDF')->name('miscellaneous.pdf');
+    Route::get('/miscellanea/{miscellanea}/pdf', 'App\Http\Controllers\MiscellaneaController@downloadShowPDF')->name('miscellaneous.showPdf');
 
 
 //exports
