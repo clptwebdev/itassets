@@ -1,4 +1,7 @@
 @extends("layouts.guest")
+
+@section('title', 'Forgot password')
+
 @section('css')
     <link href="{{ asset('css/login.css') }}" rel="stylesheet" type="text/css" />
 @endsection
@@ -16,7 +19,7 @@
 
             </div>
             <hr class="hr-break">
-            <div class="container-middle-2  container-margin-login flex-size">
+            <div class="container-margin-login flex-size">
                 <div class="margin-centre">
                     <h3 class="centred d-block">
                         Resetting your Account Password
