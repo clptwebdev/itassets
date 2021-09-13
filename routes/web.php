@@ -76,11 +76,14 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/user/password', 'App\Http\Controllers\UserController@userPassword')->name('user.password');
         Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
         Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
+        Route::get('/user/forgotpassword', 'App\Http\Controllers\UserController@forgotPassword')->name('forgot.my.password');
+        Route::post('/user/forgotpasswordstore', 'App\Http\Controllers\UserController@storePass')->name('forgot.my.password.store');
+        Route::post('/user/change/password', 'App\Http\Controllers\UserController@changePassword')->name('change.password.store');
     //Administrator Permissions Middleware
         Route::resource('/location', 'App\Http\Controllers\LocationController');
         Route::resource('/comment', 'App\Http\Controllers\CommentController');
         Route::post('permissions/users', 'App\Http\Controllers\UserController@permissions');
-        
+
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
 
         Route::resource('/depreciation', 'App\Http\Controllers\DepreciationController');

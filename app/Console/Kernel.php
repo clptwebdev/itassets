@@ -48,7 +48,7 @@ class Kernel extends ConsoleKernel
             $files = Storage::files('/public/csv');
             Storage::delete($files);
         })
-            ->weekly()
+            ->daily()
             ->runInBackground();
 
     }
