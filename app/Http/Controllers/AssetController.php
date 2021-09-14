@@ -631,9 +631,10 @@ class AssetController extends Controller {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
         }
         $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
-        dispatch(new AssetsPdf($assets));
+        $user = auth()->user();
+        dispatch(new AssetsPdf($assets, $user));
         return redirect(route('assets.index'))
-            ->with('success_message', "Your Report is being</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here")
             ->withInput();
     }
 

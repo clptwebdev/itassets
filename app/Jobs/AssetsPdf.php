@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Asset;
+use App\Models\Status;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,14 +17,17 @@ class AssetsPdf implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-
+    public $assets;
+    protected $user;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($assets, $user)
     {
+        $this->assets = $assets;
+        $this->user = $user;
     }
 
     /**
@@ -33,10 +37,13 @@ class AssetsPdf implements ShouldQueue
      */
     public function handle()
     {
-        $assets = Asset::all();
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets'));
+        $assets = $this->assets;
+        $user = $this->user;
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets', 'user'));
         $pdf->setPaper('a4', 'landscape');
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         Storage::put("public/reports/assets-{$date}.pdf", $pdf->output());
+
+        /* Status::create(('name', 'deployable', 'icon', 'colour')); */
     }
 }

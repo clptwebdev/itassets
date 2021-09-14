@@ -57,7 +57,7 @@
                     <br><strong>Assets</strong>
                 </td>
                 <td align="right" style="padding-right: 10px;">
-                    Report On: {{ \Carbon\Carbon::now()->format('d-m-Y H:i')}}<br>Report by: {{auth()->user()->name;}}
+                    Report On: {{ \Carbon\Carbon::now()->format('d-m-Y H:i')}}<br>Report by: {{$user->name;}}
                 </td>
             </tr>
         </table>
