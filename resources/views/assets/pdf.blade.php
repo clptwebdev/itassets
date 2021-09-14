@@ -1,11 +1,65 @@
-@extends('layouts.pdf-reports')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Report</title>
+    <!-- Custom styles for this template-->
+    <style>
 
-@section('title', 'Asset Report')
+        body{
+            font-size: 11px;
+            font-family: 'Roboto', sans-serif;
+        }
 
-@section('page', 'Assets')
+        #header{
+            background-color: #454777;
+            width: 100%;
+            margin-bottom: 30px;
+            color: #fff;
+            font-size: 14px;
+        }
 
-@section('content')
-    <table id="assetsTable" width="100%" class="table table-striped">
+        #logo{
+            max-height: 100px;
+        }
+
+        #assetsTable{
+            border: solid 1px #666;
+            border-collapse: collapse;
+        }
+
+        #assetsTable th{
+            padding: 5px;
+            background-color: #454777;
+            color: #FFF;
+            border: solid 1px #666;
+        }
+
+        #assetsTable td{
+            border: solid 1px #AAA;
+            padding: 5px;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+        </style>
+</head>
+<body>
+    <header id="header">
+        <table width="100%"></i>
+            <tr>
+                <td align="left" style="padding-left:10px;" width="20%"><img id="logo" src="" alt="Apollo Assets Manager"></td>
+                <td align="left">Apollo Asset Manangement<br><small>A Central Learning Partnership Trust (CLPT) System &copy; 2021</small>
+                    <br><strong>Assets</strong>
+                </td>
+                <td align="right" style="padding-right: 10px;">
+                    Report On: {{ \Carbon\Carbon::now()->format('d-m-Y H:i')}}<br>Report by: {{auth()->user()->name;}}
+                </td>
+            </tr>
+        </table>
+    </header>
+    <table id="assetsTable" width="100%">
         <thead>
         <tr>
             <th width="15%;">Item</th>
@@ -19,7 +73,7 @@
             <th width="15%;">Audit Due</th>
         </tr>
         </thead>
-        
+
         <tbody>
         @foreach($assets as $asset)
             <tr>
@@ -27,12 +81,12 @@
                 <td class="text-center"><span style="color: {{ $asset->location->icon ?? '#666'}}">{{$asset->location->name ?? 'Unassigned'}}</span>
                 </td>
                 <td align="center">
-                    {!! '<div id="barcode"><img width="120px" height="30px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   /></div>' !!}
+                    {!! '<span id="barcode"><img width="120px" height="30px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   /></span>' !!}
                     <span style="font-weight: 800">{{ $asset->asset_tag }}</span></td>
                 <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
                 <td>{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                 <td class="text-center">
-                    
+
                     @if($asset->model)
                     <br>
                     @php
@@ -49,8 +103,8 @@
                     £{{ number_format($dep, 2)}}
                     <small>*£{{ $asset->purchased_cost }} (Original)</small>
                     @else
-                    £{{ $asset->purchased_cost }}  
-                    @endif                    
+                    £{{ $asset->purchased_cost }}
+                    @endif
                 </td>
                 <td class="text-center">{{$asset->supplier->name ?? "N/A"}}</td>
                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
@@ -91,4 +145,5 @@
             </tr>
         </tfoot>
     </table>
-@endsection
+</body>
+</html>
