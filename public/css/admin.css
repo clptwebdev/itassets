@@ -11526,6 +11526,23 @@ tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
   background-color: #e4c17b;
 }
 
+.slide:hover{
+    margin-left: 0.2rem;
+    text-decoration: none;
+}
+
+.slide:focus{
+    font-size: 23px;
+    margin-left: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+.slide{
+    text-decoration: none;
+    font-size: 20px;
+    transition: all .3s ease-in-out;
+
+}
 
 
 @media (max-width: 768px) {
