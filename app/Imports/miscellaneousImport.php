@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\miscellanea;
+use App\Models\Miscellanea;
 use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
@@ -82,7 +82,7 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
     public function model(array $row)
     {
 
-        $miscellanea = new miscellanea;
+        $miscellanea = new Miscellanea;
         $miscellanea->name = $row["name"];
 
         $miscellanea->serial_no = $row["serial_no"];
@@ -177,7 +177,7 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
                 $miscellanea->location_id = 0;
         }
         $miscellanea->location_id = $location->id ?? 0;
-
+        $miscellanea->photo_id =  0;
         $miscellanea->notes = $row["notes"];
         $miscellanea->save();
     }

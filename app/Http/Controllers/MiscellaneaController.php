@@ -120,7 +120,7 @@ class MiscellaneaController extends Controller
             }else{
                 for($i = 0; $i < count($request->name); $i++)
                 {
-                    $miscellanea = new miscellanea;
+                    $miscellanea = new Miscellanea;
                     $miscellanea->name = $request->name[$i];
                     $miscellanea->serial_no = $request->serial_no[$i];
                     $miscellanea->status_id = $request->status_id[$i];
@@ -132,6 +132,8 @@ class MiscellaneaController extends Controller
                     $miscellanea->warranty = $request->warranty[$i];
                     $miscellanea->location_id = $request->location_id[$i];
                     $miscellanea->notes = $request->notes[$i];
+                    $miscellanea->photo_id =  0;
+
                     $miscellanea->save();
                 }
 
@@ -198,7 +200,7 @@ class MiscellaneaController extends Controller
         return redirect(route("miscellaneous.index"));
     }
 
-    public function destroy(miscellanea $miscellaneou)
+    public function destroy(Miscellanea $miscellaneou)
     {
         if (auth()->user()->cant('delete', $miscellaneou)) {
             return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'delete']));

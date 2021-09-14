@@ -175,7 +175,7 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 $consumable->location_id = 0;
         }
         $consumable->location_id = $location->id ?? 0;
-
+        $consumable->photo_id =  0;
         $consumable->notes = $row["notes"];
         $consumable->save();
     }

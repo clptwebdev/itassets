@@ -28,6 +28,6 @@ class Log extends Model
     }
     public function miscellanea()
     {
-        return $this->belongsTo(miscellanea::class);
+        return $this->belongsTo(Miscellanea::class);
     }
 }

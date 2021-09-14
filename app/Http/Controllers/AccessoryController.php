@@ -28,7 +28,7 @@ class AccessoryController extends Controller
             $accessories = Accessory::all();
         }else{
             $accessories = auth()->user()->location_accessories;
-        } 
+        }
         return view('accessory.view', compact('accessories'));
     }
 
@@ -37,7 +37,7 @@ class AccessoryController extends Controller
         if (auth()->user()->cant('create', $accesory)) {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'create']));
         }
-        
+
         if(auth()->user()->role_id == 1){
             $locations = Location::all();
         }else{
@@ -69,7 +69,7 @@ class AccessoryController extends Controller
         if (auth()->user()->cant('create', Accessory::class)) {
             return redirect(route('errors.forbidden', ['area', 'Accessories', 'create']));
         }
-        
+
         $request->validate([
             "name" => "required|max:255",
             "supplier_id" => "required",
@@ -99,7 +99,7 @@ class AccessoryController extends Controller
         if (auth()->user()->cant('viewAll', Accessory::class)) {
             return redirect(route('errors.forbidden', ['area', 'Accessories', 'export']));
         }
-            
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new accessoryErrorsExport($export), "/public/csv/accessories-errors-{$date}.csv");
         $url = asset("storage/csv/accessories-errors-{$date}.csv");
@@ -139,6 +139,7 @@ class AccessoryController extends Controller
                     $accessory->warranty = $request->warranty[$i];
                     $accessory->location_id = $request->location_id[$i];
                     $accessory->notes = $request->notes[$i];
+                    $accessory->photo_id =  0;
                     $accessory->save();
                 }
 
@@ -213,7 +214,7 @@ class AccessoryController extends Controller
         if (auth()->user()->cant('delete', $accessory)) {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'delete']));
         }
-        
+
         $name = $accessory->name;
         $accessory->delete();
         session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
@@ -232,7 +233,7 @@ class AccessoryController extends Controller
         $url = asset("storage/csv/accessories-ex-{$date}.csv");
         return redirect(route('accessories.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
-            ->withInput(); 
+            ->withInput();
     }
 
     public function import(Request $request)
@@ -357,7 +358,7 @@ class AccessoryController extends Controller
         return redirect(route('accessories.show', $accessory->id))
             ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
             ->withInput();
-        
+
     }
 
     //Restore and Force Delete Function Need to be Created

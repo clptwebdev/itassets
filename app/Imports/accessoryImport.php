@@ -174,6 +174,7 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
                 $accessory->location_id = 0;
         }
         $accessory->location_id = $location->id ?? 0;
+        $accessory->photo_id =  0;
 
         $accessory->notes = $row["notes"];
         $accessory->save();

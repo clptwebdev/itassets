@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder {
         \App\Models\Status::factory(20)->create();
         \App\Models\Comment::factory(20)->create();
         \App\Models\Consumable::factory(20)->create();
-        \App\Models\miscellanea::factory(20)->create();
+        \App\Models\Miscellanea::factory(20)->create();
         for($i = 0; $i < 20; $i++)
         {
             DB::table('field_fieldset')->insert(

@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('login/microsoft', 'App\Http\Controllers\OfficeLoginController@redirectToProvider');
 Route::get('login/microsoft/callback', 'App\Http\Controllers\OfficeLoginController@handleProviderCallback');
-
 require __DIR__ . '/auth.php';
 
 Route::group(['middleware' => 'auth'], function() {
@@ -77,11 +76,14 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/user/password', 'App\Http\Controllers\UserController@userPassword')->name('user.password');
         Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
         Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
+        Route::get('/user/forgotpassword', 'App\Http\Controllers\UserController@forgotPassword')->name('forgot.my.password');
+        Route::post('/user/forgotpasswordstore', 'App\Http\Controllers\UserController@storePass')->name('forgot.my.password.store');
+        Route::post('/user/change/password', 'App\Http\Controllers\UserController@changePassword')->name('change.password.store');
     //Administrator Permissions Middleware
         Route::resource('/location', 'App\Http\Controllers\LocationController');
         Route::resource('/comment', 'App\Http\Controllers\CommentController');
         Route::post('permissions/users', 'App\Http\Controllers\UserController@permissions');
-        
+
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
 
         Route::resource('/depreciation', 'App\Http\Controllers\DepreciationController');
@@ -168,7 +170,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/databasebackupdownload/{$file_name}', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
 
 // Manufacturers Routes (Doesn't include import routes)
-    
+
 
 // status Routes (Doesn't include import routes)
     Route::resource('/status', 'App\Http\Controllers\StatusController');

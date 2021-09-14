@@ -32,7 +32,7 @@ class Comment extends Model {
     }
     public function miscellanea()
     {
-        return $this->morphedByMany(miscellanea::class);
+        return $this->morphedByMany(Miscellanea::class);
     }
 
     public function asset()

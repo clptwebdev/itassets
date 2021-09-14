@@ -54,9 +54,6 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
             'serial_no' => [
                 'required',
             ],
-            'notes' => [
-
-            ],
             'status_id' => [
 
             ],
@@ -72,7 +69,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 'required'
             ],
             'manufacturer_id' => [
-                
+
             ],
 
         ];
@@ -104,7 +101,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
             }else
                 $component->status_id =0;
         }
-        
+
         $component->status_id = $status->id ?? 0;
 
         $component->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
@@ -176,7 +173,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 $component->location_id = 0;
         }
         $component->location_id = $location->id ?? 0;
-
+        $component->photo_id =  0;
         $component->notes = $row["notes"];
         $component->save();
     }
