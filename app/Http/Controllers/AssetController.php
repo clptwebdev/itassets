@@ -629,6 +629,7 @@ class AssetController extends Controller {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
         }
+        set_time_limit(300);
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets'));
         $pdf->setPaper('a4', 'landscape');
