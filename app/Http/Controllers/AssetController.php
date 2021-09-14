@@ -378,7 +378,7 @@ class AssetController extends Controller {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Assets', 'export']));
         }
-        $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->get();
+        $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model','status','user')->get();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new AssetExport($assets), "/public/csv/assets-ex-{$date}.csv");
         $url = asset("storage/csv/assets-ex-{$date}.csv");
@@ -630,9 +630,15 @@ class AssetController extends Controller {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
         }
+
         $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
+<<<<<<< HEAD
         $user = auth()->user();
         dispatch(new AssetsPdf($assets, $user));
+=======
+        dispatch(new AssetsPdf($assets));
+
+>>>>>>> 814fc960c9e5ff07a0c91d65c2ebaa2a9ee7ad9f
         return redirect(route('assets.index'))
             ->with('success_message', "Your Report is being processed, check your reports here")
             ->withInput();

@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <title>PDF Report</title>
     <!-- Custom styles for this template-->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
         body{
             font-size: 11px;
@@ -52,7 +49,7 @@
     <header id="header">
         <table width="100%"></i>
             <tr>
-                <td align="left" style="padding-left:10px;" width="20%"><img id="logo" src="{{ asset('images/apollo-logo.jpg') }}" alt="Apollo Assets Manager"></td>
+                <td align="left" style="padding-left:10px;" width="20%"><img id="logo" src="" alt="Apollo Assets Manager"></td>
                 <td align="left">Apollo Asset Manangement<br><small>A Central Learning Partnership Trust (CLPT) System &copy; 2021</small>
                     <br><strong>Assets</strong>
                 </td>
@@ -62,9 +59,7 @@
             </tr>
         </table>
     </header>
-</body>
-</html>
-    <table id="assetsTable" width="100%" class="table table-striped">
+    <table id="assetsTable" width="100%">
         <thead>
         <tr>
             <th width="15%;">Item</th>
@@ -78,7 +73,7 @@
             <th width="15%;">Audit Due</th>
         </tr>
         </thead>
-        
+
         <tbody>
         @foreach($assets as $asset)
             <tr>
@@ -86,12 +81,12 @@
                 <td class="text-center"><span style="color: {{ $asset->location->icon ?? '#666'}}">{{$asset->location->name ?? 'Unassigned'}}</span>
                 </td>
                 <td align="center">
-                    {!! '<div id="barcode"><img width="120px" height="30px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   /></div>' !!}
+                    {!! '<span id="barcode"><img width="120px" height="30px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   /></span>' !!}
                     <span style="font-weight: 800">{{ $asset->asset_tag }}</span></td>
                 <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
                 <td>{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                 <td class="text-center">
-                    
+
                     @if($asset->model)
                     <br>
                     @php
@@ -108,8 +103,8 @@
                     £{{ number_format($dep, 2)}}
                     <small>*£{{ $asset->purchased_cost }} (Original)</small>
                     @else
-                    £{{ $asset->purchased_cost }}  
-                    @endif                    
+                    £{{ $asset->purchased_cost }}
+                    @endif
                 </td>
                 <td class="text-center">{{$asset->supplier->name ?? "N/A"}}</td>
                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
