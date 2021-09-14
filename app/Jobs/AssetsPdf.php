@@ -22,8 +22,9 @@ class AssetsPdf implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct( )
     {
+
     }
 
     /**
@@ -33,10 +34,6 @@ class AssetsPdf implements ShouldQueue
      */
     public function handle()
     {
-        $assets = Asset::all();
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets'));
-        $pdf->setPaper('a4', 'landscape');
-        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/assets-{$date}.pdf", $pdf->output());
+
     }
 }
