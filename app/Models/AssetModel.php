@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AssetModel extends Model
 {
     use HasFactory;
+//    protected $with =['manufacturer','photo','fieldset','depreciation'];
 
     protected $fillable = ['name', 'manufacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'];
 

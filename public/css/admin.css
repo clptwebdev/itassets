@@ -11437,10 +11437,10 @@ tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
 
 .import-control{
   cursor: pointer;
-  background-color: none; 
-  padding: .75rem; 
-  border: none; 
-  display:  block; 
+  background-color: none;
+  padding: .75rem;
+  border: none;
+  display:  block;
   font-size: 12px;
 }
 
@@ -11502,7 +11502,7 @@ tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
 
 .select-items div:hover, .same-as-selected {
   background-color: rgba(0, 0, 0, 0.1);
-} 
+}
 
 
 

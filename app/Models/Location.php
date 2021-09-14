@@ -9,7 +9,6 @@ use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 class Location extends Model
 {
     use HasFactory;
-
     protected $fillable = ['name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'telephone', 'email', 'photo_id', 'icon'];
 
     public function photo()

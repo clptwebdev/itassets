@@ -13,6 +13,7 @@ class Miscellanea extends Model
     protected $fillable = [
         'name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'notes','manufacturer_id', 'photo_id'
     ];
+    protected $with =['supplier','location','manufacturer','photo','Status'];
     public function photo()
     {
         return $this->belongsTo(Photo::class, 'photo_id');

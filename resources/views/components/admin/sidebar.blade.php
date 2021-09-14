@@ -160,6 +160,7 @@
                 <a class="collapse-item" href="{{ route('fields.index')}}">Custom Fields</a>
                 <a class="collapse-item" href="{{ route('status.index')}}">Status Fields</a>
                 <a class="collapse-item" href="/databasebackups">Database Backups</a>
+                <a class="collapse-item" href="/help/Documentation">Documentation</a>
                 <a class="collapse-item" href="login.html">Settings</a>
         </div>
     </li>

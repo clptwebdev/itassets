@@ -30,7 +30,7 @@ class Manufacturer extends Model {
     {
         return $this->hasMany(Accessory::class);
     }
-    
+
     public function consumable()
     {
         return $this->hasMany(Consumable::class);

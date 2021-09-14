@@ -17,7 +17,7 @@ class Asset extends Model {
 
     public function location()
     {
-        return $this->belongsTo(Location::class);
+        return $this->belongsTo(Location::class)->with('photo');
     }
     public function comment()
     {
@@ -26,7 +26,7 @@ class Asset extends Model {
 
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Supplier::class)->with('photo');
     }
 
     public function user()
@@ -36,12 +36,12 @@ class Asset extends Model {
     }
 
     public function model(){
-        return $this->belongsTo(AssetModel::class, 'asset_model', 'id');
+        return $this->belongsTo(AssetModel::class, 'asset_model', 'id')->with('manufacturer')->with('depreciation');
     }
 
     public function fields()
     {
-        return $this->belongsToMany(Field::class)->withPivot('value');
+        return $this->belongsToMany(Field::class)->withPivot('value')->with('fieldset');
     }
 
     public function status(){
