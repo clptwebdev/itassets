@@ -1,10 +1,69 @@
-@extends('layouts.pdf-reports')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Report</title>
+    <!-- Custom styles for this template-->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
-@section('title', 'Asset Report')
+        body{
+            font-size: 11px;
+            font-family: 'Roboto', sans-serif;
+        }
 
-@section('page', 'Assets')
+        #header{
+            background-color: #454777;
+            width: 100%;
+            margin-bottom: 30px;
+            color: #fff;
+            font-size: 14px;
+        }
 
-@section('content')
+        #logo{
+            max-height: 100px;
+        }
+
+        #assetsTable{
+            border: solid 1px #666;
+            border-collapse: collapse;
+        }
+
+        #assetsTable th{
+            padding: 5px;
+            background-color: #454777;
+            color: #FFF;
+            border: solid 1px #666;
+        }
+
+        #assetsTable td{
+            border: solid 1px #AAA;
+            padding: 5px;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+        </style>
+</head>
+<body>
+    <header id="header">
+        <table width="100%"></i>
+            <tr>
+                <td align="left" style="padding-left:10px;" width="20%"><img id="logo" src="{{ asset('images/apollo-logo.jpg') }}" alt="Apollo Assets Manager"></td>
+                <td align="left">Apollo Asset Manangement<br><small>A Central Learning Partnership Trust (CLPT) System &copy; 2021</small>
+                    <br><strong>Assets</strong>
+                </td>
+                <td align="right" style="padding-right: 10px;">
+                    Report On: {{ \Carbon\Carbon::now()->format('d-m-Y H:i')}}<br>Report by: {{auth()->user()->name;}}
+                </td>
+            </tr>
+        </table>
+    </header>
+</body>
+</html>
     <table id="assetsTable" width="100%" class="table table-striped">
         <thead>
         <tr>
@@ -91,4 +150,5 @@
             </tr>
         </tfoot>
     </table>
-@endsection
+</body>
+</html>
