@@ -24,7 +24,7 @@ class Supplier extends Model
 
     public function miscellanea()
     {
-        return $this->hasOne(Miscellanea::class);
+        return $this->hasMany(Miscellanea::class);
     }
 
     public function component()
