@@ -35,7 +35,7 @@ class AssetController extends Controller {
         }
 
         if(auth()->user()->role_id == 1){
-            $assets = Asset::all();
+            $assets = Asset::with('location')->with('supplier')->get();
             $locations = Location::all();
         }else{
             $assets = auth()->user()->location_assets;
