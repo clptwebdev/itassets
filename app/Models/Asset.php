@@ -41,7 +41,7 @@ class Asset extends Model {
 
     public function fields()
     {
-        return $this->belongsToMany(Field::class)->withPivot('value')->with('fieldset');
+        return $this->belongsToMany(Field::class)->withPivot('value');
     }
 
     public function status(){
