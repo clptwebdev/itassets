@@ -25,6 +25,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PDF;
 use function PHPUnit\Framework\isEmpty;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\AssetsPdf;
 
 class AssetController extends Controller {
 
@@ -629,15 +630,12 @@ class AssetController extends Controller {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
         }
-        set_time_limit(300);
+
         $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets'));
-        $pdf->setPaper('a4', 'landscape');
-        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/assets-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/assets-{$date}.pdf");
+        dispatch(new AssetsPdf($assets));
+
         return redirect(route('assets.index'))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being</a>")
             ->withInput();
     }
 
