@@ -43,13 +43,18 @@ class Kernel extends ConsoleKernel
         })
             ->lastDayOfMonth()
             ->runInBackground();
+        
         //deletes all csv's Monthly
         $schedule->call(function(){
             $files = Storage::files('/public/csv');
             Storage::delete($files);
-        })
-            ->weekly()
-            ->runInBackground();
+        })->daily()->runInBackground();
+
+        //deletes all PDF's Monthly
+        $schedule->call(function(){
+            $files = Storage::files('/public/reports');
+            Storage::delete($files);
+        })->weekly()->runInBackground();
 
     }
 
