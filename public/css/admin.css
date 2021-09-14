@@ -11504,6 +11504,28 @@ tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+/*Buttons */
+
+.bg-lilac{
+  background-color:#b087bc;
+}
+
+.bg-coral{
+  background-color:#f95959;
+}
+
+.bg-blue{
+  background-color: #7d96b0;
+}
+
+.bg-green{
+  background-color: #94c0c0;
+}
+
+.bg-yellow{
+  background-color: #e4c17b;
+}
+
 
 
 @media (max-width: 768px) {

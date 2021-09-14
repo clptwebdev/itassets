@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminte\Contracts\Queue\ShouldQueue;
 
 class Supplier extends Model
 {
@@ -22,7 +23,7 @@ class Supplier extends Model
 
     public function miscellanea()
     {
-        return $this->hasOne(Miscellanea::class);
+        return $this->hasMany(Miscellanea::class);
     }
 
     public function component()

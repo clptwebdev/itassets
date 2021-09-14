@@ -2,70 +2,69 @@
 
 namespace App\Observers;
 
-use App\Models\location;
+use App\Models\Miscellanea;
 use App\Models\Log;
 use Carbon\Carbon;
 
-class LocationObserver
+class MiscellaneaObserver
 {
-
-    public function created(Location $location)
+    public function created(Miscellanea $miscellanea)
     {
         $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ?? 0 ,
-            'data'=> $name.' created a new Location - '.$location->name
+            'loggable_id'=> $miscellanea->id ?? 0 ,
+            'data'=> $name.' created a new Miscellanea - '.$miscellanea->name
         ]);
     }
 
-    public function updated(Location $location)
+    public function updated(Miscellanea $miscellanea)
     {
         $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ?? 0,
-            'data'=> $name.' updated Location - '.$location->name
+            'loggable_id'=> $miscellanea->id ?? 0,
+            'data'=> $name.' updated Miscellanea - '.$miscellanea->name
         ]);
     }
 
-    public function deleted(Location $location)
+    public function deleted(Miscellanea $miscellanea)
     {
         $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ?? 0,
-            'data'=> $name.' deleted Location - '.$location->name
+            'loggable_id'=> $miscellanea->id ?? 0,
+            'data'=> $name.' deleted Miscellanea - '.$miscellanea->name
         ]);
     }
 
-    public function restored(Location $location)
+    public function restored(Miscellanea $miscellanea)
     {
         $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ?? 0,
-            'data'=> $name.' restored Location - '.$location->name
+            'loggable_id'=> $miscellanea->id ?? 0,
+            'data'=> $name.' restored Miscellanea - '.$miscellanea->name
         ]);
     }
 
-    public function forceDeleted(Location $location)
+    public function forceDeleted(Miscellanea $miscellanea)
     {
         $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id'=>auth()->user()->id,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ,
-            'data'=> $name.' permanently removed Location - '.$location->name
+            'loggable_id'=> $miscellanea->id ,
+            'data'=> $name.' permanently removed Miscellanea - '.$miscellanea->name
         ]);
     }
 }

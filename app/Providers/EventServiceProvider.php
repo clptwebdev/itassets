@@ -11,10 +11,13 @@ use App\Models\Asset;
 use App\Models\AssetModel;
 use App\Models\User;
 use App\Models\Supplier;
+use App\Models\Manufacturer;
 use App\Models\Component;
 use App\Models\Accessory;
 use App\Models\Consumable;
 use App\Models\Location;
+use App\Models\Miscellanea;
+use App\Models\Backup;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -50,9 +53,12 @@ class EventServiceProvider extends ServiceProvider
         Asset::observe(\App\Observers\AssetObserver::class);
         Accessory::observe(\App\Observers\AccessoryObserver::class);
         Supplier::observe(\App\Observers\SupplierObserver::class);
+        Manufacturer::observe(\App\Observers\ManufacturerObserver::class);
         Component::observe(\App\Observers\ComponentObserver::class);
         Consumable::observe(\App\Observers\ConsumableObserver::class);
         AssetModel::observe(\App\Observers\AssetModelObserver::class);
         Location::observe(\App\Observers\LocationObserver::class);
+        Miscellanea::observe(\App\Observers\MiscellaneaObserver::class);
+        Backup::observe(\App\Observers\BackupObserver::class);
     }
 }

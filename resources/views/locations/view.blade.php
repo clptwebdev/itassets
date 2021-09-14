@@ -88,11 +88,11 @@
                             <table width="100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>As</small></span></th>
-                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Ac</small></span></th>
-                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Cm</small></span></th>
-                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Cn</small></span></th>
-                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Mi</small></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"><i class="fas fa-fw fa-tablet-alt"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"><i class="fas fa-fw fa-keyboard"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"><i class="fas fa-fw fa-hdd"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"><i class="fas fa-fw fa-tint"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"><i class="fas fa-fw fa-question"></i></span></th>
                                     </tr>
                                 </thead>
                                 <tbody>

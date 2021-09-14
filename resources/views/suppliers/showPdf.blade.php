@@ -9,7 +9,7 @@
 <table class="table  table-bordered p-1 mb-4" width="100%">
     <thead>
         <tr style="background-color: #454777; padding: 10px; color: #fff;">
-            <th colspan="2">Manufacturer Information</th>
+            <th colspan="2">Supplier Information</th>
         </tr>
     </thead>
     <tr>
@@ -22,13 +22,40 @@
         </td>
         <td>{{ $supplier->name }}</td>
     </tr>
+    <tr><td>
+        {{ $supplier->name }}<br>
+        <p>{{ $supplier->address_1 }}<br>
+            @if($supplier->address_2 != "")
+            {{ $supplier->address_2 }}<br>
+            @endif
+            {{ $supplier->city }}<br>
+            {{ $supplier->postcode }}</p>
+        <p>Tel: {{ $supplier->telephone }}</p>
+        @if($supplier->fax != "")
+        {{ $supplier->fax }}<br>
+        @endif
+        <p>Email: {{ $supplier->email }}</p>
+        <p>URL: {{ $supplier->url }}</p>    
+    </td></tr>
     <tr><td>{{ $supplier->supportUrl }}</td></tr>
     <tr><td>{{ $supplier->supportPhone }}</td></tr>
     <tr><td>{{ $supplier->supportEmail }}</td></tr>
 </table>
+</section>
+<hr>
+<section>
+<table class="table table-bordered">
+    <tr>
+        <td class="text-center d-none d-xl-table-cell">{{ $supplier->asset->count() }}                                </td>
+        <td class="text-center d-none d-xl-table-cell">{{$supplier->accessory->count() ?? "N/A"}}</td>
+        <td class="text-center d-none d-xl-table-cell">{{$supplier->component->count() ?? "N/A"}}</td>
+        <td class="text-center d-none d-xl-table-cell">{{$supplier->consumable->count() ?? "N/A"}}</td>
+        <td class="text-center d-none d-xl-table-cell">{{$supplier->miscellanea->count() ?? "N/A"}}</td>
+    </tr>
+</table>
 
 </section>
-@if($supplier->asset()->exists())
+{{-- @if($supplier->asset()->exists())
 <section>
     <table width="100%" class="table table-striped table-bordered">
         <thead>
@@ -336,6 +363,6 @@
             </tr>
             </tfoot>
     </table>
-</section>
-@endif
+</section> 
+@endif--}}
 @endsection

@@ -11,56 +11,61 @@ class SupplierObserver
 {
     public function created(supplier $supplier)
     {
+        $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name ?? "Unknown".' created a new supplier - '.$supplier->name,
+            'data'=> $name.' created a new supplier - '.$supplier->name,
         ]);
     }
 
     public function updated(supplier $supplier)
     {
+        $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name ?? "Unknown".' updated supplier - '.$supplier->name,
+            'data'=> $name.' updated supplier - '.$supplier->name,
         ]);
     }
 
     public function deleted(supplier $supplier)
     {
+        $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name ?? "Unknown".' deleted supplier - '.$supplier->name,
+            'data'=> $name.' deleted supplier - '.$supplier->name,
         ]);
     }
 
     public function restored(supplier $supplier)
     {
+        $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name ?? "Unknown".' restored supplier - '.$supplier->name,
+            'data'=> $name.' restored supplier - '.$supplier->name,
         ]);
     }
 
     public function forceDeleted(supplier $supplier)
     {
+        $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'supplier',
             'loggable_id'=> $supplier->id ?? 0,
-            'data'=> auth()->user()->name ?? "Unknown".' permanently deleted supplier - '.$supplier->name,
+            'data'=> $name.' permanently deleted supplier - '.$supplier->name,
         ]);
     }
 }

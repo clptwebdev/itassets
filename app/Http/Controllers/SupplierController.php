@@ -69,7 +69,13 @@ class SupplierController extends Controller
 
     public function export(Supplier $supplier)
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new SupplierExport, 'supplier.csv');
+
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new SupplierExport, "/public/csv/suppliers-ex-{$date}.csv");
+        $url = asset("storage/csv/suppliers-ex-{$date}.csv");
+        return redirect(route('suppliers.index'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput(); 
     }
 
     public function downloadPDF()
