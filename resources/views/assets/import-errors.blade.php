@@ -16,7 +16,6 @@
                 <button type="submit" class="d-inline-block btn btn-sm btn-warning shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save All Errors as Excel
                 </button>
-
                 <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to assets</a>
                 <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
@@ -32,7 +31,7 @@
     <div class="m-3 alert alert-danger">
         You have @if(count($errorArray) > 1){{ count($errorArray).' errors'}}@else {{  count($errorArray).' error' }}@endif within your Assets Import. You have errors
         on rows {{ $errorRows}}
-        
+
     </div>
 
     @if(session('danger_message'))

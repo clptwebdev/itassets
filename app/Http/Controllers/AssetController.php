@@ -632,7 +632,7 @@ class AssetController extends Controller {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
         }
-
+set_time_limit(120);
         $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
         $user = auth()->user();
         
