@@ -24,7 +24,7 @@
             <span class="sidebar-title">Assets</span>
         </a>
         <div id="collapseTwo" class="collapse p-0" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i class="far fa-circle text-secondary"></i> All Assets (@if(auth()->user()->role_id == 1){{ \App\Models\Asset::all()->count()}}@else{{(auth()->user()->location_assets()->count()) ?? null}})@endif </a>
+                <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i class="far fa-circle text-secondary"></i> All Assets (@if(auth()->user()->role_id == 1){{ \App\Models\Asset::all()->count()}}@else{{(auth()->user()->location_assets()->count()) ?? null}})@endif)</a>
                 @php
                 $statuses = App\Models\Status::all();
                 @endphp

@@ -18,14 +18,17 @@
                     <td>Device Name:</td>
                     <td>{{ $asset->name }}</td>
                 </tr>
+                @if($asset->model()->exists())
                 <tr>
                     <td>Device Model N<span class="">o</span></td>
                     <td>{{$asset->model->name}}<br><small>{{ $asset->model->model_no }}</small></td>
                 </tr>
+                @endif
                 <tr>
                     <td>Device Serial N<span class="">o</span></td>
                     <td>{{ $asset->serial_no }}</td>
                 </tr>
+                @if($asset->fields()->exists())
                 @foreach($asset->fields as $field)
                     <tr>
                         <td>{{ $field->name ?? 'Unknown' }}</td>
@@ -42,7 +45,9 @@
                             @endif
                         </td>
                     </tr>
-                    @endforeach
+                @endforeach
+                @endif
+
             </table>
 
             <table class="table table-sm table-bordered table-striped">
@@ -80,6 +85,7 @@
                         @endif
                     </td>
                 </tr>
+                @if($asset->model()->exists())
                 <tr>
                     <td>End of Life (EOL): </td>
                     @php($eol =\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol)->format('d/m/Y'))
@@ -88,23 +94,24 @@
                         @if(\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol)->isPast())
                         <button class="btn btn-sm btn-danger p-1 font-weight-bold">{!! '<i class="fas fa-skull-crossbones"></i> Sorry for your loss' !!}</button>
                         @else
-                        <?php $age = Carbon\Carbon::now()->floatDiffInDays(\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol));?>
-                        @switch(true)
-                            @case($age == 0)
-                                <span class="text-danger">Sorry for your loss</span>
-                                @break
-                            @case($age < 31) 
-                                <span class="text-warning">End is Near</span>
-                                @break
-                            @case($age >= 32)
-                                <span class="text-success">Life in the Old Dog</span>
-                                @break
-                            @default
-                                <span class="text-danger">Unknown</span>
-                            @endswitch
+                            <?php $age = Carbon\Carbon::now()->floatDiffInDays(\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol));?>
+                            @switch(true)
+                                @case($age == 0)
+                                    <span class="text-danger">Sorry for your loss</span>
+                                    @break
+                                @case($age < 31) 
+                                    <span class="text-warning">End is Near</span>
+                                    @break
+                                @case($age >= 32)
+                                    <span class="text-success">Life in the Old Dog</span>
+                                    @break
+                                @default
+                                    <span class="text-danger">Unknown</span>
+                                @endswitch
                         @endif
                     </td>
                 </tr>
+                @endif
             </table>
 
             <table class="table table-sm table-bordered table-striped">
@@ -120,7 +127,7 @@
                     </tr>
                 </tbody>
             </table>
-            @if(count($asset->category) != 0)
+            @if($asset->category()->exists())
             <table class="table table-sm table-bordered">
                 <tr>
                     <td>
@@ -134,7 +141,7 @@
 
         </div>
         <div style="width: 32%; padding-left: 3%;float: right; border-left: solid 3px #CCC;">
-            @if(isset($asset->model->photo->path))
+            @if($asset->model->photo()->exists())
                 <img src="{{ asset($asset->model->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->model->name}}">
             @else
                 <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->model->name}}">
@@ -145,7 +152,7 @@
             <hr>
             <?php $manufacturer = $asset->model->manufacturer; ?>
             <div class="text-center">
-            @if(isset($manufacturer->photo->path))
+            @if($manufacturer->photo->exists())
             <img src="{{ asset($manufacturer->photo->path)}}"
                 width="70%" alt="{{$manufacturer->name}}">
             @endif
@@ -153,7 +160,7 @@
             <p><strong>{{ $manufacturer->name }}</strong></p>
             <p>Tel: {{ $manufacturer->supportPhone }}</p>
             <p>Email: {{ $manufacturer->supportEmail }}</p>
-            <p>URL: {{ $manufacturer->supportUrl }}</p>
+            <p>URL: {{ $manufacturer->supportUrl ?? 'Unknown'}}</p>
         </div>
     </div>
     <div class="page-break"></div>
@@ -170,12 +177,16 @@
             <tr>
                 <td>Supplier:</td>
                 <td>
+                    @if($asset->supplier()->exists())
                     {{ $asset->supplier->name}}<br>
                     {{ $asset->supplier->address_1 }}<br>
                     {{ $asset->supplier->address_2 }}<br>
                     {{ $asset->supplier->city }}<br>
                     {{ $asset->supplier->county }}<br>
                     {{ $asset->supplier->postcode }}<br>
+                    @else
+                    {{'No Supplier Information Available'}}
+                    @endif
                 </td>
             </tr>
             <tr>
@@ -192,6 +203,7 @@
                     {{ $asset->warranty }} Month(s) - <strong>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</strong>
                 </td>
             </tr>
+            @if($asset->purchased_cost > 0)
             <tr>
                 <td>Purchase Cost:</td>
                 <?php $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date); $percentage = floor($age)*33.333; $dep = $asset->purchased_cost * ((100 - $percentage) / 100);?>
@@ -199,15 +211,16 @@
                 <small>*Calculated using Depreciation Model:</small><br><strong
                     class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>Laptop and Tablet</small></strong></p></td>
             </tr>
+            @endif
         </table>
     </div>
-    @if($asset->location)
+    @if($asset->location()->exists())
     <hr>
     <div class="w-100 d-block">
         
         <table class="table table-bordered table-striped" width="100%">
             <tr style="background-color: #454777; padding: 10px; color: #fff;"><td>Location Information</td></tr>
-            @if(isset($asset->location->photo))
+            @if($asset->location->photo()->exists())
             <tr>
                 <td class="text-center p-1">
                     <div style="width: 150px; overflow:hidden; margin-left: auto; margin-right: auto;">
@@ -230,7 +243,7 @@
     @endif
 </section>
 
-@if(count($asset->comment) != 0)
+@if($asset->comment()->exists())
 <div class="page-break"></div>
 <p>Comments</p>
 <table class="table table-bordered table-striped ">
@@ -247,7 +260,7 @@
     </tbody>
 </table>
 @endif
-@if(count($asset->logs) != 0)
+@if($asset->logs()->exists())
 <div class="page-break"></div>
 <table class="table table-bordered table-striped ">
     <thead>

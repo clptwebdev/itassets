@@ -361,12 +361,18 @@ class AccessoryController extends Controller
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'view pdf']));
         }
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('accessory.showPdf', compact('accessory'));
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/accessory-{$accessory->id}-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/accessory-{$accessory->id}-{$date}.pdf");
-        return redirect(route('accessories.show', $accessory->id))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+        $path = 'accessory-'.$accessory->id.'-'.$date;
+
+        dispatch(new AccessoryPdf($accessory, $user, $path));
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
+        return redirect(route('accessories.index'))
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
     }
