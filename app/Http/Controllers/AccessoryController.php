@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PDF;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\AccessoriesPdf;
+use App\Jobs\AccessoryPdf;
+use App\Models\Report;
 
 class AccessoryController extends Controller
 {
@@ -334,14 +337,21 @@ class AccessoryController extends Controller
         if (auth()->user()->cant('viewAll', Accessory::class)) {
             return redirect(route('errors.forbidden', ['area', 'Accessories', 'view pdf']));
         }
+
         $accessories = Accessory::withTrashed()->whereIn('id', json_decode($request->accessories))->get();
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('accessory.pdf', compact('accessories'));
-        $pdf->setPaper('a4', 'landscape');
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/accessories-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/accessories-{$date}.pdf");
+        $path = 'accessories-'.$date;
+
+        dispatch(new AccessoriesPdf($accessories, $user, $path));
+        //Create Report
+        
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('accessories.index'))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 

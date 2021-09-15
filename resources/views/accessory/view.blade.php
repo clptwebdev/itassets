@@ -13,33 +13,33 @@
         <h1 class="h3 mb-0 text-gray-800">Accessories</h1>
         <div>
             @can('recycleBin', \App\Models\Accessory::class)
-            <a href="{{ route('accessories.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a href="{{ route('accessories.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                 class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Accessory::onlyTrashed()->count()}})</a>
             @endcan
             @can('create', \App\Models\Accessory::class)
-            <a href="{{ route('accessories.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Add New Accessory</a>
+            <a href="{{ route('accessories.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                    class="fas fa-plus fa-sm text-dark-50"></i> Add New Accessory</a>
             @endcan
             @can('generatePDF', \App\Models\Accessory::class)
                 @if ($accessories->count() == 1)
-                    <a href="{{ route('accessories.showPdf', $accessories[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                    <a href="{{ route('accessories.showPdf', $accessories[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                        class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
                     @else
                     <form class="d-inline-block" action="{{ route('accessories.pdf')}}" method="POST">
                         @csrf
                         <input type="hidden" value="{{ json_encode($accessories->pluck('id'))}}" name="accessories"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
-                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
+                            class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
                     </form>                
                 @endif
                 @if($accessories->count() >1)
-                <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
-                    class="fas fa-download fa-sm text-white-50"></i>Export</a>
+                <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
+                    class="fas fa-download fa-sm text-wdarkhite-50"></i>Export</a>
                 @endif
             @endcan
             @can('import', \App\Models\Accessory::class)
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                    class="fas fa-download fa-sm text-dark-50 fa-text-width"></i> Import</a>
             @endcan
         </div>
     </div>

@@ -13,27 +13,32 @@ use Illuminate\Queue\SerializesModels;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 
-class AssetsPdf implements ShouldQueue
+class AssetPdf implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public $assets;
+    protected $asset;
     protected $user;
     public $path;
     
-    public function __construct($assets, $user, $path)
+    public function __construct(Asset $asset, $user, $path)
     {
-        $this->assets = $assets;
+        $this->asset = $asset->id;
         $this->user = $user;
         $this->path = $path;
     }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
     public function handle()
     {
-        $assets = $this->assets;
+        $asset = Asset::find($this->asset);
         $user = $this->user;
         $path = $this->path;
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets', 'user'));
-        $pdf->setPaper('a4', 'landscape');
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.showPdf', compact('asset', 'user'));
+        $pdf->setPaper('a4', 'portrait');
         Storage::put("public/reports/".$path.".pdf", $pdf->output());
         $this->path = "";
     }

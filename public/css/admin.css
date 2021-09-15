@@ -11504,27 +11504,87 @@ tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/*Buttons */
+/*Backgrounds */
 
 .bg-lilac{
   background-color:#b087bc;
+  color: white;
 }
 
 .bg-coral{
   background-color:#f95959;
+  color: white;
 }
 
 .bg-blue{
   background-color: #7d96b0;
+  color: white;
 }
 
 .bg-green{
   background-color: #94c0c0;
+  color: white;
 }
 
 .bg-yellow{
   background-color: #e4c17b;
+  color: #333;
 }
+
+.bg-grey{
+  background-color: #d1d1d1;
+  color: #333;
+}
+
+/*Backgrounds */
+
+.btn-lilac{
+  background-color:#b087bc;
+  color: white;
+}
+
+.btn-coral{
+  background-color:#f95959;
+  color: white;
+}
+
+.btn-blue{
+  background-color: #7d96b0;
+  color: white;
+}
+
+.btn-green{
+  background-color: #94c0c0;
+  color: #666;
+}
+
+.btn-yellow{
+  background-color: #e4c17b;
+  color: #666;
+}
+
+.btn-grey{
+  background-color: #d1d1d1;
+  color: #666;
+}
+
+.btn-coral:hover, .btn-lilac:hover, .btn-blue:hover{
+  color: #d3d3d3;
+  text-decoration: none;
+  transition: .2s;
+}
+
+.btn-green:hover, .btn-yellow:hover, .btn-grey:hover{
+  color: #333;
+  text-decoration: none;
+  transition: .2s;
+}
+
+
+
+
+
+
 
 
 

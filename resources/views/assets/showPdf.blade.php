@@ -1,72 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Assets Download</title>
-    <!-- Custom styles for this template-->
-    
-        <!-- Custom styles for this template-->
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@extends('layouts.pdf-reports')
 
-        body{
-            font-size: 11px;
-            font-family:Verdana, Geneva, Tahoma, sans-serif;
-            color: #000;
-        }
+@section('title', 'Asset  Report')
 
-        #header{
-            background-color: #454777;
-            width: 100%;
-            margin-bottom: 30px;
-            color: #fff;
-            font-size: 14px;
-        }
+@section('page', $asset->name)
 
-        #logo{
-            max-height: 100px;
-        }
+@section('user', $user->name)
 
-        #assetsTable{
-            border: solid 1px #666;
-            border-collapse: collapse;
-        }
-
-        #assetsTable th{
-            padding: 5px;
-            background-color: #454777;
-            color: #FFF;
-            border: solid 1px #666;
-        }
-
-        #assetsTable td{
-            border: solid 1px #AAA;
-            padding: 5px;
-        }
-
-        .page-break {
-            page-break-after: always;
-        }
-        </style>
-</head>
-<body>
-    <header id="header">
-        <table width="100%"></i>
-            <tr>
-                <td width="15%" align="right" style="padding-left:10px;"><img id="logo" src="{{ asset('images/apollo-logo.jpg') }}" alt="Apollo Assets Manager"></td>
-                <td width="45%" align="left">Apollo Asset Manangement<br><small>A Central Learning Partnership Trust (CLPT) System &copy; 2021</small></td>
-                <td width="40%" align="right" style="padding-right: 10px;">
-                    Report On: {{ \Carbon\Carbon::now()->format('d-m-Y - H:ia')}}<br>Report by: {{auth()->user()->name;}}
-                </td>
-            </tr>
-        </table>
-    </header>
-
+@section('content')
         <div style="width: 62%; pading-right: 3%; float: left;">
-            <table id="assetstable" class="table table-sm table-bordered table-striped">
+            <table class="table table-sm table-bordered table-striped" width="100%">
                 <thead>
                     <tr style="background-color: #454777; padding: 10px; color: #fff;">
                         <th colspan="2">Device Information</th>
@@ -320,5 +262,4 @@
     </tbody>
 </table>
 @endif
-</body>
-</html>
+@endsection
