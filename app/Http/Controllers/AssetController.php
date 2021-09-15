@@ -26,6 +26,8 @@ use PDF;
 use function PHPUnit\Framework\isEmpty;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\AssetsPdf;
+use App\Jobs\AssetPdf;
+use App\Models\Report;
 
 class AssetController extends Controller {
 
@@ -630,12 +632,19 @@ class AssetController extends Controller {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
         }
-set_time_limit(120);
         $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
         $user = auth()->user();
-        AssetsPdf::dispatch( new $assets,$user);
+
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        $path = 'assets-'.$date;
+
+        AssetsPdf::dispatch( new $assets,$user,$path );
+        //Create Report
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
         return redirect(route('assets.index'))
-            ->with('success_message', "Your Report is being processed, check your reports here")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 
@@ -644,13 +653,16 @@ set_time_limit(120);
         if (auth()->user()->cant('view', $asset)) {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'View PDF']));
         }
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.showPdf', compact('asset'));
 
+        $user = auth()->user();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/asset-{$asset->asset_tag}-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/asset-{$asset->asset_tag}-{$date}.pdf");
+        $path = "asset-{$asset->asset_tag}-{$date}";
+        dispatch(new AssetPdf($asset, $user, $path));
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('assets.show', $asset->id))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 

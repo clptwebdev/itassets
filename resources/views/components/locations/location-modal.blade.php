@@ -1,8 +1,8 @@
 @props(["asset"])
 
-<div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid {{$asset->location->icon}};">
+<div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid {{$asset->location->icon ?? '#666'}};">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold" style="color: {{$asset->location->icon}};">Location
+        <h6 class="m-0 font-weight-bold" style="color: {{$asset->location->icon ?? '#666'}};">Location
             Information</h6>
     </div>
     <div class="card-body">
@@ -10,7 +10,7 @@
             <div class="col mr-2">
                 <div class="mb-1">
                     <p class="mb-4">Information regarding <strong
-                            class="font-weight-bold btn btn-sm shadow-sm p-1 text-light" style="background-color: {{ $asset->location->icon}};">{{ $asset->location->name }}</strong>
+                            class="font-weight-bold btn btn-sm shadow-sm p-1 text-light" style="background-color: {{$asset->location->icon ?? '#666'}};">{{ $asset->location->name }}</strong>
                         , the location that is currently assigned to the asset and any request information.</p>
                     <div class="row">
                         <div class="col-12 col-lg-4">

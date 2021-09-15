@@ -18,39 +18,39 @@
         <h1 class="h3 mb-0 text-gray-800">Assets</h1>
         <div>
             @can('recycleBin', \App\Models\Asset::class)
-                <a href="{{ route('assets.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                <a href="{{ route('assets.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                         class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin
                     ({{ \App\Models\Asset::onlyTrashed()->count()}})</a>
             @endcan
             @can('create', \App\Models\Asset::class)
-                <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Add New Asset(s)</a>
+                <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                        class="fas fa-plus fa-sm text-dark-50"></i> Add New Asset(s)</a>
             @endcan
             @can('generatePDF', \App\Models\Asset::class)
             @if($assets->count() != 0)
                 @if ($assets->count() == 1)
-                <a href="{{ route('asset.showPdf', $assets[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                    class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                <a href="{{ route('asset.showPdf', $assets[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                    class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
                 @else
                 <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
                     @csrf
                     <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
-                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
-                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
+                        class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
                 </form>
                 @endif
             @endif
             @endcan
             @can('create', \App\Models\Asset::class)
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                class="fas fa-download fa-sm text-dark-50 fa-text-width"></i> Import</a>
             @endcan
             @if($assets->count() > 1)
                 @can('generatePDF', \App\Models\Asset::class)
                 <form class="d-inline-block" action="/exportassets" method="POST">
                     @csrf
                     <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
-                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
+                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
                         class="fas fa-download fa-sm text-dark-50"></i> Export</button>
                 </form>
                 @endcan
@@ -85,7 +85,7 @@
             <p>Message</p>
             <a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear Filter</a>
             @endif
-            <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-secondary p-2 shadow-sm">Filter</a>
+            <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-lilac p-2 shadow-sm">Filter</a>
         </div>
         <div id="filter" class="card shadow mb-4">
             <div id="filter-header" class="card-header d-flex justify-content-between align-items-center text-white"

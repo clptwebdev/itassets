@@ -16,6 +16,7 @@
                     <img src="{{ asset($asset->model->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->name}}">
                     @else
                     <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->name ?? "N/A"}}">
+
                     @endif
                     <hr>
                     {!! '<img width="100%" height="100px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   />' !!}
@@ -94,6 +95,7 @@
                                 @endif
                             </td>
                         </tr>
+                        @if($asset->model()->exists())
                         <tr>
                             <td>End of Life (EOL): </td>
                             @php($eol =\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol)->format('d/m/Y'))
@@ -118,6 +120,7 @@
                                 @endif
                             </td>
                         </tr>
+                        @endif
                     </table>
 
                     <table class="table table-sm table-bordered table-striped">

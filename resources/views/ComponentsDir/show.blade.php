@@ -50,9 +50,13 @@
         </div>
 
         <div class="row row-eq-height">
+            
             <div class="col-12 col-lg-8 mb-4">
+                @if($component->location()->exists())
                 <x-locations.location-modal :asset="$component"/>
+                @endif
             </div>
+            
             <div class="col-12 col-lg-4 mb-4">
                 <x-manufacturers.manufacturer-modal :asset="$component"/>
             </div>

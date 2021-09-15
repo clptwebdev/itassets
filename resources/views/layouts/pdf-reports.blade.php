@@ -60,7 +60,7 @@
                     <br><strong>@yield('page')</strong>
                 </td>
                 <td align="right" style="padding-right: 10px;">
-                    Report On: {{ \Carbon\Carbon::now()->format('d-m-Y H:i')}}<br>Report by: {{auth()->user()->name;}}
+                    Report On: {{ \Carbon\Carbon::now()->format('d-m-Y H:i')}}<br>Report by: @yield('user')
                 </td>
             </tr>
         </table>

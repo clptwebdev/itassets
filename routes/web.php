@@ -154,6 +154,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
     //Permission Routes
 
+    //Reports
+        Route::get('/reports', '\App\Http\Controllers\ReportController@index')->name('reports.index');
     //Supplier
         Route::resource('/suppliers', 'App\Http\Controllers\SupplierController');
         Route::get('/supplier/pdf', 'App\Http\Controllers\SupplierController@downloadPDF')->name('suppliers.pdf');

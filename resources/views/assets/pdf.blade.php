@@ -1,64 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>PDF Report</title>
-    <!-- Custom styles for this template-->
-    <style>
+@extends('layouts.pdf-reports')
 
-        body{
-            font-size: 11px;
-            font-family: 'Roboto', sans-serif;
-        }
+@section('title', 'Asset  Report')
 
-        #header{
-            background-color: #454777;
-            width: 100%;
-            margin-bottom: 30px;
-            color: #fff;
-            font-size: 14px;
-        }
+@section('page', 'Assets')
 
-        #logo{
-            max-height: 100px;
-        }
+@section('user', $user->name)
 
-        #assetsTable{
-            border: solid 1px #666;
-            border-collapse: collapse;
-        }
-
-        #assetsTable th{
-            padding: 5px;
-            background-color: #454777;
-            color: #FFF;
-            border: solid 1px #666;
-        }
-
-        #assetsTable td{
-            border: solid 1px #AAA;
-            padding: 5px;
-        }
-
-        .page-break {
-            page-break-after: always;
-        }
-        </style>
-</head>
-<body>
-    <header id="header">
-        <table width="100%"></i>
-            <tr>
-                <td align="left" style="padding-left:10px;" width="20%"><img id="logo" src="" alt="Apollo Assets Manager"></td>
-                <td align="left">Apollo Asset Manangement<br><small>A Central Learning Partnership Trust (CLPT) System &copy; 2021</small>
-                    <br><strong>Assets</strong>
-                </td>
-                <td align="right" style="padding-right: 10px;">
-                    Report On: {{ \Carbon\Carbon::now()->format('d-m-Y H:i')}}<br>Report by: {{$user->name;}}
-                </td>
-            </tr>
-        </table>
-    </header>
+@section('content')
     <table id="assetsTable" width="100%">
         <thead>
         <tr>
@@ -145,5 +93,4 @@
             </tr>
         </tfoot>
     </table>
-</body>
-</html>
+@endsection

@@ -8,7 +8,7 @@
             <div class="row no-gutters">
                 <div class="col mr-2">
                     <div class="mb-1">
-                        <p class="mb-4">Log information regarding {{ $asset->model->name}} <strong
+                        <p class="mb-4">Log information regarding {{ $asset->name}} <strong
                                 class="font-weight-bold btn btn-sm btn-secondary shadow-sm p-1"><small>#{{ $asset->asset_tag }}</small></strong>
                             , view history and activity regarding the selected asset.</p>
                             <table class="logs table table-striped ">
