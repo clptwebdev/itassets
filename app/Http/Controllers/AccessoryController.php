@@ -37,7 +37,7 @@ class AccessoryController extends Controller
 
     public function create()
     {
-        if (auth()->user()->cant('create', $accesory)) {
+        if (auth()->user()->cant('create', Accessory::class)) {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'create']));
         }
 
