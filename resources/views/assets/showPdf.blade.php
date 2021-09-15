@@ -23,6 +23,7 @@
                     <td>Device Model N<span class="">o</span></td>
                     <td>{{$asset->model->name}}<br><small>{{ $asset->model->model_no }}</small></td>
                 </tr>
+                @endif
                 <tr>
                     <td>Device Serial N<span class="">o</span></td>
                     <td>{{ $asset->serial_no }}</td>
