@@ -127,7 +127,7 @@
                     </tr>
                 </tbody>
             </table>
-            @if($asset->category()->exits())
+            @if($asset->category()->exists())
             <table class="table table-sm table-bordered">
                 <tr>
                     <td>
