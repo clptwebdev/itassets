@@ -51,7 +51,9 @@
         </div>
         
         <div class="col-12 col-lg-4 mb-4">
+            @if($asset->model()->exists())
             <x-manufacturers.manufacturer-modal :asset="$asset->model"/>
+            @endif
         </div>
         
     </div>
@@ -170,7 +172,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="commentModalEditLabel">Update Comment for
-                        <strong>{{$asset->model->name}}</strong></h5>
+                        <strong>{{$asset->name}}</strong></h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>

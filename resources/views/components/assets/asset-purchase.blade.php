@@ -19,12 +19,14 @@
                         <tr>
                             <td>Supplier:</td>
                             <td>
+                                @if($asset->supplier()->exists())
                                 {{ $asset->supplier->name}}<br>
                                 {{ $asset->supplier->address_1 }}<br>
                                 {{ $asset->supplier->address_2 }}<br>
                                 {{ $asset->supplier->city }}<br>
                                 {{ $asset->supplier->county }}<br>
                                 {{ $asset->supplier->postcode }}<br>
+                                @endif
                             </td>
                         </tr>
                         <tr>
