@@ -17,9 +17,9 @@ class AssetsPdf implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $assets;
+    protected $assets;
     protected $user;
-    public $path;
+    protected $path;
     
     public function __construct($assets, $user, $path)
     {
