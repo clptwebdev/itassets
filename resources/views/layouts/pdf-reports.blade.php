@@ -56,7 +56,7 @@
         <table width="100%"></i>
             <tr>
                 <td align="left" style="padding-left:10px;" width="20%"><img id="logo" src="{{ asset('images/apollo-logo.jpg') }}" alt="Apollo Assets Manager"></td>
-                <td align="left">Apollo Asset Manangement<br><small>A Central Learning Partnership Trust (CLPT) System &copy; 2021</small>
+                <td align="left">Apollo Asset Management<br><small>A Central Learning Partnership Trust (CLPT) System &copy; 2021</small>
                     <br><strong>@yield('page')</strong>
                 </td>
                 <td align="right" style="padding-right: 10px;">

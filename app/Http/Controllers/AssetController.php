@@ -16,6 +16,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Exports\AssetExport;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Excel;
@@ -632,14 +635,15 @@ class AssetController extends Controller {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
         }
+        set_time_limit(120);
+
         $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'assets-'.$date;
+        AssetsPdf::dispatch( $assets,$user,$path )->afterResponse();
 
-        AssetsPdf::dispatch($assets,$user,$path )->afterResponse();
-        //Create Report
 
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
