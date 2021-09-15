@@ -28,7 +28,7 @@
                     <td>Device Serial N<span class="">o</span></td>
                     <td>{{ $asset->serial_no }}</td>
                 </tr>
-                @if(asset->fields()->exists())
+                @if($asset->fields()->exists())
                 @foreach($asset->fields as $field)
                     <tr>
                         <td>{{ $field->name ?? 'Unknown' }}</td>
