@@ -661,7 +661,7 @@ class AssetController extends Controller {
         $user = auth()->user();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = "asset-{$asset->asset_tag}-{$date}";
-        AssetsPdf::dispatch( $assets,$user,$path )->afterResponse();
+        AssetsPdf::dispatch( $asset,$user,$path )->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
 
