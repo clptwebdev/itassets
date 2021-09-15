@@ -32,6 +32,13 @@
                                 <label class=" fa-sm text-white-50">Password: </label>
                                 <input class="form-control input-styles input-style-design" id="password" type="password"
                                        name="password" placeholder="Password" required>
+
+{{--                                    <div class="alert alert-danger mt-1">This email doesn't belong to this application</div>--}}
+
+
+                                @if(session('success_message'))
+                                    <div class="alert alert-success"> {!! session('success_message')!!} </div>
+                                @endif
                                 <button class="centred button margin-25-height font20 w-100 mt-4 border-0"> Log in</button>
                             </form>
                         </div>

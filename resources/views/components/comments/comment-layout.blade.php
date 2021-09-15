@@ -18,7 +18,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach($asset->comment as $comment)    
+                            @foreach($asset->comment as $comment)
                                 <tr>
                                     <td class="text-left" data-sort="{{ strtotime($comment->created_at)}}">
                                         <strong>{{$comment->title}}</strong><br>
@@ -35,10 +35,10 @@
                                                 aria-labelledby="dropdownMenuLink">
                                                 <div class="dropdown-header">comment Options:</div>
                                                 @can('update', $comment)
-                                                <a href="#" class="dropdown-item editComment" 
-                                                    data-route="{{ route('comment.update', $comment->id)}}" 
-                                                    data-id="{{ $comment->id}}" 
-                                                    data-title="{{ $comment->title}}" 
+                                                <a href="#" class="dropdown-item editComment"
+                                                    data-route="{{ route('comment.update', $comment->id)}}"
+                                                    data-id="{{ $comment->id}}"
+                                                    data-title="{{ $comment->title}}"
                                                     data-comment="{{ $comment->comment}}"
                                                 >Edit</a>
                                                 @endcan
@@ -47,8 +47,8 @@
                                                     method="POST" class="d-block p-0 m-0">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <a class="dropdown-item deleteComment " href="#"
-                                                    data-id="{{$comment->id}}">Delete</a>
+                                                    <button id="commentModal" class="dropdown-item deleteComment "
+                                                    data-id="{{$comment->id}}">Delete</button>
                                                 </form>
                                                 @endcan
                                             </div>

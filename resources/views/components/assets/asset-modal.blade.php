@@ -13,9 +13,9 @@
                 </div>
                 <div class="col-12 col-sm-5 col-md-3 p-2">
                     @if(isset($asset->model->photo->path))
-                    <img src="{{ asset($asset->model->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->model->name}}">
+                    <img src="{{ asset($asset->model->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->name}}">
                     @else
-                    <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->model->name}}">
+                    <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->name ?? "N/A"}}">
                     @endif
                     <hr>
                     {!! '<img width="100%" height="100px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   />' !!}
@@ -34,7 +34,7 @@
                         </tr>
                         <tr>
                             <td>Device Model N<span class="">o</span></td>
-                            <td>{{$asset->model->name}}<br><small>{{ $asset->model->model_no }}</small></td>
+                            <td>{{$asset->model->name ?? "N/A"}}<br><small>{{ $asset->model->model_no ?? "N/A"}}</small></td>
                         </tr>
                         <tr>
                             <td>Device Serial N<span class="">o</span></td>
@@ -85,7 +85,7 @@
                                         @case($age < 31)
                                             <button class="btn btn-sm btn-warning p-1 font-weight-bold">{{ 'Audit Due Soon' }}</button>
                                             @break
-                                        @case($age >= 32) 
+                                        @case($age >= 32)
                                             <button class="btn btn-sm btn-success p-1 font-weight-bold">{{ round($age).' Days till Due' }}</button>
                                                 @break
                                         @default
