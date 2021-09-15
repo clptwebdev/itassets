@@ -85,6 +85,7 @@
                         @endif
                     </td>
                 </tr>
+                @if($asset->model()->exists())
                 <tr>
                     <td>End of Life (EOL): </td>
                     @php($eol =\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol)->format('d/m/Y'))
@@ -93,23 +94,24 @@
                         @if(\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol)->isPast())
                         <button class="btn btn-sm btn-danger p-1 font-weight-bold">{!! '<i class="fas fa-skull-crossbones"></i> Sorry for your loss' !!}</button>
                         @else
-                        <?php $age = Carbon\Carbon::now()->floatDiffInDays(\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol));?>
-                        @switch(true)
-                            @case($age == 0)
-                                <span class="text-danger">Sorry for your loss</span>
-                                @break
-                            @case($age < 31) 
-                                <span class="text-warning">End is Near</span>
-                                @break
-                            @case($age >= 32)
-                                <span class="text-success">Life in the Old Dog</span>
-                                @break
-                            @default
-                                <span class="text-danger">Unknown</span>
-                            @endswitch
+                            <?php $age = Carbon\Carbon::now()->floatDiffInDays(\Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->model->eol));?>
+                            @switch(true)
+                                @case($age == 0)
+                                    <span class="text-danger">Sorry for your loss</span>
+                                    @break
+                                @case($age < 31) 
+                                    <span class="text-warning">End is Near</span>
+                                    @break
+                                @case($age >= 32)
+                                    <span class="text-success">Life in the Old Dog</span>
+                                    @break
+                                @default
+                                    <span class="text-danger">Unknown</span>
+                                @endswitch
                         @endif
                     </td>
                 </tr>
+                @endif
             </table>
 
             <table class="table table-sm table-bordered table-striped">
