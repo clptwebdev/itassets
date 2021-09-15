@@ -20,7 +20,7 @@ class AssetsPdf implements ShouldQueue
     public $assets;
     protected $user;
     public $path;
-    
+
     public function __construct($assets, $user, $path)
     {
         $this->assets = $assets;
