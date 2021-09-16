@@ -2,7 +2,7 @@
     <div class="card shadow h-100">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold">Comments</h6>
-            <button id="commentModal" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+            <button id="commentModal" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm">
                     Add New Comment
             </button>
         </div>
@@ -47,8 +47,8 @@
                                                     method="POST" class="d-block p-0 m-0">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button id="commentModal" class="dropdown-item deleteComment "
-                                                    data-id="{{$comment->id}}">Delete</button>
+                                                    <a href="#" id="commentModal" class="dropdown-item deleteComment "
+                                                    data-id="{{$comment->id}}">Delete</a>
                                                 </form>
                                                 @endcan
                                             </div>

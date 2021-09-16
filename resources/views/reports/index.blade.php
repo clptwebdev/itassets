@@ -53,14 +53,18 @@
                             <tr>
                                 <td>
                                     @if(file_exists($report->report))
-                                    <a href="{{ asset($report->report)}}" title="New">{{$report->report }}</a>
-                                    @else{!! $report->report.' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' !!}
-
+                                        <a href="{{ asset($report->report)}}" title="New">{{$report->report }}</a>
+                                    @else
+                                        @if(\Carbon\Carbon::now()->floatDiffInMinutes($report->created_at) < 15)
+                                            {!! $report->report.' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' !!}
+                                        @else
+                                            {!! "<span class='text-coral'>{$report->report} <i class='fas fa-times'></i></span>" !!}
+                                        @endif
                                     @endif
                                 </td>
                                 <td>{{ $report->user->name ?? 'N/A' }}</td>
-                                <td class="text-center">{{ \Carbon\Carbon::parse($report->created_at)->format('d/m/Y H:i:s')}}</td>
-                                <td class="text-center">{{ \Carbon\Carbon::parse($report->created_at)->addDays(7)->format('d/m/Y H:i:s') }}</td>
+                                <td class="text-center" data-sort="{{  strtotime($report->created_at) }}">{{ \Carbon\Carbon::parse($report->created_at)->format('d/m/Y H:i:s')}}</td>
+                                <td class="text-center" data-sort="{{ strtotime($report->created_at)+(60*60*24*7)}}">{{ \Carbon\Carbon::parse($report->created_at)->addDays(7)->format('d/m/Y H:i:s') }}</td>
                                 <td class="text-right">...</td>
                             </tr>
                         @endforeach

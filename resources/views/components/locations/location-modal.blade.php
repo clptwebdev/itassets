@@ -45,7 +45,7 @@
                                 </tbody>
                             </table>
                             @if($asset->location->email && $asset->location->email != "")
-                            <a href="mailto:{{ $asset->location->email}}"><button class="btn btn-sm btn-primary"><i class="far fa-envelope"></i> Email Location</button></a>
+                            <a href="mailto:{{ $asset->location->email}}"><button class="btn btn-sm btn-blue"><i class="far fa-envelope"></i> Email Location</button></a>
                             @endif
                         </div>
                     </div>

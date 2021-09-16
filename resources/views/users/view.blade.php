@@ -11,23 +11,29 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Users</h1>
     <div class="mt-4 mt-sm-0">
-        <a href="{{ route('users.create')}}" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+        <a href="{{ route('users.create')}}" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New User</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-        @if($users->count() >1)
-        <a href="/exportusers" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i>Export</a>
+        @can('viewAll', auth()->user())
+            <form class="d-inline-block" action="{{ route('users.pdf')}}" method="POST">
+                @csrf
+                <input type="hidden" value="{{ json_encode($users->pluck('id'))}}" name="users"/>
+            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
+                    class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
+            </form>
+            @if($users->count() >1)
+            <a href="/exportusers" class="d-inline-block btn btn-sm btn-yellow shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50"></i>Export</a>
             @endif
+        @endcan
     </div>
 </div>
 
 @if(session('danger_message'))
-<div class="alert alert-danger"> {{ session('danger_message')}} </div>
+<div class="alert alert-danger"> {!! session('danger_message')!!} </div>
 @endif
 
 @if(session('success_message'))
-<div class="alert alert-success"> {{ session('success_message')}} </div>
+<div class="alert alert-success"> {!! session('success_message')!!} </div>
 @endif
 
 <section>

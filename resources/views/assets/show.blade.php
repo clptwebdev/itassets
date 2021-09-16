@@ -90,8 +90,8 @@
                     </select> 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-success" type="submit">Update</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-green" type="submit">Update</button>
                     </div>
                 </form>
             </div>
@@ -117,8 +117,8 @@
                         set to Null.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </div>
             </div>
         </div>
@@ -154,8 +154,8 @@
 
                         </div>
                         <div class="p-2 text-lg-right">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                            <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-green" type="button" id="commentUpload">
                                 Save
                             </button>
                         </div>
@@ -195,8 +195,8 @@
 
                         </div>
                         <div class="p-2 text-lg-right">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                            <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-green" type="button" id="commentUpload">
                                 Save
                             </button>
                         </div>
@@ -223,8 +223,8 @@
                     <small class="text-danger">**Warning this is permanent. </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmCommentBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmCommentBtn">Delete</button>
                 </div>
             </div>
         </div>
@@ -245,6 +245,8 @@
             var form = '#' + 'form' + $('#asset-id').val();
             $(form).submit();
         });
+
+        
 
         $('#commentModal').click(function () {
             //showModal

@@ -7,15 +7,15 @@
         <div class="card-body">
             <div class="row no-gutters">
                 <div class="col-12"><p class="mb-4 ">Information regarding <strong
-                            class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>{{ $miscellaneou->name }}</small></strong>
+                            class="font-weight-bold d-inline-block btn-sm btn-grey shadow-sm p-1"><small>{{ $miscellaneou->name }}</small></strong>
                         , along with additional relational data attached.</p>
                     <hr>
                 </div>
                 <div class="col-12 col-sm-5 col-md-3 p-2">
                     @if($miscellaneou->photo()->exists())
-                        <img src="{{ asset($miscellaneou->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="{{$miscellaneou->name}}">
+                        <img src="{{ asset($miscellaneou->photo->path) ?? asset('images/svg/misc-image.svg')}}" width="100%" alt="{{$miscellaneou->name}}">
                     @else
-                        <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$miscellaneou->name}}">
+                        <img src="{{asset('images/svg/misc-image.svg')}}" width="100%" alt="{{$miscellaneou->name}}">
                     @endif
                 </div>
                 <div class="col-12 col-sm-7 col-md-9 p-2">
@@ -59,7 +59,7 @@
                         <tr>
                             <td>Device Status: </td>
                             <td><strong>{{ $miscellaneou->status->name ?? 'No Status Set'}}</strong></td>
-                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#changeStatus">Change Status</button></td>
+                            <td class="text-right"><button class="btn btn-sm btn-blue p-1 font-weight-bold" data-toggle="modal" data-target="#changeStatus">Change Status</button></td>
                         </tr>
                     </table>
 
@@ -76,7 +76,7 @@
                             <td class="text-right">
                                 @if(isset($miscellaneou->user->id))
                                     <a href="{{ route('users.show', $miscellaneou->user->id)}}">
-                                        <button class="font-weight-bold btn btn-sm btn-primary p-1">View User</button></a>
+                                        <button class="font-weight-bold btn btn-sm btn-blue p-1">View User</button></a>
                                 @endif
                             </td>
                         </tr>
@@ -87,7 +87,7 @@
                             <tr>
                                 <td>
                                     @foreach($miscellaneou->category as $category)
-                                        <strong class="font-weight-bold d-inline-block btn-sm btn-light shadow-sm p-1 m-2"><small>{{ $category->name}}</small></strong>
+                                        <strong class="font-weight-bold d-inline-block btn-sm btn-lilac shadow-sm p-1 m-2"><small>{{ $category->name}}</small></strong>
                                     @endforeach
                                 </td>
                             </tr>

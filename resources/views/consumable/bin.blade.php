@@ -12,17 +12,17 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Consumables | Recycle Bin</h1>
         <div>
-            <a href="{{ route('consumables.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+            <a href="{{ route('consumables.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @can('generatePDF', \App\Models\Consumable::class)
                 @if ($consumables->count() == 1)
-                    <a href="{{ route('consumables.showPdf', $consumables[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                    <a href="{{ route('consumables.showPdf', $consumables[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
                     @else
                     <form class="d-inline-block" action="{{ route('consumables.pdf')}}" method="POST">
                         @csrf
                         <input type="hidden" value="{{ json_encode($consumables->pluck('id'))}}" name="consumables"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                     </form>                
                 @endif
@@ -31,11 +31,11 @@
     </div>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
 
     <section>
@@ -89,7 +89,7 @@
                                     @endif  
                                 </td>
                                 <td class="text-center">{{$consumable->manufacturer->name ?? "N/A"}}</td>
-                                <td>{{\Carbon\Carbon::parse($consumable->purchased_date)->format("d/m/Y")}}</td>
+                                <td data-sort="{{ strtomtime($consumable->purchased_date)}}">{{\Carbon\Carbon::parse($consumable->purchased_date)->format("d/m/Y")}}</td>
                                 <td>£{{$consumable->purchased_cost}}</td>
                                 <td>{{$consumable->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center"  style="color: {{$consumable->status->colour ?? '#666'}};">
@@ -160,8 +160,8 @@
                     <small class="text-danger">**Warning this is permanent and the consumable will be removed from the system </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </div>
             </div>
         </div>
@@ -187,10 +187,10 @@
         $(document).ready(function () {
             $('#usersTable').DataTable({
                 "columnDefs": [{
-                    "targets": [3, 4, 5],
+                    "targets": [8],
                     "orderable": false,
                 }],
-                "order": [[1, "asc"]]
+                "order": [[3, "desc"]]
             });
         });
         // import

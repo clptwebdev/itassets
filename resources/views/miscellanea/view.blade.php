@@ -13,32 +13,32 @@
         <h1 class="h3 mb-0 text-gray-800">Miscellaneous</h1>
         <div>
             @can('viewAny', \App\Models\Miscellanea::class)
-                <a href="{{ route('miscellaneous.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <a href="{{ route('miscellaneous.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm">
                     <i class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Miscellanea::onlyTrashed()->count()}})</a>
             @endcan
             @can('create', \App\Models\Miscellanea::class)
-                <a href="{{ route('miscellaneous.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+                <a href="{{ route('miscellaneous.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm">
                     <i class="fas fa-plus fa-sm text-white-50"></i> Add New Miscellanea</a>
             @endcan
             @can('viewAny', \App\Models\Miscellanea::class)
                 @if ($miscellaneous->count() == 1)
-                    <a href="{{ route('miscellaneous.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm mr-1 loading"><i
+                    <a href="{{ route('miscellaneous.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm mr-1 loading"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                 @else
                     <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">
                         @csrf
                         <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
-                        <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm mr-1 loading"><i
+                        <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm mr-1 loading"><i
                                 class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                     </form>
                 @endif
                 @if($miscellaneous->count() >1)
-                    <a href="/exportmiscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
+                    <a href="/exportmiscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
                             class="fas fa-download fa-sm text-white-50"></i>Export</a>
                 @endif
             @endcan
             @can('create', \App\Models\Miscellanea::class)
-                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm">
                     <i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
             @endcan
         </div>
@@ -104,7 +104,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
-                                <td>{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
+                                <td data-sort="{{ strtotime($miscellanea->purchased_date)}}">{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
                                 <td>£{{$miscellanea->purchased_cost}}</td>
                                 <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center">{{$miscellanea->status->name ??'N/A'}}</td>
@@ -179,8 +179,8 @@
                     <small class="text-danger">**This is not permanent and the component can be restored in the Components Recycle Bin. </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>
@@ -199,21 +199,21 @@
                 <form action="/importmiscellaneous" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add miscellaneous to the system.</p>
-                        <input id="importEmpty" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        <input id="importEmpty" class="form-control"
                                type="file" placeholder="Upload here" name="csv" accept=".csv">
 
                     </div>
 
                     <div class="modal-footer">
                         @if(session('import-error'))
-                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
+                            <div class="alert text-warning ml-0"> {{ session('import-error') ?? ' Select a file to be uploaded before continuing!'}} </div>
                         @endif
                         <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/EbntKq_mlTVAgWc6TVyyomUBai1vGhqJFBJy9sULugmz_A?e=83Q40o" target="_blank" class="btn btn-info" >
                             Download Import Template
                         </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
+                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
                             Import
                         </button>
                     @csrf
@@ -221,7 +221,6 @@
             </div>
         </div>
     </div>
-    <?php session()->flash('import-error', ' Select a file to be uploaded before continuing!');?>
 @endsection
 
 @section('js')
@@ -241,10 +240,10 @@
         $(document).ready(function () {
             $('#usersTable').DataTable({
                 "columnDefs": [{
-                    "targets": [3, 4, 5],
+                    "targets": [8],
                     "orderable": false,
                 }],
-                "order": [[1, "asc"]]
+                "order": [[3, "asc"]]
             });
         });
         // import

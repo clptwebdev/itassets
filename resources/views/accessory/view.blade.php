@@ -18,7 +18,7 @@
             @endcan
             @can('create', \App\Models\Accessory::class)
             <a href="{{ route('accessories.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                    class="fas fa-plus fa-sm text-dark-50"></i> Add New Accessory</a>
+                    class="fas fa-plus fa-sm text-white-50"></i> Add New Accessory</a>
             @endcan
             @can('generatePDF', \App\Models\Accessory::class)
                 @if ($accessories->count() == 1)
@@ -39,7 +39,7 @@
             @endcan
             @can('import', \App\Models\Accessory::class)
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                    class="fas fa-download fa-sm text-dark-50 fa-text-width"></i> Import</a>
+                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
             @endcan
         </div>
     </div>
@@ -122,7 +122,7 @@
                                         </a>
                                         <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                              aria-labelledby="dropdownMenu{{$accessory->id}}Link">
-                                            <div class="dropdown-header">accessory Options:</div>
+                                            <div class="dropdown-header">Accessory Options:</div>
                                             @can('view', $accessory)
                                             <a href="{{ route('accessories.show', $accessory->id) }}" class="dropdown-item">View</a>
                                             @endcan
@@ -200,7 +200,7 @@
                 <form action="/importacessories" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add Accessories to the system.</p>
-                        <input id="importEmpty" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        <input id="importEmpty" class="form-control"
                                type="file" placeholder="Upload here" name="csv" accept=".csv">
 
                     </div>
@@ -209,12 +209,12 @@
                         @if(session('import-error'))
                             <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
                         @endif
-                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/EUS0PE9tn-xFsPAqFeza6OQB9Cm8EONyQNd4eTdkmXJnXw?e=wCJU5b" target="_blank" class="btn btn-info" >
+                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/EUS0PE9tn-xFsPAqFeza6OQB9Cm8EONyQNd4eTdkmXJnXw?e=wCJU5b" target="_blank" class="btn btn-blue" >
                             Download Import Template
                         </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
+                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
                             Import
                         </button>
                     @csrf

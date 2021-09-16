@@ -8,7 +8,7 @@
             <div class="row no-gutters">
                 <div class="mb-1">
                     <p class="mb-4 ">Information regarding <strong
-                            class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>#{{ $asset->asset_tag }}</small></strong>
+                            class="font-weight-bold d-inline-block btn-sm btn-grey shadow-sm p-1"><small>{{$asset->name }}</small></strong>
                         purchase order, you find information about the purchase and the supplier.</p>
                     
                     <table class="table table-sm table-bordered table-striped">
@@ -45,14 +45,19 @@
                         </tr>
                         <tr>
                             <td>Purchase Cost:</td>
-                            <?php $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date); $percentage = floor($age)*33.333; $dep = $asset->purchased_cost * ((100 - $percentage) / 100);?>
+                            <?php 
+                            $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date); 
+                            $percent = 100 / $asset->model->depreciation->years;
+                            $percentage = floor($age)*$percent;
+                            $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                            ?>
                             <td>£{{ $asset->purchased_cost }} - (Current Value*: £{{ number_format($dep, 2)}})<br>
                             <small>*Calculated using Depreciation Model:</small><br><strong
                                 class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>Laptop and Tablet</small></strong></p></td>
                         </tr>
                     </table>
                     @if($asset->supplier && $asset->supplier->email != "")
-                    <a href="mailto:{{$asset->supplier->email}}"><button class="btn btn-sm btn-primary"><i class="far fa-envelope"></i> Email Supplier</button></a>
+                    <a href="mailto:{{$asset->supplier->email}}"><button class="btn btn-sm btn-blue"><i class="far fa-envelope"></i> Email Supplier</button></a>
                     @endif
                 </div>
             </div>

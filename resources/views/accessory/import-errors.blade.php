@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'View Accessories Import errors')
+@section('title', 'Accessory Import Errors')
 
 
 @section('css')
@@ -15,25 +15,24 @@
             @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
 
             <div>
-                <form action="accessories/export-import-errors" method="POST">
+                <form action="{{route('componentexport.import')}}" method="POST" class="d-inline">
                     @csrf
                     <div class="form-group">
                         <input type="hidden" class="form-control " name="name"
                                id="name" placeholder="" value="{{htmlspecialchars(json_encode($valueArray))}}">
                     </div>
-                    <button type="submit" class="d-inline-block btn btn-sm btn-warning shadow-sm loading"><i
-                            class="far fa-save fa-sm text-white-50"></i> Download Errors
+                    <button type="submit" class="d-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
+                            class="far fa-save fa-sm text-dark-50"></i> Download Errors
                     </button>
-
-                    <a href="{{ route('accessories.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                            class="fas fa-chevron-left fa-sm te
-                        xt-white-50"></i> Back to Consumables</a>
-                    <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
-                            class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
-                    <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
-                            class="far fa-save fa-sm text-white-50"></i> Save
-                    </a>
                 </form>
+                <a href="{{ route('accessories.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                        class="fas fa-chevron-left fa-sm te
+                    xt-white-50"></i> Back to Consumables</a>
+                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
+                        class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
+                <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
+                        class="far fa-save fa-sm text-white-50"></i> Save
+                </a>
             </div>
         </div>
 
@@ -64,36 +63,36 @@
                 <div class="card-body">
                     <div class="table-responsive">
 
-                        <table id="categoryTable" class="table table-striped">
+                        <table id="categoryTable" class="table table-bordered">
                             <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Status Id</th>
-                                <th>Supplier</th>
-                                <th>Manufacturers</th>
-                                <th>Location</th>
-                                <th>Order_no</th>
-                                <th>Serial Num</th>
-                                <th>Purchased Cost</th>
-                                <th>Purchased Date</th>
-                                <th>Warranty</th>
-                                <th>Notes</th>
+                                <th><small>Name</small></th>
+                                <th><small>Status</small></th>
+                                <th><small>Supplier</small></th>
+                                <th><small>Manufacturers</small></th>
+                                <th><small>Location</small></th>
+                                <th><small>Order_no</small></th>
+                                <th><small>Serial Num</small></th>
+                                <th><small>Purchased Cost</small></th>
+                                <th><small>Purchased Date</small></th>
+                                <th><small>Warranty</small></th>
+                                <th><small>Notes</small></th>
                             </tr>
                             </thead>
                             <tfoot>
-                            <tr>
-                                <th>Name</th>
-                                <th>Status id</th>
-                                <th>Supplier</th>
-                                <th>Manufacturers</th>
-                                <th>Location</th>
-                                <th>Order_no</th>
-                                <th>Serial Num</th>
-                                <th>Purchased Cost</th>
-                                <th>Purchased Date</th>
-                                <th>Warranty</th>
-                                <th>Notes</th>
-                            </tr>
+                                <tr>
+                                    <th><small>Name</small></th>
+                                    <th><small>Status</small></th>
+                                    <th><small>Supplier</small></th>
+                                    <th><small>Manufacturers</small></th>
+                                    <th><small>Location</small></th>
+                                    <th><small>Order_no</small></th>
+                                    <th><small>Serial Num</small></th>
+                                    <th><small>Purchased Cost</small></th>
+                                    <th><small>Purchased Date</small></th>
+                                    <th><small>Warranty</small></th>
+                                    <th><small>Notes</small></th>
+                                </tr>
                             </tfoot>
 
                             @csrf
@@ -104,7 +103,7 @@
                                     <td>
                                         <span id="name{{$line}}" class="tooltip-danger">
                                             <input type="text"
-                                               class="form-control @if(in_array('name', $errors)){{ 'border-danger'}}@endif" name="name[]"
+                                               class="import-control @if(in_array('name', $errors)){{ 'border-bottom border-danger'}}@endif" name="name[]"
                                                id="name" value="{{ $valueArray[$row]['name'] }}"
                                                placeholder="This Row is Empty Please Fill!" required data-container='#name{{$line}}' data-placement='top'
                                                @if(array_key_exists('name', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
@@ -112,11 +111,11 @@
                                     </td>
                                     <td>
                                         <span id="status_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown" class="form-control @if(in_array('status_id', $errors)){{ 'border-danger'}}@endif" name="status_id[]" id="status_id"
+                                        <select type="dropdown" class="import-control @if(in_array('status_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="status_id[]" id="status_id"
                                             required data-container='#status_id{{$line}}' data-placement='top'
                                         @if(array_key_exists('status_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['status_id']}'" !!}@endif
                                         >
-                                            <option value="0" @if($valueArray[$row]['status_id'] == ''){{'selected'}}@endif>Please Select a Status</option>
+                                            <option value="0" @if($valueArray[$row]['status_id'] == ''){{'selected'}}@endif>No Status</option>
                                             @foreach($statuses as $status)
                                                 <option value="{{$status->id }}" @if( $valueArray[$row]['status_id'] == $status->name){{'selected'}}@endif>{{ $status->name }}</option>
                                             @endforeach
@@ -126,11 +125,11 @@
                                     </td>
                                     <td>
                                         <span id="supplier_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown" class="form-control @if(in_array('supplier_id', $errors)){{ 'border-danger'}}@endif" name="supplier_id[]" required
+                                        <select type="dropdown" class="import-control @if(in_array('supplier_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="supplier_id[]" required
                                         data-container='#supplier_id{{$line}}' data-placement='top'
                                         @if(array_key_exists('supplier_id', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['supplier_id']}'" !!}@endif
                                         >
-                                            <option value="0" @if($valueArray[$row]['supplier_id'] == ''){{'selected'}}@endif>Please Select a Supplier</option>
+                                            <option value="0" @if($valueArray[$row]['supplier_id'] == ''){{'selected'}}@endif>No Supplier</option>
                                             @foreach($suppliers as $supplier)
                                                 <option value="{{ $supplier->id }}" @if( $valueArray[$row]['supplier_id'] == $supplier->name){{'selected'}}@endif>{{ $supplier->name }}</option>
                                             @endforeach
@@ -139,7 +138,7 @@
                                     </td>
                                     <td>
                                         <span id="manufacturer_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown" class="form-control @if(in_array('manufacturer_id', $errors)){{ 'border-danger'}}@endif" name="manufacturer_id[]" required
+                                        <select type="dropdown" class="import-control @if(in_array('manufacturer_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="manufacturer_id[]" required
                                         data-container='#manufacturer_id{{$line}}' data-placement='top'
                                         @if(array_key_exists('manufacturer_id', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['manufacturer_id']}'" !!}@endif
                                         >
@@ -152,7 +151,7 @@
                                     </td>
                                     <td>
                                         <span id="location_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown" class="form-control @if(in_array('location_id', $errors)){{ 'border-danger'}}@endif" name="location_id[]" required
+                                        <select type="dropdown" class="import-control @if(in_array('location_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="location_id[]" required
                                         data-container='#location_id{{$line}}' data-placement='top'
                                         @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['location_id']}'" !!}@endif
                                         >
@@ -165,7 +164,7 @@
                                     </td>
                                     <td>
                                         <span id="order_no{{$line}}" class="tooltip-danger">
-                                        <input type="text" class="form-control @if(in_array('order_no', $errors)){{ 'border-danger'}}@endif" name="order_no[]" id="order_no" placeholder="This Row is Empty Please Fill!"
+                                        <input type="text" class="import-control @if(in_array('order_no', $errors)){{ 'border-bottom border-danger'}}@endif" name="order_no[]" id="order_no" placeholder="This Row is Empty Please Fill!"
                                             value="{{ $valueArray[$row]['order_no'] }}" required data-container='#order_no{{$line}}' data-placement='top'
                                             @if(array_key_exists('order_no', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['order_no']}'" !!}@endif
                                         >
@@ -174,7 +173,7 @@
                                     <td>
                                         <span id="serial_no{{$line}}" class="tooltip-danger">
                                         <input type="text"
-                                               class="form-control @if(in_array('serial_no', $errors)){{ 'border-danger'}}@endif" name="serial_no[]" id="serial_no" placeholder="This Row is Empty Please Fill!"
+                                               class="import-control @if(in_array('serial_no', $errors)){{ 'border-bottom border-danger'}}@endif" name="serial_no[]" id="serial_no" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['serial_no'] }}" required data-container='#serial_no{{$line}}' data-placement='top'
                                                @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['serial_no']}'" !!}@endif
                                         >
@@ -183,7 +182,7 @@
                                     <td>
                                         <span id="purchased_cost{{$line}}" class="tooltip-danger">
                                         <input type="text"
-                                               class="form-control @if(in_array('purchased_cost', $errors)){{'border-danger'}}@endif"
+                                               class="import-control @if(in_array('purchased_cost', $errors)){{'border-bottom border-danger'}}@endif"
                                                name="purchased_cost[]"
                                                id="purchased_cost" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['purchased_cost'] }}" required data-container='#purchased_cost{{$line}}' data-placement='top'
@@ -192,11 +191,18 @@
                                         </span>
                                     </td>
                                     <td>
+                                        <?php
+                                        try {
+                                            $date = \Carbon\Carbon::parse(str_replace('/', '-', $valueArray[$row]['purchased_date']))->format('Y-m-d');
+                                        } catch (\Exception $e) {
+                                            $date = 'dd/mm/yyyy';
+                                        }
+                                        ?>
                                         <span id="purchased_date{{$line}}" class="tooltip-danger">
-                                        <input type="text"
-                                               class="form-control @if(in_array('purchased_date', $errors)){{ 'border-danger'}}@endif" name="purchased_date[]"
+                                        <input type="date"
+                                               class="import-control @if(in_array('purchased_date', $errors)){{ 'border-bottom border-danger'}}@endif" name="purchased_date[]"
                                                id="purchased_date" placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['purchased_date'] }}" required data-container='#purchased_date{{$line}}' data-placement='top'
+                                               value="{{ $date }}" required data-container='#purchased_date{{$line}}' data-placement='top'
                                                @if(array_key_exists('purchased_date', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['purchased_date']}'" !!}
                                                @endif
                                                >
@@ -206,7 +212,7 @@
                                     <td>
                                         <span id="warranty{{$line}}" class="tooltip-danger">
                                         <input type="text"
-                                               class="form-control @if(in_array('warranty', $errors)){{'border-danger'}}@endif"
+                                               class="import-control @if(in_array('warranty', $errors)){{'border-bottom border-danger'}}@endif"
                                                name="warranty[]"
                                                id="warranty" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['warranty'] }}" required data-container='#warranty{{$line}}' data-placement='top'
@@ -217,7 +223,7 @@
                                     <td>
                                         <span id="warranty{{$line}}" class="tooltip-danger">
                                         <input type="text"
-                                               class="form-control @if(in_array('notes', $errors)){{'border-danger'}}@endif"
+                                               class="import-control @if(in_array('notes', $errors)){{'border-bottom border-danger'}}@endif"
                                                name="notes[]"
                                                id="notes" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['notes'] }}" required data-container='#notes{{$line}}' data-placement='top'
@@ -261,10 +267,10 @@
                     </div>
                     <div class="modal-footer">
                         <p>For Anymore information please email Apollo@clpt.co.uk</p>
-                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=CXfTdb" target="_blank" class="btn btn-info" >
+                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=CXfTdb" target="_blank" class="btn btn-blue" >
                             Download Import Template
                         </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
                     @csrf
                 </form>
             </div>
@@ -281,17 +287,6 @@
             $('#importManufacturerModal').modal('show')
 
         })
-
-
-        $(document).ready(function () {
-            $('#categoryTable').DataTable({
-                "columnDefs": [{
-                    "targets": [0, 5],
-                    "orderable": false,
-                }],
-                "order": [[1, "asc"]]
-            });
-        });
 
         //validation
         function checkErrors(obj){
@@ -360,7 +355,7 @@
             });
 
             $.ajax({
-                url: '/consumables/create/ajax',
+                url: '/accessories/create/ajax',
                 type: 'POST',
                 data: data,
                 processData: false,
@@ -369,15 +364,15 @@
                     if(response === 'Success'){
                         window.location.href = '/accessories';
                     }else{
-                        $('.form-control').removeClass('border-danger');
-                        $('.form-control').tooltip('dispose');
+                        $('.import-control').removeClass('border-danger');
+                        $('.import-control').tooltip('dispose');
                         $('input').removeClass('border-danger');
                         var i = 0;
                         Object.entries(response).forEach(entry => {
                             const [key, value] = entry;
                             res = key.split('.');
                             const error = value.toString().replace(key, res[0]);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border');
+                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-bottom');
                             $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
                             $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('data-toggle', 'tooltip');
                             $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('title', error);

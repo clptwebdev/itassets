@@ -15,19 +15,19 @@
             <h1 class="h3 mb-0 text-gray-800">View Component</h1>
             <div>
                 <a href="{{ route('components.index')}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
                 @can('delete', $component)
-                <a class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" href="#"
+                <a class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn" href="#"
                    data-id="{{$component->id}}"><i class=" fas fa-trash fa-sm text-white-50"></i>Delete</a>
                 @endcan
-                @can('edit', $component)
+                @can('update', $component)
                 <a href="{{ route('components.edit', $component->id)}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                   class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                         class="fas fa-edit fa-sm text-white-50"></i> Edit</a>
                 @endcan
                 @can('export', $component)
-                <a href="{{ route('components.showPdf', $component->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
+                <a href="{{ route('components.showPdf', $component->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                 @endcan
             </div>
@@ -58,12 +58,14 @@
             </div>
             
             <div class="col-12 col-lg-4 mb-4">
+                @if($component->manufacturer()->exists())
                 <x-manufacturers.manufacturer-modal :asset="$component"/>
+                @endif
             </div>
         </div>
 
         <div class="row row-eq-height">
-            <x-components.component-log :component="$component"/>
+                <x-components.component-log :component="$component"/>
             <div class="col-12 col-lg-6 mb-4">
                 <x-comments.comment-layout :asset="$component"/>
             </div>   
@@ -96,8 +98,8 @@
                     </select> 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-success" type="submit">Update</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-green" type="submit">Update</button>
                     </div>
                 </form>
             </div>
@@ -120,8 +122,8 @@
                     <small class="text-danger">**This is not permanent and the component can be restored in the Components Recycle Bin. </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </div>
             </div>
         </div>
@@ -156,8 +158,8 @@
 
                     </div>
                     <div class="p-2 text-lg-right">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-green" type="button" id="commentUpload">
                             Save
                         </button>
                     </div>
@@ -197,12 +199,35 @@
 
                     </div>
                     <div class="p-2 text-lg-right">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-green" type="button" id="commentUpload">
                             Save
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+     <!-- Comment Delete Modal-->
+     <div class="modal fade bd-example-modal-lg" id="removeComment" tabindex="-1" role="dialog" aria-labelledby="removeCommentLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeCommentLabel">Are you sure you want to delete this Comment?
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="comment-id" type="hidden" value="">
+                    <p>Select "Delete" to remove this comment.</p>
+                    <small class="text-danger">**Warning this is permanent. </small>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmCommentBtn">Delete</button>
+                </div>
             </div>
         </div>
     </div>
@@ -234,6 +259,17 @@
             var route = $(this).data('route');
             $('#updateForm').attr('action', route); 
             $('#commentModalEdit').modal('show');
+        });
+
+        $('.deleteComment').click(function () {
+            $('#comment-id').val($(this).data('id'));
+            //showModal
+            $('#removeComment').modal('show');
+        });
+
+        $('#confirmCommentBtn').click(function () {
+            var form = '#' + 'comment' + $('#comment-id').val();
+            $(form).submit();
         });
 
         $(document).ready( function () {

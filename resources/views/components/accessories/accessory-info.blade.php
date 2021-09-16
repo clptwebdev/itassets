@@ -7,7 +7,7 @@
         <div class="card-body">
             <div class="row no-gutters">
                 <div class="col-12"><p class="mb-4 ">Information regarding <strong
-                        class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>{{ $accessory->name }}</small></strong>
+                        class="font-weight-bold d-inline-block btn-sm btn-grey shadow-sm p-1"><small>{{ $accessory->name }}</small></strong>
                     , along with additional relational data attached.</p>
                 <hr>
                 </div>
@@ -44,7 +44,7 @@
                         <tr>
                             <td>Device Status: </td>
                             <td><strong><i class="{{$accessory->status->icon ?? 'fa fa-circle'}}" style="color: {{$accessory->status->colour ?? '#666'}};"></i> {{ $accessory->status->name ?? 'No Status Set'}}</strong></td>
-                            <td class="text-right"><button class="btn btn-sm btn-primary p-1 font-weight-bold" data-toggle="modal" data-target="#accessoryModalStatus">Change Status</button></td>
+                            <td class="text-right"><button class="btn btn-sm btn-blue p-1 font-weight-bold" data-toggle="modal" data-target="#accessoryModalStatus">Change Status</button></td>
                         </tr>
                     </table>
 

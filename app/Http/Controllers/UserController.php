@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 use App\Models\Location;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
+use App\Jobs\UsersPdf;
+use App\Jobs\UserPdf;
+use App\Models\Report;
 
 class UserController extends Controller {
 
@@ -252,5 +256,43 @@ class UserController extends Controller {
                 ->with('danger_message', "Your Password Didn't match your current password please try again!");
         }
     }
+    
+    public function downloadPDF(Request $request)
+    {
+        if (auth()->user()->cant('viewAll', User::class)) {
+            return redirect(route('errors.forbidden', ['area', 'User', 'View PDF']));
+        }
 
+        $users = User::select('id', 'name', 'email', 'location_id', 'role_id')->whereIn('id', json_decode($request->users))->get();
+        $user = auth()->user();
+
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        $path = 'users-'.$date;
+        UsersPdf::dispatch( $users,$user,$path )->afterResponse();
+
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        return redirect(route('users.index'))
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
+    }
+
+    public function downloadShowPDF(Asset $asset)
+    {
+        if (auth()->user()->cant('view', $asset)) {
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'View PDF']));
+        }
+
+        $user = auth()->user();
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        $path = "asset-{$asset->asset_tag}-{$date}";
+        AssetsPdf::dispatch( $asset,$user,$path )->afterResponse();
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
+        return redirect(route('assets.show', $asset->id))
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
+    }
 }

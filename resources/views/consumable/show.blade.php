@@ -11,33 +11,33 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">View Consumables</h1>
         <div>
-            <a href="{{ route('consumables.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+            <a href="{{ route('consumables.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @can('generatePDF', $consumable)
-            <a href="{{ route('consumables.showPdf', $consumable->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
+            <a href="{{ route('consumables.showPdf', $consumable->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
             @endcan
-            @can('edit', $consumable)
+            @can('update', $consumable)
             <a href="{{ route('consumables.edit', $consumable->id)}}"
-               class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+               class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                     class="fas fa-edit fa-sm text-white-50"></i> Edit</a>
             @endcan
             <form class="d-inline-block id="form{{$consumable->id}}" action="{{ route('consumables.destroy', $consumable->id) }}"
                 method="POST">
             @csrf
             @method('DELETE')
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" data-id="{{$consumable->id}}"><i
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn" data-id="{{$consumable->id}}"><i
                     class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
             </form>
         </div>
     </div>
 
     @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
+        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
     @endif
 
     @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
+        <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
 
     <div class="row row-eq-height">
@@ -46,14 +46,16 @@
     </div>
 
     <div class="row row-eq-height">
+        @if($consumable->location()->exists())
         <div class="col-12 col-lg-8 mb-4">
             <x-locations.location-modal :asset="$consumable"/>
         </div>
-        
+        @endif
+        @if($consumable->manufacturer()->exists())
         <div class="col-12 col-lg-4 mb-4">
             <x-manufacturers.manufacturer-modal :asset="$consumable"/>
         </div>
-        
+        @endif
     </div>
     <div class="row row-eq-height">
         <x-consumables.consumable-log :consumable="$consumable"/>
@@ -88,8 +90,8 @@
                     </select> 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-success" type="submit">Update</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-green" type="submit">Update</button>
                     </div>
                 </form>
             </div>
@@ -113,8 +115,8 @@
                     <small class="text-danger">**Warning this is not permanent. This Consumable can be restored inside the Recycle Bin.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>
@@ -149,8 +151,8 @@
 
                     </div>
                     <div class="p-2 text-lg-right">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-green" type="button" id="commentUpload">
                             Save
                         </button>
                     </div>
@@ -190,15 +192,38 @@
 
                     </div>
                     <div class="p-2 text-lg-right">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-green" type="button" id="commentUpload">
                             Save
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-
+    </div>
+        <!-- Comment Delete Modal-->
+     <div class="modal fade bd-example-modal-lg" id="removeComment" tabindex="-1" role="dialog" aria-labelledby="removeCommentLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeCommentLabel">Are you sure you want to delete this Comment?
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="comment-id" type="hidden" value="">
+                    <p>Select "Delete" to remove this comment.</p>
+                    <small class="text-danger">**Warning this is permanent. </small>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmCommentBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -227,6 +252,31 @@
             var route = $(this).data('route');
             $('#updateForm').attr('action', route); 
             $('#commentModalEdit').modal('show');
+        });
+
+        $('.deleteComment').click(function () {
+            $('#comment-id').val($(this).data('id'));
+            //showModal
+            $('#removeComment').modal('show');
+        });
+
+        $('#confirmCommentBtn').click(function () {
+            var form = '#' + 'comment' + $('#comment-id').val();
+            $(form).submit();
+        });
+
+        $(document).ready( function () {
+            $('#comments').DataTable({
+                "autoWidth": false,
+                "pageLength": 10,
+                "searching": false,
+                "bLengthChange": false,
+                "columnDefs": [ {
+                    "targets": [1],
+                    "orderable": false
+                }],
+                "order": [[ 0, "desc"]],
+            });
         });
     </script>
 

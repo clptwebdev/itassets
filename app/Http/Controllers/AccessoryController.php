@@ -120,7 +120,6 @@ class AccessoryController extends Controller
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
                 'location_id.*' => 'required|gt:0',
-                'supplier_id.*' => 'required|gt:0',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             ]);
@@ -344,7 +343,7 @@ class AccessoryController extends Controller
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'accessories-'.$date;
 
-        dispatch(new AccessoriesPdf($accessories, $user, $path));
+        dispatch(new AccessoriesPdf($accessories, $user, $path))->afterResponse();
         //Create Report
         
         $url = "storage/reports/{$path}.pdf";
@@ -366,7 +365,7 @@ class AccessoryController extends Controller
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'accessory-'.$accessory->id.'-'.$date;
 
-        dispatch(new AccessoryPdf($accessory, $user, $path));
+        dispatch(new AccessoryPdf($accessory, $user, $path))->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);

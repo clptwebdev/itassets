@@ -9,13 +9,13 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Components | Recycle Bin</h1>
         <div>
-            <a href="{{ route('components.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+            <a href="{{ route('components.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-trash-alt fa-sm text-white-50"></i> Back to Components</a>
             @can('generatePDF', \App\Models\Component::class)
             <form class="d-inline-block" action="{{ route('components.pdf')}}" method="POST">
                 @csrf
                 <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="assets"/>
-            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                     class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
             </form>
             @endcan
@@ -150,8 +150,8 @@
                     <small class="text-danger">**Warning this is permanent. </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </div>
             </div>
         </div>
@@ -170,7 +170,7 @@
                 <form action="/importcomponents" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add components to the system.</p>
-                        <input id="importEmpty" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        <input id="importEmpty" class="form-control"
                                type="file" placeholder="Upload here" name="csv" accept=".csv">
 
                     </div>
@@ -182,9 +182,9 @@
                             <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b" target="_blank" class="btn btn-info" >
                                 Download Import Template
                             </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
+                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
                             Import
                         </button>
                     @csrf

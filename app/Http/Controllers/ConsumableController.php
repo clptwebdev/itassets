@@ -122,7 +122,6 @@ class ConsumableController extends Controller
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
                 'location_id.*' => 'required|gt:0',
-                'supplier_id.*' => 'required|gt:0',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             ]);
@@ -166,7 +165,7 @@ class ConsumableController extends Controller
 
     public function edit(Consumable $consumable)
     {
-        if (auth()->user()->cant('update', Consumable::class)) {
+        if (auth()->user()->cant('update', $consumable)) {
             return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'update']));
         }
 
