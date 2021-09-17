@@ -24,11 +24,11 @@
             <tr>
                 <td class="text-center">{{ $admin->id }}</small></td>
                 <td class="text-center">
-
+                    <small>@if($photo = \App\Models\Photo::find($admin->photo_id)){{ $photo->name }}@else {{ 'Not working'}}@endif</small>
                 </td>
                 <td align="left">
                     {{ $admin->name}}
-                    <br>@if($location = \App\Models\Location::find($admin->location_id)){{ $location->name }}@else {{ 'Not working'}}@endif
+                    <br><small>@if($location = \App\Models\Location::find($admin->location_id)){{ $location->name }}@else {{ 'Not working'}}@endif</small>
                 </td>
                 <td class="text-left">{{ $admin->email ?? 'N/A' }}</td>
                 <td class="text-center">
