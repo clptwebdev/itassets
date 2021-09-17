@@ -22,14 +22,16 @@
         <tbody>
         @foreach($users as $admin)
             <tr>
-                <td>{{ $admin->id }}</small></td>
+                <td class="text-center">{{ $admin->id }}</small></td>
                 <td class="text-center">
-                    <img class="img-profile rounded-circle"
-                    src="{{ asset($admin->photo->path) ?? asset('images/profile.png') }}" width="50px">    
+                    
+                    @if($photo = \App\Models\Photo::find($admin->photo_id))
+                    {{ $photo->name }}
+                    @endif 
                 </td>
                 <td align="left">{{ $admin->name}}</td>
-                <td class="text-center">{{ $admin->email ?? 'N/A' }}</td>
-                <td>
+                <td class="text-left">{{ $admin->email ?? 'N/A' }}</td>
+                <td class="text-center">
                     @php
                     switch($admin->role_id){
                         case 0:
@@ -51,7 +53,7 @@
 
                     @endphp
                 </td>
-                <td class="text-center">
+                <td class="text-center align-top">
                     @php
                         if($admin->role_id == 1){
                             $locations = App\Models\Location::all();
