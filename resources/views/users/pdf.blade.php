@@ -26,7 +26,10 @@
                 <td class="text-center">
 
                 </td>
-                <td align="left">{{ $admin->name}}<br>@if($location = \App\Models\Location::find($admin->location_id)){{ $location->name }}@endif</td>
+                <td align="left">
+                    {{ $admin->name}}
+                    <br>@if($location = \App\Models\Location::find($admin->location_id)){{ $location->name }}@else {{ 'Not working'}}@endif
+                </td>
                 <td class="text-left">{{ $admin->email ?? 'N/A' }}</td>
                 <td class="text-center">
                     @php
