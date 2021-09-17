@@ -8,11 +8,9 @@
 
 @section('content')
 <table class="table table-bordered p-1 mb-4" width="100%">
-    <thead>
         <tr style="background-color: #454777; padding: 10px; color: #fff;">
             <th colspan="2">User Information</th>
         </tr>
-    </thead>
     <tr>
         <td rowspan="6" width="15%">
             @if($photo = \App\Models\Photo::find($user->photo_id))
@@ -85,13 +83,17 @@
     </tr>
 </table>
 
+@if($user->activity()->exists())
 <div class="page-break"></div>
 <table class="logs table table-striped ">
     <thead>
+        <tr style="background-color: #454777; padding: 10px; color: #fff;">
+            <th colspan="4">User Activity</th>
+        </tr>
         <tr>
             <th class="text-center" width="10%">Log ID</th>
-            <th class="text-center" width="60%">Data</th>
-            <th class="textcenter" width="10%">User</th>
+            <th class="text-center" width="10%">Type</th>
+            <th class="textcenter" width="60%">Data</th>
             <th class="text-center" width="20%">Date</th>
         </tr>
     </thead>
@@ -99,7 +101,10 @@
     <tbody>
             @foreach($user->activity as $activity)
             <tr>
-                <td colspan="4">{{ 'NA'}}</td>
+                <td>{{ $activity->id ?? 'NA'}}</td>
+                <td class="text-left">{{$activity->loggable_type ?? 'NA'}}</td>
+                <td class="text-left">{{ $activity->data  ?? 'NA'}}</td>
+                <td class="text-left" >{{ \Carbon\Carbon::parse($activity->created_at)->format('d-m-Y h:i:s')  ?? 'NA'}}</td>
             </tr>
             @endforeach
     </tbody>
@@ -112,10 +117,14 @@
         </tr>
     </tfoot>
 </table>
-
+@endif
+@if($user->logs()->exists())
 <div class="page-break"></div>
 <table class="logs table table-striped ">
     <thead>
+        <tr style="background-color: #454777; padding: 10px; color: #fff;">
+            <th colspan="2">User Logs</th>
+        </tr>
         <tr>
             <th class="text-center" width="10%">Log ID</th>
             <th class="text-center" width="60%">Data</th>
@@ -143,4 +152,5 @@
         </tr>
     </tfoot>
 </table>
+@endif
 @endsection
