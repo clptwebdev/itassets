@@ -638,7 +638,7 @@ class AssetController extends Controller {
         }
         set_time_limit(120);
 
-        $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date', 'location_id')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
+        $assets = $request->assets;
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');

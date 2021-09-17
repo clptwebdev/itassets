@@ -23,7 +23,7 @@
         </thead>
 
         <tbody>
-        @foreach($assets as $obj)
+        @foreach($assets as $id)
         <?php $asset = \App\Models\Asset::find($obj->id);?>
             <tr>
                 <td>{{ $asset->name }}<br><small>{{ $asset->model->name ?? 'No Model' }}</small></td>
