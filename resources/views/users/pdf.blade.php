@@ -25,9 +25,9 @@
                 <td class="text-center">{{ $admin->id }}</small></td>
                 <td class="text-center">
                     @if($photo = \App\Models\Photo::find($admin->photo_id))
-                        <img src="{{asset($photo->path)}}" alt="{{ $admin->name.' Profile Image'}}" class="img-responsive" width="50px"> 
+                        <img src="{{asset($photo->path)}}"  width="50px" /> 
                     @else
-                        <img src="{{ asset('images\profile.png')}}" alt="{{ $admin->name.' Profile Image'}}" class="img-responsive" width="50px">
+                        <img src="{{ asset('images\profile.png')}}" alt="{{ $admin->name.' Profile Image'}}" class="img-responsive" width="50px"/>
                     @endif
                 </td>
                 <td align="left">
