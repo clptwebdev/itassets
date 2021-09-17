@@ -28,7 +28,7 @@
                         <img src="{{asset($photo->path)}}"  width="50px" /> 
                     @else
                     public\images\profile.png
-                        <img src="{{ asset('\images\apollo-logo.jpg')}}" alt="{{ $admin->name.' Profile Image'}}" class="img-responsive" width="50px"/>
+                        <img src="{{ asset('images/profile.png')}}" alt="{{ $admin->name.' Profile Image'}}" class="img-responsive" width="50px"/>
                     @endif
                 </td>
                 <td>
