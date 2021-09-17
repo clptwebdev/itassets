@@ -108,26 +108,33 @@
                                 @endforeach
                             </td>
                             <td class="text-right">
-                                <a href="{{ route('users.show', $user->id) }}"
-                                    class="btn-sm btn-secondary text-white d-inline-block d-md-none p-3"><i class="far fa-eye"></i></a>&nbsp;
-                                <form id="form{{$user->id}}" action="{{ route('users.destroy', $user->id) }}"
-                                    method="POST" class="d-none d-md-inline-block">
-                                    <a href="{{ route('users.show', $user->id) }}"
-                                        class="btn-sm btn-secondary text-white"><i class="far fa-eye"></i>
-                                        View</a>&nbsp;
-                                    <a href="{{route('users.edit', $user->id) }}"
-                                        class="btn-sm btn-secondary text-white"><i
-                                            class="fas fa-pencil-alt"></i></a>&nbsp;
-
-                                    @csrf
-                                    @method('DELETE')
-                                    @if($user->role_id == 0 || auth()->user()->role_id == 1 || auth()->user()->role_id <= $user->role_id && $user->id != auth()->user()->id)
-                                    <a class="btn-sm btn-danger text-white deleteBtn" href="#"
-                                        data-id="{{$user->id}}"><i class=" fas fa-trash"></i></a>
-                                    @else
-                                    <a class="btn-sm btn-secondary text-white" disabled data-toggle="tooltip" data-placement="left" title="Permission Denied"><i class="fas fa-trash"></i></a>
-                                    @endif
-                                </form>
+                                <div class="dropdown no-arrow">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                       id="dropdownMenuLink"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div
+                                        class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                        aria-labelledby="dropdownMenuLink">
+                                        <div class="dropdown-header">User Options:</div>
+                                        @can('view', $user)
+                                        <a href="{{ route('users.show', $user->id) }}"
+                                           class="dropdown-item">View</a>
+                                        @endcan
+                                        @can('update', $user)
+                                            <a href="{{ route('users.edit', $user->id) }}" class="dropdown-item">Edit</a>
+                                        @endcan
+                                        @can('delete', $user)
+                                            <form id="form{{$user->id}}" action="{{ route('users.destroy', $user->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <a class="deleteBtn dropdown-item" href="#"
+                                                   data-id="{{$user->id}}">Delete</a>
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         @endforeach

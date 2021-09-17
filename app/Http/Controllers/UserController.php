@@ -278,20 +278,20 @@ class UserController extends Controller {
             ->withInput();
     }
 
-    public function downloadShowPDF(Asset $asset)
+    public function downloadShowPDF(User $user)
     {
-        if (auth()->user()->cant('view', $asset)) {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'View PDF']));
+        if (auth()->user()->cant('view', $user)) {
+            return redirect(route('errors.forbidden', ['asset', $user->id, 'View PDF']));
         }
 
-        $user = auth()->user();
+        $admin = auth()->user();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = "asset-{$asset->asset_tag}-{$date}";
-        AssetsPdf::dispatch( $asset,$user,$path )->afterResponse();
+        $path = "{$user->name}-{$date}";
+        UserPdf::dispatch( $user,$admin,$path )->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
 
-        return redirect(route('assets.show', $asset->id))
+        return redirect(route('users.show', $user->id))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
