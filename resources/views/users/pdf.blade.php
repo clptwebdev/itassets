@@ -10,12 +10,12 @@
     <table id="assetsTable" width="100%">
         <thead>
         <tr>
-            <th width="5%;">ID</th>
-            <th width="15%;">Photo</th>
+            <th width="5%;" class="text-center">ID</th>
+            <th width="15%;" class="text-center">Photo</th>
             <th width="15%;">Name</th>
             <th width="15%;">Email</th>
-            <th width="10%;">Role</th>
-            <th width="40%;">Permissions</th>
+            <th width="10%;" class="text-center">Role</th>
+            <th width="40%;" class="text-center">Permissions</th>
         </tr>
         </thead>
 
@@ -27,12 +27,12 @@
                     @if($photo = \App\Models\Photo::find($admin->photo_id))
                         <img src="{{asset($photo->path)}}"  width="50px" /> 
                     @else
-                        <img src="{{ asset('images/profile.png')}}" alt="{{ $admin->name.' Profile Image'}}" class="img-responsive" width="50px"/>
+                        <img src="{{ asset('images/profile.png')}}" alt="{{ $admin->name.' Profile Image'}}" width="50px"/>
                     @endif
                 </td>
                 <td>
                     {{ $admin->name}}
-                    <br><small>@if($location = \App\Models\Location::find($admin->location_id)){{ $location->name }}@else {{ 'Not working'}}@endif</small>
+                    @if($location = \App\Models\Location::find($admin->location_id)){!! '<br><small>'.$location->name.'</small>' !!}@endif
                 </td>
                 <td class="text-left">{{ $admin->email ?? 'N/A' }}</td>
                 <td class="text-center">
