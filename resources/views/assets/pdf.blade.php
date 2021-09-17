@@ -30,7 +30,7 @@
                     @if($location = \App\Models\Location::find($asset->location_id))
                     <span style="color: {{ $location->icon ?? '#666'}}">{{$location->name ?? 'Unassigned'}}</span>
                     @else
-                       {{ 'No Find'}} 
+                       {{ 'Unallocated'}} 
                     @endif
                 </td>
                 <td align="center">
