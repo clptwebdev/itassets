@@ -27,10 +27,11 @@
                     @if($photo = \App\Models\Photo::find($admin->photo_id))
                         <img src="{{asset($photo->path)}}"  width="50px" /> 
                     @else
-                        <img src="{{ asset('images\profile.png')}}" alt="{{ $admin->name.' Profile Image'}}" class="img-responsive" width="50px"/>
+                    public\images\profile.png
+                        <img src="{{ asset('public\images\profile.png')}}" alt="{{ $admin->name.' Profile Image'}}" class="img-responsive" width="50px"/>
                     @endif
                 </td>
-                <td align="left">
+                <td>
                     {{ $admin->name}}
                     <br><small>@if($location = \App\Models\Location::find($admin->location_id)){{ $location->name }}@else {{ 'Not working'}}@endif</small>
                 </td>
