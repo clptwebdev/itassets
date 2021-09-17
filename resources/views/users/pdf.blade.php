@@ -24,7 +24,7 @@
             <tr>
                 <td class="text-center">{{ $admin->id }}</small></td>
                 <td class="text-center">
-                    
+                    {{ $admin->photo->name ?? 'No Photo'}}
                 </td>
                 <td align="left">{{ $admin->name}}</td>
                 <td class="text-left">{{ $admin->email ?? 'N/A' }}</td>
