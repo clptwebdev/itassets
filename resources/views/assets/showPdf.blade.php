@@ -142,9 +142,7 @@
         </div>
         <div style="width: 32%; padding-left: 3%;float: right; border-left: solid 3px #CCC;">
             @if($asset->model->photo()->exists())
-                <img src="{{ asset($asset->model->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->model->name}}">
-            @else
-                <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$asset->model->name}}">
+                <img src="{{ asset($asset->model->photo->path) ?? ''}}" width="100%" alt="{{$asset->model->name}}">
             @endif
             <hr>
             {!! '<img width="100%" height="100px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   />' !!}

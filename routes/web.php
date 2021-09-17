@@ -79,13 +79,13 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/user/forgotpassword', 'App\Http\Controllers\UserController@forgotPassword')->name('forgot.my.password');
         Route::post('/user/forgotpasswordstore', 'App\Http\Controllers\UserController@storePass')->name('forgot.my.password.store');
         Route::post('/user/change/password', 'App\Http\Controllers\UserController@changePassword')->name('change.password.store');
+        Route::post('/users/pdf', 'App\Http\Controllers\UserController@downloadPDF')->name('users.pdf');
+        Route::get('/user/{user}/pdf', 'App\Http\Controllers\UserController@downloadShowPDF')->name('user.showPdf');
     //Administrator Permissions Middleware
         Route::resource('/location', 'App\Http\Controllers\LocationController');
         Route::resource('/comment', 'App\Http\Controllers\CommentController');
         Route::post('permissions/users', 'App\Http\Controllers\UserController@permissions');
-
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
-
         Route::resource('/depreciation', 'App\Http\Controllers\DepreciationController');
         Route::resource('/fieldsets', 'App\Http\Controllers\FieldsetController');
         Route::resource('/fields', 'App\Http\Controllers\FieldController');

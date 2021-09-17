@@ -228,6 +228,7 @@ class AssetController extends Controller {
             'models'=>AssetModel::all(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
+            'categories' => Category::all(),
         ]);
 
 
@@ -321,7 +322,7 @@ class AssetController extends Controller {
             'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]))->save();
         $asset->fields()->sync($array);
-
+        $asset->category()->sync($request->category);
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
         return redirect(route('assets.index'));
@@ -637,7 +638,7 @@ class AssetController extends Controller {
         }
         set_time_limit(120);
 
-        $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
+        $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date', 'location_id')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
@@ -661,7 +662,7 @@ class AssetController extends Controller {
         $user = auth()->user();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = "asset-{$asset->asset_tag}-{$date}";
-        dispatch(new AssetPdf($asset, $user, $path));
+        AssetsPdf::dispatch( $asset,$user,$path )->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
 

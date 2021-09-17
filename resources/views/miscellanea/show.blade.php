@@ -10,22 +10,22 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">View Miscellaneous</h1>
         <div>
-            <a href="{{ route('miscellaneous.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+            <a href="{{ route('miscellaneous.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @can('generatePDF', $miscellaneou)
-                <a href="{{ route('miscellaneous.showPdf', $miscellaneou->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                <a href="{{ route('miscellaneous.showPdf', $miscellaneou->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
             @endcan
             @can('edit', $miscellaneou)
                 <a href="{{ route('miscellaneous.edit', $miscellaneou->id)}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                   class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                         class="fas fa-edit fa-sm text-white-50"></i> Edit</a>
             @endcan
             <form id="form{{$miscellaneou->id}}" class="d-inline-block id=" action="{{ route('miscellaneous.destroy', $miscellaneou->id) }}"
             method="POST">
             @csrf
             @method('DELETE')
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" data-id="{{$miscellaneou->id}}"><i
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn" data-id="{{$miscellaneou->id}}"><i
                     class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
             </form>
         </div>
@@ -45,14 +45,16 @@
     </div>
 
     <div class="row row-eq-height">
+        @if($miscellaneou->location()->exists())
         <div class="col-12 col-lg-8 mb-4">
             <x-locations.location-modal :asset="$miscellaneou"/>
         </div>
-
+        @endif
+        @if($miscellaneou->manufacturer()->exists())
         <div class="col-12 col-lg-4 mb-4">
             <x-manufacturers.manufacturer-modal :asset="$miscellaneou"/>
         </div>
-
+        @endif
     </div>
     <div class="row row-eq-height">
         <x-miscellaneous.miscellanea-log :miscellaneou="$miscellaneou"/>
@@ -87,8 +89,8 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-success" type="submit">Update</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-green" type="submit">Update</button>
                     </div>
                 </form>
             </div>
@@ -113,8 +115,8 @@
                     <small class="text-danger">**Warning this is not permanent. This miscellanea can be restored inside the Recycle Bin.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger loading" type="button" id="confirmBtn">Send to Bin</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral loading" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>
@@ -150,8 +152,8 @@
 
                         </div>
                         <div class="p-2 text-lg-right">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                            <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-green" type="button" id="commentUpload">
                                 Save
                             </button>
                         </div>
@@ -192,8 +194,8 @@
 
                         </div>
                         <div class="p-2 text-lg-right">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success" type="button" id="commentUpload">
+                            <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-green" type="button" id="commentUpload">
                                 Save
                             </button>
                         </div>
@@ -204,8 +206,7 @@
     </div>
 
     <!-- Comment Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeComment" tabindex="-1" role="dialog"
-         aria-labelledby="removeCommentLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="removeComment" tabindex="-1" role="dialog" aria-labelledby="removeCommentLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -221,8 +222,8 @@
                     <small class="text-danger">**Warning this is permanent. </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmCommentBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmCommentBtn">Delete</button>
                 </div>
             </div>
         </div>
@@ -262,6 +263,17 @@
             var route = $(this).data('route');
             $('#updateForm').attr('action', route); 
             $('#commentModalEdit').modal('show');
+        });
+
+        $('#confirmCommentBtn').click(function () {
+            var form = '#' + 'comment' + $('#comment-id').val();
+            $(form).submit();
+        });
+
+        $('.deleteComment').click(function () {
+            $('#comment-id').val($(this).data('id'));
+            //showModal
+            $('#removeComment').modal('show');
         });
 
         $('#confirmCommentBtn').click(function () {

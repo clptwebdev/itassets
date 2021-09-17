@@ -12,14 +12,14 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Miscellaneous | Recycle Bin</h1>
         <div>
-            <a href="{{ route('miscellaneous.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+            <a href="{{ route('miscellaneous.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
 
             @can('viewAny', \App\Models\Miscellanea::class)
                 <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">
                     @csrf
                     <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                 </form>
 
@@ -86,7 +86,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
-                                <td>{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
+                                <td data-sort="{{ strtotime($miscellanea->purchased_date)}}">{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
                                 <td>£{{$miscellanea->purchased_cost}}</td>
                                 <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center"  style="color: {{$miscellanea->status->colour ?? '#666'}};">
@@ -156,8 +156,8 @@
                     <small class="text-danger">**Warning this is permanent and the miscellanea will be removed from the system </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </div>
             </div>
         </div>
@@ -183,10 +183,10 @@
         $(document).ready(function () {
             $('#usersTable').DataTable({
                 "columnDefs": [{
-                    "targets": [3, 4, 5],
+                    "targets": [8],
                     "orderable": false,
                 }],
-                "order": [[1, "asc"]]
+                "order": [[3, "desc"]]
             });
         });
         // import

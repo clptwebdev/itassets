@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Asset;
+use App\Models\User;
 use App\Models\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -13,28 +13,30 @@ use Illuminate\Queue\SerializesModels;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 
-class AssetsPdf implements ShouldQueue
+class UserPdf implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $assets;
+    protected $admin;
     protected $user;
     protected $path;
     
-    public function __construct($assets, $user, $path)
+    public function __construct(User $user, User $admin, $path)
     {
-        $this->assets = $assets;
+        $this->admin = $admin;
         $this->user = $user;
         $this->path = $path;
     }
     public function handle()
     {
-        $assets = $this->assets;
+        $admin = $this->admin;
         $user = $this->user;
         $path = $this->path;
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets', 'user'));
-        $pdf->setPaper('a4', 'landscape');
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('users.showPdf', compact('admin', 'user'));
+        $pdf->setPaper('a4', 'portrait');
         Storage::put("public/reports/".$path.".pdf", $pdf->output());
         $this->path = "";
+        unset($this->admin);
+        unset($this->user);
     }
 }

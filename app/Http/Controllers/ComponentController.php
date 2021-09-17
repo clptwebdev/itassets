@@ -113,7 +113,6 @@ class ComponentController extends Controller {
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
                 'location_id.*' => 'required|gt:0',
-                'supplier_id.*' => 'required|gt:0',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
 

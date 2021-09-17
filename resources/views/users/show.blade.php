@@ -13,28 +13,28 @@
     <div>
         <form id="form{{$user->id}}" action="{{ route('users.destroy', $user->id) }}"
             method="POST">
-        <a href="{{ route('users.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+        <a href="{{ route('users.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
         <a href="#"
-            class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn" data-id="{{$user->id}}"><i
+            class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn" data-id="{{$user->id}}"><i
                 class="fas fa-trash fa-sm text-white-50 "></i> Delete</a>
                 @csrf
             @method('DELETE')
         <a href="{{ route('users.edit', $user->id)}}"
-            class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+            class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        <a href="{{ route('user.showPdf', $user->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
         </form>
     </div>
 </div>
 
 @if(session('danger_message'))
-<div class="alert alert-danger"> {{ session('danger_message')}} </div>
+<div class="alert alert-danger"> {!! session('danger_message')!!} </div>
 @endif
 
 @if(session('success_message'))
-<div class="alert alert-success"> {{ session('success_message')}} </div>
+<div class="alert alert-success"> {!! session('success_message')!!} </div>
 @endif
 
 <section>
@@ -51,9 +51,9 @@
                     <div class="row">
                         <div class="col-12 col-md-6 col-lg-3 ">
                             @if($user->photo()->exists())
-                                <img src="{{$user->photo->path ?? ''}}" alt="{{ $user->name.' Profile Image'}}" class="img-responsive"> 
+                                <img src="{{asset($user->photo->path)?? ''}}" alt="{{ $user->name.' Profile Image'}}" class="img-responsive" width="100%"> 
                             @else
-                                <img src="{{ asset('images\profile.png')}}" alt="{{ $user->name.' Profile Image'}}" class="img-responsive" width="100%">
+                                <img src="{{ asset('images/profile.png')}}" alt="{{ $user->name.' Profile Image'}}" class="img-responsive" width="100%">
                             @endif
                         </div>
                         <div class="col-12 col-md-6 col-lg-9">

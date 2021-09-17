@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Accessories Recycle Bin')
+
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
@@ -10,17 +12,17 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Accessories | Recycle Bin</h1>
         <div>
-            <a href="{{ route('accessories.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+            <a href="{{ route('accessories.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                class="fas fa-chevron-left fa-sm text-dark-50"></i> Back</a>
             @can('generatePDF', \App\Models\Accessory::class)
                 @if ($accessories->count() == 1)
-                    <a href="{{ route('accessories.showPdf', $accessories[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                    <a href="{{ route('accessories.showPdf', $accessories[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                         class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
                     @else
                     <form class="d-inline-block" action="{{ route('accessories.pdf')}}" method="POST">
                         @csrf
                         <input type="hidden" value="{{ json_encode($accessories->pluck('id'))}}" name="accessories"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                     </form>                
                 @endif

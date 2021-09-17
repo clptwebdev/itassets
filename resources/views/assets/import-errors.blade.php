@@ -13,15 +13,15 @@
                     <input type="hidden" class="import-control " name="asset_tag"
                            id="asset_tag" placeholder="" value="{{htmlspecialchars(json_encode($valueArray))}}">
                 </div>
-                <button type="submit" class="d-inline-block btn btn-sm btn-warning shadow-sm"><i
+                <button type="submit" class="d-inline-block btn btn-sm btn-yellow shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save All Errors as Excel
                 </button>
-                <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to assets</a>
-                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
-                <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-success shadow-sm">
-                    <i class="far fa-save fa-sm text-white-50"></i> Save
+                <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-geen shadow-sm">
+                    <i class="far fa-save fa-sm text-dark-50"></i> Save
                 </a>
             </form>
         </div>
@@ -286,7 +286,7 @@
                     <div class="modal-footer">
                         <p>For Anymore information please email Apollo@clpt.co.uk</p>
                         <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/Eb2RbyCNk_hOuTfMOufGpMsBl0yUs1ZpeCjkCm6YnLfN9Q?e=HDDCIp"
-                           target="_blank" class="btn btn-info">
+                           target="_blank" class="btn btn-blue">
                             Download Import Template
                         </a>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>

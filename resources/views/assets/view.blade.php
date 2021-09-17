@@ -90,7 +90,7 @@
         <div id="filter" class="card shadow mb-4">
             <div id="filter-header" class="card-header d-flex justify-content-between align-items-center text-white"
                  style="background-color: #474775; border-top-left-radius: 0px;"><h6 class="m-0">Filter Results</h6><a
-                    class="btn-sm btn-secondary" onclick="javascript:toggleFilter();"><i class="fa fa-times"
+                    class="btn-sm btn-lilac" onclick="javascript:toggleFilter();"><i class="fa fa-times"
                                                                                          aria-hidden="true"></i></a>
             </div>
             <div class="card-body">
@@ -107,10 +107,10 @@
                                 <div class="option-body">
                                     @foreach($statuses as $status)
                                         <div class="form-check">
+                                            <label class="form-check-label mr-4"
+                                                   for="{{'status'.$status->id}}">{{ $status->name }}</label>
                                             <input class="form-check-input" type="checkbox" name="status[]"
                                                    value="{{ $status->id}}" id="{{'status'.$status->id}}">
-                                            <label class="form-check-label"
-                                                   for="{{'status'.$status->id}}">{{ $status->name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -128,10 +128,11 @@
                                 <div class="option-body">
                                     @foreach($categories as $category)
                                         <div class="form-check">
+                                            <label class="form-check-label mr-4"
+                                                   for="{{'category'.$category->id}}">{{ $category->name }}</label>
                                             <input class="form-check-input" type="checkbox" name="category[]"
                                                    value="{{ $category->id}}" id="{{'category'.$category->id}}">
-                                            <label class="form-check-label"
-                                                   for="{{'category'.$category->id}}">{{ $category->name }}</label>
+                                            
                                         </div>
                                     @endforeach
                                 </div>
@@ -149,10 +150,10 @@
                                 <div class="option-body">
                                     @foreach($locations as $location)
                                         <div class="form-check">
+                                            <label class="form-check-label mr-4"
+                                                   for="{{'location'.$location->id}}">{{ $location->name }}</label>
                                             <input class="form-check-input" type="checkbox" name="locations[]"
                                                    value="{{ $location->id}}" id="{{'location'.$location->id}}">
-                                            <label class="form-check-label"
-                                                   for="{{'location'.$location->id}}">{{ $location->name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -226,7 +227,7 @@
 
                     </div>
 
-                    <button type="submit" class="btn-sm btn-success text-right">Apply Filter</button>
+                    <button type="submit" class="btn btn-green text-right">Apply Filter</button>
                 </form>
             </div>
         </div>
@@ -393,12 +394,12 @@
                 <div class="modal-body">
                     <input id="asset-id" type="hidden" value="">
                     <p>Select "Send to Bin" to send this asset to the recycle bin from the system.</p>
-                    <small class="text-danger">**This is not permanent and the Asset can be restored. Whilst in the
+                    <small class="text-coral">**This is not permanent and the Asset can be restored. Whilst in the
                         Recycle Bin, the Asset will not be included in any statistics and data.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>
@@ -417,7 +418,7 @@
                 <form action="/importassets" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add Assets to the system.</p>
-                        <input class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        <input class="form-control shadow-sm"
                                type="file" placeholder="Upload here" name="csv" accept=".csv" id="importEmpty">
                     </div>
                     <div class="modal-footer">
@@ -425,12 +426,12 @@
                             <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
                         @endif
                         <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/Eb2RbyCNk_hOuTfMOufGpMsBl0yUs1ZpeCjkCm6YnLfN9Q?e=4t5BVO"
-                           target="_blank" class="btn btn-info">
+                           target="_blank" class="btn btn-blue">
                             Download Import Template
                         </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
+                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
                             Import
                         </button>
                     @csrf

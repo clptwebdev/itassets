@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Storage;
 
 class MiscellaneaController extends Controller
 {
+    
     public function newComment(Request $request)
     {
         $request->validate([
@@ -110,7 +111,6 @@ class MiscellaneaController extends Controller
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
                 'location_id.*' => 'required|gt:0',
-                'supplier_id.*' => 'required|gt:0',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             ]);
@@ -137,7 +137,7 @@ class MiscellaneaController extends Controller
                     $miscellanea->save();
                 }
 
-                session()->flash('success_message', 'You have successfully added all miscellaneous!');
+                session()->flash('success_message', 'You have successfully added all the Miscellaneous items');
                 return 'Success';
             }
         }

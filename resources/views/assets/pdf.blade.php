@@ -26,12 +26,19 @@
         @foreach($assets as $asset)
             <tr>
                 <td>{{ $asset->name }}<br><small>{{ $asset->model->name ?? 'No Model' }}</small></td>
-                <td class="text-center"><span style="color: {{ $asset->location->icon ?? '#666'}}">{{$asset->location->name ?? 'Unassigned'}}</span>
+                <td class="text-center">
+                    @if($location = \App\Models\Location::find($asset->location_id))
+                    <span style="color: {{ $location->icon ?? '#666'}}">{{$location->name ?? 'Unassigned'}}</span>
+                    @else
+                       {{ 'Unallocated'}} 
+                    @endif
                 </td>
                 <td align="center">
                     {!! '<span id="barcode"><img width="120px" height="30px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   /></span>' !!}
                     <span style="font-weight: 800">{{ $asset->asset_tag }}</span></td>
-                <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
+                <td class="text-center">
+                    {{ $asset->model->manufacturer->name ?? 'N/A' }}
+                </td>
                 <td>{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                 <td class="text-center">
 

@@ -13,10 +13,10 @@
 
             <div>
                 <a href="{{ route('assets.index')}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Assets</a>
-                <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
-                        class="far fa-save fa-sm text-white-50"></i> Save 
+                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                        class="fas fa-chevron-left fa-sm text-dark-50"></i> Back to Assets</a>
+                <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
+                        class="far fa-save fa-sm text-dark-50"></i> Save 
                 </button>
             </div>
         </div>
@@ -179,7 +179,7 @@
                             </div>
                             @endif
 
-                            <div id="categories" class="border border-light p-2 mb-3">
+                            <div id="categories" class="form-control h-100 p-4 mb-3">
                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                 @foreach($categories as $category)
                                 <div class="form-check form-check-inline">

@@ -12,27 +12,27 @@
         <h1 class="h3 mb-0 text-gray-800">Components</h1>
         <div>
             @can('recycleBin', \App\Models\Component::class)
-            <a href="{{ route('components.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a href="{{ route('components.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                 class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Component::onlyTrashed()->count()}})</a>
             @endcan
             @can('create' , \App\Models\Component::class)
-            <a href="{{ route('components.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+            <a href="{{ route('components.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Component</a>
             @endcan
             @can('export', \App\Models\Component::class)
             <form class="d-inline-block" action="{{ route('components.pdf')}}" method="POST">
                 @csrf
                 <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="components"/>
-            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
-                    class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
+                    class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
             </form>
             @if($components->count() >1)
-            <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Export</a>
+            <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
+                    class="fas fa-download fa-sm text-dark-50"></i> Export</a>
             @endif
             @endcan
             @can('import' , \App\Models\Component::class)
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
             @endcan
         </div>
     </div>
@@ -169,8 +169,8 @@
                     <small class="text-danger">**This is not permanent and the component can be restored in the Components Recycle Bin. </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>
@@ -189,7 +189,7 @@
                 <form action="/importcomponents" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add components to the system.</p>
-                        <input id="importEmpty" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        <input id="importEmpty" class="form-control"
                                type="file" placeholder="Upload here" name="csv" accept=".csv">
 
                     </div>
@@ -198,12 +198,12 @@
                         @if(session('import-error'))
                             <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
                         @endif
-                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b" target="_blank" class="btn btn-info" >
+                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b" target="_blank" class="btn btn-blue" >
                                 Download Import Template
                             </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
+                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
                             Import
                         </button>
                     @csrf

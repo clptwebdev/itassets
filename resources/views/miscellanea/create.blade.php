@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create New miscellanea')
+@section('title', 'Create New Miscellanea')
 
 @section('css')
 
@@ -9,13 +9,13 @@
 @section('content')
     <form action="{{ route('miscellaneous.store') }}" method="POST">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Add New miscellaneous</h1>
+            <h1 class="h3 mb-0 text-gray-800">Add New Miscellaneous</h1>
 
             <div>
                 <a href="{{ route('miscellaneous.index') }}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to miscellaneous</a>
-                <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+                <button type="submit" class="d-inline-block btn btn-sm btn-blue shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
             </div>
@@ -47,7 +47,7 @@
                                 <label for="name">Name</label>
                                 <input type="text"
                                        class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name" id="name" placeholder="miscellaneous Name">
+                                       name="name" id="name" placeholder="Please enter a Name">
                             </div>
                             <div class="form-group">
                                 <label for="serial_no">Serial_no</label>
@@ -107,7 +107,7 @@
                             </div>
 
                             <h4 class="h6 text-left pb-0">Categories</h4>
-                            <div id="categories" class="border border-gray p-2 mb-3 rounded">
+                            <div id="categories" class="form-control h-100 p-4 mb-3 rounded">
 
                                 @foreach($categories as $category)
                                     <div class="form-check form-check-inline">
@@ -130,9 +130,9 @@
                         <div class="card-body">
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
-                                    <h4 class="h6 mb-3">Location Image</h4>
+                                    <h4 class="h6 mb-3">Miscellaneous Image</h4>
                                     <img id="profileImage"
-                                         src="{{ asset('images/svg/location-image.svg') }}"
+                                         src="{{ asset('images/svg/misc-image.svg') }}"
                                          width="100%"
                                          alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
@@ -205,7 +205,7 @@
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" data-toggle="modal"
                             data-target="#uploadModal">Upload
                         file
                     </button>
@@ -231,7 +231,7 @@
                     <form id="imageUpload">
                         Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
                         Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                        <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
+                        <button type='submit' class='btn btn-green' id='btn_upload'>Upload</button>
                     </form>
                 </div>
 
