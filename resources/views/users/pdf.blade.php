@@ -27,6 +27,8 @@
                     
                     @if($photo = \App\Models\Photo::find($admin->photo_id))
                     {{ $photo->name }}
+                    @else
+                        {{ 'Not Found a Photo'}}
                     @endif 
                 </td>
                 <td align="left">{{ $admin->name}}</td>
