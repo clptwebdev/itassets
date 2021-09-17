@@ -83,7 +83,7 @@
     </tr>
 </table>
 
-@if($user->activity()->exists())
+@if(count($user->activity) !=0)
 <div class="page-break"></div>
 <table class="logs table table-striped ">
     <thead>
@@ -118,7 +118,7 @@
     </tfoot>
 </table>
 @endif
-@if($user->logs()->exists())
+@if(count($user->logs) != 0)
 <div class="page-break"></div>
 <table class="logs table table-striped ">
     <thead>
