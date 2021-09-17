@@ -24,11 +24,7 @@
             <tr>
                 <td class="text-center">{{ $admin->id }}</small></td>
                 <td class="text-center">
-                    @if($photo = \App\Models\Location::find($admin->photo_id))
-                    <span>{{$photo->name ?? 'Cant find Name'}}</span>
-                    @else
-                       {{ 'Unallocated'}} 
-                    @endif
+                    {{ $admin->photo_id }}
                 </td>
                 <td align="left">{{ $admin->name}}<br>{{ $admin->location->name ?? 'Not Allocated'}}</td>
                 <td class="text-left">{{ $admin->email ?? 'N/A' }}</td>
