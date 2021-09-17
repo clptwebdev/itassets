@@ -32,7 +32,7 @@
                 </td>
                 <td>
                     {{ $admin->name}}
-                    @if($location = \App\Models\Location::find($admin->location_id)){!! '<br><small>'.$location->name.'</small>' !!}@endif
+                    <br><small>@if($location = \App\Models\Location::find($admin->location_id)){{ $location->name }}@else {{ 'Central Learning Partnership Trust'}}@endif</small>
                 </td>
                 <td class="text-left">{{ $admin->email ?? 'N/A' }}</td>
                 <td class="text-center">
