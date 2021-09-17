@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Asset;
+use App\Models\User;
 use App\Models\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -21,7 +22,7 @@ class AssetsPdf implements ShouldQueue
     protected $user;
     protected $path;
     
-    public function __construct($assets, $user, $path)
+    public function __construct($assets, User $user, $path)
     {
         $this->assets = $assets;
         $this->user = $user;
