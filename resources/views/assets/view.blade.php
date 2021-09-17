@@ -30,7 +30,7 @@
             @if($assets->count() != 0)
                 @if ($assets->count() == 1)
                 <a href="{{ route('asset.showPdf', $assets[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                    class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
+                    class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</a>
                 @else
                 <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
                     @csrf
