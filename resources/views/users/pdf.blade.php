@@ -24,12 +24,6 @@
             <tr>
                 <td class="text-center">{{ $admin->id }}</small></td>
                 <td class="text-center">
-                    
-                    @if($photo = \App\Models\Photo::find($admin->photo_id))
-                    {{ $photo->name }}
-                    @else
-                        {{ 'Not Found a Photo'}}
-                    @endif 
                 </td>
                 <td align="left">{{ $admin->name}}</td>
                 <td class="text-left">{{ $admin->email ?? 'N/A' }}</td>
