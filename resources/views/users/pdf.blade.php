@@ -27,7 +27,6 @@
                     @if($photo = \App\Models\Photo::find($admin->photo_id))
                         <img src="{{asset($photo->path)}}"  width="50px" /> 
                     @else
-                    public\images\profile.png
                         <img src="{{ asset('images/profile.png')}}" alt="{{ $admin->name.' Profile Image'}}" class="img-responsive" width="50px"/>
                     @endif
                 </td>
