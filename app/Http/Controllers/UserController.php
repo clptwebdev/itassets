@@ -263,7 +263,7 @@ class UserController extends Controller {
             return redirect(route('errors.forbidden', ['area', 'User', 'View PDF']));
         }
 
-        $users = User::select('id', 'name', 'email', 'location_id', 'role_id')->whereIn('id', json_decode($request->users))->get();
+        $users = User::select('id', 'name', 'email', 'location_id', 'role_id', 'photo_id')->whereIn('id', json_decode($request->users))->get();
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
