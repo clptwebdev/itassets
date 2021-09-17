@@ -24,9 +24,9 @@
             <tr>
                 <td class="text-center">{{ $admin->id }}</small></td>
                 <td class="text-center">
-                    {{ $admin->photo_id }}
+
                 </td>
-                <td align="left">{{ $admin->name}}<br>{{ $admin->location->name ?? 'Not Allocated'}}</td>
+                <td align="left">{{ $admin->name}}<br>@if($location = \App\Models\Location::find($admin->location_id)){{ $location->name }}@endif</td>
                 <td class="text-left">{{ $admin->email ?? 'N/A' }}</td>
                 <td class="text-center">
                     @php

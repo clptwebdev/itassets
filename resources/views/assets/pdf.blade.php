@@ -36,7 +36,9 @@
                 <td align="center">
                     {!! '<span id="barcode"><img width="120px" height="30px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   /></span>' !!}
                     <span style="font-weight: 800">{{ $asset->asset_tag }}</span></td>
-                <td class="text-center">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
+                <td class="text-center">
+                    {{ $asset->model->manufacturer->name ?? 'N/A' }}
+                </td>
                 <td>{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                 <td class="text-center">
 
