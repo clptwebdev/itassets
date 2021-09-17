@@ -12,7 +12,7 @@
             <th colspan="2">User Information</th>
         </tr>
     <tr>
-        <td rowspan="6" width="15%">
+        <td width="15%">
             @if($photo = \App\Models\Photo::find($user->photo_id))
                 <img src="{{asset($photo->path)}}"  width="100%" /> 
             @else
@@ -60,7 +60,7 @@
         </td>
     </tr>
 </table>
-
+<hr>
 <table class="table  table-bordered p-1 mb-4" width="100%">
     <thead>
         <tr style="background-color: #454777; padding: 10px; color: #fff;">
@@ -123,7 +123,7 @@
 <table class="logs table table-striped ">
     <thead>
         <tr style="background-color: #454777; padding: 10px; color: #fff;">
-            <th colspan="2">User Logs</th>
+            <th colspan="4">User Logs</th>
         </tr>
         <tr>
             <th class="text-center" width="10%">Log ID</th>
