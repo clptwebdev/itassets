@@ -24,7 +24,7 @@
             <tr>
                 <td class="text-center">{{ $admin->id }}</small></td>
                 <td class="text-center">
-                    @if($photo = \App\Models\Photo::find($asset->photo_id))
+                    @if($photo = \App\Models\Photo::find($admin->photo_id))
                     <span>{{$photo->name ?? 'Unassigned'}}</span>
                     @else
                        {{ 'Unallocated'}} 
