@@ -23,14 +23,14 @@
         </thead>
 
         <tbody>
-        @foreach($assets as $id=>$key)
-        <?php $asset = \App\Models\Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date', 'location_id')->withTrashed()->where('id', json_decode($key))->with('supplier', 'location','model')->get();;?>
+        @foreach($assets as $asset)
             <tr>
-                <td>{{ $asset->name }}<br><small>{{ $asset->model->name ?? 'No Model' }}</small></td>
+                <td>{{ $asset->name }}<br><small>{{ $asset->model ?? 'No Model' }}</small></td>
+                <td class="text-center"><span style="color:{{ $asset->icon ?? '#666' }};">{{ $asset->location ?? 'No Location' }}</span></td>
                 <td class="text-center">
-                    <span style="color: {{ $asset->location->icon ?? '#666'}}">{{$asset->location->name ?? 'Unassigned'}}</span>
+                    {!! '<img width="100%" height="100px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   />' !!}
+                    <br>Asset Tag: #{{ $asset->asset_tag }}   
                 </td>
-                
             </tr>
         @endforeach
         </tbody>

@@ -295,7 +295,7 @@ class UserController extends Controller {
         $path = "{$user->name}-{$date}";
         UserPdf::dispatch( $user,$admin,$path )->afterResponse();
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report'=> $url, 'user_id'=> $admin->id]);
 
         return redirect(route('users.show', $user->id))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")

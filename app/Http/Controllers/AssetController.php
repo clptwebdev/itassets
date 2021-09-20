@@ -636,13 +636,24 @@ class AssetController extends Controller {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
         }
-        $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date', 'location_id')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
+        $assets = array();
+        $found = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date', 'location_id', 'asset_model')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier','location','model')->get();
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['model'] = $f->model->name ?? 'N/A';
+            $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['icon'] = $f->location->icon ?? '#666';
+            $array['asset_tag'] = $f->asset_tag;
+            $assets[] = $array;
+        }
+
         $user = auth()->user();
         
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'assets-'.$date;
-        AssetsPdf::dispatch( $assets,$user,$path )->afterResponse();
 
+        AssetsPdf::dispatch( $assets,$user,$path )->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
