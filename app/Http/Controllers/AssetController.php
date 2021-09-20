@@ -636,21 +636,37 @@ class AssetController extends Controller {
         if (auth()->user()->cant('viewAll', Asset::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
         }
-        set_time_limit(120);
+        $assets = array();
+        $found = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date', 'location_id', 'asset_model')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier','location','model')->get();
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['model'] = $f->model->name ?? 'N/A';
+            $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['icon'] = $f->location->icon ?? '#666';
+            $array['asset_tag'] = $f->asset_tag;
+            $array['manufacturer'] = $f->model->manufacturer->name ?? 'N/A';
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
+            $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $array['supplier'] = $f->supplier->name ?? 'N/A';
+            $array['warranty'] = $f->warranty;
+            $array['audit'] = \Carbon\Carbon::parse($f->audit_date)->format('d/m/Y');
+            $assets[] = $array;
+        }
 
-        $assets = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date', 'location_id')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model')->get();
         $user = auth()->user();
-
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'assets-'.$date;
-        AssetsPdf::dispatch( $assets,$user,$path )->afterResponse();
 
+        AssetsPdf::dispatch( $assets,$user,$path )->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
         return redirect(route('assets.index'))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
+
     }
 
     public function downloadShowPDF(Asset $asset)

@@ -77,7 +77,7 @@
                 }
                 @endphp
                 @foreach($locations as $location)
-                <span style="background-color: {{$location->icon}};" class="shadow p-2 m-2">{{$location->name}}</span>
+                <button style="background-color: {{$location->icon}};" class="btn-sm shadow p-2 m-2">{{$location->name}}</button>
                 @endforeach
         </td>
     </tr>

@@ -6,14 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title')</title>
     <!-- Custom styles for this template-->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
         body{
             font-size: 11px;
-            font-family: 'Roboto', sans-serif;
+            font-family: sans-serif;
         }
 
         #header{
@@ -43,6 +40,10 @@
         #assetsTable td{
             border: solid 1px #AAA;
             padding: 5px;
+        }
+
+        #assetsTable td:even{
+            background-color:#f2f2f2;
         }
 
         .page-break {

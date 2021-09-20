@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Location;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\UsersPdf;
@@ -66,7 +67,12 @@ class UserController extends Controller {
             'email' => 'required|unique:users|email:rfc,dns,spoof,filter',
         ]);
 
-        $user = User::create(array_merge($request->only('name', 'email', 'location_id', 'role_id'), ['password' => '123']));
+        $user = new User;
+        $unhash = $user->random_password(12);
+        $password = Hash::make($unhash);
+        $user->fill(['name' => $request->name, 'telephone' => $request->telephone, 'email' => $request->email, 'location_id' => $request->location_id, 'role_id' => $request->role_id, 'password' => $password])->save();
+        Mail::to('stuartcorns@outlook.com')->send(new \App\Mail\NewUserPassword($user, $unhash));
+
         $array = explode(',', $request->permission_ids);
         $user->locations()->attach($array);
         session()->flash('success_message', $request->name . ' has been created successfully');
@@ -289,7 +295,7 @@ class UserController extends Controller {
         $path = "{$user->name}-{$date}";
         UserPdf::dispatch( $user,$admin,$path )->afterResponse();
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report'=> $url, 'user_id'=> $admin->id]);
 
         return redirect(route('users.show', $user->id))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
