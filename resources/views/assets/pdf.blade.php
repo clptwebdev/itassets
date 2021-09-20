@@ -23,13 +23,14 @@
         </thead>
 
         <tbody>
-        @foreach($assets as $id)
-        <?php $asset = \App\Models\Asset::find($obj->id);?>
+        @foreach($assets as $id=>$key)
+        <?php $asset = \App\Models\Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date', 'location_id')->withTrashed()->where('id', json_decode($key))->with('supplier', 'location','model')->get();;?>
             <tr>
                 <td>{{ $asset->name }}<br><small>{{ $asset->model->name ?? 'No Model' }}</small></td>
                 <td class="text-center">
                     <span style="color: {{ $asset->location->icon ?? '#666'}}">{{$asset->location->name ?? 'Unassigned'}}</span>
                 </td>
+                
             </tr>
         @endforeach
         </tbody>

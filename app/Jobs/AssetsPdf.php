@@ -30,7 +30,7 @@ class AssetsPdf implements ShouldQueue
     }
     public function handle()
     {
-        $assets = $this->assets;
+        $assets = $this->assets->pluck('id')->toArray();
         $user = $this->user;
         $path = $this->path;
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.pdf', compact('assets', 'user'));
