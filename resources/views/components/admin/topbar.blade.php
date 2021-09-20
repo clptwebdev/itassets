@@ -61,6 +61,12 @@
                 <span class="badge badge-success badge-counter">+</span>
             </a>
         </li>
+        <li class="nav-item mx-1">
+            <a class="nav-link" href="{{route("documentation.index")}}">
+                <i class="fas fa-fw fa-info-circle text-warning" data-toggle="tooltip" data-placement="bottom"
+                   title="Documentation"></i>
+            </a>
+        </li>
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">
             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
