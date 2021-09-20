@@ -645,6 +645,12 @@ class AssetController extends Controller {
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['icon'] = $f->location->icon ?? '#666';
             $array['asset_tag'] = $f->asset_tag;
+            $array['manufacturer'] = $f->model->manufacturer->name ?? 'N/A';
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
+            $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $array['supplier'] = $f->supplier->name ?? 'N/A';
+            $array['warranty'] = $f->warranty;
+            $array['audit'] = \Carbon\Carbon::parse($f->audit_date)->format('d/m/Y');
             $assets[] = $array;
         }
 
