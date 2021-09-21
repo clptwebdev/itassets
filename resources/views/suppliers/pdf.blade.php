@@ -1,8 +1,10 @@
 @extends('layouts.pdf-reports')
 
-@section('title', 'Manufacturer Report')
+@section('title', 'Suppliers Report')
 
-@section('page', 'Manufacturers')
+@section('user', $user->name)
+
+@section('page', 'Suppliers')
 
 @section('content')
     <table id="assetsTable" class="table table-striped" width="100%">
@@ -24,15 +26,18 @@
         @foreach($suppliers as $supplier)
 
             <tr>
-                <td>{{ $supplier->name}}</td>
-                <td><small>{{ $supplier->address_1.', '.$supplier->address_2.', '.$supplier->city.', '.$supplier->county.', '.$supplier->postcode}}</small></td>
-                <td><small>{{ $supplier->email}}<br>{{ $supplier->telephone}}</small></td>
-                <td><small>{{ $supplier->url}}</small></td>
-                <td class="text-center"> {{ $supplier->asset->count() ?? 'N/A'}}</td>
-                <td class="text-center">{{$supplier->accessory->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$supplier->component->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$supplier->consumable->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$supplier->miscellanea->count() ?? "N/A"}}</td>
+                <td>
+                    {{ $supplier['name']}}<br>
+                    <span class="small">{{ $supplier['line1'].', '.$supplier['line2'].', '.$supplier['city'].', '.$supplier['county'].', '.$supplier['postcode']}}</span>
+                </td>
+                <td><small>{{ $supplier['url']}}</small></td>
+                <td><small>{{ $supplier['email']}}</small></td>
+                <td><small>{{ $supplier['telephone']}}</small></td>
+                <td class="text-center">{{ $supplier['asset']}}</td>
+                <td class="text-center">{{$supplier['accessory']}}</td>
+                <td class="text-center">{{$supplier['component']}}</td>
+                <td class="text-center">{{$supplier['consumable']}}</td>
+                <td class="text-center">{{$supplier['miscellaneous']}}</td>
             </tr>
         @endforeach
         </tbody>

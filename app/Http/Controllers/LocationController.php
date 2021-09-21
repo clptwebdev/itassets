@@ -8,6 +8,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\LocationsPdf;
+use App\Jobs\LocationPdf;
+use App\Models\Report;
+
 
 class LocationController extends Controller
 {
@@ -129,20 +133,44 @@ class LocationController extends Controller
         }
 
         if(auth()->user()->role_id==1){
-            $locations =Location::all();
+            $found =Location::all();
         }else{
-            $locations = auth()->user()->locations;
+            $found = auth()->user()->locations;
         }
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('locations.pdf', compact('locations'));
-        $pdf->setPaper('a4', 'landscape');
-        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/locations-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/locations-{$date}.pdf");
-        return redirect(route('location.index'))
-            ->with('success_message', "Your Reprot has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
-            ->withInput();
+        $locations = array();
 
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['color'] = $f->icon ?? '#666';
+            $array['line1'] = $f->address_1 ?? 'N/A';
+            $array['line2'] = $f->address_2 ?? 'N/A';
+            $array['city'] = $f->city ?? 'N/A';
+            $array['county'] = $f->county ?? 'N/A';
+            $array['postcode'] = $f->postcode ?? 'N/A';
+            $array['asset'] = $f->asset->count() ?? 'N/A';
+            $array['accessory'] = $f->accessory->count() ?? 'N/A';
+            $array['component'] = $f->component->count() ?? 'N/A';
+            $array['consumable'] = $f->consumable->count() ?? 'N/A';
+            $array['miscellaneous'] = $f->miscellanea->count() ?? 'N/A';
+            $locations[] = $array;
+        }
+
+        $user = auth()->user();
+        
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        $path = 'locations-'.$date;
+
+        dispatch(new LocationsPdf($locations, $user, $path))->afterResponse();
+        //Create Report
+        
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
+        return redirect(route('location.index'))
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
     }
 
     public function downloadShowPDF(Location $location)
@@ -150,14 +178,19 @@ class LocationController extends Controller
         if (auth()->user()->cant('view', $location)) {
             return redirect(route('errors.forbidden', ['locations', $location->id, 'View PDF']));
         }
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('locations.showPdf', compact('location'));
-
+        
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        //return $pdf->download("{$location->name}-{$date}.pdf");
-        Storage::put("public/reports/{$location->name}-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/{$location->name}-{$date}.pdf");
+        $path = str_replace(' ', '-', $location->name).'-'.$date;
+
+        dispatch(new LocationPdf($location, $user, $path))->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('location.show', $location->id))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 

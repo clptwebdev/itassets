@@ -82,7 +82,6 @@
         <div class="d-flex flex-row-reverse mb-2">
 
             @if(isset($filter))
-            <p>Message</p>
             <a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear Filter</a>
             @endif
             <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-lilac p-2 shadow-sm">Filter</a>

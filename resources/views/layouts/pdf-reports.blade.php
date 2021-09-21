@@ -9,7 +9,7 @@
     <style>
 
         body{
-            font-size: 11px;
+            font-size: 9px;
             font-family: sans-serif;
         }
 
@@ -25,29 +25,40 @@
             max-height: 100px;
         }
 
-        #assetsTable{
-            border: solid 1px #666;
+        .table{
+            border: solid 1px #999;
             border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
-        #assetsTable th{
-            padding: 5px;
+        .table th{
+            padding: 2px;
             background-color: #454777;
             color: #FFF;
-            border: solid 1px #666;
+            border: solid 1px #999;
+            text-align: center;
         }
 
-        #assetsTable td{
+        .table td{
             border: solid 1px #AAA;
-            padding: 5px;
+            padding: 2px;
         }
 
-        #assetsTable td:even{
-            background-color:#f2f2f2;
+        .table tr:even{
+            background-color:#f2f2f296;
         }
 
         .page-break {
             page-break-after: always;
+        }
+
+        .small{
+            font-size: 8px;
+        }
+
+        .text-center{
+            text-align: center;
         }
         </style>
     @yield('css')
@@ -57,7 +68,7 @@
         <table width="100%"></i>
             <tr>
                 <td align="left" style="padding-left:10px;" width="20%"><img id="logo" src="{{ asset('images/apollo-logo.jpg') }}" alt="Apollo Assets Manager"></td>
-                <td align="left">Apollo Asset Management<br><small>A Central Learning Partnership Trust (CLPT) System &copy; 2021</small>
+                <td align="left">Apollo Asset Management<br><span class="small">A Central Learning Partnership Trust (CLPT) System &copy; 2021</span>
                     <br><strong>@yield('page')</strong>
                 </td>
                 <td align="right" style="padding-right: 10px;">

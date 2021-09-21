@@ -37,7 +37,6 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
             ],
             'supporturl' => [
                 'required',
-                'url',
             ],
             'supportphone' => [
                 'required',

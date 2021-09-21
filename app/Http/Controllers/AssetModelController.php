@@ -10,6 +10,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\AssetModelsPdf;
+use App\Jobs\AssetModelPdf;
+use App\Models\Report;
 
 class AssetModelController extends Controller
 {
@@ -97,15 +100,34 @@ class AssetModelController extends Controller
         if (auth()->user()->cant('viewAny', AssetModel::class)) {
             return redirect(route('errors.forbidden', ['area', 'Asset Model', 'Download PDF']));
         }
-        $models = AssetModel::all();
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.pdf', compact('models'));
-        $pdf->setPaper('a4', 'landscape');
+        $models = array();
+        $found = AssetModel::all();
+        
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
+            $array['model_no'] = $f->model_no ?? 'N/A';
+            $array['depreciation'] = $f->depreciation->name ?? 'No Depreciation';
+            $array['assets'] = $f->assets->count();
+            $array['notes'] = $f->notes ?? 'N/A';
+            $models[] = $array;
+        }
+
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/models-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/models-{$date}.pdf");
+        $path = 'asset-models-'.$date;
+
+        AssetModelsPdf::dispatch( $models, $user, $path )->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
         return redirect(route('asset-models.index'))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
+        
+        
     }
 
     public function downloadShowPDF(AssetModel $assetModel)

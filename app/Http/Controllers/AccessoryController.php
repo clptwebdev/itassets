@@ -337,7 +337,24 @@ class AccessoryController extends Controller
             return redirect(route('errors.forbidden', ['area', 'Accessories', 'view pdf']));
         }
 
-        $accessories = Accessory::withTrashed()->whereIn('id', json_decode($request->accessories))->get();
+        $accessories = array();
+        $found = Accessory::withTrashed()->whereIn('id', json_decode($request->accessories))->get();
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['serial_no'] = $f->serial_no ?? 'N/A';
+            $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['icon'] = $f->location->icon ?? '#666';
+            $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
+            $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $array['supplier'] = $f->supplier->name ?? 'N/A';
+            $array['warranty'] = $f->warranty;
+            $array['status'] = $f->status->name;
+            $array['color'] = $f->status->colour ?? '#666';
+            $accessories[] = $array;
+        }
+
         $user = auth()->user();
         
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
@@ -370,7 +387,7 @@ class AccessoryController extends Controller
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
 
-        return redirect(route('accessories.index'))
+        return redirect(route('accessories.show', $accessory->id))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 

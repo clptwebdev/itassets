@@ -20,12 +20,17 @@
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Component</a>
             @endcan
             @can('export', \App\Models\Component::class)
-            <form class="d-inline-block" action="{{ route('components.pdf')}}" method="POST">
-                @csrf
-                <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="components"/>
-            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
+            @if ($components->count() == 1)
+                <a href="{{ route('components.showPdf', $components[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
-            </form>
+                @else
+                <form class="d-inline-block" action="{{ route('components.pdf')}}" method="POST">
+                    @csrf
+                    <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="components"/>
+                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
+                        class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
+                </form>                
+            @endif
             @if($components->count() >1)
             <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
                     class="fas fa-download fa-sm text-dark-50"></i> Export</a>
@@ -196,7 +201,7 @@
 
                     <div class="modal-footer">
                         @if(session('import-error'))
-                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
+                            <div class="alert text-warning ml-0"> {{ session('import-error' ?? ' Select a file to be uploaded before continuing!')}} </div>
                         @endif
                             <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b" target="_blank" class="btn btn-blue" >
                                 Download Import Template
@@ -212,7 +217,6 @@
         </div>
     </div>
     </div>
-    <?php session()->flash('import-error', ' Select a file to be uploaded before continuing!');?>
 @endsection
 
 @section('js')

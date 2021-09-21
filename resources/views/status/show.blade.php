@@ -11,13 +11,13 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">View Status</h1>
     <div>
-        <a href="{{ route('status.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+        <a href="{{ route('status.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn"><i
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"><i
                 class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm updateBtn"><i
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm updateBtn"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>

@@ -19,6 +19,7 @@ class Location extends Model
     public function asset(){
         return $this->hasMany(Asset::class);
     }
+    
     public function miscellanea()
     {
         return $this->hasMany(Miscellanea::class);
@@ -27,9 +28,11 @@ class Location extends Model
     public function component(){
         return $this->hasMany(Component::class);
     }
+
     public function accessory(){
         return $this->hasMany(Accessory::class);
     }
+
     public function consumable(){
         return $this->hasMany(Consumable::class);
     }

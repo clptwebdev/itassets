@@ -12,16 +12,16 @@
     <h1 class="h3 mb-0 text-gray-800">Locations</h1>
     <div>
         @can('create', \App\Models\Location::class)
-        <a href="{{ route('location.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+        <a href="{{ route('location.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm">
             <i class="fas fa-plus fa-sm text-white-50"></i> Add New Location
         </a>
         @endcan
         @can('viewAny', \App\Models\Location::class)
-        <a href="{{ route('location.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading">
+        <a href="{{ route('location.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading">
             <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
         </a>
         @if($locations->count() >1)
-            <a href="exportlocations" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm">
+            <a href="exportlocations" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm">
                 <i class="fas fa-download fa-sm text-white-50"></i>Export
             </a>
         @endif
@@ -88,11 +88,11 @@
                             <table width="100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"><i class="fas fa-fw fa-tablet-alt"></i></span></th>
-                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"><i class="fas fa-fw fa-keyboard"></i></span></th>
-                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"><i class="fas fa-fw fa-hdd"></i></span></th>
-                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"><i class="fas fa-fw fa-tint"></i></span></th>
-                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"><i class="fas fa-fw fa-question"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Assets"><i class="fas fa-fw fa-tablet-alt"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Accessories"><i class="fas fa-fw fa-keyboard"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Components"><i class="fas fa-fw fa-hdd"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Consumables"><i class="fas fa-fw fa-tint"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="MIscellaneous"><i class="fas fa-fw fa-question"></i></span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -117,16 +117,6 @@
 @endsection
 
 @section('modals')
-<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"aria-hidden="true" id="loadingModal">
-<div class="modal-dialog modal-sm">
-   <div class="modal-content">
-       <button class="btn btn-primary" type="button" disabled style="background-color: #b087bc; color:#111;">
-           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-           Loading...
-       </button>
-   </div>
-</div>
-</div>
 
 <!-- User Delete Modal-->
 <div class="modal fade bd-example-modal-lg" id="removeLocationModal" tabindex="-1" role="dialog"
@@ -145,8 +135,8 @@
                 <small class="text-danger">**Warning this is permanent. All assets assigned to this location will become available.</small>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
             </div>
         </div>
     </div>
@@ -166,11 +156,6 @@
     $('#confirmBtn').click(function() {
         var form = '#'+'form'+$('#location-id').val();
         $(form).submit();
-    });
-
-    $('.loading').click(function () {
-        //showModal
-        $('#loadingModal').modal('show')
     });
 </script>
 

@@ -7,7 +7,7 @@
 @section('user', $user->name)
 
 @section('content')
-    <table id="assetsTable" width="100%">
+    <table class="table" width="100%">
         <tr>
             <th align="center">Item</th>
             <th align="center">Location</th>

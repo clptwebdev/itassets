@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Asset;
+use App\Models\Consumable;
 use App\Models\User;
 use App\Models\Report;
 use Illuminate\Bus\Queueable;
@@ -14,27 +14,27 @@ use Illuminate\Queue\SerializesModels;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 
-class AssetPdf implements ShouldQueue
+class ConsumablePdf implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $asset;
+    protected $consumable;
     protected $user;
     public $path;
     
-    public function __construct(Asset $asset, User $user, $path)
+    public function __construct(Consumable $consumable, User $user, $path)
     {
-        $this->asset = $asset;
+        $this->consumable = $consumable;
         $this->user = $user;
         $this->path = $path;
     }
 
     public function handle()
     {
-        $asset = $this->asset;
+        $consumable = $this->consumable;
         $user = $this->user;
         $path = $this->path;
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('assets.showPdf', compact('asset', 'user'));
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('consumable.showPdf', compact('consumable', 'user'));
         $pdf->setPaper('a4', 'portrait');
         Storage::put("public/reports/".$path.".pdf", $pdf->output());
         $this->path = "";

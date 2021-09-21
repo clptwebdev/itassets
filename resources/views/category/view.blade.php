@@ -11,10 +11,10 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Categories</h1>
     <div>
-        <a href="#" data-toggle="modal" data-target="#addCategoryModal" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Add New Category</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        <a href="#" data-toggle="modal" data-target="#addCategoryModal" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                class="fas fa-plus fa-sm text-white-50"></i> Add New Category</a>{{-- 
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> --}}
     </div>
 </div>
 
@@ -127,8 +127,8 @@
                     <small class="text-info">**You will be able to assign categories to any assets on the system. These can act as a filter.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Save</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Save</button>
                 </div>
             </form>
         </div>
@@ -158,8 +158,8 @@
                         can act as a filter.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Save</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Save</button>
                 </div>
             </form>
         </div>
@@ -187,8 +187,8 @@
                 <form id="deleteForm" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </form>
             </div>
         </div>

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Create a Manufacturer')
+
 @section('css')
 
 @endsection
@@ -10,9 +12,9 @@
             <h1 class="h3 mb-0 text-gray-800">Add New Manufacturer</h1>
 
             <div>
-                <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Manufacturers</a>
-                <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+                <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save</button>
             </div>
         </div>
@@ -107,7 +109,7 @@
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#uploadModal">Upload
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" data-toggle="modal" data-target="#uploadModal">Upload
                         file</button>
                 </div>
             </div>
@@ -131,7 +133,7 @@
                     <form id="imageUpload">
                         Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
                         Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                        <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
+                        <button type='submit' class='btn btn-green' id='btn_upload'>Upload</button>
                     </form>
                 </div>
 

@@ -8,9 +8,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\SuppliersPdf;
+use App\Jobs\SupplierPdf;
+use App\Models\Report;
 
 class SupplierController extends Controller
 {
+    
     public function index()
     {
         return view('suppliers.view');
@@ -81,18 +85,44 @@ class SupplierController extends Controller
     public function downloadPDF()
     {
         if (auth()->user()->cant('viewAny', Supplier::class)) {
-            return redirect(route('errors.forbidden', ['area', 'Manufacturers', 'View PDF']));
+            return redirect(route('errors.forbidden', ['area', 'suppliers', 'View PDF']));
         }
 
-        $suppliers = Supplier::all();
+        $found = Supplier::all();
+        $suppliers = array();
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('suppliers.pdf', compact('suppliers'));
-        $pdf->setPaper('a4', 'landscape');
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['url'] = $f->url ?? 'N/A';
+            $array['email'] = $f->email ?? 'N/A';
+            $array['telephone'] = $f->telehone ?? 'N/A';
+            $array['line1'] = $f->address_1 ?? 'N/A';
+            $array['line2'] = $f->address_2 ?? 'N/A';
+            $array['city'] = $f->city ?? 'N/A';
+            $array['county'] = $f->county ?? 'N/A';
+            $array['postcode'] = $f->postcode ?? 'N/A';
+            $array['asset'] = $f->asset->count(); 
+            $array['accessory'] = $f->accessory->count() ?? 'N/A';
+            $array['component'] = $f->component->count() ?? 'N/A';
+            $array['consumable'] = $f->consumable->count() ?? 'N/A';
+            $array['miscellaneous'] = $f->miscellanea->count() ?? 'N/A';
+            $suppliers[] = $array;
+        }
+
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/suppliers-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/suppliers-{$date}.pdf");
+        $path = 'suppliers-'.$date;
+
+        dispatch(new SuppliersPdf($suppliers, $user, $path))->afterResponse();
+        //Create Report
+        
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('suppliers.index'))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
     }
@@ -102,14 +132,20 @@ class SupplierController extends Controller
         if (auth()->user()->cant('viewAny', Supplier::class)) {
             return redirect(route('errors.forbidden', ['suppliers', $supplier->id, 'View PDF']));
         }
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('suppliers.showPdf', compact('supplier'));
-
+        
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        //return $pdf->download("{$location->name}-{$date}.pdf");
-        Storage::put("public/reports/{$supplier->name}-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/{$supplier->name}-{$date}.pdf");
+        $path = str_replace(' ', '-', $supplier->name).'-'.$date;
+
+        dispatch(new supplierPdf($supplier, $user, $path))->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('suppliers.show', $supplier->id))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
+
 }

@@ -23,6 +23,9 @@ use Ramsey\Uuid\Type\Integer;
 use function PHPUnit\Framework\isEmpty;
 use PDF;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\ComponentsPdf;
+use App\Jobs\ComponentPdf;
+use App\Models\Report;
 
 class ComponentController extends Controller {
 
@@ -340,11 +343,39 @@ class ComponentController extends Controller {
         if (auth()->user()->cant('viewAll', Component::class)) {
             return redirect(route('errors.forbidden', ['area', 'Components', 'download pdf']));
         }
-        $components = Component::withTrashed()->whereIn('id', json_decode($request->components))->get();
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('ComponentsDir.pdf', compact('components'));
-        $pdf->setPaper('a4', 'landscape');
+        
+        $components = array();
+        $found = Component::withTrashed()->whereIn('id', json_decode($request->components))->get();
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['serial_no'] = $f->serial_no ?? 'N/A';
+            $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['icon'] = $f->location->icon ?? '#666';
+            $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
+            $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $array['supplier'] = $f->supplier->name ?? 'N/A';
+            $array['warranty'] = $f->warranty ?? '0';
+            $array['status'] = $f->status->name ?? 'N/A';
+            $array['color'] = $f->status->colour ?? '#666';
+            $components[] = $array;
+        }
+
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("components-{$date}.pdf");
+        $path = 'components-'.$date;
+
+        dispatch(new ComponentsPdf($components, $user, $path))->afterResponse();
+        //Create Report
+        
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
+        return redirect(route('components.index'))
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
     }
 
     public function downloadShowPDF(Component $component)
@@ -352,9 +383,20 @@ class ComponentController extends Controller {
         if (auth()->user()->cant('view', $component)) {
             return redirect(route('errors.forbidden', ['components', $component->id, 'download pdf']));
         }
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('ComponentsDir.showPdf', compact('component'));
+
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        return $pdf->download("component-{$component->id}-{$date}.pdf");
+        $path = 'component-'.$component->id.'-'.$date;
+
+        dispatch(new ComponentPdf($component, $user, $path))->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
+        return redirect(route('components.show', $component->id))
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
     }
 
     //Restore and Force Delete Function Need to be Created

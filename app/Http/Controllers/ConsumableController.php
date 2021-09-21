@@ -18,6 +18,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PDF;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\ConsumablesPdf;
+use App\Jobs\ConsumablePdf;
+use App\Models\Report;
 
 class ConsumableController extends Controller
 {
@@ -340,14 +343,38 @@ class ConsumableController extends Controller
         if (auth()->user()->cant('viewAll', Consumable::class)) {
             return redirect(route('errors.forbidden', ['area', 'consumables', 'export pdf']));
         }
-        $consumables = Consumable::withTrashed()->whereIn('id', json_decode($request->consumables))->get();
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('consumable.pdf', compact('consumables'));
-        $pdf->setPaper('a4', 'landscape');
+
+        $consumables = array();
+        $found = Consumable::withTrashed()->whereIn('id', json_decode($request->consumables))->get();
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['serial_no'] = $f->serial_no ?? 'N/A';
+            $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['icon'] = $f->location->icon ?? '#666';
+            $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
+            $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $array['supplier'] = $f->supplier->name ?? 'N/A';
+            $array['warranty'] = $f->warranty ?? '0';
+            $array['status'] = $f->status->name ?? 'N/A';
+            $array['color'] = $f->status->colour ?? '#666';
+            $consumables[] = $array;
+        }
+
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/consumables-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/consumables-{$date}.pdf");
+        $path = 'consumables-'.$date;
+
+        dispatch(new ConsumablesPdf($consumables, $user, $path))->afterResponse();
+        //Create Report
+        
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('consumables.index'))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 
@@ -356,12 +383,18 @@ class ConsumableController extends Controller
         if (auth()->user()->cant('export', Consumable::class)) {
             return redirect(route('errors.forbidden', ['area', 'consumables', 'export pdf']));
         }
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('consumable.showPdf', compact('consumable'));
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/consumable-{$consumable->id}-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/consumable-{$consumable->id}-{$date}.pdf");
+        $path = 'consumable-'.$consumable->id.'-'.$date;
+
+        dispatch(new ConsumablePdf($consumable, $user, $path))->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('consumables.show', $consumable->id))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 

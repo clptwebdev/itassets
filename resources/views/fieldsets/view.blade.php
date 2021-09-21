@@ -11,10 +11,8 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Asset Model Custom Fieldsets</h1>
     <div>
-        <a href="{{ route('fieldsets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+        <a href="{{ route('fieldsets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Custom Fieldset</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>
 
@@ -62,7 +60,7 @@
                             </td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
-                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                    <a class="btn btn-lilac dropdown-toggle" href="#" role="button"
                                         id="dropdownMenuLink"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -112,8 +110,8 @@
                 <form id="deleteForm" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </form>
             </div>
         </div>

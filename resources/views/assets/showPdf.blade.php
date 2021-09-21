@@ -8,7 +8,7 @@
 
 @section('content')
         <div style="width: 62%; pading-right: 3%; float: left;">
-            <table class="table table-sm table-bordered table-striped" width="100%">
+            <table class="table" width="100%">
                 <thead>
                     <tr style="background-color: #454777; padding: 10px; color: #fff;">
                         <th colspan="2">Device Information</th>
@@ -50,7 +50,7 @@
 
             </table>
 
-            <table class="table table-sm table-bordered table-striped">
+            <table class="table" width=="100%">
                 <thead>
                 <tr style="background-color: #454777; padding: 10px; color: #fff;">
                     <th colspan="3">Status </th>
@@ -58,7 +58,7 @@
                 </thead>
                 <tr>
                     <td>Device Status: </td>
-                    <td><strong>{{ $asset->status->name}}</strong></td>
+                    <td><strong>{{ $asset->status->name ?? 'No Status Set'}}</strong></td>
                     <td class="text-right"></td>
                 </tr>
                 <tr>
@@ -114,7 +114,7 @@
                 @endif
             </table>
 
-            <table class="table table-sm table-bordered table-striped">
+            <table class="table">
                 <thead>
                     <tr style="background-color: #454777; padding: 10px; color: #fff;">
                         <th colspan="2">Created by:</th>
@@ -148,23 +148,18 @@
             {!! '<img width="100%" height="100px" src="data:image/png;base64,' . DNS1D::getBarcodePNG($asset->asset_tag, 'C39',3,33) . '" alt="barcode"   />' !!}
             <p class="text-center font-weight-bold mx-4">Asset Tag: #{{ $asset->asset_tag }}</p>
             <hr>
-            <?php $manufacturer = $asset->model->manufacturer; ?>
-            <div class="text-center">
-            @if($manufacturer->photo->exists())
-            <img src="{{ asset($manufacturer->photo->path)}}"
-                width="70%" alt="{{$manufacturer->name}}">
+            @if($asset->model->manufacturer->exists())
+            <p><strong>{{ $asset->model->manufacturer->name }}</strong></p>
+            <p>Tel: {{ $asset->model->manufacturer->supportPhone }}</p>
+            <p>Email: {{ $asset->model->manufacturer->supportEmail }}</p>
+            <p>URL: {{ $asset->model->manufacturer->supportUrl ?? 'Unknown'}}</p>
             @endif
-            </div>
-            <p><strong>{{ $manufacturer->name }}</strong></p>
-            <p>Tel: {{ $manufacturer->supportPhone }}</p>
-            <p>Email: {{ $manufacturer->supportEmail }}</p>
-            <p>URL: {{ $manufacturer->supportUrl ?? 'Unknown'}}</p>
         </div>
     </div>
     <div class="page-break"></div>
     <section class="d-block" style="margin-top: 50px; clear: both;">
     <div class="w-100 d-block">
-        <table class="table table-bordered table-striped" width="100%">
+        <table class="table" width="100%">
             <tr style="background-color: #454777; padding: 10px; color: #fff;">
                 <th colspan="2">Purchase Information Information</th>
             </tr>
@@ -216,7 +211,7 @@
     <hr>
     <div class="w-100 d-block">
         
-        <table class="table table-bordered table-striped" width="100%">
+        <table class="table" width="100%">
             <tr style="background-color: #454777; padding: 10px; color: #fff;"><td>Location Information</td></tr>
             @if($asset->location->photo()->exists())
             <tr>
@@ -244,7 +239,7 @@
 @if($asset->comment()->exists())
 <div class="page-break"></div>
 <p>Comments</p>
-<table class="table table-bordered table-striped ">
+<table class="table ">
     <thead>
         <tr style="background-color: #454777; padding: 10px; color: #fff;"><th>Recent Actvity</th></tr>    
     </thead>                      
@@ -260,7 +255,7 @@
 @endif
 @if($asset->logs()->exists())
 <div class="page-break"></div>
-<table class="table table-bordered table-striped ">
+<table class="table">
     <thead>
         <tr style="background-color: #454777; padding: 10px; color: #fff;"><th>Recent Actvity</th></tr>    
     </thead>                      

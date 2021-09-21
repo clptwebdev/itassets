@@ -19,6 +19,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PDF;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\MiscellaneousPdf;
+use App\Jobs\MiscellaneaPdf;
+use App\Models\Report;
 
 class MiscellaneaController extends Controller
 {
@@ -326,14 +329,39 @@ class MiscellaneaController extends Controller
         if (auth()->user()->cant('viewAny', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export pdf']));
         }
-        $miscellaneous = Miscellanea::withTrashed()->whereIn('id', json_decode($request->miscellaneous))->get();
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('miscellanea.pdf', compact('miscellaneous'));
-        $pdf->setPaper('a4', 'landscape');
+        
+        $miscellaneous = array();
+
+        $found = Miscellanea::withTrashed()->whereIn('id', json_decode($request->miscellaneous))->get();
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['serial_no'] = $f->serial_no ?? 'N/A';
+            $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['icon'] = $f->location->icon ?? '#666';
+            $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
+            $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $array['supplier'] = $f->supplier->name ?? 'N/A';
+            $array['warranty'] = $f->warranty ?? '0';
+            $array['status'] = $f->status->name ?? 'N/A';
+            $array['color'] = $f->status->colour ?? '#666';
+            $miscellaneous[] = $array;
+        }
+
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/miscellaneous-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/miscellaneous-{$date}.pdf");
+        $path = 'miscellaneous-'.$date;
+
+        dispatch(new MiscellaneousPdf($miscellaneous, $user, $path))->afterResponse();
+        //Create Report
+        
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('miscellaneous.index'))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 
@@ -343,13 +371,18 @@ class MiscellaneaController extends Controller
             return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'export pdf']));
         }
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('miscellanea.showPdf', compact('miscellanea'));
-        $pdf->setPaper('a4', 'portrait');
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/{$miscellanea->name}-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/{$miscellanea->name}-{$date}.pdf");
+        $path = 'miscellanea-'.$miscellanea->id.'-'.$date;
+
+        dispatch(new MiscellaneaPdf($miscellanea, $user, $path))->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('miscellaneous.show', $miscellanea->id))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 

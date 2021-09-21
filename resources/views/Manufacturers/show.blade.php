@@ -11,17 +11,17 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">View Manufacturers</h1>
     <div>
-        <a href="{{ route('manufacturers.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+        <a href="{{ route('manufacturers.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
         @can('delete', $manufacturer)
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn"><i
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"><i
                 class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
         @endcan
         @can('update', $manufacturer)
-        <a href="{{ route('manufacturers.edit', $manufacturer->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+        <a href="{{ route('manufacturers.edit', $manufacturer->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
         @endcan
-        <a href="{{ route('manufacturer.showPdf', $manufacturer->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
+        <a href="{{ route('manufacturer.showPdf', $manufacturer->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>
@@ -108,7 +108,7 @@
                     @foreach($assetModel->assets as $asset)
                         <tr>
                             <td>{{ $asset->name }}<br>
-                                {{ $assetModel->name ?? 'No Model'}}<br><small
+                                {{ $asset->model->name ?? 'No Model'}}<br><small
                                     class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
                             <td class="text-center" style="color: {{$asset->location->icon ?? '#666'}}">{{ $asset->location->name ?? 'Unallocated'}}</td>
                             <td>{{ $asset->asset_tag }}</td>
@@ -495,7 +495,7 @@
                                         <a href="{{ route('miscellaneous.show', $miscellanea->id) }}" class="dropdown-item">View</a>
                                         @endcan
                                         @can('update', $miscellanea)
-                                            <a href="{{ route('misclellaneous.edit', $miscellanea->id) }}" class="dropdown-item">Edit</a>
+                                            <a href="{{ route('miscellaneous.edit', $miscellanea->id) }}" class="dropdown-item">Edit</a>
                                         @endcan
                                         @can('delete', $miscellanea)
                                             <form id="form{{$miscellanea->id}}" action="{{ route('miscellaneous.destroy', $miscellanea->id) }}" method="POST" class="d-block p-0 m-0">
@@ -520,17 +520,6 @@
 
 @section('modals')
 
-<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"aria-hidden="true" id="loadingModal">
-    <div class="modal-dialog modal-sm">
-       <div class="modal-content">
-           <button class="btn" type="button" disabled style="background-color: #b087bc; color: #666;">
-               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-               Loading...
-           </button>
-       </div>
-    </div>
-</div>
-
 <!-- User Delete Modal-->
 <div class="modal fade bd-example-modal-lg" id="removeModal" tabindex="-1" role="dialog"
     aria-labelledby="removeModalLabel" aria-hidden="true">
@@ -552,8 +541,8 @@
                     <small class="text-danger">**Warning this is permanent. Everything that is linked and assigned to this Manufacturer will have the Manufacturer set to NULL</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="submit">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="submit">Delete</button>
                 </div>
             </form>
         </div>

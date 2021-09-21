@@ -10,13 +10,13 @@
     <h1 class="h3 mb-0 text-gray-800">Suppliers</h1>
     <div>
         @can('create', \App\Models\Supplier::class)
-        <a href="{{ route('suppliers.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+        <a href="{{ route('suppliers.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Supplier</a>
         @endcan
         @can('viewAny', \App\Models\Supplier::class)
-        <a href="{{ route('suppliers.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
+        <a href="{{ route('suppliers.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-        <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
+        <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Export</a>
         @endcan
     </div>
@@ -146,8 +146,8 @@
                     <small class="text-danger">**Warning this is permanent. All assets assigned to this supplier will be set to Null.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </div>
             </div>
         </div>
@@ -171,10 +171,10 @@
         $(document).ready( function () {
             $('#suppliersTable').DataTable({
                 "columnDefs": [ {
-                    "targets": [0, 5],
+                    "targets": [2,3,9],
                     "orderable": false,
                 } ],
-                "order": [[ 1, "asc"]]
+                "order": [[ 0, "asc"]]
             });
         } );
     </script>

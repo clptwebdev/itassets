@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use phpDocumentor\Reflection\Location;
 use PDF;
-use Illuminate\Support\Facades\Storage;
+use App\Jobs\ManufacturersPdf;
+use App\Jobs\ManufacturerPdf;
+use App\Models\Report;
 
 class ManufacturerController extends Controller {
 
@@ -96,7 +98,7 @@ class ManufacturerController extends Controller {
         {
             $validation = Validator::make($request->all(), [
                 "name.*" => "required|unique:manufacturers,name|max:255",
-                "supportPhone.*" => "required|max:14",
+                "supportPhone.*" => "min:11|max:14",
                 "supportUrl.*" => "required",
                 "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
             ]);
@@ -239,16 +241,40 @@ class ManufacturerController extends Controller {
             return redirect(route('errors.forbidden', ['area', 'Manufacturers', 'View PDF']));
         }
 
-        $manufacturers = Manufacturer::all();
+        $found = Manufacturer::all();
+        $manufacturers = array();
 
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['url'] = $f->supportUrl ?? '#666';
+            $array['email'] = $f->supportEmail ?? 'N/A';
+            $array['telephone'] = $f->supportPhone ?? 'N/A';
+            $total = 0;
+            foreach($f->assetModel as $assetModel){
+                $total += $assetModel->assets->count();
+            }
+            $array['asset'] = $total; 
+            $array['accessory'] = $f->accessory->count() ?? 'N/A';
+            $array['component'] = $f->component->count() ?? 'N/A';
+            $array['consumable'] = $f->consumable->count() ?? 'N/A';
+            $array['miscellaneous'] = $f->miscellanea->count() ?? 'N/A';
+            $manufacturers[] = $array;
+        }
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('manufacturers.pdf', compact('manufacturers'));
-        $pdf->setPaper('a4', 'landscape');
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/manufacturers-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/manufacturers-{$date}.pdf");
+        $path = 'manufacturers-'.$date;
+
+        dispatch(new ManufacturersPdf($manufacturers, $user, $path))->afterResponse();
+        //Create Report
+        
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('manufacturers.index'))
-            ->with('success_message', "Your Reprot has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
     }
@@ -258,14 +284,19 @@ class ManufacturerController extends Controller {
         if (auth()->user()->cant('view', Manufacturer::class)) {
             return redirect(route('errors.forbidden', ['manufacturers', $manufacturer->id, 'View PDF']));
         }
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('manufacturers.showPdf', compact('manufacturer'));
-
+        
+        $user = auth()->user();
+        
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        //return $pdf->download("{$location->name}-{$date}.pdf");
-        Storage::put("public/reports/{$manufacturer->name}-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/{$manufacturer->name}-{$date}.pdf");
+        $path = str_replace(' ', '-', $manufacturer->name).'-'.$date;
+
+        dispatch(new ManufacturerPdf($manufacturer, $user, $path))->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('manufacturers.show', $manufacturer->id))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 

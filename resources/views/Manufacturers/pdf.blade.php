@@ -2,6 +2,8 @@
 
 @section('title', 'Manufacturer Report')
 
+@section('user', $user->name)
+
 @section('page', 'Manufacturers')
 
 @section('content')
@@ -24,23 +26,15 @@
         @foreach($manufacturers as $manufacturer)
 
             <tr>
-                <td>{{ $manufacturer->name}}</td>
-                <td><small>{{ $manufacturer->supportUrl}}</small></td>
-                <td><small>{{ $manufacturer->supportEmail}}</small></td>
-                <td><small>{{ $manufacturer->supportPhone}}</small></td>
-                <td class="text-center">
-                    @php
-                        $total = 0;
-                        foreach($manufacturer->assetModel as $assetModel){
-                            $total += $assetModel->assets->count();
-                        }   
-                    @endphp
-                    {{ $total}}
-                </td>
-                <td class="text-center">{{$manufacturer->accessory->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$manufacturer->component->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$manufacturer->consumable->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$manufacturer->miscellanea->count() ?? "N/A"}}</td>
+                <td>{{ $manufacturer['name']}}</td>
+                <td><small>{{ $manufacturer['url']}}</small></td>
+                <td><small>{{ $manufacturer['email']}}</small></td>
+                <td><small>{{ $manufacturer['telephone']}}</small></td>
+                <td class="text-center">{{ $manufacturer['asset']}}</td>
+                <td class="text-center">{{$manufacturer['accessory']}}</td>
+                <td class="text-center">{{$manufacturer['component']}}</td>
+                <td class="text-center">{{$manufacturer['consumable']}}</td>
+                <td class="text-center">{{$manufacturer['miscellaneous']}}</td>
             </tr>
         @endforeach
         </tbody>

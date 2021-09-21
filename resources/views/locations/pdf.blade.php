@@ -4,6 +4,8 @@
 
 @section('page', 'Locations')
 
+@section('user', $user->name)
+
 @section('content')
     <table id="assetsTable" class="table table-striped" width="100%">
         <thead>
@@ -22,13 +24,13 @@
         @foreach($locations as $location)
 
             <tr>
-                <td style="color:{{ $location->icon}}">{{ $location->name}}</td>
-                <td><small>{{ $location->address_1.', '.$location->address_2.', '.$location->city.', '.$location->county.', '.$location->postcode}}</small></td>
-                <td class="text-center">{{$location->asset->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$location->accessory->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$location->component->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$location->consumable->count() ?? "N/A"}}</td>
-                <td class="text-center">N/A</td>
+                <td style="color:{{ $location['color']}}">{{ $location['name']}}</td>
+                <td><span class="small">{{ $location['line1'].', '.$location['line2'].', '.$location['city'].', '.$location['county'].', '.$location['postcode']}}</span></td>
+                <td align="center">{{$location['asset']}}</td>
+                <td align="center">{{$location['accessory']}}</td>
+                <td align="center">{{$location['component']}}</td>
+                <td align="center">{{$location['consumable']}}</td>
+                <td align="center">{{$location['miscellaneous']}}</td>
             </tr>
         @endforeach
         </tbody>

@@ -11,15 +11,15 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">View Supplier</h1>
     <div>
-        <a href="{{ route('suppliers.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+        <a href="{{ route('suppliers.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
         <a href="{{ route('suppliers.destroy', $supplier->id) }}"
-            class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+            class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm"><i
                 class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
         <a href="{{ route('suppliers.edit', $supplier->id)}}"
-            class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+            class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
-        <a href="{{ route('suppliers.showPdf', $supplier->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
+        <a href="{{ route('suppliers.showPdf', $supplier->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>
@@ -91,7 +91,7 @@
                         <th class="col-1 col-md-auto"><small>Tag</small></th>
                         <th class="d-none d-xl-table-cell"><small>Date</small></th>
                         <th class="d-none d-xl-table-cell text-center"><small>Cost</small></th>
-                        <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
+                        <th class="d-none d-xl-table-cell"><small>Manufacturer</small></th>
                         <th class="col-auto d-none d-xl-table-cell text-center"><small>Warranty (M)</small></th>
                         <th class="col-auto text-center d-none d-md-table-cell"><small>Audit Due</small></th>
                         <th class="text-right col-1"><small>Options</small></th>
@@ -104,7 +104,7 @@
                         <th><small>Tag</small></th>
                         <th class=" d-none d-xl-table-cell"><small>Date</small></th>
                         <th class=" d-none d-xl-table-cell"><small>Cost</small></th>
-                        <th class=" d-none d-xl-table-cell text-center"><small>Supplier</small></th>
+                        <th class=" d-none d-xl-table-cell text-center"><small>Manufacturer</small></th>
                         <th class=" d-none d-xl-table-cell text-center"><small>Warranty (M)</small></th>
                         <th class="text-center  d-none d-md-table-cell"><small>Audit Due</small></th>
                         <th class="text-right col-1"><small>Options</small></th>
@@ -124,7 +124,7 @@
                                 £{{ $asset->purchased_cost }}
                             
                             </td>
-                            <td class="text-center d-none d-xl-table-cell">{{$asset->supplier->name ?? "N/A"}}</td>
+                            <td class="text-center d-none d-xl-table-cell">{{$asset->model->manufacturer->name ?? "N/A"}}</td>
                             @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
                             <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
                                 {{ $asset->warranty }} Months
@@ -201,7 +201,7 @@
                         <th class="text-center"><small>Location</small></th>
                         <th><small>Date</small></th>
                         <th><small>Cost</small></th>
-                        <th><small>Supplier</small></th>
+                        <th><small>Manufacturer</small></th>
                         <th class="text-center"><small>Status</small></th>
                         <th class="text-center"><small>Warranty</small></th>
                         <th class="text-right"><small>Options</small></th>
@@ -213,7 +213,7 @@
                             <th class="text-center"><small>Location</small></th>
                             <th><small>Purchased Date</small></th>
                             <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
+                            <th><small>Manufacturer</small></th>
                             <th class="text-center"><small>Status</small></th>
                             <th class="text-center"><small>Warranty</small></th>
                             <th class="text-right"><small>Options</small></th>
@@ -230,7 +230,7 @@
                             <td class="text-center" style="color: {{$accessory->location->icon ?? '#666'}}">{{ $accessory->location->name ?? 'Unallocated'}}</td>
                             <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
                             <td>£{{$accessory->purchased_cost}}</td>
-                            <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
+                            <td>{{$accessory->manufacturer->name ?? 'N/A'}}</td>
                             <td class="text-center"  style="color: {{$accessory->status->colour}};">
                                 <i class="{{$accessory->status->icon}}"></i> {{ $accessory->status->name }}
                             </td>
@@ -286,7 +286,7 @@
                         <th class="text-center"><small>Location</small></th>
                         <th><small>Purchased Date</small></th>
                         <th><small>Purchased Cost</small></th>
-                        <th><small>Supplier</small></th>
+                        <th><small>Manufacturer</small></th>
                         <th class="text-center"><small>Status</small></th>
                         <th class="text-center"><small>Warranty</small></th>
                         <th class="text-right"><small>Options</small></th>
@@ -298,7 +298,7 @@
                         <th class="text-center"><small>Location</small></th>
                         <th><small>Purchased Date</small></th>
                         <th><small>Purchased Cost</small></th>
-                        <th><small>Supplier</small></th>
+                        <th><small>Manufacturer</small></th>
                         <th class="text-center"><small>Status</small></th>
                         <th class="text-center"><small>Warranty</small></th>
                         <th class="text-right"><small>Options</small></th>
@@ -315,7 +315,7 @@
                             <td class="text-center" style="color: {{$component->location->icon ?? '#666'}}">{{ $component->location->name ?? 'Unallocated'}}</td>
                             <td>{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
                             <td>{{$component->purchased_cost}}</td>
-                            <td>{{$component->supplier->name ?? 'N/A'}}</td>
+                            <td>{{$component->manufacturer->name ?? 'N/A'}}</td>
                             <td class="text-center">{{$component->status->name ??'N/A'}}</td>
                             @php $warranty_end = \Carbon\Carbon::parse($component->purchased_date)->addMonths($component->warranty);@endphp
                             <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
@@ -368,7 +368,7 @@
                         <th class="text-center"><small>Location</small></th>
                         <th><small>Purchased Date</small></th>
                         <th><small>Purchased Cost</small></th>
-                        <th><small>Supplier</small></th>
+                        <th><small>Manufacturer</small></th>
                         <th class="text-center"><small>Status</small></th>
                         <th class="text-center"><small>Warranty</small></th>
                         <th class="text-right"><small>Options</small></th>
@@ -380,7 +380,7 @@
                             <th class="text-center"><small>Location</small></th>
                             <th><small>Purchased Date</small></th>
                             <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
+                            <th><small>Manufacturer</small></th>
                             <th class="text-center"><small>Status</small></th>
                             <th class="text-center"><small>Warranty</small></th>
                             <th class="text-right"><small>Options</small></th>
@@ -396,7 +396,7 @@
                             <td class="text-center" style="color: {{$consumable->location->icon ?? '#666'}}">{{ $consumable->location->name ?? 'Unallocated'}}</td>
                             <td>{{\Carbon\Carbon::parse($consumable->purchased_date)->format("d/m/Y")}}</td>
                             <td>£{{$consumable->purchased_cost}}</td>
-                            <td>{{$consumable->supplier->name ?? 'N/A'}}</td>
+                            <td>{{$consumable->manufacturer->name ?? 'N/A'}}</td>
                             <td class="text-center">{{$consumable->status->name ??'N/A'}}</td>
                             @php $warranty_end = \Carbon\Carbon::parse($consumable->purchased_date)->addMonths($consumable->warranty);@endphp
                             <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
@@ -451,7 +451,7 @@
                         <th class="text-center"><small>Location</small></th>
                         <th><small>Purchased Date</small></th>
                         <th><small>Purchased Cost</small></th>
-                        <th><small>Supplier</small></th>
+                        <th><small>Manufacturer</small></th>
                         <th class="text-center"><small>Status</small></th>
                         <th class="text-center"><small>Warranty</small></th>
                         <th class="text-right"><small>Options</small></th>
@@ -463,7 +463,7 @@
                             <th class="text-center"><small>Location</small></th>
                             <th><small>Purchased Date</small></th>
                             <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
+                            <th><small>Manufacturer</small></th>
                             <th class="text-center"><small>Status</small></th>
                             <th class="text-center"><small>Warranty</small></th>
                             <th class="text-right"><small>Options</small></th>
@@ -479,7 +479,7 @@
                             <td class="text-center" style="color: {{$miscellanea->location->icon ?? '#666'}}">{{ $miscellanea->location->name ?? 'Unallocated'}}</td>
                             <td>{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
                             <td>£{{$miscellanea->purchased_cost}}</td>
-                            <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
+                            <td>{{$miscellanea->manufacturer->name ?? 'N/A'}}</td>
                             <td class="text-center">{{$miscellanea->status->name ??'N/A'}}</td>
                             @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
                             <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
@@ -545,8 +545,8 @@
                     available.</small>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
             </div>
         </div>
     </div>

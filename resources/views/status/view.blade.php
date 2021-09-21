@@ -12,7 +12,7 @@
     <h1 class="h3 mb-0 text-gray-800">Status Fields</h1>
     <div>
         <a href="#" data-toggle="modal" data-target="#addStatusModal"
-            class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+            class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Status</a>
     </div>
 </div>
@@ -179,8 +179,8 @@
                         can act as a filter.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Save</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-green" type="button" id="confirmBtn">Save</button>
                 </div>
             </form>
         </div>
@@ -233,8 +233,8 @@
                         can act as a filter.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Save</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-green" type="button" id="confirmBtn">Save</button>
                 </div>
             </form>
         </div>
@@ -263,8 +263,8 @@
                 <form id="deleteForm" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </form>
             </div>
         </div>
