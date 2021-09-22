@@ -231,7 +231,7 @@ Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@f
  //Logs View
 Route::get("/logs", [\App\Http\Controllers\LogController::class, "index"])->name("logs.index");
 //documentation link
-Route::get("/help/Documentation" ,function(){
-    return view('documentation.Documents');
+Route::get("/help/Documentation" , function(){
+    return view('documentation.Documents')->name('documentation.index');
 });
 
