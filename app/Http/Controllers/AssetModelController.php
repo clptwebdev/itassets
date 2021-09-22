@@ -130,21 +130,21 @@ class AssetModelController extends Controller
         
     }
 
-    public function downloadShowPDF(AssetModel $model)
+    public function downloadShowPDF(AssetModel $assetModel)
     {
-        if (auth()->user()->cant('view', $model)) {
+        if (auth()->user()->cant('view', $assetModel)) {
             return redirect(route('errors.forbidden', ['assetModel', $assetModel->id, 'Download PDF']));
         }
         
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = str_replace(' ', '-', $asset->asset_tag)."-{$date}";
-        AssetPdf::dispatch( $model,$user,$path )->afterResponse();
+        $path = str_replace(' ', '-', $assetModel->name)."-{$date}";
+        AssetModelPdf::dispatch( $assetModel,$user,$path )->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
 
-        return redirect(route('asset-model.show', $model->id))
+        return redirect(route('asset-models.show', $assetModel))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }

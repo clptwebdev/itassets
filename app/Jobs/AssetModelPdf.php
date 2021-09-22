@@ -18,23 +18,23 @@ class AssetModelPdf implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $model;
+    protected $assetModel;
     protected $user;
     public $path;
     
-    public function __construct(AssetModel $model, User $user, $path)
+    public function __construct(AssetModel $assetModel, User $user, $path)
     {
-        $this->model = $model;
+        $this->assetModel = $assetModel;
         $this->user = $user;
         $this->path = $path;
     }
 
     public function handle()
     {
-        $asset = $this->model;
+        $assetModel = $this->assetModel;
         $user = $this->user;
         $path = $this->path;
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.showPdf', compact('model', 'user'));
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.showPdf', compact('assetModel', 'user'));
         $pdf->setPaper('a4', 'portrait');
         Storage::put("public/reports/".$path.".pdf", $pdf->output());
         $this->path = "";

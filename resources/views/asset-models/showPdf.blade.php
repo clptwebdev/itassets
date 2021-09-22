@@ -2,91 +2,113 @@
 
 @section('title', 'Asset Models Report')
 
-@section('page', $model->name)
+@section('page', $assetModel->name)
 
 @section('user', $user->name)
 
 @section('content')
 
-    <div style="width: 62%; pading-right: 3%; float: left;">
-            @if($model->photo()->exists())
-                <img src="{{ asset($assetModel->photo->path) ?? asset('images/svg/device-image.svg')}}" width="200px" class="p-3" alt="{{$assetModel->name}}">
+    <table class="table">
+        <thead>
+            <tr style="background-color: #454777; padding: 10px; color: #fff;">
+                <th colspan="2">Device Information</th>
+            </tr>
+        </thead>
+        <tr>
+            <td rowspan="4" width="20%">
+            @if($assetModel->photo()->exists())
+                <img src="{{ asset($assetModel->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" class="p-3" alt="{{$assetModel->name}}">
             @else
-                <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$assetModel->name}}">
+            <span style="width: 100px; height: 100px; background-colour: #222;">No Image Available</span>
             @endif
-            <hr>
-            <table id="assetstable" class="table table-sm table-bordered table-striped">
-                <thead>
-                    <tr style="background-color: #454777; padding: 10px; color: #fff;">
-                        <th colspan="2">Device Information</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Name:</td>
-                    <td>{{ $assetModel->name }}</td>
-                </tr>
-                <tr>
-                <tr>
-                    <td>Device Model N<span class="">o</span></td>
-                    <td>{{ $assetModel->model_no }}</td>
-                </tr>
-            </table>
+            </td>
+            <td>Name:</td>
+        </tr>
+        <tr>
+            <td>{{ $assetModel->name }}</td>
+        </tr>
+        <tr>
+            <td>Device Model N<span class="">o</span></td>
+        </tr>
+        <tr>
+            <td>{{ $assetModel->model_no }}</td>
+        </tr>
+    </table>
 
-            <table class="table table-sm table-bordered table-striped">
-                <thead>
-                <tr style="background-color: #454777; padding: 10px; color: #fff;">
-                    <th >Depreciation Model </th>
-                </tr>
-                </thead>
-                <tr>
-                    <td><strong>{{ $assetModel->depreciation->name }}</strong></td>
-                </tr>
-            </table>
+    <table class="table">
+        <thead>
+        <tr style="background-color: #454777; padding: 10px; color: #fff;">
+            <th >Depreciation Model </th>
+        </tr>
+        </thead>
+        <tr>
+            <td><strong>{{ $assetModel->depreciation->name ?? 'No Deprecatiation Set'}}</strong></td>
+        </tr>
+    </table>
 
-            <table class="table table-sm table-bordered table-striped">
-                <thead>
-                <tr style="background-color: #454777; padding: 10px; color: #fff;">
-                    <th >EOL (End of Life) </th>
-                </tr>
-                </thead>
-                <tr>
-                    <td><strong>{{ $assetModel->eol }} Months</strong></td>
-                </tr>
-            </table>
+    <table class="table">
+        <thead>
+        <tr style="background-color: #454777; padding: 10px; color: #fff;">
+            <th >EOL (End of Life) </th>
+        </tr>
+        </thead>
+        <tr>
+            <td><strong>{{ $assetModel->eol }} Months</strong></td>
+        </tr>
+    </table>
 
-            <table class="table table-sm table-bordered table-striped">
-                <thead>
-                    <tr style="background-color: #454777; padding: 10px; color: #fff;">
-                        <th>Notes:</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ $assetModel->notes}}</td>
-                    </tr>
-                </tbody>
-            </table>
+    <table class="table">
+        <thead>
+            <tr style="background-color: #454777; padding: 10px; color: #fff;">
+                <th>Notes:</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ $assetModel->notes}}</td>
+            </tr>
+        </tbody>
+    </table>
 
-        </div>
-        <div style="width: 32%; padding-left: 3%;float: right; border-left: solid 3px #CCC;">
-            <?php $manufacturer = $assetModel->manufacturer; ?>
-            <div class="text-center">
-            @if(isset($manufacturer->photo->path))
-            <img src="{{ asset($manufacturer->photo->path)}}"
-                width="70%" alt="{{$manufacturer->name}}">
+    @if($assetModel->manufacturer()->exists())
+    <?php $manufacturer = $assetModel->manufacturer; ?>
+    <table class="table">
+        <thead>
+            <tr style="background-color: #454777; padding: 10px; color: #fff;">
+                <th colspan="2">Device Information</th>
+            </tr>
+        </thead>
+        <tr>
+            <td rowspan="4" width="20%">
+            @if($manufacturer->photo()->exists())
+                <img src="{{ asset($manufacturer->photo->path)}}"
+                    width="100%" alt="{{$manufacturer->name}}">
+            @else
+            <span style="width: 100px; height: 100px; background-colour: #222;">No Image Available</span>
             @endif
-            </div>
-            <p><strong>{{ $manufacturer->name }}</strong></p>
-            <p>Tel: {{ $manufacturer->supportPhone }}</p>
-            <p>Email: {{ $manufacturer->supportEmail }}</p>
-            <p>URL: {{ $manufacturer->supportUrl }}</p>
-        </div>
-    </div>
+            </td>
+            <td>Name:</td>
+        </tr>
+        <tr>
+            <td>{{ $manufacturer->name }}</td>
+        </tr>
+        <tr>
+            <td>Details:</td>
+        </tr>
+        <tr>
+            <td>
+                <p>Tel: {{ $manufacturer->supportPhone }}</p>
+                <p>Email: {{ $manufacturer->supportEmail }}</p>
+                <p>URL: {{ $manufacturer->supportUrl }}</p>    
+            </td>
+        </tr>
+    </table>
+    @endif
     
 
 @if($assetModel->assets()->exists())
 <div class="page-break"></div>
-<table class="table table-bordered table-striped ">
+<table class="table ">
     <thead>
         <tr style="background-color: #454777; padding: 10px; color: #fff;"><th colspan="5">Assigned Assets</th></tr>    
     </thead>                      
@@ -100,9 +122,9 @@
             </tr>
             @foreach($assetModel->assets as $asset)
             <tr>
-                <td>{{ $assetModel->name }}</th>
+                <td>{{ $asset->name }}<br>{{ $asset->serial_no}}</th>
                 <td>{{ $asset->asset_tag }}</td>
-                <td><span style="color:{{ $asset->location->icon}};">{{ $asset->location->name }}</th>
+                <td><span style="color:{{ $asset->location->icon ?? '#666'}};">{{ $asset->location->name ?? 'Unallocated' }}</th>
                 <td>{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                 <td>£{{ $asset->purchased_cost }}</td>
             </tr>
