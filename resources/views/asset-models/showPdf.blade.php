@@ -2,14 +2,14 @@
 
 @section('title', 'Asset Models Report')
 
-@section('page', 'Asset Models')
+@section('page', $model->name)
 
 @section('user', $user->name)
 
 @section('content')
 
         <div style="width: 62%; pading-right: 3%; float: left;">
-            @if($assetModel->photo()->exists())
+            @if($model->photo()->exists())
                 <img src="{{ asset($assetModel->photo->path) ?? asset('images/svg/device-image.svg')}}" width="200px" class="p-3" alt="{{$assetModel->name}}">
             @else
                 <img src="{{asset('images/svg/device-image.svg')}}" width="100%" alt="{{$assetModel->name}}">

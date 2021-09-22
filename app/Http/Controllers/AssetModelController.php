@@ -130,18 +130,22 @@ class AssetModelController extends Controller
         
     }
 
-    public function downloadShowPDF(AssetModel $assetModel)
+    public function downloadShowPDF(AssetModel $model)
     {
-        if (auth()->user()->cant('view', $assetModel)) {
+        if (auth()->user()->cant('view', $model)) {
             return redirect(route('errors.forbidden', ['assetModel', $assetModel->id, 'Download PDF']));
         }
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('asset-models.showPdf', compact('assetModel'));
+        
+        $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/model-{$assetModel->id}-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/model-{$assetModel->id}-{$date}.pdf");
-        return redirect(route('asset-models.show', $assetModel->id))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+        $path = str_replace(' ', '-', $asset->asset_tag)."-{$date}";
+        AssetPdf::dispatch( $model,$user,$path )->afterResponse();
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
+        return redirect(route('asset-model.show', $model->id))
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 }

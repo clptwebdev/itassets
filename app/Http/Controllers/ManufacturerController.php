@@ -31,7 +31,7 @@ class ManufacturerController extends Controller {
             return redirect(route('errors.forbidden', ['Manufacturer', $manufacturer->id, 'view']));
         }
 
-        return view('manufacturers.show', compact('manufacturer'));
+        return view('Manufacturers.show', compact('manufacturer'));
     }
 
     public function create()
@@ -273,7 +273,7 @@ class ManufacturerController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
 
-        return redirect(route('manufacturers.index'))
+        return redirect(route('manufacturers.'))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
