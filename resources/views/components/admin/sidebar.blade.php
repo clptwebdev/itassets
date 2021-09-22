@@ -161,7 +161,7 @@
                 <a class="collapse-item" href="{{ route('status.index')}}">Status Fields</a>
                 <a class="collapse-item" href="/databasebackups">Database Backups</a>
                 <a href="{{ route('reports.index')}}" class="collapse-item">Generated Reports</a>
-                <a class="collapse-item" href="{{route("documentation.index")}}">Documentation</a>
+                <a class="collapse-item" href="{{ route("documentation.index") }}">Documentation</a>
         </div>
     </li>
 
