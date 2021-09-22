@@ -224,6 +224,12 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');
     Route::get('chart/asset/values', 'App\Http\Controllers\ChartController@getAssetValueChart');
     Route::get('chart/asset/audits', 'App\Http\Controllers\ChartController@getAssetAuditChart');
+    //Logs View
+    Route::get("/logs", [\App\Http\Controllers\LogController::class, "index"])->name("logs.index");
+//documentation link
+    Route::get("/help/Documentation" ,function(){
+        return view('documentation.Documents');
+    })->name("documentation.index");
 
 });
 //403 redirects
