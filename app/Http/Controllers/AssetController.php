@@ -146,6 +146,9 @@ class AssetController extends Controller {
                             case('url'):
                                 $val_string .= "url";
                                 break;
+                            case('string'):
+                                $val_string .= "string";
+                                break;
                             default:
                                 $val_string .= "alpha_num";
                                 break;
@@ -281,6 +284,9 @@ class AssetController extends Controller {
                             break;
                         case('url'):
                             $val_string .= "url";
+                            break;
+                        case('string'):
+                            $val_string .= "string";
                             break;
                         default:
                             $val_string .= "alpha_num";
