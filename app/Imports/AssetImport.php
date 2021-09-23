@@ -80,7 +80,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
     {
 
             $asset = new Asset;
-            $asset->asset_tag = $row["asset_tag"];
+            $asset->asset_tag = $row["asset_tag"] ?? 0;
             $asset->name = $row["name"];
             $asset->user_id = auth()->user()->id;
             $asset->serial_no = $row["serial_no"];
@@ -170,7 +170,19 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
             }
 
+            if($row['categories'] != null){
+                $cat_array = array();
+                $categories = explode(',', $row['categories']);
+                foreach($categories as $category){
+                    $found = Category::findOrCreate(['name' => $category]);
+                    $cat_array[] = $found->id;
+                }
+            }
+
             $asset->save();
+            if(!$cat_array){
+                $asset->category->attach($cat_array);
+            }
 
     }
 
