@@ -180,9 +180,23 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 }
             }
 
+            if(isset($row['additonal'])){
+                $additional = array();
+                $fields = explode(';', $row['additional']);
+                foreach($fields as $field){
+                    $field_value = explode(':', $field);
+                    if($found = Fields::find(['name' => $field_value[0]])){
+                        $additional[$found->id] = ['value' => $field_value[1]];
+                    }
+                }
+            }
+
+            
+
 
             $asset->save();
             $asset->category()->attach($cat_array);
+            $asset->fields()->attach($additional);
 
     }
 
