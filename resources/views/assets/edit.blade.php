@@ -158,10 +158,9 @@
                             @foreach($asset->fields as $as)
                             @php( $field_array[$as->id] = $as->pivot->value)
                             @endforeach
-
+                            @php(dd($field_array))
 
                             @foreach($model->fieldset->fields as $field)
-                            @php( dd($field))
 
                             <div class="form-group">
                                 <label for="{{str_replace(' ', '_', strtolower($field->name))}}">{{$field->name}}</label>
