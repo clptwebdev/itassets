@@ -115,7 +115,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="purchased_date">Purchased Date</label>
-                                    @php if(old('purchased_date')){ $date=old('purchased_date');}else{$date= $asset->audit_date;} @endphp
+                                    @php if(old('purchased_date')){ $date=old('purchased_date');}else{$date= $asset->purchased_date;} @endphp
                                     <input type="date"
                                         class="form-control @if($errors->has('purchased_date')){{'border-danger'}}@endif"
                                         name="purchased_date" id="purchased_date" value="{{ \Carbon\Carbon::parse($date)->format('Y-m-d')}}">
