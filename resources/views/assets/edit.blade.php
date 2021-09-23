@@ -161,7 +161,7 @@
 
 
                             @foreach($model->fieldset->fields as $field)
-                            @php(return dd($field))
+                            @php( dd($field))
 
                             <div class="form-group">
                                 <label for="{{str_replace(' ', '_', strtolower($field->name))}}">{{$field->name}}</label>
