@@ -175,7 +175,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 $cat_array = array();
                 $categories = explode(',', $row['categories']);
                 foreach($categories as $category){
-                    $found = Category::findOrCreate(['name' => $category]);
+                    $found = Category::firstOrCreate(['name' => $category]);
                     $cat_array[] = $found->id;
                 }
             }
