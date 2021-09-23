@@ -297,7 +297,10 @@ class AssetController extends Controller {
                 {
                     $values = $request->$name;
                 }
-                $array[$field->id] = ['value' => $values];
+                if($values != null){
+                    $array[$field->id] = ['value' => $values];
+                }
+                
             }
         }
 
