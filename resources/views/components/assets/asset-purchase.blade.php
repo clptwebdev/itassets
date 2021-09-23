@@ -52,7 +52,7 @@
                         </tr>
                         <tr>
                             <td>Purchase Cost:</td>
-                            @if($asset->model()->exist() && $asset->model()->depreciation()->exists())
+                            @if($asset->model()->exists() && $asset->model->depreciation()->exists())
                                 <?php 
                                 $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date); 
                                 $percent = 100 / $asset->model->depreciation->years;
