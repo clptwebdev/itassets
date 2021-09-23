@@ -31,7 +31,7 @@ class SupplierController extends Controller
             'name' => 'required|max:255',
             'url' => 'sometimes|nullable|unique:suppliers',
             'email' => 'sometimes|nullable|unique:locations|email:rfc,dns,spoof,filter',
-            'telephone' => 'required|max:14',
+            'telephone' => 'sometimes|nullable|max:14',
         ]);
         //
         Supplier::create($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'fax', 'url', 'photo_id', 'notes'))->save();
@@ -55,7 +55,7 @@ class SupplierController extends Controller
             'name' => 'required|max:255',
             'email' => ['sometimes', 'nullable', \Illuminate\Validation\Rule::unique('suppliers')->ignore($supplier->id), 'email:rfc,dns,spoof,filter'],
             'url' => ['sometimes', 'nullable', \Illuminate\Validation\Rule::unique('suppliers')->ignore($supplier->id)],
-            'telephone' => 'required|max:14',
+            'telephone' => 'sometimes|nullable|max:14',
         ]);
         //
         $supplier->fill($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'fax', 'url', 'photo_id', 'notes'))->save();
