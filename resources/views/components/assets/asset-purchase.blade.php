@@ -52,19 +52,27 @@
                         </tr>
                         <tr>
                             <td>Purchase Cost:</td>
+                            <td>
+                            £{{ $asset->purchased_cost }}
                             @if($asset->model()->exists() && $asset->model->depreciation()->exists())
-                                <?php 
-                                $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date); 
-                                $percent = 100 / $asset->model->depreciation->years;
-                                $percentage = floor($age)*$percent;
-                                $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
-                                ?>
-                            @else
-                                @php($dep = 0)
+                                <br>
+                                @php
+                                    $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                                    if($eol->isPast()){
+                                        $dep = 0;
+                                    }else{
+
+                                        $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
+                                        $percent = 100 / $asset->model->depreciation->years;
+                                        $percentage = floor($age)*$percent;
+                                        $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                                    }
+                                @endphp
+                                 - (*£{{ number_format($dep, 2)}})
+                                 <small>*Calculated using Depreciation Model:</small><br><strong
+                                class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>{{ $asset->model->depreciation->name }}</small></strong>
                             @endif
-                            <td>£{{ $asset->purchased_cost }} - (Current Value*: £{{ number_format($dep, 2)}})<br>
-                            <small>*Calculated using Depreciation Model:</small><br><strong
-                                class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>Laptop and Tablet</small></strong></p></td>
+                            </td>
                         </tr>
                     </table>
                     @if($asset->supplier && $asset->supplier->email != "")
