@@ -77,7 +77,7 @@ class ManufacturerController extends Controller {
             "name" => "required|unique:manufacturers,name|max:255",
             "supportPhone" => "max:14",
             "supportUrl" => "required",
-            "supportEmail" => 'unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
+            "supportEmail" => 'sometimes|nullable|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
             "PhotoId" => "nullable",
         ]);
         Manufacturer::create([
