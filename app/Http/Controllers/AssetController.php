@@ -135,7 +135,7 @@ class AssetController extends Controller {
                                 $val_string .= "alpha";
                                 break;
                             case('alpha_num'):
-                                $val_string .= "alpha_num";
+                                $val_string .= "string";
                                 break;
                             case('num'):
                                 $val_string .= "numeric";
