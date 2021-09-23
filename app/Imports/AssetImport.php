@@ -182,7 +182,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
             $asset->save();
             if(!empty($cat_array)){
-                $asset->category->attach($cat_array);
+                $asset->category()->attach($cat_array);
             }
 
     }
