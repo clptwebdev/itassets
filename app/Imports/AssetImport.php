@@ -171,7 +171,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
             }
 
-            if($row['categories'] != null){
+            if(isset($row['categories'])){
                 $cat_array = array();
                 $categories = explode(',', $row['categories']);
                 foreach($categories as $category){
@@ -181,7 +181,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             }
 
             $asset->save();
-            if(!$cat_array){
+            if(!empty($cat_array)){
                 $asset->category->attach($cat_array);
             }
 
