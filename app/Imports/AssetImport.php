@@ -81,7 +81,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
     {
 
             $asset = new Asset;
-            $asset->asset_tag = $row["asset_tag"] ?? NULL;
+            $asset->asset_tag = $row["asset_tag"];
             $asset->name = $row["name"];
             $asset->user_id = auth()->user()->id;
             $asset->serial_no = $row["serial_no"];
