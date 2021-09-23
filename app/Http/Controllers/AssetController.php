@@ -162,7 +162,7 @@ class AssetController extends Controller {
                         $values = $request->$name;
                     }
                     if($values != null){
-                    $array[$field->id] = ['value' => $values];
+                        $array[$field->id] = ['value' => $values];
                     }
                 }
             }
