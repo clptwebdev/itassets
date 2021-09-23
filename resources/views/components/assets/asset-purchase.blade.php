@@ -60,7 +60,7 @@
                                 $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
                                 ?>
                             @else
-                                @php($dep = 0;)
+                                @php($dep = 0)
                             @endif
                             <td>£{{ $asset->purchased_cost }} - (Current Value*: £{{ number_format($dep, 2)}})<br>
                             <small>*Calculated using Depreciation Model:</small><br><strong
