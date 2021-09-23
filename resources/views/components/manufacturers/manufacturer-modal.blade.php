@@ -36,19 +36,19 @@
                                     <td>Telephone:</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ $manufacturer->supportPhone }}</td>
+                                    <td>{{ $manufacturer->supportPhone ?? 'No Telephone Number Available'}}</td>
                                 </tr>
                                 <tr>
                                     <td>Email:</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ $manufacturer->supportEmail }}</td>
+                                    <td>{{ $manufacturer->supportEmail ?? 'No Email Address Available' }}</td>
                                 </tr>
                                 <tr>
                                     <td>URL:</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ $manufacturer->supportUrl }}</td>
+                                    <td>{{ $manufacturer->supportUrl ?? 'No Website Available' }}</td>
                                 </tr>
                             </tbody>
                         </table>
