@@ -258,6 +258,8 @@ class AssetController extends Controller {
                 if($field->required == 1)
                 {
                     $val_string .= "required";
+                }else{
+                    $val_string .= "nullable";
                 }
 
                 if($field->type == 'Text')
