@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <input type="text" class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>" name="name"
-                                       id="name" placeholder="" value="{{ old('name')}}">
+                                       id="name" placeholder="" value="{{ old('name')}}" required>
                             </div>
                             <div class="form-group">
                                 <label for="supportPhone">Telephone</label>
@@ -49,7 +49,7 @@
                                        placeholder="Telelphone" value="{{ old('supportPhone')}}">
                             </div>   <div class="form-group">
                                 <label for="supportUrl">Manufacturer Website</label>
-                                <input type="text" class="form-control" name="supportUrl" id="supportUrl" placeholder="www.dell.com" value="{{ old('supportUrl')}}">
+                                <input type="text" class="form-control" name="supportUrl" id="supportUrl" placeholder="www.dell.com" value="{{ old('supportUrl')}}" required>
                             </div>
 
                             <div class="form-group">
