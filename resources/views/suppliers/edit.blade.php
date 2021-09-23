@@ -99,7 +99,7 @@
                         <hr>
                         <div class="form-group">
                             <label for="url">Website URL:</label>
-                            <input class="form-control" type="text" id="url" name="url" placeholder="https://" value="{{ $supplier->url}}" required>
+                            <input class="form-control" type="text" id="url" name="url" placeholder="https://" value="{{ $supplier->url}}" >
                         </div>
 
                         <div class="form-group">
@@ -114,7 +114,7 @@
 
                         <div class="form-group">
                             <label for="telephone">Email Address</label>
-                            <input type="text" class="form-control" name="email" id="email" placeholder="@" required value="{{ $supplier->email }}">
+                            <input type="text" class="form-control" name="email" id="email" placeholder="@"  value="{{ $supplier->email }}">
                         </div>
                     </div>
                 </div>

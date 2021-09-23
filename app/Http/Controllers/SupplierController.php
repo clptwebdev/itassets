@@ -29,8 +29,8 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|max:255',
-            'url' => 'required|unique:suppliers',
-            'email' => 'required|unique:locations|email:rfc,dns,spoof,filter',
+            'url' => 'sometimes|nullable|unique:suppliers',
+            'email' => 'sometimes|nullable|unique:locations|email:rfc,dns,spoof,filter',
             'telephone' => 'required|max:14',
         ]);
         //
@@ -53,8 +53,8 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|max:255',
-            'email' => ['required', \Illuminate\Validation\Rule::unique('suppliers')->ignore($supplier->id), 'email:rfc,dns,spoof,filter'],
-            'url' => ['required', \Illuminate\Validation\Rule::unique('suppliers')->ignore($supplier->id)],
+            'email' => ['sometimes', 'nullable', \Illuminate\Validation\Rule::unique('suppliers')->ignore($supplier->id), 'email:rfc,dns,spoof,filter'],
+            'url' => ['sometimes', 'nullable', \Illuminate\Validation\Rule::unique('suppliers')->ignore($supplier->id)],
             'telephone' => 'required|max:14',
         ]);
         //
