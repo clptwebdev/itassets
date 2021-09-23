@@ -302,10 +302,15 @@
                                 <td class="text-center d-none d-xl-table-cell">{{$asset->supplier->name ?? "N/A"}}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
+                                    @if(\Carbon\Carbon::parse($warranty_end)->isPast())
+                                        {{ $asset->warranty }} Months<br>
+                                        <span class="text-coral">{{ 'Expired' }}</span>
+                                    @else
                                     {{ $asset->warranty }} Months
 
                                     <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
                                         Remaining</small>
+                                    @endif
                                 </td>
                                 <td class="text-center d-none d-xl-table-cell"
                                     data-sort="{{ strtotime($asset->audit_date)}}">
