@@ -8,7 +8,7 @@ use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Category;
-use App\Models\Fields;
+use App\Models\Field;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
