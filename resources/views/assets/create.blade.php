@@ -141,18 +141,29 @@
                                     <label for="{{str_replace(' ', '_', strtolower($field->name))}}">{{$field->name}}</label>
                                     @switch($field->type)
                                     @case('Text'):
-                                    <input type="text" class="form-control <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>" name="{{str_replace(' ', '_', strtolower($field->name))}}"
-                                     value="{{ old(str_replace(' ', '_', strtolower($field->name)))}}">
+                                    <input  type="text" 
+                                            class="form-control 
+                                            <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border border-danger<?php }?>" 
+                                            name="{{str_replace(' ', '_', strtolower($field->name))}}"
+                                            value="{{ old(str_replace(' ', '_', strtolower($field->name)))}}"
+                                    >
                                     @break
                                     @case('Textarea')
-                                    <textarea name="{{str_replace(' ', '_', strtolower($field->name))}}" id="" cols="30" rows="10"
-                                        class="form-contol <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>">{{ old(str_replace(' ', '_', strtolower($field->name)))}}</textarea>
+                                    <textarea 
+                                        name="{{str_replace(' ', '_', strtolower($field->name))}}" 
+                                        cols="30" 
+                                        rows="10"
+                                        class="form-contol 
+                                        <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>">{{ old(str_replace(' ', '_', strtolower($field->name)))}}
+                                    </textarea>
                                     @break
                                     @case('Select')
                                     <?php $array = explode("\r\n", $field->value);?>
-                                    <select name="{{str_replace(' ', '_', strtolower($field->name))}}" class="form-control <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>">
+                                    <select 
+                                        name="{{str_replace(' ', '_', strtolower($field->name))}}" 
+                                        class="form-control <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>">
                                         @foreach($array as $id=>$key)
-                                        <option value="{{ $key }}" @if(old(str_replace(' ', '_', strtolower($field->name))) == $key){{ 'selected'}}@endif>{{ $key }}</option>
+                                            <option value="{{ $key }}" @if(old(str_replace(' ', '_', strtolower($field->name))) == $key){{ 'selected'}}@endif>{{ $key }}</option>
                                         @endforeach
                                     </select>
                                     @break
