@@ -158,7 +158,6 @@
                             @foreach($asset->fields as $as)
                             @php( $field_array[$as->id] = $as->pivot->value)
                             @endforeach
-                            @php(dd($model->fieldset->fields))
 
                             @foreach($model->fieldset->fields as $field)
 
@@ -170,8 +169,8 @@
                                     placeholder="{{ $field->name }}" value="{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''}}">
                                 @break
                                 @case('Textarea')
-                                <textarea name="{{str_replace(' ', '_', strtolower($field->name))}}" id="" cols="30" rows="10"
-                                    class="form-contol">{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''}}</textarea>
+                                <textarea name="{{str_replace(' ', '_', strtolower($field->name))}}"cols="30" rows="10"
+                                    class="form-contol"></textarea>
                                 @break
                                 @case('Select')
                                 <?php if(count($field_array) != 0){ if(old(str_replace(' ', '_', strtolower($field->name)))){$vid = old(str_replace(' ', '_', strtolower($field->name)));}else{ $vid = $field_array[$field->id];}}else{ $vid = 0;}?>
