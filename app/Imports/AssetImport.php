@@ -181,7 +181,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 }
             }
 
-            if(isset($row['additonal'])){
+            if(isset($row['additional'])){
                 $additional = array();
                 $fields = explode(';', $row['additional']);
                 foreach($fields as $field){
