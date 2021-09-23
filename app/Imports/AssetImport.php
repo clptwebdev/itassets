@@ -42,7 +42,8 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
         return [
             'asset_tag' => [
-                'required',
+                'sometimes',
+                'nullable',
                 'unique:assets',
             ],'name' => [
                 'required',

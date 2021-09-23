@@ -276,7 +276,7 @@
                                             .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                 </td>
-                                <td>{{ $asset->asset_tag }}</td>
+                                <td>{{ $asset->asset_tag ?? 'N/A'}}</td>
                                 <td class="text-center d-none d-xl-table-cell">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
                                 <td class="d-none d-md-table-cell"
                                     data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>

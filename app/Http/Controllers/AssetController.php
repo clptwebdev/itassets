@@ -524,7 +524,7 @@ class AssetController extends Controller {
                 'warranty.*' => 'int',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-                'asset_tag.*' => 'required|unique:assets,asset_tag',
+                'asset_tag.*' => 'sometimes|nullable||unique:assets,asset_tag',
                 'status_id.*' => 'string|nullable',
                 'audit_date.*' => 'date|nullable',
                 'supplier_id.*' => 'string',
