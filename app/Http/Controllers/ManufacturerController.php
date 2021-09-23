@@ -75,9 +75,9 @@ class ManufacturerController extends Controller {
     {
         request()->validate([
             "name" => "required|unique:manufacturers,name|max:255",
-            "supportPhone" => "required|max:14",
+            "supportPhone" => "max:14",
             "supportUrl" => "required",
-            "supportEmail" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
+            "supportEmail" => 'unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
             "PhotoId" => "nullable",
         ]);
         Manufacturer::create([

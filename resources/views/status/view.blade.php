@@ -103,7 +103,16 @@
                                 @endphp
                                 {{ $consumables->count() }}
                             </td>
-                            <td class="text-center">N/A</td>
+                            <td class="text-center">
+                                @php
+                                    if(auth()->user()->role_id == 1){
+                                        $miscellaneous = App\Models\Miscellanea::statusFilter([$status->id]);
+                                    }else{
+                                        $miscellaneous = auth()->user()->location_miscellaneous()->statusFilter([$status->id]);
+                                    }
+                                @endphp
+                                {{ $miscellaneous->count() }}
+                            </td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
                                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$status->id}}Link"
@@ -309,10 +318,10 @@
     $(document).ready( function () {
         $('#categoryTable').DataTable({
             "columnDefs": [ {
-                "targets": [0, 5],
+                "targets": [7],
                 "orderable": false,
             } ],
-            "order": [[ 1, "asc"]]
+            "order": [[ 0, "asc"]]
         });
     } );
 </script>

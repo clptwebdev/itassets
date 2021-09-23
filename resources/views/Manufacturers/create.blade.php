@@ -41,20 +41,20 @@
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <input type="text" class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>" name="name"
-                                       id="name" placeholder="">
+                                       id="name" placeholder="" value="{{ old('name')}}">
                             </div>
                             <div class="form-group">
                                 <label for="supportPhone">Telephone</label>
                                 <input type="text" class="form-control" name="supportPhone" id="supportPhone"
-                                       placeholder="Telelphone">
+                                       placeholder="Telelphone" value="{{ old('supportPhone')}}">
                             </div>   <div class="form-group">
                                 <label for="supportUrl">Manufacturer Website</label>
-                                <input type="text" class="form-control" name="supportUrl" id="supportUrl" placeholder="www.dell.com">
+                                <input type="text" class="form-control" name="supportUrl" id="supportUrl" placeholder="www.dell.com" value="{{ old('supportUrl')}}">
                             </div>
 
                             <div class="form-group">
                                 <label for="supportEmail">Email Address</label>
-                                <input type="text" class="form-control" name="supportEmail" id="supportEmail" placeholder="Email">
+                                <input type="text" class="form-control" name="supportEmail" id="supportEmail" placeholder="Email" value="{{ old('supportEmail')}}">
                             </div>
 
                         </div>

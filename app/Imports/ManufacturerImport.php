@@ -39,12 +39,10 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
                 'required',
             ],
             'supportphone' => [
-                'required',
                 'max:14',
                 'string',
             ],
             'supportemail' => [
-                'required',
                 'email:rfc,dns,spoof,filter',
                 'unique:manufacturers,supportEmail',
             ],
