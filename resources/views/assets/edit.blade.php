@@ -58,7 +58,7 @@
                                     <label for="asset_tag">Asset Tag Number</label><span class="text-danger">*</span>
                                     <input type="text"
                                         class="form-control @if($errors->has('name')){{'border-danger'}}@endif"
-                                        name="asset_tag" id="asset_tag" value="{{ old('asset_tag') ?? $asset->asset_tag}}" required>
+                                        name="asset_tag" id="asset_tag" value="{{ old('asset_tag') ?? $asset->asset_tag}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="serial_no">Serial Number</label><span class="text-danger">*</span>

@@ -174,7 +174,8 @@ class AssetController extends Controller {
         if(! empty($validate_fieldet))
         {
             $v = array_merge($validate_fieldet, [
-                'asset_tag' => 'required|unique:assets',
+                'name' => 'required',
+                'asset_tag' => 'sometimes|nullable|unique:assets',
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -183,7 +184,8 @@ class AssetController extends Controller {
         } else
         {
             $v = [
-                'asset_tag' => 'required|unique:assets',
+                'name' => 'required',
+                'asset_tag' => 'sometimes|nullable|unique:assets',
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -314,7 +316,7 @@ class AssetController extends Controller {
         {
             $v = array_merge($validate_fieldet, [
                 'name' => 'required',
-                'asset_tag' => 'required',
+                'asset_tag' => 'sometimes|nullable|unique:assets',
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -324,7 +326,7 @@ class AssetController extends Controller {
         {
             $v = [
                 'name' => 'required',
-                'asset_tag' => 'required',
+                'asset_tag' => 'sometimes|nullable|unique:assets',
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
