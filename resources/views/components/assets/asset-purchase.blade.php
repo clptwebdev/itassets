@@ -14,7 +14,7 @@
                     <table class="table table-sm table-bordered table-striped">
                         <tr>
                             <td class="col-4">Order N<sup>o</sup>:</td>
-                            <td class="col-8"> {{$asset->order_no }}</td>
+                            <td class="col-8"> {{$asset->order_no ?? 'No Order Information Available'}}</td>
                         </tr>
                         <tr>
                             <td>Supplier:</td>
@@ -26,6 +26,8 @@
                                 {{ $asset->supplier->city }}<br>
                                 {{ $asset->supplier->county }}<br>
                                 {{ $asset->supplier->postcode }}<br>
+                                @else
+                                    <p>No Supplier Information</p>
                                 @endif
                             </td>
                         </tr>
@@ -39,8 +41,12 @@
                         <tr>
                             <td>Warranty</td>
                             <td>
-                                <?php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);?>
-                                {{ $asset->warranty }} Month(s) - <strong>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</strong>
+                                @if(\Carbon\Carbon::parse($warranty_end)->isPast())
+                                        {{ $asset->warranty }} Month(s) - <strong class="text-coral">{{ 'Expired' }}</strong>
+                                    @else
+                                    {{ $asset->warranty }} Month(s) - <strong>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
+                                        Remaining</strong>
+                                    @endif
                             </td>
                         </tr>
                         <tr>
