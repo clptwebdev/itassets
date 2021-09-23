@@ -186,7 +186,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 $fields = explode(';', $row['additional']);
                 foreach($fields as $field){
                     $field_value = explode(':', $field);
-                    if($found = Field::where(['name' => $field_value[0]])->get()){
+                    if($found = Field::where(['name' => $field_value[0]])->first()){
                         return dd($found);
                         $additional[$found->id] = ['value' => $field_value[1]];
                     }
