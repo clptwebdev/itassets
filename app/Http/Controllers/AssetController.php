@@ -265,7 +265,7 @@ class AssetController extends Controller {
                     $val_string .= "nullable";
                 }
 
-                if($field->type == 'Text')
+                if($field->type == 'text')
                 {
                     $val_string .= "|";
                     switch($field->format)
