@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Category;
+use App\Models\Fields;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
@@ -195,8 +196,12 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
 
             $asset->save();
-            $asset->category()->attach($cat_array);
-            $asset->fields()->attach($additional);
+            if(isset($cat_array)){
+                $asset->category()->attach($cat_array);
+            }
+            if(isset($additional)){
+                $asset->fields()->attach($additional);
+            }
 
     }
 
