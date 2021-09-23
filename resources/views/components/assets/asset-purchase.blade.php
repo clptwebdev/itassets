@@ -41,6 +41,7 @@
                         <tr>
                             <td>Warranty</td>
                             <td>
+                                @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
                                 @if(\Carbon\Carbon::parse($warranty_end)->isPast())
                                         {{ $asset->warranty }} Month(s) - <strong class="text-coral">{{ 'Expired' }}</strong>
                                     @else
