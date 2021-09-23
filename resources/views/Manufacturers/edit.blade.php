@@ -48,23 +48,23 @@
                                 <input type="text"
                                        class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
                                        name="name"
-                                       id="name" value="{{$manufacturer->name}}">
+                                       id="name" value="{{old('name') ?? $manufacturer->name}}">
                             </div>
                             <div class="form-group">
                                 <label for="supportPhone">Telephone</label>
                                 <input type="text" class="form-control" name="supportPhone" id="supportPhone"
-                                       value="{{$manufacturer->supportPhone}}">
+                                       value="{{old('supportPhone') ?? $manufacturer->supportPhone}}">
                             </div>
                             <div class="form-group">
                                 <label for="supportUrl">Manufacturer Website</label>
                                 <input type="text" class="form-control" name="supportUrl" id="supportUrl"
-                                       value="{{$manufacturer->supportUrl}}">
+                                       value="{{old('supportUrl') ?? $manufacturer->supportUrl}}">
                             </div>
 
                             <div class="form-group">
                                 <label for="supportEmail">Email Address</label>
                                 <input type="text" class="form-control" name="supportEmail" id="supportEmail"
-                                       value="{{$manufacturer->supportEmail}}">
+                                       value="{{old('supportEmail') ?? $manufacturer->supportEmail}}">
                             </div>
 
                         </div>
