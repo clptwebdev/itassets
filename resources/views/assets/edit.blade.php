@@ -133,7 +133,7 @@
                                         class="form-control <?php if ($errors->has('supplier')) {?>border-danger<?php }?>">
                                         <option value="0">No Supplier</option>
                                         @foreach($suppliers as $supplier)
-                                        <option value="{{ $asset->supplier->id }}" @if($asset->supplier->id == $supplier->id){{'selected'}}@endif>{{ $supplier->name}}</option>
+                                        <option value="{{ $supplier->id }}" @if($asset->supplier_id == $supplier->id){{'selected'}}@endif>{{ $supplier->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
