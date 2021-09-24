@@ -381,7 +381,7 @@ class AssetController extends Controller {
         if (auth()->user()->cant('delete', $asset)) {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'force delete']));
         }
-        $name=$asset->asset_tag;
+        $name=$asset->name;
         $asset->forceDelete();
         session()->flash('danger_message', "#". $name . ' was deleted permanently');
         return redirect(route('assets.bin'));

@@ -277,7 +277,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $asset->asset_tag ?? 'N/A'}}</td>
-                                <td class="text-center d-none d-xl-table-cell">{{ $asset->model->manufacturer->name ?? 'N/A' }}<small>{{ $asset->model->name ?? 'No Model'}}</small></td>
+                                <td class="text-center d-none d-xl-table-cell">{{ $asset->model->manufacturer->name ?? 'N/A' }}<br><small>{{ $asset->model->name ?? 'No Model'}}</small></td>
                                 <td class="d-none d-md-table-cell"
                                     data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                                 <td class="text-center  d-none d-xl-table-cell">
