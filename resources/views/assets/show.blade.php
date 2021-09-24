@@ -47,7 +47,9 @@
 
     <div class="row row-eq-height">
         <div class="col-12 col-lg-8 mb-4">
+            @if($asset->location()->exists())
             <x-locations.location-modal :asset="$asset"/>
+            @endif
         </div>
         
         <div class="col-12 col-lg-4 mb-4">

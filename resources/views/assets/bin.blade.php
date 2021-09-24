@@ -14,7 +14,7 @@
         <h1 class="h3 mb-0 text-gray-800">Assets | Recycle Bin</h1>
         <div>
             <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                class="fas fa-trash-alt fa-sm text-dark-50"></i> Back to Assets</a>
+                class="fas fa-chevron-left fa-sm text-dark-50"></i> Back to Assets</a>
             @can('generatePDF', \App\Models\Asset::class)
             <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
                 @csrf

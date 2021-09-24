@@ -28,6 +28,7 @@ class CreateAssetsTable extends Migration
             $table->string("order_no")->nullable();
             $table->string("warranty")->default("0");
             $table->foreignId("location_id");
+            $table->string("room")->nullable();
             $table->foreignId("user_id")->nullable();
             $table->date("audit_date")->nullable();
             $table->softDeletes();

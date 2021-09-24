@@ -196,7 +196,7 @@ class AssetController extends Controller {
         $validated = $request->validate($v);
 
         $asset = Asset::create(array_merge($request->only(
-            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]));
 
         if(!empty($array)){
@@ -295,7 +295,7 @@ class AssetController extends Controller {
                             $val_string .= "string";
                             break;
                         default:
-                            $val_string .= "alpha_num";
+                            $val_string .= "string";
                             break;
                     }
                 }
@@ -340,10 +340,14 @@ class AssetController extends Controller {
 
         $validated = $request->validate($v);
         $asset->fill(array_merge($request->only(
-            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]))->save();
-        $asset->fields()->sync($array);
-        $asset->category()->sync($request->category);
+        if(!empty($array)){
+            $asset->fields()->sync($array);
+        }
+        if(!empty($request->category)){
+            $asset->category()->sync($request->category);
+        }
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
         return redirect(route('assets.index'));
@@ -381,10 +385,10 @@ class AssetController extends Controller {
         if (auth()->user()->cant('delete', $asset)) {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'force delete']));
         }
-        $name=$asset->asset_tag;
+        $name=$asset->name;
         $asset->forceDelete();
         session()->flash('danger_message', "#". $name . ' was deleted permanently');
-        return redirect("/assets");
+        return redirect(route('assets.bin'));
     }
 
     public function model(AssetModel $model)
@@ -559,6 +563,7 @@ class AssetController extends Controller {
                     $asset->warranty = $request->warranty[$i];
 
                     $asset->location_id = $request->location_id[$i];
+                    $asset->room = $request->room;
                     $asset->asset_model = $request->asset_model[$i];
 
                     $asset->save();
@@ -665,7 +670,7 @@ class AssetController extends Controller {
             $array['model'] = $f->model->name ?? 'N/A';
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['icon'] = $f->location->icon ?? '#666';
-            $array['asset_tag'] = $f->asset_tag;
+            $array['asset_tag'] = $f->asset_tag ?? 'N/A';
             $array['manufacturer'] = $f->model->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£'.$f->purchased_cost;
