@@ -49,7 +49,7 @@
                 </div>
                 <a href="{{ route('assets.bin')}}" title="Recycle Bin" class="collapse-item sub-link"><i class="fas fa-trash-alt fa-xs"></i> Recycle Bin</a>
                 <a href="{{ route('assets.create')}}" title="Add New Asset" class="collapse-item sub-link"><i class="fas fa-plus-circle fa-xs"></i> Add New Asset</a>
-                <a href="" title="Import Assets" class="sub-link collapse-item">Transfers</a>
+                <a href="" title="Import Assets" class="sub-link collapse-item"><i class="fas fa-exchange-alt"></i> Transfers</a>
 
 
         </div>
