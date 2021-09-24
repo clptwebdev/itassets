@@ -135,7 +135,7 @@ class AssetController extends Controller {
                                 $val_string .= "alpha";
                                 break;
                             case('alpha_num'):
-                                $val_string .= "string";
+                                $val_string .= "alpha_num";
                                 break;
                             case('num'):
                                 $val_string .= "numeric";
@@ -150,7 +150,7 @@ class AssetController extends Controller {
                                 $val_string .= "string";
                                 break;
                             default:
-                                $val_string .= "alpha_num";
+                                $val_string .= "string";
                                 break;
                         }
                     }
@@ -198,9 +198,13 @@ class AssetController extends Controller {
         $asset = Asset::create(array_merge($request->only(
             'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]));
-        $asset->fields()->attach($array);
-        $asset->category()->attach($request->category);
 
+        if(!empty($array)){
+            $asset->fields()->attach($array);
+        }
+        if(!empty($request->category)){
+            $asset->category()->attach($request->category);
+        }
         session()->flash('success_message', $request->name . ' has been created successfully');
 
         return redirect(route('assets.index'));
