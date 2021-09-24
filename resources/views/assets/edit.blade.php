@@ -92,7 +92,7 @@
                                 <div class="form-group">
                                     <label for="asset_model">Asset Model Select</label><span
                                         class="text-danger">*</span>
-                                        @php if(old('asset_model')){$id=old('asset_model');}else{ $id= $asset->model->id;} @endphp
+                                        @php if(old('asset_model')){$id = old('asset_model');}else{ $id= $asset->model->id ?? 0;} @endphp
                                     <select type="dropdown" class="form-control" name="asset_model" id="asset_model"
                                         required onchange="getFields(this);" autocomplete="off">
                                         <option value="0">Please Select a Model</option>
@@ -153,7 +153,8 @@
                                 $model = $asset->model;
                             }
                         @endphp
-                        <div id="additional-fields" @if($model->fieldset_id == 0){{ 'style="display: none;"'}}@endif class="border border-secondary p-2 mb-3">
+                        <div id="additional-fields" @if($asset->model()->exists() && $model->fieldset_id == 0){{ 'style="display: none;"'}}@endif class="border border-secondary p-2 mb-3">
+                            @if($asset->model()->exists())
                             @php( $field_array = [])
                             @foreach($asset->fields as $as)
                             @php( $field_array[$as->id] = $as->pivot->value)
@@ -214,6 +215,7 @@
                                 @endswitch
                             </div>
                             @endforeach
+                            @endif
                         </div>
 
                         <div id="categories" class="form-control h-100 p-4 mb-3">
