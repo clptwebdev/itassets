@@ -676,7 +676,7 @@ class AssetController extends Controller {
             }else{
                 $array['manufacturer'] = 'N/A';
             }
-            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = '£'.$f->purchased_cost;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty ?? 0;

@@ -25,11 +25,11 @@
             <td><span style="color: {{ $asset['icon']}}">{{$asset['location']}}</span></td>
             <td align="center">#{{ $asset['asset_tag'] }}</td>
             <td>{{ $asset['manufacturer']}}</td>
-            <td align="center">{{ $asset['purchased_date']}}</td>
+            <td align="center">{{ $asset['purchased_date'] ?? 'N/A'}}</td>
             <td align="center">{{ $asset['purchased_cost']}}</td>
             <td>{{ $asset['supplier']}}</td>
             <td align="center">{{ $asset['warranty']}}</td>
-            <td align="center">{{ $asset['audit']}}</td>
+            <td align="center">{{ $asset['audit'] ?? 'N/A'}}</td>
         </tr>
         @endforeach
     </table>
