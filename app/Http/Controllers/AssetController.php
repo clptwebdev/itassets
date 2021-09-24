@@ -679,7 +679,7 @@ class AssetController extends Controller {
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = '£'.$f->purchased_cost;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
-            $array['warranty'] = $f->warranty ?? 0;
+            $array['warranty'] = $f->warranty ?? 'N/A';
             $array['audit'] = \Carbon\Carbon::parse($f->audit_date)->format('d/m/Y') ?? 'N/A';
             $assets[] = $array;
         }
