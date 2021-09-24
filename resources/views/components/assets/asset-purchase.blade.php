@@ -53,7 +53,7 @@
                         <tr>
                             <td>Purchase Cost:</td>
                             <td>
-                            £{{ $asset->purchased_cost }}
+                            <p>£{{ $asset->purchased_cost }}
                             @if($asset->model()->exists() && $asset->model->depreciation()->exists())
                                 <br>
                                 @php
@@ -69,9 +69,10 @@
                                     }
                                 @endphp
                                  - (*£{{ number_format($dep, 2)}})
-                                 <small>*Calculated using Depreciation Model:</small><br><strong
-                                class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>{{ $asset->model->depreciation->name }}</small></strong>
+                                 <small>*Calculated using Depreciation Model:</small><br>
+                                 <strong class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>{{ $asset->model->depreciation->name }}</small></strong>
                             @endif
+                                </p>
                             </td>
                         </tr>
                     </table>
