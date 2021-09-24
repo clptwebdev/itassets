@@ -21,9 +21,15 @@
         </tr>
         @foreach($assets as $id=>$asset)
         <tr>
-            <td>{{ $asset['name']}}<br>{{ $asset['model']}}</td>
-            <td><span style="color: {{ $asset['icon']}}">{{$asset['location']}}</span></td>
-            <td align="center">#{{ $asset['asset_tag'] }}</td>
+            <td>{{ $asset['name'] ?? 'N/A'}}<br>{{ $asset['model'] ?? 'N/A'}}</td>
+            <td><span style="color: {{ $asset['icon'] ?? '#666'}}">{{$asset['location'] ?? 'N/A'}}</span></td>
+            <td align="center">#{{ $asset['asset_tag'] ?? 'N/A'}}</td>
+            <td>{{ $asset['manufacturer'] ?? 'N/A'}}</td>
+            <td align="center">{{ $asset['purchased_date'] ?? 'N/A'}}</td>
+            <td align="center">{{ $asset['purchased_cost'] ?? 'N/A'}}</td>
+            <td>{{ $asset['supplier'] ?? 'N/A'}}</td>
+            <td align="center">{{ $asset['warranty'] ?? 'N/A'}}</td>
+            <td align="center">{{ $asset['audit'] ?? 'N/A'}}</td>
         </tr>
         @endforeach
     </table>
