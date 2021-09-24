@@ -154,7 +154,7 @@
                             }
                         @endphp
                         <div id="additional-fields" @if($asset->model()->exists() && $model->fieldset_id == 0){{ 'style="display: none;"'}}@endif class="border border-secondary p-2 mb-3">
-                            @if($asset->model()->exists())
+                            @if($asset->model()->exists() && $model->fieldset()->exists())
                             @php( $field_array = [])
                             @foreach($asset->fields as $as)
                             @php( $field_array[$as->id] = $as->pivot->value)
