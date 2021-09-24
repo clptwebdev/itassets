@@ -342,8 +342,12 @@ class AssetController extends Controller {
         $asset->fill(array_merge($request->only(
             'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]))->save();
-        $asset->fields()->sync($array);
-        $asset->category()->sync($request->category);
+        if(!empty($array)){
+            $asset->fields()->sync($array);
+        }
+        if(!empty($request->category)){
+            $asset->category()->sync($request->category);
+        }
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
         return redirect(route('assets.index'));
