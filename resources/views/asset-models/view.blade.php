@@ -63,7 +63,7 @@
                         @foreach($models as $model)
                         <tr>
                             <td>{{ $model->name }}</td>
-                            <td>{{ $model->manufacturer->name}}</td>
+                            <td>{{ $model->manufacturer->name ?? 'N/A'}}</td>
                             <td>{{ $model->model_no }}</td>
                             <td class="text-center">{{ $model->assets->count() }}</td>
                             <td>{{ $model->depreciation->name ?? 'No Depreciation Set' }}</td>
