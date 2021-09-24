@@ -58,8 +58,7 @@
                                         @if(\Carbon\Carbon::now()->floatDiffInMinutes($report->created_at) < 15)
                                             {!! substr($report->report,16).' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' !!}
                                         @else
-                                          @php  $report = substr($report->report ,16) @endphp
-                                            {!! "<span class='text-coral'>{$report} <i class='fas fa-times'></i></span>" !!}
+                                            {!! "<span class='text-coral'>{substr($report->report ,16)} <i class='fas fa-times'></i></span>" !!}
                                         @endif
                                     @endif
                                 </td>
