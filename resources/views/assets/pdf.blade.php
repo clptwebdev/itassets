@@ -27,9 +27,6 @@
             <td>{{ $asset['manufacturer'] ?? 'N/A'}}</td>
             <td align="center">{{ $asset['purchased_date'] ?? 'N/A'}}</td>
             <td align="center">{{ $asset['purchased_cost'] ?? 'N/A'}}</td>
-            <td>-</td>
-            <td align="center">-</td>
-            <td align="center">{{ $asset['audit'] ?? 'N/A'}}</td>
         </tr>
         @endforeach
     </table>
