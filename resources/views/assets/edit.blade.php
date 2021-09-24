@@ -82,6 +82,12 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="room">Room</label>
+                                    <input type="text" class="form-control <?php if ($errors->has('room')) {?> border border-danger<?php }?>" name="room"
+                                        id="room" placeholder="" value="{{ old('room') ?? $asset->room}}">
+                                </div>
+
+                                <div class="form-group">
                                     <label for="audit_date">Audit Date</label>
                                     @php if(old('audit_date')){ $date=old('audit_date');}else{$date= $asset->audit_date;} @endphp
                                     <input type="date"
@@ -89,20 +95,7 @@
                                         name="audit_date" id="audit_date" value="{{ \Carbon\Carbon::parse($date)->format('Y-m-d')}}">
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="asset_model">Asset Model Select</label><span
-                                        class="text-danger">*</span>
-                                        @php if(old('asset_model')){$id = old('asset_model');}else{ $id= $asset->model->id ?? 0;} @endphp
-                                    <select type="dropdown" class="form-control" name="asset_model" id="asset_model"
-                                        required onchange="getFields(this);" autocomplete="off">
-                                        <option value="0">Please Select a Model</option>
-                                        @foreach($models as $model)
-                                        <option value="{{ $model->id }}" @if($id ==
-                                        $model->id){{ 'selected'}}@endif>{{ $model->name }}</option>
-
-                                        @endforeach
-                                    </select>
-                                </div>
+                                
                             </div>
 
                             <div class="col-12 col-sm-6 bg-light p-2 mb-3">
@@ -142,6 +135,21 @@
                                     <input type="number"
                                         class="form-control @php if ($errors->has('warranty')){ echo 'border-danger';}@endphp"
                                         name="warranty" id="warranty" value="{{old('warranty') ?? $asset->warranty}}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="asset_model">Asset Model Select</label><span
+                                        class="text-danger">*</span>
+                                        @php if(old('asset_model')){$id = old('asset_model');}else{ $id= $asset->model->id ?? 0;} @endphp
+                                    <select type="dropdown" class="form-control" name="asset_model" id="asset_model"
+                                        required onchange="getFields(this);" autocomplete="off">
+                                        <option value="0">Please Select a Model</option>
+                                        @foreach($models as $model)
+                                        <option value="{{ $model->id }}" @if($id ==
+                                        $model->id){{ 'selected'}}@endif>{{ $model->name }}</option>
+
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
