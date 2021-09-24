@@ -23,7 +23,7 @@
         <tr>
             <td>{{ $asset['name'] ?? 'N/A'}}<br>{{ $asset['model'] ?? 'N/A'}}</td>
             <td><span style="color: {{ $asset['icon'] ?? '#666'}}">{{$asset['location'] ?? 'N/A'}}</span></td>
-            <td align="center">#{{ $asset['asset_tag'] ?? 'N/A'}}</td>
+            <td align="center">#{{ 'N/A'}}</td>
             <td>{{ $asset['manufacturer'] ?? 'N/A'}}</td>
             <td align="center">{{ $asset['purchased_date'] ?? 'N/A'}}</td>
             <td align="center">{{ $asset['purchased_cost'] ?? 'N/A'}}</td>
