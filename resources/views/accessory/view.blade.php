@@ -30,7 +30,7 @@
                         <input type="hidden" value="{{ json_encode($accessories->pluck('id'))}}" name="accessories"/>
                     <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
                             class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
-                    </form>                
+                    </form>
                 @endif
                 @if($accessories->count() >1)
                 <a href="/exportaccessories" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
@@ -100,7 +100,7 @@
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($accessory->location->icon ?? '#666').'">'
                                             .strtoupper(substr($accessory->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                    @endif  
+                                    @endif
                                 </td>
                                 <td class="text-center">{{$accessory->manufacturer->name ?? "N/A"}}</td>
                                 <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
@@ -151,8 +151,7 @@
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Accessories</h4>
-                <p>This area can be minimised and will contain a little help on the page that the accessory is currently
-                    on.</p>
+                <p>Click <a href="{{route("documentation.index").'#collapseEightAccessory'}}">here</a> for a the Documentation on Accessories on Importing ,Exporting , Adding , Removing!</p>
             </div>
         </div>
 

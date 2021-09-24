@@ -14,6 +14,9 @@
         <div>
             <a href="{{ route('consumables.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+            <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                    class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
             @can('generatePDF', \App\Models\Consumable::class)
                 @if ($consumables->count() == 1)
                     <a href="{{ route('consumables.showPdf', $consumables[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
@@ -24,7 +27,7 @@
                         <input type="hidden" value="{{ json_encode($consumables->pluck('id'))}}" name="consumables"/>
                     <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-                    </form>                
+                    </form>
                 @endif
             @endcan
         </div>
@@ -86,7 +89,7 @@
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($consumable->location->icon ?? '#666').'">'
                                             .strtoupper(substr($consumable->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                    @endif  
+                                    @endif
                                 </td>
                                 <td class="text-center">{{$consumable->manufacturer->name ?? "N/A"}}</td>
                                 <td data-sort="{{ strtomtime($consumable->purchased_date)}}">{{\Carbon\Carbon::parse($consumable->purchased_date)->format("d/m/Y")}}</td>
@@ -111,7 +114,7 @@
                                             <div class="dropdown-header">Consumable Options:</div>
                                             <a href="{{ route('consumables.restore', $consumable->id) }}"
                                                 class="dropdown-item">Restore</a>
-                                            <form class="d-block" id="form{{$consumable->id}}" action="{{ route('consumables.remove', $consumable->id) }}" method="POST">   
+                                            <form class="d-block" id="form{{$consumable->id}}" action="{{ route('consumables.remove', $consumable->id) }}" method="POST">
                                                 @csrf
                                                 @can('delete', $consumable)
                                                 <a class="deleteBtn dropdown-item" href="#"
@@ -167,7 +170,7 @@
         </div>
     </div>
 
-    
+
 @endsection
 
 @section('js')
