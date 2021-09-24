@@ -198,9 +198,13 @@ class AssetController extends Controller {
         $asset = Asset::create(array_merge($request->only(
             'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]));
-        $asset->fields()->attach($array);
-        $asset->category()->attach($request->category);
 
+        if(!empty($array)){
+            $asset->fields()->attach($array);
+        }
+        if(!empty($request_category)){
+            $asset->category()->attach($request->category);
+        }
         session()->flash('success_message', $request->name . ' has been created successfully');
 
         return redirect(route('assets.index'));
