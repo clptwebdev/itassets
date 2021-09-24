@@ -53,12 +53,13 @@
                             <tr>
                                 <td>
                                     @if(file_exists($report->report))
-                                        <a href="{{ asset($report->report)}}" title="New">{{$report->report }}</a>
+                                        <a href="{{ asset($report->report)}}" title="New">{{substr($report->report ,16) }}</a>
                                     @else
                                         @if(\Carbon\Carbon::now()->floatDiffInMinutes($report->created_at) < 15)
-                                            {!! $report->report.' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' !!}
+                                            {!! substr($report->report,16).' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' !!}
                                         @else
-                                            {!! "<span class='text-coral'>{$report->report} <i class='fas fa-times'></i></span>" !!}
+                                          @php  $report = substr($report->report ,16) @endphp
+                                            {!! "<span class='text-coral'>{$report} <i class='fas fa-times'></i></span>" !!}
                                         @endif
                                     @endif
                                 </td>
@@ -86,7 +87,7 @@
 @endsection
 
 @section('modals')
-  
+
 @endsection
 
 @section('js')
@@ -96,7 +97,7 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
-        
+
 
         $(document).ready(function () {
             $('#assetsTable').DataTable({
