@@ -196,7 +196,7 @@ class AssetController extends Controller {
         $validated = $request->validate($v);
 
         $asset = Asset::create(array_merge($request->only(
-            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]));
 
         if(!empty($array)){
@@ -340,7 +340,7 @@ class AssetController extends Controller {
 
         $validated = $request->validate($v);
         $asset->fill(array_merge($request->only(
-            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]))->save();
         if(!empty($array)){
             $asset->fields()->sync($array);
@@ -563,6 +563,7 @@ class AssetController extends Controller {
                     $asset->warranty = $request->warranty[$i];
 
                     $asset->location_id = $request->location_id[$i];
+                    $asset->room = $request->room;
                     $asset->asset_model = $request->asset_model[$i];
 
                     $asset->save();
