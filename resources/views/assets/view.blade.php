@@ -267,7 +267,7 @@
                         @foreach($assets as $asset)
                             <tr>
                                 <td>{{$asset->name}}<br><small
-                                        class="d-none d-md-inline-block">{{ $asset->model->name ?? 'No Model'}}</small></td>
+                                        class="d-none d-md-inline-block">{{ $asset->serial_no ?? 'N/A'}}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
                                         <img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>
@@ -277,7 +277,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $asset->asset_tag ?? 'N/A'}}</td>
-                                <td class="text-center d-none d-xl-table-cell">{{ $asset->model->manufacturer->name ?? 'N/A' }}</td>
+                                <td class="text-center d-none d-xl-table-cell">{{ $asset->model->manufacturer->name ?? 'N/A' }}<small>{{ $asset->model->name ?? 'No Model'}}</small></td>
                                 <td class="d-none d-md-table-cell"
                                     data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                                 <td class="text-center  d-none d-xl-table-cell">

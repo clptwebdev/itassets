@@ -295,7 +295,7 @@ class AssetController extends Controller {
                             $val_string .= "string";
                             break;
                         default:
-                            $val_string .= "alpha_num";
+                            $val_string .= "string";
                             break;
                     }
                 }
@@ -384,7 +384,7 @@ class AssetController extends Controller {
         $name=$asset->asset_tag;
         $asset->forceDelete();
         session()->flash('danger_message', "#". $name . ' was deleted permanently');
-        return redirect("/assets");
+        return redirect(route('assets.bin'));
     }
 
     public function model(AssetModel $model)
