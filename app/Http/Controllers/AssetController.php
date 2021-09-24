@@ -666,7 +666,7 @@ class AssetController extends Controller {
         $found = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date', 'location_id', 'asset_model')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier','location','model')->get();
         foreach($found as $f){
             $array = array();
-            $array['name'] = $f->name;
+            $array['name'] = $f->name ?? 'No Name';
             $array['model'] = $f->model->name ?? 'N/A';
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['icon'] = $f->location->icon ?? '#666';
@@ -675,7 +675,7 @@ class AssetController extends Controller {
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£'.$f->purchased_cost;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
-            $array['warranty'] = $f->warranty;
+            $array['warranty'] = $f->warranty ?? 0;
             $array['audit'] = \Carbon\Carbon::parse($f->audit_date)->format('d/m/Y');
             $assets[] = $array;
         }
