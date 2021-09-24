@@ -127,7 +127,7 @@
                                             name="warranty" id="warranty" value="{{ old('warranty') ?? 24}}">
                                     </div>
 
-                                    <div class="form-group bg-blue">
+                                    <div class="form-group">
                                         <label for="asset_model">Asset Model Select</label><span class="text-danger">*</span>
                                         <select type="dropdown" class="form-control" name="asset_model" id="asset_model" onchange="getFields(this);" autocomplete="off" required>
                                             <option value="0" @if(old('asset_model') == 0){{'selected'}}@endif>Please Select a Model</option>
