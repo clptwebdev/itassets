@@ -33,8 +33,12 @@
             {{--      heading one      --}}
             <div id="headingOne" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseOne"
-                        aria-expanded="false" aria-controls="collapseOne">Exports
+                        aria-expanded="false" aria-controls="collapseOne">
+                    <a class="slide" href="#collapseOneExports">
+                        Exports
+                    </a>
                 </button>
+
             </div>
             <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
@@ -63,8 +67,12 @@
             {{--     heading two       --}}
             <div id="headingTwoo" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseTwoo"
-                        aria-expanded="false" aria-controls="collapseTwoo">Passwords
+                        aria-expanded="false" aria-controls="collapseTwoo">
+                    <a class="slide" href="#collapseTwooPasswords">
+                        Passwords
+                    </a>
                 </button>
+
             </div>
             <div id="collapseTwoo" class="collapse" aria-labelledby="headingTwoo" data-parent="#accordion">
                 <div class="card-body">
@@ -89,7 +97,8 @@
             {{--     heading three       --}}
             <div id="headingThree" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseThree"
-                        aria-expanded="false" aria-controls="collapseThree">Assets
+                        aria-expanded="false" aria-controls="collapseThree">
+                    <a class="slide" href="#collapseThreeAssets">Assets</a>
                 </button>
             </div>
             <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
@@ -197,8 +206,12 @@
             {{--     headingFour       --}}
             <div id="headingFour" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseFour"
-                        aria-expanded="false" aria-controls="collapseFour">Status
+                        aria-expanded="false" aria-controls="collapseFour">
+                    <a class="slide" href="#collapseFourStatus">
+                        Status
+                    </a>
                 </button>
+
             </div>
             <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
                 <div class="card-body">
@@ -230,8 +243,12 @@
             {{--     headingFive       --}}
             <div id="headingFive" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseFive"
-                        aria-expanded="false" aria-controls="collapseFive">Location
+                        aria-expanded="false" aria-controls="collapseFive">
+                    <a class="slide" href="#collapseFiveLocations">
+                        Locations
+                    </a>
                 </button>
+
             </div>
             <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
                 <div class="card-body">
@@ -277,8 +294,12 @@
             {{--     headingSix       --}}
             <div id="headingSix" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseSix"
-                        aria-expanded="false" aria-controls="collapseSix">Recycle Bin
+                        aria-expanded="false" aria-controls="collapseSix">
+                    <a class="slide" href="#collapseSixRecycleBin">
+                        Recycle Bin
+                    </a>
                 </button>
+
             </div>
             <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
                 <div class="card-body">
@@ -299,8 +320,12 @@
             {{--     headingSeven       --}}
             <div id="headingSeven" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseSeven"
-                        aria-expanded="false" aria-controls="collapseSeven">Import
+                        aria-expanded="false" aria-controls="collapseSeven">
+                    <a class="slide" href="#collapseSevenImport">
+                        Import
+                    </a>
                 </button>
+
             </div>
             <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion">
                 <div class="card-body">
@@ -352,7 +377,10 @@
             {{--     headingEight       --}}
             <div id="headingEight" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseEight"
-                        aria-expanded="false" aria-controls="collapseEight">Accessory
+                        aria-expanded="false" aria-controls="collapseEight">
+                    <a class="slide" href="#collapseEightAccessory">
+                        Accessory
+                    </a>
                 </button>
             </div>
             <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordion">
@@ -464,7 +492,10 @@
             {{--     headingNine       --}}
             <div id="headingNine" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseNine"
-                        aria-expanded="false" aria-controls="collapseNine">Component
+                        aria-expanded="false" aria-controls="collapseNine">
+                    <a class="slide" href="#collapseNineComponent">
+                        Component
+                    </a>
                 </button>
             </div>
             <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordion">
@@ -577,7 +608,10 @@
             {{--     headingTen       --}}
             <div id="headingTen" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseTen"
-                        aria-expanded="false" aria-controls="collapseTen">Miscellaneous
+                        aria-expanded="false" aria-controls="collapseTen">
+                    <a class="slide" href="#collapseTenMiscellaneous">
+                        Miscellaneous
+                    </a>
                 </button>
             </div>
             <div id="collapseTen" class="collapse" aria-labelledby="headingTen" data-parent="#accordion">
@@ -689,7 +723,10 @@
             {{--     headingTwenty       --}}
             <div id="headingTwenty" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseTwenty"
-                        aria-expanded="false" aria-controls="collapseTwenty">Consumables
+                        aria-expanded="false" aria-controls="collapseTwenty">
+                    <a class="slide" href="#collapseTwentyConsumables">
+                        Consumables
+                    </a>
                 </button>
             </div>
             <div id="collapseTwenty" class="collapse" aria-labelledby="headingTwenty" data-parent="#accordion">
@@ -801,7 +838,10 @@
             {{--     headingEleven       --}}
             <div id="headingEleven" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseEleven"
-                        aria-expanded="false" aria-controls="collapseEleven">Users
+                        aria-expanded="false" aria-controls="collapseEleven">
+                    <a class="slide" href="#collapseElevenUsers">
+                        Users
+                    </a>
                 </button>
             </div>
             <div id="collapseEleven" class="collapse" aria-labelledby="headingEleven" data-parent="#accordion">
@@ -840,7 +880,10 @@
             {{--     headingTwelve       --}}
             <div id="headingTwelve" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseTwelve"
-                        aria-expanded="false" aria-controls="collapseTwelve">Permissions
+                        aria-expanded="false" aria-controls="collapseTwelve">
+                    <a class="slide" href="#collapseTwelvePermissions">
+                        Permissions
+                    </a>
                 </button>
             </div>
             <div id="collapseTwelve" class="collapse" aria-labelledby="headingTwelve" data-parent="#accordion">
@@ -878,7 +921,10 @@
             {{--     headingThirteen       --}}
             <div id="headingThirteen" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseThirteen"
-                        aria-expanded="false" aria-controls="collapseThirteen">Manufacturers
+                        aria-expanded="false" aria-controls="collapseThirteen">
+                    <a class="slide" href="#collapseThirteenManufacturers">
+                        Manufacturers
+                    </a>
                 </button>
             </div>
             <div id="collapseThirteen" class="collapse" aria-labelledby="headingThirteen" data-parent="#accordion">
@@ -983,7 +1029,10 @@
             {{--     headingFourteen       --}}
             <div id="headingFourteen" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseFourteen"
-                        aria-expanded="false" aria-controls="collapseFourteen">Suppliers
+                        aria-expanded="false" aria-controls="collapseFourteen">
+                    <a class="slide" href="#collapseFourteenSuppliers">
+                        Suppliers
+                    </a>
                 </button>
             </div>
             <div id="collapseFourteen" class="collapse" aria-labelledby="headingFourteen" data-parent="#accordion">
@@ -1051,7 +1100,10 @@
             {{--     headingFithteen       --}}
             <div id="headingFithteen" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseFithteen"
-                        aria-expanded="false" aria-controls="collapseFithteen">Asset Models
+                        aria-expanded="false" aria-controls="collapseFithteen">
+                    <a class="slide" href="#collapseFithteenAssetModels">
+                        Asset Models
+                    </a>
                 </button>
             </div>
             <div id="collapseFithteen" class="collapse" aria-labelledby="headingFithteen" data-parent="#accordion">
@@ -1112,7 +1164,10 @@
             {{--     headingSixteen       --}}
             <div id="headingSixteen" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseSixteen"
-                        aria-expanded="false" aria-controls="collapseSixteen">Depreciation
+                        aria-expanded="false" aria-controls="collapseSixteen">
+                    <a class="slide" href="#collapseSixteenDepreciation">
+                        Depreciation
+                    </a>
                 </button>
             </div>
             <div id="collapseSixteen" class="collapse" aria-labelledby="headingSixteen" data-parent="#accordion">
@@ -1135,7 +1190,10 @@
             {{--     headingSeventeen       --}}
             <div id="headingSeventeen" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseSeventeen"
-                        aria-expanded="false" aria-controls="collapseSeventeen">Categories
+                        aria-expanded="false" aria-controls="collapseSeventeen">
+                    <a class="slide" href="#collapseSeventeenCategories">
+                        Categories
+                    </a>
                 </button>
             </div>
             <div id="collapseSeventeen" class="collapse" aria-labelledby="headingSeventeen" data-parent="#accordion">
@@ -1155,7 +1213,10 @@
             {{--     headingEighteen       --}}
             <div id="headingEighteen" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseEighteen"
-                        aria-expanded="false" aria-controls="collapseEighteen">Fieldsets
+                        aria-expanded="false" aria-controls="collapseEighteen">
+                    <a class="slide" href="#collapseEighteenFieldsets">
+                        Fieldsets
+                    </a>
                 </button>
             </div>
             <div id="collapseEighteen" class="collapse" aria-labelledby="headingEighteen" data-parent="#accordion">
@@ -1213,6 +1274,11 @@
         $(function () {
             $("#accordion").accordion();
         });
+        var hash = window.location.hash;
+        var anchor = $('a[href$="'+hash+'"]');
+        if (anchor.length > 0){
+            anchor.click();
+        }
     </script>
 
 @endsection

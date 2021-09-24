@@ -12,7 +12,7 @@
     <h1 class="h3 mb-0 text-gray-800">Categories</h1>
     <div>
         <a href="#" data-toggle="modal" data-target="#addCategoryModal" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Add New Category</a>{{-- 
+                class="fas fa-plus fa-sm text-white-50"></i> Add New Category</a>{{--
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> --}}
     </div>
@@ -75,7 +75,7 @@
                             </td>
                             <td class="text-center">
                                 <?php $consumables = \App\Models\Consumable::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($consumables)}}    
+                                {{count($consumables)}}
                             </td>
                             <td class="text-center">N/A</td>
                             <td class="text-right">
@@ -86,8 +86,7 @@
                                     </a>
                                     <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$category->id}}Link">
                                         <div class="dropdown-header">Category Options:</div>
-                                        <a href="{{ route('category.show', $category->id) }}" class="dropdown-item">View</a>
-                                        <a href="#" class="dropdown-item updateBtn" 
+                                        <a href="#" class="dropdown-item updateBtn"
                                         data-id="{{$category->id}}" data-name="{{ $category->name}}" data-route="{{ route('category.update', $category->id)}}">Edit</a>
                                         <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('category.destroy', $category->id)}}">Delete</a>
                                     </div>
@@ -214,11 +213,11 @@
         var name = $(this).data('name');
         var route = $(this).data('route');
         $('[name="name"]').val(name);
-        $('#updateForm').attr('action', route); 
+        $('#updateForm').attr('action', route);
         $('#updateCategoryModal').modal('show');
     });
-    
-    
+
+
 
     $(document).ready( function () {
         $('#categoryTable').DataTable({

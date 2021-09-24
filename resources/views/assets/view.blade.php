@@ -131,7 +131,7 @@
                                                    for="{{'category'.$category->id}}">{{ $category->name }}</label>
                                             <input class="form-check-input" type="checkbox" name="category[]"
                                                    value="{{ $category->id}}" id="{{'category'.$category->id}}">
-                                            
+
                                         </div>
                                     @endforeach
                                 </div>
@@ -372,8 +372,7 @@
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Assets</h4>
-                <p>This area can be minimised and will contain a little help on the page that the user is currently
-                    on.</p>
+                <p>Click <a href="{{route("documentation.index").'#collapseThreeAssets'}}">here</a> for a the Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
             </div>
         </div>
 

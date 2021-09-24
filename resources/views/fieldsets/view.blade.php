@@ -69,7 +69,6 @@
                                         class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                         aria-labelledby="dropdownMenuLink">
                                         <div class="dropdown-header">Asset Options:</div>
-                                        <a href="{{ route('fieldsets.show', $fieldset->id) }}" class="dropdown-item">View</a>
                                         <a href="{{ route('fieldsets.edit', $fieldset->id) }}" class="dropdown-item">Edit</a>
                                         <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('fieldsets.destroy', $fieldset->id)}}"">Delete</a>
                                     </div>
@@ -127,7 +126,7 @@
         //showModal
         $('#removeFieldsetModal').modal('show');
     });
-    
+
     $('#confirmBtn').click(function() {
         $('#deleteForm').submit();
     });

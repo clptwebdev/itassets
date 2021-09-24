@@ -95,6 +95,104 @@
             </div>
         </section>
     </form>
+{{--    //permissions and activity--}}
+    <div class="col-12 mb-4 pt-2 p-r5 p-l5">
+        <div class="card shadow h-100 pb-2">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold">Permissions</h6>
+            </div>
+            <div class="card-body">
+                @php
+                    if(auth()->user()->role_id == 1){
+                        $locations = App\Models\Location::all();
+                    }else{
+                        $locations = auth()->user()->locations;
+                    }
+                @endphp
+                @foreach($locations as $location)
+                    <small data-toggle="tooltip" data-html="true" data-placement="left" title="{{ $location->name }}<br>{{ $location->address1}}" class="rounded p-1 m-1 mb-2 text-white d-inline-block pointer" style="background-color: {{$location->icon}}">{{$location->name}}</small>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" data-toggle="collapse" data-target="#changes" aria-expanded="false" aria-controls="changes">
+                <h6 class="m-0 font-weight-bold">Account Changes</h6>
+            </div>
+            <div class="card-body collapse" id="changes">
+                <table class="logs table table-striped ">
+                    <thead>
+                    <tr>
+                        <th class="col-1">Log ID</th>
+                        <th class="col-7 text-center">Data</th>
+                        <th class="col-2    text-center">User</th>
+                        <th class="col-2 text-center">Date</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Log ID</th>
+                        <th class="text-center">Data</th>
+                        <th class="text-center">User</th>
+                        <th class="text-center">Date</th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    @php($logs = auth()->user()->logs()->orderBy('created_at', 'desc')->get())
+                    @foreach($logs as $log)
+                        <tr>
+                            <td class="text-center">{{ $log->id }}</td>
+                            <td class="text-left">{{$log->data}}</td>
+                            <td class="text-left">{{ $log->user->name ?? 'Unkown'}}</td>
+                            <td class="text-right" data-sort="{{ strtotime($log->created_at)}}">{{ \Carbon\Carbon::parse($log->created_at)->format('d-m-Y h:i:s')}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" data-toggle="collapse" data-target="#activity" aria-expanded="false" aria-controls="activity">
+                <h6 class="m-0 font-weight-bold"><a id="Recent">Recent Activity</a></h6>
+            </div>
+            <div class="card-body collapse" id="activity">
+                <table class="logs table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="col-1">Log ID</th>
+                        <th class="col-1 text-center">Type</th>
+                        <th class="col-7 text-center">Data</th>
+                        <th class="col-3 text-center">Date</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Log ID</th>
+                        <th class="text-center">Type</th>
+                        <th class="text-center">Data</th>
+                        <th class="text-center">Date</th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    @php($activities = auth()->user()->activity()->orderBy('id', 'desc')->get())
+                    @foreach($activities as $activity)
+                        <tr>
+                            <td>{{ $activity->id }}</td>
+                            <td class="text-left">{{$activity->loggable_type}}</td>
+                            <td class="text-left">{{ $activity->data }}</td>
+                            <td class="text-left" data-sort="{{ strtotime($activity->created_at)}}">{{ \Carbon\Carbon::parse($activity->created_at)->format('d-m-Y h:i:s')}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('modals')

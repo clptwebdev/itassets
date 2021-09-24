@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     //User
         Route::get('/user/details', 'App\Http\Controllers\UserController@userDetails')->name('user.details');
+        Route::get('/user/details/#Recent', 'App\Http\Controllers\UserController@userDetails')->name('user.details.activity');
         Route::get('/user/password', 'App\Http\Controllers\UserController@userPassword')->name('user.password');
         Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
         Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
@@ -227,7 +228,8 @@ Route::group(['middleware' => 'auth'], function() {
 //Logs View
     Route::get("/logs", [\App\Http\Controllers\LogController::class, "index"])->name("logs.index");
 //documentation link
-    Route::get("/help/documentation" , function(){ return view('documentation.Documents');})->name('documentation.index'); 
+    Route::get("/help/documentation" , function(){ return view('documentation.Documents');})->name('documentation.index');
+    Route::get("/help/documentation/{section}" , function(){ return view('documentation.Documents');})->name('documentation.index.section');
 });
 //403 redirects
 Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');

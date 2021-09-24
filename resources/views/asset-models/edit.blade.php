@@ -53,7 +53,7 @@
                                 <?php $mans = App\Models\Manufacturer::all();?>
                                 <option value="0">Please select a Manufacturer</option>
                                 @foreach($mans as $man)
-                                <option value="{{$man->id}}" 
+                                <option value="{{$man->id}}"
                                     @if($man->id == $assetModel->manufacturer_id)
                                         selected
                                     @endif
@@ -116,13 +116,7 @@
             </div>
         </div>
 
-        <div class="card shadow mt-4">
-            <div class="card-header bg-primary-blue text-white">Information</div>
-            <div class="card-body">
-                <p>There are currently X Locations on the System</p>
-            </div>
-
-        </div>
+        <x-admin.assetModels.details />
     </section>
 </form>
 @endsection

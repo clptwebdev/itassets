@@ -113,6 +113,7 @@ class UserController extends Controller {
 
     public function update(Request $request, User $user)
     {
+
         if(auth()->user()->cant('update', $user))
         {
             return redirect(route('errors.forbidden', ['user', $user->id, 'edit']));
@@ -120,12 +121,14 @@ class UserController extends Controller {
 
         $validated = $request->validate([
             'name' => 'required|max:255',
+            'telephone' => 'regex:/(01)[0-9]{9}/|nullable',
             'email' => ['required', \Illuminate\Validation\Rule::unique('users')->ignore($user->id), 'email:rfc,dns,spoof,filter'],
         ]);
 
-        $user->fill($request->only('name', 'email', 'location_id', 'role_id'))->save();
+        $user->fill($request->only('name', 'email', 'location_id', 'role_id','telephone'))->save();
         $array = explode(',', $request->permission_ids);
         $user->locations()->sync($array);
+
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
         return redirect(route('users.index'));
@@ -262,7 +265,7 @@ class UserController extends Controller {
                 ->with('danger_message', "Your Password Didn't match your current password please try again!");
         }
     }
-    
+
     public function downloadPDF(Request $request)
     {
         if (auth()->user()->cant('viewAll', User::class)) {

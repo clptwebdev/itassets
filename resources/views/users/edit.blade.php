@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Edit User')
 @section('css')
 
 @endsection
@@ -14,7 +14,7 @@
                    class="d-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Users</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
-                        class="far fa-save fa-sm text-white-50"></i> Save 
+                        class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
             </div>
         </div>
@@ -52,7 +52,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="telephone">Telephone</label><span class="text-danger">*</span>
+                                <label for="telephone">Telephone</label><span class="text-danger">* (Please use 01 Format)</span>
                                 <input type="text" class="form-control <?php if ($errors->has('telephone')) {?>border-danger<?php }?>" name="telephone"
                                     id="telephone" placeholder="" value="@if(old('telephone') !== NULL){{ old('telephone')}}@else{{$user->telephone}}@endif">
                             </div>
@@ -90,12 +90,12 @@
                                 </select>
                             </div>
                         </div>
-                    </div>                           
+                    </div>
                 </div>
 
                 <div class="col-12 mt-4">
                     <div class="card shadow">
-                        
+
                         <div class="card-body">
                             <div class="card-title">Permissions</div>
                             <div class="form-group">
@@ -104,7 +104,7 @@
                             </div>
 
                             <div class="form-inline">
-                                
+
                                 <select type="text"
                                     class="form-control mb-2 mr-sm-2"
                                     name="permission_id" id="permission_id">
@@ -135,7 +135,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @endforeach  
+                                    @endforeach
                                 </div>
                                 </div>
                             </div>
@@ -148,7 +148,7 @@
     @endsection
 
     @section('modals')
-       
+
     @endsection
 
     @section('js')
@@ -193,11 +193,11 @@
                 $.ajax({
                     url: '/permissions/users',
                     type: 'POST',
-                    data: fData, 
+                    data: fData,
                     processData: false,
                     contentType: false,
                     success: function(data) {
-                        document.getElementById("permissions").innerHTML = data;    
+                        document.getElementById("permissions").innerHTML = data;
                     },
                 });
             }
