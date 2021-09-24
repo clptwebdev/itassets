@@ -272,7 +272,7 @@
                                     @if(isset($asset->location->photo->path))
                                         <img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}" data-toggle="tooltip" data-placement="top" title="{{ $asset->location->name }}<br>{{ $asset->room ?? 'Unknown'}}"/>
                                     @else
-                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="'.$asset->location->name }}.'<br>'.$asset->room.'">'
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
                                             .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                 </td>
