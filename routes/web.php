@@ -73,7 +73,6 @@ Route::group(['middleware' => 'auth'], function() {
 
     //User
         Route::get('/user/details', 'App\Http\Controllers\UserController@userDetails')->name('user.details');
-        Route::get('/user/details/#Recent', 'App\Http\Controllers\UserController@userDetails')->name('user.details.activity');
         Route::get('/user/password', 'App\Http\Controllers\UserController@userPassword')->name('user.password');
         Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
         Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');

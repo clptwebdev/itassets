@@ -170,7 +170,7 @@
                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                     Edit
                 </a>
-                <a class="dropdown-item" href="{{route("user.details.activity")}}">
+                <a class="dropdown-item" href="{{route("user.details")."/#Reports"}}">
                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                     Activity Log
                 </a>
