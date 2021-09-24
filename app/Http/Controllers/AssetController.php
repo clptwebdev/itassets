@@ -202,7 +202,7 @@ class AssetController extends Controller {
         if(!empty($array)){
             $asset->fields()->attach($array);
         }
-        if(!empty($request_category)){
+        if(!empty($request->category)){
             $asset->category()->attach($request->category);
         }
         session()->flash('success_message', $request->name . ' has been created successfully');
