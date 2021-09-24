@@ -670,7 +670,7 @@ class AssetController extends Controller {
             $array['model'] = $f->model->name ?? 'N/A';
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['icon'] = $f->location->icon ?? '#666';
-            $array['asset_tag'] = $f->asset_tag;
+            $array['asset_tag'] = $f->asset_tag ?? 'N/A';
             $array['manufacturer'] = $f->model->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£'.$f->purchased_cost;
