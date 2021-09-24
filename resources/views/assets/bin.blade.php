@@ -15,6 +15,9 @@
         <div>
             <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-dark-50"></i> Back to Assets</a>
+            <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                    class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
             @can('generatePDF', \App\Models\Asset::class)
             <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
                 @csrf
@@ -38,7 +41,7 @@
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
-        
+
 
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -113,7 +116,7 @@
                                             <div class="dropdown-header">Asset Options:</div>
                                             <a href="{{ route('assets.restore', $asset->id) }}"
                                                 class="dropdown-item">Restore</a>
-                                            <form class="d-block" id="form{{$asset->id}}" action="{{ route('assets.remove', $asset->id) }}" method="POST">   
+                                            <form class="d-block" id="form{{$asset->id}}" action="{{ route('assets.remove', $asset->id) }}" method="POST">
                                                 @csrf
                                                 @can('delete', $asset)
                                                 <a class="deleteBtn dropdown-item" href="#"
@@ -172,7 +175,7 @@
 @endsection
 
 @section('js')
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>

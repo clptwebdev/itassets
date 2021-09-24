@@ -11,6 +11,9 @@
         <div>
             <a href="{{ route('components.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-trash-alt fa-sm text-white-50"></i> Back to Components</a>
+            <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                    class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
             @can('generatePDF', \App\Models\Component::class)
             <form class="d-inline-block" action="{{ route('components.pdf')}}" method="POST">
                 @csrf
@@ -77,7 +80,7 @@
                                         @else
                                             {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($component->location->icon ?? '#666').'">'
                                                 .strtoupper(substr($component->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                        @endif    
+                                        @endif
                                     </td>
                                     <td class="text-center">{{$component->manufacturer->name ?? "N/A"}}</td>
                                     <td>{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
@@ -101,7 +104,7 @@
                                                 <div class="dropdown-header">Component Options:</div>
                                                 <a href="{{ route('components.restore', $component->id) }}"
                                                     class="dropdown-item">Restore</a>
-                                                <form class="d-block" id="form{{$component->id}}" action="{{ route('components.remove', $component->id) }}" method="POST">   
+                                                <form class="d-block" id="form{{$component->id}}" action="{{ route('components.remove', $component->id) }}" method="POST">
                                                     @csrf
                                                     @can('delete', $component)
                                                     <a class="deleteBtn dropdown-item" href="#"
