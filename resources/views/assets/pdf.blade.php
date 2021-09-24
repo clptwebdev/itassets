@@ -22,7 +22,7 @@
         @foreach($assets as $id=>$asset)
         <tr>
             <td>{{ $asset['name']}}<br>{{ $asset['model']}}</td>
-        </tr>
+            <td><span style="color: {{ $asset['icon']}}">{{$asset['location']}}</span></td>
         @endforeach
     </table>
 @endsection
