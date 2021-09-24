@@ -23,6 +23,8 @@
         <tr>
             <td>{{ $asset['name']}}<br>{{ $asset['model']}}</td>
             <td><span style="color: {{ $asset['icon']}}">{{$asset['location']}}</span></td>
+            <td align="center">#{{ $asset['asset_tag'] }}</td>
+        </tr>
         @endforeach
     </table>
 @endsection
