@@ -14,7 +14,7 @@
 }
 body{
   background: #474775;
-  
+
 }
 .whistle{
   width: 20%;
@@ -65,7 +65,7 @@ h2{
   text-transform: capitalize;
 }
   </style>
-  
+
 </head>
 <body>
   <use>
@@ -118,13 +118,13 @@ h2{
           $name = $user->name;
           $message = "You don't have permission to '".strtoupper($method)."' User - ".$name;
           $link = "/suppliers";
-          break; 
+          break;
         case 'manufacturers':
           $user = \App\Models\Manufacturer::find($id);
           $name = $user->name;
           $message = "You don't have permission to '".strtoupper($method)."' User - ".$name;
           $link = "/manufacturers";
-          break; 
+          break;
         case 'area':
           $message = "You don't have permission to the '".strtoupper($id)."' Area.";
           $link = "/dashboard";
@@ -134,7 +134,7 @@ h2{
           $link = "/dashboard";
           break;
 
-}   
+}
 @endphp
 <h2>
   {{ $message }}

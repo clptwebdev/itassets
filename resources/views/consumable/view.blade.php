@@ -150,9 +150,9 @@
 
         <div class="card shadow mb-3">
             <div class="card-body">
-                <h4>Help with consumables</h4>
-                <p>This area can be minimised and will contain a little help on the page that the Consumable is currently
-                    on.</p>
+                <h4>Help with Consumable</h4>
+                <p>Click <a href="{{route("documentation.index").'#collapseTwentyConsumables'}}">here</a> for the Documentation on Consumables on Importing ,Exporting , Adding , Removing!</p>
+
             </div>
         </div>
 

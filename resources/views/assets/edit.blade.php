@@ -14,6 +14,9 @@
         <div>
             <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-dark-50"></i> Back to Assets</a>
+            <a href="{{ route('documentation.index')."#collapseThreeAssets"}}"
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                    class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
             <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="far fa-save fa-sm text-dark-50"></i> Save
             </button>
@@ -95,7 +98,7 @@
                                         name="audit_date" id="audit_date" value="{{ \Carbon\Carbon::parse($date)->format('Y-m-d')}}">
                                 </div>
 
-                                
+
                             </div>
 
                             <div class="col-12 col-sm-6 bg-light p-2 mb-3">
@@ -182,17 +185,17 @@
                                     class="form-contol">{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''}}</textarea>
                                 @break
                                 @case('Select')
-                                <?php 
-                                    if(count($field_array) != 0){ 
+                                <?php
+                                    if(count($field_array) != 0){
                                         if(old(str_replace(' ', '_', strtolower($field->name)))){
                                             $vid = old(str_replace(' ', '_', strtolower($field->name)));
-                                        }else{ 
+                                        }else{
                                             if(isset($field_array[$field->id])){
                                                 $vid = $field_array[$field->id];
                                             }else{
                                                 $vid = 0;
                                             }
-                                            
+
                                         }
                                     }else{ $vid = 0;}?>
                                 <?php $array = explode("\r\n", $field->value);?>
