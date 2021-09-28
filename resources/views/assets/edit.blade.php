@@ -68,17 +68,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="School Location">School Location</label><span
-                                        class="text-danger">*</span>
-                                    <select type="text"
-                                        class="form-control mb-3 @if($errors->has('location_id')){{'border-danger'}}@endif"
-                                        name="location_id" id="location_id" required>
-                                        <option value="0" selected>No Location</option>
-                                        @foreach($locations as $location)
-                                        @php if(old('location_id')){ $id=old('location_id');}else{ $id= $asset->location_id;} @endphp
-                                        <option value="{{$location->id}}" @if($id == $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="room">Location</label>
+                                    <input type="text" class="form-control <?php if ($errors->has('room')) {?> border border-danger<?php }?>" 
+                                        id="location" placeholder="" value="{{ $asset->location->name}}" disabled>
                                 </div>
 
                                 <div class="form-group">

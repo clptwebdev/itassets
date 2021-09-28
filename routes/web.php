@@ -90,7 +90,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::resource('/fieldsets', 'App\Http\Controllers\FieldsetController');
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
-
+    //Archives
+        Route::get('/archives', 'App\Http\Controllers\ArchiveController@index')->name('archives.index');
     //Asset Model Routes
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
         Route::get('/asset-model/pdf', 'App\Http\Controllers\AssetModelController@downloadPDF')->name('asset-model.pdf');
@@ -154,6 +155,12 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
     //Permission Routes
 
+
+    //Request
+        Route::post('/request/transfer', 'App\Http\Controllers\RequestsController@transfer')->name('request.transfer');
+        Route::post('/request/dispose', 'App\Http\Controllers\RequestsController@disposal')->name('request.disposal');
+        Route::get('/request/{requests}/handle/{status}', 'App\Http\Controllers\RequestsController@handle')->name('request.handle');
+        Route::get('/requests', 'App\Http\Controllers\RequestsController@index')->name('requests.index');
     //Reports
         Route::get('/reports', '\App\Http\Controllers\ReportController@index')->name('reports.index');
     //Supplier
@@ -161,7 +168,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/supplier/pdf', 'App\Http\Controllers\SupplierController@downloadPDF')->name('suppliers.pdf');
         Route::get('/supplier/{supplier}/pdf', 'App\Http\Controllers\SupplierController@downloadShowPDF')->name('suppliers.showPdf');
         Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
-
+    //Transfers
+        Route::get('/transfers', 'App\Http\Controllers\TransferController@index')->name('transfers.index');
 
 
     //Database Backups Routes (Doesn't include import routes)

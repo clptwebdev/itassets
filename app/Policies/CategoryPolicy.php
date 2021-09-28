@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\Supplier;
+use App\Models\Category;
 use App\Models\User;
 
-class SupplierPolicy
+class CategoryPolicy
 {
     use HandlesAuthorization;
 
@@ -31,22 +31,22 @@ class SupplierPolicy
         return in_array($user->role_id, $this->manager);
     }
 
-    public function update(User $user, Supplier $supplier)
+    public function update(User $user, Category $category)
     {
-        return in_array($user->role_id, $this->manager);
+        return in_array($user->role_id, $this->super);
     }
 
-    public function delete(User $user, Supplier $supplier)
+    public function delete(User $user, Category $category)
     {
-        return in_array($user->role_id, $this->manager);
+        return in_array($user->role_id, $this->super);
     }
 
-    public function restore(User $user, Supplier $supplier)
+    public function restore(User $user, Category $category)
     {
-        return in_array($user->role_id, $this->manager);
+        return in_array($user->role_id, $this->super);
     }
 
-    public function forceDelete(User $user, Supplier $supplier)
+    public function forceDelete(User $user, Category $category)
     {
         return in_array($user->role_id, $this->super);
     }

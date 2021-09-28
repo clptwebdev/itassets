@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransfersTable extends Migration
+class CreateRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateTransfersTable extends Migration
      */
     public function up()
     {
-        Schema::create('transfers', function (Blueprint $table) {
+        Schema::create('requests', function (Blueprint $table) {
             $table->id();
-            $table->string('model_type');
-            $table->foreignId('model_id');
-            $table->foreignId('location_from');
+            $table->string('type');
+            $table->string('model_type')->nullable();
+            $table->foreignId('model_id')->nullable();
             $table->foreignId('location_to');
-            $table->string('value');
-            $table->foreignId('user_id');
-            $table->foreignId('super_id');
+            $table->foreignId('location_from')->nullable();
+            $table->foreignId("user_id");
+            $table->foreignId("super_id")->nullable();
+            $table->integer('status')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
         });
@@ -34,6 +35,6 @@ class CreateTransfersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reports');
+        Schema::dropIfExists('requests');
     }
 }
