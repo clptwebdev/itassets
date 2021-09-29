@@ -119,7 +119,7 @@
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Suppliers</h4>
-                <p>This area can be minimised and will contain a little help on the page that the user is currently on.</p>
+                <p>Click <a href="{{route("documentation.index").'#collapseFourteenSuppliers'}}">here</a> for the Documentation on Suppliers on exporting,Adding and Removing!</p>
             </div>
         </div>
 

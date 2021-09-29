@@ -10,6 +10,10 @@ class FieldController extends Controller
 {
      public function index()
     {
+        if (auth()->user()->cant('viewAny', Fieldset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'fieldset', 'view']));
+        }
+
         $fields = Field::all();
         return view('fields.view', compact('fields'));
     }
@@ -25,35 +29,11 @@ class FieldController extends Controller
         return redirect(route('fields.index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Field  $fields
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Field $fields)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Fields  $fields
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Field $field)
     {
         return view('fields.edit', compact('field'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Field  $fields
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Field $field)
     {
         $field->fill($request->only('name', 'format', 'type', 'required', 'value', 'help'))->save();
@@ -61,12 +41,6 @@ class FieldController extends Controller
         return redirect(route('fields.index'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Field  $fields
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Field $field)
     {
         $name= $field->name;

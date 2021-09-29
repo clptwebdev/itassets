@@ -15,6 +15,9 @@
             <a href="{{ route('suppliers.index') }}"
                 class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Suppliers</a>
+            <a href="{{ route('documentation.index')."#collapseFourteenSuppliers"}}"
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                    class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
             <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="far fa-save fa-sm text-white-50"></i> Save</button>
         </div>

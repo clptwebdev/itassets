@@ -9,36 +9,33 @@ use Illuminate\Http\Request;
 
 class FieldsetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
+        if (auth()->user()->cant('viewAny', Fieldset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'fieldset', 'view']));
+        }
+
         $fieldsets = Fieldset::all();
         return view('fieldsets.view', compact('fieldsets'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
+        if (auth()->user()->cant('create', Fieldset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'fieldset', 'create']));
+        }
+
         $fields = \App\Models\Field::all();
         return view('fieldsets.create', compact('fields'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        if (auth()->user()->cant('create', Fieldset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'fieldset', 'create']));
+        }
+
         $validated = $request->validate([
             'name' => 'required',
         ]);
@@ -49,38 +46,22 @@ class FieldsetController extends Controller
         return redirect(route('fieldsets.index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Fieldset  $fieldset
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Fieldset $fieldset)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Fieldset  $fieldset
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Fieldset $fieldset)
     {
+        if (auth()->user()->cant('update', Fieldset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Category', 'edit']));
+        }
+
         $fields = Field::all();
         return view('fieldsets.edit', compact('fieldset', 'fields'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Fieldset  $fieldset
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Fieldset $fieldset)
     {
+        if (auth()->user()->cant('update', Fieldset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Category', 'update']));
+        }
+
         $validated = $request->validate([
             'name' => 'required',
         ]);
@@ -91,14 +72,12 @@ class FieldsetController extends Controller
         return redirect(route('fieldsets.index'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Fieldset  $fieldset
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Fieldset $fieldset)
     {
+        if (auth()->user()->cant('delete', Fieldset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Category', 'delete']));
+        }
+
         $name=$fieldset->name;
         $fieldset->fields()->detach();
         $fieldset->delete();

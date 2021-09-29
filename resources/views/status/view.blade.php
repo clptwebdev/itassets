@@ -128,7 +128,7 @@
                                     </div>
                                 </div>
 
-                                
+
                             </td>
                         </tr>
                         @endforeach
@@ -137,7 +137,13 @@
             </div>
         </div>
     </div>
+    <div class="card shadow mb-3">
+        <div class="card-body">
+            <h4>Help with Status's</h4>
+            <p>Click <a href="{{route("documentation.index").'#collapseFourStatus'}}">here</a> for the Documentation on Status's on Adding and Removing!</p>
 
+        </div>
+    </div>
 </section>
 
 @endsection
@@ -297,10 +303,10 @@
     $('.updateBtn').click(function(){
         var val = $(this).data('id');
         var deployable = $(this).data('deploy');
-        if(deployable == 1){ 
+        if(deployable == 1){
             document.getElementById("update_deployable_yes").checked = true;
-        }else{ 
-            document.getElementById("update_deployable_no").checked = true; 
+        }else{
+            document.getElementById("update_deployable_no").checked = true;
         }
         var name = $(this).data('name');
         var route = $(this).data('route');
@@ -309,11 +315,11 @@
         $('#update_name').val(name);
         $('#update_colour').val(colour);
         $('#update_icon').val(icon);
-        $('#updateForm').attr('action', route); 
+        $('#updateForm').attr('action', route);
         $('#updateStatusModal').modal('show');
     });
-    
-    
+
+
 
     $(document).ready( function () {
         $('#categoryTable').DataTable({

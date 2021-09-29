@@ -15,6 +15,9 @@
                 <a href="{{ route('accessories.index') }}"
                    class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-dark-50"></i> Back to Accessories</a>
+                <a href="{{ route('documentation.index')."#collapseEightAccessory"}}"
+                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                        class="fas fa-question fa-sm text-dark-50"></i>  need Help?</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
@@ -110,7 +113,7 @@
                             @php( $cat_array = [])
                             @foreach($accessory->category as $cc)
                             @php( $cat_array[] = $cc->id)
-                            
+
                             @endforeach
                             <div id="categories" class="form-control h-100 p-4 mb-3">
                                 <h4 class="h6 mb-4 text-center">Categories</h4>
@@ -137,7 +140,7 @@
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Image</h4>
                                     @if($accessory->photo()->exists())
-                                        <img id="profileImage" src="{{ asset($accessory->photo->path) ?? asset('images/svg/accessory_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal"> 
+                                        <img id="profileImage" src="{{ asset($accessory->photo->path) ?? asset('images/svg/accessory_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     @else
                                     <img id="profileImage"
                                          src="{{ asset('images/svg/accessory_image.svg') }}"

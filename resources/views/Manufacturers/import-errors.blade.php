@@ -14,7 +14,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import
             Failures</h1>
-        
+
         <div>
             <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50">
@@ -147,6 +147,8 @@
                                 re-import your file!
                             </li>
                             <li>Struggling to Pass this stage are all your data fields in the correct format?</li>
+                            <li>Need More help? Click <a href="{{route("documentation.index").'#collapseSevenImport'}}">here</a> to be redirected to the Documentation on Importing!</li>
+
                         </ol>
                     </div>
                     <div class="modal-footer">

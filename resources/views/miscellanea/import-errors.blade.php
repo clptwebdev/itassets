@@ -12,7 +12,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
         @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
-        <div>  
+        <div>
             <form action="{{route('miscellaneaexport.import')}}" method="POST" class="d-inline">
                 @csrf
                 <div class="form-group">
@@ -21,7 +21,7 @@
                 </div>
                 <button type="submit" class="d-inline-block btn btn-sm btn-yellow shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Download Errors
-                </button> 
+                </button>
             </form>
             <a href="/miscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-plus fa-sm te
@@ -259,6 +259,8 @@
                             <li>The Required fields are: Name, Supplier,Location and serial num.</li>
                             <li>All Correct rows skip this page and import straight to the database so please don't re-import your file!</li>
                             <li>Struggling to Pass this stage are all your data fields in the correct format?</li>
+                            <li>Need More help? Click <a href="{{route("documentation.index").'#collapseSevenImport'}}">here</a> to be redirected to the Documentation on Importing!</li>
+
                         </ol>
                     </div>
                     <div class="modal-footer">

@@ -10,8 +10,14 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
+    protected $super = [1];
+    protected $admin = [1,2];
+    protected $technician = [1,3];
+    protected $manager = [1,2,3,4];
+    protected $all = [1,2,3,4,5];
+
     public function viewAll(User $user){
-        return $user->role_id != 0 && $user->role_id <= 2;
+        return in_array($user->role_id, $this->manager);
     }
 
     public function view(User $admin, User $user)
@@ -22,7 +28,7 @@ class UserPolicy
                 $permission++;
             }
         }
-        if($permission != 0 && ($admin->role_id != 0 && $admin->role_id <= 2) || $admin->role_id == 1){
+        if($permission != 0 && in_array($user->role_id, $this->all)){
             return true;
         }else{
             return false;
@@ -37,7 +43,7 @@ class UserPolicy
                 $permission++;
             }
         }
-        if($permission != 0 && ($admin->role_id != 0 && $admin->role_id <= 2) || $admin->role_id == 1){
+        if($permission != 0 && in_array($user->role_id, $this->admin && $admin->role_id <= $user->role_id)){
             return true;
         }else{
             return false;
@@ -52,7 +58,7 @@ class UserPolicy
                 $permission++;
             }
         }
-        if($permission != 0 || $admin->role_id == 1 && $admin->role_id <= $user->role_id){
+        if($permission != 0 && in_array($user->role_id, $this->admin) && $admin->role_id <= $user->role_id){
             return true;
         }else{
             return false;
@@ -69,6 +75,6 @@ class UserPolicy
     }
 
     public function permissions(User $user){
-        return $user->role_id != 0 && $user->role_id <= 2;
+        return in_array($user->role_id, $this->admin);
     }
 }

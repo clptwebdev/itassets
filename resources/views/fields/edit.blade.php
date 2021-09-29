@@ -14,6 +14,9 @@
         <div>
             <a href="{{ route('fields.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back to All Fields</a>
+            <a href="{{ route('documentation.index')."#collapseFithteenAssetModels"}}"
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                    class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
             <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="far fa-save fa-sm text-white-50"></i> Save</button>
         </div>
@@ -103,7 +106,7 @@
 <script type="text/javascript">
     function sortFormat(obj){
         if(obj.value != 'text'){ document.getElementById('format-div').style.display = "none";}else{document.getElementById('format-div').style.display = "block";}
-        if(obj.value == 'checkbox' || obj.value == 'select'){ 
+        if(obj.value == 'checkbox' || obj.value == 'select'){
             document.getElementById('value-div').style.display ="block";
         }else{
             document.getElementById('value-div').style.display = "none";

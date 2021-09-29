@@ -13,6 +13,9 @@
                 <a href="{{ route('users.index')}}"
                    class="d-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Users</a>
+                <a href="{{ route('documentation.index')."#collapseElevenUsers"}}"
+                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                        class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
@@ -85,8 +88,9 @@
                                     <option value="1" @if(old('role_id') == 1){{'selected'}}@elseif($user->role_id == 1){{ 'selected'}}@endif>Super Administrator</option>
                                     @endif
                                     <option value="2" @if(old('role_id') == 2){{'selected'}}@elseif($user->role_id == 2){{ 'selected'}}@endif>Administrator</option>
-                                    <option value="3" @if(old('role_id') == 3){{'selected'}}@elseif($user->role_id == 3){{ 'selected'}}@endif>User Manager</option>
-                                    <option value="4" @if(old('role_id') == 4){{'selected'}}@elseif($user->role_id == 4){{ 'selected'}}@endif>User</option>
+                                    <option value="3" @if(old('role_id') == 3){{'selected'}}@elseif($user->role_id == 3){{ 'selected'}}@endif>Technician</option>
+                                    <option value="4" @if(old('role_id') == 4){{'selected'}}@elseif($user->role_id == 4){{ 'selected'}}@endif>User Manager</option>
+                                    <option value="5" @if(old('role_id') == 5){{'selected'}}@elseif($user->role_id == 5){{ 'selected'}}@endif>User</option>
                                 </select>
                             </div>
                         </div>

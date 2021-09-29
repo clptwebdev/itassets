@@ -348,6 +348,21 @@
                                             @can('update', $asset)
                                                 <a href="{{ route('assets.edit', $asset->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
+                                            @can('transfer', $asset)
+                                                <a  href="#" 
+                                                    class="dropdown-item transferBtn" 
+                                                    data-model-id="{{$asset->id}}"
+                                                    data-location-from="{{$asset->location->name ?? 'Unallocated'}}"
+                                                    data-location-id="{{ $asset->location_id }}"
+                                                >Transfer</a>
+                                            @endcan
+                                            @can('dispose', $asset)
+                                                <a  href="#" 
+                                                    class="dropdown-item disposeBtn" 
+                                                    data-model-id="{{$asset->id}}"
+                                                    data-model-name="{{$asset->name ?? $asset->model->name ?? $asset->asset_tag ?? 'No name'}}"
+                                                >Dispose</a>
+                                            @endcan
                                             @can('delete', $asset)
                                                 <form id="form{{$asset->id}}"
                                                       action="{{ route('assets.destroy', $asset->id) }}" method="POST"
@@ -372,7 +387,7 @@
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Assets</h4>
-                <p>Click <a href="{{route("documentation.index").'#collapseThreeAssets'}}">here</a> for a the Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
+                <p>Click <a href="{{route("documentation.index").'#collapseThreeAssets'}}">here</a> for the Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
             </div>
         </div>
 
@@ -381,6 +396,86 @@
 <?php session()->flash('import-error', 'Select a file to be uploaded before continuing!');?>
 
 @section('modals')
+    <!-- Disposal Modal-->
+    <div class="modal fade bd-example-modal-lg" id="requestDisposal" tabindex="-1" role="dialog" aria-labelledby="requestDisposalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form action="{{ route('request.disposal')}}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requestDisposalLabel">Request to Dispose of the Asset?
+                        </h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @csrf
+                            <input name="model_type" type="hidden" value="asset">
+                            <input id="dispose_id" name="model_id" type="hidden" value="">
+                            <input type="text" value="" id="asset_name" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Additional Comments:</label>
+                            <textarea name="notes" class="form-control" rows="5"></textarea>
+                        </div>
+                        <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-coral" type="submit">Request Disposal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Transfer Modal-->
+    <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog" aria-labelledby="requestTransferLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form action="{{ route('request.transfer')}}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requestTransferLabel">Request to Transfer this Asset to another Location?
+                        </h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @csrf
+                            <input name="model_type" type="hidden" value="asset">
+                            <input id="model_id" name="model_id" type="hidden" value="">
+                            <input id="location_id" name="location_from" type="hidden" value="">
+                            <input id="location_from" type="text" class="form-control" value="" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="School Location">Transfer to:</label><span
+                                class="text-danger">*</span>
+                            <select type="text"
+                                class="form-control mb-3 @if($errors->has('location_id')){{'border-danger'}}@endif"
+                                name="location_to" required>
+                                <option value="0" selected>Please select a Location</option>
+                                @foreach($locations as $location)
+                                @php if(old('location_id')){ $id=old('location_id');}else{ $id= $asset->location_id;} @endphp
+                                <option value="{{$location->id}}" @if($id == $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Additional Comments:</label>
+                            <textarea name="notes" class="form-control" rows="5"></textarea>
+                        </div>
+                        <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-lilac" type="submit">Request Transfer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeAssetModal" tabindex="-1" role="dialog"
          aria-labelledby="removeassetModalLabel" aria-hidden="true">
@@ -442,6 +537,9 @@
             </div>
         </div>
     </div>
+
+    
+
 @endsection
 
 @section('js')
@@ -470,6 +568,19 @@
         $('#confirmBtn').click(function () {
             var form = '#' + 'form' + $('#asset-id').val();
             $(form).submit();
+        });
+
+        $('.transferBtn').click(function(){
+            $('#model_id').val($(this).data('model-id'));
+            $('#location_id').val($(this).data('location-id'));
+            $('#location_from').val($(this).data('location-from'));
+            $('#requestTransfer').modal('show');
+        });
+
+        $('.disposeBtn').click(function(){
+            $('#asset_name').val($(this).data('model-name'));
+            $('#dispose_id').val($(this).data('model-id'));
+            $('#requestDisposal').modal('show');
         });
 
         $(function () {

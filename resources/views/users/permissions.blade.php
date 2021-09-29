@@ -21,7 +21,8 @@
     @else
     <p>No Permissions Set</p>
     @endif
-@endforeach  
+@endforeach
 @else
     <p>No Permissions Set</p>
 @endif
+

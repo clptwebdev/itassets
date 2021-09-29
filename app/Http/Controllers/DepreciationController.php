@@ -15,66 +15,47 @@ class DepreciationController extends Controller
      */
     public function index()
     {
+        if (auth()->user()->cant('viewAny', Depreciation::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Depreciation', 'view']));
+        }
+
         $depreciation  = Depreciation::all();
         return view('depreciation.view', compact('depreciation'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        if (auth()->user()->cant('create', Depreciation::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Depreciation', 'create']));
+        }
         Depreciation::create($request->only('name', 'years'))->save();
         session()->flash('success_message', $request->name.' has been added to the system');
         return redirect(route('depreciation.index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show(Depreciation $depreciation)
     {
         return $depreciation->models;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Depreciation $depreciation)
     {
+        if (auth()->user()->cant('update', $depreciation)) {
+            return redirect(route('errors.forbidden', ['area', 'Depreciation', 'update']));
+        }
+
         $depreciation->fill($request->only('name', 'years'))->save();
         session()->flash('success_message', $request->name.' has been updated to the system');
         return redirect(route('depreciation.index'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function destroy(Depreciation $depreciation)
     {
+        if (auth()->user()->cant('delete', Depreciation::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Depreciation', 'view']));
+        }
+
         $name=$depreciation->name;
         $depreciation->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');

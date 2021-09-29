@@ -15,6 +15,9 @@
             <a href="{{ route('fieldsets.index') }}"
                 class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Fieldsets</a>
+            <a href="{{ route('documentation.index')."#collapseEighteenFieldsets"}}"
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                    class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
             <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="far fa-save fa-sm text-white-50"></i> Save</button>
         </div>
@@ -55,15 +58,15 @@
                         <h5 class="text-right">Selected Fields</h5>
                     </div>
                     <div class="card-body text-right">
-                            <?php 
-                                $string = ""; 
-                                foreach($fieldset->fields as $field){ 
-                                    if($string != ""){ 
+                            <?php
+                                $string = "";
+                                foreach($fieldset->fields as $field){
+                                    if($string != ""){
                                         $string .= ",".$field->id;
-                                    }else{ 
+                                    }else{
                                         $string = $field->id;
                                     }
-                                } 
+                                }
                                 $array = explode(',', $string);
                             ?>
                         <input type="hidden" id="fields" name="fields" value="{{ $string }}" autocomplete="off">

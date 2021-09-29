@@ -48,9 +48,12 @@
                             echo '<small class="text-warning">Administrator</small>';
                             break;
                         case 3:
-                            echo '<small class="text-success">User Manager</small>';
+                            echo '<small class="text-success">Technician</small>';
                             break;
                         case 4:
+                            echo '<small class="text-success">User Manager</small>';
+                            break;
+                        case 5:
                             echo '<small class="text-secondary">User</small>';
                             break;
                     }

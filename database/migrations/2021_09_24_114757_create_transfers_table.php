@@ -15,11 +15,14 @@ class CreateTransfersTable extends Migration
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('asset_id');
+            $table->string('model_type');
+            $table->foreignId('model_id');
             $table->foreignId('location_from');
             $table->foreignId('location_to');
             $table->string('value');
             $table->foreignId('user_id');
+            $table->foreignId('super_id');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

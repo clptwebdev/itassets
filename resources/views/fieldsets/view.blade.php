@@ -69,8 +69,12 @@
                                         class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                         aria-labelledby="dropdownMenuLink">
                                         <div class="dropdown-header">Asset Options:</div>
+                                        @can('update', $fieldset)
                                         <a href="{{ route('fieldsets.edit', $fieldset->id) }}" class="dropdown-item">Edit</a>
+                                        @endcan
+                                        @can('delete', $fieldset)
                                         <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('fieldsets.destroy', $fieldset->id)}}"">Delete</a>
+                                        @endcan
                                     </div>
                                 </div>
                             </td>
@@ -81,7 +85,13 @@
             </div>
         </div>
     </div>
+    <div class="card shadow mb-3">
+        <div class="card-body">
+            <h4>Help with Fieldsets</h4>
+            <p>Click <a href="{{route("documentation.index").'#collapseEighteenFieldsets'}}">here</a> for the Documentation on FieldSets on Adding and Removing!</p>
 
+        </div>
+    </div>
 </section>
 
 @endsection
