@@ -261,6 +261,8 @@
                            <li>The Required fields are: Name, Supplier,Location and serial num.</li>
                            <li>All Correct rows skip this page and import straight to the database so please don't re-import your file!</li>
                            <li>Struggling to Pass this stage are all your data fields in the correct format?</li>
+                           <li>Need More help? Click <a href="{{route("documentation.index").'#collapseSevenImport'}}">here</a> to be redirected to the Documentation on Importing!</li>
+
                        </ol>
                     </div>
                     <div class="modal-footer">

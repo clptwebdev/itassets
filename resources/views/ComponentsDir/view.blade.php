@@ -29,7 +29,7 @@
                     <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="components"/>
                 <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
                         class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
-                </form>                
+                </form>
             @endif
             @if($components->count() >1)
             <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
@@ -146,8 +146,8 @@
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Components </h4>
-                <p>This area can be minimised and will contain a little help on the page that the Component is currently
-                    on.</p>
+                <p>Click <a href="{{route("documentation.index").'#collapseNineComponent'}}">here</a> for a the Documentation on Components on Importing ,Exporting , Adding , Removing!</p>
+
             </div>
         </div>
 

@@ -85,7 +85,7 @@
                                         </form>
                                     </div>
                                 </div>
-                                
+
                             </td>
                         </tr>
                         @endforeach
@@ -98,7 +98,7 @@
     <div class="card shadow mb-3">
         <div class="card-body">
             <h4>Help with Asset Models</h4>
-            <p>This area can be minimised and will contain a little help on the page that the user is currently on.</p>
+            <p>Click <a href="{{route("documentation.index").'#collapseFithteenAssetModels'}}">here</a> for a the Documentation on Asset Models on Importing ,Exporting , Adding , Removing!</p>
         </div>
     </div>
 
@@ -121,7 +121,7 @@
             </div>
             <div class="modal-body">
                 <input id="model-id" type="hidden" value="">
-                <p>There are currently <span id="asset_count">0</span> Asset(s) linked with this Asset Model. These Assets will be unassigned and related data will be lost. 
+                <p>There are currently <span id="asset_count">0</span> Asset(s) linked with this Asset Model. These Assets will be unassigned and related data will be lost.
                     If you wish to continue please Select "Delete" to remove this Asset Model from the system.</p>
                 <small class="text-danger">**Warning this is permanent. This will unassign any Assets that have this model. </small>
             </div>
@@ -143,7 +143,7 @@
             //showModal
             $('#removeModelModal').modal('show')
         });
-        
+
         $('#confirmBtn').click(function() {
             var form = '#'+'form'+$('#model-id').val();
             $(form).submit();

@@ -387,7 +387,7 @@
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Assets</h4>
-                <p>Click <a href="{{route("documentation.index").'#collapseThreeAssets'}}">here</a> for a the Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
+                <p>Click <a href="{{route("documentation.index").'#collapseThreeAssets'}}">here</a> for the Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
             </div>
         </div>
 

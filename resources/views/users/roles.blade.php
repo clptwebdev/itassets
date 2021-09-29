@@ -35,9 +35,9 @@
                                 @if($sup->photo()->exists())
                                 <img src="{{asset($sup->photo->path) ?? asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px">
                                 @else
-                                <img src="{{asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px"> 
+                                <img src="{{asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px">
                                 @endif
-                            
+
                                 {{ $sup->name }}
                             </div>
                             <div class="dropdown no-arrow">
@@ -75,9 +75,9 @@
                                 @if($sup->photo()->exists())
                                 <img src="{{asset($sup->photo->path) ?? asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px">
                                 @else
-                                <img src="{{asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px"> 
+                                <img src="{{asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px">
                                 @endif
-                            
+
                                 {{ $sup->name }}
                             </div>
                             <div class="dropdown no-arrow">
@@ -158,9 +158,9 @@
                                 @if($sup->photo()->exists())
                                 <img src="{{asset($sup->photo->path) ?? asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px">
                                 @else
-                                <img src="{{asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px"> 
+                                <img src="{{asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px">
                                 @endif
-                            
+
                                 {{ $sup->name }}
                             </div>
                             <div class="dropdown no-arrow">
@@ -240,9 +240,9 @@
                                 @if($sup->photo()->exists())
                                 <img src="{{asset($sup->photo->path) ?? asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px">
                                 @else
-                                <img src="{{asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px"> 
+                                <img src="{{asset('images\profile.png')}}" alt="{{$sup->name}}" width="40px">
                                 @endif
-                            
+
                                 {{ $sup->name }}
                             </div>
                             <div class="dropdown no-arrow">
@@ -269,7 +269,12 @@
             </div>
         </div>
     </div>
-    
+    <div class="card shadow mb-3">
+        <div class="card-body">
+            <h4>Help with User Permissions</h4>
+            <p>Click <a href="{{route("documentation.index").'#collapseTwelvePermissions'}}">here</a> for the Documentation on Users Roles and permissions!</p>
+        </div>
+    </div>
 </section>
 
 @endsection
@@ -287,7 +292,7 @@
                 </button>
             </div>
             <div class="modal-body" id="permissions">
-                
+
             </div>
         </div>
     </div>
@@ -328,7 +333,7 @@
             url: `/users/${id}/locations`,
             type: 'GET',
             success: function(data) {
-                document.getElementById("permissions").innerHTML = data;    
+                document.getElementById("permissions").innerHTML = data;
             },
         });
 

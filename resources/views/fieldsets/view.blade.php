@@ -85,7 +85,13 @@
             </div>
         </div>
     </div>
+    <div class="card shadow mb-3">
+        <div class="card-body">
+            <h4>Help with Fieldsets</h4>
+            <p>Click <a href="{{route("documentation.index").'#collapseEighteenFieldsets'}}">here</a> for the Documentation on FieldSets on Adding and Removing!</p>
 
+        </div>
+    </div>
 </section>
 
 @endsection

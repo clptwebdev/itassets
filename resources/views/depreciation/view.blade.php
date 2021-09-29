@@ -60,7 +60,7 @@
                                     <small class="bg-secondary rounded p-1 m-1 text-white">{{$model->name}}</small>
                                 @endforeach
                                 <small class="bg-light border border-secondary rounded p-1 m-1 text-secondary showBtn pointer" data-id="{{$dep->id}}" data-name="{{$dep->name}}" data-route="{{ route('depreciation.show', $dep->id)}}"><i class="fas fa-ellipsis-h"></i></small>
-                            </td>                            
+                            </td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
                                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$dep->id}}Link"
@@ -86,7 +86,13 @@
             </div>
         </div>
     </div>
+    <div class="card shadow mb-3">
+        <div class="card-body">
+            <h4>Help with Depreciation</h4>
+            <p>Click <a href="{{route("documentation.index").'#collapseSixteenDepreciation'}}">here</a> for the Documentation on Depreciation on Adding and Removing!</p>
 
+        </div>
+    </div>
 </section>
 
 @endsection
@@ -232,7 +238,7 @@
         var years = $(this).data('years');
         $('#update_name').val(name);
         $('#update_years').val(years);
-        $('#updateForm').attr('action', route); 
+        $('#updateForm').attr('action', route);
         $('#updateDepModal').modal('show');
     });
 
@@ -241,7 +247,7 @@
         var route = $(this).data('route');
         $('#showDepModalLabel').html(name);
         $.ajax({
-            url: route, 
+            url: route,
             type: 'GET',
             success: function(response){
                 let html = "";
@@ -255,8 +261,8 @@
             },
         });
 
-        
-    }); 
+
+    });
 
     $(document).ready( function () {
         $('#depTable').DataTable({

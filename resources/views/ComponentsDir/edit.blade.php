@@ -15,6 +15,9 @@
                 <a href="{{ route('components.index') }}"
                    class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Components</a>
+                <a href="{{ route('documentation.index')."#collapseNineComponent"}}"
+                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                        class="fas fa-question fa-sm text-dark-50"></i>  need Help?</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
@@ -111,7 +114,7 @@
                             @php( $cat_array = [])
                             @foreach($component->category as $cc)
                             @php( $cat_array[] = $cc->id)
-                            
+
                             @endforeach
                             <div id="categories" class="border border-gray p-2 mb-3">
                                 <h4 class="h6 mb-4 text-center">Categories</h4>
@@ -137,7 +140,7 @@
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Component Image</h4>
                                     @if($component->photo()->exists())
-                                        <img id="profileImage" src="{{ asset($component->photo->path) ?? asset('images/svg/components_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal> 
+                                        <img id="profileImage" src="{{ asset($component->photo->path) ?? asset('images/svg/components_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal>
                                     @else
                                     <img id="profileImage"
                                          src="{{ asset('images/svg/components_image.svg') }}"

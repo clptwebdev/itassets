@@ -106,7 +106,12 @@
             </div>
         </div>
     </div>
-
+    <div class="card shadow mb-3">
+        <div class="card-body">
+            <h4>Help with Category's</h4>
+                <p>Click <a href="{{route("documentation.index").'#collapseSeventeenCategories'}}">here</a> for the Documentation on Categories on Adding and Removing!</p>
+        </div>
+    </div>
 </section>
 
 @endsection

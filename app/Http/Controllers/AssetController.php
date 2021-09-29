@@ -319,7 +319,7 @@ class AssetController extends Controller {
                 if($values != null){
                     $array[$field->id] = ['value' => $values];
                 }
-                
+
             }
         }
 
@@ -692,7 +692,7 @@ class AssetController extends Controller {
         }
 
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'assets-'.$date;
 

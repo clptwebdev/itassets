@@ -36,7 +36,7 @@
 
     <section>
         <p class="mb-4">Below are different tiles, one for each manufacturers stored in the management system. Each tile
-            has different manufacturers information that can be created, updated, and deleted.</p>
+            has different manufacturers information that can be created, updated, and deleted.Need Help Click <a href="{{route("documentation.index").'#collapseThirteenManufacturers'}}">here?</a> </p>
 
         <div class="row">
             @foreach($manufacturers as $manufacturer)
@@ -102,7 +102,7 @@
                                                         $total = 0;
                                                         foreach($manufacturer->assetModel as $assetModel){
                                                             $total += $assetModel->assets->count();
-                                                        }   
+                                                        }
                                                     @endphp
                                                     {{ $total}}
                                                 </td>
