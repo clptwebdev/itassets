@@ -22,7 +22,7 @@ class CreatedUser extends Mailable
     public function __construct(User $user, $newUser)
     {
             $this->user = $user;
-            $this->newUser = $name;
+            $this->newUser = $newUser;
     }
 
     /**
