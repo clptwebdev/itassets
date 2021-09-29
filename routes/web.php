@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth'], function() {
             $locations = auth()->user()->locations;
             $assets = auth()->user()->location_assets;
         }
+        
 
         return view('dashboard',
             [
