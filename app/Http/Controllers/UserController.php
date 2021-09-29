@@ -71,7 +71,7 @@ class UserController extends Controller {
         $unhash = $user->random_password(12);
         $password = Hash::make($unhash);
         $user->fill(['name' => $request->name, 'telephone' => $request->telephone, 'email' => $request->email, 'location_id' => $request->location_id, 'role_id' => $request->role_id, 'password' => $password])->save();
-        Mail::to('stuartcorns@outlook.com')->send(new \App\Mail\NewUserPassword($user, $unhash));
+        Mail::to($request->email)->send(new \App\Mail\NewUserPassword($user, $unhash));
 
         $array = explode(',', $request->permission_ids);
         $user->locations()->attach($array);
