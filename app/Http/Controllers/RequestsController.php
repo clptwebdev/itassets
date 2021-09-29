@@ -25,6 +25,7 @@ class RequestsController extends Controller
             'location_from' => $request->location_from, 
             'notes' => $request->notes,
             'user_id' => auth()->user()->id, 
+            'date' => $request->transfer_date,
             'status' => 0,
         ]);
         //Notify by email
@@ -42,6 +43,7 @@ class RequestsController extends Controller
             'model_type'=> $request->model_type, 
             'model_id'=>$request->model_id,
             'notes' => $request->notes,
+            'date' => $request->disposed_date,
             'user_id' => auth()->user()->id, 
             'status' => 0,
         ]);
@@ -82,6 +84,9 @@ class RequestsController extends Controller
                         'location_to'=> $requests->location_to, 
                         'location_from' => $requests->location_from, 
                         'value' => number_format($dep, 2),
+                        'notes' => $requests->notes,
+                        'created_at' => $requests->date,
+                        'date' => $requests->date,
                         'user_id' => $requests->user_id,
                         'super_id' => auth()->user()->id,
                     ]);
@@ -123,16 +128,18 @@ class RequestsController extends Controller
                         'user_id' => $model->user_id ?? 0,
                         'archived_id' => $requests->user_id,
                         'super_id' => auth()->user()->id,
+                        'date' => $requests->date,
+                        'notes' => $requests->notes,
                     ]);
                     $model->forceDelete();
-                    $requests->update(['status' => 1, 'super_id'  => auth()->user()->id]);
+                    $requests->update(['status' => 1, 'super_id'  => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
                     return back()->with('success_message','The Request has been approved');
                     break;
                 default:
 
             }
         }elseif($status == 2){
-            $requests->update(['status' => 2, 'super_id' => auth()->user()->id]);
+            $requests->update(['status' => 2, 'super_id' => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
             return back()->with('danger_message','The Request has been denied');
         }
     }

@@ -23,6 +23,7 @@ class CreateTransfersTable extends Migration
             $table->foreignId('user_id');
             $table->foreignId('super_id');
             $table->text('notes')->nullable();
+            $table->timestamp('date');
             $table->timestamps();
         });
     }

@@ -416,7 +416,11 @@
                             <input type="text" value="" id="asset_name" class="form-control" disabled>
                         </div>
                         <div class="form-group">
-                            <label for="notes">Additional Comments:</label>
+                            <label for="disposal_date">Date of Disposal</label>
+                            <input type="date" value="" id="disposed_date" name="disposed_date" class="form-control" value="{\Carbon\Carbon::now()->format('Y-m-d')}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Reasons for:</label>
                             <textarea name="notes" class="form-control" rows="5"></textarea>
                         </div>
                         <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
@@ -447,7 +451,11 @@
                             <input name="model_type" type="hidden" value="asset">
                             <input id="model_id" name="model_id" type="hidden" value="">
                             <input id="location_id" name="location_from" type="hidden" value="">
-                            <input id="location_from" type="text" class="form-control" value="" disabled>
+                            <input id="location_from" type="text" class="form-control" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="disposal_date">Date of Transfer</label>
+                            <input type="date" value="" id="transfer_date" name="transfer_date" class="form-control" value="">
                         </div>
                         <div class="form-group">
                             <label for="School Location">Transfer to:</label><span

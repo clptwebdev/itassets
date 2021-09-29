@@ -105,14 +105,15 @@
                                     @if(isset($archive->location->photo->path))
                                         <img src="{{ asset($archive->location->photo->path)}}" height="30px" alt="{{$archive->location->name}}" title="{{ $archive->location->name }}<br>{{ $asset->room ?? 'Unknown'}}"/>
                                     @else
-                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($archive->location->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
                                             .strtoupper(substr($archive->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                     <small class="d-none d-md-inline-block">{{$archive->location->name}}</small>
                                 </td>
                                 <td>{{ $archive->asset_tag ?? 'N/A'}}</td>
-                                <td class="d-none d-md-table-cell"data-sort="{{ strtotime($archive->purchased_date)}}">
-                                    {{ \Carbon\Carbon::parse($archive->purchased_date)->format('d/m/Y')}}
+                                <td class="d-none d-md-table-cell"data-sort="{{ strtotime($archive->date)}}">
+                                    {{ \Carbon\Carbon::parse($archive->purchased_date)->format('d/m/Y')}}<br>
+                                    <small class="text-danger">Disposed on:{{ \Carbon\Carbon::parse($archive->date)->format('d/m/Y')}}</small>
                                 </td>
                                 <td class="text-center  d-none d-xl-table-cell">
                                     £{{ $archive->purchased_cost }}<br><small>Value at Disposal - £{{ $archive->archived_cost}}</small>
@@ -171,10 +172,10 @@
                 "autoWidth": false,
                 "pageLength": 25,
                 "columnDefs": [{
-                    "targets": [9],
+                    "targets": [7,8],
                     "orderable": false
                 }],
-                "order": [[1, "asc"]],
+                "order": [[4, "desc"]],
             });
         });
     </script>

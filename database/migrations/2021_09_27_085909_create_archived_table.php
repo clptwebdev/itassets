@@ -31,6 +31,8 @@ class CreateArchivedTable extends Migration
             $table->foreignId("super_id");
             $table->text('comments')->nullable();
             $table->text('logs')->nullable();
+            $table->text('notes');
+            $table->timestamp('date');
             $table->timestamps();
         });
     }

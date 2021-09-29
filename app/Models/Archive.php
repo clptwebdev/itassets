@@ -9,7 +9,7 @@ class Archive extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'asset_tag', 'asset_model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'archived_cost', 'supplier_id', 'order_no', 'location_id', 'user_id', 'super_id'];
+    protected $fillable = ['name', 'asset_tag', 'asset_model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'archived_cost', 'supplier_id', 'order_no', 'location_id', 'user_id', 'super_id', 'notes', 'date'];
 
     public function location()
     {

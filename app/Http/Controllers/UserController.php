@@ -75,6 +75,8 @@ class UserController extends Controller {
 
         $array = explode(',', $request->permission_ids);
         $user->locations()->attach($array);
+
+        Mail::to('apollo@clpt.co.uk')->send(new \App\Mail\DeletedUser(auth()->user(), $name));
         session()->flash('success_message', $request->name . ' has been created successfully');
 
         return redirect(route('users.index'));
