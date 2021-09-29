@@ -43,7 +43,8 @@ class UserPolicy
                 $permission++;
             }
         }
-        if($permission != 0 && in_array($user->role_id, $this->admin && $admin->role_id <= $user->role_id)){
+
+        if($permission != 0 && in_array($user->role_id, $this->admin) && $admin->role_id <= $user->role_id){
             return true;
         }else{
             return false;
