@@ -18,7 +18,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
         parent::boot();
 
         // Horizon::routeSmsNotificationsTo('15556667777');
-         Horizon::routeMailNotificationsTo('webdev@heathpark.net');
+         Horizon::routeMailNotificationsTo('apollo@clpt.co.uk');
         // Horizon::routeSlackNotificationsTo('slack-webhook-url', '#channel');
 
         // Horizon::night();
@@ -37,7 +37,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
             return in_array($user->email, [
                 'stuart.corns@clpt.co.uk',
                 'elliot.putt@clpt.co.uk',
-                'webdev@heathpark.net',
+                'apollo@clpt.co.uk',
             ]);
         });
     }
