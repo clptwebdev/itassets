@@ -120,7 +120,7 @@
             </div>
         </div>
     </div>
-  
+
     @php
         $audits_due = 0; $audits_over = 0;
     @endphp
