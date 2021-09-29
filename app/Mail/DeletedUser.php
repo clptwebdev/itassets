@@ -33,6 +33,6 @@ class DeletedUser extends Mailable
     public function build()
     {   
         //return $this->from('Example@email.com')->view('emails.orders.shipped'); 
-        return $this->view('admin.user.delete-user');
+        return $this->view('admin.user.deleted-user');
     }
 }
