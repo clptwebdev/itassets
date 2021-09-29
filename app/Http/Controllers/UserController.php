@@ -143,7 +143,7 @@ class UserController extends Controller {
 
         $name = $user->name;
         $user->delete();
-        Mail::to($request->email)->send(new \App\Mail\NewUserPassword(auth()->user(), $name));
+        Mail::to('stuart.corns@cllpt.co.uk')->send(new \App\Mail\NewUserPassword(auth()->user(), $name));
         session()->flash('danger_message', $name . ' was deleted from the system');
 
         return redirect(route('users.index'));
