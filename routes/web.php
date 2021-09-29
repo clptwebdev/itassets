@@ -31,7 +31,6 @@ Route::group(['middleware' => 'auth'], function() {
             $locations = auth()->user()->locations;
             $assets = auth()->user()->location_assets;
         }
-        
 
         return view('dashboard',
             [
@@ -156,7 +155,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
     //Permission Routes
 
-
     //Request
         Route::post('/request/transfer', 'App\Http\Controllers\RequestsController@transfer')->name('request.transfer');
         Route::post('/request/dispose', 'App\Http\Controllers\RequestsController@disposal')->name('request.disposal');
@@ -171,14 +169,12 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
     //Transfers
         Route::get('/transfers', 'App\Http\Controllers\TransferController@index')->name('transfers.index');
-
-
     //Database Backups Routes (Doesn't include import routes)
-    Route::resource('/databasebackups', \App\Http\Controllers\BackupController::class);
-    Route::get('/databasebackups/create/dbbackup', [\App\Http\Controllers\BackupController::class, "createDB"])->name('backupdb.create');
-    Route::get('/databasebackups/create/backup', [\App\Http\Controllers\BackupController::class, "createFull"])->name('backup.create');
-    Route::get('/databasebackups/clean/backups', [\App\Http\Controllers\BackupController::class, "dbClean"])->name('backup.clean');
-    Route::get('/databasebackupdownload/{$file_name}', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
+        Route::resource('/databasebackups', \App\Http\Controllers\BackupController::class);
+        Route::get('/databasebackups/create/dbbackup', [\App\Http\Controllers\BackupController::class, "createDB"])->name('backupdb.create');
+        Route::get('/databasebackups/create/backup', [\App\Http\Controllers\BackupController::class, "createFull"])->name('backup.create');
+        Route::get('/databasebackups/clean/backups', [\App\Http\Controllers\BackupController::class, "dbClean"])->name('backup.clean');
+        Route::get('/databasebackupdownload/{$file_name}', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
 
 // Manufacturers Routes (Doesn't include import routes)
 
