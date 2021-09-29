@@ -10,16 +10,22 @@ class AccessoryPolicy
 {
     use HandlesAuthorization;
 
+    protected $super = [1];
+    protected $admin = [1,2];
+    protected $technician = [1,3];
+    protected $manager = [1,2,3,4];
+    protected $all = [1,2,3,4,5];
+
     
     public function viewAll(User $user)
     {
-        return $user->role_id != 0 && $user->role_id <= 4;
+        return in_array($user->role_id, $this->all);
     }
 
     public function view(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->all) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -34,7 +40,7 @@ class AccessoryPolicy
     public function update(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -44,7 +50,7 @@ class AccessoryPolicy
     public function delete(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -54,7 +60,7 @@ class AccessoryPolicy
     public function restore(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -64,7 +70,7 @@ class AccessoryPolicy
     public function forceDelete(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->super) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
@@ -73,31 +79,41 @@ class AccessoryPolicy
 
     public function recycleBin(User $user)
     {
-        return $user->role_id != 0 && $user->role_id <= 4;
+        return in_array($user->role_id, $this->manager);
     }
 
     public function import(User $user,)
     {
-        return $user->role_id != 0 && $user->role_id <= 3;
+        return in_array($user->role_id, $this->manager);
     }
 
     public function export(User $user, Accessory $accessory)
     {
-        return $user->role_id != 0 && $user->role_id <= 4;
+        return in_array($user->role_id, $this->all);
     }
 
     public function generatePDF(User $user)
     {
-        return $user->role_id != 0 && $user->role_id <= 4;
+        return in_array($user->role_id, $this->all);
     }
 
     public function generateAccessoryPDF(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if($user->role_id == 1 || ($user->role_id != 0 && $user->role_id <= 3) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->all) && in_array($accessory->location_id, $locations)){
             return true;
         }else{
             return false;
         }
+    }
+
+    public function transfer(User $user, Accessory $accessory){
+        $locations = $user->locations->pluck('id')->toArray();
+        return in_array($user->role_id, $this->technician) && in_array($accessory->location_id, $locations);
+    }
+
+    public function dispose(User $user, Accessory $accessory){
+        $locations = $user->locations->pluck('id')->toArray();
+        return in_array($user->role_id, $this->technician) && in_array($accessory->location_id, $locations);
     }
 }

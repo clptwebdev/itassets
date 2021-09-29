@@ -88,8 +88,9 @@
                                     <option value="1" @if(old('role_id') == 1){{'selected'}}@elseif($user->role_id == 1){{ 'selected'}}@endif>Super Administrator</option>
                                     @endif
                                     <option value="2" @if(old('role_id') == 2){{'selected'}}@elseif($user->role_id == 2){{ 'selected'}}@endif>Administrator</option>
-                                    <option value="3" @if(old('role_id') == 3){{'selected'}}@elseif($user->role_id == 3){{ 'selected'}}@endif>User Manager</option>
-                                    <option value="4" @if(old('role_id') == 4){{'selected'}}@elseif($user->role_id == 4){{ 'selected'}}@endif>User</option>
+                                    <option value="3" @if(old('role_id') == 3){{'selected'}}@elseif($user->role_id == 3){{ 'selected'}}@endif>Technician</option>
+                                    <option value="4" @if(old('role_id') == 4){{'selected'}}@elseif($user->role_id == 4){{ 'selected'}}@endif>User Manager</option>
+                                    <option value="5" @if(old('role_id') == 5){{'selected'}}@elseif($user->role_id == 5){{ 'selected'}}@endif>User</option>
                                 </select>
                             </div>
                         </div>

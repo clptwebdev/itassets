@@ -24,6 +24,13 @@ class AuthServiceProvider extends ServiceProvider
          'App\Models\Miscellanea' => 'App\Policies\MiscellaneaPolicy',
          'App\Models\Manufacturer' => 'App\Policies\ManufacturerPolicy',
          'App\Models\Supplier' => 'App\Policies\SupplierPolicy',
+         'App\Models\Archive' => 'App\Policies\ArchivePolicy',
+         'App\Models\Transfer' => 'App\Policies\TransferPolicy',
+         'App\Models\Request' => 'App\Policies\RequestPolicy',
+         'App\Models\Depreciation' => 'App\Policies\DepreciationPolicy',
+         'App\Models\Category' => 'App\Policies\CategoryPolicy',
+         'App\Models\Fieldset' => 'App\Policies\FieldsetPolicy',
+         'App\Models\Field' => 'App\Policies\FieldPolicy',
     ];
 
     /**

@@ -77,7 +77,10 @@
                                 <?php $consumables = \App\Models\Consumable::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
                                 {{count($consumables)}}
                             </td>
-                            <td class="text-center">N/A</td>
+                            <td class="text-center">
+                                <?php $miscellaneous = \App\Models\Miscellanea::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
+                                {{count($miscellaneous)}}
+                            </td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
                                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$category->id}}Link"
@@ -86,9 +89,13 @@
                                     </a>
                                     <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$category->id}}Link">
                                         <div class="dropdown-header">Category Options:</div>
-                                        <a href="#" class="dropdown-item updateBtn"
+                                        @can('update', $category)
+                                            <a href="#" class="dropdown-item updateBtn"
                                         data-id="{{$category->id}}" data-name="{{ $category->name}}" data-route="{{ route('category.update', $category->id)}}">Edit</a>
-                                        <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('category.destroy', $category->id)}}">Delete</a>
+                                        @endcan
+                                        @can('delete', $category)
+                                            <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('category.destroy', $category->id)}}">Delete</a>
+                                        @endcan
                                     </div>
                                 </div>
                             </td>

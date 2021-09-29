@@ -217,8 +217,15 @@ class AssetController extends Controller {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'view']));
         }
 
+        if(auth()->user()->role_id == 1){
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+        }
+
         return view('assets.show', [
             "asset" => $asset,
+            "locations" => $locations,
         ]);
     }
 
@@ -340,7 +347,7 @@ class AssetController extends Controller {
 
         $validated = $request->validate($v);
         $asset->fill(array_merge($request->only(
-            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+            'name', 'asset_tag', 'asset_model', 'serial_no', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]))->save();
         if(!empty($array)){
             $asset->fields()->sync($array);

@@ -77,8 +77,12 @@
                                         class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                         aria-labelledby="dropdownMenuLink">
                                         <div class="dropdown-header">Asset Options:</div>
+                                        @can('update', $field)
                                         <a href="{{route('fields.edit', $field->id) }}" class="dropdown-item">Edit</a>
+                                        @endcan
+                                        @can('delete', $field)
                                         <a class="dropdown-item" href="#" data-route="{{ route('fields.destroy', $field->id)}}">Delete</a>
+                                        @endcan
                                     </div>
                                 </div>
                             </td>

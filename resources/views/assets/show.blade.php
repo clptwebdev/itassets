@@ -13,11 +13,15 @@
         <div>
             <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-dark-50"></i> Back</a>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-lilac shadow-sm transferBtn"><i
+                        class="fas fa-exchange-alt fa-sm text-dark-50"></i> Request Transfer</a>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm disposalBtn"><i
+                            class="fas fa-archive fa-sm text-dark-50"></i> Request Disposal</a>
             @can('generatePDF', $asset)
             <a href="{{ route('asset.showPdf', $asset->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm loading"><i
                         class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</a>
             @endcan
-            @can('edit', $asset)
+            @can('update', $asset)
             <a href="{{ route('assets.edit', $asset->id)}}"
                class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                     class="fas fa-edit fa-sm text-dark-50"></i> Edit</a>
@@ -232,6 +236,87 @@
         </div>
     </div>
 
+     <!-- Transfer Modal-->
+     <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog" aria-labelledby="reuqestTransferLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form action="{{ route('request.transfer')}}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rrequestTransferLabel">Request to Transfer this Asset to another Location?
+                        </h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @csrf
+                            <input name="model_type" type="hidden" value="asset">
+                            <input name="model_id" type="hidden" value="{{ $asset->id }}">
+                            <input name="location_from" type="hidden" value="{{ $asset->location_id }}">
+                            <input type="text" class="form-control" value="{{ $asset->location->name }}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="School Location">Transfer to:</label><span
+                                class="text-danger">*</span>
+                            <select type="text"
+                                class="form-control mb-3 @if($errors->has('location_id')){{'border-danger'}}@endif"
+                                name="location_to" required>
+                                <option value="0" selected>No Location</option>
+                                @foreach($locations as $location)
+                                @php if(old('location_id')){ $id=old('location_id');}else{ $id= $asset->location_id;} @endphp
+                                <option value="{{$location->id}}" @if($id == $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Additional Comments:</label>
+                            <textarea name="notes" class="form-control" rows="5"></textarea>
+                        </div>
+                        <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-lilac" type="submit">Request Transfer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disposal Modal-->
+    <div class="modal fade bd-example-modal-lg" id="requestDisposal" tabindex="-1" role="dialog" aria-labelledby="requestDisposalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form action="{{ route('request.disposal')}}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requestDisposalLabel">Request to Dispose of the Asset?
+                        </h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @csrf
+                            <input name="model_type" type="hidden" value="asset">
+                            <input name="model_id" type="hidden" value="{{ $asset->id }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Additional Comments:</label>
+                            <textarea name="notes" class="form-control" rows="5"></textarea>
+                        </div>
+                        <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-coral" type="submit">Request Disposal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('js')
@@ -241,6 +326,14 @@
             $('#asset-id').val($(this).data('id'))
             //showModal
             $('#removeassetModal').modal('show')
+        });
+
+        $('.transferBtn').click(function () {
+            $('#requestTransfer').modal('show')
+        });
+
+        $('.disposalBtn').click(function () {
+            $('#requestDisposal').modal('show')
         });
 
         $('#confirmBtn').click(function () {

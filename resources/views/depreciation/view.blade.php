@@ -69,9 +69,13 @@
                                     </a>
                                     <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$dep->id}}Link">
                                         <div class="dropdown-header">Asset Options:</div>
+                                        @can('update', $dep)
                                         <a href="#" class="dropdown-item updateBtn" data-id="{{$dep->id}}"
                                         data-route="{{ route('depreciation.update', $dep->id)}}" data-name="{{$dep->name}}" data-years="{{$dep->years}}">Edit</a>
+                                        @endcan
+                                        @can('delete', $dep)
                                         <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('depreciation.destroy', $dep->id)}}">Delete</a>
+                                        @endcan
                                     </div>
                                 </div>
                             </td>

@@ -77,19 +77,22 @@
                                 @php
                                 switch($user->role_id){
                                     case 0:
-                                        echo '<small class="rounded p-1 m-1 mb-2 bg-danger text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="No Access Permitted">No Access</small>';
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-grey text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="No Access Permitted">No Access</small>';
                                         break;
                                     case 1:
-                                        echo '<small class="rounded p-1 m-1 mb-2 bg-primary text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="Full Control:<br>Full User Permissions<br>Full Location Permissions">Super Admin</small>';
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-coral text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="Full Control:<br>Full User Permissions<br>Full Location Permissions">Super Admin</small>';
                                         break;
                                     case 2:
-                                        echo '<small class="rounded p-1 m-1 mb-2 bg-info text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="Administrator:<br>Location Based User Permissions<br>Set Location Permissions">Administrator</small>';
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-blue text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="Administrator:<br>Location Based User Permissions<br>Set Location Permissions">Administrator</small>';
                                         break;
                                     case 3:
-                                        echo '<small class="rounded p-1 m-1 mb-2 bg-success text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="User Manager:<br>No User Permissions<br>Location Based Permissions">User Manager</small>';
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-green text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="Technician:<br>Location Based Permissions<br>Request Disposals and/or Transfers">Technician</small>';
                                         break;
                                     case 4:
-                                        echo '<small class="rounded p-1 m-1 mb-2 bg-secondary text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="User:<br>No User Permissions<br>View Only - Assets">User</small>';
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-lilac text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="User Manager:<br>No User Permissions<br>Location Based Permissions"">User Manager</small>';
+                                        break;
+                                    case 5:
+                                        echo '<small class="rounded p-1 m-1 mb-2 bg-yellow text-white d-inline-block pointer" data-toggle="tooltip" data-html="true" data-placement="left" title="User:<br>No User Permissions<br>View Only - Assets">User</small>';
                                         break;
                                 }
 
