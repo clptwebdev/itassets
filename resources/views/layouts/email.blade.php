@@ -109,7 +109,7 @@
             text-decoration: none !important;
         }
     </style>
-    @yeild('css')
+    @yield('css')
     <!--[if !mso]><!-->
     <link href="https://fonts.googleapis.com/css?family=Cabin:400,700&display=swap" rel="stylesheet" type="text/css">
     <!--<![endif]-->
@@ -410,7 +410,7 @@
                                                                 <tr>
                                                                     <td style="padding-right: 0px;padding-left: 0px;" align="center">
                                                                         <img align="center" border="0"
-                                                                            src="{{ asset('images/svg/device-image.svg')}}" alt="Manage Asset Devices"
+                                                                            src="{{ asset('images\svg\device-image.svg')}}" alt="Manage Asset Devices"
                                                                             title="Manage Asset Devices"
                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 21%;max-width: 64.05px;"
                                                                             width="64.05" />
@@ -472,7 +472,7 @@
                                                                 <tr>
                                                                     <td style="padding-right: 0px;padding-left: 0px;" align="center">
                                                                         <img align="center" border="0"
-                                                                            src="{{ asset('images/svg/suppliers.svg')}}" alt="Image"
+                                                                            src="{{ asset('images\svg\suppliers.svg')}}" alt="Image"
                                                                             title="Image"
                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 21%;max-width: 64.05px;"
                                                                             width="64.05" />
@@ -546,7 +546,7 @@
                                                                 <tr>
                                                                     <td style="padding-right: 0px;padding-left: 0px;" align="center">
                                                                         <img align="center" border="0"
-                                                                            src="images/image-8.png" alt="Image"
+                                                                            src="{{ asset('images\svg\money-image.svg')}}" alt="Image"
                                                                             title="Image"
                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 21%;max-width: 64.05px;"
                                                                             width="64.05" />
