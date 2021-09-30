@@ -93,7 +93,25 @@
                                 </td>
                                 <td class="text-center">{{$accessory->manufacturer->name ?? "N/A"}}</td>
                                 <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
-                                <td>£{{$accessory->purchased_cost}}</td>
+                                <td class="text-center">
+                                    £{{$accessory->purchased_cost}}
+                                    @if($accessory->depreciation->exists())
+                                        <br>
+                                        @php
+                                            $eol = Carbon\Carbon::parse($accessory->purchased_date)->addYears($accessory->depreciation->years);
+                                            if($eol->isPast()){
+                                                $dep = 0;
+                                            }else{
+
+                                                $age = Carbon\Carbon::now()->floatDiffInYears($accessory->purchased_date);
+                                                $percent = 100 / $accessory->depreciation->years;
+                                                $percentage = floor($age)*$percent;
+                                                $dep = $accessory->purchased_cost * ((100 - $percentage) / 100);
+                                            }
+                                        @endphp
+                                        <small>(*£{{ number_format($dep, 2)}})</small>
+                                    @endif
+                                </td>
                                 <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center"  style="color: {{$accessory->status->colour}};">
                                     <i class="{{$accessory->status->icon}}"></i> {{ $accessory->status->name }}

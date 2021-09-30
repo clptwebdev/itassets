@@ -64,9 +64,9 @@
                         <tr>
                             <th><small>Name</small></th>
                             <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
+                            <th class="text-center"><small>Model</small></th>
                             <th><small>Date</small></th>
-                            <th><small>Cost</small></th>
+                            <th class="text-center"><small>Cost (Value)</small></th>
                             <th><small>Supplier</small></th>
                             <th class="text-center"><small>Status</small></th>
                             <th class="text-center"><small>Warranty</small></th>
@@ -77,9 +77,9 @@
                             <tr>
                                 <th><small>Name</small></th>
                                 <th class="text-center"><small>Location</small></th>
-                                <th class="text-center"><small>Manufacturers</small></th>
+                                <th class="text-center"><small>Model</small></th>
                                 <th><small>Purchased Date</small></th>
-                                <th><small>Purchased Cost</small></th>
+                                <th class="text-center"><small>Cost (Value)</small></th>
                                 <th><small>Supplier</small></th>
                                 <th class="text-center"><small>Status</small></th>
                                 <th class="text-center"><small>Warranty</small></th>
@@ -102,18 +102,39 @@
                                             .strtoupper(substr($accessory->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                 </td>
-                                <td class="text-center">{{$accessory->manufacturer->name ?? "N/A"}}</td>
+                                <td class="text-center">{{ $accessory->model ?? 'No Model'}}<br><small>{{$accessory->manufacturer->name ?? "N/A"}}</small></td>
                                 <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
-                                <td>£{{$accessory->purchased_cost}}</td>
+                                <td class="text-center">
+                                    £{{$accessory->purchased_cost}}
+                                    @if($accessory->depreciation()->exists())
+                                        <br>
+                                        @php
+                                            $eol = Carbon\Carbon::parse($accessory->purchased_date)->addYears($accessory->depreciation->years);
+                                            if($eol->isPast()){
+                                                $dep = 0;
+                                            }else{
+
+                                                $age = Carbon\Carbon::now()->floatDiffInYears($accessory->purchased_date);
+                                                $percent = 100 / $accessory->depreciation->years;
+                                                $percentage = floor($age)*$percent;
+                                                $dep = $accessory->purchased_cost * ((100 - $percentage) / 100);
+                                            }
+                                        @endphp
+                                        <small>(*£{{ number_format($dep, 2)}})</small>
+                                    @endif
+                                </td>
                                 <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center"  style="color: {{$accessory->status->colour}};">
                                     <i class="{{$accessory->status->icon}}"></i> {{ $accessory->status->name }}
                                 </td>
                                 @php $warranty_end = \Carbon\Carbon::parse($accessory->purchased_date)->addMonths($accessory->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                    {{ $accessory->warranty }} Months
-
-                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small></td>
+                                    {{ $accessory->warranty }} Months<br>
+                                    @if(\Carbon\Carbon::parse($warranty_end)->isPast())
+                                        <span class="text-coral">{{ 'Expired' }}</span>
+                                    @else
+                                    <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                    @endif
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$accessory->id}}Link"

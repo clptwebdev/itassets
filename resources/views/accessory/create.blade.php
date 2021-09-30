@@ -46,42 +46,48 @@
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <input type="text"
-                                       class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name" id="name" placeholder="Name">
+                                       class="form-control <?php if ($errors->has('name')) {?>border border-danger<?php }?>"
+                                       name="name" id="name" placeholder="Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="model">Model</label>
+                                <input type="text"
+                                       class="form-control mb-3 <?php if ($errors->has('model')){?>border border-danger<?php }?>"
+                                       name="model" id="model" >
                             </div>
                             <div class="form-group">
                                 <label for="serial_no">Serial_no</label>
                                 <input type="text"
-                                       class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
+                                       class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border border-danger<?php }?>"
                                        name="serial_no" id="serial_no" required>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label for="order_no">Order_no</label>
                                     <input type="text"
-                                           class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                           id="order_no" name="order_no" required>
+                                           class="form-control <?php if ($errors->has('order_no')) {?>border border-danger<?php }?>"
+                                           id="order_no" name="order_no">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_cost">Purchased Cost</label>
                                     <input type="text"
-                                           class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
+                                           class="form-control <?php if ($errors->has('purchase_cost')) {?>border border-danger<?php }?>"
                                            id="purchased_cost" name="purchased_cost" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_date">Purchased Date</label>
                                     <input type="date"
-                                           class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
+                                           class="form-control <?php if ($errors->has('purchased_date')) {?>border border-danger<?php }?>"
                                            id="purchased_date" name="purchased_date" required>
                                 </div>
 
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
 
                                     <label for="suppliers">Supplier</label>
                                     <select type="text"
-                                            class="form-control <?php if ($errors->has('supplier_id')) {?>border-danger<?php }?>"
+                                            class="form-control <?php if ($errors->has('supplier_id')) {?>border border-danger<?php }?>"
                                             id="supplier_id" name="supplier_id" required>
                                         <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif>No Supplier
                                         </option>
@@ -92,10 +98,25 @@
                                     </select>
 
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
+
+                                    <label for="suppliers">Depreciation Model</label>
+                                    <select type="text"
+                                            class="form-control <?php if ($errors->has('depreciation_id')) {?>border border-danger<?php }?>"
+                                            id="depreciation_id" name="depreciation_id" required>
+                                        <option value="0" @if(old('depreciation_id') == 0){{'selected'}}@endif>No Depreciation
+                                        </option>
+                                        @foreach($depreciations as $depreciation)
+                                            <option
+                                                value="{{ $depreciation->id }}" @if(old('depreciation_id') == $depreciation->id){{'selected'}}@endif>{{ $depreciation->name}}</option>
+                                        @endforeach
+                                    </select>
+
+                                </div>
+                                <div class="form-group col-md-4">
                                     <label for="status">Status</label>
                                     <select
-                                        class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
+                                        class="form-control <?php if ($errors->has('status_id')) {?>border border-danger<?php }?>"
                                         id="status_id" name="status_id">
                                         <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset</option>
                                         @foreach($statuses as $status)
@@ -142,7 +163,7 @@
                             <div class="form-group col-md-12">
                                 <label for=" school location">Location</label>
                                 <select
-                                    class="form-control <?php if ($errors->has('location_id')) {?>border-danger<?php }?>"
+                                    class="form-control <?php if ($errors->has('location_id')) {?>border border-danger<?php }?>"
                                     id="location_id" name="location_id" required>
                                     <option value="0" @if(old('location_id') == 0){{'selected'}}@endif>Unallocated
                                     </option>
@@ -156,13 +177,13 @@
                             <div class="form-group col-md-12">
                                 <label for="warranty">Warranty</label>
                                 <input type="text"
-                                       class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
+                                       class="form-control <?php if ($errors->has('warranty')) {?>border border-danger<?php }?>"
                                        id="warranty" name="warranty">
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="Warranty">Manufacturer</label>
                                 <select
-                                    class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
+                                    class="form-control <?php if ($errors->has('manufacturer')) {?>border border-danger<?php }?>"
                                     id="manufacturer_id" name="manufacturer_id">
                                     <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
                                     </option>

@@ -11,7 +11,7 @@ class Accessory extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'notes','manufacturer_id', 'photo_id'];
+    protected $fillable = ['name', 'model', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'notes','manufacturer_id', 'photo_id', 'depreciation_id'];
 
     public function photo()
     {
@@ -36,6 +36,11 @@ class Accessory extends Model
     public function status()
     {
         return $this->belongsTo(Status::class);
+    }
+
+    public function depreciation()
+    {
+        return $this->belongsTo(Depreciation::class);
     }
 
     public function manufacturer()

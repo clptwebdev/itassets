@@ -50,32 +50,38 @@
                                 <label for="name">Name</label>
                                 <input type="text"
                                        class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name" id="name" placeholder="accessory Name" value="{{$accessory->name}}">
+                                       name="name" id="name" placeholder="accessory Name" value="{{old('name') ?? $accessory->name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="model">Model</label>
+                                <input type="text"
+                                       class="form-control mb-3 <?php if ($errors->has('model')){?>border border-danger<?php }?>"
+                                       name="model" id="model" value="{{old('model') ?? $accessory->model}}">
                             </div>
                             <div class="form-group">
                                 <label for="serial_no">Serial_no</label>
                                 <input type="text"
                                        class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                       name="serial_no" id="serial_no" value="{{$accessory->serial_no}}">
+                                       name="serial_no" id="serial_no" value="{{old('serial_no') ?? $accessory->serial_no}}">
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label for="order_no">Order_no</label>
                                     <input type="text"
                                            class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                           id="order_no" name="order_no"  value="{{$accessory->order_no}}" required>
+                                           id="order_no" name="order_no"  value="{{old('order_no') ?? $accessory->order_no}}" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_cost">Purchased Cost</label>
                                     <input type="text"
                                            class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
-                                           id="purchased_cost" name="purchased_cost" value="{{$accessory->purchased_cost}}" required>
+                                           id="purchased_cost" name="purchased_cost" value="{{old('purchased_cost') ?? $accessory->purchased_cost}}" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_date">Purchased Date</label>
                                     <input type="date"
                                            class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
-                                           id="purchased_date" name="purchased_date" value="{{ \Carbon\Carbon::parse($accessory->purchased_date)->format('Y-m-d')}}" required>
+                                           id="purchased_date" name="purchased_date" value="{{old('purchased_date') ??  \Carbon\Carbon::parse($accessory->purchased_date)->format('Y-m-d')}}" required>
                                 </div>
 
                             </div>
@@ -91,7 +97,7 @@
                                         </option>
                                         @foreach($suppliers as $supplier)
                                             <option
-                                                value="{{ $supplier->id }}" @isset($accessory->supplier->id)@if($accessory->supplier->id == $supplier->id){{'selected'}}@endif @endisset>{{ $supplier->name}}</option>
+                                                value="{{ $supplier->id }}" @if((old('supplier_id') || $accessory->supplier->id) == $supplier->id){{'selected'}}@endif>{{ $supplier->name}}</option>
                                         @endforeach
                                     </select>
 
@@ -105,7 +111,7 @@
                                         </option>
                                         @foreach($statuses as $status)
                                             <option
-                                                value="{{ $status->id }}"@isset($accessory->status->id) @if($accessory->status->id == $status->id){{'selected'}}@endif @endisset>{{ $status->name}}</option>
+                                                value="{{ $status->id }}" @if((old('status_id') || $accessory->status_id) == $supplier->id){{'selected'}}@endif>{{ $status->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -126,7 +132,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="notes">Notes</label>
-                                <textarea name="notes" id="notes" class="form-control" rows="10">{{$accessory->notes}}</textarea>
+                                <textarea name="notes" id="notes" class="form-control" rows="10">{{ old('notes') ?? $accessory->notes}}</textarea>
                             </div>
 
                         </div>

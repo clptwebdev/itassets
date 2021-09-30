@@ -18,6 +18,7 @@ class CreateAccessoriesTable extends Migration
             $table->timestamps();
             $table->string("serial_no");
             $table->string("name");
+            $table->string("model")->nullable();
             $table->foreignId("status_id")->nullable();
             $table->date("purchased_date")->nullable();
             $table->decimal("purchased_cost",11,2)->nullable();
@@ -27,6 +28,7 @@ class CreateAccessoriesTable extends Migration
             $table->string("warranty")->default("0")->nullable();
             $table->foreignId("location_id");
             $table->foreignId("photo_id")->default("0");
+            $table->foreignId('depreciation_id')->nullable();
             $table->text("notes")->nullable();
             $table->softDeletes();
         });

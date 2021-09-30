@@ -8,6 +8,7 @@ use App\Models\Accessory;
 use App\Models\Category;
 use App\Models\Location;
 use App\Models\Manufacturer;
+use App\Models\Depreciation;
 use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
@@ -52,6 +53,7 @@ class AccessoryController extends Controller
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
             'categories' => Category::all(),
+            'depreciations' => Depreciation::all(),
         ]);
     }
 
@@ -75,11 +77,12 @@ class AccessoryController extends Controller
 
         $request->validate([
             "name" => "required|max:255",
+            "model" => "nullable",
             "supplier_id" => "required",
             "location_id" => "required",
             "notes" => "nullable",
             "status_id" => "nullable",
-            'order_no' => 'required',
+            'order_no' => 'nullable',
             'serial_no' => 'required',
             'warranty' => 'int|nullable',
             'purchased_date' => 'nullable|date',
@@ -87,7 +90,7 @@ class AccessoryController extends Controller
         ]);
 
         $accessory = Accessory::create($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ));
         $accessory->category()->attach($request->category);
         return redirect(route("accessories.index"));
@@ -116,6 +119,7 @@ class AccessoryController extends Controller
         if($request->ajax()){
             $validation = Validator::make($request->all(), [
                 "name.*" => "required|max:255",
+                "model" => "nullable",
                 'order_no.*' => 'required',
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
@@ -131,6 +135,7 @@ class AccessoryController extends Controller
                 {
                     $accessory = new Accessory;
                     $accessory->name = $request->name[$i];
+                    $accessory->model = $request->model[$i];
                     $accessory->serial_no = $request->serial_no[$i];
                     $accessory->status_id = $request->status_id[$i];
                     $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
@@ -142,6 +147,7 @@ class AccessoryController extends Controller
                     $accessory->location_id = $request->location_id[$i];
                     $accessory->notes = $request->notes[$i];
                     $accessory->photo_id =  0;
+                    $accessory->depreciation_id = $request->depreciation_id[$i];
                     $accessory->save();
                 }
 
@@ -182,6 +188,7 @@ class AccessoryController extends Controller
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
             'categories' => Category::all(),
+            'depreciations' => Depreciation::all(),
         ]);
     }
 
@@ -193,10 +200,11 @@ class AccessoryController extends Controller
 
         $request->validate([
             "name" => "required|max:255",
+            "model" => "nullable",
             "supplier_id" => "required",
             "location_id" => "required",
             "notes" => "nullable",
-            'order_no' => 'required',
+            'order_no' => 'nullable',
             'serial_no' => 'required',
             'warranty' => 'int|nullable',
             'purchased_date' => 'nullable|date',
@@ -204,7 +212,7 @@ class AccessoryController extends Controller
         ]);
 
         $accessory->fill($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ))->save();
         session()->flash('success_message', $accessory->name.' has been Updated successfully');
         $accessory->category()->sync($request->category);
@@ -314,6 +322,7 @@ class AccessoryController extends Controller
                     "suppliers"=>Supplier::all(),
                     "locations"=>Location::all(),
                     "manufacturers"=>Manufacturer::all(),
+                    "depreciations"=>Depreciation::all(),
                 ]);
 
             } else
@@ -342,12 +351,26 @@ class AccessoryController extends Controller
         foreach($found as $f){
             $array = array();
             $array['name'] = $f->name;
+            $array['model'] = $f->model;
             $array['serial_no'] = $f->serial_no ?? 'N/A';
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['icon'] = $f->location->icon ?? '#666';
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation->years);
+            if($f->depreciation->exists()){
+                if($eol->isPast()){
+                    $dep = 0;
+                }else{
+    
+                    $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
+                    $percent = 100 / $f->depreciation->years;
+                    $percentage = floor($age)*$percent;
+                    $dep = $f->purchased_cost * ((100 - $percentage) / 100);
+                }
+            }
+            $array['depreciation'] = $dep;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty;
             $array['status'] = $f->status->name;

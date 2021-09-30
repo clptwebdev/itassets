@@ -67,6 +67,7 @@
                             <thead>
                             <tr>
                                 <th><small>Name</small></th>
+                                <th><small>Model</small></th>
                                 <th><small>Status</small></th>
                                 <th><small>Supplier</small></th>
                                 <th><small>Manufacturers</small></th>
@@ -75,6 +76,7 @@
                                 <th><small>Serial Num</small></th>
                                 <th><small>Purchased Cost</small></th>
                                 <th><small>Purchased Date</small></th>
+                                <th><small>Depreciation</small></th>
                                 <th><small>Warranty</small></th>
                                 <th><small>Notes</small></th>
                             </tr>
@@ -82,6 +84,7 @@
                             <tfoot>
                                 <tr>
                                     <th><small>Name</small></th>
+                                    <th><small>Model</small></th>
                                     <th><small>Status</small></th>
                                     <th><small>Supplier</small></th>
                                     <th><small>Manufacturers</small></th>
@@ -90,6 +93,7 @@
                                     <th><small>Serial Num</small></th>
                                     <th><small>Purchased Cost</small></th>
                                     <th><small>Purchased Date</small></th>
+                                    <th><small>Depreciation</small></th>
                                     <th><small>Warranty</small></th>
                                     <th><small>Notes</small></th>
                                 </tr>
@@ -104,14 +108,23 @@
                                         <span id="name{{$line}}" class="tooltip-danger">
                                             <input type="text"
                                                class="import-control @if(in_array('name', $errors)){{ 'border-bottom border-danger'}}@endif" name="name[]"
-                                               id="name" value="{{ $valueArray[$row]['name'] }}"
+                                               value="{{ $valueArray[$row]['name'] }}"
                                                placeholder="This Row is Empty Please Fill!" required data-container='#name{{$line}}' data-placement='top'
                                                @if(array_key_exists('name', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
                                         </span>
                                     </td>
                                     <td>
+                                        <span id="model{{$line}}" class="tooltip-danger">
+                                            <input type="text"
+                                               class="import-control @if(in_array('model', $errors)){{ 'border-bottom border-danger'}}@endif" name="model[]"
+                                               value="{{ $valueArray[$row]['model'] }}"
+                                               placeholder="This Row is Empty Please Fill!" required data-container='#model{{$line}}' data-placement='top'
+                                               @if(array_key_exists('model', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['model']}'" !!}@endif>
+                                        </span>
+                                    </td>
+                                    <td>
                                         <span id="status_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown" class="import-control @if(in_array('status_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="status_id[]" id="status_id"
+                                        <select type="dropdown" class="import-control @if(in_array('status_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="status_id[]"
                                             required data-container='#status_id{{$line}}' data-placement='top'
                                         @if(array_key_exists('status_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['status_id']}'" !!}@endif
                                         >
@@ -210,6 +223,19 @@
 
                                     </td>
                                     <td>
+                                        <span id="depreciation_id{{$line}}" class="tooltip-danger">
+                                        <select type="dropdown" class="import-control @if(in_array('depreciation_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="depreciation_id[]" required
+                                        data-container='#depreciation_id{{$line}}' data-placement='top'
+                                        @if(array_key_exists('depreciation_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['depreciation_id']}'" !!}@endif
+                                        >
+                                            <option value="0" @if($valueArray[$row]['depreciation_id'] == ''){{'selected'}}@endif>No Depreciation</option>
+                                            @foreach($depreciations as $depreciation)
+                                                <option value="{{ $depreciation->id  }}" @if( $valueArray[$row]['depreciation_id'] == $depreciation->name){{'selected'}}@endif>{{ $depreciation->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        </span>
+                                    </td>
+                                    <td>
                                         <span id="warranty{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="import-control @if(in_array('warranty', $errors)){{'border-bottom border-danger'}}@endif"
@@ -221,7 +247,7 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <span id="warranty{{$line}}" class="tooltip-danger">
+                                        <span id="notes{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="import-control @if(in_array('notes', $errors)){{'border-bottom border-danger'}}@endif"
                                                name="notes[]"
