@@ -50,6 +50,7 @@
                 <a href="{{ route('assets.bin')}}" title="Recycle Bin" class="collapse-item sub-link"><i class="fas fa-trash-alt fa-xs"></i> Recycle Bin</a>
                 <a href="{{ route('assets.create')}}" title="Add New Asset" class="collapse-item sub-link"><i class="fas fa-plus-circle fa-xs"></i> Add New Asset</a>
                 <a href="{{ route('transfers.assets')}}" title="Asset Transfers" class="sub-link collapse-item"><i class="fas fa-exchange-alt"></i> Transfers</a>
+                <a href="{{ route('archives.assets')}}" title="Asset Archives" class="sub-link collapse-item"><i class="fas fa-archive"></i> Disposed/Archived</a>
             </div>
     </li>
 
@@ -64,7 +65,8 @@
                 <a class="collapse-item sub-link" href="{{ route('accessories.index')}}"><i class="far fa-circle text-secondary"></i> View All</a>
                 <a class="collapse-item sub-link" href="{{ route('accessories.create')}}"><i class="fas fa-plus-circle fa-xs"></i> Add New Accessory</a>
                 <a href="{{ route('accessories.bin')}}" title="Recycle Bin" class="collapse-item sub-link"><i class="fas fa-trash-alt fa-xs"></i> Recycle Bin</a>
-                <a href="{{ route('transfers.accessories')}}" title="Asset Transfers" class="collapse-item sub-link"><i class="fas fa-exchange-alt"></i> Transfers</a>
+                <a href="{{ route('transfers.accessories')}}" title="Accessory Transfers" class="collapse-item sub-link"><i class="fas fa-exchange-alt"></i> Transfers</a>
+                <a href="{{ route('archives.accessories')}}" title="Accessory Archives" class="collapse-item sub-link"><i class="fas fa-archive"></i> Disposed/Archived</a>
         </div>
     </li>
 

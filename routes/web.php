@@ -92,6 +92,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
     //Archives
         Route::get('/archives', 'App\Http\Controllers\ArchiveController@index')->name('archives.index');
+        Route::get('/asset/archives', 'App\Http\Controllers\ArchiveController@assets')->name('archives.assets');
+        Route::get('/accessory/archives', 'App\Http\Controllers\ArchiveController@accessories')->name('archives.accessories');
     //Asset Model Routes
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
         Route::get('/asset-model/pdf', 'App\Http\Controllers\AssetModelController@downloadPDF')->name('asset-model.pdf');

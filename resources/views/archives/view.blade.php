@@ -120,7 +120,7 @@
                                 </td>
                                 <td class="text-center d-none d-xl-table-cell">{{$archive->supplier->name ?? "N/A"}}<br><small>Order No: {{ $archive->order_no ?? 'N/A'}}</small></td>
                                 <td class="text-center">
-                                    @if($archive->requested->photo()->exists())
+                                    @if($archive->requested()->exists() && $archive->requested->photo()->exists())
                                     <img class="img-profile rounded-circle"
                                         src="{{ asset($archive->requested->photo->path) ?? asset('images/profile.png') }}" width="50px" title="{{ $archive->requested->name ?? 'Unknown' }}">
                                     @else
@@ -129,7 +129,7 @@
                                     <small>{{ \Carbon\Carbon::parse($archive->created_at)->format("d/m/Y") }}</small>
                                 </td>
                                 <td class="text-center">
-                                    @if($archive->approved->photo()->exists())
+                                    @if($archive->approved()->exists() && $archive->approved->photo()->exists())
                                     <img class="img-profile rounded-circle"
                                         src="{{ asset($archive->approved->photo->path) ?? asset('images/profile.png') }}" width="50px" title="{{ $archive->approved->name ?? 'Unknown' }}">
                                     @else

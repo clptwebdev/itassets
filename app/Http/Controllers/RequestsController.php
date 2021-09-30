@@ -100,20 +100,26 @@ class RequestsController extends Controller
                 case 'disposal':
                     $m = "\\App\\Models\\".ucfirst($requests->model_type);
                     $model = $m::find($requests->model_id);
-                    if($model->model()->exists()){
-                        $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($model->model->depreciation->years);
-                        if($eol->isPast()){
-                            $dep = 0;
-                        }else{
-                            $age = \Carbon\Carbon::now()->floatDiffInYears($model->purchased_date);
-                            $percent = 100 / $model->model->depreciation->years;
-                            $percentage = floor($age)*$percent;
-                            $dep = $model->purchased_cost * ((100 - $percentage) / 100);
-                        }
+
+                    if($requests->model_type == 'asset' && $model->model()->exists()){
+                        $years = $model->model->depreciation->years;
+                    }elseif($model->depreciation_id != 0){
+                        $years = $model->depreciation->years;
                     }else{
-                        $dep = 0;
+                        $years = 0;
                     }
+                    $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($years);
+                    if($eol->isPast()){
+                        $dep = 0;
+                    }else{
+                        $age = \Carbon\Carbon::now()->floatDiffInYears($model->purchased_date);
+                        $percent = 100 / $years;
+                        $percentage = floor($age)*$percent;
+                        $dep = $model->purchased_cost * ((100 - $percentage) / 100);
+                    }
+
                     $archive = Archive::create([
+                        'model_type' => $requests->model_type ?? 'unknown',
                         'name' => $model->name ?? 'No Name',
                         'asset_tag' => $model->asset_tag ?? 'No Asset Tag',
                         'serial_no' => $model->serial_no ?? 'N/A',
