@@ -64,18 +64,21 @@ class RequestsController extends Controller
                     $m = "\\App\\Models\\".ucfirst($requests->model_type);
                     $model = $m::find($requests->model_id);
                     $model->update(['location_id'=> $requests->location_to]);
-                    if($model->model){
-                        $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($model->model->depreciation->years);
-                        if($eol->isPast()){
-                            $dep = 0;
-                        }else{
-                            $age = \Carbon\Carbon::now()->floatDiffInYears($model->purchased_date);
-                            $percent = 100 / $model->model->depreciation->years;
-                            $percentage = floor($age)*$percent;
-                            $dep = $model->purchased_cost * ((100 - $percentage) / 100);
-                        }
+                    if($requests->model_type == 'asset' && $model->model()->exists()){
+                        $years = $model->model->depreciation->years;
+                    }elseif($model->depreciation_id != 0){
+                        $years = $model->depreciation->years;
                     }else{
+                        $years = 0;
+                    }
+                    $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($years);
+                    if($eol->isPast()){
                         $dep = 0;
+                    }else{
+                        $age = \Carbon\Carbon::now()->floatDiffInYears($model->purchased_date);
+                        $percent = 100 / $years;
+                        $percentage = floor($age)*$percent;
+                        $dep = $model->purchased_cost * ((100 - $percentage) / 100);
                     }
                     $transfer = Transfer::create([
                         'type'=>'transfer',

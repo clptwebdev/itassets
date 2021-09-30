@@ -9,7 +9,7 @@
 @section('content')
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Asset Transfers</h1>
+        <h1 class="h3 mb-0 text-gray-800">{{ $title}}</h1>
         <div>
             {{-- @can('recycleBin', \App\Models\Asset::class)
                 <a href="{{ route('assets.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
@@ -171,10 +171,10 @@
                 "autoWidth": false,
                 "pageLength": 25,
                 "columnDefs": [{
-                    "targets": [9],
+                    "targets": [3],
                     "orderable": false
                 }],
-                "order": [[1, "asc"]],
+                "order": [[7, "asc"]],
             });
         });
         

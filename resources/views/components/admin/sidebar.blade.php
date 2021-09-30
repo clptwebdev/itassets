@@ -49,11 +49,8 @@
                 </div>
                 <a href="{{ route('assets.bin')}}" title="Recycle Bin" class="collapse-item sub-link"><i class="fas fa-trash-alt fa-xs"></i> Recycle Bin</a>
                 <a href="{{ route('assets.create')}}" title="Add New Asset" class="collapse-item sub-link"><i class="fas fa-plus-circle fa-xs"></i> Add New Asset</a>
-                <a href="{{ route('transfers.index')}}" title="Asset Transfers" class="sub-link collapse-item"><i class="fas fa-exchange-alt"></i> Transfers</a>
-                <a href="{{ route('archives.index')}}" title="Archived" class="sub-link collapse-item"><i class="fas fa-archive"></i> Disposed/Archived</a>
-
-
-        </div>
+                <a href="{{ route('transfers.assets')}}" title="Asset Transfers" class="sub-link collapse-item"><i class="fas fa-exchange-alt"></i> Transfers</a>
+            </div>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
@@ -63,10 +60,11 @@
             <i class="fas fa-fw fa-keyboard sidebar-icon" data-toggle="tooltip" data-placement="right" title="Accessories"></i>
             <span class="sidebar-title">Accessories</span>
         </a>
-        <div id="accessoryDD" class="collapse" aria-labelledby="accessoryTitle" data-parent="#accordionSidebar">
-                <a class="collapse-item" href="{{ route('accessories.index')}}">View All</a>
-                <a class="collapse-item" href="{{ route('accessories.create')}}"> Add New Accessory</a>
-                <a class="collapse-item" href="{{ route('accessories.index')}}"> Import Accessories</a>
+        <div id="accessoryDD" class="collapse p-0" aria-labelledby="accessoryTitle" data-parent="#accordionSidebar">
+                <a class="collapse-item sub-link" href="{{ route('accessories.index')}}"><i class="far fa-circle text-secondary"></i> View All</a>
+                <a class="collapse-item sub-link" href="{{ route('accessories.create')}}"><i class="fas fa-plus-circle fa-xs"></i> Add New Accessory</a>
+                <a href="{{ route('accessories.bin')}}" title="Recycle Bin" class="collapse-item sub-link"><i class="fas fa-trash-alt fa-xs"></i> Recycle Bin</a>
+                <a href="{{ route('transfers.accessories')}}" title="Asset Transfers" class="collapse-item sub-link"><i class="fas fa-exchange-alt"></i> Transfers</a>
         </div>
     </li>
 
@@ -143,6 +141,12 @@
         <a class="nav-link" href="{{ route('suppliers.index') }}">
             <i class="fas fa-fw fa-tags sidebar-icon"></i>
             <span class="sidebar-title">Suppliers</span></a>
+    </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+    <li class="nav-item">
+        <a href="{{ route('archives.index')}}" title="Archived" class="nav-link">
+            <i class="fas fa-fw fa-archive sidebar-icon"></i> <span class="sidebar-title">Disposed/Archived</span></a>
     </li>
     <!-- Divider -->
     <hr class="sidebar-divider">

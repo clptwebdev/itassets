@@ -150,6 +150,21 @@
                                             @can('update', $accessory)
                                                 <a href="{{ route('accessories.edit', $accessory->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
+                                            @can('transfer', $accessory)
+                                                <a  href="#" 
+                                                    class="dropdown-item transferBtn" 
+                                                    data-model-id="{{$accessory->id}}"
+                                                    data-location-from="{{$accessory->location->name ?? 'Unallocated' }}"
+                                                    data-location-id="{{ $accessory->location_id }}"
+                                                >Transfer</a>
+                                            @endcan
+                                            @can('dispose', $accessory)
+                                                <a  href="#" 
+                                                    class="dropdown-item disposeBtn" 
+                                                    data-model-id="{{$accessory->id}}"
+                                                    data-model-name="{{$accessory->name ?? 'No name'}}"
+                                                >Dispose</a>
+                                            @endcan
                                             @can('delete', $accessory)
                                                 <form id="form{{$accessory->id}}" action="{{ route('accessories.destroy', $accessory->id) }}" method="POST" class="d-block p-0 m-0">
                                                     @csrf
@@ -181,7 +196,94 @@
 @endsection
 
 @section('modals')
-
+    <!-- Disposal Modal-->
+    <div class="modal fade bd-example-modal-lg" id="requestDisposal" tabindex="-1" role="dialog" aria-labelledby="requestDisposalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form action="{{ route('request.disposal')}}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requestDisposalLabel">Request to Dispose of the Accessory?
+                        </h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @csrf
+                            <input name="model_type" type="hidden" value="accessory">
+                            <input id="dispose_id" name="model_id" type="hidden" value="">
+                            <input type="text" value="" id="accessory" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="disposal_date">Date of Disposal</label>
+                            <input type="date" value="" id="disposed_date" name="disposed_date" class="form-control" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Reasons for:</label>
+                            <textarea name="notes" class="form-control" rows="5"></textarea>
+                        </div>
+                        <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-coral" type="submit">Request Disposal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Transfer Modal-->
+    <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog" aria-labelledby="requestTransferLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form action="{{ route('request.transfer')}}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requestTransferLabel">Request to Transfer this Accessory to another Location?
+                        </h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @csrf
+                            <input name="model_type" type="hidden" value="accessory">
+                            <input id="model_id" name="model_id" type="hidden" value="">
+                            <input id="location_id" name="location_from" type="hidden" value="">
+                            <input id="location_from" type="text" class="form-control" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="disposal_date">Date of Transfer</label>
+                            <input type="date" value="" id="transfer_date" name="transfer_date" class="form-control" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="School Location">Transfer to:</label><span
+                                class="text-danger">*</span>
+                            <select type="text"
+                                class="form-control mb-3 @if($errors->has('location_id')){{'border-danger'}}@endif"
+                                name="location_to" required>
+                                <option value="0" selected>Please select a Location</option>
+                                @foreach($locations as $location)
+                                @php if(old('location_id')){ $id=old('location_id');}else{ $id= $accessory->location_id;} @endphp
+                                <option value="{{$location->id}}" @if($id == $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Additional Comments:</label>
+                            <textarea name="notes" class="form-control" rows="5"></textarea>
+                        </div>
+                        <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-lilac" type="submit">Request Transfer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
          aria-labelledby="removeUserModalLabel" aria-hidden="true">
@@ -257,6 +359,19 @@
         $('#confirmBtn').click(function () {
             var form = '#' + 'form' + $('#user-id').val();
             $(form).submit();
+        });
+
+        $('.transferBtn').click(function(){
+            $('#model_id').val($(this).data('model-id'));
+            $('#location_id').val($(this).data('location-id'));
+            $('#location_from').val($(this).data('location-from'));
+            $('#requestTransfer').modal('show');
+        });
+
+        $('.disposeBtn').click(function(){
+            $('#accessory_name').val($(this).data('model-name'));
+            $('#dispose_id').val($(this).data('model-id'));
+            $('#requestDisposal').modal('show');
         });
 
         $(document).ready(function () {

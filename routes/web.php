@@ -169,6 +169,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
     //Transfers
         Route::get('/transfers', 'App\Http\Controllers\TransferController@index')->name('transfers.index');
+        Route::get('/asset/transfers', 'App\Http\Controllers\TransferController@assets')->name('transfers.assets');
+        Route::get('/accessory/transfers', 'App\Http\Controllers\TransferController@accessories')->name('transfers.accessories');
     //Database Backups Routes (Doesn't include import routes)
         Route::resource('/databasebackups', \App\Http\Controllers\BackupController::class);
         Route::get('/databasebackups/create/dbbackup', [\App\Http\Controllers\BackupController::class, "createDB"])->name('backupdb.create');

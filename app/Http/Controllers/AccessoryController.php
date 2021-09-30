@@ -33,7 +33,8 @@ class AccessoryController extends Controller
         }else{
             $accessories = auth()->user()->location_accessories;
         }
-        return view('accessory.view', compact('accessories'));
+        $locations = auth()->user()->locations;
+        return view('accessory.view', compact('accessories', 'locations'));
     }
 
     public function create()
