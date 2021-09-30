@@ -134,7 +134,8 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             $asset->order_no = $row["order_no"];
             $asset->warranty = $row["warranty"];
             //check for already existing Locations upon import if else create if blank dont assign it to a location
-            $location = Location::where(["name" => $row["location_id"]])->first() ? $id = $location->id : $id = 0;
+            $location = Location::where(["name" => $row["location_id"]])->first();
+            $id = $location->id ?? 0;
             $asset->location_id = $id;
 
             if($asset_model = AssetModel::where(["name" => $row["asset_model"]])->first())
