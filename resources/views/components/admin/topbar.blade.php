@@ -53,7 +53,13 @@
                 </form>
             </div>
         </li>
-
+        <li class="nav-item mx-1">
+            <a class="nav-link" href="{{route("requests.index")}}">
+                <i class="fas fa-fw fa-tasks" data-toggle="tooltip" data-placement="bottom"
+                   title="Requests"></i>
+                   <span class="badge badge-danger badge-counter">{{\App\Models\Requests::whereStatus(0)->count()}}</span>
+            </a>
+        </li>
         <li class="nav-item mx-1">
             <a class="nav-link" href="{{route("assets.create")}}">
                 <i class="fas fa-fw fa-tablet-alt" data-toggle="tooltip" data-placement="bottom"
@@ -61,12 +67,7 @@
                 <span class="badge badge-success badge-counter">+</span>
             </a>
         </li>
-        <li class="nav-item mx-1">
-            <a class="nav-link" href="{{route("documentation.index")}}">
-                <i class="fas fa-fw fa-info-circle text-warning" data-toggle="tooltip" data-placement="bottom"
-                   title="Documentation"></i>
-            </a>
-        </li>
+        
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">
             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
@@ -140,6 +141,13 @@
             </div>
         </li>
 
+        <li class="nav-item mx-1">
+            <a class="nav-link" href="{{route("documentation.index")}}">
+                <i class="fas fa-fw fa-folder" data-toggle="tooltip" data-placement="bottom"
+                   title="Documentation"></i>
+                   <span class="badge badge-primary badge-counter"><i class="fas fa-eye text-white"></i></span>
+            </a>
+        </li>
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <!-- Nav Item - User Information -->
