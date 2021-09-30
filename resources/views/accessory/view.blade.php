@@ -213,7 +213,7 @@
                             @csrf
                             <input name="model_type" type="hidden" value="accessory">
                             <input id="dispose_id" name="model_id" type="hidden" value="">
-                            <input type="text" value="" id="accessory" class="form-control" disabled>
+                            <input type="text" value="" id="accessory_name" class="form-control" disabled>
                         </div>
                         <div class="form-group">
                             <label for="disposal_date">Date of Disposal</label>
