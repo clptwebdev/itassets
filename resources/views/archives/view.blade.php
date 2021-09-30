@@ -10,7 +10,7 @@
 @section('content')
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Archives</h1>
+        <h1 class="h3 mb-0 text-gray-800">{{ $title}}</h1>
         <div>
             {{-- @can('recycleBin', \App\Models\Asset::class)
                 <a href="{{ route('assets.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
