@@ -375,6 +375,8 @@
 
         $(document).ready(function () {
             $('#usersTable').DataTable({
+                "autoWidth": false,
+                "pageLength": 25,
                 "columnDefs": [{
                     "targets": [3, 4, 5],
                     "orderable": false,
