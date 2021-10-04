@@ -11,7 +11,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">View Archive</h1>
         <div>
-            <a href="{{ back()}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+            <a href="{{ url()->previous() }}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-dark-50"></i> Back</a>
             @can('generatePDF', $archive)
             <a href="{{ route('asset.showPdf', $archive->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm loading"><i
@@ -90,7 +90,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>{{ $archive->created_user->name ?? 'Unkown'}}</td>
+                                        <td>{{ $archive->created_user->name ?? 'Unknown'}}</td>
                                         <td>{{ \Carbon\Carbon::parse($archive->created_on)->format('d/m/Y') }}</td>
                                         <td class="text-right">
                                             @if($archive->created_user()->exists())
