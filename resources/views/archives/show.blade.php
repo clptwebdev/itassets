@@ -93,9 +93,10 @@
                                         <td>{{ $archive->created_user->name ?? 'Unkown'}}</td>
                                         <td>{{ \Carbon\Carbon::parse($archive->created_on)->format('d/m/Y') }}</td>
                                         <td class="text-right">
+                                            @if($archive->created_user()->exists())
                                             <a href="{{ route('users.show', $archive->created_user->id)}}">
                                             <button class="font-weight-bold btn btn-sm btn-blue p-1">View User</button></a>
-                                            
+                                            @endif
                                         </td>
                                     </tr>
                                 </tbody>
