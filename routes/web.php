@@ -94,8 +94,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::resource('archives', App\Http\Controllers\ArchiveController::class)->only(['index', 'show', 'destroy']);
         Route::get('/asset/archives', 'App\Http\Controllers\ArchiveController@assets')->name('archives.assets');
         Route::get('/accessory/archives', 'App\Http\Controllers\ArchiveController@accessories')->name('archives.accessories');
-        Route::post('/archives/pdf', 'App\Http\Controllers\Archiveontroller@downloadPDF')->name('archives.pdf');
-        Route::get('/archives/{archive}/pdf', 'App\Http\Controllers\ArchiveController@downloadShowPDF')->name('archives.showPdf');
+        Route::post('/archive/pdf', 'App\Http\Controllers\Archiveontroller@downloadPDF')->name('archives.pdf');
+        Route::get('/archive/{archive}/pdf', 'App\Http\Controllers\ArchiveController@downloadShowPDF')->name('archives.showPdf');
     //Asset Model Routes
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
         Route::get('/asset-model/pdf', 'App\Http\Controllers\AssetModelController@downloadPDF')->name('asset-model.pdf');
