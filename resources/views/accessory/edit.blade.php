@@ -61,14 +61,14 @@
                                 <label for="serial_no">Serial_no</label>
                                 <input type="text"
                                        class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                       name="serial_no" id="serial_no" value="{{old('serial_no') ?? $accessory->serial_no}}">
+                                       name="serial_no" id="serial_no" value="{{old('serial_no') ?? $accessory->serial_no}}" required>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label for="order_no">Order_no</label>
                                     <input type="text"
                                            class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                           id="order_no" name="order_no"  value="{{old('order_no') ?? $accessory->order_no}}" required>
+                                           id="order_no" name="order_no"  value="{{old('order_no') ?? $accessory->order_no}}">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_cost">Purchased Cost</label>
