@@ -126,6 +126,7 @@
                                  data-parent="#accordion">
                                 <div class="option-body">
                                     @foreach($categories as $category)
+                                        @if($category->assets()->count() != 0)
                                         <div class="form-check">
                                             <label class="form-check-label mr-4"
                                                    for="{{'category'.$category->id}}">{{ $category->name }}</label>
@@ -133,6 +134,7 @@
                                                    value="{{ $category->id}}" id="{{'category'.$category->id}}">
 
                                         </div>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>
