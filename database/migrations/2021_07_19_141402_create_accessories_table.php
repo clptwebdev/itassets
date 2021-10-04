@@ -30,6 +30,7 @@ class CreateAccessoriesTable extends Migration
             $table->foreignId("photo_id")->default("0");
             $table->foreignId('depreciation_id')->nullable();
             $table->text("notes")->nullable();
+            $table->foreignId('user_id');
             $table->softDeletes();
         });
     }

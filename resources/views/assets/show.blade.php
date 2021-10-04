@@ -26,13 +26,15 @@
                class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                     class="fas fa-edit fa-sm text-dark-50"></i> Edit</a>
             @endcan
-            <form class="d-inline-block id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
+            @can('delete', $asset)
+            <form class="d-inline-block" id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
                 method="POST">
             @csrf
             @method('DELETE')
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn" data-id="{{$asset->id}}"><i
                     class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
             </form>
+            @can
         </div>
     </div>
 
@@ -325,7 +327,7 @@
         $('.deleteBtn').click(function () {
             $('#asset-id').val($(this).data('id'))
             //showModal
-            $('#removeassetModal').modal('show')
+            $('#removeAssetModal').modal('show')
         });
 
         $('.transferBtn').click(function () {

@@ -9,6 +9,9 @@ use App\Models\Status;
 use App\Models\Supplier;
 use App\Models\Category;
 use App\Models\Depreciation;
+
+use App\Rules\permittedLocation;
+use App\Rules\findLocation;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
@@ -50,27 +53,24 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
             ],
             'order_no' => [
                 'nullable',
-
             ],
             'serial_no' => [
                 'required',
             ],
-            'notes' => [
-
-            ],
-            'status_id' => [
-            ],
+            'notes' => [],
+            'status_id' => [],
             'purchased_date' => [
                 'date_format:"d/m/Y"',
             ],
-            'supplier_id' => [
-            ],
+            'supplier_id' => [],
             'location_id' => [
                 'string',
-                'required'
+                'required',
+                new permittedLocation,
+                new findLocation,
             ],
-            'manufacturer_id' => [
-            ],
+            'room' => ['nullable'],
+            'manufacturer_id' => [],
 
         ];
 
@@ -165,10 +165,12 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
 
         $location = Location::where(["name" => $row["location_id"]])->first();
         $lid = $location->id ?? 0;
+        $accessory->room = $row["room"];
         $accessory->location_id = $lid;
         $accessory->photo_id =  0;
 
         $accessory->notes = $row["notes"];
+        $accessory->user_id = auth()->user()->id;
         $accessory->save();
         if(isset($cat_array)){
             $accessory->category()->attach($cat_array);

@@ -11,6 +11,8 @@ use App\Models\Manufacturer;
 use App\Models\Depreciation;
 use App\Models\Status;
 use App\Models\Supplier;
+use App\Rules\permittedLocation;
+use App\Rules\findLocation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -81,6 +83,7 @@ class AccessoryController extends Controller
             "model" => "nullable",
             "supplier_id" => "required",
             "location_id" => "required",
+            "room" => "nullable",
             "notes" => "nullable",
             "status_id" => "nullable",
             'order_no' => 'nullable',
@@ -90,9 +93,9 @@ class AccessoryController extends Controller
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
 
-        $accessory = Accessory::create($request->only(
-            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
-        ));
+        $accessory = Accessory::create(array_merge($request->only(
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id', 'user_id'
+        ), ['user_id' => auth()->user()->id]));
         $accessory->category()->attach($request->category);
         return redirect(route("accessories.index"));
     }
@@ -121,13 +124,15 @@ class AccessoryController extends Controller
             $validation = Validator::make($request->all(), [
                 "name.*" => "required|max:255",
                 "model" => "nullable",
-                'order_no.*' => 'required',
+                'order_no.*' => 'nullable',
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
-                'location_id.*' => 'required|gt:0',
-                'purchased_date.*' => 'nullable|date',
+                'location_id.*' => ['required', 'gt:0'],
+                'room' => 'nullable',
+                'purchased_date.*' => 'date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             ]);
+
 
             if($validation->fails()){
                 return $validation->errors();
@@ -146,9 +151,11 @@ class AccessoryController extends Controller
                     $accessory->order_no = $request->order_no[$i];
                     $accessory->warranty = $request->warranty[$i];
                     $accessory->location_id = $request->location_id[$i];
+                    $accessory->room = $request->room[$i] ?? 'N/A';
                     $accessory->notes = $request->notes[$i];
                     $accessory->photo_id =  0;
                     $accessory->depreciation_id = $request->depreciation_id[$i];
+                    $accessory->user_id = auth()->user()->id;
                     $accessory->save();
                 }
 
@@ -204,6 +211,7 @@ class AccessoryController extends Controller
             "model" => "nullable",
             "supplier_id" => "required",
             "location_id" => "required",
+            "room" => "nullable",
             "notes" => "nullable",
             'order_no' => 'nullable',
             'serial_no' => 'required',
@@ -213,7 +221,7 @@ class AccessoryController extends Controller
         ]);
 
         $accessory->fill($request->only(
-            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ))->save();
         session()->flash('success_message', $accessory->name.' has been Updated successfully');
         $accessory->category()->sync($request->category);
@@ -314,14 +322,13 @@ class AccessoryController extends Controller
 
                 }
 
-
                 return view('accessory.import-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
                     "statuses"=>Status::all(),
                     "suppliers"=>Supplier::all(),
-                    "locations"=>Location::all(),
+                    "locations"=> auth()->user()->locations,
                     "manufacturers"=>Manufacturer::all(),
                     "depreciations"=>Depreciation::all(),
                 ]);
@@ -355,6 +362,7 @@ class AccessoryController extends Controller
             $array['model'] = $f->model;
             $array['serial_no'] = $f->serial_no ?? 'N/A';
             $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['room'] = $f->room ?? 'N/A';
             $array['icon'] = $f->location->icon ?? '#666';
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');

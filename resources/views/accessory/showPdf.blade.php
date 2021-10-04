@@ -194,6 +194,9 @@
         <tr><td>{{ $accessory->location->city }}</td></tr>
         <tr><td>{{ $accessory->location->county }}</td></tr>
         <tr><td>{{ $accessory->location->postcode }}</td></tr>
+        @if($acessory->room != "")
+        <tr><td>Accessory Location in {{ $accessory->room }}</td></tr>
+        @endif
     </table>
 @endif
 

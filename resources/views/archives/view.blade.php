@@ -12,44 +12,31 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">{{ $title}}</h1>
         <div>
-            {{-- @can('recycleBin', \App\Models\Asset::class)
-                <a href="{{ route('assets.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
-                        class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin
-                    ({{ \App\Models\Asset::onlyTrashed()->count()}})</a>
-            @endcan
-            @can('create', \App\Models\Asset::class)
-                <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                        class="fas fa-plus fa-sm text-dark-50"></i> Add New Asset(s)</a>
-            @endcan
-            @can('generatePDF', \App\Models\Asset::class)
-            @if($assets->count() != 0)
-                @if ($assets->count() == 1)
-                <a href="{{ route('asset.showPdf', $assets[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+            @can('generatePDF', \App\Models\Archive::class)
+            @if($archives->count() != 0)
+                @if ($archives->count() == 1)
+                <a href="{{ route('archives.showPdf', $archives[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</a>
                 @else
-                <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
+                <form class="d-inline-block" action="{{ route('archives.pdf')}}" method="POST">
                     @csrf
-                    <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
+                    <input type="hidden" value="{{ json_encode($archives->pluck('id'))}}" name="assets"/>
                 <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
                         class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
                 </form>
                 @endif
             @endif
             @endcan
-            @can('create', \App\Models\Asset::class)
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                class="fas fa-download fa-sm text-dark-50 fa-text-width"></i> Import</a>
-            @endcan
-            @if($assets->count() > 1)
-                @can('generatePDF', \App\Models\Asset::class)
+            @if($archives->count() > 1)
+                @can('generatePDF', \App\Models\Archive::class)
                 <form class="d-inline-block" action="/exportassets" method="POST">
                     @csrf
-                    <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
+                    <input type="hidden" value="{{ json_encode($archives->pluck('id'))}}" name="assets"/>
                 <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
                         class="fas fa-download fa-sm text-dark-50"></i> Export</button>
                 </form>
                 @endcan
-            @endif --}}
+            @endif 
         </div>
     </div>
 
@@ -80,6 +67,7 @@
                             <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
                             <th class="col-auto d-none d-xl-table-cell"><small>Requested By</small></th>
                             <th class="col-auto text-center d-none d-md-table-cell"><small>Approved By</small></th>
+                            <th class="text-right"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -93,6 +81,7 @@
                             <th class=" d-none d-xl-table-cell"><small>Supplier</small></th>
                             <th class=" d-none d-xl-table-cell"><small>Warranty (M)</small></th>
                             <th class="text-center  d-none d-md-table-cell"><small>Audit Due</small></th>
+                            <th class="text-right"><small>Options</small></th>
                         </tr>
                         </tfoot>
                         <tbody>
@@ -137,7 +126,29 @@
                                     @endif
                                     <small>{{ \Carbon\Carbon::parse($archive->updated_at)->format("d/m/Y") }}</small>
                                 </td>
-                                
+                                <td class="text-right">
+                                    <div class="dropdown no-arrow">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$archive->id}}Link"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenu{{$archive->id}}Link">
+                                            <div class="dropdown-header">Archive Options:</div>
+                                            @can('view', $archive)
+                                            <a href="{{ route('archives.show', $archive->id) }}" class="dropdown-item">View</a>
+                                            @endcan
+                                            @can('delete', $archive)
+                                                <form id="form{{$archive->id}}" action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="d-block p-0 m-0">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a class="deleteBtn dropdown-item" href="#"
+                                                       data-id="{{$archive->id}}">Delete</a>
+                                                </form>
+                                            @endcan
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -158,14 +169,48 @@
 <?php session()->flash('import-error', 'Select a file to be uploaded before continuing!');?>
 
 @section('modals')
-    
+    <!-- Archive Delete Modal-->
+    <div class="modal fade bd-example-modal-lg" id="removeArchiveModal" tabindex="-1" role="dialog"
+         aria-labelledby="removeArchiveModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeArchiveModalLabel">Are you sure you want to delete this item?
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="archive-id" type="hidden" value="">
+                    <p>Select "Delete" to remove this item from the system.</p>
+                    <small class="text-danger">**Warning this is permanent. All assigned items will be
+                        set to Null.</small>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
 
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
-        
+        $('.deleteBtn').click(function () {
+            $('#archive-id').val($(this).data('id'))
+            //showModal
+            $('#removeArchiveModal').modal('show')
+        });
+
+        $('#confirmBtn').click(function () {
+            var form = '#' + 'form' + $('#archive-id').val();
+            $(form).submit();
+        });   
+
 
         $(document).ready(function () {
             $('#assetsTable').DataTable({

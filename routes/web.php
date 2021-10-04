@@ -91,13 +91,16 @@ Route::group(['middleware' => 'auth'], function() {
         Route::resource('/fields', 'App\Http\Controllers\FieldController');
         Route::post('photo/upload', 'App\Http\Controllers\PhotoController@upload');
     //Archives
-        Route::get('/archives', 'App\Http\Controllers\ArchiveController@index')->name('archives.index');
+        Route::resource('archives', App\Http\Controllers\ArchiveController::class)->only(['index', 'show', 'destroy']);
         Route::get('/asset/archives', 'App\Http\Controllers\ArchiveController@assets')->name('archives.assets');
         Route::get('/accessory/archives', 'App\Http\Controllers\ArchiveController@accessories')->name('archives.accessories');
+        Route::post('/archives/pdf', 'App\Http\Controllers\Archiveontroller@downloadPDF')->name('archives.pdf');
+        Route::get('/archives/{archive}/pdf', 'App\Http\Controllers\ArchiveController@downloadShowPDF')->name('archives.showPdf');
     //Asset Model Routes
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
         Route::get('/asset-model/pdf', 'App\Http\Controllers\AssetModelController@downloadPDF')->name('asset-model.pdf');
         Route::get('/asset-model/{assetModel}/pdf', 'App\Http\Controllers\AssetModelController@downloadShowPDF')->name('asset-model.showPdf');
+        
     // Asset Routes
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/search',[\App\Http\Controllers\AssetController::class, "search"] )->name('assets.search');

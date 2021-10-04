@@ -23,7 +23,6 @@
                 </button>
             </div>
         </div>
-
         <section>
             <p class="mb-4">Edit {{ $accessory->name}} and change any of the following information. Click the 'Save' button. Or click the 'Back' button
                 to return the Accessories page.
@@ -86,7 +85,23 @@
 
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
+                                    <label for="Warranty">Manufacturer</label>
+                                    <select
+                                        class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
+                                        id="manufacturer_id" name="manufacturer_id">
+                                        <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
+                                        </option>
+                                        @foreach($manufacturers as $manufacturer)
+                                            <option value="{{$manufacturer->id}}" 
+                                                @if(old('manufacturer_id') & old('manufacturer_id') == $manufacturer->id){{'selected'}}
+                                                @elseif($accessory->manufacturer_id == $manufacturer->id){{ 'selected'}}
+                                                @endif
+                                            >{{$manufacturer->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
 
                                     <label for="suppliers">Supplier</label>
                                     <select type="text"
@@ -96,25 +111,23 @@
                                             Supplier
                                         </option>
                                         @foreach($suppliers as $supplier)
-                                            <option
-                                                value="{{ $supplier->id }}" @if((old('supplier_id') || $accessory->supplier->id) == $supplier->id){{'selected'}}@endif>{{ $supplier->name}}</option>
+                                            <option value="{{ $supplier->id }}" 
+                                                @if(old('supplier_id') & old('supplier_id') == $supplier->id){{'selected'}}
+                                                @elseif($accessory->supplier_id == $supplier->id){{ 'selected'}}
+                                                @endif
+                                            >{{ $supplier->name}}</option>
                                         @endforeach
                                     </select>
 
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="status">Status</label>
-                                    <select
-                                        class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
-                                        id="status_id" name="status_id">
-                                        <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
-                                        </option>
-                                        @foreach($statuses as $status)
-                                            <option
-                                                value="{{ $status->id }}" @if((old('status_id') || $accessory->status_id) == $supplier->id){{'selected'}}@endif>{{ $status->name}}</option>
-                                        @endforeach
-                                    </select>
+                                
+                                <div class="form-group col-md-4">
+                                    <label for="warranty">Warranty</label>
+                                    <input type="text"
+                                           class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
+                                           id="warranty" name="warranty" value="{{old('warranty') ?? $accessory->warranty}}">
                                 </div>
+
                             </div>
                             @php( $cat_array = [])
                             @foreach($accessory->category as $cc)
@@ -157,6 +170,7 @@
                                 </div>
                             </div>
                             <hr>
+
                             <div class="form-group col-md-12">
                                 <label for=" school location">Location</label>
                                 <select
@@ -172,24 +186,48 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="warranty">Warranty</label>
+                                <label for="warranty">Room</label>
                                 <input type="text"
-                                       class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
-                                       id="warranty" name="warranty" value="{{$accessory->warranty}}">
+                                       class="form-control <?php if ($errors->has('room')) {?>border-danger<?php }?>"
+                                       id="room" name="room" value="{{old('room') ?? $accessory->room}}">
                             </div>
+
                             <div class="form-group col-md-12">
-                                <label for="Warranty">Manufacturer</label>
-                                <select
-                                    class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
-                                    id="manufacturer_id" name="manufacturer_id">
-                                    <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
+
+                                <label for="suppliers">Depreciation Model</label>
+                                <select type="text"
+                                        class="form-control <?php if ($errors->has('depreciation_id')) {?>border border-danger<?php }?>"
+                                        id="depreciation_id" name="depreciation_id" required>
+                                    <option value="0" @if(old('depreciation_id') == 0){{'selected'}}@endif>No Depreciation
                                     </option>
-                                    @foreach($manufacturers as $manufacturer)
-                                        <option
-                                            value="{{$manufacturer->id}}" @isset($accessory->manufacturer->id)@if($accessory->manufacturer->id == $manufacturer->id){{'selected'}}@endif @endisset>{{$manufacturer->name}}</option>
+                                    @foreach($depreciations as $depreciation)
+                                        <option value="{{ $depreciation->id }}" 
+                                            @if(old('depreciation_id') & old('depreciation_id') == $supplier->id){{'selected'}}
+                                            @elseif($accessory->depreciation_id == $depreciation->id){{ 'selected'}}
+                                            @endif
+                                        >{{ $depreciation->name}}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="status">Status</label>
+                                <select
+                                    class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
+                                    id="status_id" name="status_id">
+                                    <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
+                                    </option>
+                                    @foreach($statuses as $status)
+                                        <option value="{{ $status->id }}" 
+                                            @if(old('status_id') & old('status_id') == $status->id){{'selected'}}
+                                            @elseif($accessory->status_id == $status->id){{ 'selected'}}
+                                            @endif
+                                        >{{ $status->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

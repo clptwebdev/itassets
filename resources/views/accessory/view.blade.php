@@ -124,8 +124,8 @@
                                     @endif
                                 </td>
                                 <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
-                                <td class="text-center"  style="color: {{$accessory->status->colour}};">
-                                    <i class="{{$accessory->status->icon}}"></i> {{ $accessory->status->name }}
+                                <td class="text-center"  style="color: {{$accessory->status->colour ?? '#666'}};">
+                                    <i class="{{$accessory->status->icon ?? 'fas fa-circle'}}"></i> {{ $accessory->status->name ?? 'No Status' }}
                                 </td>
                                 @php $warranty_end = \Carbon\Carbon::parse($accessory->purchased_date)->addMonths($accessory->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">

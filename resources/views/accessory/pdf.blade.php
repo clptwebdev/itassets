@@ -29,7 +29,8 @@
                     <br>
                     <small>{{$accessory['serial_no']}}</small>
                 </td>
-                <td class="text-center"><span style="color: {{ $accessory['icon'] ?? '#666'}}">{{$accessory['location'] ?? 'Unassigned'}}</span></td>
+                <td class="text-center"><span style="color: {{ $accessory['icon'] ?? '#666'}}">{{$accessory['location'] ?? 'Unassigned'}}</span>
+                    @if($accessory->room != "")<br><small>{{ $accessory->room ?? 'N/A'}}</small>@endif</td>
                 <td class="text-center">{{ $accessory['model']}}<br><small>{{$accessory['manufacturer'] ?? "N/A"}}</small></td>
                 <td>{{$accessory['purchased_date']}}</td>
                 <td class="text-center">
