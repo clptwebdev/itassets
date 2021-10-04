@@ -16,7 +16,7 @@ class MiscellaneaPolicy
     protected $all = [1,2,3,4,5];
 
     
-    public function viewAll(User $user)
+    public function viewAny(User $user)
     {
         return in_array($user->role_id, $this->all);
     }

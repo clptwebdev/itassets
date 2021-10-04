@@ -12,6 +12,8 @@ use App\Models\Field;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
+use App\Rules\permittedLocation;
+use App\Rules\findLocation;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -70,6 +72,10 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             'supplier_id' => [
             ],
             'location_id' => [
+                'string',
+                'required',
+                new permittedLocation,
+                new findLocation,
             ]
             , 'status_id' => [
             ],
