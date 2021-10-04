@@ -465,7 +465,7 @@
                                 name="location_to" required>
                                 <option value="0" selected>Please select a Location</option>
                                 @foreach($locations as $location)
-                                @php if(old('location_id')){ $id=old('location_id');}else{ $id= $asset->location_id;} @endphp
+                                @php if(old('location_id')){ $id=old('location_id');}else{ $id= 0} @endphp
                                 <option value="{{$location->id}}" @if($id == $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
                                 @endforeach
                             </select>

@@ -53,6 +53,7 @@
                 </form>
             </div>
         </li>
+        @can('handle', App\Models\Requests::class)
         <li class="nav-item mx-1">
             <a class="nav-link" href="{{route("requests.index")}}">
                 <i class="fas fa-fw fa-tasks" data-toggle="tooltip" data-placement="bottom"
@@ -60,6 +61,7 @@
                    <span class="badge badge-danger badge-counter">{{\App\Models\Requests::whereStatus(0)->count()}}</span>
             </a>
         </li>
+        @endcan
         <li class="nav-item mx-1">
             <a class="nav-link" href="{{route("assets.create")}}">
                 <i class="fas fa-fw fa-tablet-alt" data-toggle="tooltip" data-placement="bottom"
