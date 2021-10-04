@@ -101,6 +101,7 @@
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($accessory->location->icon ?? '#666').'">'
                                             .strtoupper(substr($accessory->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
+                                    @if($accessory->room != "")<br><small>Room {{ $accessory->room }}</small>@endif
                                 </td>
                                 <td class="text-center">{{ $accessory->model ?? 'No Model'}}<br><small>{{$accessory->manufacturer->name ?? "N/A"}}</small></td>
                                 <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
