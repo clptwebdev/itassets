@@ -42,26 +42,26 @@
                         <thead>
                         <tr>
                             <th class="text-center"><small>Data</small></th>
-                            <th><small>Log Date</small></th>
+                            <th><small>User</small></th>
                             <th><small>Type</small></th>
                             <th class="text-center"><small> ID</small></th>
-                            <th><small>Updated At</small></th>
+                            <th><small>Date</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
                             <th><small>Data</small></th>
-                            <th><small>Log Date</small></th>
+                            <th><small>User</small></th>
                             <th><small>Type</small></th>
                             <th class="text-center"><small> ID</small></th>
-                            <th><small>Updated At</small></th>
+                            <th><small>Date</small></th>
                         </tr>
                         </tfoot>
                         <tbody>
                         @foreach($logs as $log)
                             <tr>
-                                <td class="text-center">{{ $log->data }}</td>
-                                <td>{{ $log->log_date }}</td>
+                                <td class="text-left text-sm">{{ $log->data }}</td>
+                                <td class="text-left text-sm">{{ $log->user->name }}</td>
                                 <td>{{ $log->loggable_type}}</td>
                                 <td>{{ $log->loggable_id }}</td>
                                 <td class="text-center">{{ $log->updated_at->diffForHumans() }}</td>

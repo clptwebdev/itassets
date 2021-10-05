@@ -79,16 +79,17 @@
     <div class="w-50 row rounded p-2 pb-4" style="background-color: #EEE">
         <div class="col-12 text-dark text-xs font-weight-bold text-uppercase">Assets</div>
         <div class="col-lg-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card border-left-lilac shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Everything</div>
+                            <div class="text-xs font-weight-bold text-lilac text-uppercase mb-1">
+                                Total</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: {{ $assets->count() + $accessories->count()}}</small><br>
+                                <small>Count: {{ $assets->count() + $accessories->count()}}</small><br>
                                 {{ '£'.round($asset_total + $accessory_total)}}
-                                <small class="text-danger">(£{{ round($asset_depreciation + $accessory_depreciation)}})</small>
+                                <small class="text-coral">(£{{ round($asset_depreciation + $accessory_depreciation)}})*</small><br>
+                                <span class="text-xs">*calculated depreciation</span>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -100,16 +101,17 @@
         </div>
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-lg-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card border-left-coral shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        <div class="col mr-1">
+                            <div class="text-xs font-weight-bold text-coral text-uppercase mb-1">
                                 Assets</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 <small>Total: {{ $assets->count()}}</small><br>
-                                {{ '£'.round($asset_total)}}
-                                <small class="text-danger">(£{{ round($asset_depreciation)}})</small>
+                                <small>{{ '£'.round($asset_total)}}</small>
+                                <small class="text-coral">(£{{ round($asset_depreciation)}})*</small><br>
+                                <span class="text-xs">*calculated depreciation</span>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -121,16 +123,17 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card border-left-blue shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        <div class="col mr-1">
+                            <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
                                 Accessories</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 <small>Total: {{ $accessories->count()}}</small><br>
                                 {{ '£'.round($accessory_total)}}
-                                <small class="text-danger">(£{{ round($accessory_depreciation)}})*</small>
+                                <small class="text-coral">(£{{ round($accessory_depreciation)}})*</small><br>
+                                <span class="text-xs">*calculated depreciation</span>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -145,13 +148,13 @@
     <div class="w-50 row rounded p-2 pb-4">
         <div class="col-12 text-dark text-xs font-weight-bold text-uppercase">Other Items</div>
         <div class="col-lg-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card border-left-green shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        <div class="col mr-1">
+                            <div class="text-xs font-weight-bold text-green text-uppercase mb-1">
                                 Components</div>
-                                <small>Total: {{ $components->count()}}</small><br>
+                                <small>Total Spent: {{ $components->count()}}</small><br>
                                 {{ '£'.round($component_total)}}
                         </div>
                         <div class="col-auto">
@@ -164,13 +167,13 @@
 
         <!-- Requests -->
         <div class="col-lg-4">
-            <div class="card border-left-success shadow h-100 py-2">
+            <div class="card border-left-yellow shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-yellow text-uppercase mb-1">
                                 Consumables</div>
-                                <small>Total: {{ $consumables->count()}}</small><br>
+                                <small>Total Spent: {{ $consumables->count()}}</small><br>
                                 {{ '£'.round($consumable_total)}}
                         </div>
                         <div class="col-auto">
@@ -183,13 +186,13 @@
 
         <!-- Requests -->
         <div class="col-lg-4">
-            <div class="card border-left-success shadow h-100 py-2">
+            <div class="card border-left-blue shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
                                 Miscellaneous</div>
-                                <small>Total: {{ $miscellaneous->count()}}</small><br>
+                                <small>Total Spent: {{ $miscellaneous->count()}}</small><br>
                                 {{ '£'.round($miscellanea_total)}}
                         </div>
                         <div class="col-auto">
@@ -230,7 +233,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-uppercase mb-1">
                             Transfers</div>
-                        <div class="h5 mb-0 font-weight-bold">{{$assets->count() ?? null}}</div>
+                        <div class="h5 mb-0 font-weight-bold">{{$transfers->count() ?? '-'}}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-exchange-alt fa-2x d-md-none d-lg-inline-block"></i>
@@ -249,7 +252,7 @@
                         <div class="text-xs font-weight-bold text-uppercase mb-1">
                             Archived</div>
                         <div class="h5 mb-0 font-weight-bold ">
-                        14
+                        {{ $archived->count() ?? '-'}}
                         </div>
                     </div>
                     <div class="col-auto">
@@ -284,10 +287,8 @@
 
                             <div class="col">
                                 <div class="progress progress-sm mr-2">
-                                    @if(!$ud === 0 )
-
                                     <div class="progress-bar bg-coral" role="progressbar" style="width: {{ ($ud/$total) * 100 }}%"
-                                        aria-valuenow="{{ ($ud/$total) * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>@endif
+                                        aria-valuenow="{{ ($ud/$total) * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
                         </div>

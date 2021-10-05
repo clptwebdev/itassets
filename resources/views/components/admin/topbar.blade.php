@@ -53,6 +53,17 @@
                 </form>
             </div>
         </li>
+        @can("create", App\Models\Asset::class)
+        <li class="nav-item mx-1">
+            <a class="nav-link" href="{{route("assets.create")}}">
+                <i class="fas fa-fw fa-tablet-alt" data-toggle="tooltip" data-placement="bottom"
+                   title="Add New Asset"></i>
+                <span class="badge badge-success badge-counter">+</span>
+            </a>
+        </li>
+        @endcan
+        <div class="topbar-divider d-none d-sm-block"></div>
+        
         @can('handle', App\Models\Requests::class)
         <li class="nav-item mx-1">
             <a class="nav-link" href="{{route("requests.index")}}">
@@ -62,13 +73,6 @@
             </a>
         </li>
         @endcan
-        <li class="nav-item mx-1">
-            <a class="nav-link" href="{{route("assets.create")}}">
-                <i class="fas fa-fw fa-tablet-alt" data-toggle="tooltip" data-placement="bottom"
-                   title="Add New Asset"></i>
-                <span class="badge badge-success badge-counter">+</span>
-            </a>
-        </li>
         
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">

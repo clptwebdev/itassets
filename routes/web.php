@@ -45,16 +45,22 @@ Route::group(['middleware' => 'auth'], function() {
         {
             $locations = \App\Models\Location::all();
             $assets = \App\Models\Asset::all();
+            $transfers = \App\Models\Transfer::all();
+            $archived = \App\Models\Archive::all();
         } else
         {
             $locations = auth()->user()->locations;
             $assets = auth()->user()->location_assets;
+            $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->get();
+            $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->get();
         }
 
         return view('dashboard',
             [
                 'locations' => $locations,
                 'assets' => $assets,
+                'transfers' => $transfers,
+                'archived' => $archived,
             ]
         );
     })->name('dashboard');

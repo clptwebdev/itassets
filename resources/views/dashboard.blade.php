@@ -21,7 +21,7 @@
 </div>
 @if($assets->count() != 0)
 
-<x-admin.asset-info/>
+<x-admin.asset-info :transfers="$transfers" :archived="$archived"/>
 
 <!-- Content Row -->
 <div class="row row-eq-height mb-4">
@@ -55,7 +55,7 @@
         <div class="card shadow">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Asset Audits</h6>
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -186,25 +186,32 @@
 
 <div class="row row-eq-height mb-4">
     @foreach($locations as $location)
-    <div class="col-md-12 col-xl-4 mb-3">
-        <div class="card shadow" style="background-color: {{$location->icon}}; color: #FFF">
+    <div class="col-md-12 col-xl-3 mb-3">
+        <div class="card shadow bg-white" style="border-left: solid 5px {{$location->icon ?? '#666'}};">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-12 col-md-9">
-                        {{ $location->name}}
-                        <div class="text-white-50 small">{{$location->icon}}</div>
+                <div class="row pb-2">
+                    <div class="col-12 col-md-10">
+                        <span style="color:{{$location->icon}};">{{ $location->name}}</span>
+                        <div class="text-gray-50 small">{{$location->address_1}}, @if($location->address_2 != ""){{ $location->address_2}},@endif {{ $location->city}}, {{ $location->postcode}} </div>
                     </div>
-                    <div class="col-12 col-md-3" background>
+                    <div class="col-12 col-md-2" background>
+                        <div class="border border-dark bg-white" style="height: 50px; width: 50px; border-radius: 50%; overflow: hidden; margin: auto;">
                         @if(isset($location->photo->path))
-                            <img src="{{ asset($location->photo->path)}}" height="50px" alt="{{$location->name}}" title="{{ $location->name ?? 'Unnassigned'}}"/>
+                            <img src="{{ asset($location->photo->path)}}" style="width: 100%; height: 100%; object-fit:cover; " alt="{{$location->name}}" title="{{ $location->name ?? 'Unnassigned'}}"/>
                         @else
-                            {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($location->icon ?? '#666').'">'
+                            {!! '<span class="d-flex justify-content-center align-items-center font-weight-bold bg-white" style="color:'.strtoupper($location->icon ?? '#666').'; height: 100%; width: 100%; font-size: 2.5rem">'
                                 .strtoupper(substr($location->name ?? 'u', 0, 1)).'</span>' !!}
                         @endif
+                        </div>
                     </div>
                 </div>
-
-                <div class="row no-gutters border-top border-info pt-4">
+                <div class="border-top border-light pt-4">
+                    
+                    {{ '£'.round($asset_total + $accessory_total)}}
+                    <small class="text-coral">(£{{ round($asset_depreciation + $accessory_depreciation)}})*</small><br>
+                    <span class="text-xs">*calculated depreciation</span>
+                </div>
+                <div class="row no-gutters border-top border-light mt-4 pt-4">
                     <div class="col-12">
                         <table width="100%">
                             <thead>
