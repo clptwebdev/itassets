@@ -207,9 +207,9 @@
                 </div>
                 <div class="border-top border-light pt-4">
                     
-                    {{ '£'.round($asset_total + $accessory_total)}}
+                  {{--   {{ '£'.round($asset_total + $accessory_total)}}
                     <small class="text-coral">(£{{ round($asset_depreciation + $accessory_depreciation)}})*</small><br>
-                    <span class="text-xs">*calculated depreciation</span>
+                    <span class="text-xs">*calculated depreciation</span> --}}
                 </div>
                 <div class="row no-gutters border-top border-light mt-4 pt-4">
                     <div class="col-12">
