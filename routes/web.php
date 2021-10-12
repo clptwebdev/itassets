@@ -40,6 +40,8 @@ Route::group(['middleware' => 'auth'], function() {
             [
                 'locations' => $locations,
                 'assets' => $assets,
+                'transfers' => $transfers,
+                'archived' => $archived,
             ]
         );
     })->name('home');
