@@ -61,7 +61,7 @@
                         @foreach($logs as $log)
                             <tr>
                                 <td class="text-left text-sm">{{ $log->data }}</td>
-                                <td class="text-left text-sm">{{ $log->user->name ?? 'Authentication'}}</td>
+                                <td class="text-left text-sm">@if($log->user()->exists()) {{ $log->user->name ?? 'Authentication'}} @else {{ 'Authentication' }} @endif</td>
                                 <td>{{ $log->loggable_type}}</td>
                                 <td>{{ $log->loggable_id }}</td>
                                 <td class="text-center">{{ $log->updated_at->diffForHumans() }}</td>
