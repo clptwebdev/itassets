@@ -61,7 +61,7 @@
                         @foreach($logs as $log)
                             <tr>
                                 <td class="text-left text-sm">{{ $log->data }}</td>
-                                <td class="text-left text-sm">{{ $log->user->name }}</td>
+                                <td class="text-left text-sm">{{ $log->user->name ?? 'Authentication'}}</td>
                                 <td>{{ $log->loggable_type}}</td>
                                 <td>{{ $log->loggable_id }}</td>
                                 <td class="text-center">{{ $log->updated_at->diffForHumans() }}</td>
