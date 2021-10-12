@@ -240,7 +240,7 @@
                                 </div>
                             @endif
 
-                            <div id="categories" class="form-control h-100 p-4 mb-3">
+                            <div id="categories" class="form-control mh-100 p-4 mb-3">
                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                 @foreach($categories as $category)
                                     <div class="form-check form-check-inline">
