@@ -95,10 +95,10 @@
     $(document).ready( function () {
         $('#logsTable').DataTable({
             "columnDefs": [ {
-                "targets": [3,5],
+                "targets": [0],
                 "orderable": false,
             } ],
-            "order": [[ 1, "asc"]]
+            "order": [[ 4, "asc"]]
         });
     } );
 </script>
