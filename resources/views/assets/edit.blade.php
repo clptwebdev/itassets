@@ -221,7 +221,7 @@
                             @endif
                         </div>
 
-                        <div id="categories" class="form-control h-100 p-4 mb-3">
+                        <div id="categories" class="form-control h-auto p-4 mb-3">
                             @php($array = $asset->category->pluck('id')->toArray())
                             <h4 class="h6 mb-4 text-center">Categories</h4>
                             @foreach($categories as $category)

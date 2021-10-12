@@ -121,7 +121,7 @@
                             </div>
                             
                             <h4 class="h6 text-left pb-0">Categories</h4>
-                            <div id="categories" class="form-control h-100 p-4 mb-3 rounded">
+                            <div id="categories" class="form-control h-auto p-4 mb-3 rounded">
                                 
                                 @foreach($categories as $category)
                                 <div class="form-check form-check-inline">

@@ -116,7 +116,7 @@
                             @php( $cat_array[] = $cc->id)
 
                             @endforeach
-                            <div id="categories" class="border border-gray p-2 mb-3">
+                            <div id="categories" class="form-control h-auto p-4 mb-3 rounded">
                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                 @foreach($categories as $category)
                                 <div class="form-check form-check-inline">
