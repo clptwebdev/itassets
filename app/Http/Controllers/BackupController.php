@@ -12,7 +12,7 @@ class BackupController extends Controller {
 
     public function index()
     {
-        $files = Storage::files('public/Apollo---Asset-Manager');
+        $files = Storage::files('public/Apollo-Asset-Manager');
 
         $zipFiles = array();
 
