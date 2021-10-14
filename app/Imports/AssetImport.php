@@ -86,7 +86,6 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
     public function model(array $row)
     {
-        return dd($row);
             $asset = new Asset;
             $asset->asset_tag = $row["asset_tag"];
             $asset->name = $row["name"];
@@ -147,8 +146,8 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 $additional = array();
                 if($asset_model->fieldset()->exists()){
                     foreach($asset_model->fieldset->fields as $field){
-                        if(array_key_exists(strtolower($field->name), $row) && $row[strtolower($field->name)] != NULL){
-                            $additional[$field->id] = ['value' =>$row[strtolower($field->name)]];
+                        if(array_key_exists(str_replace(' ', '_', strtolower($field->name)), $row) && $row[str_replace(' ', '_', strtolower($field->name))] != NULL){
+                            $additional[$field->id] = ['value' =>$row[str_replace(' ', '_', strtolower($field->name))]];
                         }
                     }
                 }
