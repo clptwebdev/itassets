@@ -147,7 +147,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 $additional = array();
                 if($asset_model->fieldset()->exists()){
                     foreach($asset_model->fieldset->fields as $field){
-                        if(array_key_exists(strtolower($field->name), $row) && $row[strtolower($field->name)] != ""){
+                        if(array_key_exists(strtolower($field->name), $row) && $row[strtolower($field->name)] !== ""){
                             $additional[$field->id] = ['value' =>$row[strtolower($field->name)]];
                         }
                     }
