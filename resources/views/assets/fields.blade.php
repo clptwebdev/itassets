@@ -1,3 +1,4 @@
+@if($fieldset->fields()->exists())
 @foreach($fieldset->fields as $field)
 <div class="form-group">
     <label for="{{str_replace(' ', '_', strtolower($field->name))}}">{{$field->name}}</label>
@@ -27,3 +28,4 @@
  @endswitch
     </div>
 @endforeach
+@endif

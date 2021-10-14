@@ -176,7 +176,7 @@
 
                             @if(old('asset_model') !== null && $model = \App\Models\AssetModel::find(old('asset_model')))
                                 <div id="additional-fields" class="border border-secondary p-2 mb-3">
-
+                                    @if($model->fieldset->fields()->exists())
                                     @foreach($model->fieldset->fields as $field)
 
                                         <div class="form-group">
@@ -231,7 +231,7 @@
                                             @endswitch
                                         </div>
                                     @endforeach
-
+                                        @endif  
                                 </div>
                             @else
                                 <div id="additional-fields" style="display: none;"
