@@ -59,7 +59,7 @@
         </div>
         
         <div class="col-12 col-lg-4 mb-4">
-            @if($asset->model()->exists())
+            @if($asset->model()->exists() && $asset->model->manufacturer()->exists())
             <x-manufacturers.manufacturer-modal :asset="$asset->model"/>
             @endif
         </div>
