@@ -84,7 +84,7 @@
         </div>
     </li>
 
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('consumables.index')}}" data-toggle="collapse" data-target="#consumableDD" aria-expanded="true"
             aria-controls="consumableDD">
             <i class="fas fa-fw fa-tint sidebar-icon" data-toggle="tooltip" data-placement="right" title="Consumables"></i>
@@ -95,7 +95,7 @@
                 <a class="collapse-item" href="{{ route('consumables.create')}}"> Add New Consumable</a>
                 <a class="collapse-item" href="{{ route('consumables.index')}}"> Import Consumables</a>
         </div>
-    </li>
+    </li> --}}
     <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('miscellaneous.index')}}" data-toggle="collapse" data-target="#miscellaneousDD" aria-expanded="true"
            aria-controls="miscellaneousDD">
@@ -110,7 +110,18 @@
     </li>
     <!-- Divider -->
     <hr class="sidebar-divider">
-
+    <!-- Nav Item - Charts -->
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="far fa-fw fa-id-badge sidebar-icon"></i>
+            <span class="sidebar-title">Licenses</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-wifi sidebar-icon"></i>
+            <span class="sidebar-title">Broadband</span></a>
+    </li>
+    <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
