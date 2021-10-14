@@ -160,7 +160,7 @@
                                         <label for="asset_model">Asset Model Select</label><span
                                             class="text-danger">*</span>
                                         <select type="dropdown" class="form-control" name="asset_model" id="asset_model"
-                                                onchange="getFields(this);" autocomplete="off" required>
+                                        @if($model->fieldset()->exists()) onchange="getFields(this);" @endif autocomplete="off" required>
                                             <option value="0" @if(old('asset_model') == 0){{'selected'}}@endif>Please
                                                 Select a Model
                                             </option>
@@ -176,7 +176,7 @@
 
                             @if(old('asset_model') !== null && $model = \App\Models\AssetModel::find(old('asset_model')))
                                 <div id="additional-fields" class="border border-secondary p-2 mb-3">
-                                    @if($model->fieldset->fields()->exists())
+                                    @if($model->fieldset()->exists() && $model->fieldset->fields()->exists())
                                     @foreach($model->fieldset->fields as $field)
 
                                         <div class="form-group">
