@@ -284,7 +284,7 @@
                                     data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                                 <td class="text-center  d-none d-xl-table-cell">
                                     £{{ $asset->purchased_cost }}
-                                    @if($asset->model)
+                                    @if($asset->model()->exists() && $asset->model->depreciation()->exists())
                                         <br>
                                         @php
                                             $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
