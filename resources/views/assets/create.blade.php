@@ -160,7 +160,7 @@
                                         <label for="asset_model">Asset Model Select</label><span
                                             class="text-danger">*</span>
                                         <select type="dropdown" class="form-control" name="asset_model" id="asset_model"
-                                        @if($asset->model->fieldset()->exists()) onchange="getFields(this);" @endif autocomplete="off" required>
+                                        onchange="getFields(this);" autocomplete="off" required>
                                             <option value="0" @if(old('asset_model') == 0){{'selected'}}@endif>Please
                                                 Select a Model
                                             </option>
