@@ -17,7 +17,7 @@
     $total = 0; $depreciation = 0;
     foreach($assets as $asset){
         $total = $total + $asset->purchased_cost;
-        if($asset->asset_model()->exists() && $asset->asset_model->depreciation()->exists()){
+        if($asset->model()->exists() && $asset->model->depreciation()->exists()){
             $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
             if($eol->isPast()){}else{
                 $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
