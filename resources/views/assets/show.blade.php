@@ -27,14 +27,14 @@
                     class="fas fa-edit fa-sm text-dark-50"></i> Edit</a>
             @endcan
             @can('delete', $asset)
-            <form class="d-inline-block" id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
-                method="POST">
-            @csrf
-            @method('DELETE')
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn" data-id="{{$asset->id}}"><i
-                    class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
-            </form>
-            @can
+                <form class="d-inline-block" id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
+                    method="POST">
+                @csrf
+                @method('DELETE')
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn" data-id="{{$asset->id}}"><i
+                        class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
+                </form>
+            @endcan
         </div>
     </div>
 
