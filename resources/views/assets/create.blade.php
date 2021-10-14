@@ -135,7 +135,7 @@
                                                class="form-control <?php if ($errors->has('purchased_cost')) {?>border border-danger<?php }?>"
                                                name="purchased_cost" id="purchased_cost"
                                                value="{{ old('purchased_cost')}}" placeholder="£">
-                                        <div class="form-check">
+                                        <div class="form-check pt-2">
                                         <input class="form-check-input" type="checkbox" value="1" name="donated" id="donated">
                                         <label class="form-check-label" for="donated">
                                             Donated
