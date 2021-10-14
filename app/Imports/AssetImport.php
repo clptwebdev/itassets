@@ -86,7 +86,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
     public function model(array $row)
     {
-
+        return dd($row);
             $asset = new Asset;
             $asset->asset_tag = $row["asset_tag"];
             $asset->name = $row["name"];
