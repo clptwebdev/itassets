@@ -150,6 +150,7 @@
             <td>Purchase Cost:</td>
             <td>
                 £{{$accessory->purchased_cost}}
+                @if($accessory->donated == 1)<span class="text-success text-sm">Donated</span>@endif
             </td>
         </tr>
         @if($accessory->depreciation()->exists())

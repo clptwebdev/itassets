@@ -81,6 +81,12 @@
                                     <input type="date"
                                            class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
                                            id="purchased_date" name="purchased_date" value="{{old('purchased_date') ??  \Carbon\Carbon::parse($accessory->purchased_date)->format('Y-m-d')}}" required>
+                                    <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" value="1" name="donated" id="donated" @if($accessory->donated == 1) checked @endif>
+                                    <label class="form-check-label" for="donated">
+                                        Donated
+                                    </label>
+                                    </div>
                                 </div>
 
                             </div>

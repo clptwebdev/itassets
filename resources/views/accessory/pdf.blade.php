@@ -34,7 +34,7 @@
                 <td class="text-center">{{ $accessory['model']}}<br><small>{{$accessory['manufacturer'] ?? "N/A"}}</small></td>
                 <td>{{$accessory['purchased_date']}}</td>
                 <td class="text-center">
-                    £{{$accessory['purchased_cost']}}
+                    £{{$accessory['purchased_cost']}} @if($accessory['donated'] == 1)<span class="text-success text-sm">Donated</span>@endif
                     <small>(*£{{ number_format($accessory['depreciation'], 2)}})</small>
                 </td>
                 <td>{{$accessory['supplier'] ?? 'N/A'}}</td>

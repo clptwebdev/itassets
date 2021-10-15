@@ -94,7 +94,7 @@ class AccessoryController extends Controller
         ]);
 
         $accessory = Accessory::create(array_merge($request->only(
-            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id', 'user_id'
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id', 'user_id'
         ), ['user_id' => auth()->user()->id]));
         $accessory->category()->attach($request->category);
         return redirect(route("accessories.index"));
@@ -146,6 +146,7 @@ class AccessoryController extends Controller
                     $accessory->status_id = $request->status_id[$i];
                     $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
                     $accessory->purchased_cost = $request->purchased_cost[$i];
+                    $accessory->donated = $request->donated[$i];
                     $accessory->supplier_id = $request->supplier_id[$i];
                     $accessory->manufacturer_id = $request->manufacturer_id[$i];
                     $accessory->order_no = $request->order_no[$i];
@@ -221,7 +222,7 @@ class AccessoryController extends Controller
         ]);
 
         $accessory->fill($request->only(
-            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ))->save();
         session()->flash('success_message', $accessory->name.' has been Updated successfully');
         $accessory->category()->sync($request->category);
@@ -367,6 +368,7 @@ class AccessoryController extends Controller
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $array['donated'] = '£'.$f->donated;
             $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation->years);
             if($f->depreciation->exists()){
                 if($eol->isPast()){

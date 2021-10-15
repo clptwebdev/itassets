@@ -347,7 +347,7 @@ class AssetController extends Controller {
 
         $validated = $request->validate($v);
         $asset->fill(array_merge($request->only(
-            'name', 'asset_tag', 'asset_model', 'serial_no', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+            'name', 'asset_tag', 'asset_model', 'serial_no', 'room', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]))->save();
         if(!empty($array)){
             $asset->fields()->sync($array);
@@ -564,6 +564,7 @@ class AssetController extends Controller {
 
                     $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
                     $asset->purchased_cost = $request->purchased_cost[$i];
+                    $asset->donated = $request->donated[$i];
 
                     $asset->supplier_id = $request->supplier_id[$i];
                     $asset->order_no = $request->order_no[$i];
@@ -685,6 +686,19 @@ class AssetController extends Controller {
             }
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = '£'.$f->purchased_cost;
+            if($f->model->depreciation->exists()){
+                $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->model->eol);
+                if($eol->isPast()){
+                    $dep = 0;
+                }else{
+                    $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
+                    $percent = 100 / $f->model->depreciation->years;
+                    $percentage = floor($age)*$percent;
+                    $dep = $f->purchased_cost * ((100 - $percentage) / 100);
+                }
+            }
+            $array['depreciation'] = $dep;
+            $array['donated'] = $f->donated;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty ?? 'N/A';
             $array['audit'] = \Carbon\Carbon::parse($f->audit_date)->format('d/m/Y') ?? 'N/A';
