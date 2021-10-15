@@ -199,9 +199,10 @@ class MiscellaneaController extends Controller
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
 
-        $miscellanea->fill($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
-        ))->save();
+        if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
+        $miscellanea->fill(array_merge($request->only(
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+        ), ['donated' => $donated]))->save();
         $miscellanea->category()->sync($request->category);
         session()->flash('success_message', $miscellanea->name. ' has been updated successfully');
 
