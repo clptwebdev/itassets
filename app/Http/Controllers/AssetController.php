@@ -346,9 +346,10 @@ class AssetController extends Controller {
         }
 
         $validated = $request->validate($v);
+        if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
         $asset->fill(array_merge($request->only(
-            'name', 'asset_tag', 'asset_model', 'serial_no', 'room', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
-        ), ['user_id' => auth()->user()->id]))->save();
+            'name', 'asset_tag', 'asset_model', 'serial_no', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+        ), ['user_id' => auth()->user()->id, 'donated' => $donated]))->save();
         if(!empty($array)){
             $asset->fields()->sync($array);
         }
