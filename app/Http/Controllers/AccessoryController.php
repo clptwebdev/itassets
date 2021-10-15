@@ -220,10 +220,10 @@ class AccessoryController extends Controller
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-
-        $accessory->fill($request->only(
-            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
-        ))->save();
+        if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
+        $accessory->fill(array_merge($request->only(
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+        ), ['donated' => $donated]))->save();
         session()->flash('success_message', $accessory->name.' has been Updated successfully');
         $accessory->category()->sync($request->category);
         return redirect(route("accessories.index"));
