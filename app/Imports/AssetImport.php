@@ -159,7 +159,6 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 $asset->audit_date = null;
             }else{
                 $asset->audit_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["audit_date"]))->format("Y-m-d");
-
             }
 
             if(isset($row['categories'])){
