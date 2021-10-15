@@ -13,6 +13,7 @@ use App\Models\Category;
 use App\Models\Miscellanea;
 use App\Models\Location;
 use App\Models\Manufacturer;
+use App\Models\Depreciation;
 use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
@@ -67,6 +68,7 @@ class MiscellaneaController extends Controller
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
             'categories' => Category::all(),
+            'depreciations' => Depreciation::all(),
         ]);
     }
 
@@ -175,6 +177,7 @@ class MiscellaneaController extends Controller
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
             "categories" => Category::all(),
+            'depreciations' => Depreciation::all(),
         ]);
     }
 
