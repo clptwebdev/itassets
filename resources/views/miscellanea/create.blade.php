@@ -67,6 +67,12 @@
                                     <input type="text"
                                            class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
                                            id="purchased_cost" name="purchased_cost" required>
+                                        <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="1" name="donated" id="donated">
+                                        <label class="form-check-label" for="donated">
+                                            Donated
+                                        </label>
+                                        </div>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_date">Purchased Date</label>

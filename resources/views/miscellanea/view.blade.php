@@ -96,7 +96,7 @@
                                 <td class="text-center">
                                     @if($miscellanea->location()->exists())
                                         @if($miscellanea->location->photo()->exists())
-                                            <img src="{{ asset($miscellanea->location->photo->path)}}" height="30px" alt="{{$miscellanea->location->name}}" title="{{ $miscellanea->location->name ?? 'Unnassigned'}}"/>'
+                                            <img src="{{ asset($miscellanea->location->photo->path)}}" height="30px" alt="{{$miscellanea->location->name}}" title="{{ $miscellanea->location->name ?? 'Unnassigned'}}"/>
                                         @else
                                             {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($miscellanea->location->icon ?? '#666').'">'
                                                 .strtoupper(substr($miscellanea->location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -128,9 +128,12 @@
                                 <td class="text-center">{{$miscellanea->status->name ??'N/A'}}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                    {{ $miscellanea->warranty }} Months
-
-                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                    {{ $miscellanea->warranty }} Months<br>
+                                    @if(\Carbon\Carbon::parse($warranty_end)->isPast())
+                                        <span class="text-coral">{{ 'Expired' }}</span>
+                                    @else
+                                    <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                    @endif
                                 </td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">

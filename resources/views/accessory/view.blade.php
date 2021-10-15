@@ -136,6 +136,7 @@
                                     @else
                                     <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
                                     @endif
+                                </td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$accessory->id}}Link"
