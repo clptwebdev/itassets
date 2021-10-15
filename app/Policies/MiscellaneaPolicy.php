@@ -39,7 +39,7 @@ class MiscellaneaPolicy
     public function update(User $user, Miscellanea $miscellanea)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->manager) && in_array($miscellanea->location_id, $locations)){
+        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->manager) && in_array($miscellanea->location_id, $locations))){
             return true;
         }else{
             return false;
@@ -49,17 +49,7 @@ class MiscellaneaPolicy
     public function delete(User $user, Miscellanea $miscellanea)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->manager) && in_array($miscellanea->location_id, $locations)){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    public function restore(User $user, Miscellanea $miscellanea)
-    {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->manager) && in_array($miscellanea->location_id, $locations)){
+        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->manager) && in_array($miscellanea->location_id, $locations))){
             return true;
         }else{
             return false;
