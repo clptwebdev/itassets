@@ -337,7 +337,7 @@ class AssetController extends Controller {
         {
             $v = [
                 'name' => 'required',
-                'asset_tag' => 'sometimes|nullable|unique:assets',
+                'asset_tag' => ['sometimes', 'nullable', \Illuminate\Validation\Rule::unique('assets')->ignore($asset->id)],
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
