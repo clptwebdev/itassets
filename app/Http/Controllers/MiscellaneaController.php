@@ -183,9 +183,8 @@ class MiscellaneaController extends Controller
 
     public function update(Request $request, Miscellanea $miscellaneou)
     {
-        dd($miscellaneou);
-        if (auth()->user()->cant('update', $miscellanea)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'update']));
+        if (auth()->user()->cant('update', $miscellaneou)) {
+            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'update']));
         }
 
         $request->validate([
@@ -201,11 +200,11 @@ class MiscellaneaController extends Controller
         ]);
 
         if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
-        $miscellanea->fill(array_merge($request->only(
+        $miscellaneou->fill(array_merge($request->only(
             'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ), ['donated' => $donated]))->save();
-        $miscellanea->category()->sync($request->category);
-        session()->flash('success_message', $miscellanea->name. ' has been updated successfully');
+        $miscellaneou->category()->sync($request->category);
+        session()->flash('success_message', $miscellaneou->name. ' has been updated successfully');
 
         return redirect(route("miscellaneous.index"));
     }
