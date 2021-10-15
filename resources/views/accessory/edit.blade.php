@@ -81,6 +81,7 @@
                                                 Donated
                                             </label>
                                             </div>
+                                </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_date">Purchased Date</label>
                                     <input type="date"
