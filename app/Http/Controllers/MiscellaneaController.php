@@ -181,9 +181,9 @@ class MiscellaneaController extends Controller
         ]);
     }
 
-    public function update(Request $request, Miscellanea $miscellanea)
+    public function update(Request $request, Miscellanea $miscellaneou)
     {
-        dd($miscellanea);
+        dd($miscellaneou);
         if (auth()->user()->cant('update', $miscellanea)) {
             return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'update']));
         }
