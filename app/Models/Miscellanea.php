@@ -11,7 +11,7 @@ class Miscellanea extends Model
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
-        'name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'notes','manufacturer_id', 'photo_id'
+        'name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'room', 'notes','manufacturer_id', 'photo_id', 'depreciation_id'
     ];
     protected $with =['supplier','location','manufacturer','photo','Status'];
     public function photo()
@@ -32,6 +32,11 @@ class Miscellanea extends Model
     public function status()
     {
         return $this->belongsTo(Status::class);
+    }
+
+    public function depreciation()
+    {
+        return $this->belongsTo(Depreciation::class);
     }
 
     public function manufacturer(){

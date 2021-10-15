@@ -106,7 +106,7 @@
                                 <td class="text-center">{{ $accessory->model ?? 'No Model'}}<br><small>{{$accessory->manufacturer->name ?? "N/A"}}</small></td>
                                 <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
                                 <td class="text-center">
-                                    £{{$accessory->purchased_cost}}
+                                    £{{$accessory->purchased_cost}} @if($miscellanea->donated == 1) <span class="text-sm">*Donated</span> @endif
                                     @if($accessory->depreciation()->exists())
                                         <br>
                                         @php

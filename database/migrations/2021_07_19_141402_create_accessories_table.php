@@ -22,6 +22,7 @@ class CreateAccessoriesTable extends Migration
             $table->foreignId("status_id")->nullable();
             $table->date("purchased_date")->nullable();
             $table->decimal("purchased_cost",11,2)->nullable();
+            $table->integer('donated')->default(0);
             $table->foreignId("supplier_id")->nullable()->default(0);
             $table->foreignId("manufacturer_id")->nullable()->default(0);
             $table->string("order_no")->nullable();

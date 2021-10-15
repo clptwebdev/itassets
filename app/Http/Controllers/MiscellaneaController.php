@@ -89,7 +89,7 @@ class MiscellaneaController extends Controller
         ]);
 
         $miscellanea = Miscellanea::create($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ));
         $miscellanea->category()->attach($request->category);
         return redirect(route("miscellaneous.index"));
@@ -133,7 +133,9 @@ class MiscellaneaController extends Controller
                     $miscellanea->manufacturer_id = $request->manufacturer_id[$i];
                     $miscellanea->order_no = $request->order_no[$i];
                     $miscellanea->warranty = $request->warranty[$i];
+                    $miscellanea->depreciation_id = $request->depreciation_id[$i];
                     $miscellanea->location_id = $request->location_id[$i];
+                    $miscellanea->room = $request->room[$i];
                     $miscellanea->notes = $request->notes[$i];
                     $miscellanea->photo_id =  0;
 
@@ -195,7 +197,7 @@ class MiscellaneaController extends Controller
         ]);
 
         $miscellanea->fill($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ))->save();
         $miscellanea->category()->sync($request->category);
         session()->flash('success_message', $miscellanea->name. ' has been updated successfully');
@@ -338,10 +340,24 @@ class MiscellaneaController extends Controller
             $array['name'] = $f->name;
             $array['serial_no'] = $f->serial_no ?? 'N/A';
             $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['room'] = $f->room ?? 'Unallocated';
             $array['icon'] = $f->location->icon ?? '#666';
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation->years);
+            if($f->depreciation->exists()){
+                if($eol->isPast()){
+                    $dep = 0;
+                }else{
+    
+                    $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
+                    $percent = 100 / $f->depreciation->years;
+                    $percentage = floor($age)*$percent;
+                    $dep = $f->purchased_cost * ((100 - $percentage) / 100);
+                }
+            }
+            $array['depreciation'] = $dep;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty ?? '0';
             $array['status'] = $f->status->name ?? 'N/A';

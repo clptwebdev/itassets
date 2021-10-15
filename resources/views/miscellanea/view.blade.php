@@ -105,7 +105,25 @@
                                 </td>
                                 <td class="text-center">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
                                 <td data-sort="{{ strtotime($miscellanea->purchased_date)}}">{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
-                                <td>£{{$miscellanea->purchased_cost}}</td>
+                                <td class="text-center">
+                                    £{{$miscellanea->purchased_cost}} @if($miscellanea->donated == 1) <span class="text-sm">*Donated</span> @endif
+                                    @if($miscellanea->depreciation()->exists())
+                                        <br>
+                                        @php
+                                            $eol = Carbon\Carbon::parse($miscellanea->purchased_date)->addYears($miscellanea->depreciation->years);
+                                            if($eol->isPast()){
+                                                $dep = 0;
+                                            }else{
+
+                                                $age = Carbon\Carbon::now()->floatDiffInYears($miscellanea->purchased_date);
+                                                $percent = 100 / $miscellanea->depreciation->years;
+                                                $percentage = floor($age)*$percent;
+                                                $dep = $miscellanea->purchased_cost * ((100 - $percentage) / 100);
+                                            }
+                                        @endphp
+                                        <small>(*£{{ number_format($dep, 2)}})</small>
+                                    @endif
+                                </td>
                                 <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center">{{$miscellanea->status->name ??'N/A'}}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
