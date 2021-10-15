@@ -174,7 +174,7 @@
                                     </option>
                                     @foreach($locations as $location)
                                         <option
-                                            value="{{ $location->id }}" @if($miscellanea->location->id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
+                                            value="{{ $location->id }}" @if($miscellanea->location_id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
