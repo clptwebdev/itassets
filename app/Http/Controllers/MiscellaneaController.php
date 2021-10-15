@@ -91,7 +91,7 @@ class MiscellaneaController extends Controller
         ]);
 
         $miscellanea = Miscellanea::create($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ));
         $miscellanea->category()->attach($request->category);
         return redirect(route("miscellaneous.index"));
