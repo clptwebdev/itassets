@@ -184,19 +184,18 @@
 
                             </div>
 
-                            
-                        </div>
-                        <div class="form-group col-md-12">
-                            <label for="status">Status</label>
-                            <select
-                                class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
-                                id="status_id" name="status_id">
-                                <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset</option>
-                                @foreach($statuses as $status)
-                                    <option
-                                        value="{{ $status->id }}" @if(old('status_id') == $status->id){{'selected'}}@endif>{{ $status->name}}</option>
-                                @endforeach
-                            </select>
+                            <div class="form-group col-md-12">
+                                <label for="status">Status</label>
+                                <select
+                                    class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
+                                    id="status_id" name="status_id">
+                                    <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset</option>
+                                    @foreach($statuses as $status)
+                                        <option
+                                            value="{{ $status->id }}" @if(old('status_id') == $status->id){{'selected'}}@endif>{{ $status->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
