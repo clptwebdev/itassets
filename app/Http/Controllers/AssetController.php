@@ -686,7 +686,7 @@ class AssetController extends Controller {
             }
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = '£'.$f->purchased_cost;
-            if($f->model->depreciation->exists()){
+            if($f->model()->exists() && $f->model->depreciation()->exists()){
                 $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->model->eol);
                 if($eol->isPast()){
                     $dep = 0;
