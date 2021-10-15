@@ -106,9 +106,9 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
         $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
         $accessory->purchased_cost = $row["purchased_cost"];
         if(strtolower($row["donated"]) == 'yes'){
-            $asset->donated = 1;
+            $accessory->donated = 1;
         }else{
-            $asset->donated = 0;
+            $accessory->donated = 0;
         }
 
         //check for already existing Suppliers upon import if else create
