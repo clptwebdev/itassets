@@ -30,6 +30,10 @@
                             <td>{{ $accessory->name }}</td>
                         </tr>
                         <tr>
+                            <td>Model:</td>
+                            <td>{{ $accessory->model ?? 'No Model' }}</td>
+                        </tr>
+                        <tr>
                             <td>Serial N<span class="">o</span></td>
                             <td>{{ $accessory->serial_no }}</td>
                         </tr>

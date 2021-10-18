@@ -205,6 +205,9 @@
                     class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>Laptop and Tablet</small></strong></p></td>
             </tr>
             @endif
+            @if($accessory['donated'] == 1)
+            <tr><td>Donated</td><td class="text-success">Yes</td></tr>
+            @endif
         </table>
     </div>
     @if($asset->location()->exists())

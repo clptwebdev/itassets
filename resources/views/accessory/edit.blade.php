@@ -23,7 +23,6 @@
                 </button>
             </div>
         </div>
-
         <section>
             <p class="mb-4">Edit {{ $accessory->name}} and change any of the following information. Click the 'Save' button. Or click the 'Back' button
                 to return the Accessories page.
@@ -50,37 +49,66 @@
                                 <label for="name">Name</label>
                                 <input type="text"
                                        class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name" id="name" placeholder="accessory Name" value="{{$accessory->name}}">
+                                       name="name" id="name" placeholder="accessory Name" value="{{old('name') ?? $accessory->name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="model">Model</label>
+                                <input type="text"
+                                       class="form-control mb-3 <?php if ($errors->has('model')){?>border border-danger<?php }?>"
+                                       name="model" id="model" value="{{old('model') ?? $accessory->model}}">
                             </div>
                             <div class="form-group">
                                 <label for="serial_no">Serial_no</label>
                                 <input type="text"
                                        class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                       name="serial_no" id="serial_no" value="{{$accessory->serial_no}}">
+                                       name="serial_no" id="serial_no" value="{{old('serial_no') ?? $accessory->serial_no}}" required>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label for="order_no">Order_no</label>
                                     <input type="text"
                                            class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                           id="order_no" name="order_no"  value="{{$accessory->order_no}}" required>
+                                           id="order_no" name="order_no"  value="{{old('order_no') ?? $accessory->order_no}}">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_cost">Purchased Cost</label>
                                     <input type="text"
                                            class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
-                                           id="purchased_cost" name="purchased_cost" value="{{$accessory->purchased_cost}}" required>
+                                           id="purchased_cost" name="purchased_cost" value="{{old('purchased_cost') ?? $accessory->purchased_cost}}" required>
+                                           <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" value="1" name="donated" id="donated" @if($accessory->donated == 1) checked @endif>
+                                            <label class="form-check-label" for="donated">
+                                                Donated
+                                            </label>
+                                            </div>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_date">Purchased Date</label>
                                     <input type="date"
                                            class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
-                                           id="purchased_date" name="purchased_date" value="{{ \Carbon\Carbon::parse($accessory->purchased_date)->format('Y-m-d')}}" required>
+                                           id="purchased_date" name="purchased_date" value="{{old('purchased_date') ??  \Carbon\Carbon::parse($accessory->purchased_date)->format('Y-m-d')}}" required>
+                                    
                                 </div>
 
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
+                                    <label for="Warranty">Manufacturer</label>
+                                    <select
+                                        class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
+                                        id="manufacturer_id" name="manufacturer_id">
+                                        <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
+                                        </option>
+                                        @foreach($manufacturers as $manufacturer)
+                                            <option value="{{$manufacturer->id}}" 
+                                                @if(old('manufacturer_id') & old('manufacturer_id') == $manufacturer->id){{'selected'}}
+                                                @elseif($accessory->manufacturer_id == $manufacturer->id){{ 'selected'}}
+                                                @endif
+                                            >{{$manufacturer->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
 
                                     <label for="suppliers">Supplier</label>
                                     <select type="text"
@@ -90,32 +118,30 @@
                                             Supplier
                                         </option>
                                         @foreach($suppliers as $supplier)
-                                            <option
-                                                value="{{ $supplier->id }}" @isset($accessory->supplier->id)@if($accessory->supplier->id == $supplier->id){{'selected'}}@endif @endisset>{{ $supplier->name}}</option>
+                                            <option value="{{ $supplier->id }}" 
+                                                @if(old('supplier_id') & old('supplier_id') == $supplier->id){{'selected'}}
+                                                @elseif($accessory->supplier_id == $supplier->id){{ 'selected'}}
+                                                @endif
+                                            >{{ $supplier->name}}</option>
                                         @endforeach
                                     </select>
 
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="status">Status</label>
-                                    <select
-                                        class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
-                                        id="status_id" name="status_id">
-                                        <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
-                                        </option>
-                                        @foreach($statuses as $status)
-                                            <option
-                                                value="{{ $status->id }}"@isset($accessory->status->id) @if($accessory->status->id == $status->id){{'selected'}}@endif @endisset>{{ $status->name}}</option>
-                                        @endforeach
-                                    </select>
+                                
+                                <div class="form-group col-md-4">
+                                    <label for="warranty">Warranty</label>
+                                    <input type="text"
+                                           class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
+                                           id="warranty" name="warranty" value="{{old('warranty') ?? $accessory->warranty}}">
                                 </div>
+
                             </div>
                             @php( $cat_array = [])
                             @foreach($accessory->category as $cc)
                             @php( $cat_array[] = $cc->id)
 
                             @endforeach
-                            <div id="categories" class="form-control h-100 p-4 mb-3">
+                            <div id="categories" class="form-control h-auto p-4 mb-3">
                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                 @foreach($categories as $category)
                                 <div class="form-check form-check-inline">
@@ -126,7 +152,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="notes">Notes</label>
-                                <textarea name="notes" id="notes" class="form-control" rows="10">{{$accessory->notes}}</textarea>
+                                <textarea name="notes" id="notes" class="form-control" rows="10">{{ old('notes') ?? $accessory->notes}}</textarea>
                             </div>
 
                         </div>
@@ -151,6 +177,7 @@
                                 </div>
                             </div>
                             <hr>
+
                             <div class="form-group col-md-12">
                                 <label for=" school location">Location</label>
                                 <select
@@ -166,24 +193,48 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="warranty">Warranty</label>
+                                <label for="warranty">Room</label>
                                 <input type="text"
-                                       class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
-                                       id="warranty" name="warranty" value="{{$accessory->warranty}}">
+                                       class="form-control <?php if ($errors->has('room')) {?>border-danger<?php }?>"
+                                       id="room" name="room" value="{{old('room') ?? $accessory->room}}">
                             </div>
+
                             <div class="form-group col-md-12">
-                                <label for="Warranty">Manufacturer</label>
-                                <select
-                                    class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
-                                    id="manufacturer_id" name="manufacturer_id">
-                                    <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
+
+                                <label for="suppliers">Depreciation Model</label>
+                                <select type="text"
+                                        class="form-control <?php if ($errors->has('depreciation_id')) {?>border border-danger<?php }?>"
+                                        id="depreciation_id" name="depreciation_id" required>
+                                    <option value="0" @if(old('depreciation_id') == 0){{'selected'}}@endif>No Depreciation
                                     </option>
-                                    @foreach($manufacturers as $manufacturer)
-                                        <option
-                                            value="{{$manufacturer->id}}" @isset($accessory->manufacturer->id)@if($accessory->manufacturer->id == $manufacturer->id){{'selected'}}@endif @endisset>{{$manufacturer->name}}</option>
+                                    @foreach($depreciations as $depreciation)
+                                        <option value="{{ $depreciation->id }}" 
+                                            @if(old('depreciation_id') & old('depreciation_id') == $supplier->id){{'selected'}}
+                                            @elseif($accessory->depreciation_id == $depreciation->id){{ 'selected'}}
+                                            @endif
+                                        >{{ $depreciation->name}}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="status">Status</label>
+                                <select
+                                    class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
+                                    id="status_id" name="status_id">
+                                    <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
+                                    </option>
+                                    @foreach($statuses as $status)
+                                        <option value="{{ $status->id }}" 
+                                            @if(old('status_id') & old('status_id') == $status->id){{'selected'}}
+                                            @elseif($accessory->status_id == $status->id){{ 'selected'}}
+                                            @endif
+                                        >{{ $status->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

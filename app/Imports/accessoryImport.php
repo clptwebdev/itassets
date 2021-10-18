@@ -7,6 +7,11 @@ use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Supplier;
+use App\Models\Category;
+use App\Models\Depreciation;
+
+use App\Rules\permittedLocation;
+use App\Rules\findLocation;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
@@ -41,38 +46,31 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
             'name' => [
                 'required',
                 'string',
-
             ],
             'purchased_cost' => [
                 'required',
                 'regex:/^\d+(\.\d{1,2})?$/',
             ],
             'order_no' => [
-                'required',
-
+                'nullable',
             ],
             'serial_no' => [
                 'required',
             ],
-            'notes' => [
-
-            ],
-            'status_id' => [
-            ],
+            'notes' => [],
+            'status_id' => [],
             'purchased_date' => [
-                'date',
+                'date_format:"d/m/Y"',
             ],
-            'supplier_id' => [
-                'string',
-                'required'
-            ],
+            'supplier_id' => [],
             'location_id' => [
                 'string',
-                'required'
+                'required',
+                new permittedLocation,
+                new findLocation,
             ],
-            'manufacturer_id' => [
-
-            ],
+            'room' => ['nullable'],
+            'manufacturer_id' => [],
 
         ];
 
@@ -84,7 +82,7 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
 
         $accessory = new Accessory;
         $accessory->name = $row["name"];
-
+        $accessory->model = $row["model"];
         $accessory->serial_no = $row["serial_no"];
 
         //check for already existing Status upon import if else create
@@ -107,6 +105,9 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
 
         $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
         $accessory->purchased_cost = $row["purchased_cost"];
+        if(strtolower($row["donated"]) == 'yes'){
+            $accessory->donated = 1;
+        }
 
         //check for already existing Suppliers upon import if else create
         if($supplier = Supplier::where(["name" => $row["supplier_id"]])->first())
@@ -151,33 +152,32 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
 
         $accessory->order_no = $row["order_no"];
         $accessory->warranty = $row["warranty"];
-        //check for already existing Locations upon import if else create
-        if($location = Location::where(["name" => $row["location_id"]])->first())
-        {
 
-        } else
-        {
-            if(isset($row["location_id"]))
-            {
-                $location = new Location;
-
-                $location->name = $row["location_id"];
-                $location->email = 'enquiries@' . str_replace(' ', '', strtolower($row["location_id"])) . '.co.uk';
-                $location->telephone = "01902556360";
-                $location->address_1 = "Unknown";
-                $location->city = "Unknown";
-                $location->postcode = "Unknown";
-                $location->county = "West Midlands";
-                $location->icon = "#222222";
-                $location->save();
-            }else
-                $accessory->location_id = 0;
+        if(isset($row['categories'])){
+            $cat_array = array();
+            $categories = explode(',', $row['categories']);
+            foreach($categories as $category){
+                $found = Category::firstOrCreate(['name' => $category]);
+                $cat_array[] = $found->id;
+            }
         }
-        $accessory->location_id = $location->id ?? 0;
+        
+        $depreciation = Depreciation::where(["name" => $row["depreciation_id"]])->first();
+        $id = $depreciation->id ?? 0;
+        $accessory->depreciation_id = $id;
+
+        $location = Location::where(["name" => $row["location_id"]])->first();
+        $lid = $location->id ?? 0;
+        $accessory->room = $row["room"];
+        $accessory->location_id = $lid;
         $accessory->photo_id =  0;
 
         $accessory->notes = $row["notes"];
+        $accessory->user_id = auth()->user()->id;
         $accessory->save();
+        if(isset($cat_array)){
+            $accessory->category()->attach($cat_array);
+        }
     }
 
     public function batchSize(): int

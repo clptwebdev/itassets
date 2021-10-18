@@ -21,7 +21,7 @@
 </div>
 @if($assets->count() != 0)
 
-<x-admin.asset-info/>
+<x-admin.asset-info :transfers="$transfers" :archived="$archived"/>
 
 <!-- Content Row -->
 <div class="row row-eq-height mb-4">
@@ -35,14 +35,14 @@
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                    {{-- <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                             aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Dropdown Header:</div>
                         <a class="dropdown-item" href="#">Action</a>
                         <a class="dropdown-item" href="#">Another action</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <!-- Card Body -->
@@ -55,20 +55,20 @@
         <div class="card shadow">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Asset Audits</h6>
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                    {{-- <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                             aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Dropdown Header:</div>
                         <a class="dropdown-item" href="#">Action</a>
                         <a class="dropdown-item" href="#">Another action</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <!-- Card Body -->
@@ -184,34 +184,65 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-xl-6 mb-4">
-        <div class="row row-eq-height">
-            @foreach($locations as $location)
-            <div class="col-md-12 col-xl-6 mb-4 h-100">
-                <div class="card shadow" style="background-color: {{$location->icon}}; color: #FFF">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-md-9">
-                                {{ $location->name}}
-                                <div class="text-white-50 small">{{$location->icon}}</div>
-                            </div>
-                            <div class="col-12 col-md-3" background>
-                                @if(isset($location->photo->path))
-                                    <img src="{{ asset($location->photo->path)}}" height="50px" alt="{{$location->name}}" title="{{ $location->name ?? 'Unnassigned'}}"/>
-                                @else
-                                    {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($location->icon ?? '#666').'">'
-                                        .strtoupper(substr($location->name ?? 'u', 0, 1)).'</span>' !!}
-                                @endif
-                            </div>
+<div class="row row-eq-height mb-4">
+    @foreach($locations as $location)
+    <div class="col-md-12 col-xl-3 mb-3">
+        <div class="card shadow bg-white" style="border-left: solid 5px {{$location->icon ?? '#666'}};">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-12 col-md-10">
+                        <span style="color:{{$location->icon}};">{{ $location->name}}</span>
+                        <div class="text-gray-50 small">{{$location->address_1}}, @if($location->address_2 != ""){{ $location->address_2}},@endif {{ $location->city}}, {{ $location->postcode}} </div>
+                    </div>
+                    <div class="col-12 col-md-2" background>
+                        <div class="border border-dark bg-white" style="height: 50px; width: 50px; border-radius: 50%; overflow: hidden; margin: auto;">
+                        @if(isset($location->photo->path))
+                            <img src="{{ asset($location->photo->path)}}" style="width: 100%; height: 100%; object-fit:cover; " alt="{{$location->name}}" title="{{ $location->name ?? 'Unnassigned'}}"/>
+                        @else
+                            {!! '<span class="d-flex justify-content-center align-items-center font-weight-bold bg-white" style="color:'.strtoupper($location->icon ?? '#666').'; height: 100%; width: 100%; font-size: 2.5rem">'
+                                .strtoupper(substr($location->name ?? 'u', 0, 1)).'</span>' !!}
+                        @endif
                         </div>
                     </div>
                 </div>
+                <div class="border-top border-light pt-4">
+                    
+                  {{--   {{ '£'.round($asset_total + $accessory_total)}}
+                    <small class="text-coral">(£{{ round($asset_depreciation + $accessory_depreciation)}})*</small><br>
+                    <span class="text-xs">*calculated depreciation</span> --}}
+                </div>
+                <div class="row no-gutters border-top border-light mt-4 pt-4">
+                    <div class="col-12">
+                        <table width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Assets"><i class="fas fa-fw fa-tablet-alt"></i></span></th>
+                                    <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Accessories"><i class="fas fa-fw fa-keyboard"></i></span></th>
+                                    <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Components"><i class="fas fa-fw fa-hdd"></i></span></th>
+                                    <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Consumables"><i class="fas fa-fw fa-tint"></i></span></th>
+                                    <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="MIscellaneous"><i class="fas fa-fw fa-question"></i></span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">{{$location->asset->count() ?? "N/A"}}</td>
+                                    <td class="text-center">{{$location->accessory->count() ?? "N/A"}}</td>
+                                    <td class="text-center">{{$location->component->count() ?? "N/A"}}</td>
+                                    <td class="text-center">{{$location->consumable->count() ?? "N/A"}}</td>
+                                    <td class="text-center">{{$location->miscellanea->count() ?? "N/A"}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
-            @endforeach
         </div>
     </div>
-    <div class="col-lg-6 mb-4 h-100">
+    @endforeach
+</div>
+<div class="row">
+    <div class="col-6">
         <div class="card shadow mb-4 h-100">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Categories</h6>
@@ -219,29 +250,80 @@
             <div class="card-body">
                 <table class="table table-striped">
                     <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th class="text-center"><i class="fas fa-fw fa-tablet-alt"></i> <span
-                                class="d-none d-lg-inline-block">Assets</span></th>
-                        <th class="text-center">Components</th>
-                        <th class="text-center">Accessories</th>
-                        <th class="text-center">Consumables</th>
-                    </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th class="text-center"><i class="fas fa-fw fa-tablet-alt"></i> <small
+                                    class="d-none d-lg-inline-block">Assets</small></th>
+                            <th class="text-center"><i class="fas fa-fw fa-keyboard"></i> <small
+                                class="d-none d-lg-inline-block">Accessories</small></th>
+                            <th class="text-center"><i class="fas fa-fw fa-hdd"></i> <small
+                                class="d-none d-lg-inline-block">Components</small></th>
+                            <th class="text-center"><i class="fas fa-fw fa-tint"></i> <small
+                                class="d-none d-lg-inline-block">Consumables</small></th>
+                            <th class="text-center"><i class="fas fa-fw fa-question"></i> <small
+                                class="d-none d-lg-inline-block">Miscellanea</small></th>
+                        </tr>
                     </thead>
                     <tfoot>
-                    <tr>
-                        <td colspan="5" class="text-center">View Categories</td>
-                    </tr>
+                        <tr>
+                            <td colspan="6" class="text-center"><a href="{{ route('status.index')}}" class="btn btn-green">View Statuses</a></td>
+                        </tr>
                     </tfoot>
                     <tbody>
                     @php($category = \App\Models\Category::all())
                     @foreach($category as $cat)
                         <tr>
-                            <td>{{ $cat->name }}</td>
-                            <td class="text-center">{{$cat->assets->count()}}</td>
-                            <td class="text-center">243</td>
-                            <td class="text-center">1021</td>
-                            <td class="text-center">5</td>
+                            <tr>
+                                <td>{{ $cat->name }}</td>
+                                <td class="text-center">{{$cat->assets->count()}}</td>
+                                <td class="text-center">{{$cat->accessories->count()}}</td>
+                                <td class="text-center">{{$cat->components->count()}}</td>
+                                <td class="text-center">{{$cat->consumables->count()}}</td>
+                                <td class="text-center">{{$cat->miscellanea->count()}}</td>
+                            </tr>
+                        </tr>
+                    @endforeach
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card shadow mb-4 h-100">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Status</h6>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th class="text-center"><i class="fas fa-fw fa-tablet-alt"></i> <small
+                                class="d-none d-lg-inline-block">Assets</small></th>
+                        <th class="text-center"><i class="fas fa-fw fa-keyboard"></i> <small
+                            class="d-none d-lg-inline-block">Accessories</small></th>
+                        <th class="text-center"><i class="fas fa-fw fa-hdd"></i> <small
+                            class="d-none d-lg-inline-block">Components</small></th>
+                        <th class="text-center"><i class="fas fa-fw fa-tint"></i> <small
+                            class="d-none d-lg-inline-block">Consumables</small></th>
+                        <th class="text-center"><i class="fas fa-fw fa-question"></i> <small
+                            class="d-none d-lg-inline-block">Miscellanea</small></th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-center"><a href="{{ route('status.index')}}" class="btn btn-green">View Statuses</a></td>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    @php($statuses = \App\Models\Status::all())
+                    @foreach($statuses as $status)
+                        <tr>
+                            <td>{{ $status->name }}</td>
+                            <td class="text-center">{{$status->assets->count()}}</td>
+                            <td class="text-center">{{$status->accessory->count()}}</td>
+                            <td class="text-center">{{$status->component->count()}}</td>
+                            <td class="text-center">{{$status->consumable->count()}}</td>
+                            <td class="text-center">{{$status->miscellanea->count()}}</td>
                         </tr>
                     @endforeach
                 </table>

@@ -24,6 +24,7 @@ class CreateRequestsTable extends Migration
             $table->foreignId("super_id")->nullable();
             $table->integer('status')->nullable();
             $table->text('notes')->nullable();
+            $table->timestamp('date');
             $table->timestamps();
         });
     }

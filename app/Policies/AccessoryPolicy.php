@@ -25,7 +25,7 @@ class AccessoryPolicy
     public function view(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->all) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->all) && in_array($accessory->location_id, $locations))){
             return true;
         }else{
             return false;
@@ -40,7 +40,7 @@ class AccessoryPolicy
     public function update(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations))){
             return true;
         }else{
             return false;
@@ -50,7 +50,7 @@ class AccessoryPolicy
     public function delete(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations))){
             return true;
         }else{
             return false;
@@ -60,7 +60,7 @@ class AccessoryPolicy
     public function restore(User $user, Accessory $accessory)
     {
         $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations))){
             return true;
         }else{
             return false;
@@ -69,8 +69,7 @@ class AccessoryPolicy
 
     public function forceDelete(User $user, Accessory $accessory)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->super) && in_array($accessory->location_id, $locations)){
+        if(in_array($user->role_id, $this->super)){
             return true;
         }else{
             return false;

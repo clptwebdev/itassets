@@ -96,7 +96,7 @@
                                 <td class="text-center">
                                     @if($miscellanea->location()->exists())
                                         @if($miscellanea->location->photo()->exists())
-                                            <img src="{{ asset($miscellanea->location->photo->path)}}" height="30px" alt="{{$miscellanea->location->name}}" title="{{ $miscellanea->location->name ?? 'Unnassigned'}}"/>'
+                                            <img src="{{ asset($miscellanea->location->photo->path)}}" height="30px" alt="{{$miscellanea->location->name}}" title="{{ $miscellanea->location->name ?? 'Unnassigned'}}"/>
                                         @else
                                             {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($miscellanea->location->icon ?? '#666').'">'
                                                 .strtoupper(substr($miscellanea->location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -105,14 +105,35 @@
                                 </td>
                                 <td class="text-center">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
                                 <td data-sort="{{ strtotime($miscellanea->purchased_date)}}">{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
-                                <td>£{{$miscellanea->purchased_cost}}</td>
+                                <td class="text-center">
+                                    £{{$miscellanea->purchased_cost}} @if($miscellanea->donated == 1) <span class="text-sm">*Donated</span> @endif
+                                    @if($miscellanea->depreciation()->exists())
+                                        <br>
+                                        @php
+                                            $eol = Carbon\Carbon::parse($miscellanea->purchased_date)->addYears($miscellanea->depreciation->years);
+                                            if($eol->isPast()){
+                                                $dep = 0;
+                                            }else{
+
+                                                $age = Carbon\Carbon::now()->floatDiffInYears($miscellanea->purchased_date);
+                                                $percent = 100 / $miscellanea->depreciation->years;
+                                                $percentage = floor($age)*$percent;
+                                                $dep = $miscellanea->purchased_cost * ((100 - $percentage) / 100);
+                                            }
+                                        @endphp
+                                        <small>(*£{{ number_format($dep, 2)}})</small>
+                                    @endif
+                                </td>
                                 <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center">{{$miscellanea->status->name ??'N/A'}}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                    {{ $miscellanea->warranty }} Months
-
-                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                    {{ $miscellanea->warranty }} Months<br>
+                                    @if(\Carbon\Carbon::parse($warranty_end)->isPast())
+                                        <span class="text-coral">{{ 'Expired' }}</span>
+                                    @else
+                                    <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                    @endif
                                 </td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">

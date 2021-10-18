@@ -87,7 +87,7 @@ class ComponentPolicy
         return in_array($user->role_id, $this->manager);
     }
 
-    public function export(User $user, Component $component)
+    public function export(User $user)
     {
         return in_array($user->role_id, $this->all);
     }

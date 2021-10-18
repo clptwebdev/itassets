@@ -24,4 +24,16 @@ class ArchivePolicy
     public function viewAll(User $user){
         return $user->role_id != 0 && $user->role_id >= 5;
     }
+
+    public function view(User $user, Archive $archive){
+        return true;
+    }
+
+    public function delete(User $user, Archive $archive){
+        return true;
+    }
+
+    public function generatePdf(User $user){
+        return true;
+    }
 }

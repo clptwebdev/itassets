@@ -12,7 +12,7 @@
     <table class="table">
         <thead>
             <tr style="background-color: #454777; color: #fff;">
-                <th colspan="3" style="padding: 5px;">Information</th>
+                <th colspan="@if($accessory->photo()->exists()){{'3'}}@else{{'2'}}@endif" style="padding: 5px;">Information</th>
             </tr>
         </thead>
         @if($accessory->photo()->exists())
@@ -23,7 +23,16 @@
             <td>Name:</td>
             <td>{{ $accessory->name }}</td>
         </tr>
+        @else
+        <tr>
+            <td>Name:</td>
+            <td>{{ $accessory->name }}</td>
+        </tr>
         @endif
+        <tr>
+            <td>Model</td>
+            <td>{{ $accessory->model ?? 'No Model'}}</td>
+        </tr>
         <tr>
             <td>Serial N<span class="">o</span></td>
             <td>{{ $accessory->serial_no }}</td>
@@ -77,7 +86,6 @@
     @endif
     
 </section>
-<div class="page-break"></div>
     @if($accessory->manufacturer()->exists())
     <table class="table" width="100%">
         <thead>
@@ -129,13 +137,43 @@
             <td>Warranty</td>
             <td>
                 <?php $warranty_end = \Carbon\Carbon::parse($accessory->purchased_date)->addMonths($accessory->warranty);?>
-                {{ $accessory->warranty }} Month(s) - <strong>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</strong>
+                {{ $accessory->warranty }} Month(s)<br>
+                @if(\Carbon\Carbon::parse($warranty_end)->isPast())
+                        <span class="text-coral">{{ 'Expired' }}</span>
+                @else
+                <small class="text-success">{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Month(s) Remaining</small>
+                @endif
+                </strong>
             </td>
         </tr>
         <tr>
             <td>Purchase Cost:</td>
-            <td>£{{ $accessory->purchased_cost }}</td>
+            <td>
+                £{{$accessory->purchased_cost}}
+                @if($accessory->donated == 1)<span class="text-success text-sm">Donated</span>@endif
+            </td>
         </tr>
+        @if($accessory->depreciation()->exists())
+            <tr>
+                <td>Current Value</td>
+                <td>
+                    @php
+                        $eol = Carbon\Carbon::parse($accessory->purchased_date)->addYears($accessory->depreciation->years);
+                        if($eol->isPast()){
+                            $dep = 0;
+                        }else{
+
+                            $age = Carbon\Carbon::now()->floatDiffInYears($accessory->purchased_date);
+                            $percent = 100 / $accessory->depreciation->years;
+                            $percentage = floor($age)*$percent;
+                            $dep = $accessory->purchased_cost * ((100 - $percentage) / 100);
+                        }
+                    @endphp
+                    £{{ number_format($dep, 2)}}*<br>
+                    <small>*Calculated using the Depreciation Model [{{$accessory->depreciation->name}}]</small>
+                </td>
+            </tr>
+        @endif
     </table>
 @if($accessory->location()->exists())
     <table class="table" width="100%">
@@ -157,6 +195,9 @@
         <tr><td>{{ $accessory->location->city }}</td></tr>
         <tr><td>{{ $accessory->location->county }}</td></tr>
         <tr><td>{{ $accessory->location->postcode }}</td></tr>
+        @if($acessory->room != "")
+        <tr><td>Accessory Location in {{ $accessory->room }}</td></tr>
+        @endif
     </table>
 @endif
 

@@ -7,10 +7,6 @@
 @endsection
 
 @section('content')
-    <form id="form{{$accessory->id}}" action="{{ route('accessories.destroy', $accessory->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
-
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">View Accessory</h1>
             <div>
@@ -18,8 +14,12 @@
                    class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-dark-50"></i> Back</a>
                 @can('delete', $accessory)
-                <a class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn" href="#"
-                   data-id="{{$accessory->id}}"><i class=" fas fa-trash fa-sm text-white-50"></i> Delete</a>
+                    <form id="form{{$accessory->id}}" action="{{ route('accessories.destroy', $accessory->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <a class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn" href="#"
+                        data-id="{{$accessory->id}}"><i class=" fas fa-trash fa-sm text-white-50"></i> Delete</a>
+                    </form>
                 @endcan
                 @can('update', $accessory)
                 <a href="{{ route('accessories.edit', $accessory->id)}}"
@@ -32,7 +32,6 @@
                 @endcan
             </div>
         </div>
-    </form>
 
     @if(session('danger_message'))
         <div class="alert alert-danger"> {!! session('danger_message')!!} </div>

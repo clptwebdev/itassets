@@ -175,7 +175,7 @@ class AssetController extends Controller {
         {
             $v = array_merge($validate_fieldet, [
                 'name' => 'required',
-                'asset_tag' => 'sometimes|nullable|unique:assets',
+                'asset_tag' => 'sometimes|nullable',
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -185,7 +185,7 @@ class AssetController extends Controller {
         {
             $v = [
                 'name' => 'required',
-                'asset_tag' => 'sometimes|nullable|unique:assets',
+                'asset_tag' => 'sometimes|nullable',
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -196,7 +196,7 @@ class AssetController extends Controller {
         $validated = $request->validate($v);
 
         $asset = Asset::create(array_merge($request->only(
-            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
+            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'room', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]));
 
         if(!empty($array)){
@@ -327,7 +327,7 @@ class AssetController extends Controller {
         {
             $v = array_merge($validate_fieldet, [
                 'name' => 'required',
-                'asset_tag' => 'sometimes|nullable|unique:assets',
+                'asset_tag' => ['sometimes', 'nullable'],
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -337,7 +337,7 @@ class AssetController extends Controller {
         {
             $v = [
                 'name' => 'required',
-                'asset_tag' => 'sometimes|nullable|unique:assets',
+                'asset_tag' => ['sometimes', 'nullable', \Illuminate\Validation\Rule::unique('assets')->ignore($asset->id)],
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -346,9 +346,10 @@ class AssetController extends Controller {
         }
 
         $validated = $request->validate($v);
+        if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
         $asset->fill(array_merge($request->only(
             'name', 'asset_tag', 'asset_model', 'serial_no', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
-        ), ['user_id' => auth()->user()->id]))->save();
+        ), ['user_id' => auth()->user()->id, 'donated' => $donated]))->save();
         if(!empty($array)){
             $asset->fields()->sync($array);
         }
@@ -539,7 +540,7 @@ class AssetController extends Controller {
                 'warranty.*' => 'int',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-                'asset_tag.*' => 'sometimes|nullable||unique:assets,asset_tag',
+                'asset_tag.*' => 'sometimes|nullable',
                 'status_id.*' => 'string|nullable',
                 'audit_date.*' => 'date|nullable',
                 'supplier_id.*' => 'string',
@@ -564,6 +565,7 @@ class AssetController extends Controller {
 
                     $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
                     $asset->purchased_cost = $request->purchased_cost[$i];
+                    $asset->donated = $request->donated[$i];
 
                     $asset->supplier_id = $request->supplier_id[$i];
                     $asset->order_no = $request->order_no[$i];
@@ -685,6 +687,19 @@ class AssetController extends Controller {
             }
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = '£'.$f->purchased_cost;
+            if($f->model()->exists() && $f->model->depreciation()->exists()){
+                $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->model->eol);
+                if($eol->isPast()){
+                    $dep = 0;
+                }else{
+                    $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
+                    $percent = 100 / $f->model->depreciation->years;
+                    $percentage = floor($age)*$percent;
+                    $dep = $f->purchased_cost * ((100 - $percentage) / 100);
+                }
+            }
+            $array['depreciation'] = $dep;
+            $array['donated'] = $f->donated;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty ?? 'N/A';
             $array['audit'] = \Carbon\Carbon::parse($f->audit_date)->format('d/m/Y') ?? 'N/A';

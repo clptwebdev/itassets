@@ -11,11 +11,16 @@ class Accessory extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'notes','manufacturer_id', 'photo_id'];
+    protected $fillable = ['name', 'model', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'room', 'notes','manufacturer_id', 'photo_id', 'depreciation_id', 'user_id'];
 
     public function photo()
     {
         return $this->belongsTo(Photo::class, 'photo_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function comment()
@@ -36,6 +41,11 @@ class Accessory extends Model
     public function status()
     {
         return $this->belongsTo(Status::class);
+    }
+
+    public function depreciation()
+    {
+        return $this->belongsTo(Depreciation::class);
     }
 
     public function manufacturer()

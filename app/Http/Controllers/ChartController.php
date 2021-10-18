@@ -44,7 +44,7 @@ class ChartController extends Controller
                 $y = \Carbon\Carbon::now()->addYears($i);
                 $yv = 0;
                 foreach($location->asset as $asset){
-                    if($asset->asset_model != 0){
+                    if($asset->model()->exists() && $asset->model->depreciation()->exists()){
                         $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
                         if($eol->isPast()){}else{
                             $age = $y->floatDiffInYears($asset->purchased_date); 

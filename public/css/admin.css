@@ -11579,9 +11579,79 @@ tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
 
 /* Text Colours   */
 
-  .text-coral{
-    color:#f95959;
-  }
+.text-coral{
+  color:#f95959;
+}
+
+.text-lilac{
+  color:#b087bc;
+}
+
+.text-blue{
+  color: #7d96b0;
+}
+
+.text-green{
+  color: #94c0c0;
+}
+
+.text-yellow{
+  color: #e4c17b;
+}
+
+.text-grey{
+  color: #d1d1d1;
+}
+
+/* Borders*/
+
+.border-lilac{
+  border-color: #b087bc;
+}
+
+.border-coral{
+  border-color: #f95959;
+}
+
+.border-blue{
+  border-color:  #7d96b0;
+}
+
+.border-green{
+  border-color:  #94c0c0;
+}
+
+.border-yellow{
+  border-color:  #e4c17b;
+}
+
+.border-grey{
+  border-color:  #d1d1d1;
+}
+
+.border-left-lilac{
+  border-left: solid 5px #b087bc;
+}
+
+.border-left-coral{
+  border-left: solid 5px #f95959;
+}
+
+.border-left-blue{
+  border-left: solid 5px #7d96b0;
+}
+
+.border-left-green{
+  border-left: solid 5px #94c0c0;
+}
+
+.border-left-yellow{
+  border-left: solid 5px #e4c17b;
+}
+
+.border-left-grey{
+  border-left: solid 5px #d1d1d1;
+}
 
 .slide:hover{
     margin-left: 0.2rem;

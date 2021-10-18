@@ -8,8 +8,11 @@ use App\Models\Accessory;
 use App\Models\Category;
 use App\Models\Location;
 use App\Models\Manufacturer;
+use App\Models\Depreciation;
 use App\Models\Status;
 use App\Models\Supplier;
+use App\Rules\permittedLocation;
+use App\Rules\findLocation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -32,7 +35,8 @@ class AccessoryController extends Controller
         }else{
             $accessories = auth()->user()->location_accessories;
         }
-        return view('accessory.view', compact('accessories'));
+        $locations = auth()->user()->locations;
+        return view('accessory.view', compact('accessories', 'locations'));
     }
 
     public function create()
@@ -52,6 +56,7 @@ class AccessoryController extends Controller
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
             'categories' => Category::all(),
+            'depreciations' => Depreciation::all(),
         ]);
     }
 
@@ -75,20 +80,22 @@ class AccessoryController extends Controller
 
         $request->validate([
             "name" => "required|max:255",
+            "model" => "nullable",
             "supplier_id" => "required",
             "location_id" => "required",
+            "room" => "nullable",
             "notes" => "nullable",
             "status_id" => "nullable",
-            'order_no' => 'required',
+            'order_no' => 'nullable',
             'serial_no' => 'required',
             'warranty' => 'int|nullable',
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
 
-        $accessory = Accessory::create($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
-        ));
+        $accessory = Accessory::create(array_merge($request->only(
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id', 'user_id'
+        ), ['user_id' => auth()->user()->id]));
         $accessory->category()->attach($request->category);
         return redirect(route("accessories.index"));
     }
@@ -116,13 +123,16 @@ class AccessoryController extends Controller
         if($request->ajax()){
             $validation = Validator::make($request->all(), [
                 "name.*" => "required|max:255",
-                'order_no.*' => 'required',
+                "model" => "nullable",
+                'order_no.*' => 'nullable',
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
-                'location_id.*' => 'required|gt:0',
-                'purchased_date.*' => 'nullable|date',
+                'location_id.*' => ['required', 'gt:0'],
+                'room' => 'nullable',
+                'purchased_date.*' => 'date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             ]);
+
 
             if($validation->fails()){
                 return $validation->errors();
@@ -131,17 +141,22 @@ class AccessoryController extends Controller
                 {
                     $accessory = new Accessory;
                     $accessory->name = $request->name[$i];
+                    $accessory->model = $request->model[$i];
                     $accessory->serial_no = $request->serial_no[$i];
                     $accessory->status_id = $request->status_id[$i];
                     $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
                     $accessory->purchased_cost = $request->purchased_cost[$i];
+                    $accessory->donated = $request->donated[$i];
                     $accessory->supplier_id = $request->supplier_id[$i];
                     $accessory->manufacturer_id = $request->manufacturer_id[$i];
                     $accessory->order_no = $request->order_no[$i];
                     $accessory->warranty = $request->warranty[$i];
                     $accessory->location_id = $request->location_id[$i];
+                    $accessory->room = $request->room[$i] ?? 'N/A';
                     $accessory->notes = $request->notes[$i];
                     $accessory->photo_id =  0;
+                    $accessory->depreciation_id = $request->depreciation_id[$i];
+                    $accessory->user_id = auth()->user()->id;
                     $accessory->save();
                 }
 
@@ -182,6 +197,7 @@ class AccessoryController extends Controller
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
             'categories' => Category::all(),
+            'depreciations' => Depreciation::all(),
         ]);
     }
 
@@ -193,19 +209,21 @@ class AccessoryController extends Controller
 
         $request->validate([
             "name" => "required|max:255",
+            "model" => "nullable",
             "supplier_id" => "required",
             "location_id" => "required",
+            "room" => "nullable",
             "notes" => "nullable",
-            'order_no' => 'required',
+            'order_no' => 'nullable',
             'serial_no' => 'required',
             'warranty' => 'int|nullable',
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-
-        $accessory->fill($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
-        ))->save();
+        if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
+        $accessory->fill(array_merge($request->only(
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+        ), ['donated' => $donated]))->save();
         session()->flash('success_message', $accessory->name.' has been Updated successfully');
         $accessory->category()->sync($request->category);
         return redirect(route("accessories.index"));
@@ -305,15 +323,15 @@ class AccessoryController extends Controller
 
                 }
 
-
                 return view('accessory.import-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
                     "statuses"=>Status::all(),
                     "suppliers"=>Supplier::all(),
-                    "locations"=>Location::all(),
+                    "locations"=> auth()->user()->locations,
                     "manufacturers"=>Manufacturer::all(),
+                    "depreciations"=>Depreciation::all(),
                 ]);
 
             } else
@@ -342,12 +360,28 @@ class AccessoryController extends Controller
         foreach($found as $f){
             $array = array();
             $array['name'] = $f->name;
+            $array['model'] = $f->model;
             $array['serial_no'] = $f->serial_no ?? 'N/A';
             $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['room'] = $f->room ?? 'N/A';
             $array['icon'] = $f->location->icon ?? '#666';
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $array['donated'] = '£'.$f->donated;
+            $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation->years);
+            if($f->depreciation->exists()){
+                if($eol->isPast()){
+                    $dep = 0;
+                }else{
+    
+                    $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
+                    $percent = 100 / $f->depreciation->years;
+                    $percentage = floor($age)*$percent;
+                    $dep = $f->purchased_cost * ((100 - $percentage) / 100);
+                }
+            }
+            $array['depreciation'] = $dep;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty;
             $array['status'] = $f->status->name;

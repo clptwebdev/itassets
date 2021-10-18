@@ -135,6 +135,12 @@
                                                class="form-control <?php if ($errors->has('purchased_cost')) {?>border border-danger<?php }?>"
                                                name="purchased_cost" id="purchased_cost"
                                                value="{{ old('purchased_cost')}}" placeholder="£">
+                                        <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="1" name="donated" id="donated">
+                                        <label class="form-check-label" for="donated">
+                                            Donated
+                                        </label>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="purchased_cost">Supplier</label>
@@ -160,7 +166,7 @@
                                         <label for="asset_model">Asset Model Select</label><span
                                             class="text-danger">*</span>
                                         <select type="dropdown" class="form-control" name="asset_model" id="asset_model"
-                                                onchange="getFields(this);" autocomplete="off" required>
+                                        onchange="getFields(this);" autocomplete="off" required>
                                             <option value="0" @if(old('asset_model') == 0){{'selected'}}@endif>Please
                                                 Select a Model
                                             </option>
@@ -176,7 +182,7 @@
 
                             @if(old('asset_model') !== null && $model = \App\Models\AssetModel::find(old('asset_model')))
                                 <div id="additional-fields" class="border border-secondary p-2 mb-3">
-
+                                    @if($model->fieldset()->exists() && $model->fieldset->fields()->exists())
                                     @foreach($model->fieldset->fields as $field)
 
                                         <div class="form-group">
@@ -231,7 +237,7 @@
                                             @endswitch
                                         </div>
                                     @endforeach
-
+                                        @endif  
                                 </div>
                             @else
                                 <div id="additional-fields" style="display: none;"
@@ -240,7 +246,7 @@
                                 </div>
                             @endif
 
-                            <div id="categories" class="form-control h-100 p-4 mb-3">
+                            <div id="categories" class="form-control h-auto p-4 mb-3">
                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                 @foreach($categories as $category)
                                     <div class="form-check form-check-inline">

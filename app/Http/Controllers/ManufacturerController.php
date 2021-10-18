@@ -188,7 +188,7 @@ class ManufacturerController extends Controller {
                 $errorArray = [];
                 $valueArray = [];
                 $errorValues = [];
-                
+
                 foreach($importErrors as $error)
                 {
                     if(array_key_exists($error['row'], $errorArray))

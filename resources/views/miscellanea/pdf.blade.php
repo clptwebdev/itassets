@@ -32,7 +32,9 @@
                 <td class="text-center"><span style="color: {{ $miscellanea['icon'] ?? '#666'}}">{{$miscellanea['location'] ?? 'Unassigned'}}</span></td>
                 <td class="text-center">{{$miscellanea['manufacturer'] ?? "N/A"}}</td>
                 <td>{{$miscellanea['purchased_date']}}</td>
-                <td>£{{$miscellanea['purchased_cost']}}</td>
+                <td class="text-center">
+                    £{{$miscellanea['purchased_cost']}} @if($miscellanea['donated'] == 1)<span class="text-success text-sm">Donated</span>@endif
+                    <small>(*£{{ number_format($miscellanea['depreciation'], 2)}})</small>
                 <td>{{$miscellanea['supplier'] ?? 'N/A'}}</td>
                 <td class="text-center"><span style="color:{{ $miscellanea['color']}};">{{$miscellanea['status'] ??'N/A'}}</span></td>
                 <td class="text-center">{{ $miscellanea['warranty'] }} Months</small>

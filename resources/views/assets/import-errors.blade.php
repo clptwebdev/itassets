@@ -182,6 +182,16 @@
                                     </span>
                                 </td>
                                 <td>
+                                    <span id="donated{{$line}}" class="tooltip-danger">
+                                        <select type="dropdown" class="import-control <?php if (in_array('status_id', $errors)) {?>border-bottom border-danger<?php }?>" name="donated[]" id="donatedInput{{$line}}"
+                                                onchange="getFields(this);" autocomplete="off" required data-container='#donated{{$line}}' data-placement='top'
+                                                @if(array_key_exists('donated', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['donated']}'" !!}@endif>>
+                                            <option value="0" @if($valueArray[$row]['donated'] == 0){{'selected'}}@endif>No</option>
+                                            <option value="1" @if( $valueArray[$row]['status_id'] == 1){{'selected'}}@endif>Yes</option>
+                                        </select>
+                                    </span>
+                                </td>
+                                <td>
                                     <span id="supplier_id{{$line}}" class="tooltip-danger">
                                     <select type="dropdown" class="import-control <?php if (in_array('supplier_id', $errors)) {?>border-bottom border-danger<?php }?>" name="supplier_id[]" id="supplier_id"
                                             onchange="getFields(this);" autocomplete="off" required data-container='#supplier_id{{$line}}' data-placement='top'
@@ -352,6 +362,11 @@
             var pcInputs = $("input[name='purchased_cost[]']").get();
             pcInputs.forEach(element => {
                 data.append('purchased_cost[]', element.value);
+            });
+
+            var doInputs = $("select[name='donated[]']").get();
+                doInputs.forEach(element => {
+                data.append('donated[]', element.value);
             });
 
             var supInputs = $("select[name='supplier_id[]']").get();

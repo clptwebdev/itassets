@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Asset;
+use App\Models\Acessory;
 use App\Models\Transfer;
 use App\Models\Location;
 
@@ -12,7 +13,7 @@ class TransferController extends Controller
 {
     public function index(){
         if (auth()->user()->cant('viewAll', Asset::class)) {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'view']));
+            return redirect(route('errors.forbidden', ['area', 'Assets', 'transfers']));
         }
 
         if(auth()->user()->role_id == 1){
@@ -26,6 +27,47 @@ class TransferController extends Controller
         }
 
         return view('transfers.view', compact('transfers', 'locations'));
+    }
+
+    public function assets(){
+        if (auth()->user()->cant('viewAll', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Assets', 'view']));
+        }
+
+        if(auth()->user()->role_id == 1){
+            $transfers = Transfer::whereModelType('asset')->get();
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+
+            $location_ids = $locations->pluck('id');
+            $transfers = Transfer::whereIn('location_from', $location_ids)->orWhereIn('location_to', $location_ids)->whereModelType('asset')->get();
+        }
+
+        $title = "Asset Transfers";
+
+        return view('transfers.view', compact('transfers', 'locations', 'title'));
+    }
+
+    public function accessories()
+    {
+        if (auth()->user()->cant('viewAll', Accessory::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Assets', 'accessories']));
+        }
+
+        if(auth()->user()->role_id == 1){
+            $transfers = Transfer::whereModelType('accessory')->get();
+            $locations = Location::all();
+        }else{
+            $locations = auth()->user()->locations;
+
+            $location_ids = $locations->pluck('id');
+            $transfers = Transfer::whereIn('location_from', $location_ids)->orWhereIn('location_to', $location_ids)->whereModelType('accessory')->get();
+        }
+
+        $title = "Accessory Transfers";
+
+        return view('transfers.view', compact('transfers', 'locations', 'title'));
     }
 
     public function transfer(Request $request){

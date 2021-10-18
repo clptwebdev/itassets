@@ -44,7 +44,7 @@ class UserPolicy
             }
         }
 
-        if($permission != 0 && in_array($user->role_id, $this->admin) && $admin->role_id <= $user->role_id){
+        if($admin->id !== $user->id && (in_array($admin->role_id, $this->super) || ($permission != 0 && in_array($admin->role_id, $this->admin) && ($admin->role_id <= $user->role_id || $user->role_id == 0)))){
             return true;
         }else{
             return false;
@@ -59,7 +59,7 @@ class UserPolicy
                 $permission++;
             }
         }
-        if($permission != 0 && in_array($user->role_id, $this->admin) && $admin->role_id <= $user->role_id){
+        if($admin->id !== $user->id && (in_array($admin->role_id, $this->super) || ($permission != 0 && in_array($admin->role_id, $this->admin) && ($admin->role_id <= $user->role_id || $user->role_id == 0)))){
             return true;
         }else{
             return false;

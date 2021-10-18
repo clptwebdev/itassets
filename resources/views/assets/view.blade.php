@@ -126,13 +126,15 @@
                                  data-parent="#accordion">
                                 <div class="option-body">
                                     @foreach($categories as $category)
+                                        @if($category->assets()->count() != 0)
                                         <div class="form-check">
                                             <label class="form-check-label mr-4"
-                                                   for="{{'category'.$category->id}}">{{ $category->name }}</label>
+                                                   for="{{'category'.$category->id}}">{{ $category->name }} ({{$category->assets()->count()}})</label>
                                             <input class="form-check-input" type="checkbox" name="category[]"
                                                    value="{{ $category->id}}" id="{{'category'.$category->id}}">
 
                                         </div>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>
@@ -282,7 +284,7 @@
                                     data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                                 <td class="text-center  d-none d-xl-table-cell">
                                     £{{ $asset->purchased_cost }}
-                                    @if($asset->model)
+                                    @if($asset->model()->exists() && $asset->model->depreciation()->exists())
                                         <br>
                                         @php
                                             $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
@@ -416,7 +418,11 @@
                             <input type="text" value="" id="asset_name" class="form-control" disabled>
                         </div>
                         <div class="form-group">
-                            <label for="notes">Additional Comments:</label>
+                            <label for="disposal_date">Date of Disposal</label>
+                            <input type="date" value="" id="disposed_date" name="disposed_date" class="form-control" value="{\Carbon\Carbon::now()->format('Y-m-d')}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Reasons for:</label>
                             <textarea name="notes" class="form-control" rows="5"></textarea>
                         </div>
                         <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
@@ -447,7 +453,11 @@
                             <input name="model_type" type="hidden" value="asset">
                             <input id="model_id" name="model_id" type="hidden" value="">
                             <input id="location_id" name="location_from" type="hidden" value="">
-                            <input id="location_from" type="text" class="form-control" value="" disabled>
+                            <input id="location_from" type="text" class="form-control" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="disposal_date">Date of Transfer</label>
+                            <input type="date" value="" id="transfer_date" name="transfer_date" class="form-control" value="">
                         </div>
                         <div class="form-group">
                             <label for="School Location">Transfer to:</label><span
@@ -457,8 +467,7 @@
                                 name="location_to" required>
                                 <option value="0" selected>Please select a Location</option>
                                 @foreach($locations as $location)
-                                @php if(old('location_id')){ $id=old('location_id');}else{ $id= $asset->location_id;} @endphp
-                                <option value="{{$location->id}}" @if($id == $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
+                                <option value="{{$location->id}}" @if(old('location_id') == $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -113,6 +113,12 @@
                                     <input type="text"
                                         class="form-control @if($errors->has('purchased_cost')){{'border-danger'}}@endif"
                                         name="purchased_cost" id="purchased_cost" placeholder="£" value="{{ old('purchased_cost') ?? $asset->purchased_cost}}">
+                                        <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="1" name="donated" id="donated" @if($asset->donated == 1) checked @endif>
+                                        <label class="form-check-label" for="donated">
+                                            Donated
+                                        </label>
+                                        </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="purchased_cost">Supplier</label>
@@ -221,7 +227,7 @@
                             @endif
                         </div>
 
-                        <div id="categories" class="form-control h-100 p-4 mb-3">
+                        <div id="categories" class="form-control h-auto p-4 mb-3">
                             @php($array = $asset->category->pluck('id')->toArray())
                             <h4 class="h6 mb-4 text-center">Categories</h4>
                             @foreach($categories as $category)

@@ -64,9 +64,9 @@
                         <tr>
                             <th><small>Name</small></th>
                             <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
+                            <th class="text-center"><small>Model</small></th>
                             <th><small>Date</small></th>
-                            <th><small>Cost</small></th>
+                            <th class="text-center"><small>Cost (Value)</small></th>
                             <th><small>Supplier</small></th>
                             <th class="text-center"><small>Status</small></th>
                             <th class="text-center"><small>Warranty</small></th>
@@ -77,9 +77,9 @@
                             <tr>
                                 <th><small>Name</small></th>
                                 <th class="text-center"><small>Location</small></th>
-                                <th class="text-center"><small>Manufacturers</small></th>
+                                <th class="text-center"><small>Model</small></th>
                                 <th><small>Purchased Date</small></th>
-                                <th><small>Purchased Cost</small></th>
+                                <th class="text-center"><small>Cost (Value)</small></th>
                                 <th><small>Supplier</small></th>
                                 <th class="text-center"><small>Status</small></th>
                                 <th class="text-center"><small>Warranty</small></th>
@@ -101,19 +101,42 @@
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($accessory->location->icon ?? '#666').'">'
                                             .strtoupper(substr($accessory->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
+                                    @if($accessory->room != "")<br><small>Room: {{ $accessory->room }}</small>@endif
                                 </td>
-                                <td class="text-center">{{$accessory->manufacturer->name ?? "N/A"}}</td>
+                                <td class="text-center">{{ $accessory->model ?? 'No Model'}}<br><small>{{$accessory->manufacturer->name ?? "N/A"}}</small></td>
                                 <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
-                                <td>£{{$accessory->purchased_cost}}</td>
+                                <td class="text-center">
+                                    £{{$accessory->purchased_cost}} @if($miscellanea->donated == 1) <span class="text-sm">*Donated</span> @endif
+                                    @if($accessory->depreciation()->exists())
+                                        <br>
+                                        @php
+                                            $eol = Carbon\Carbon::parse($accessory->purchased_date)->addYears($accessory->depreciation->years);
+                                            if($eol->isPast()){
+                                                $dep = 0;
+                                            }else{
+
+                                                $age = Carbon\Carbon::now()->floatDiffInYears($accessory->purchased_date);
+                                                $percent = 100 / $accessory->depreciation->years;
+                                                $percentage = floor($age)*$percent;
+                                                $dep = $accessory->purchased_cost * ((100 - $percentage) / 100);
+                                            }
+                                        @endphp
+                                        <small>(*£{{ number_format($dep, 2)}})</small>
+                                    @endif
+                                </td>
                                 <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
-                                <td class="text-center"  style="color: {{$accessory->status->colour}};">
-                                    <i class="{{$accessory->status->icon}}"></i> {{ $accessory->status->name }}
+                                <td class="text-center"  style="color: {{$accessory->status->colour ?? '#666'}};">
+                                    <i class="{{$accessory->status->icon ?? 'fas fa-circle'}}"></i> {{ $accessory->status->name ?? 'No Status' }}
                                 </td>
                                 @php $warranty_end = \Carbon\Carbon::parse($accessory->purchased_date)->addMonths($accessory->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                    {{ $accessory->warranty }} Months
-
-                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small></td>
+                                    {{ $accessory->warranty }} Months<br>
+                                    @if(\Carbon\Carbon::parse($warranty_end)->isPast())
+                                        <span class="text-coral">{{ 'Expired' }}</span>
+                                    @else
+                                    <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                    @endif
+                                </td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$accessory->id}}Link"
@@ -128,6 +151,21 @@
                                             @endcan
                                             @can('update', $accessory)
                                                 <a href="{{ route('accessories.edit', $accessory->id) }}" class="dropdown-item">Edit</a>
+                                            @endcan
+                                            @can('transfer', $accessory)
+                                                <a  href="#" 
+                                                    class="dropdown-item transferBtn" 
+                                                    data-model-id="{{$accessory->id}}"
+                                                    data-location-from="{{$accessory->location->name ?? 'Unallocated' }}"
+                                                    data-location-id="{{ $accessory->location_id }}"
+                                                >Transfer</a>
+                                            @endcan
+                                            @can('dispose', $accessory)
+                                                <a  href="#" 
+                                                    class="dropdown-item disposeBtn" 
+                                                    data-model-id="{{$accessory->id}}"
+                                                    data-model-name="{{$accessory->name ?? 'No name'}}"
+                                                >Dispose</a>
                                             @endcan
                                             @can('delete', $accessory)
                                                 <form id="form{{$accessory->id}}" action="{{ route('accessories.destroy', $accessory->id) }}" method="POST" class="d-block p-0 m-0">
@@ -160,7 +198,93 @@
 @endsection
 
 @section('modals')
-
+    <!-- Disposal Modal-->
+    <div class="modal fade bd-example-modal-lg" id="requestDisposal" tabindex="-1" role="dialog" aria-labelledby="requestDisposalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form action="{{ route('request.disposal')}}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requestDisposalLabel">Request to Dispose of the Accessory?
+                        </h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @csrf
+                            <input name="model_type" type="hidden" value="accessory">
+                            <input id="dispose_id" name="model_id" type="hidden" value="">
+                            <input type="text" value="" id="accessory_name" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="disposal_date">Date of Disposal</label>
+                            <input type="date" value="" id="disposed_date" name="disposed_date" class="form-control" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Reasons for:</label>
+                            <textarea name="notes" class="form-control" rows="5"></textarea>
+                        </div>
+                        <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-coral" type="submit">Request Disposal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Transfer Modal-->
+    <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog" aria-labelledby="requestTransferLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form action="{{ route('request.transfer')}}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requestTransferLabel">Request to Transfer this Accessory to another Location?
+                        </h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @csrf
+                            <input name="model_type" type="hidden" value="accessory">
+                            <input id="model_id" name="model_id" type="hidden" value="">
+                            <input id="location_id" name="location_from" type="hidden" value="">
+                            <input id="location_from" type="text" class="form-control" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="disposal_date">Date of Transfer</label>
+                            <input type="date" value="" id="transfer_date" name="transfer_date" class="form-control" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="School Location">Transfer to:</label><span
+                                class="text-danger">*</span>
+                            <select type="text"
+                                class="form-control mb-3 @if($errors->has('location_id')){{'border-danger'}}@endif"
+                                name="location_to" required>
+                                <option value="0" selected>Please select a Location</option>
+                                @foreach($locations as $location)
+                                <option value="{{$location->id}}" @if(old('location_id')== $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Additional Comments:</label>
+                            <textarea name="notes" class="form-control" rows="5"></textarea>
+                        </div>
+                        <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-lilac" type="submit">Request Transfer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- Delete Modal-->
     <div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
          aria-labelledby="removeUserModalLabel" aria-hidden="true">
@@ -238,8 +362,23 @@
             $(form).submit();
         });
 
+        $('.transferBtn').click(function(){
+            $('#model_id').val($(this).data('model-id'));
+            $('#location_id').val($(this).data('location-id'));
+            $('#location_from').val($(this).data('location-from'));
+            $('#requestTransfer').modal('show');
+        });
+
+        $('.disposeBtn').click(function(){
+            $('#accessory_name').val($(this).data('model-name'));
+            $('#dispose_id').val($(this).data('model-id'));
+            $('#requestDisposal').modal('show');
+        });
+
         $(document).ready(function () {
             $('#usersTable').DataTable({
+                "autoWidth": false,
+                "pageLength": 25,
                 "columnDefs": [{
                     "targets": [3, 4, 5],
                     "orderable": false,

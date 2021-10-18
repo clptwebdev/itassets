@@ -25,6 +25,7 @@ class RequestsController extends Controller
             'location_from' => $request->location_from, 
             'notes' => $request->notes,
             'user_id' => auth()->user()->id, 
+            'date' => $request->transfer_date,
             'status' => 0,
         ]);
         //Notify by email
@@ -42,6 +43,7 @@ class RequestsController extends Controller
             'model_type'=> $request->model_type, 
             'model_id'=>$request->model_id,
             'notes' => $request->notes,
+            'date' => $request->disposed_date,
             'user_id' => auth()->user()->id, 
             'status' => 0,
         ]);
@@ -62,18 +64,21 @@ class RequestsController extends Controller
                     $m = "\\App\\Models\\".ucfirst($requests->model_type);
                     $model = $m::find($requests->model_id);
                     $model->update(['location_id'=> $requests->location_to]);
-                    if($model->model){
-                        $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($model->model->depreciation->years);
-                        if($eol->isPast()){
-                            $dep = 0;
-                        }else{
-                            $age = \Carbon\Carbon::now()->floatDiffInYears($model->purchased_date);
-                            $percent = 100 / $model->model->depreciation->years;
-                            $percentage = floor($age)*$percent;
-                            $dep = $model->purchased_cost * ((100 - $percentage) / 100);
-                        }
+                    if($requests->model_type == 'asset' && $model->model()->exists()){
+                        $years = $model->model->depreciation->years;
+                    }elseif($model->depreciation_id != 0){
+                        $years = $model->depreciation->years;
                     }else{
+                        $years = 0;
+                    }
+                    $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($years);
+                    if($eol->isPast()){
                         $dep = 0;
+                    }else{
+                        $age = \Carbon\Carbon::now()->floatDiffInYears($model->purchased_date);
+                        $percent = 100 / $years;
+                        $percentage = floor($age)*$percent;
+                        $dep = $model->purchased_cost * ((100 - $percentage) / 100);
                     }
                     $transfer = Transfer::create([
                         'type'=>'transfer',
@@ -82,6 +87,9 @@ class RequestsController extends Controller
                         'location_to'=> $requests->location_to, 
                         'location_from' => $requests->location_from, 
                         'value' => number_format($dep, 2),
+                        'notes' => $requests->notes,
+                        'created_at' => $requests->date,
+                        'date' => $requests->date,
                         'user_id' => $requests->user_id,
                         'super_id' => auth()->user()->id,
                     ]);
@@ -92,20 +100,26 @@ class RequestsController extends Controller
                 case 'disposal':
                     $m = "\\App\\Models\\".ucfirst($requests->model_type);
                     $model = $m::find($requests->model_id);
-                    if($model->model()->exists()){
-                        $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($model->model->depreciation->years);
-                        if($eol->isPast()){
-                            $dep = 0;
-                        }else{
-                            $age = \Carbon\Carbon::now()->floatDiffInYears($model->purchased_date);
-                            $percent = 100 / $model->model->depreciation->years;
-                            $percentage = floor($age)*$percent;
-                            $dep = $model->purchased_cost * ((100 - $percentage) / 100);
-                        }
+
+                    if($requests->model_type == 'asset' && $model->model()->exists()){
+                        $years = $model->model->depreciation->years;
+                    }elseif($model->depreciation_id != 0){
+                        $years = $model->depreciation->years;
                     }else{
-                        $dep = 0;
+                        $years = 0;
                     }
+                    $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($years);
+                    if($eol->isPast()){
+                        $dep = 0;
+                    }else{
+                        $age = \Carbon\Carbon::now()->floatDiffInYears($model->purchased_date);
+                        $percent = 100 / $years;
+                        $percentage = floor($age)*$percent;
+                        $dep = $model->purchased_cost * ((100 - $percentage) / 100);
+                    }
+
                     $archive = Archive::create([
+                        'model_type' => $requests->model_type ?? 'unknown',
                         'name' => $model->name ?? 'No Name',
                         'asset_tag' => $model->asset_tag ?? 'No Asset Tag',
                         'serial_no' => $model->serial_no ?? 'N/A',
@@ -120,19 +134,22 @@ class RequestsController extends Controller
                         'room' => $model->room ?? 'N/A',
                         'logs' => 'N/A',
                         'comments' => 'N/A',
-                        'user_id' => $model->user_id ?? 0,
-                        'archived_id' => $requests->user_id,
+                        'created_user' => $model->user_id ?? 0,
+                        'created_on' => $model->created_at,
+                        'user_id' => $requests->user_id,
                         'super_id' => auth()->user()->id,
+                        'date' => $requests->date,
+                        'notes' => $requests->notes,
                     ]);
                     $model->forceDelete();
-                    $requests->update(['status' => 1, 'super_id'  => auth()->user()->id]);
+                    $requests->update(['status' => 1, 'super_id'  => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
                     return back()->with('success_message','The Request has been approved');
                     break;
                 default:
 
             }
         }elseif($status == 2){
-            $requests->update(['status' => 2, 'super_id' => auth()->user()->id]);
+            $requests->update(['status' => 2, 'super_id' => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
             return back()->with('danger_message','The Request has been denied');
         }
     }

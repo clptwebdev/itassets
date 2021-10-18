@@ -27,10 +27,14 @@ class CreateArchivedTable extends Migration
             $table->string("warranty")->default("0");
             $table->foreignId("location_id");
             $table->string("room")->nullable();
+            $table->foreignId("created_user");
+            $table->timestamp("created_on");
             $table->foreignId("user_id");
             $table->foreignId("super_id");
             $table->text('comments')->nullable();
             $table->text('logs')->nullable();
+            $table->text('notes');
+            $table->timestamp('date');
             $table->timestamps();
         });
     }

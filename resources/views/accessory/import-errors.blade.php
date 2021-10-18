@@ -67,14 +67,17 @@
                             <thead>
                             <tr>
                                 <th><small>Name</small></th>
+                                <th><small>Model</small></th>
                                 <th><small>Status</small></th>
                                 <th><small>Supplier</small></th>
                                 <th><small>Manufacturers</small></th>
                                 <th><small>Location</small></th>
+                                <th><small>Room</small></th>
                                 <th><small>Order_no</small></th>
                                 <th><small>Serial Num</small></th>
                                 <th><small>Purchased Cost</small></th>
                                 <th><small>Purchased Date</small></th>
+                                <th><small>Depreciation</small></th>
                                 <th><small>Warranty</small></th>
                                 <th><small>Notes</small></th>
                             </tr>
@@ -82,14 +85,17 @@
                             <tfoot>
                                 <tr>
                                     <th><small>Name</small></th>
+                                    <th><small>Model</small></th>
                                     <th><small>Status</small></th>
                                     <th><small>Supplier</small></th>
                                     <th><small>Manufacturers</small></th>
                                     <th><small>Location</small></th>
+                                    <th><small>Room</small></th>
                                     <th><small>Order_no</small></th>
                                     <th><small>Serial Num</small></th>
                                     <th><small>Purchased Cost</small></th>
                                     <th><small>Purchased Date</small></th>
+                                    <th><small>Depreciation</small></th>
                                     <th><small>Warranty</small></th>
                                     <th><small>Notes</small></th>
                                 </tr>
@@ -104,14 +110,23 @@
                                         <span id="name{{$line}}" class="tooltip-danger">
                                             <input type="text"
                                                class="import-control @if(in_array('name', $errors)){{ 'border-bottom border-danger'}}@endif" name="name[]"
-                                               id="name" value="{{ $valueArray[$row]['name'] }}"
+                                               value="{{ $valueArray[$row]['name'] }}"
                                                placeholder="This Row is Empty Please Fill!" required data-container='#name{{$line}}' data-placement='top'
                                                @if(array_key_exists('name', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
                                         </span>
                                     </td>
                                     <td>
+                                        <span id="model{{$line}}" class="tooltip-danger">
+                                            <input type="text"
+                                               class="import-control @if(in_array('model', $errors)){{ 'border-bottom border-danger'}}@endif" name="model[]"
+                                               value="{{ $valueArray[$row]['model'] }}"
+                                               placeholder="This Row is Empty Please Fill!" required data-container='#model{{$line}}' data-placement='top'
+                                               @if(array_key_exists('model', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['model']}'" !!}@endif>
+                                        </span>
+                                    </td>
+                                    <td>
                                         <span id="status_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown" class="import-control @if(in_array('status_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="status_id[]" id="status_id"
+                                        <select type="dropdown" class="import-control @if(in_array('status_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="status_id[]"
                                             required data-container='#status_id{{$line}}' data-placement='top'
                                         @if(array_key_exists('status_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['status_id']}'" !!}@endif
                                         >
@@ -153,13 +168,22 @@
                                         <span id="location_id{{$line}}" class="tooltip-danger">
                                         <select type="dropdown" class="import-control @if(in_array('location_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="location_id[]" required
                                         data-container='#location_id{{$line}}' data-placement='top'
-                                        @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['location_id']}'" !!}@endif
+                                        @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['location_id']} - {$valueArray[$row]['location_id']}'" !!}@endif
                                         >
                                             <option value="0" @if($valueArray[$row]['location_id'] == ''){{'selected'}}@endif>Please Select a Location</option>
                                             @foreach($locations as $location)
                                                 <option value="{{ $location->id  }}" @if( $valueArray[$row]['location_id'] == $location->name){{'selected'}}@endif>{{ $location->name }}</option>
                                             @endforeach
                                         </select>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span id="room{{$line}}" class="tooltip-danger">
+                                        <input type="text"
+                                               class="import-control @if(in_array('room', $errors)){{ 'border-bottom border-danger'}}@endif" name="room[]" placeholder="This Row is Empty Please Fill!"
+                                               value="{{ $valueArray[$row]['room'] }}" required data-container='#room{{$line}}' data-placement='top'
+                                               @if(array_key_exists('room', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['room']}'" !!}@endif
+                                        >
                                         </span>
                                     </td>
                                     <td>
@@ -190,6 +214,17 @@
                                         >
                                         </span>
                                     </td>
+                                    
+                                <td>
+                                    <span id="donated{{$line}}" class="tooltip-danger">
+                                        <select type="dropdown" class="import-control <?php if (in_array('status_id', $errors)) {?>border-bottom border-danger<?php }?>" name="donated[]" id="donatedInput{{$line}}"
+                                                onchange="getFields(this);" autocomplete="off" required data-container='#donated{{$line}}' data-placement='top'
+                                                @if(array_key_exists('donated', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['donated']}'" !!}@endif>>
+                                            <option value="0" @if($valueArray[$row]['donated'] == 0){{'selected'}}@endif>No</option>
+                                            <option value="1" @if( $valueArray[$row]['status_id'] == 1){{'selected'}}@endif>Yes</option>
+                                        </select>
+                                    </span>
+                                </td>
                                     <td>
                                         <?php
                                         try {
@@ -210,6 +245,19 @@
 
                                     </td>
                                     <td>
+                                        <span id="depreciation_id{{$line}}" class="tooltip-danger">
+                                        <select type="dropdown" class="import-control @if(in_array('depreciation_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="depreciation_id[]" required
+                                        data-container='#depreciation_id{{$line}}' data-placement='top'
+                                        @if(array_key_exists('depreciation_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['depreciation_id']}'" !!}@endif
+                                        >
+                                            <option value="0" @if($valueArray[$row]['depreciation_id'] == ''){{'selected'}}@endif>No Depreciation</option>
+                                            @foreach($depreciations as $depreciation)
+                                                <option value="{{ $depreciation->id  }}" @if( $valueArray[$row]['depreciation_id'] == $depreciation->name){{'selected'}}@endif>{{ $depreciation->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        </span>
+                                    </td>
+                                    <td>
                                         <span id="warranty{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="import-control @if(in_array('warranty', $errors)){{'border-bottom border-danger'}}@endif"
@@ -221,7 +269,7 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <span id="warranty{{$line}}" class="tooltip-danger">
+                                        <span id="notes{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="import-control @if(in_array('notes', $errors)){{'border-bottom border-danger'}}@endif"
                                                name="notes[]"
@@ -303,6 +351,12 @@
                 data.append('name[]', element.value);
             });
 
+            //Names
+            var mdInputs = $("input[name='name[]']").get();
+            mdInputs.forEach(element => {
+                data.append('model[]', element.value);
+            });
+
             //status
             var stInputs = $("select[name='status_id[]']").get();
             stInputs.forEach(element => {
@@ -326,6 +380,11 @@
                 data.append('location_id[]', element.value);
             });
 
+            var roInputs = $("input[name='room[]']").get();
+                roInputs.forEach(element => {
+                data.append('room[]', element.value);
+            });
+
             var orInputs = $("input[name='order_no[]']").get();
                 orInputs.forEach(element => {
                 data.append('order_no[]', element.value);
@@ -341,9 +400,19 @@
                 data.append('purchased_cost[]', element.value);
             });
 
+            var doInputs = $("select[name='donated[]']").get();
+                doInputs.forEach(element => {
+                data.append('donated[]', element.value);
+            });
+
             var pdInputs = $("input[name='purchased_date[]']").get();
                 pdInputs.forEach(element => {
                 data.append('purchased_date[]', element.value);
+            });
+
+            var dpInputs = $("select[name='depreciation_id[]']").get();
+                dpInputs.forEach(element => {
+                data.append('depreciation_id[]', element.value);
             });
 
             var waInputs = $("input[name='warranty[]']").get();
@@ -367,8 +436,8 @@
                         window.location.href = '/accessories';
                     }else{
                         $('.import-control').removeClass('border-danger');
+                        $('.import-control').removeClass('border-bottom');
                         $('.import-control').tooltip('dispose');
-                        $('input').removeClass('border-danger');
                         var i = 0;
                         Object.entries(response).forEach(entry => {
                             const [key, value] = entry;
