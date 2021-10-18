@@ -584,11 +584,9 @@ class AssetController extends Controller {
         }
     }
 
-    public function getFilter(Request $request)
+    public function filter(Request $request)
     {
-        return dd($request);
-
-        /* if(auth()->user()->role_id != 1){
+        if(auth()->user()->role_id != 1){
             $locations = auth()->user()->locations->pluck('id');
             $locs = auth()->user()->locations;
         }else{
@@ -634,83 +632,18 @@ class AssetController extends Controller {
         $assets->costFilter($request->amount);
         $filters['amount'] = $request->amount;
         $assets->get();
+        $assets->paginate(15)->appends($filters);
 
         return view('assets.view', [
-            "assets" => $assets->cursorPaginate(15)->appends($filters),
+            "assets" => $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
             "locations"=> $locs,
             "filter" => $request,
             "amount" => $request->amount,
-        ]); */
-    }
-
-    public function filter(Request $request)
-    {
-        if ($request->isMethod('get')) {
-            return(dd($request));
-        }else{
-
-            if(auth()->user()->role_id != 1){
-                $locations = auth()->user()->locations->pluck('id');
-                $locs = auth()->user()->locations;
-            }else{
-                $locations = \App\Models\Location::all()->pluck('id');
-                $locs = \App\Models\Location::all();
-            }
-            $filters = [];
-            $assets = Asset::locationFilter($locations);
-            if(! empty($request->locations))
-            {
-                $assets->locationFilter($request->locations);
-                $filters['locations'] = $request->locations;
-            }
-            if(! empty($request->status))
-            {
-                $assets->statusFilter($request->status);
-                $filters['status'] = $request->status;
-            }
-            if(! empty($request->category))
-            {
-                $assets->categoryFilter($request->category);
-                $filters['category'] = $request->category;
-            }
-            if($request->start != '' && $request->end != '')
-            {
-                $assets->purchaseFilter($request->start, $request->end);
-                $filters['start'] = $request->start;
-                $filters['end'] = $request->end;
-            }
-
-            if($request->audit != 0)
-            {
-                $assets->auditFilter($request->audit);
-                $filters['audit'] = $request->audit;
-            }
-
-            if($request->warranty != 0)
-            {
-                $assets->warrantyFilter($request->warranty);
-                $filters['warranty'] = $request->warranty;
-            }
-
-            $assets->costFilter($request->amount);
-            $filters['amount'] = $request->amount;
-            $assets->get();
-            $assets->paginate(15)->appends($filters);
-
-            return view('assets.view', [
-                "assets" => $assets,
-                'suppliers' => Supplier::all(),
-                'statuses' => Status::all(),
-                'categories' => Category::all(),
-                "locations"=> $locs,
-                "filter" => $request,
-                "amount" => $request->amount,
-            ]);
-            }
-    }
+        ]);
+}
 
     public function status(Status $status)
     {
