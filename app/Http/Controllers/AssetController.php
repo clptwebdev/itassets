@@ -175,7 +175,7 @@ class AssetController extends Controller {
         {
             $v = array_merge($validate_fieldet, [
                 'name' => 'required',
-                'asset_tag' => 'sometimes|nullable|unique:assets',
+                'asset_tag' => 'sometimes|nullable',
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -185,7 +185,7 @@ class AssetController extends Controller {
         {
             $v = [
                 'name' => 'required',
-                'asset_tag' => 'sometimes|nullable|unique:assets',
+                'asset_tag' => 'sometimes|nullable',
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -327,7 +327,7 @@ class AssetController extends Controller {
         {
             $v = array_merge($validate_fieldet, [
                 'name' => 'required',
-                'asset_tag' => ['sometimes', 'nullable', \Illuminate\Validation\Rule::unique('assets')->ignore($asset->id)],
+                'asset_tag' => ['sometimes', 'nullable'],
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -540,7 +540,7 @@ class AssetController extends Controller {
                 'warranty.*' => 'int',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-                'asset_tag.*' => 'sometimes|nullable||unique:assets,asset_tag',
+                'asset_tag.*' => 'sometimes|nullable',
                 'status_id.*' => 'string|nullable',
                 'audit_date.*' => 'date|nullable',
                 'supplier_id.*' => 'string',

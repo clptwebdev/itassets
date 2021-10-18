@@ -139,6 +139,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             $location = Location::where(["name" => $row["location_id"]])->first();
             $id = $location->id ?? 0;
             $asset->location_id = $id;
+            $asset->room = $row['room'];
 
             if($asset_model = AssetModel::where(["name" => $row["asset_model"]])->first())
             {
