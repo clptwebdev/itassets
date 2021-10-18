@@ -382,6 +382,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    {{ $asset->links()}}
                 </div>
             </div>
         </div>
@@ -606,7 +607,7 @@
                 " - £" + $("#slider-range").slider("values", 1));
         });
 
-        $(document).ready(function () {
+        /* $(document).ready(function () {
             $('#assetsTable').DataTable({
                 "autoWidth": false,
                 "pageLength": 25,
@@ -616,7 +617,7 @@
                 }],
                 "order": [[1, "asc"]],
             });
-        });
+        }); */
         // import
 
         $('#import').click(function () {
