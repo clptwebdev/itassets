@@ -623,9 +623,10 @@ class AssetController extends Controller {
         }
 
         $assets->costFilter($request->amount);
+        $assets->get();
 
         return view('assets.view', [
-            "assets" => $assets->cursorPaginate(15)->get(),
+            "assets" => $assets->cursorPaginate(15),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
