@@ -594,39 +594,48 @@ class AssetController extends Controller {
             $locations = \App\Models\Location::all()->pluck('id');
             $locs = \App\Models\Location::all();
         }
+        $filters = [];
         $assets = Asset::locationFilter($locations);
         if(! empty($request->locations))
         {
             $assets->locationFilter($request->locations);
+            $filters[] = $request->locations;
         }
         if(! empty($request->status))
         {
             $assets->statusFilter($request->status);
+            $filters[] = $request->status;
         }
         if(! empty($request->category))
         {
             $assets->categoryFilter($request->category);
+            $filters[] = $request->category;
         }
         if($request->start != '' && $request->end != '')
         {
             $assets->purchaseFilter($request->start, $request->end);
+            $filters[] = $request->start;
+            $filters[] = $request->end;
         }
 
         if($request->audit != 0)
         {
             $assets->auditFilter($request->audit);
+            $filters[] = $request->audit;
         }
 
         if($request->warranty != 0)
         {
             $assets->warrantyFilter($request->warranty);
+            $filters[] = $request->warranty;
         }
 
         $assets->costFilter($request->amount);
+        $filters[] = $request->amount;
         $assets->get();
 
         return view('assets.view', [
-            "assets" => $assets->cursorPaginate(15),
+            "assets" => $assets->appends($filters)->cursorPaginate(15),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
