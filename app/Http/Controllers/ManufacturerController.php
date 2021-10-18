@@ -140,13 +140,13 @@ class ManufacturerController extends Controller {
         if (auth()->user()->cant('viewAny', Manufacturer::class)) {
             return redirect(route('errors.forbidden', ['area', 'manufacturers', 'export']));
         }
-            
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new ManufacturerExport, "/public/csv/manufacturers-ex-{$date}.csv");
         $url = asset("storage/csv/manufacturers-ex-{$date}.csv");
         return redirect(route('manufacturers.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
-            ->withInput(); 
+            ->withInput();
     }
 
     public function import(Request $request)
@@ -254,7 +254,7 @@ class ManufacturerController extends Controller {
             foreach($f->assetModel as $assetModel){
                 $total += $assetModel->assets->count();
             }
-            $array['asset'] = $total; 
+            $array['asset'] = $total;
             $array['accessory'] = $f->accessory->count() ?? 'N/A';
             $array['component'] = $f->component->count() ?? 'N/A';
             $array['consumable'] = $f->consumable->count() ?? 'N/A';
@@ -263,13 +263,13 @@ class ManufacturerController extends Controller {
         }
 
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'manufacturers-'.$date;
 
         dispatch(new ManufacturersPdf($manufacturers, $user, $path))->afterResponse();
         //Create Report
-        
+
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
 
@@ -284,9 +284,9 @@ class ManufacturerController extends Controller {
         if (auth()->user()->cant('view', Manufacturer::class)) {
             return redirect(route('errors.forbidden', ['manufacturers', $manufacturer->id, 'View PDF']));
         }
-        
+
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = str_replace(' ', '-', $manufacturer->name).'-'.$date;
 
