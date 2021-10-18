@@ -584,6 +584,67 @@ class AssetController extends Controller {
         }
     }
 
+    public function getFilter(Request $request)
+    {
+
+        if(auth()->user()->role_id != 1){
+            $locations = auth()->user()->locations->pluck('id');
+            $locs = auth()->user()->locations;
+        }else{
+            $locations = \App\Models\Location::all()->pluck('id');
+            $locs = \App\Models\Location::all();
+        }
+        $filters = [];
+        $assets = Asset::locationFilter($locations);
+        if(! empty($request->locations))
+        {
+            $assets->locationFilter($request->locations);
+            $filters[] = $request->locations;
+        }
+        if(! empty($request->status))
+        {
+            $assets->statusFilter($request->status);
+            $filters[] = $request->status;
+        }
+        if(! empty($request->category))
+        {
+            $assets->categoryFilter($request->category);
+            $filters[] = $request->category;
+        }
+        if($request->start != '' && $request->end != '')
+        {
+            $assets->purchaseFilter($request->start, $request->end);
+            $filters[] = $request->start;
+            $filters[] = $request->end;
+        }
+
+        if($request->audit != 0)
+        {
+            $assets->auditFilter($request->audit);
+            $filters[] = $request->audit;
+        }
+
+        if($request->warranty != 0)
+        {
+            $assets->warrantyFilter($request->warranty);
+            $filters[] = $request->warranty;
+        }
+
+        $assets->costFilter($request->amount);
+        $filters[] = $request->amount;
+        $assets->get();
+
+        return view('assets.view', [
+            "assets" => $assets->cursorPaginate(15)->appends($filters),
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations"=> $locs,
+            "filter" => $request,
+            "amount" => $request->amount,
+        ]);
+    }
+
     public function filter(Request $request)
     {
 
