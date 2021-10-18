@@ -599,39 +599,39 @@ class AssetController extends Controller {
         if(! empty($request->locations))
         {
             $assets->locationFilter($request->locations);
-            $filters[] = $request->locations;
+            $filters['locations'] = $request->locations;
         }
         if(! empty($request->status))
         {
             $assets->statusFilter($request->status);
-            $filters[] = $request->status;
+            $filters['status'] = $request->status;
         }
         if(! empty($request->category))
         {
             $assets->categoryFilter($request->category);
-            $filters[] = $request->category;
+            $filters['category'] = $request->category;
         }
         if($request->start != '' && $request->end != '')
         {
             $assets->purchaseFilter($request->start, $request->end);
-            $filters[] = $request->start;
-            $filters[] = $request->end;
+            $filters['start'] = $request->start;
+            $filters['end'] = $request->end;
         }
 
         if($request->audit != 0)
         {
             $assets->auditFilter($request->audit);
-            $filters[] = $request->audit;
+            $filters['audit'] = $request->audit;
         }
 
         if($request->warranty != 0)
         {
             $assets->warrantyFilter($request->warranty);
-            $filters[] = $request->warranty;
+            $filters['warranty'] = $request->warranty;
         }
 
         $assets->costFilter($request->amount);
-        $filters[] = $request->amount;
+        $filters['amount'] = $request->amount;
         $assets->get();
 
         return view('assets.view', [
@@ -660,39 +660,39 @@ class AssetController extends Controller {
         if(! empty($request->locations))
         {
             $assets->locationFilter($request->locations);
-            $filters[] = $request->locations;
+            $filters['locations'] = $request->locations;
         }
         if(! empty($request->status))
         {
             $assets->statusFilter($request->status);
-            $filters[] = $request->status;
+            $filters['status'] = $request->status;
         }
         if(! empty($request->category))
         {
             $assets->categoryFilter($request->category);
-            $filters[] = $request->category;
+            $filters['category'] = $request->category;
         }
         if($request->start != '' && $request->end != '')
         {
             $assets->purchaseFilter($request->start, $request->end);
-            $filters[] = $request->start;
-            $filters[] = $request->end;
+            $filters['start'] = $request->start;
+            $filters['end'] = $request->end;
         }
 
         if($request->audit != 0)
         {
             $assets->auditFilter($request->audit);
-            $filters[] = $request->audit;
+            $filters['audit'] = $request->audit;
         }
 
         if($request->warranty != 0)
         {
             $assets->warrantyFilter($request->warranty);
-            $filters[] = $request->warranty;
+            $filters['warranty'] = $request->warranty;
         }
 
         $assets->costFilter($request->amount);
-        $filters[] = $request->amount;
+        $filters['amount'] = $request->amount;
         $assets->get();
 
         return view('assets.view', [
