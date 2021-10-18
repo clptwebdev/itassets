@@ -382,7 +382,9 @@
                         @endforeach
                         </tbody>
                     </table>
+                    @if($assets->hasPages())
                     {{ $assets->links()}}
+                    @endif
                 </div>
             </div>
         </div>
