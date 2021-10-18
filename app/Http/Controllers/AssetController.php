@@ -41,11 +41,11 @@ class AssetController extends Controller {
         }
 
         if(auth()->user()->role_id == 1){
-            $assets = Asset::with('supplier', 'location','model')->cursorPaginate(15);
+            $assets = Asset::with('supplier', 'location','model')->cursorPaginate(15)->withQueryString();
 
             $locations = Location::all();
         }else{
-            $assets = auth()->user()->location_assets()->cursorPaginate(15);
+            $assets = auth()->user()->location_assets()->cursorPaginate(15)->withQueryString();
             $locations = auth()->user()->locations;
         }
         return view('assets.view', [
