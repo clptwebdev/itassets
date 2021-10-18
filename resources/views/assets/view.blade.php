@@ -382,7 +382,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                    {{ $assets->links()->onEachSide(5)}}
+                    {{ $assets->links()}}
                 </div>
             </div>
         </div>
