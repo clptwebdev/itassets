@@ -7,6 +7,9 @@
 @endsection
 
 @section('content')
+    <div class="container">
+        <div class="flex direct-middle">
+
     <x-auth-card>
         <x-slot name="logo" >
             <div class="container-margin-login flex-size margin-centre">
@@ -14,14 +17,13 @@
                     <x-application-logo/>
                 </div>
                 <div class=" w-100 text-center">
-                    <h3 class="text-yellow-dash">Welcome to Sothis</h3>
+                    <h3 class="text-yellow-dash">Welcome to Apollo</h3>
                 </div>
-                <hr class="hr-break w-50 m-auto">
         </x-slot>
 
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
+<div style="background-color: #474775 ;">
         <form method="POST" action="{{ route('password.update') }}">
             @csrf
 
@@ -57,5 +59,8 @@
                 </x-button>
             </div>
         </form>
+</div>
     </x-auth-card>
+    </div>
+    </div>
 @endsection
