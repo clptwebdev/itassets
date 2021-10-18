@@ -631,11 +631,11 @@ class AssetController extends Controller {
 
         $assets->costFilter($request->amount);
         $filters['amount'] = $request->amount;
-        $assets->get();
+        
         $assets->paginate(15)->appends($filters);
 
         return view('assets.view', [
-            "assets" => $assets,
+            "assets" => $assets->get(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
