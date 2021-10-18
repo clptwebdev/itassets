@@ -586,8 +586,9 @@ class AssetController extends Controller {
 
     public function getFilter(Request $request)
     {
+        return dd($request);
 
-        if(auth()->user()->role_id != 1){
+        /* if(auth()->user()->role_id != 1){
             $locations = auth()->user()->locations->pluck('id');
             $locs = auth()->user()->locations;
         }else{
@@ -642,7 +643,7 @@ class AssetController extends Controller {
             "locations"=> $locs,
             "filter" => $request,
             "amount" => $request->amount,
-        ]);
+        ]); */
     }
 
     public function filter(Request $request)
