@@ -8,10 +8,15 @@
 
 @section('content')
     <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
+        <x-slot name="logo" >
+            <div class="container-margin-login flex-size margin-centre">
+                <div class="apollo" style="max-width: 300px;">
+                    <x-application-logo/>
+                </div>
+                <div class=" w-100 text-center">
+                    <h3 class="text-yellow-dash">Welcome to Sothis</h3>
+                </div>
+                <hr class="hr-break w-50 m-auto">
         </x-slot>
 
         <!-- Validation Errors -->
