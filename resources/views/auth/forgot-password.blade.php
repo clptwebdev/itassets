@@ -1,4 +1,12 @@
+@extends("layouts.guest")
 
+@section('title', 'Forgot password')
+
+@section('css')
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet" type="text/css" />
+@endsection
+
+@section('content')
     <div class="container">
         <div class="flex direct-middle">
             <div class="container-middle-1  container-margin-login flex-size margin-centre">
@@ -51,7 +59,7 @@
             </div>
         </div>
     </div>
-
+@endsection
 
 
 
