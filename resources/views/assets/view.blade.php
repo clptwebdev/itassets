@@ -78,13 +78,109 @@
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
+        
         <!-- DataTales Example -->
-        <div class="d-flex flex-row-reverse mb-2">
-
-            @if(isset($filter))
-            <a href="{{ route('assets.index')}}" class="btn-sm btn-warning p-2 ml-2 shadow-sm">Clear Filter</a>
-            @endif
-            <a href="#" onclick="javascript:toggleFilter();" class="btn-sm btn-lilac p-2 shadow-sm">Filter</a>
+        <div class="d-flex justify-content-between flex-row-reverse mb-2 p-2">
+            <div id="filterDiv" class="col-3 text-right">
+                <a name="#table"></a>
+                @if(isset($filter) && $filter != 0)
+                <a href="{{ route('assets.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
+                <div class="dropdown d-inline ml-2">
+                    <button class="btn btn-green dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      View Filter
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuButton">
+                       
+                            @if(session()->has('status'))
+                                <h6 class="dropdown-header text-center">Status</h6>
+                                @foreach(session('status') as $id => $key)
+                                    @php
+                                    $status = \App\Models\Status::find($key);
+                                    @endphp
+                                    <span class="dropdown-item">{{ $status->name }} </span>
+                                    @php
+                                        unset($status);
+                                    @endphp
+                                @endforeach
+                            @endif
+                            @if(session()->has('locations'))
+                                <h6 class="dropdown-header text-center">Locations</h6>
+                                @foreach(session('locations') as $id => $key)
+                                    @php
+                                    $location = \App\Models\Location::find($key);
+                                    @endphp
+                                    <span class="dropdown-item">{{ $location->name }} </span>
+                                    @php
+                                        unset($location);
+                                    @endphp
+                                @endforeach
+                            @endif
+                            @if(session()->has('category'))
+                                <h6 class="dropdown-header text-center">Categories</h6>
+                                @foreach(session('category') as $id => $key)
+                                    @php
+                                    $category = \App\Models\category::find($key);
+                                    @endphp
+                                    <span class="dropdown-item">{{ $category->name }} </span>
+                                    @php
+                                        unset($category);
+                                    @endphp
+                                @endforeach
+                            @endif
+                            <ul>
+                            @if(session()->has('category'))
+                            <li>{{ implode(",", session('category')) ?? 'No Categories'}} </li>
+                            @endif
+                            <li>{{ session('start').'-'.session('end') ?? 'No Dates'}} </li>
+                            <li>{{ session('audit') ?? 'No Audit'}} </li>
+                            <li>{{ session('warranty') ?? 'No Warranty'}} </li>
+                            <li>{{ session('amount') ?? 'No Amount'}} </li>
+                            <li>{{ session('searcg') ?? 'No Search'}} </li>
+                        </ul>
+                    </div>
+                  </div>
+                @endif
+                <a href="#" onclick="javascript:toggleFilter();" class="btn btn-blue shadow-sm ml-2">Filter</a>
+            </div>
+            <div id="searchBar" class="col-5">
+                <div class="col-auto">
+                <label class="sr-only" for="inlineFormInputGroup">Search</label>
+                <form method="POST" action="{{ route('assets.filter')}}">
+                <div class="input-group mb-2">
+                    
+                            @csrf
+                        <input type="text" class="form-control" name="search" placeholder="Search">
+                        <div class="input-group-append">
+                        <button class="btn btn-blue">Search</button>
+                        
+                        </div>
+                    </div>
+                </form>
+                </div>  
+            </div>
+            <div id="Sort" class="col-4">
+                <form class="form-inline" method="POST" action="{{ route('assets.filter')}}">
+                    @csrf
+                    <label class="my-1 mr-2">Amount:</label>
+                    <select class="form-control mr-2" name="limit">
+                        <option value="25" @if(session('limit') == 25) selected @endif>25</option>
+                        <option value="50" @if(session('limit') == 50) selected @endif>50</option>
+                        <option value="100" @if(session('limit') == 100) selected @endif>100</option>
+                    </select>
+                    <label class="my-1 mr-2">Order By:</label>
+                    <select class="form-control mr-2" name="orderby">
+                        <option value="name" @if(session('orderby') == 'name') selected @endif>Name</option>
+                        <option value="location_id" @if(session('orderby') == 'location_id') selected @endif>Location</option>
+                        <option value="asset_tag" @if(session('orderby') == 'asset_tag') selected @endif>Asset tag</option>
+                        <option value="manufacturer_id" @if(session('orderby') == 'manufacturer_id') selected @endif>Manufacturer</option>
+                        <option value="purchased_date" @if(session('orderby') == 'date') selected @elseif(!session()->has('orderby')) selected @endif>Date</option>
+                        <option value="purchased_cost" @if(session('orderby') == 'purchased_cost') selected @endif>Cost</option>
+                        <option value="supplier_id" @if(session('orderby') == 'supplier_id') selected @endif>Supplier</option>
+                        <option value="audit_date" @if(session('orderby') == 'audit_date') selected @endif>Audit Date</option>
+                    </select>
+                    <button class="btn btn-blue" type="submit">Sort</button>
+                </form>
+            </div>
         </div>
         <div id="filter" class="card shadow mb-4">
             <div id="filter-header" class="card-header d-flex justify-content-between align-items-center text-white"
@@ -266,6 +362,7 @@
                         </tr>
                         </tfoot>
                         <tbody>
+                        @if($assets->count() != 0)
                         @foreach($assets as $asset)
                             <tr>
                                 <td>{{$asset->name}}<br><small
@@ -380,11 +477,21 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @else
+                            <td colspan="10" class="text-center">No Assets Returned</td>
+                        @endif
                         </tbody>
                     </table>
-                    @if($assets->hasPages())
-                    {{ $assets->links()}}
-                    @endif
+                    <div class="d-flex justify-content-between align-content-center">
+                        <div>
+                            @if($assets->hasPages())
+                            {{ $assets->links()}}
+                            @endif
+                        </div>
+                        <div class="text-right">
+                            Showing Assets {{ $assets->firstItem() }} to {{ $assets->lastItem() }} ({{ $assets->total() }} Total Results)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

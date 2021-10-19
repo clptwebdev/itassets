@@ -116,7 +116,9 @@ Route::group(['middleware' => 'auth'], function() {
     // Asset Routes
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/search',[\App\Http\Controllers\AssetController::class, "search"] )->name('assets.search');
-        Route::post('/assets/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
+        Route::post('/asset/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
+        Route::get('/asset/filter/clear', 'App\Http\Controllers\AssetController@clearFilter')->name('assets.clear.filter');
+        Route::get('/asset/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filtered');
         Route::get('/status/{status}/assets', 'App\Http\Controllers\AssetController@status')->name('assets.status');
         Route::get('/location/{location}/assets', 'App\Http\Controllers\AssetController@location')->name('assets.location');
         Route::post('/assets/pdf', 'App\Http\Controllers\AssetController@downloadPDF')->name('assets.pdf');

@@ -56,6 +56,12 @@ class Asset extends Model {
         return $query->whereIn('location_id', $locations);
     }
 
+    public function scopeSearchFilter($query, $search){
+        return $query->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('asset_tag', 'LIKE', "%{$search}%")
+                    ->orWhere('serial_no', 'LIKE', "%{$search}%");
+    }
+
     public function scopeStatusFilter($query, $status){
         return $query->whereIn('status_id', $status);
     }
