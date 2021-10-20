@@ -25,6 +25,11 @@ class Status extends Model
     public function accessory(){
         return $this->hasMany(Accessory::class);
     }
+
+    public function accessories(){
+        return $this->hasMany(Accessory::class);
+    }
+
     public function consumable(){
         return $this->hasMany(Consumable::class);
     }

@@ -19,6 +19,10 @@ class Location extends Model
     public function asset(){
         return $this->hasMany(Asset::class);
     }
+
+    public function assets(){
+        return $this->hasMany(Asset::class);
+    }
     
     public function miscellanea()
     {
@@ -30,6 +34,10 @@ class Location extends Model
     }
 
     public function accessory(){
+        return $this->hasMany(Accessory::class);
+    }
+
+    public function accessories(){
         return $this->hasMany(Accessory::class);
     }
 

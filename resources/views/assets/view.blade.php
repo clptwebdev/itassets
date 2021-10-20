@@ -74,264 +74,28 @@
             $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
             $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
         }
+        if(session()->has('amount')){
+            $amount = str_replace('£', '', session('amount'));
+            $amount = explode(' - ', $amount);
+            $start_value = intval($amount[0]);
+            $end_value = intval($amount[1]);
+        }else{
+            $start_value = $floor;
+            $end_value = $limit;
+        }
     @endphp
+    
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
         
         <!-- DataTales Example -->
-        <div class="d-flex justify-content-between flex-row-reverse mb-2 p-2">
-            <div id="filterDiv" class="col-3 text-right">
-                <a name="#table"></a>
-                @if(isset($filter) && $filter != 0)
-                <a href="{{ route('assets.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
-                <div class="dropdown d-inline ml-2">
-                    <button class="btn btn-green dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      View Filter
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuButton">
-                       
-                            @if(session()->has('status'))
-                                <h6 class="dropdown-header text-center">Status</h6>
-                                @foreach(session('status') as $id => $key)
-                                    @php
-                                    $status = \App\Models\Status::find($key);
-                                    @endphp
-                                    <span class="dropdown-item">{{ $status->name }} </span>
-                                    @php
-                                        unset($status);
-                                    @endphp
-                                @endforeach
-                            @endif
-                            @if(session()->has('locations'))
-                                <h6 class="dropdown-header text-center">Locations</h6>
-                                @foreach(session('locations') as $id => $key)
-                                    @php
-                                    $location = \App\Models\Location::find($key);
-                                    @endphp
-                                    <span class="dropdown-item">{{ $location->name }} </span>
-                                    @php
-                                        unset($location);
-                                    @endphp
-                                @endforeach
-                            @endif
-                            @if(session()->has('category'))
-                                <h6 class="dropdown-header text-center">Categories</h6>
-                                @foreach(session('category') as $id => $key)
-                                    @php
-                                    $category = \App\Models\category::find($key);
-                                    @endphp
-                                    <span class="dropdown-item">{{ $category->name }} </span>
-                                    @php
-                                        unset($category);
-                                    @endphp
-                                @endforeach
-                            @endif
-                            <ul>
-                            @if(session()->has('category'))
-                            <li>{{ implode(",", session('category')) ?? 'No Categories'}} </li>
-                            @endif
-                            <li>{{ session('start').'-'.session('end') ?? 'No Dates'}} </li>
-                            <li>{{ session('audit') ?? 'No Audit'}} </li>
-                            <li>{{ session('warranty') ?? 'No Warranty'}} </li>
-                            <li>{{ session('amount') ?? 'No Amount'}} </li>
-                            <li>{{ session('searcg') ?? 'No Search'}} </li>
-                        </ul>
-                    </div>
-                  </div>
-                @endif
-                <a href="#" onclick="javascript:toggleFilter();" class="btn btn-blue shadow-sm ml-2">Filter</a>
-            </div>
-            <div id="searchBar" class="col-5">
-                <div class="col-auto">
-                <label class="sr-only" for="inlineFormInputGroup">Search</label>
-                <form method="POST" action="{{ route('assets.filter')}}">
-                <div class="input-group mb-2">
-                    
-                            @csrf
-                        <input type="text" class="form-control" name="search" placeholder="Search">
-                        <div class="input-group-append">
-                        <button class="btn btn-blue">Search</button>
-                        
-                        </div>
-                    </div>
-                </form>
-                </div>  
-            </div>
-            <div id="Sort" class="col-4">
-                <form class="form-inline" method="POST" action="{{ route('assets.filter')}}">
-                    @csrf
-                    <label class="my-1 mr-2">Amount:</label>
-                    <select class="form-control mr-2" name="limit">
-                        <option value="25" @if(session('limit') == 25) selected @endif>25</option>
-                        <option value="50" @if(session('limit') == 50) selected @endif>50</option>
-                        <option value="100" @if(session('limit') == 100) selected @endif>100</option>
-                    </select>
-                    <label class="my-1 mr-2">Order By:</label>
-                    <select class="form-control mr-2" name="orderby">
-                        <option value="name" @if(session('orderby') == 'name') selected @endif>Name</option>
-                        <option value="location_id" @if(session('orderby') == 'location_id') selected @endif>Location</option>
-                        <option value="asset_tag" @if(session('orderby') == 'asset_tag') selected @endif>Asset tag</option>
-                        <option value="manufacturer_id" @if(session('orderby') == 'manufacturer_id') selected @endif>Manufacturer</option>
-                        <option value="purchased_date" @if(session('orderby') == 'date') selected @elseif(!session()->has('orderby')) selected @endif>Date</option>
-                        <option value="purchased_cost" @if(session('orderby') == 'purchased_cost') selected @endif>Cost</option>
-                        <option value="supplier_id" @if(session('orderby') == 'supplier_id') selected @endif>Supplier</option>
-                        <option value="audit_date" @if(session('orderby') == 'audit_date') selected @endif>Audit Date</option>
-                    </select>
-                    <button class="btn btn-blue" type="submit">Sort</button>
-                </form>
-            </div>
-        </div>
-        <div id="filter" class="card shadow mb-4">
-            <div id="filter-header" class="card-header d-flex justify-content-between align-items-center text-white"
-                 style="background-color: #474775; border-top-left-radius: 0px;"><h6 class="m-0">Filter Results</h6><a
-                    class="btn-sm btn-lilac" onclick="javascript:toggleFilter();"><i class="fa fa-times"
-                                                                                         aria-hidden="true"></i></a>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('assets.filter')}}" method="POST">
-                    <div id="accordion" class="mb-4">
-                        <div class="option">
-                            <div class="option-header pointer collapsed" id="statusHeader" data-toggle="collapse"
-                                 data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader">
-                                <small>Status Type</small>
-                            </div>
-                            @csrf
-                            <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader"
-                                 data-parent="#accordion">
-                                <div class="option-body">
-                                    @foreach($statuses as $status)
-                                        <div class="form-check">
-                                            <label class="form-check-label mr-4"
-                                                   for="{{'status'.$status->id}}">{{ $status->name }}</label>
-                                            <input class="form-check-input" type="checkbox" name="status[]"
-                                                   value="{{ $status->id}}" id="{{'status'.$status->id}}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="option">
-                            <div class="option-header collapsed pointer" id="categoryHeader" data-toggle="collapse"
-                                 data-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryHeader">
-                                <small>Category</small>
-                            </div>
-
-                            <div id="categoryCollapse" class="collapse" aria-labelledby="categoryHeader"
-                                 data-parent="#accordion">
-                                <div class="option-body">
-                                    @foreach($categories as $category)
-                                        @if($category->assets()->count() != 0)
-                                        <div class="form-check">
-                                            <label class="form-check-label mr-4"
-                                                   for="{{'category'.$category->id}}">{{ $category->name }} ({{$category->assets()->count()}})</label>
-                                            <input class="form-check-input" type="checkbox" name="category[]"
-                                                   value="{{ $category->id}}" id="{{'category'.$category->id}}">
-
-                                        </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="option">
-                            <div class="option-header collapsed pointer" id="locationHeader" data-toggle="collapse"
-                                 data-target="#locationCollapse" aria-expanded="true" aria-controls="locationHeader">
-                                <small>Location</small>
-                            </div>
-
-                            <div id="locationCollapse" class="collapse" aria-labelledby="locationHeader"
-                                 data-parent="#accordion">
-                                <div class="option-body">
-                                    @foreach($locations as $location)
-                                        <div class="form-check">
-                                            <label class="form-check-label mr-4"
-                                                   for="{{'location'.$location->id}}">{{ $location->name }}</label>
-                                            <input class="form-check-input" type="checkbox" name="locations[]"
-                                                   value="{{ $location->id}}" id="{{'location'.$location->id}}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="option">
-                            <div class="option-header collapsed pointer" id="purchasedDateHeader" data-toggle="collapse"
-                                 data-target="#purchasedDateCollapse" aria-expanded="true"
-                                 aria-controls="purchasedDateHeader">
-                                <small>Purchased Date</small>
-                            </div>
-
-                            <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader"
-                                 data-parent="#accordion">
-                                <div class="option-body">
-                                    <div class="form-row">
-                                        <label for="start" class="p-0 m-0 mb-1"><small>Start</small></label>
-                                        <input class="form-control" type="date" name="start" value=""
-                                               placeholder="DD/MM/YYYY"/>
-                                    </div>
-                                    <div class="form-row">
-                                        <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
-                                        <input class="form-control" type="date" name="end" value=""
-                                               placeholder="DD/MM/YYYY"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="option">
-                            <div class="option-header collapsed pointer" id="costHeader" data-toggle="collapse"
-                                 data-target="#costCollapse" aria-expanded="true" aria-controls="costHeader">
-                                <small>Purchased Cost</small>
-                            </div>
-
-                            <div id="costCollapse" class="collapse" aria-labelledby="costHeader"
-                                 data-parent="#accordion">
-                                <div class="option-body" style="padding-bottom: 60px;">
-                                    <div class="form-control">
-                                        <label for="amount">Price range:</label>
-                                        <input type="text" id="amount" name="amount" readonly
-                                               style="border:0; color:#b087bc; font-weight:bold; margin-bottom: 20px;">
-                                        <div id="slider-range"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="option">
-                            <div class="option-header pointer collapsed" id="auditDateHeader" data-toggle="collapse"
-                                 data-target="#auditDateCollapse" aria-expanded="true" aria-controls="auditDateHeader">
-                                <small>Audit Date</small>
-                            </div>
-                            <div id="auditDateCollapse" class="collapse" aria-labelledby="auditDateHeader"
-                                 data-parent="#accordion">
-                                <div class="option-body">
-                                    <div class="form-row">
-                                        <select name="audit" class="form-control">
-                                            <option value="0">All</option>
-                                            <option value="1">Overdue Audits</option>
-                                            <option value="2">In next 30 days</option>
-                                            <option value="3">In next 3 months</option>
-                                            <option value="4">In next 6 months</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <button type="submit" class="btn btn-green text-right">Apply Filter</button>
-                </form>
-            </div>
-        </div>
-
+        <x-filters.navigation model="Asset" :filter=$filter />
+        <x-filters.filter model="Asset" relations="assets" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories/>
+        
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive">
+                <div class="table-responsive" id="table">
                     <table id="assetsTable" class="table table-striped">
                         <thead>
                         <tr>
@@ -666,7 +430,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
             integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
         function toggleFilter() {
             if ($('#filter').hasClass('show')) {
@@ -707,7 +470,7 @@
                 range: true,
                 min: {{ floor($floor)}},
                 max: {{ round($limit)}},
-                values: [{{ floor($floor)}}, {{ round($limit)}}],
+                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
                 slide: function (event, ui) {
                     $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
                 }
@@ -716,33 +479,21 @@
                 " - £" + $("#slider-range").slider("values", 1));
         });
 
-        /* $(document).ready(function () {
-            $('#assetsTable').DataTable({
-                "autoWidth": false,
-                "pageLength": 25,
-                "columnDefs": [{
-                    "targets": [9],
-                    "orderable": false
-                }],
-                "order": [[1, "asc"]],
-            });
-        }); */
-        // import
-
         $('#import').click(function () {
             $('#manufacturer-id-test').val($(this).data('id'))
             //showModal
             $('#importManufacturerModal').modal('show')
         });
 
-        // file input empty
+        /* // file input empty
         $("#confirmBtnImport").click(":submit", function (e) {
 
             if (!$('#importEmpty').val()) {
                 e.preventDefault();
-                <?php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');?>
+                @php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');@endphp
             } else {
-                <?php session()->flash('import-error', '');?>            }
-        })
+                @php session()->flash('import-error', '');@endphp          
+            }
+        }); */
     </script>
 @endsection

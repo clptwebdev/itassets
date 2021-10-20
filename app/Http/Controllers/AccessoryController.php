@@ -31,12 +31,130 @@ class AccessoryController extends Controller
         }
 
         if(auth()->user()->role_id == 1){
-            $accessories = Accessory::all();
+            $accessories = Accessory::with('supplier', 'location')->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25)->fragment('table');;
+            $locations = Location::all();
         }else{
-            $accessories = auth()->user()->location_accessories;
+            $accessories = auth()->user()->location_accessories()->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25)->fragment('table');;
+            $locations = auth()->user()->locations;
         }
-        $locations = auth()->user()->locations;
-        return view('accessory.view', compact('accessories', 'locations'));
+        $this->clearFilter();
+        $filter = 0;
+        
+        return view('accessory.view', [
+            "accessories" => $accessories,
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations" => $locations,
+            "filter" => 0,
+        ]);
+    }
+
+    public function filter(Request $request)
+    {
+        if($request->isMethod('post')){
+
+            if(! empty($request->search)){
+                session(['search' => $request->search]);
+            }else{
+                $this->clearFilter();
+            }
+
+            if(! empty($request->limit)){
+                session(['limit' => $request->limit]);
+            }
+
+            if(! empty($request->orderby)){
+                session(['orderby' => $request->orderby]);
+            }
+
+            if(! empty($request->locations)){
+                session(['locations' => $request->locations]);
+            }
+
+            if(! empty($request->status))
+            {
+                session(['status' => $request->status]);
+            }
+
+            if(! empty($request->category))
+            {  
+                session(['category' => $request->category]);
+            }
+
+            if($request->start != '' && $request->end != '')
+            { 
+                session(['start' => $request->start]);
+                session(['end' => $request->end]);
+            }
+
+            if($request->audit != 0)
+            {  
+                session(['audit' => $request->audit]);
+            }
+
+            if($request->warranty != 0)
+            { 
+                session(['warranty' => $request->warranty]);
+            }
+
+            session(['amount' => $request->amount]);
+        }
+
+        if(auth()->user()->role_id != 1){
+            $locations = auth()->user()->locations->pluck('id');
+            $locs = auth()->user()->locations;
+            
+        }else{
+            $locations = \App\Models\Location::all()->pluck('id');
+            $locs = \App\Models\Location::all();
+        }
+        
+        
+        $filter = 0;
+        $accessories = Accessory::locationFilter($locations);
+        if(session()->has('locations')) {
+            $accessories->locationFilter(session('locations'));
+            $filter++;
+        }
+        if(session()->has('status')) {
+            $accessories->statusFilter(session('status'));
+            $filter++;
+        }
+        if(session()->has('category')) {
+            $accessories->categoryFilter(session('category'));
+            $filter++;
+        }
+        if(session()->has('start') && session()->has('end')){
+            $accessories->purchaseFilter(session('start'), session('end'));
+            $filter++;
+        }
+        if(session()->has('amount')){
+            $accessories->costFilter(session('amount'));
+            $filter++;
+        }
+
+        if(session()->has('search')){
+            $accessories->searchFilter(session('search'));
+            $filter++;
+        }
+        
+        $accessories->orderBy(session('orderby') ?? 'purchased_date')->get();
+        $limit = session('limit') ?? 25;
+
+        return view('accessory.view', [
+            "accessories" => $accessories->paginate(intval($limit))->withPath(asset('/accessory/filter'))->fragment('table'),
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations"=> $locs,
+            "filter" => $filter,
+        ]);
+    }
+
+    public function clearFilter(){
+        session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
+        return redirect(route('accessories.index'));
     }
 
     public function create()

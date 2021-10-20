@@ -52,10 +52,35 @@
         <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
 
+    @php
+        if(auth()->user()->role_id == 1){
+            $limit = \App\Models\Accessory::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
+            $floor = \App\Models\Accessory::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first();
+        }else{
+            $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+        }
+        if(session()->has('amount')){
+            $amount = str_replace('£', '', session('amount'));
+            $amount = explode(' - ', $amount);
+            $start_value = intval($amount[0]);
+            $end_value = intval($amount[1]);
+        }else{
+            $start_value = $floor;
+            $end_value = $limit;
+        }
+    @endphp
+
     <section>
+
+
         <p class="mb-4">Below are the different Accessories stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
-        <!-- DataTales Example -->
+        
+         <!-- DataTales Example -->
+         <x-filters.navigation model="Accessory" :filter=$filter />
+         <x-filters.filter model="Accessory" relations="accessories" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories/>    
+
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
@@ -106,7 +131,7 @@
                                 <td class="text-center">{{ $accessory->model ?? 'No Model'}}<br><small>{{$accessory->manufacturer->name ?? "N/A"}}</small></td>
                                 <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
                                 <td class="text-center">
-                                    £{{$accessory->purchased_cost}} @if($miscellanea->donated == 1) <span class="text-sm">*Donated</span> @endif
+                                    £{{$accessory->purchased_cost}} @if($accessory->donated == 1) <span class="text-sm">*Donated</span> @endif
                                     @if($accessory->depreciation()->exists())
                                         <br>
                                         @php
@@ -182,6 +207,16 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-between align-content-center">
+                        <div>
+                            @if($accessories->hasPages())
+                            {{ $accessories->links()}}
+                            @endif
+                        </div>
+                        <div class="text-right">
+                            Showing Assets {{ $accessories->firstItem() }} to {{ $accessories->lastItem() }} ({{ $accessories->total() }} Total Results)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -349,8 +384,21 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+         
+         function toggleFilter() {
+            if ($('#filter').hasClass('show')) {
+                $('#filter').removeClass('show');
+                $('#filter').css('right', '-100%');
+            } else {
+                $('#filter').addClass('show');
+                $('#filter').css('right', '0%');
+            }
+        }
+
         $('.deleteBtn').click(function () {
             $('#user-id').val($(this).data('id'))
             //showModal
@@ -376,31 +424,23 @@
         });
 
         $(document).ready(function () {
-            $('#usersTable').DataTable({
-                "autoWidth": false,
-                "pageLength": 25,
-                "columnDefs": [{
-                    "targets": [3, 4, 5],
-                    "orderable": false,
-                }],
-                "order": [[1, "asc"]]
+        
+
+            $('#import').click(function () {
+                $('#manufacturer-id-test').val($(this).data('id'))
+                //showModal
+                $('#importManufacturerModal').modal('show')
+
             });
-        });
-        // import
+            
 
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
+            // file input empty
+            $("#confirmBtnImport").click(":submit", function (e) {
 
-        });
-
-        // file input empty
-        $("#confirmBtnImport").click(":submit", function (e) {
-
-            if (!$('#importEmpty').val()) {
-                e.preventDefault();
-            }
+                if (!$('#importEmpty').val()) {
+                    e.preventDefault();
+                }
+            });
         });
 
     </script>

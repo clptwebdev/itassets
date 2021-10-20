@@ -41,19 +41,21 @@ class AssetController extends Controller {
         }
 
         if(auth()->user()->role_id == 1){
-            $assets = Asset::with('supplier', 'location','model')->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25);
+            $assets = Asset::with('supplier', 'location','model')->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25)->fragment('table');
 
             $locations = Location::all();
         }else{
-            $assets = auth()->user()->location_assets()->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25);
+            $assets = auth()->user()->location_assets()->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25)->fragment('table');
             $locations = auth()->user()->locations;
         }
+        $this->clearFilter();
         return view('assets.view', [
             "assets" => $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
             "locations" => $locations,
+            "filter" => 0,
         ]);
     }
 
@@ -587,8 +589,11 @@ class AssetController extends Controller {
     public function filter(Request $request)
     {
         if($request->isMethod('post')){
+
             if(! empty($request->search)){
                 session(['search' => $request->search]);
+            }else{
+                $this->clearFilter();
             }
 
             if(! empty($request->limit)){
@@ -660,7 +665,7 @@ class AssetController extends Controller {
             $assets->purchaseFilter(session('start'), session('end'));
             $filter++;
         }
-        if(session()->has('audit')) {
+        if(session()->has('audit') && session('audit') != 0) {
             $assets->auditFilter(session('audit'));
             $filter++;
         }
@@ -692,7 +697,7 @@ class AssetController extends Controller {
     }
 
     public function clearFilter(){
-        session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount']);
+        session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
         return redirect(route('assets.index'));
     }
 

@@ -81,7 +81,7 @@ class Asset extends Model {
     public function scopeAuditFilter($query, $date){
         switch($date){
             case 1:
-                $query->whereAuditDate('audit_date', '<', \Carbon\Carbon::now()->toDateString());
+                $query->where('audit_date', '<', \Carbon\Carbon::now()->toDateString());
                 break;
             case 2:
                 $date = \Carbon\Carbon::now()->addDays(30);

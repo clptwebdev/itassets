@@ -116,9 +116,9 @@ Route::group(['middleware' => 'auth'], function() {
     // Asset Routes
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/search',[\App\Http\Controllers\AssetController::class, "search"] )->name('assets.search');
-        Route::post('/asset/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filter');
-        Route::get('/asset/filter/clear', 'App\Http\Controllers\AssetController@clearFilter')->name('assets.clear.filter');
-        Route::get('/asset/filter', 'App\Http\Controllers\AssetController@filter')->name('assets.filtered');
+        Route::post('/asset/filter', 'App\Http\Controllers\AssetController@filter')->name('asset.filter');
+        Route::get('/asset/filter/clear', 'App\Http\Controllers\AssetController@clearFilter')->name('asset.clear.filter');
+        Route::get('/asset/filter', 'App\Http\Controllers\AssetController@filter')->name('asset.filtered');
         Route::get('/status/{status}/assets', 'App\Http\Controllers\AssetController@status')->name('assets.status');
         Route::get('/location/{location}/assets', 'App\Http\Controllers\AssetController@location')->name('assets.location');
         Route::post('/assets/pdf', 'App\Http\Controllers\AssetController@downloadPDF')->name('assets.pdf');
@@ -142,6 +142,9 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/component/{component}/status', 'App\Http\Controllers\ComponentController@changeStatus')->name('component.status');
     //Accessory Routes
         Route::resource('/accessories', 'App\Http\Controllers\AccessoryController');
+        Route::post('/accessory/filter', 'App\Http\Controllers\AccessoryController@filter')->name('accessory.filter');
+        Route::get('/accessory/filter/clear', 'App\Http\Controllers\AccessoryController@clearFilter')->name('accessory.clear.filter');
+        Route::get('/accessory/filter', 'App\Http\Controllers\AccessoryController@filter')->name('accessory.filtered');
         Route::get('/accessory/bin', 'App\Http\Controllers\AccessoryController@recycleBin')->name('accessories.bin');
         Route::get('/accessory/{accessory}/restore', 'App\Http\Controllers\AccessoryController@restore')->name('accessories.restore');
         Route::post('/accessory/{accessory}/remove', 'App\Http\Controllers\AccessoryController@forceDelete')->name('accessories.remove');
