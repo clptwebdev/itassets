@@ -60,7 +60,7 @@ class AssetController extends Controller {
         $this->clearFilter();
         $limit = session('limit') ?? 25;
         return view('assets.view', [
-            "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
+            "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table')->get(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
