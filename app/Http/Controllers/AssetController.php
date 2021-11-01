@@ -44,7 +44,7 @@ class AssetController extends Controller {
             $assets = Asset::all();
             $assets = $assets->map(function($item){
                 $item->location_name = $item->location->name;
-                $item->manufacturer = $item->model()->manufacturer()->name ?? 'Not Found';
+                $item->manufacturer = $item->model->manufacturer->name ?? 'Not Found';
             });
 
             $locations = Location::all();
