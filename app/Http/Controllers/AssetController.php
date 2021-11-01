@@ -687,7 +687,7 @@ class AssetController extends Controller {
                 ->join('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->orderBy(session('orderby') ?? 'purchased_date')->get(['assets.*', 'locations.name as location_name', 'manufacturers.name as manufactuer_name']);
         $limit = session('limit') ?? 25;
-
+        return dd($assets->first());
         return view('assets.view', [
             "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
             'suppliers' => Supplier::all(),
