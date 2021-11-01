@@ -41,7 +41,7 @@ class AssetController extends Controller {
         }
 
         if(auth()->user()->role_id == 1){
-            $assets = Asset::with('supplier', 'location','model')->leftJoin('locations', 'locations.id', '=', 'assets.location_id')->orderBy('purchased_date')->paginate(intval(session('limit')) ?? 25, ['assets.*', 'location.name as location_name'])->fragment('table');
+            $assets = Asset::with('supplier', 'location','model')->leftJoin('locations', 'locations.id', '=', 'assets.location_id')->orderBy('purchased_date')->paginate(intval(session('limit')) ?? 25, ['assets.*', 'locations.name as location_name'])->fragment('table');
 
             $locations = Location::all();
         }else{
