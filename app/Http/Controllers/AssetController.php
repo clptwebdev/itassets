@@ -55,6 +55,8 @@ class AssetController extends Controller {
 
             $locations = auth()->user()->locations;
         }
+
+        return dd($assets);
         $this->clearFilter();
         $limit = session('limit') ?? 25;
         return view('assets.view', [
