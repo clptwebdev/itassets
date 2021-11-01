@@ -45,7 +45,7 @@ class AssetController extends Controller {
 
             $locations = Location::all();
         }else{
-            $assets = auth()->user()->location_assets()->join('locations', 'locations.id', '=', 'assets.location_id')->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25)->fragment('table');
+            $assets = auth()->user()->location_assets()->join('locations', 'locations.id', '=', 'assets.location_id')->orderBy(session('orderby') ?? 'purchased_date')->get(['locations.name as location_name'])->paginate(intval(session('limit')) ?? 25)->fragment('table');
             $locations = auth()->user()->locations;
         }
         $this->clearFilter();
