@@ -45,11 +45,10 @@ class AssetController extends Controller {
 
             $locations = Location::all();
         }else{
-            $assets = auth()->user()->location_assets()->leftJoin('locations', 'locations.id', '=', 'assets.location_id')->orderBy('purchased_date')->paginate(intval(session('limit')) ?? 25)->fragment('table');
+            $assets = auth()->user()->location_assets()->leftJoin('locations', 'locations.id', '=', 'assets.location_id')->orderBy('purchased_date')->paginate(intval(session('limit')) ?? 25, ['assets.*', 'locations.name as location_name'])->fragment('table');
             $locations = auth()->user()->locations;
         }
         $this->clearFilter();
-        return dd($assets->first());
         return view('assets.view', [
             "assets" => $assets,
             'suppliers' => Supplier::all(),
