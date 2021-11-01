@@ -41,11 +41,12 @@ class AssetController extends Controller {
         }
 
         if(auth()->user()->role_id == 1){
-            $assets = Asset::with('supplier', 'location','model')
+            $assets = Asset::select('*')
+                ->with('supplier', 'location','model')
                 ->join('locations', 'locations.id', '=', 'assets.location_id')
                 ->join('asset_models', 'asset_models.id', '=', 'assets.asset_model')
                 ->orderBy(session('orderby') ?? 'purchased_date')
-                ->select(['locations.name as location_name', 'asset_models.manufacturer_id as manufacturer_id']);
+                ->get(['locations.name as location_name', 'asset_models.manufacturer_id as manufacturer_id']);
 
             $locations = Location::all();
         }else{
@@ -53,14 +54,14 @@ class AssetController extends Controller {
                 ->join('locations', 'locations.id', '=', 'assets.location_id')
                 ->join('asset_models', 'asset_models.id', '=', 'assets.asset_model')
                 ->orderBy(session('orderby') ?? 'purchased_date')
-                ->select(['locations.name as location_name', 'asset_models.manufacturer_id as manufacturer_id']);
+                ->get(['locations.name as location_name', 'asset_models.manufacturer_id as manufacturer_id']);
 
             $locations = auth()->user()->locations;
         }
         $this->clearFilter();
         $limit = session('limit') ?? 25;
         return view('assets.view', [
-            "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table')->get(),
+            "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
