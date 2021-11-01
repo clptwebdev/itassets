@@ -56,7 +56,7 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
 
-        return dd($assets->first());
+        return dd($assets->paginate(intval($limit), ['assets.*','locations.name as location_name', 'asset_models.manufacturer_id as manufacturer_id'])->first());
         $this->clearFilter();
         $limit = session('limit') ?? 25;
         return view('assets.view', [
