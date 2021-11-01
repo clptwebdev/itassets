@@ -58,8 +58,9 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
         $this->clearFilter();
+        $limit = session('limit') ?? 25;
         return view('assets.view', [
-            "assets" => $assets->paginate(intval(session('limit')) ?? 25)->fragment('table'),
+            "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
