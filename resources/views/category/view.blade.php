@@ -64,20 +64,16 @@
                                 {{ $category->assets()->locationFilter($locations->pluck('id'))->count()}}
                             </td>
                             <td class="text-center">
-                                {{-- <?php $accessories = \App\Models\Accessory::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($accessories)}} --}}
+                                {{ $category->accessories()->locationFilter($locations->pluck('id'))->count()}}
                             </td>
                             <td class="text-center">
-                                {{-- <?php $components = \App\Models\Component::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($components)}} --}}
+                                {{ $category->components()->locationFilter($locations->pluck('id'))->count()}}
                             </td>
                             <td class="text-center">
-                                {{-- <?php $consumables = \App\Models\Consumable::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($consumables)}} --}}
+                                {{ $category->consumables()->locationFilter($locations->pluck('id'))->count()}}
                             </td>
                             <td class="text-center">
-                                {{-- <?php $miscellaneous = \App\Models\Miscellanea::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($miscellaneous)}} --}}
+                                {{ $category->miscellanea()->locationFilter($locations->pluck('id'))->count()}}
                             </td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
