@@ -42,7 +42,6 @@ class AssetController extends Controller {
 
         if(auth()->user()->role_id == 1){
             $assets = Asset::select('*')
-                ->with('supplier', 'location','model')
                 ->join('locations', 'locations.id', '=', 'assets.location_id')
                 ->join('asset_models', 'asset_models.id', '=', 'assets.asset_model')
                 ->orderBy(session('orderby') ?? 'purchased_date');
