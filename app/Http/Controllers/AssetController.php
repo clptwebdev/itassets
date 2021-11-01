@@ -41,7 +41,7 @@ class AssetController extends Controller {
         }
 
         if(auth()->user()->role_id == 1){
-            $assets = Asset::select('*');
+            $assets = Asset::all();
             $assets = $assets->map(function($item){
                 $item->location_name = $item->location->name;
                 $item->manufacturer = $item->model->manufacturer->name;
