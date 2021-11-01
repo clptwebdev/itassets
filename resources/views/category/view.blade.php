@@ -61,24 +61,23 @@
                         <tr>
                             <td>{{ $category->name }}</td>
                             <td class="text-center">
-                                <?php $assets = \App\Models\Asset::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($assets)}}
+                                {{ $category->assets->locationFilter($locations->pluck('id'))->count()}}
                             </td>
                             <td class="text-center">
-                                <?php $accessories = \App\Models\Accessory::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($accessories)}}
+                                {{-- <?php $accessories = \App\Models\Accessory::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
+                                {{count($accessories)}} --}}
                             </td>
                             <td class="text-center">
-                                <?php $components = \App\Models\Component::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($components)}}
+                                {{-- <?php $components = \App\Models\Component::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
+                                {{count($components)}} --}}
                             </td>
                             <td class="text-center">
-                                <?php $consumables = \App\Models\Consumable::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($consumables)}}
+                                {{-- <?php $consumables = \App\Models\Consumable::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
+                                {{count($consumables)}} --}}
                             </td>
                             <td class="text-center">
-                                <?php $miscellaneous = \App\Models\Miscellanea::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($miscellaneous)}}
+                                {{-- <?php $miscellaneous = \App\Models\Miscellanea::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
+                                {{count($miscellaneous)}} --}}
                             </td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">

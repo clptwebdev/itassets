@@ -22,6 +22,9 @@ class CategoryController extends Controller
             $locations = auth()->user()->locations;
         }
         $categories = Category::all();
+        /* $categories = $categories->map(function($item){
+            $item-
+        }); */
         return view('category.view', compact('categories', 'locations'));
     }
 
