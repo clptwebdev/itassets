@@ -41,10 +41,11 @@ class AssetController extends Controller {
         }
 
         if(auth()->user()->role_id == 1){
-            $assets = Asset::select('*')
-                ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
-                ->leftJoin('asset_models', 'asset_models.id', '=', 'assets.asset_model')
-                ;
+            $assets = Asset::select('*');
+            $assets = $assets->map(function($item){
+                $item->location_name = $item->location->name;
+                $item->manufacturer = $item->model->manufacturer->name;
+            });
 
             $locations = Location::all();
         }else{
@@ -56,7 +57,7 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
 
-        return dd($assets->paginate(intval(25), ['assets.*','locations.name as location_name', 'asset_models.manufacturer_id as manufacturer_id'])->first());
+        return dd($assets->first());
         $this->clearFilter();
         $limit = session('limit') ?? 25;
         return view('assets.view', [
