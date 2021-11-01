@@ -42,8 +42,8 @@ class AssetController extends Controller {
 
         if(auth()->user()->role_id == 1){
             $assets = Asset::select('*')
-                ->join('locations', 'locations.id', '=', 'assets.location_id')
-                ->join('asset_models', 'asset_models.id', '=', 'assets.asset_model')
+                ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
+                ->leftJoin('asset_models', 'asset_models.id', '=', 'assets.asset_model')
                 ->orderBy(session('orderby') ?? 'purchased_date');
 
             $locations = Location::all();
@@ -690,15 +690,15 @@ class AssetController extends Controller {
             $assets->searchFilter(session('search'));
             $filter++;
         }
-        $assets ->join('locations', 'assets.location_id', '=', 'locations.id')
-                ->join('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->join('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->orderBy(session('orderby') ?? 'purchased_date')->get(['assets.*', 'locations.id','locations.name as location_name', 'manufacturers.id', 'manufacturers.name as manufacturer_name',
-                    'asset_models.name as model_name', 'asset_models.manufacturer_id']);
+        $assets ->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
+                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+                ->orderBy(session('orderby') ?? 'purchased_date');
         $limit = session('limit') ?? 25;
 
         return view('assets.view', [
-            "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
+            "assets" => $assets->paginate(intval($limit), ['assets.*', 'locations.id','locations.name as location_name', 'manufacturers.id', 'manufacturers.name as manufacturer_name',
+            'asset_models.name as model_name', 'asset_models.manufacturer_id'])->withPath(asset('/asset/filter'))->fragment('table'),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
