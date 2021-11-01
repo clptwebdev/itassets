@@ -57,7 +57,6 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                        <?php $categories = App\Models\Category::all();?>
                         @foreach($categories as $category)
                         <tr>
                             <td>{{ $category->name }}</td>

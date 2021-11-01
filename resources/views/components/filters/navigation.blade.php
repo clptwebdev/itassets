@@ -113,7 +113,7 @@
             <label class="my-1 mr-2">Order By:</label>
             <select class="form-control mr-2" name="orderby">
                 <option value="name" @if(session('orderby') == 'name') selected @endif>Name</option>
-                <option value="location_id" @if(session('orderby') == 'location_id') selected @endif>Location</option>
+                <option value="locations.name" @if(session('orderby') == 'locations.name') selected @endif>Location</option>
                 <option value="asset_tag" @if(session('orderby') == 'asset_tag') selected @endif>Asset tag</option>
                 <option value="manufacturer_id" @if(session('orderby') == 'manufacturer_id') selected @endif>Manufacturer</option>
                 <option value="purchased_date" @if(session('orderby') == 'purchased_date') selected @elseif(!session()->has('orderby')) selected @endif>Date</option>

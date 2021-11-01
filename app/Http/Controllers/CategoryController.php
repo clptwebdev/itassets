@@ -21,7 +21,8 @@ class CategoryController extends Controller
         }else{
             $locations = auth()->user()->locations;
         }
-        return view('category.view', compact('locations'));
+        $categories = Category::all();
+        return view('category.view', compact('categories', 'locations'));
     }
 
     public function store(Request $request)
