@@ -61,7 +61,7 @@
                         <tr>
                             <td>{{ $category->name }}</td>
                             <td class="text-center">
-                                {{ $category->assets->locationFilter($locations->pluck('id'))->count()}}
+                                {{ $category->assets()->locationFilter($locations->pluck('id'))->count()}}
                             </td>
                             <td class="text-center">
                                 {{-- <?php $accessories = \App\Models\Accessory::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
