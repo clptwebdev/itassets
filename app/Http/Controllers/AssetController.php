@@ -45,7 +45,7 @@ class AssetController extends Controller {
                 ->join('locations', 'locations.id', '=', 'assets.location_id')
                 ->join('asset_models', 'asset_models.id', '=', 'assets.asset_model')
                 ->orderBy(session('orderby') ?? 'purchased_date')
-                ->get(['locations.name as location_name', 'asset_models.manufacturer_id as manufacturer_id']);
+                ->select(['locations.name as location_name', 'asset_models.manufacturer_id as manufacturer_id']);
 
             $locations = Location::all();
         }else{
@@ -53,7 +53,7 @@ class AssetController extends Controller {
                 ->join('locations', 'locations.id', '=', 'assets.location_id')
                 ->join('asset_models', 'asset_models.id', '=', 'assets.asset_model')
                 ->orderBy(session('orderby') ?? 'purchased_date')
-                ->get(['locations.name as location_name', 'asset_models.manufacturer_id as manufacturer_id']);
+                ->select(['locations.name as location_name', 'asset_models.manufacturer_id as manufacturer_id']);
 
             $locations = auth()->user()->locations;
         }
