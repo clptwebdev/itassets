@@ -41,27 +41,16 @@ class AssetController extends Controller {
         }
 
         if(auth()->user()->role_id == 1){
-            $assets = Asset::all();
-            $assets = $assets->map(function($item){
-                $item->location_name = $item->location->name;
-                $item->manufacturer = $item->model->manufacturer->name ?? 'Not Found';
-                return $item;
-            });
+            $assets = Asset::with('supplier', 'location','model')->join('locations', 'locations.id', '=', 'assets.location_id')->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25)->fragment('table');
 
             $locations = Location::all();
         }else{
-            $assets = auth()->user()->location_assets()
-                ->join('locations', 'locations.id', '=', 'assets.location_id')
-                ->join('asset_models', 'asset_models.id', '=', 'assets.asset_model')
-                ->orderBy(session('orderby') ?? 'purchased_date');
-
+            $assets = auth()->user()->location_assets()->join('locations', 'locations.id', '=', 'assets.location_id')->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25)->fragment('table');
             $locations = auth()->user()->locations;
         }
-
         $this->clearFilter();
-        $limit = session('limit') ?? 25;
         return view('assets.view', [
-            "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
+            "assets" => $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
@@ -693,15 +682,14 @@ class AssetController extends Controller {
             $assets->searchFilter(session('search'));
             $filter++;
         }
-        $assets ->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
-                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->orderBy(session('orderby') ?? 'purchased_date');
+        $assets ->join('locations', 'assets.location_id', '=', 'locations.id')
+                ->join('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+                ->join('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+                ->orderBy(session('orderby') ?? 'purchased_date')->get();
         $limit = session('limit') ?? 25;
 
         return view('assets.view', [
-            "assets" => $assets->paginate(intval($limit), ['assets.*', 'locations.id','locations.name as location_name', 'manufacturers.id', 'manufacturers.name as manufacturer_name',
-            'asset_models.name as model_name', 'asset_models.manufacturer_id'])->withPath(asset('/asset/filter'))->fragment('table'),
+            "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
