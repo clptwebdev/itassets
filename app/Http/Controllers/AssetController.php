@@ -44,7 +44,7 @@ class AssetController extends Controller {
             $assets = Asset::select('*')
                 ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
                 ->leftJoin('asset_models', 'asset_models.id', '=', 'assets.asset_model')
-                ->orderBy(session('orderby') ?? 'purchased_date');
+                ;
 
             $locations = Location::all();
         }else{
@@ -56,7 +56,7 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
 
-        return dd($assets);
+        return dd($assets->get());
         $this->clearFilter();
         $limit = session('limit') ?? 25;
         return view('assets.view', [
