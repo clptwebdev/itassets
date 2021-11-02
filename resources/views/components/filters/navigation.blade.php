@@ -85,7 +85,7 @@
         @endif
         <a href="#" onclick="javascript:toggleFilter();" class="btn btn-blue shadow-sm ml-2">Filter</a>
     </div>
-    <div id="searchBar" class="col-5">
+    <div id="searchBar" class="col-4">
         <div class="col-auto">
         <label class="sr-only" for="inlineFormInputGroup">Search</label>
         <form method="POST" action="{{ route($route.'.filter')}}">
@@ -101,7 +101,7 @@
         </form>
         </div>  
     </div>
-    <div id="Sort" class="col-4">
+    <div id="Sort" class="col-5">
         <form class="form-inline" method="POST" action="{{ route($route.'.filter')}}">
             @csrf
             <label class="my-1 mr-2">Amount:</label>
