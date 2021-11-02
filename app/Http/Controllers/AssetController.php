@@ -682,14 +682,14 @@ class AssetController extends Controller {
             $assets->searchFilter(session('search'));
             $filter++;
         }
-        $assets ->rightJoin('locations', 'assets.location_id', '=', 'locations.id')
-                ->rightJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->rightJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+        $assets ->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
+                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->orderBy(session('orderby') ?? 'purchased_date')->get();
         $limit = session('limit') ?? 25;
         return dd($assets->first());
         return view('assets.view', [
-            "assets" => $assets->paginate(intval($limit), ['assets.*', 'locations.name as location_name', 'manufacturers.name as manufactuer_name'])->withPath(asset('/asset/filter'))->fragment('table'),
+            "assets" => $assets->paginate(intval($limit), ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufactuer_name'])->withPath(asset('/asset/filter'))->fragment('table'),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
