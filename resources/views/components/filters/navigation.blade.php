@@ -112,22 +112,22 @@
             </select>
             <label class="my-1 mr-2">Order By:</label>
             <select class="form-control mr-2" name="orderby">
-                <option value="name asc" @if(session('orderby') == 'name asc') selected @endif>Name (A-Z)</option>
-                <option value="name desc" @if(session('orderby') == 'name desc') selected @endif>Name (A-Z)</option>
-                <option value="location_name asc" @if(session('orderby') == 'location_name asc') selected @endif>Location (A-Z)</option>
-                <option value="location_name desc" @if(session('orderby') == 'location_name desc') selected @endif>Location (Z-A))</option>
-                <option value="asset_tag asc" @if(session('orderby') == 'asset_tag asc') selected @endif>Asset Tag (0-9)</option>
-                <option value="asset_tag desc" @if(session('orderby') == 'asset_tag desc') selected @endif>Asset Tag (9-0)</option>
-                <option value="manufacturer_name asc" @if(session('orderby') == 'manufacturer_name asc') selected @endif>Manufacturer (A-Z)</option>
-                <option value="manufacturer_name desc" @if(session('orderby') == 'manufacturer_name desc') selected @endif>Manufacturer (Z-A)</option>
-                <option value="purchased_date asc" @if(session('orderby') == 'purchased_date asc') selected @elseif(!session()->has('orderby')) selected @endif>Date (Earliest to Latest)</option>
-                <option value="purchased_date desc" @if(session('orderby') == 'purchased_date desc') selected @elseif(!session()->has('orderby')) selected @endif>Date (Latest to Earliest)</option>
-                <option value="purchased_cost asc" @if(session('orderby') == 'purchased_cost asc') selected @endif>Cost (Low to High)</option>
-                <option value="purchased_cost desc" @if(session('orderby') == 'purchased_cost desc') selected @endif>Cost (High to Low)</option>
-                <option value="supplier_id asc" @if(session('orderby') == 'supplier_id asc') selected @endif>Supplier (A-Z)</option>
-                <option value="supplier_id desc" @if(session('orderby') == 'supplier_id desc') selected @endif>Supplier (Z-A)</option>
-                <option value="audit_date asc" @if(session('orderby') == 'audit_date asc') selected @endif>Audit Date (Earliest to Latest)</option>
-                <option value="audit_date desc" @if(session('orderby') == 'audit_date desc') selected @endif>Audit Date (Earliest to Latest)</option>
+                <option value="name asc" @if(session('orderby') == 'name' && (session('direction')) == 'asc') selected @endif>Name (A-Z)</option>
+                <option value="name desc" @if(session('orderby') == 'name' && (session('direction')) == 'desc') selected @endif>Name (A-Z)</option>
+                <option value="location_name asc" @if(session('orderby') == 'location_name' && (session('direction')) == 'asc') selected @endif>Location (A-Z)</option>
+                <option value="location_name desc" @if(session('orderby') == 'location_name' && (session('direction')) == 'desc') selected @endif>Location (Z-A))</option>
+                <option value="asset_tag asc" @if(session('orderby') == 'asset_tag' && (session('direction')) == 'asc') selected @endif>Asset Tag (0-9)</option>
+                <option value="asset_tag desc" @if(session('orderby') == 'asset_tag' && (session('direction')) == 'desc') selected @endif>Asset Tag (9-0)</option>
+                <option value="manufacturer_name asc" @if(session('orderby') == 'manufacturer_name' && (session('direction')) == 'asc') selected @endif>Manufacturer (A-Z)</option>
+                <option value="manufacturer_name desc" @if(session('orderby') == 'manufacturer_name' && (session('direction')) == 'desc') selected @endif>Manufacturer (Z-A)</option>
+                <option value="purchased_date asc" @if(session('orderby') == 'purchased_date' && (session('direction')) == 'asc') selected @elseif(!session()->has('orderby')) selected @endif>Date (Earliest to Latest)</option>
+                <option value="purchased_date desc" @if(session('orderby') == 'purchased_date' && (session('direction')) == 'desc') selected @elseif(!session()->has('orderby')) selected @endif>Date (Latest to Earliest)</option>
+                <option value="purchased_cost asc" @if(session('orderby') == 'purchased_cost' && (session('direction')) == 'asc') selected @endif>Cost (Low to High)</option>
+                <option value="purchased_cost desc" @if(session('orderby') == 'purchased_cost' && (session('direction')) == 'desc') selected @endif>Cost (High to Low)</option>
+                <option value="supplier_id asc" @if(session('orderby') == 'supplier_id' && (session('direction')) == 'asc') selected @endif>Supplier (A-Z)</option>
+                <option value="supplier_id desc" @if(session('orderby') == 'supplier_id' && (session('direction')) == 'desc') selected @endif>Supplier (Z-A)</option>
+                <option value="audit_date asc" @if(session('orderby') == 'audit_date' && (session('direction')) == 'asc') selected @endif>Audit Date (Earliest to Latest)</option>
+                <option value="audit_date desc" @if(session('orderby') == 'audit_date' && (session('direction')) == 'desc') selected @endif>Audit Date (Earliest to Latest)</option>
             </select>
             <button class="btn btn-blue" type="submit">Sort</button>
         </form>
