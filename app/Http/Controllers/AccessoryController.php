@@ -164,7 +164,7 @@ class AccessoryController extends Controller
             ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
             ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-            ->select('assets.*','locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
+            ->select('accessories.*','locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
         $limit = session('limit') ?? 25;
 
         return view('accessory.view', [
