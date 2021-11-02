@@ -685,11 +685,11 @@ class AssetController extends Controller {
         $assets ->join('locations', 'assets.location_id', '=', 'locations.id')
                 ->join('asset_models', 'assets.asset_model', '=', 'asset_models.id')
                 ->join('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->orderBy(session('orderby') ?? 'purchased_date')->get();
+                ->orderBy(session('orderby') ?? 'purchased_date')->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufactuer_name');
         $limit = session('limit') ?? 25;
         return dd($assets->first());
         return view('assets.view', [
-            "assets" => $assets->paginate(intval($limit), ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufactuer_name'])->withPath(asset('/asset/filter'))->fragment('table'),
+            "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
