@@ -32,20 +32,20 @@ class AccessoryController extends Controller
 
         if(auth()->user()->role_id == 1){
             $accessories = Accessory::with('supplier', 'location')
-                ->join('locations', 'locations.id', '=', 'accessories.location_id')
-                ->join('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
-                ->join('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
+                ->leftJoin('locations', 'locations.id', '=', 'accessories.location_id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
+                ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
-                ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as suppliers_name'])
+                ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');;
             $locations = Location::all();
         }else{
             $accessories = auth()->user()->location_accessories()
-                ->join('locations', 'locations.id', '=', 'accessories.location_id')
-                ->join('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
-                ->join('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
+                ->leftJoin('locations', 'locations.id', '=', 'accessories.location_id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
+                ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
-                ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as suppliers_name'])
+                ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
             $locations = auth()->user()->locations;
         }
@@ -158,8 +158,8 @@ class AccessoryController extends Controller
         }
         
         $accessories->join('locations', 'assets.location_id', '=', 'locations.id')
-            ->join('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
-            ->join('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
             ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
             ->select('assets.*','locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
         $limit = session('limit') ?? 25;

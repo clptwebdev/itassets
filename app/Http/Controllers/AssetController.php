@@ -42,10 +42,10 @@ class AssetController extends Controller {
 
         if(auth()->user()->role_id == 1){
             $assets = Asset::with('supplier', 'location','model')
-                ->join('locations', 'locations.id', '=', 'assets.location_id')
-                ->join('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->join('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->join('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
+                ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
+                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+                ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
@@ -53,9 +53,9 @@ class AssetController extends Controller {
             $locations = Location::all();
         }else{
             $assets = auth()->user()->location_assets()->join('locations', 'locations.id', '=', 'assets.location_id')
-                ->join('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->join('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->join('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
+                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+                ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
@@ -699,9 +699,9 @@ class AssetController extends Controller {
             $assets->searchFilter(session('search'));
             $filter++;
         }
-        $assets ->join('locations', 'assets.location_id', '=', 'locations.id')
-                ->join('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->join('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+        $assets ->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
+                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
