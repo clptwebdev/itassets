@@ -702,7 +702,7 @@ class AssetController extends Controller {
         $assets ->join('locations', 'assets.location_id', '=', 'locations.id')
                 ->join('asset_models', 'assets.asset_model', '=', 'asset_models.id')
                 ->join('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->join('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
+                ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as suppliers_name');
         $limit = session('limit') ?? 25;
