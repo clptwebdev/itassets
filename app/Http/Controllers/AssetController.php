@@ -610,6 +610,7 @@ class AssetController extends Controller {
                 $array = explode(' ', $request->orderby, -1);
                 session(['orderby' => $array[0]]);
                 session(['direction' => $array[1]]);
+                return dd($array);
             }
 
             if(! empty($request->locations)){
