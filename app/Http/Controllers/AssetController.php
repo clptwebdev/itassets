@@ -46,7 +46,7 @@ class AssetController extends Controller {
                 ->join('asset_models', 'assets.asset_model', '=', 'asset_models.id')
                 ->join('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->orderBy(session('orderby') ?? 'purchased_date')
-                ->paginate(intval(session('limit')) ?? 25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufactuer_name'])
+                ->paginate(intval(session('limit')) ?? 25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name'])
                 ->fragment('table');
 
             $locations = Location::all();
