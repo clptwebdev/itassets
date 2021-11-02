@@ -30,6 +30,9 @@ class AccessoryController extends Controller
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'view']));
         }
 
+        session(['orderby' => 'purchased_date']);
+        session(['direction' => 'desc']);
+
         if(auth()->user()->role_id == 1){
             $accessories = Accessory::with('supplier', 'location')
                 ->leftJoin('locations', 'locations.id', '=', 'accessories.location_id')
