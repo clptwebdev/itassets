@@ -122,8 +122,8 @@
                 <option value="manufacturer_name desc" @if(session('orderby') == 'manufacturer_name' && (session('direction')) == 'desc') selected @endif>Manufacturer (Z-A)</option>
                 <option value="purchased_date asc" @if(session('orderby') == 'purchased_date' && (session('direction')) == 'asc') selected @elseif(!session()->has('orderby')) selected @endif>Date (Earliest to Latest)</option>
                 <option value="purchased_date desc" @if(session('orderby') == 'purchased_date' && (session('direction')) == 'desc') selected @elseif(!session()->has('orderby')) selected @endif>Date (Latest to Earliest)</option>
-                <option value="CAST(purchased_cost AS DECIMAL(10,2)) asc" @if(session('orderby') == 'purchased_cost' && (session('direction')) == 'asc') selected @endif>Cost (Low to High)</option>
-                <option value="CAST(purchased_cost AS DECIMAL(10,2)) desc" @if(session('orderby') == 'purchased_cost' && (session('direction')) == 'desc') selected @endif>Cost (High to Low)</option>
+                <option value="purchased_cost asc" @if(session('orderby') == 'purchased_cost' && (session('direction')) == 'asc') selected @endif>Cost (Low to High)</option>
+                <option value="purchased_cost desc" @if(session('orderby') == 'purchased_cost' && (session('direction')) == 'desc') selected @endif>Cost (High to Low)</option>
                 <option value="supplier_id asc" @if(session('orderby') == 'supplier_id' && (session('direction')) == 'asc') selected @endif>Supplier (A-Z)</option>
                 <option value="supplier_id desc" @if(session('orderby') == 'supplier_id' && (session('direction')) == 'desc') selected @endif>Supplier (Z-A)</option>
                 <option value="audit_date asc" @if(session('orderby') == 'audit_date' && (session('direction')) == 'asc') selected @endif>Audit Date (Earliest to Latest)</option>

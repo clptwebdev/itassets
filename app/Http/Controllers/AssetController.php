@@ -607,10 +607,11 @@ class AssetController extends Controller {
             }
 
             if(! empty($request->orderby)){
-                $array = explode(' ', $request->orderby, -1);
+                $array = explode(' ', $request->orderby);
+    
                 session(['orderby' => $array[0]]);
                 session(['direction' => $array[1]]);
-                return dd($array);
+                
             }
 
             if(! empty($request->locations)){
