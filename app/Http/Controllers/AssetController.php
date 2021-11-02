@@ -55,6 +55,7 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
         $this->clearFilter();
+        return($assets->first());
         return view('assets.view', [
             "assets" => $assets,
             'suppliers' => Supplier::all(),
