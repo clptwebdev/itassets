@@ -168,7 +168,7 @@ class AccessoryController extends Controller
         $limit = session('limit') ?? 25;
 
         return view('accessory.view', [
-            "accessories" => $accessories->paginate(intval($limit))->withPath(asset('/accessory/filter'))->fragment('table'),
+            "accessories" => $accessories->paginate(intval($limit))->withPath('/accessory/filter')->fragment('table'),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
