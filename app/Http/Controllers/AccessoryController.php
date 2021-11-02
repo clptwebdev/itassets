@@ -160,7 +160,7 @@ class AccessoryController extends Controller
             $filter++;
         }
         
-        $accessories->join('locations', 'assets.location_id', '=', 'locations.id')
+        $accessories->join('locations', 'accessories.location_id', '=', 'locations.id')
             ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
             ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
