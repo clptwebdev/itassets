@@ -31,10 +31,22 @@ class AccessoryController extends Controller
         }
 
         if(auth()->user()->role_id == 1){
-            $accessories = Accessory::with('supplier', 'location')->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25)->fragment('table');;
+            $accessories = Accessory::with('supplier', 'location')
+                ->join('locations', 'locations.id', '=', 'accessories.location_id')
+                ->join('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
+                ->join('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
+                ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
+                ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as suppliers_name'])
+                ->fragment('table');;
             $locations = Location::all();
         }else{
-            $accessories = auth()->user()->location_accessories()->orderBy(session('orderby') ?? 'purchased_date')->paginate(intval(session('limit')) ?? 25)->fragment('table');;
+            $accessories = auth()->user()->location_accessories()
+                ->join('locations', 'locations.id', '=', 'accessories.location_id')
+                ->join('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
+                ->join('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
+                ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
+                ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as suppliers_name'])
+                ->fragment('table');
             $locations = auth()->user()->locations;
         }
         $this->clearFilter();
@@ -65,7 +77,13 @@ class AccessoryController extends Controller
             }
 
             if(! empty($request->orderby)){
-                session(['orderby' => $request->orderby]);
+                $array = explode(' ', $request->orderby);
+                if($array[0] != 'audit_date'){
+                    session(['orderby' => $array[0]]);
+                }else{
+                    session(['orderby' => purchased_date]);
+                }
+                session(['direction' => $array[1]]);
             }
 
             if(! empty($request->locations)){
@@ -139,7 +157,11 @@ class AccessoryController extends Controller
             $filter++;
         }
         
-        $accessories->orderBy(session('orderby') ?? 'purchased_date')->get();
+        $accessories->join('locations', 'assets.location_id', '=', 'locations.id')
+            ->join('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
+            ->join('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->select('assets.*','locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
         $limit = session('limit') ?? 25;
 
         return view('accessory.view', [
