@@ -51,11 +51,7 @@ class Kernel extends ConsoleKernel
         })->daily()->runInBackground();
 
         //deletes all PDF's Monthly
-        $schedule->call(function(){
-            $files = Storage::files('/public/reports');
-            Storage::delete($files);
-        })->daily()
-            ->runInBackground();
+        $schedule->call(Report::clean())->daily()->runInBackground();
 
     }
 
