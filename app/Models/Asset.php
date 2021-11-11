@@ -57,9 +57,9 @@ class Asset extends Model {
     }
 
     public function scopeSearchFilter($query, $search){
-        return $query->where('name', 'LIKE', "%{$search}%")
-                    ->orWhere('asset_tag', 'LIKE', "%{$search}%")
-                    ->orWhere('serial_no', 'LIKE', "%{$search}%");
+        return $query->where('assets.name', 'LIKE', "%{$search}%")
+                    ->orWhere('assets.asset_tag', 'LIKE', "%{$search}%")
+                    ->orWhere('assets.serial_no', 'LIKE', "%{$search}%");
     }
 
     public function scopeStatusFilter($query, $status){
