@@ -87,7 +87,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/user/details', 'App\Http\Controllers\UserController@userDetails')->name('user.details');
         Route::get('/user/password', 'App\Http\Controllers\UserController@userPassword')->name('user.password');
         Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
-        Route::post('/user/details/update', 'App\Http\Controllers\UserController@updateDetails')->name('user.update');
         Route::get('/user/forgotpassword', 'App\Http\Controllers\UserController@forgotPassword')->name('forgot.my.password');
         Route::post('/user/forgotpasswordstore', 'App\Http\Controllers\UserController@storePass')->name('forgot.my.password.store');
         Route::post('/user/change/password', 'App\Http\Controllers\UserController@changePassword')->name('change.password.store');
