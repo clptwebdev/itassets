@@ -90,8 +90,8 @@ class Accessory extends Model
     }
 
     public function scopeSearchFilter($query, $search){
-        return $query->where('name', 'LIKE', "%{$search}%")
-                    ->orWhere('model', 'LIKE', "%{$search}%")
-                    ->orWhere('serial_no', 'LIKE', "%{$search}%");
+        return $query->where('accessories.name', 'LIKE', "%{$search}%")
+                    ->orWhere('accessories.model', 'LIKE', "%{$search}%")
+                    ->orWhere('accessories.serial_no', 'LIKE', "%{$search}%");
     }
 }
