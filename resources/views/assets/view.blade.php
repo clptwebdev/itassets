@@ -101,12 +101,12 @@
                         <tr>
                             <th class="col-9 col-md-2"><small>Item</small></th>
                             <th class="col-1 col-md-auto"><small>Location</small></th>
-                            <th class="col-1 col-md-auto"><small>Tag</small></th>
-                            <th class="d-none d-xl-table-cell"><small>Manufacturer</small></th>
+                            <th class="text-centercol-1 col-md-auto"><small>Tag</small></th>
+                            <th class="text-centerd-none d-xl-table-cell"><small>Manufacturer</small></th>
                             <th class="d-none d-xl-table-cell"><small>Date</small></th>
-                            <th class="d-none d-xl-table-cell"><small>Cost</small></th>
-                            <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class="col-auto d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                            <th class="text-centerd-none d-xl-table-cell"><small>Cost</small></th>
+                            <th class="text-centerd-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class="text-center col-auto d-none d-xl-table-cell"><small>Warranty (M)</small></th>
                             <th class="col-auto text-center d-none d-md-table-cell"><small>Audit Due</small></th>
                             <th class="text-right col-1"><small>Options</small></th>
                         </tr>
@@ -115,13 +115,13 @@
                         <tr>
                             <th><small>Item</small></th>
                             <th><small>Location</small></th>
-                            <th><small>Tag</small></th>
-                            <th class="d-none d-xl-table-cell"><small>Manufacturer</small></th>
+                            <th class="text-center"><small>Tag</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Manufacturer</small></th>
                             <th class=" d-none d-xl-table-cell"><small>Date</small></th>
-                            <th class=" d-none d-xl-table-cell"><small>Cost</small></th>
-                            <th class=" d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class=" d-none d-xl-table-cell"><small>Warranty (M)</small></th>
-                            <th class="text-center  d-none d-md-table-cell"><small>Audit Due</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Cost</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                            <th class="text-center d-none d-md-table-cell"><small>Audit Due</small></th>
                             <th class="text-right"><small>Options</small></th>
                         </tr>
                         </tfoot>
@@ -139,7 +139,7 @@
                                             .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                 </td>
-                                <td>{{ $asset->asset_tag ?? 'N/A'}}</td>
+                                <td class="text-center">{{ $asset->asset_tag ?? 'N/A'}}</td>
                                 <td class="text-center d-none d-xl-table-cell">{{ $asset->model->manufacturer->name ?? 'N/A' }}<br><small>{{ $asset->model->name ?? 'No Model'}}</small></td>
                                 <td class="d-none d-md-table-cell"
                                     data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
