@@ -271,10 +271,7 @@ class AssetController extends Controller {
 
     public function update(Request $request, Asset $asset)
     {
-        dd($request);
-        if (auth()->user()->cant('update', $asset)) {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'update']));
-        }
+       
 
         $validate_fieldet = [];
         //Validate and Collect the Additional Fieldsets
