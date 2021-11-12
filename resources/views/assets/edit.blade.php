@@ -141,7 +141,7 @@
                                 <div class="form-group">
                                     <label for="asset_model">Asset Model Select</label>
                                         <span class="text-danger">*</span>
-                                        @php if(old('asset_model')){$id = old('asset_model');}else{ $id= $asset->model->id;} @endphp
+                                        @php if(old('asset_model')){$id = old('asset_model');}else{ $id= $asset->model->id ?? 0;} @endphp
                                         <select type="dropdown" class="form-control" name="asset_model" id="asset_model"
                                             required onchange="getFields(this);" autocomplete="off">
                                             <option value="0">Please Select a Model</option>
