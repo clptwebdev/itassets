@@ -34,5 +34,4 @@ class ReportController extends Controller
         $report->delete();
         return dd($report);
     }//
-    }
 }
