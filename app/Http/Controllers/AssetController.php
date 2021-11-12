@@ -271,7 +271,9 @@ class AssetController extends Controller {
 
     public function update(Request $request, Asset $asset)
     {
-       
+        if (auth()->user()->cant('update', $asset)) {
+            return redirect(route('errors.forbidden', ['asset', $asset->id, 'update']));
+        }
 
         $validate_fieldet = [];
         //Validate and Collect the Additional Fieldsets
@@ -359,10 +361,13 @@ class AssetController extends Controller {
         }
 
         $validated = $request->validate($v);
+
         if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
+
         $asset->fill(array_merge($request->only(
             'name', 'asset_tag', 'asset_model', 'serial_no', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id, 'donated' => $donated]))->save();
+
         if(!empty($array)){
             $asset->fields()->sync($array);
         }
@@ -371,7 +376,7 @@ class AssetController extends Controller {
         }
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
-        return redirect(route('assets.index'));
+        return redirect('/dashboard');
     }
 
     public function destroy(Asset $asset)
