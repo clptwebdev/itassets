@@ -352,7 +352,7 @@ class AssetController extends Controller {
         {
             $v = [
                 'name' => 'required',
-                'asset_tag' => ['sometimes', 'nullable', \Illuminate\Validation\Rule::unique('assets')->ignore($asset->id)],
+                'asset_tag' => ['sometimes', 'nullable'],
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
@@ -361,7 +361,7 @@ class AssetController extends Controller {
         }
 
         $validated = $request->validate($v);
-
+        
         if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
 
         $asset->fill(array_merge($request->only(
@@ -376,7 +376,7 @@ class AssetController extends Controller {
         }
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
-        return redirect('/dashboard');
+        return redirect(route('assets.index'));
     }
 
     public function destroy(Asset $asset)
