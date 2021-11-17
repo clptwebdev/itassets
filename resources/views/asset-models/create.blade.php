@@ -125,7 +125,7 @@
 <!-- Profile Image Modal-->
 <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-dialog modal-xl .modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary-blue text-white">
                 <h5 class="modal-title" id="imgModalLabel">Select Image</h5>
