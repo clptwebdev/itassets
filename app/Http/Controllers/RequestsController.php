@@ -49,7 +49,7 @@ class RequestsController extends Controller
             'status' => 0,
         ]);
         
-        if(auth()->user()->role == 1){
+        if(auth()->user()->role_id == 1){
             $m = "\\App\\Models\\".ucfirst($requests->model_type);
             $model = $m::find($request->model_id);
 
@@ -94,10 +94,11 @@ class RequestsController extends Controller
                 'notes' => $request->notes,
             ]);
             $model->forceDelete();
-            $requests->update(['status' => 1, 'super_id'  => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);   
+            $requests->update(['status' => 1, 'super_id'  => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
+            $message = "The Disposal has been successful. It has been moved to the Archive";
         }
 
-        session()->flash('success_message', 'The request to transfer the asset has been sent.');
+        session()->flash('success_message', $message ?? 'The request to transfer the asset has been sent.');
         return back();
     }
 
