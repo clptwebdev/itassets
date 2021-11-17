@@ -38,6 +38,7 @@ class RequestsController extends Controller
     }
 
     public function disposal(Request $request){
+        
         $requests = Requests::create([
             'type'=>'disposal', 
             'model_type'=> $request->model_type, 
@@ -47,13 +48,57 @@ class RequestsController extends Controller
             'user_id' => auth()->user()->id, 
             'status' => 0,
         ]);
-        //Notify by email
+        
+        if(auth()->user()->role == 1){
+            $m = "\\App\\Models\\".ucfirst($requests->model_type);
+            $model = $m::find($request->model_id);
 
-        if(auth()->user()->role_id == 1){
-            return redirect(route('requests.index'));
-        }else{
-            return back()->with('success_message', 'The request to transfer the asset has been sent.');
+            if($request->model_type == 'asset' && $model->model()->exists()){
+                $years = $model->model->depreciation->years;
+            }elseif($model->depreciation_id != 0){
+                $years = $model->depreciation->years;
+            }else{
+                $years = 0;
+            }
+            $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($years);
+            if($eol->isPast()){
+                $dep = 0;
+            }else{
+                $age = \Carbon\Carbon::now()->floatDiffInYears($model->purchased_date);
+                $percent = 100 / $years;
+                $percentage = floor($age)*$percent;
+                $dep = $model->purchased_cost * ((100 - $percentage) / 100);
+            }
+
+            $archive = Archive::create([
+                'model_type' => $request->model_type ?? 'unknown',
+                'name' => $model->name ?? 'No Name',
+                'asset_tag' => $model->asset_tag ?? 'No Asset Tag',
+                'serial_no' => $model->serial_no ?? 'N/A',
+                'asset_model' => $model->model->name ?? 'No Model',
+                'order_no' => $model->order_no ?? 'N/A',
+                'supplier_id' => $model->supplier_id ?? 0,
+                'purchased_date' => $model->purchased_date,
+                'purchased_cost' => $model->purchased_cost,
+                'archived_cost' => number_format($dep, 2),
+                'warranty' => $model->warranty,
+                'location_id' => $model->location_id ?? 0,
+                'room' => $model->room ?? 'N/A',
+                'logs' => 'N/A',
+                'comments' => 'N/A',
+                'created_user' => $model->user_id ?? 0,
+                'created_on' => $model->created_at,
+                'user_id' => auth()->user()->id,
+                'super_id' => auth()->user()->id,
+                'date' => \Carbon\Carbon::now()->format('Y-m-d'),
+                'notes' => $request->notes,
+            ]);
+            $model->forceDelete();
+            $requests->update(['status' => 1, 'super_id'  => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);   
         }
+
+        session()->flash('success_message', 'The request to transfer the asset has been sent.');
+        return back();
     }
 
     public function handle(Requests $requests, $status){
