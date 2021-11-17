@@ -49,7 +49,7 @@
                             <select class="form-control mb-3 <?php if ($errors->has('manufacturer_id')){?>border-danger<?php }?>"
                                 name="manufacturer_id" id="manufacturer_id" required>
                                 <option value="0">Please select a Manufacturer</option>
-                                @foreach($mans as $man)
+                                @foreach($mans->sortBy('name') as $man)
                                 <option value="{{$man->id}}">{{ $man->name}}</option>
                                 @endforeach
                             </select>
@@ -125,7 +125,7 @@
 <!-- Profile Image Modal-->
 <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary-blue text-white">
                 <h5 class="modal-title" id="imgModalLabel">Select Image</h5>
