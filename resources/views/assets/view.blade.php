@@ -331,7 +331,7 @@
                         </div>
                         <div class="form-group">
                             <label for="disposal_date">Date of Transfer</label>
-                            <input type="date" value="" id="transfer_date" name="transfer_date" class="form-control" value="">
+                            <input type="date" value="" id="transfer_date" name="transfer_date" class="form-control" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}">
                         </div>
                         <div class="form-group">
                             <label for="School Location">Transfer to:</label><span
