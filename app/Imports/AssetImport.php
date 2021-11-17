@@ -50,7 +50,6 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 'nullable',
             ],'name' => [
                 'required',
-                'string',
             ],
             'purchased_cost' => [
                 'required',
