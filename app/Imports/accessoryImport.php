@@ -47,6 +47,9 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
                 'required',
                 'string',
             ],
+            'asset_tag' => [
+                'nullable'
+            ],
             'purchased_cost' => [
                 'required',
                 'regex:/^\d+(\.\d{1,2})?$/',
@@ -81,6 +84,7 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
     {
 
         $accessory = new Accessory;
+        $accessory->asset_tag = $row["asset_tag"];
         $accessory->name = $row["name"];
         $accessory->model = $row["model"];
         $accessory->serial_no = $row["serial_no"];

@@ -17,6 +17,7 @@ class CreateAccessoriesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string("serial_no");
+            $table->string("asset_tag")->nullable();
             $table->string("name");
             $table->string("model")->nullable();
             $table->foreignId("status_id")->nullable();
