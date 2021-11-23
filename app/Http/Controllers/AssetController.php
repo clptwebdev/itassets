@@ -93,13 +93,13 @@ class AssetController extends Controller {
         ]);
     }
 
-    public function search(Request $request )
+    public function search()
     {
-        if($asset = Asset::where("asset_tag", $request->asset_tag)->firstOrFail()){
-            return view('assets.show', compact('asset'));
-        }else{
-            return("404");
-        }
+
+       return view("assets.show",[
+          'asset'=> Asset::latest()->AssetFilter(request()->only(['asset_tag']))->firstOrFail(),
+           'locations' => Location::all(),
+       ]);
     }
 
     public function newComment(Request $request)
@@ -361,7 +361,7 @@ class AssetController extends Controller {
         }
 
         $validated = $request->validate($v);
-        
+
         if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
 
         $asset->fill(array_merge($request->only(
@@ -618,10 +618,10 @@ class AssetController extends Controller {
 
             if(! empty($request->orderby)){
                 $array = explode(' ', $request->orderby);
-    
+
                 session(['orderby' => $array[0]]);
                 session(['direction' => $array[1]]);
-                
+
             }
 
             if(! empty($request->locations)){
@@ -634,23 +634,23 @@ class AssetController extends Controller {
             }
 
             if(! empty($request->category))
-            {  
+            {
                 session(['category' => $request->category]);
             }
 
             if($request->start != '' && $request->end != '')
-            { 
+            {
                 session(['start' => $request->start]);
                 session(['end' => $request->end]);
             }
 
             if($request->audit != 0)
-            {  
+            {
                 session(['audit' => $request->audit]);
             }
 
             if($request->warranty != 0)
-            { 
+            {
                 session(['warranty' => $request->warranty]);
             }
 
@@ -660,13 +660,13 @@ class AssetController extends Controller {
         if(auth()->user()->role_id != 1){
             $locations = auth()->user()->locations->pluck('id');
             $locs = auth()->user()->locations;
-            
+
         }else{
             $locations = \App\Models\Location::all()->pluck('id');
             $locs = \App\Models\Location::all();
         }
-        
-        
+
+
         $filter = 0;
         $assets = Asset::locationFilter($locations);
         if(session()->has('locations')) {
@@ -692,7 +692,7 @@ class AssetController extends Controller {
         if(session()->has('warranty')) {
             $assets->warrantyFilter(session('warranty'));
             $filter++;
-        } 
+        }
         if(session()->has('amount')){
             $assets->costFilter(session('amount'));
             $filter++;
