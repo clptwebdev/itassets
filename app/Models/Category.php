@@ -30,4 +30,5 @@ class Category extends Model
     {
         return $this->morphedByMany(Miscellanea::class, 'cattable');
     }
+
 }

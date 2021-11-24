@@ -26,7 +26,7 @@ use App\Models\Report;
 
 class MiscellaneaController extends Controller
 {
-    
+
     public function newComment(Request $request)
     {
         $request->validate([
@@ -45,9 +45,49 @@ class MiscellaneaController extends Controller
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
         }
 
-        return view('miscellanea.view',[
-            "miscellaneous"=>Miscellanea::all(),
+        session(['orderby' => 'purchased_date']);
+        session(['direction' => 'desc']);
+
+        if(auth()->user()->role_id == 1)
+        {
+            $miscellaneous = Miscellanea::with('supplier', 'location')
+                ->leftJoin('locations', 'locations.id', '=', 'miscellaneas.location_id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'miscellaneas.manufacturer_id')
+                ->leftJoin('suppliers', 'suppliers.id', '=', 'miscellaneas.supplier_id')
+                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+                ->paginate(intval(session('limit')) ?? 25, ['miscellaneas.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+                ->fragment('table');
+            $locations = Location::all();
+        } else
+        {
+            $miscellaneous = auth()->user()->location_accessories()
+                ->leftJoin('locations', 'locations.id', '=', 'miscellaneas.location_id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'miscellaneas.manufacturer_id')
+                ->leftJoin('suppliers', 'suppliers.id', '=', 'miscellaneas.supplier_id')
+                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+                ->paginate(intval(session('limit')) ?? 25, ['miscellaneas.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+                ->fragment('table');
+            $locations = auth()->user()->locations;
+        }
+        $this->clearFilter();
+        $filter = 0;
+
+        return view('miscellanea.view', [
+            "miscellaneous" => $miscellaneous,
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations" => $locations,
+            "filter" => 0,
         ]);
+
+//        if (auth()->user()->cant('viewAny', Miscellanea::class)) {
+//            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
+//        }
+//
+//        return view('miscellanea.view',[
+//            "miscellaneous"=>Miscellanea::all(),
+//        ]);
     }
 
     public function create()
@@ -96,6 +136,137 @@ class MiscellaneaController extends Controller
         $miscellanea->category()->attach($request->category);
         return redirect(route("miscellaneous.index"));
 
+    }
+    public function clearFilter()
+    {
+        session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
+
+        return redirect(route('miscellaneous.index'));
+    }
+
+    public function filter(Request $request)
+    {
+        if($request->isMethod('post'))
+        {
+            if(! empty($request->search))
+            {
+                session(['search' => $request->search]);
+            } else
+            {
+                $this->clearFilter();
+            }
+
+            if(! empty($request->limit))
+            {
+                session(['limit' => $request->limit]);
+            }
+            if(! empty($request->orderby))
+            {
+                $array = explode(' ', $request->orderby);
+                if($array[0] != 'audit_date')
+                {
+                    session(['orderby' => $array[0]]);
+                } else
+                {
+                    session(['orderby' => purchased_date]);
+                }
+                session(['direction' => $array[1]]);
+            }
+
+            if(! empty($request->locations))
+            {
+                session(['locations' => $request->locations]);
+            }
+
+            if(! empty($request->status))
+            {
+                session(['status' => $request->status]);
+            }
+
+            if(! empty($request->category))
+            {
+                session(['category' => $request->category]);
+            }
+
+            if($request->start != '' && $request->end != '')
+            {
+                session(['start' => $request->start]);
+                session(['end' => $request->end]);
+            }
+
+            if($request->audit != 0)
+            {
+                session(['audit' => $request->audit]);
+            }
+
+            if($request->warranty != 0)
+            {
+                session(['warranty' => $request->warranty]);
+            }
+
+            session(['amount' => $request->amount]);
+        }
+
+        if(auth()->user()->role_id != 1)
+        {
+            $locations = auth()->user()->locations->pluck('id');
+            $locs = auth()->user()->locations;
+
+        } else
+        {
+            $locations = \App\Models\Location::all()->pluck('id');
+            $locs = \App\Models\Location::all();
+        }
+        $filter = 0;
+
+        $miscellaneous = Miscellanea::locationFilter($locations);
+        if(session()->has('locations'))
+        {
+            $miscellaneous->locationFilter(session('locations'));
+            $filter++;
+        }
+        if(session()->has('status'))
+        {
+            $miscellaneous->statusFilter(session('status'));
+            $filter++;
+        }
+        if(session()->has('category'))
+        {
+            $miscellaneous->categoryFilter(session('category'));
+            $filter++;
+        }
+        if(session()->has('start') && session()->has('end'))
+        {
+            $miscellaneous->purchaseFilter(session('start'), session('end'));
+            $filter++;
+        }
+        if(session()->has('amount'))
+        {
+            $miscellaneous->costFilter(session('amount'));
+            $filter++;
+        }
+
+        if(session()->has('search'))
+        {
+            $miscellaneous->searchFilter(session('search'));
+            $filter++;
+        }
+
+        $miscellaneous->join('locations', 'miscellaneas.location_id', '=', 'locations.id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'miscellaneas.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'miscellaneas.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->select('miscellaneas.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
+        $limit = session('limit') ?? 25;
+
+        return view('miscellanea.view', [
+            "miscellaneous" => $miscellaneous->paginate(intval($limit))->withPath('/miscellanea/filter')->fragment('table'),
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations" => $locs,
+            "filter" => $filter,
+        ]);
     }
 
     public function importErrors(Request $request)
@@ -335,7 +506,7 @@ class MiscellaneaController extends Controller
         if (auth()->user()->cant('viewAny', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export pdf']));
         }
-        
+
         $miscellaneous = array();
 
         $found = Miscellanea::withTrashed()->whereIn('id', json_decode($request->miscellaneous))->get();
@@ -354,7 +525,7 @@ class MiscellaneaController extends Controller
                 if($eol->isPast()){
                     $dep = 0;
                 }else{
-    
+
                     $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
                     $percent = 100 / $f->depreciation->years;
                     $percentage = floor($age)*$percent;
@@ -370,13 +541,13 @@ class MiscellaneaController extends Controller
         }
 
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'miscellaneous-'.$date;
 
         dispatch(new MiscellaneousPdf($miscellaneous, $user, $path))->afterResponse();
         //Create Report
-        
+
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
 
@@ -392,7 +563,7 @@ class MiscellaneaController extends Controller
         }
 
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'miscellanea-'.$miscellanea->id.'-'.$date;
 

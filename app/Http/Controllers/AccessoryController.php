@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Exports\accessoryErrorsExport;
 use App\Exports\accessoryExport;
 use App\Imports\accessoryImport;
@@ -21,40 +22,44 @@ use Illuminate\Support\Facades\Storage;
 use App\Jobs\AccessoriesPdf;
 use App\Jobs\AccessoryPdf;
 use App\Models\Report;
+use PHPUnit\Util\Test;
 
-class AccessoryController extends Controller
-{
+class AccessoryController extends Controller {
+
     public function index()
     {
-        if (auth()->user()->cant('viewAll', Accessory::class)) {
+        if(auth()->user()->cant('viewAll', Accessory::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'view']));
         }
 
         session(['orderby' => 'purchased_date']);
         session(['direction' => 'desc']);
 
-        if(auth()->user()->role_id == 1){
+        if(auth()->user()->role_id == 1)
+        {
             $accessories = Accessory::with('supplier', 'location')
                 ->leftJoin('locations', 'locations.id', '=', 'accessories.location_id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
+                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
-                ->fragment('table');;
+                ->fragment('table');
             $locations = Location::all();
-        }else{
+        } else
+        {
             $accessories = auth()->user()->location_accessories()
                 ->leftJoin('locations', 'locations.id', '=', 'accessories.location_id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
+                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
             $locations = auth()->user()->locations;
         }
         $this->clearFilter();
         $filter = 0;
-        
+
         return view('accessory.view', [
             "accessories" => $accessories,
             'suppliers' => Supplier::all(),
@@ -99,23 +104,23 @@ class AccessoryController extends Controller
             }
 
             if(! empty($request->category))
-            {  
+            {
                 session(['category' => $request->category]);
             }
 
             if($request->start != '' && $request->end != '')
-            { 
+            {
                 session(['start' => $request->start]);
                 session(['end' => $request->end]);
             }
 
             if($request->audit != 0)
-            {  
+            {
                 session(['audit' => $request->audit]);
             }
 
             if($request->warranty != 0)
-            { 
+            {
                 session(['warranty' => $request->warranty]);
             }
 
@@ -125,13 +130,13 @@ class AccessoryController extends Controller
         if(auth()->user()->role_id != 1){
             $locations = auth()->user()->locations->pluck('id');
             $locs = auth()->user()->locations;
-            
+
         }else{
             $locations = \App\Models\Location::all()->pluck('id');
             $locs = \App\Models\Location::all();
         }
-        
-        
+
+
         $filter = 0;
         $accessories = Accessory::locationFilter($locations);
         if(session()->has('locations')) {
@@ -159,7 +164,7 @@ class AccessoryController extends Controller
             $accessories->searchFilter(session('search'));
             $filter++;
         }
-        
+
         $accessories->join('locations', 'accessories.location_id', '=', 'locations.id')
             ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
@@ -176,23 +181,34 @@ class AccessoryController extends Controller
             "filter" => $filter,
         ]);
     }
+//    public function filter(Request $request)
+//    {
+//        return $this->testFilter($request);
+//
+//    }
 
-    public function clearFilter(){
+    public function clearFilter()
+    {
         session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
+
         return redirect(route('accessories.index'));
     }
 
     public function create()
     {
-        if (auth()->user()->cant('create', Accessory::class)) {
+        if(auth()->user()->cant('create', Accessory::class))
+        {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'create']));
         }
 
-        if(auth()->user()->role_id == 1){
+        if(auth()->user()->role_id == 1)
+        {
             $locations = Location::all();
-        }else{
+        } else
+        {
             $locations = auth()->user()->locations;
         }
+
         return view('accessory.create', [
             "locations" => $locations,
             "statuses" => Status::all(),
@@ -211,13 +227,15 @@ class AccessoryController extends Controller
         ]);
 
         $accessory = Accessory::find($request->accessory_id);
-        $accessory->comment()->create(['title'=>$request->title, 'comment'=>$request->comment, 'user_id'=>auth()->user()->id]);
+        $accessory->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+
         return redirect(route('accessories.show', $accessory->id));
     }
 
     public function store(Request $request)
     {
-        if (auth()->user()->cant('create', Accessory::class)) {
+        if(auth()->user()->cant('create', Accessory::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Accessories', 'create']));
         }
 
@@ -240,6 +258,7 @@ class AccessoryController extends Controller
             'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id', 'user_id'
         ), ['user_id' => auth()->user()->id]));
         $accessory->category()->attach($request->category);
+
         return redirect(route("accessories.index"));
     }
 
@@ -249,13 +268,15 @@ class AccessoryController extends Controller
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
 
-        if (auth()->user()->cant('viewAll', Accessory::class)) {
+        if(auth()->user()->cant('viewAll', Accessory::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Accessories', 'export']));
         }
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new accessoryErrorsExport($export), "/public/csv/accessories-errors-{$date}.csv");
         $url = asset("storage/csv/accessories-errors-{$date}.csv");
+
         return redirect(route('accessories.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
@@ -263,7 +284,8 @@ class AccessoryController extends Controller
 
     public function ajaxMany(Request $request)
     {
-        if($request->ajax()){
+        if($request->ajax())
+        {
             $validation = Validator::make($request->all(), [
                 "name.*" => "required|max:255",
                 "model" => "nullable",
@@ -276,10 +298,11 @@ class AccessoryController extends Controller
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             ]);
 
-
-            if($validation->fails()){
+            if($validation->fails())
+            {
                 return $validation->errors();
-            }else{
+            } else
+            {
                 for($i = 0; $i < count($request->name); $i++)
                 {
                     $accessory = new Accessory;
@@ -287,7 +310,7 @@ class AccessoryController extends Controller
                     $accessory->model = $request->model[$i];
                     $accessory->serial_no = $request->serial_no[$i];
                     $accessory->status_id = $request->status_id[$i];
-                    $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
+                    $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
                     $accessory->purchased_cost = $request->purchased_cost[$i];
                     $accessory->donated = $request->donated[$i];
                     $accessory->supplier_id = $request->supplier_id[$i];
@@ -297,13 +320,14 @@ class AccessoryController extends Controller
                     $accessory->location_id = $request->location_id[$i];
                     $accessory->room = $request->room[$i] ?? 'N/A';
                     $accessory->notes = $request->notes[$i];
-                    $accessory->photo_id =  0;
+                    $accessory->photo_id = 0;
                     $accessory->depreciation_id = $request->depreciation_id[$i];
                     $accessory->user_id = auth()->user()->id;
                     $accessory->save();
                 }
 
                 session()->flash('success_message', 'You have successfully added all Accessories!');
+
                 return 'Success';
             }
         }
@@ -312,7 +336,8 @@ class AccessoryController extends Controller
 
     public function show(Accessory $accessory)
     {
-        if (auth()->user()->cant('view', $accessory)) {
+        if(auth()->user()->cant('view', $accessory))
+        {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'view']));
         }
 
@@ -323,13 +348,16 @@ class AccessoryController extends Controller
 
     public function edit(Accessory $accessory)
     {
-        if (auth()->user()->cant('update', $accessory)) {
+        if(auth()->user()->cant('update', $accessory))
+        {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'edit']));
         }
 
-        if(auth()->user()->role_id == 1){
+        if(auth()->user()->role_id == 1)
+        {
             $locations = Location::all();
-        }else{
+        } else
+        {
             $locations = auth()->user()->locations;
         }
 
@@ -346,7 +374,8 @@ class AccessoryController extends Controller
 
     public function update(Request $request, Accessory $accessory)
     {
-        if (auth()->user()->cant('update', $accessory)) {
+        if(auth()->user()->cant('update', $accessory))
+        {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'update']));
         }
 
@@ -363,18 +392,26 @@ class AccessoryController extends Controller
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
-        if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
+        if(isset($request->donated) && $request->donated == 1)
+        {
+            $donated = 1;
+        } else
+        {
+            $donated = 0;
+        }
         $accessory->fill(array_merge($request->only(
             'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ), ['donated' => $donated]))->save();
-        session()->flash('success_message', $accessory->name.' has been Updated successfully');
+        session()->flash('success_message', $accessory->name . ' has been Updated successfully');
         $accessory->category()->sync($request->category);
+
         return redirect(route("accessories.index"));
     }
 
     public function destroy(Accessory $accessory)
     {
-        if (auth()->user()->cant('delete', $accessory)) {
+        if(auth()->user()->cant('delete', $accessory))
+        {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'delete']));
         }
 
@@ -387,13 +424,15 @@ class AccessoryController extends Controller
 
     public function export(Accessory $accessory)
     {
-        if (auth()->user()->cant('viewAll', Accessory::class)) {
+        if(auth()->user()->cant('viewAll', Accessory::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'export']));
         }
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport, "/public/csv/accessories-ex-{$date}.csv");
         $url = asset("storage/csv/accessories-ex-{$date}.csv");
+
         return redirect(route('accessories.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
@@ -401,15 +440,16 @@ class AccessoryController extends Controller
 
     public function import(Request $request)
     {
-        if (auth()->user()->cant('viewAll', Accessory::class)) {
+        if(auth()->user()->cant('viewAll', Accessory::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'import']));
         }
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());
 
-
-        if(in_array($result[0],$extensions)){
+        if(in_array($result[0], $extensions))
+        {
             $path = $request->file("csv")->getRealPath();
             $import = new accessoryImport;
             $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
@@ -455,11 +495,13 @@ class AccessoryController extends Controller
                     if(array_key_exists($error['row'], $errorValues))
                     {
                         $array = $errorValues[$error['row']];
-                    }else{
+                    } else
+                    {
                         $array = [];
                     }
 
-                    foreach($error['errors'] as $e){
+                    foreach($error['errors'] as $e)
+                    {
                         $array[$error['attributes']] = $e;
                     }
                     $errorValues[$error['row']] = $array;
@@ -470,11 +512,11 @@ class AccessoryController extends Controller
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
-                    "statuses"=>Status::all(),
-                    "suppliers"=>Supplier::all(),
-                    "locations"=> auth()->user()->locations,
-                    "manufacturers"=>Manufacturer::all(),
-                    "depreciations"=>Depreciation::all(),
+                    "statuses" => Status::all(),
+                    "suppliers" => Supplier::all(),
+                    "locations" => auth()->user()->locations,
+                    "manufacturers" => Manufacturer::all(),
+                    "depreciations" => Depreciation::all(),
                 ]);
 
             } else
@@ -482,25 +524,27 @@ class AccessoryController extends Controller
                 return redirect('/accessories')->with('success_message', 'All Accessories were added correctly!');
 
             }
-        }else{
+        } else
+        {
             session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
             return redirect(route('accessories.index'));
         }
 
 
-
     }
 
     public function downloadPDF(Request $request)
     {
-        if (auth()->user()->cant('viewAll', Accessory::class)) {
+        if(auth()->user()->cant('viewAll', Accessory::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Accessories', 'view pdf']));
         }
 
         $accessories = array();
         $found = Accessory::withTrashed()->whereIn('id', json_decode($request->accessories))->get();
-        foreach($found as $f){
+        foreach($found as $f)
+        {
             $array = array();
             $array['name'] = $f->name;
             $array['model'] = $f->model;
@@ -510,17 +554,20 @@ class AccessoryController extends Controller
             $array['icon'] = $f->location->icon ?? '#666';
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
-            $array['purchased_cost'] = '£'.$f->purchased_cost;
-            $array['donated'] = '£'.$f->donated;
+            $array['purchased_cost'] = '£' . $f->purchased_cost;
+            $array['donated'] = '£' . $f->donated;
             $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation->years);
-            if($f->depreciation->exists()){
-                if($eol->isPast()){
+            if($f->depreciation->exists())
+            {
+                if($eol->isPast())
+                {
                     $dep = 0;
-                }else{
-    
+                } else
+                {
+
                     $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
                     $percent = 100 / $f->depreciation->years;
-                    $percentage = floor($age)*$percent;
+                    $percentage = floor($age) * $percent;
                     $dep = $f->purchased_cost * ((100 - $percentage) / 100);
                 }
             }
@@ -533,15 +580,15 @@ class AccessoryController extends Controller
         }
 
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = 'accessories-'.$date;
+        $path = 'accessories-' . $date;
 
         dispatch(new AccessoriesPdf($accessories, $user, $path))->afterResponse();
         //Create Report
-        
+
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
         return redirect(route('accessories.index'))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
@@ -550,19 +597,20 @@ class AccessoryController extends Controller
 
     public function downloadShowPDF(Accessory $accessory)
     {
-        if (auth()->user()->cant('view', $accessory)) {
+        if(auth()->user()->cant('view', $accessory))
+        {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'view pdf']));
         }
 
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = 'accessory-'.$accessory->id.'-'.$date;
+        $path = 'accessory-' . $accessory->id . '-' . $date;
 
         dispatch(new AccessoryPdf($accessory, $user, $path))->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
         return redirect(route('accessories.show', $accessory->id))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
@@ -574,37 +622,45 @@ class AccessoryController extends Controller
 
     public function recycleBin()
     {
-        if (auth()->user()->cant('viewAll', Accessory::class)) {
+        if(auth()->user()->cant('viewAll', Accessory::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Accessories', 'Recycle Bin']));
         }
-        if(auth()->user()->role_id == 1){
+        if(auth()->user()->role_id == 1)
+        {
             $accessories = Accessory::onlyTrashed()->get();
-        }else{
+        } else
+        {
             $accessories = auth()->user()->location_accessories()->onlyTrashed();
         }
+
         return view('accessory.bin', compact('accessories'));
     }
 
     public function restore($id)
     {
         $accessory = Accessory::withTrashed()->where('id', $id)->first();
-        if (auth()->user()->cant('delete', $accessory)) {
+        if(auth()->user()->cant('delete', $accessory))
+        {
             return redirect(route('errors.forbidden', ['component', $accessory->id, 'restore']));
         }
         $accessory->restore();
-        session()->flash('success_message', "#". $accessory->name . ' has been restored.');
+        session()->flash('success_message', "#" . $accessory->name . ' has been restored.');
+
         return redirect("/accessories");
     }
 
     public function forceDelete($id)
     {
         $accessory = Accessory::withTrashed()->where('id', $id)->first();
-        if (auth()->user()->cant('delete', $accessory)) {
+        if(auth()->user()->cant('delete', $accessory))
+        {
             return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'Force Delete']));
         }
-        $name=$accessory->name;
+        $name = $accessory->name;
         $accessory->forceDelete();
-        session()->flash('danger_message', "Accessory - ". $name . ' was deleted permanently');
+        session()->flash('danger_message', "Accessory - " . $name . ' was deleted permanently');
+
         return redirect("/accessory/bin");
     }
 
@@ -613,6 +669,7 @@ class AccessoryController extends Controller
         $accessory->status_id = $request->status;
         $accessory->save();
         session()->flash('success_message', $accessory->name . ' has had its status changed successfully');
+
         return redirect(route('accessories.show', $accessory->id));
     }
 

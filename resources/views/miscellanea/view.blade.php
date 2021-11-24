@@ -56,6 +56,8 @@
         <p class="mb-4">Below are the different miscellaneous stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
         <!-- DataTales Example -->
+        <x-filters.navigation model="Miscellanea" :filter=$filter />
+        <x-filters.filter model="Miscellanea" relations="components" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories  />
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
@@ -165,6 +167,16 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-between align-content-center">
+                        <div>
+                            @if($miscellaneous->hasPages())
+                                {{ $miscellaneous->links()}}
+                            @endif
+                        </div>
+                        <div class="text-right">
+                            Showing Assets {{ $miscellaneous->firstItem() }} to {{ $miscellaneous->lastItem() }} ({{ $miscellaneous->total() }} Total Results)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -245,7 +257,9 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $('.deleteBtn').click(function () {
             $('#user-id').val($(this).data('id'))

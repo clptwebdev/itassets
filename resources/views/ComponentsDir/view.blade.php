@@ -53,6 +53,9 @@
     <section>
         <p class="mb-4">Below are the different Components stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
+
+        <x-filters.navigation model="Component" :filter=$filter />
+        <x-filters.filter model="Component" relations="components" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories  />
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -139,10 +142,19 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-between align-content-center">
+                        <div>
+                            @if($components->hasPages())
+                                {{ $components->links()}}
+                            @endif
+                        </div>
+                        <div class="text-right">
+                            Showing Assets {{ $components->firstItem() }} to {{ $components->lastItem() }} ({{ $components->total() }} Total Results)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Components </h4>
@@ -150,7 +162,6 @@
 
             </div>
         </div>
-
     </section>
 
 @endsection
@@ -180,7 +191,7 @@
             </div>
         </div>
     </div>
-//import modal
+{{--//import modal--}}
     <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
          aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -220,7 +231,9 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $('.deleteBtn').click(function () {
             $('#user-id').val($(this).data('id'))
@@ -258,6 +271,14 @@
                 e.preventDefault();
             }
         })
+        function toggleFilter() {
+            if ($('#filter').hasClass('show')) {
+                $('#filter').removeClass('show');
+                $('#filter').css('right', '-100%');
+            } else {
+                $('#filter').addClass('show');
+                $('#filter').css('right', '0%');
+            }
+        }
     </script>
-
 @endsection

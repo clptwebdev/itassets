@@ -111,7 +111,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
         Route::get('/asset-model/pdf', 'App\Http\Controllers\AssetModelController@downloadPDF')->name('asset-model.pdf');
         Route::get('/asset-model/{assetModel}/pdf', 'App\Http\Controllers\AssetModelController@downloadShowPDF')->name('asset-model.showPdf');
-        
+
     // Asset Routes
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/search',[\App\Http\Controllers\AssetController::class, "search"] )->name('assets.search');
@@ -139,6 +139,9 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/components/{component}/pdf', 'App\Http\Controllers\ComponentController@downloadShowPDF')->name('components.showPdf');
         Route::post('components/{component}/comment/create', '\App\Http\Controllers\ComponentController@newComment')->name('component.comment');
         Route::post('/component/{component}/status', 'App\Http\Controllers\ComponentController@changeStatus')->name('component.status');
+    Route::post('/component/filter', 'App\Http\Controllers\ComponentController@filter')->name('component.filter');
+    Route::get('/component/filter/clear', 'App\Http\Controllers\ComponentController@clearFilter')->name('component.clear.filter');
+    Route::get('/component/filter', 'App\Http\Controllers\ComponentController@filter')->name('component.filtered');
     //Accessory Routes
         Route::resource('/accessories', 'App\Http\Controllers\AccessoryController');
         Route::post('/accessory/filter', 'App\Http\Controllers\AccessoryController@filter')->name('accessory.filter');
@@ -217,6 +220,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/miscellaneous/{miscellanea}/remove', 'App\Http\Controllers\MiscellaneaController@forceDelete')->name('miscellaneous.remove');
     Route::post('/miscellanea/pdf', 'App\Http\Controllers\MiscellaneaController@downloadPDF')->name('miscellaneous.pdf');
     Route::get('/miscellanea/{miscellanea}/pdf', 'App\Http\Controllers\MiscellaneaController@downloadShowPDF')->name('miscellaneous.showPdf');
+    Route::post('/miscellanea/filter', 'App\Http\Controllers\MiscellaneaController@filter')->name('miscellanea.filter');
+    Route::get('/miscellanea/filter/clear', 'App\Http\Controllers\MiscellaneaController@clearFilter')->name('miscellanea.clear.filter');
+    Route::get('/miscellanea/filter', 'App\Http\Controllers\MiscellaneaController@filter')->name('miscellanea.filtered');
 
 
 //exports

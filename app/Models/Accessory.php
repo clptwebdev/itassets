@@ -36,8 +36,8 @@ class Accessory extends Model
     public function location()
     {
         return $this->belongsTo(Location::class);
-    } 
-    
+    }
+
     public function status()
     {
         return $this->belongsTo(Status::class);

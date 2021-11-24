@@ -14,6 +14,8 @@ class Miscellanea extends Model
         'name', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'room', 'notes','manufacturer_id', 'photo_id', 'depreciation_id'
     ];
     protected $with =['supplier','location','manufacturer','photo','Status'];
+
+
     public function photo()
     {
         return $this->belongsTo(Photo::class, 'photo_id');
@@ -59,6 +61,10 @@ class Miscellanea extends Model
         return $query->whereIn('location_id', $locations);
     }
 
+    public function scopeStatusFilter($query, $status){
+        return $query->whereIn('status_id', $status);
+    }
+
     public function scopeCategoryFilter($query, $category){
         $pivot = $this->category()->getTable();
 
@@ -67,7 +73,17 @@ class Miscellanea extends Model
         });
     }
 
-    public function scopeStatusFilter($query, $status){
-        return $query->whereIn('status_id', $status);
+    public function scopeCostFilter($query, $amount){
+        $amount = str_replace('£', '', $amount);
+        $amount = explode(' - ', $amount);
+        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
+    }
+
+    public function scopePurchaseFilter($query, $start, $end){
+        $query->whereBetween('purchased_date', [$start, $end]);
+    }
+    public function scopeSearchFilter($query, $search){
+        return $query->where('miscellaneas.name', 'LIKE', "%{$search}%")
+            ->orWhere('miscellaneas.serial_no', 'LIKE', "%{$search}%");
     }
 }
