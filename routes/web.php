@@ -261,7 +261,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('chart/asset/audits', 'App\Http\Controllers\ChartController@getAssetAuditChart');
 //Logs View
     Route::get("/logs", [\App\Http\Controllers\LogController::class, "index"])->name("logs.index");
-    Route::post("/logs/delete", [\App\Http\Controllers\LogController::class, "destroy"])->name("logs.destroy");
+    Route::get("/logs/delete", [\App\Http\Controllers\LogController::class, "destroy"])->name("logs.destroy");
 //documentation link
     Route::get("/help/documentation" , function(){ return view('documentation.Documents');})->name('documentation.index');
     Route::get("/help/documentation/{section}" , function(){ return view('documentation.Documents');})->name('documentation.index.section');
