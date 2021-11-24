@@ -13,6 +13,8 @@
         <div>
                 <a href="/" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Back to Dashboard</a>
+            <a href="{{route('logs.destroy')}}" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"><i
+                    class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
             @if($logs->count() > 1)
 {{--                @can('viewAny', auth()->user())--}}
                     <form class="d-inline-block" action="/exportlogs" method="POST">
