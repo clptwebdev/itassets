@@ -32,10 +32,11 @@ class ManufacturerController extends Controller {
 
         $filtered = Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate();
         if($filtered->count() == 0){
+            session()->flash('danger_message',request("search").' could not be found! Please search for something else!');
             return view("Manufacturers.view",[
                 'manufacturers'=> Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate(),
 
-            ])->with('danger_message',request("search").' could not be found! Please search for something else!');
+            ]);
         }else{
             return view("Manufacturers.view",[
                 'manufacturers'=> Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate(),
