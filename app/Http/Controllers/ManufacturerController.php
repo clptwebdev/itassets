@@ -26,7 +26,6 @@ class ManufacturerController extends Controller {
 
     }
     public function clearFilter(){
-        session()->flush();
         return redirect(route('manufacturers.index'));
     }
     public function filter(){
