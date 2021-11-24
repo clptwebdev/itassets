@@ -40,5 +40,9 @@ class Manufacturer extends Model {
     {
         return $this->hasMany(Component::class);
     }
+    public function scopeManufacturerFilter($query , array $filters){
+        $query->when($filters['search'] ?? false , fn($query ,$search) =>
+        $query->where('name','like','%' . $search. '%'));
 
+    }
 }

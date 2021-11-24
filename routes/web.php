@@ -177,6 +177,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/manufactuer/pdf', 'App\Http\Controllers\ManufacturerController@downloadPDF')->name('manufacturer.pdf');
         Route::get('/manufacturer/{manufacturer}/pdf', 'App\Http\Controllers\ManufacturerController@downloadShowPDF')->name('manufacturer.showPdf');
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
+        Route::Post("/manufacturer/filter", [\App\Http\Controllers\ManufacturerController::class, "filter"])->name("manufacturer.filter");
+        Route::get("/manufacturer/clear/filter", [\App\Http\Controllers\ManufacturerController::class, "clearFilter"])->name("manufacturer.clearfilter");
     //Permission Routes
 
     //Request
@@ -202,7 +204,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/databasebackups/clean/backups', [\App\Http\Controllers\BackupController::class, "dbClean"])->name('backup.clean');
         Route::get('/databasebackupdownload/{$file_name}', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
 
-// Manufacturers Routes (Doesn't include import routes)
 
 
 // status Routes (Doesn't include import routes)
