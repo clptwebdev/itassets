@@ -87,11 +87,11 @@
     
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
-            different options and locations can created, updated, deleted and filtered {{ $filter }}</p>
+            different options and locations can created, updated, deleted and filtered</p>
         
         <!-- DataTales Example -->
-        <x-filters.navigation model="Asset" :filter=$filter />
-        <x-filters.filter model="Asset" relations="assets" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories/>
+        <x-filters.navigation model="Asset" :filter="$filter" />
+        <x-filters.filter model="Asset" relations="assets" :filter="$filter" :locations="$locations" :statuses="$statuses" :categories="$categories"/>
         
         <div class="card shadow mb-4">
             <div class="card-body">
