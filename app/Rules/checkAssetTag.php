@@ -25,7 +25,7 @@ class checkAssetTag implements Rule
      */
     public function passes($attribute, $value)
     {
-        if($asset = Asset::where(["asset_tag" => $value, "location" => $this->location])->first()){
+        if($asset = Asset::where(["asset_tag" => $value, "location_id" => $this->location])->first()){
             return true;
         }else{
             return false;
