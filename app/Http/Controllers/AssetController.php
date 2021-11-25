@@ -32,7 +32,7 @@ use App\Jobs\AssetsPdf;
 use App\Jobs\AssetPdf;
 use App\Models\Report;
 
-use App\Rules\CheckAssetTag;
+use App\Rules\checkAssetTag;
 
 class AssetController extends Controller {
 
