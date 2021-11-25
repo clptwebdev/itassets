@@ -129,8 +129,13 @@
                         @if($assets->count() != 0)
                         @foreach($assets as $asset)
                             <tr>
-                                <td>{{$asset->name}}<br><small
-                                        class="d-none d-md-inline-block">{{ $asset->serial_no ?? 'N/A'}}</small></td>
+                                <td>{{$asset->name}}<br>
+                                    @if($asset->serial_no != 0)
+                                    <small class="d-none d-md-inline-block">
+                                        {{ $asset->serial_no ?? 'N/A'}}
+                                    </small>
+                                    @endif
+                                </td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
                                         <img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name }}<br>{{ $asset->room ?? 'Unknown'}}"/>
