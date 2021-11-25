@@ -42,14 +42,14 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
     }
 
-    public function rules(array $row): array
+    public function rules(): array
     {
         //Asset Tag create rule to check to see if it exists in the same location
         return [
             'asset_tag' => [
                 'sometimes',
                 'nullable',
-                new checkAssetTag($row['location_id']),
+                new checkAssetTag('*.location_id'),
             ],'name' => [
                 'required',
             ],
