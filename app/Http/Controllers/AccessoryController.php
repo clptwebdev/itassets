@@ -177,7 +177,8 @@ class AccessoryController extends Controller
         ]);
     }
 
-    public function clearFilter(){
+    public function clearFilter()
+    {
         session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
         return redirect(route('accessories.index'));
     }

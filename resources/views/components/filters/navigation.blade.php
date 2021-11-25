@@ -3,7 +3,7 @@
     $route = strtolower($model);
     @endphp
     <div id="filterDiv" class="col-3 text-right">
-        @if(isset($filter) && $filter != 0)
+        @if($filter != 0)
         <a href="{{ route($route.'.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
         <div class="dropdown d-inline ml-2">
             <button class="btn btn-green dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
