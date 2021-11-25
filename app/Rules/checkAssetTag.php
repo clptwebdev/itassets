@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use App\Models\Asset;
+use App\Models\Location;
 
 class checkAssetTag implements Rule
 {
@@ -24,7 +25,7 @@ class checkAssetTag implements Rule
      */
     public function passes($attribute, $value)
     {
-        if($location = Location::where(["name" => $value])->first()){
+        if($asset = Asset::where(["asset_tag" => $value, "location" => $this->location])->first()){
             return true;
         }else{
             return false;
