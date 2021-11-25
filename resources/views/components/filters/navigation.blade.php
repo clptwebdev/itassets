@@ -4,6 +4,7 @@
         $route = strtolower($model);
     @endphp
     <div id="filterDiv" class="col-3 text-right">
+        {{ $filter }}
         @if(isset($filter) && $filter != 0)
             <a href="{{ route($route.'.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
             <div class="dropdown d-inline ml-2">
