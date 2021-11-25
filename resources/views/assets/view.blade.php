@@ -87,7 +87,7 @@
     
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
-            different options and locations can created, updated, deleted and filtered</p>
+            different options and locations can created, updated, deleted and filtered {{ $filter }}</p>
         
         <!-- DataTales Example -->
         <x-filters.navigation model="Asset" :filter=$filter />
