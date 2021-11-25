@@ -1,4 +1,4 @@
-@props(['style','model'])
+@props(['style','model', 'filter'])
 <div class="d-flex justify-content-between flex-row-reverse mb-2 p-2">
     @php
         $route = strtolower($model);
