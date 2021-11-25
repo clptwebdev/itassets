@@ -17,7 +17,7 @@ class Component extends Model
     {
         return $this->belongsTo(Photo::class, 'photo_id');
     }
-    
+
     public function comment()
     {
         return $this->morphToMany(Comment::class, 'commentables');
@@ -27,12 +27,12 @@ class Component extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
-    
+
     public function location()
     {
         return $this->belongsTo(Location::class);
-    } 
-    
+    }
+
     public function status()
     {
         return $this->belongsTo(Status::class);
@@ -53,6 +53,14 @@ class Component extends Model
     public function scopeLocationFilter($query, $locations){
         return $query->whereIn('location_id', $locations);
     }
+    public function depreciation()
+    {
+        return $this->belongsTo(Depreciation::class);
+    }
+
+    public function scopeStatusFilter($query, $status){
+        return $query->whereIn('status_id', $status);
+    }
 
     public function scopeCategoryFilter($query, $category){
         $pivot = $this->category()->getTable();
@@ -62,7 +70,18 @@ class Component extends Model
         });
     }
 
-    public function scopeStatusFilter($query, $status){
-        return $query->whereIn('status_id', $status);
+    public function scopeCostFilter($query, $amount){
+        $amount = str_replace('£', '', $amount);
+        $amount = explode(' - ', $amount);
+        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
     }
+
+    public function scopePurchaseFilter($query, $start, $end){
+        $query->whereBetween('purchased_date', [$start, $end]);
+    }
+    public function scopeSearchFilter($query, $search){
+        return $query->where('components.name', 'LIKE', "%{$search}%")
+            ->orWhere('components.serial_no', 'LIKE', "%{$search}%");
+    }
+
 }

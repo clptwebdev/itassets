@@ -9,6 +9,7 @@
     </div>
     <div class="card-body">
         <form action="{{ route($route.'.filter')}}" method="POST">
+
             <div id="accordion" class="mb-4">
                 @csrf
                 @if(isset($statuses))
@@ -17,12 +18,13 @@
                          data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader">
                         <small>Status Type</small>
                     </div>
-                    
+
                     <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader"
                          data-parent="#accordion">
                         <div class="option-body">
                             @foreach($statuses as $status)
-                                @if($status->${"relations"}->count() != 0)
+                                @if(is_countable($status->${"relations"}))
+                                @if($status->${"relations"}->count() != 0 )
                                 <div class="form-check">
                                     <label class="form-check-label mr-4"
                                            for="{{'status'.$status->id}}">{{ $status->name }}  ({{$status->${"relations"}->count()}})</label>
@@ -30,6 +32,7 @@
                                            value="{{ $status->id}}" id="{{'status'.$status->id}}"
                                            @if(session()->has('status') && in_array($status->id, session('status'))) {{ 'checked'}} @endif>
                                 </div>
+                                @endif
                                 @endif
                             @endforeach
                         </div>
@@ -55,7 +58,6 @@
                                     <input class="form-check-input" type="checkbox" name="category[]"
                                            value="{{ $category->id}}" id="{{'category'.$category->id}}"
                                            @if(session()->has('category') && in_array($category->id, session('category'))) {{ 'checked'}} @endif>
-
                                 </div>
                                 @endif
                             @endforeach
@@ -75,14 +77,16 @@
                          data-parent="#accordion">
                         <div class="option-body">
                             @foreach($locations as $location)
-                            @if($location->${"relations"}->count() != 0)
+                                @if(is_countable($status->${"relations"}))
+                                @if($location->${"relations"}->count() != 0)
                             <div class="form-check">
                                 <label class="form-check-label mr-4"
                                         for="{{'location'.$location->id}}">{{ $location->name }} ({{$location->${"relations"}->count()}})</label>
                                 <input class="form-check-input" type="checkbox" name="locations[]"
-                                        value="{{ $location->id}}" id="{{'location'.$location->id}}" 
+                                        value="{{ $location->id}}" id="{{'location'.$location->id}}"
                                         @if(session()->has('locations') && in_array($location->id, session('locations'))) {{ 'checked'}} @endif>
                             </div>
+                            @endif
                             @endif
                             @endforeach
                         </div>
@@ -102,21 +106,21 @@
                         <div class="option-body">
                             <div class="form-row">
                                 <label for="start" class="p-0 m-0 mb-1"><small>Start</small></label>
-                                <input class="form-control" type="date" name="start" 
-                                        @if(session()->has('start')) 
+                                <input class="form-control" type="date" name="start"
+                                        @if(session()->has('start'))
                                         @php $start = \Carbon\Carbon::parse(session('start'))->format('Y-m-d')
                                         @endphp
-                                        value="{{ $start }}" 
+                                        value="{{ $start }}"
                                         @endif
                                        placeholder="DD/MM/YYYY"/>
                             </div>
                             <div class="form-row">
                                 <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
                                 <input class="form-control" type="date" name="end"
-                                        @if(session()->has('end')) 
+                                        @if(session()->has('end'))
                                         @php $end = \Carbon\Carbon::parse(session('end'))->format('Y-m-d')
                                         @endphp
-                                        value="{{ $end }}" 
+                                        value="{{ $end }}"
                                         @endif
                                         placeholder="DD/MM/YYYY"/>
                             </div>
@@ -166,7 +170,6 @@
                 </div>
 
             </div>
-
             <button type="submit" class="btn btn-green text-right">Apply Filter</button>
         </form>
     </div>

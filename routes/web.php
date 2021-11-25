@@ -111,7 +111,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
         Route::get('/asset-model/pdf', 'App\Http\Controllers\AssetModelController@downloadPDF')->name('asset-model.pdf');
         Route::get('/asset-model/{assetModel}/pdf', 'App\Http\Controllers\AssetModelController@downloadShowPDF')->name('asset-model.showPdf');
-        
+
     // Asset Routes
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
         Route::post('/assets/search',[\App\Http\Controllers\AssetController::class, "search"] )->name('assets.search');
@@ -139,6 +139,9 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/components/{component}/pdf', 'App\Http\Controllers\ComponentController@downloadShowPDF')->name('components.showPdf');
         Route::post('components/{component}/comment/create', '\App\Http\Controllers\ComponentController@newComment')->name('component.comment');
         Route::post('/component/{component}/status', 'App\Http\Controllers\ComponentController@changeStatus')->name('component.status');
+    Route::post('/component/filter', 'App\Http\Controllers\ComponentController@filter')->name('component.filter');
+    Route::get('/component/filter/clear', 'App\Http\Controllers\ComponentController@clearFilter')->name('component.clear.filter');
+    Route::get('/component/filter', 'App\Http\Controllers\ComponentController@filter')->name('component.filtered');
     //Accessory Routes
         Route::resource('/accessories', 'App\Http\Controllers\AccessoryController');
         Route::post('/accessory/filter', 'App\Http\Controllers\AccessoryController@filter')->name('accessory.filter');
@@ -174,6 +177,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/manufactuer/pdf', 'App\Http\Controllers\ManufacturerController@downloadPDF')->name('manufacturer.pdf');
         Route::get('/manufacturer/{manufacturer}/pdf', 'App\Http\Controllers\ManufacturerController@downloadShowPDF')->name('manufacturer.showPdf');
         Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
+        Route::Post("/manufacturer/filter", [\App\Http\Controllers\ManufacturerController::class, "filter"])->name("manufacturer.filter");
+        Route::get("/manufacturer/clear/filter", [\App\Http\Controllers\ManufacturerController::class, "clearFilter"])->name("manufacturer.clearfilter");
     //Permission Routes
 
     //Request
@@ -199,7 +204,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/databasebackups/clean/backups', [\App\Http\Controllers\BackupController::class, "dbClean"])->name('backup.clean');
         Route::get('/databasebackupdownload/{$file_name}', [\App\Http\Controllers\BackupController::class , "download"])->name('download.backup');
 
-// Manufacturers Routes (Doesn't include import routes)
 
 
 // status Routes (Doesn't include import routes)
@@ -217,6 +221,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/miscellaneous/{miscellanea}/remove', 'App\Http\Controllers\MiscellaneaController@forceDelete')->name('miscellaneous.remove');
     Route::post('/miscellanea/pdf', 'App\Http\Controllers\MiscellaneaController@downloadPDF')->name('miscellaneous.pdf');
     Route::get('/miscellanea/{miscellanea}/pdf', 'App\Http\Controllers\MiscellaneaController@downloadShowPDF')->name('miscellaneous.showPdf');
+    Route::post('/miscellanea/filter', 'App\Http\Controllers\MiscellaneaController@filter')->name('miscellanea.filter');
+    Route::get('/miscellanea/filter/clear', 'App\Http\Controllers\MiscellaneaController@clearFilter')->name('miscellanea.clear.filter');
+    Route::get('/miscellanea/filter', 'App\Http\Controllers\MiscellaneaController@filter')->name('miscellanea.filtered');
 
 
 //exports
@@ -254,6 +261,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('chart/asset/audits', 'App\Http\Controllers\ChartController@getAssetAuditChart');
 //Logs View
     Route::get("/logs", [\App\Http\Controllers\LogController::class, "index"])->name("logs.index");
+    Route::get("/logs/delete", [\App\Http\Controllers\LogController::class, "destroy"])->name("logs.destroy");
 //documentation link
     Route::get("/help/documentation" , function(){ return view('documentation.Documents');})->name('documentation.index');
     Route::get("/help/documentation/{section}" , function(){ return view('documentation.Documents');})->name('documentation.index.section');

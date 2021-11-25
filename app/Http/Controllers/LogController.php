@@ -89,14 +89,13 @@ class LogController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Log  $log
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Log $log)
+
+    public function destroy()
     {
-        //
+       Log::all()->delete();
+        session()->flash('danger_message', 'All Logs have been cleared!');
+        return view('logs.view', [
+            "logs" => Log::Latest('created_at')->get(),
+        ]);
     }
 }

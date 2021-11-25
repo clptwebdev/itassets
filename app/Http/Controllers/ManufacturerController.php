@@ -19,9 +19,30 @@ class ManufacturerController extends Controller {
 
     public function index()
     {
+        $manufacturers = Manufacturer::orderBy('name')->paginate(12);
         return view('Manufacturers.view', [
-            "manufacturers" => Manufacturer::all(),
+            "manufacturers" => $manufacturers,
         ]);
+
+    }
+    public function clearFilter(){
+        return redirect(route('manufacturers.index'));
+    }
+    public function filter(){
+
+        $filtered = Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate();
+        if($filtered->count() == 0){
+            session()->flash('danger_message', "<strong>" . request("search"). "</strong>".' could not be found! Please search for something else!');
+            return view("Manufacturers.view",[
+                'manufacturers'=> Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate(),
+
+            ]);
+        }else{
+            return view("Manufacturers.view",[
+                'manufacturers'=> Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate(),
+
+            ]);
+        }
 
     }
 

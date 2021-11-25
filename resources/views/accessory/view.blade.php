@@ -76,10 +76,10 @@
 
         <p class="mb-4">Below are the different Accessories stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
-        
+
          <!-- DataTales Example -->
          <x-filters.navigation model="Accessory" :filter=$filter />
-         <x-filters.filter model="Accessory" relations="accessories" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories/>    
+         <x-filters.filter model="Accessory" relations="accessories" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories/>
 
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -178,16 +178,16 @@
                                                 <a href="{{ route('accessories.edit', $accessory->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('transfer', $accessory)
-                                                <a  href="#" 
-                                                    class="dropdown-item transferBtn" 
+                                                <a  href="#"
+                                                    class="dropdown-item transferBtn"
                                                     data-model-id="{{$accessory->id}}"
                                                     data-location-from="{{$accessory->location->name ?? 'Unallocated' }}"
                                                     data-location-id="{{ $accessory->location_id }}"
                                                 >Transfer</a>
                                             @endcan
                                             @can('dispose', $accessory)
-                                                <a  href="#" 
-                                                    class="dropdown-item disposeBtn" 
+                                                <a  href="#"
+                                                    class="dropdown-item disposeBtn"
                                                     data-model-id="{{$accessory->id}}"
                                                     data-model-name="{{$accessory->name ?? 'No name'}}"
                                                 >Dispose</a>
@@ -388,7 +388,7 @@
             integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-         
+
          function toggleFilter() {
             if ($('#filter').hasClass('show')) {
                 $('#filter').removeClass('show');
@@ -424,7 +424,7 @@
         });
 
         $(document).ready(function () {
-        
+
 
             $('#import').click(function () {
                 $('#manufacturer-id-test').val($(this).data('id'))
@@ -432,7 +432,7 @@
                 $('#importManufacturerModal').modal('show')
 
             });
-            
+
 
             // file input empty
             $("#confirmBtnImport").click(":submit", function (e) {
