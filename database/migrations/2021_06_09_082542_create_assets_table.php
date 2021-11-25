@@ -32,6 +32,7 @@ class CreateAssetsTable extends Migration
             $table->string("room")->nullable();
             $table->foreignId("user_id")->nullable();
             $table->date("audit_date")->nullable();
+            $table->text('notes');
             $table->softDeletes();
         });
     }

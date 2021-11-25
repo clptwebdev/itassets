@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 use App\Rules\permittedLocation;
 use App\Rules\findLocation;
+use App\Rules\checkAssetTag;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -43,11 +44,12 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
     public function rules(): array
     {
-
+        //Asset Tag create rule to check to see if it exists in the same location
         return [
             'asset_tag' => [
                 'sometimes',
                 'nullable',
+                new checkAssetTag($row['location_id']),
             ],'name' => [
                 'required',
             ],
@@ -85,6 +87,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
     public function model(array $row)
     {
             $asset = new Asset;
+
             $asset->asset_tag = $row["asset_tag"];
             $asset->name = $row["name"];
             $asset->user_id = auth()->user()->id;
@@ -132,7 +135,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             $asset->supplier_id = $supplier->id ?? 0;
             //check for already existing Manufacturers upon import if else create
             $asset->order_no = $row["order_no"];
-            $asset->warranty = $row["warranty"];
+            $asset->warranty = $row["warranty"] ?? 0;
             //check for already existing Locations upon import if else create if blank dont assign it to a location
             $location = Location::where(["name" => $row["location_id"]])->first();
             $id = $location->id ?? 0;
@@ -153,6 +156,8 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             }else{
                 $asset->asset_model = 0;
             }
+
+            $asset->notes = $row['notes'];
 
             if($row["audit_date"] === null??0){
                 $asset->audit_date = null;
