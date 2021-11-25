@@ -8,7 +8,7 @@ use App\Models\Location;
 
 class checkAssetTag implements Rule
 {
-    
+    //The Location Id to see if the Asset Tag Exists
     protected $location;
 
     public function __construct($location)
@@ -25,10 +25,11 @@ class checkAssetTag implements Rule
      */
     public function passes($attribute, $value)
     {
+        //If the Asset Tag exists at the Location returns False
         if($asset = Asset::where(["asset_tag" => $value, "location_id" => $this->location])->first()){
-            return true;
-        }else{
             return false;
+        }else{
+            return true;
         }
     }
 
