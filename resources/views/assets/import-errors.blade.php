@@ -4,6 +4,7 @@
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
 @section('content')
+
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
         <div>
@@ -33,7 +34,7 @@
         on rows {{ $errorRows}}
 
     </div>
-
+{{$errorArray}}
     @if(session('danger_message'))
         <div class="alert alert-danger"> {{ session('danger_message')}} </div>
     @endif
