@@ -55,7 +55,7 @@
                 </form>
                 @endcan
             @endif
-            <button type="button" class="btn btn-grey">Bulk Options</button>
+            <button type="button" class="btn btn-sm btn-grey">Bulk Options</button>
         </div>
     </div>
 

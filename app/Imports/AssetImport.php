@@ -63,7 +63,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                     {
 
 
-                        $validator->errors()->add($key ,'asset_tag' ,'This Asset Tag is already assigned in this location.');
+                        $validator->errors()->add('asset_tag' ,'This Asset Tag is already assigned in this location.');
 
                         return false;
                     }
