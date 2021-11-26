@@ -47,7 +47,6 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
     public function withValidator($validator)
     {
         $validator->after(function($validator) {
-        return dd($validator->getData());
             foreach($validator->getData() as $key => $data)
             {
                 if($data['asset_tag'] == null)
