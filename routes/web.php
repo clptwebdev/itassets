@@ -50,15 +50,27 @@ Route::group(['middleware' => 'auth'], function() {
         if(auth()->user()->role_id == 1)
         {
             $locations = \App\Models\Location::all();
-            $assets = \App\Models\Asset::select(['audit_date','purchased_cost']);
+            $assets = \App\Models\Asset::all();
             $transfers = \App\Models\Transfer::all();
             $archived = \App\Models\Archive::all();
+            $statuses = \App\Models\Status::all();
+            $accessories = \App\Models\Accessory::all();
+            $components = App\Models\Component::all();
+            $consumables = App\Models\Consumable::all();
+            $miscellaneous = App\Models\Miscellanea::all();
+            $category = App\Models\Category::all();
         } else
         {
             $locations = auth()->user()->locations;
             $assets = auth()->user()->location_assets;
             $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->get();
             $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->get();
+            $statuses = \App\Models\Status::all();
+            $category = App\Models\Category::all();
+            $accessories = auth()->user()->location_accessories;
+            $components = auth()->user()->location_components;
+            $consumables = auth()->user()->location_consumables;
+            $miscellaneous = auth()->user()->location_miscellaneous;
         }
 
         return view('dashboard',
@@ -67,6 +79,12 @@ Route::group(['middleware' => 'auth'], function() {
                 'assets' => $assets,
                 'transfers' => $transfers,
                 'archived' => $archived,
+                'statuses' => $statuses,
+                'accessories' => $accessories,
+                'components' => $components,
+                'consumables' => $consumables,
+                'miscellaneous' => $miscellaneous,
+                'category' => $category,
             ]
         );
     })->name('dashboard');

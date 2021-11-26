@@ -21,7 +21,7 @@
 </div>
 @if($assets->count() != 0)
 
-<x-admin.asset-info :transfers="$transfers" :archived="$archived"/>
+<x-admin.asset-info :transfers="$transfers" :archived="$archived" :assets="$assets" :accessories="$accessories" :components="$components" :consumables="$consumables" :miscellaneous="$miscellaneous"/>
 
 <!-- Content Row -->
 <div class="row row-eq-height mb-4">
@@ -86,7 +86,7 @@
                 @php
                         $total = $assets->count();
                         $deployable = 0;
-                        foreach(\App\Models\Status::where('deployable', '=', 1)->get() as $status){
+                        foreach($statuses->where('deployable', '=', 1) as $status){
                             $deployable += $status->assets->count();
                         }
                 @endphp
@@ -94,7 +94,7 @@
                 <h4 class="small font-weight-bold">Asset Status<span class="float-right">{{round(($deployable / $total) * 100) ?? 0}}%</span></h4>
                 @endif
                 <div class="progress mb-1">
-                    @foreach(\App\Models\Status::all() as $status)
+                    @foreach($statuses as $status)
                         @php
                         if($status->assets->count() != 0){
                             $percent = ($status->assets->count() / $total) * 100;
@@ -116,7 +116,7 @@
                 </div>
                 <div class="mb-4">
                     <small>
-                        @foreach(\App\Models\Status::all() as $status)
+                        @foreach($statuses as $status)
 
                             <i class="fas fa-circle" style="color: {{ $status->colour}}"></i> {{$status->name}}
 
@@ -227,10 +227,7 @@
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Categories</h6>
             </div>
-            <div class="card shadow mb-4">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <div id="suppliersTable" class="table table-striped">
+            <div class="card-body">
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -253,7 +250,6 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                    @php($category = \App\Models\Category::all())
                     @foreach($category as $cat)
                         <tr>
                             <tr>
@@ -265,12 +261,9 @@
                                 <td class="text-center">{{$cat->miscellanea->count()}}</td>
                             </tr>
                         </tr>
-                    @endforeach
                     </tbody>
+                    @endforeach
                 </table>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -302,7 +295,6 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    @php($statuses = \App\Models\Status::all())
                     @foreach($statuses as $status)
                         <tr>
                             <td>{{ $status->name }}</td>
@@ -325,7 +317,6 @@
 <script src="{{ asset('js/chart.js') }}"></script>
 <script src="{{ asset('js/demo/chart-bar-demo.js') }}"></script>
 <script>
-    
     $(document).ready(function () {
         showGraph();
         showValueGraph();

@@ -1,18 +1,5 @@
 @php
-    if(auth()->user()->role_id == 1){
-        $assets = \App\Models\Asset::all();
-        $accessories = \App\Models\Accessory::all();
-        $components = App\Models\Component::all();
-        $consumables = App\Models\Consumable::all();
-        $miscellaneous = App\Models\Miscellanea::all();
-    }else{
-        $assets = auth()->user()->location_assets;
-        $accessories = auth()->user()->location_accessories;
-        $components = auth()->user()->location_components;
-        $consumables = auth()->user()->location_consumables;
-        $miscellaneous = auth()->user()->location_miscellaneous;
-    }  
-    
+
     //Assets
     $total = 0; $depreciation = 0;
     foreach($assets as $asset){
@@ -216,7 +203,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold  text-uppercase mb-1">
                             New Requests</div>
-                        <div class="h5 mb-0 font-weight-bold ">{{ \App\Models\Requests::whereStatus(0)->count(); }}</div>
+                        <div class="h5 mb-0 font-weight-bold ">{{ \App\Models\Requests::whereStatus(0)->count() }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-tasks fa-2x d-md-none d-lg-inline-block"></i>
