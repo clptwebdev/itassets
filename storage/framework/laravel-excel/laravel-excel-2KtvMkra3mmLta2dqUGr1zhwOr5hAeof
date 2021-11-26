@@ -1,0 +1,2 @@
+asset_tag,name,serial_no,asset_model,status_id,purchased_date,purchased_cost,donated,supplier_id,order_no,warranty,location_id,room,audit_date,categories,Notes,RAM,Processor,Storage Size,Storage Type,Operating System,iOS
+2072,PROBOOK_455R_1,0,ProBook 445 G6,Deployed,21/06/2020,426.65,No,,,0,Heath Park School,,01/09/2022,Laptops,"VALICT0030, Source Document: POIN4494",,Ryzen,,,,
