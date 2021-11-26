@@ -467,7 +467,6 @@ class AssetController extends Controller {
             $errors = [];
             $values = [];
             $results = $import->failures();
-            dd($import->failures);
             $importErrors = [];
             foreach($results->all() as $result)
             {
