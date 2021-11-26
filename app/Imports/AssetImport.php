@@ -53,7 +53,11 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             {
             } else
             {
-                dd(Asset::where("asset_tag", '=', $data['asset_tag'])->where("location_id", '=', $data['location_id'])->first());
+                $asset = Asset::where("asset_tag", '=', $data['asset_tag'])->first();
+               $location_asset =  $asset->location->name;
+               dd($location_asset ."" .$data['location_id']);
+//                $asset->where('location_id')
+//                ("location_id", '=', $data['location_id'])->first());
                 if(null)
                 {
 
