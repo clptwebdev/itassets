@@ -33,7 +33,7 @@ class checkAssetTag implements Rule
     public function passes($attribute, $value)
     {
         //If the Asset Tag exists at the Location returns False
-       
+
         if($asset = Asset::where("asset_tag", $value)->where("location_id", '=', $this->location)->first()){
             return false;
         }else{
