@@ -33,7 +33,7 @@
         on rows {{ $errorRows}}
 
     </div>
-
+    {{ dd($errorValues)}}
     @if(session('danger_message'))
         <div class="alert alert-danger"> {{ session('danger_message')}} </div>
     @endif
