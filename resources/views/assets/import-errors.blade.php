@@ -59,6 +59,7 @@
                             <th class="text-center"><small>Status</small></th>
                             <th class="text-center"><small>Purchased Date</small></th>
                             <th class="text-center"><small>Purchased Cost</small></th>
+                            <th class="text-center"><small>Donated</small>/small></th>
                             <th class="text-center"><small>Supplier</small></th>
                             <th class="text-center"><small>Order No</small></th>
                             <th class="text-center"><small>Warranty</small></th>
@@ -75,6 +76,7 @@
                             <th class="text-center"><small>Status</small></th>
                             <th class="text-center"><small>Purchased Date</small></th>
                             <th class="text-center"><small>Purchased Cost</small></th>
+                            <th class="text-center"><small>Donated</small></th>
                             <th class="text-center"><small>Supplier</small></th>
                             <th class="text-center"><small>Order No</small></th>
                             <th class="text-center"><small>Warranty</small></th>
