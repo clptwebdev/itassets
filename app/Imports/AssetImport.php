@@ -62,7 +62,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 //               $import_location = Location::where('name',"=",$data['location_id'])->first();
                 if(1 === 1)
                 {
-                    $validator->errors()->add('location_id' ,'The Asset Tag is already assigned in this location .');
+                    $validator->errors()->add($key ,'The Asset Tag is already assigned in this location .');
                     return false;
                 }
             }
