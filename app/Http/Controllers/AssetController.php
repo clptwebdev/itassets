@@ -485,7 +485,6 @@ class AssetController extends Controller {
             }
             if(! empty($importErrors))
             {
-                dd($importErrors);
                 $errorArray = [];
                 $valueArray = [];
                 $errorValues = [];
