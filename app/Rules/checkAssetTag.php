@@ -18,8 +18,8 @@ class checkAssetTag implements Rule
             $this->location = $location;
         }else{
             $locations = Location::whereName($location)->first();
-        dd($locations);
-            $this->locations = $locations->id;
+
+            $this->location = $locations->id;
         }
     }
 
@@ -33,7 +33,8 @@ class checkAssetTag implements Rule
     public function passes($attribute, $value)
     {
         //If the Asset Tag exists at the Location returns False
-        if($asset = Asset::where(["asset_tag" => $value, "location_id" => $this->location])->first()){
+        dd($this->location);
+        if($asset = Asset::where("asset_tag", $value)->where("location_id", '=', $this->location)->first()){
             return false;
         }else{
             return true;
