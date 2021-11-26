@@ -61,8 +61,8 @@
                     @can('create', \App\Models\Asset::class)
                     <a id="import" class="dropdown-item"> Import</a>
                     @endcan
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="#">Dispose</a>
+                    <a class="dropdown-item" href="#">Transfer</a>
                 </div>
               </div>
         </div>
