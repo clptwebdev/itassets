@@ -27,6 +27,7 @@ use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Validators\Failure;
+use phpDocumentor\Reflection\Types\False_;
 use function PHPUnit\Framework\isEmpty;
 
 class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
@@ -42,17 +43,22 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
     {
 
     }
-    public function withValidator($validator){
-        $validator->after(function ($validator) {
-            foreach($validator->getData() as $key=>$data){
 
-               new checkAssetTag($data['location_id']);
+    public function withValidator($validator)
+    {
+        $validator->after(function($validator) {
+            foreach($validator->getData() as $key => $data)
+            {
 
-            }
+                if(new checkAssetTag($data['location_id']) === false){
+                    $validator->errors()->add($key, 'first field must be less than second field.');
+
+            }}
 
         });
 
     }
+
     public function rules(): array
     {
         //Asset Tag create rule to check to see if it exists in the same location
@@ -61,7 +67,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 'sometimes',
                 'nullable',
 
-            ],'name' => [
+            ], 'name' => [
                 'required',
             ],
             'purchased_cost' => [
@@ -78,7 +84,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 'date_format:"d/m/Y"',
             ],
             'audit_date' => [
-                'date_format:"d/m/Y"'
+                'date_format:"d/m/Y"',
             ],
             'supplier_id' => [
             ],
@@ -97,101 +103,121 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
     public function model(array $row)
     {
-            $asset = new Asset;
+        $asset = new Asset;
 
-            $asset->asset_tag = $row["asset_tag"];
-            $asset->name = $row["name"];
-            $asset->user_id = auth()->user()->id;
-            $asset->serial_no = $row["serial_no"];
+        $asset->asset_tag = $row["asset_tag"];
+        $asset->name = $row["name"];
+        $asset->user_id = auth()->user()->id;
+        $asset->serial_no = $row["serial_no"];
 
-            //check for already existing Status upon import if else create
-            if($status = Status::where(["name" => $row["status_id"]])->first()){
+        //check for already existing Status upon import if else create
+        if($status = Status::where(["name" => $row["status_id"]])->first())
+        {
 
-            }else{
-                if(isset($row["status_id"])){
-                    $status = new Status;
-                    $status->name = $row["status_id"];
-                    $status->deployable = 1;
-                    $status->save();
-                }else{
-                    $asset->status_id = 0;
-                }
-            }
-
-            $asset->status_id = $status->id ?? 0;
-
-            $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
-            $asset->purchased_cost = $row["purchased_cost"];
-            if(strtolower($row["donated"]) == 'yes'){
-                $asset->donated = 1;
-            }else{
-                $asset->donated = 0;
-            }
-
-            //check for already existing Suppliers upon import if else create
-            if($supplier = Supplier::where(["name" => $row["supplier_id"]])->first()){
-
-            }else{
-                if(isset($row["supplier_id"])){
-                    $supplier = new Supplier;
-                    $supplier->name = $row["supplier_id"];
-                    $supplier->email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
-                    $supplier->url = 'www.' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
-                    $supplier->telephone = "Unknown";
-                    $supplier->save();
-                }else{
-                    $asset->supplier_id = 0;
-                }
-            }
-            $asset->supplier_id = $supplier->id ?? 0;
-            //check for already existing Manufacturers upon import if else create
-            $asset->order_no = $row["order_no"];
-            $asset->warranty = $row["warranty"] ?? 0;
-            //check for already existing Locations upon import if else create if blank dont assign it to a location
-            $location = Location::where(["name" => $row["location_id"]])->first();
-            $id = $location->id ?? 0;
-            $asset->location_id = $id;
-            $asset->room = $row['room'];
-
-            if($asset_model = AssetModel::where(["name" => $row["asset_model"]])->first())
+        } else
+        {
+            if(isset($row["status_id"]))
             {
-                $asset->asset_model = $asset_model->id;
-                $additional = array();
-                if($asset_model->fieldset()->exists()){
-                    foreach($asset_model->fieldset->fields as $field){
-                        if(array_key_exists(str_replace(' ', '_', strtolower($field->name)), $row) && $row[str_replace(' ', '_', strtolower($field->name))] != NULL){
-                            $additional[$field->id] = ['value' =>$row[str_replace(' ', '_', strtolower($field->name))]];
-                        }
+                $status = new Status;
+                $status->name = $row["status_id"];
+                $status->deployable = 1;
+                $status->save();
+            } else
+            {
+                $asset->status_id = 0;
+            }
+        }
+
+        $asset->status_id = $status->id ?? 0;
+
+        $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
+        $asset->purchased_cost = $row["purchased_cost"];
+        if(strtolower($row["donated"]) == 'yes')
+        {
+            $asset->donated = 1;
+        } else
+        {
+            $asset->donated = 0;
+        }
+
+        //check for already existing Suppliers upon import if else create
+        if($supplier = Supplier::where(["name" => $row["supplier_id"]])->first())
+        {
+
+        } else
+        {
+            if(isset($row["supplier_id"]))
+            {
+                $supplier = new Supplier;
+                $supplier->name = $row["supplier_id"];
+                $supplier->email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+                $supplier->url = 'www.' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+                $supplier->telephone = "Unknown";
+                $supplier->save();
+            } else
+            {
+                $asset->supplier_id = 0;
+            }
+        }
+        $asset->supplier_id = $supplier->id ?? 0;
+        //check for already existing Manufacturers upon import if else create
+        $asset->order_no = $row["order_no"];
+        $asset->warranty = $row["warranty"] ?? 0;
+        //check for already existing Locations upon import if else create if blank dont assign it to a location
+        $location = Location::where(["name" => $row["location_id"]])->first();
+        $id = $location->id ?? 0;
+        $asset->location_id = $id;
+        $asset->room = $row['room'];
+
+        if($asset_model = AssetModel::where(["name" => $row["asset_model"]])->first())
+        {
+            $asset->asset_model = $asset_model->id;
+            $additional = array();
+            if($asset_model->fieldset()->exists())
+            {
+                foreach($asset_model->fieldset->fields as $field)
+                {
+                    if(array_key_exists(str_replace(' ', '_', strtolower($field->name)), $row) && $row[str_replace(' ', '_', strtolower($field->name))] != null)
+                    {
+                        $additional[$field->id] = ['value' => $row[str_replace(' ', '_', strtolower($field->name))]];
                     }
                 }
-            }else{
-                $asset->asset_model = 0;
             }
+        } else
+        {
+            $asset->asset_model = 0;
+        }
 
-            $asset->notes = $row['notes'];
+        $asset->notes = $row['notes'];
 
-            if($row["audit_date"] === null??0){
-                $asset->audit_date = null;
-            }else{
-                $asset->audit_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["audit_date"]))->format("Y-m-d");
-            }
+        if($row["audit_date"] === null ?? 0)
+        {
+            $asset->audit_date = null;
+        } else
+        {
+            $asset->audit_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["audit_date"]))->format("Y-m-d");
+        }
 
-            if(isset($row['categories'])){
-                $cat_array = array();
-                $categories = explode(',', $row['categories']);
-                foreach($categories as $category){
-                    $found = Category::firstOrCreate(['name' => $category]);
-                    $cat_array[] = $found->id;
-                }
+        if(isset($row['categories']))
+        {
+            $cat_array = array();
+            $categories = explode(',', $row['categories']);
+            foreach($categories as $category)
+            {
+                $found = Category::firstOrCreate(['name' => $category]);
+                $cat_array[] = $found->id;
             }
+        }
 
-            $asset->save();
-            if(isset($cat_array)){
-                $asset->category()->attach($cat_array);
-            }
-            if(isset($additional)){
-                $asset->fields()->attach($additional);
-            }
+        $asset->save();
+        if(isset($cat_array))
+        {
+            $asset->category()->attach($cat_array);
+        }
+        if(isset($additional))
+        {
+            $asset->fields()->attach($additional);
+        }
 
     }
 
