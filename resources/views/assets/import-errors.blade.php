@@ -20,7 +20,7 @@
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to assets</a>
                 <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
-                <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-geen shadow-sm">
+                <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-green shadow-sm">
                     <i class="far fa-save fa-sm text-dark-50"></i> Save
                 </a>
             </form>
