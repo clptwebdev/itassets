@@ -69,7 +69,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                             "value" => $data,
                         ];
 
-                        $validator->errors()->add($importErrors);
+                        $validator->errors()->add($key ,$importErrors);
 
                         return false;
                     }
