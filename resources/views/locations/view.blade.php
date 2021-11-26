@@ -99,7 +99,7 @@
                                     <tr>
                                         <td class="text-center">{{$location->asset->count() ?? "N/A"}}</td>
                                         <td class="text-center">{{$location->accessory->count() ?? "N/A"}}</td>
-                                        <td class="text-center">{{$location->component->count() ?? "N/A"}}</td>
+                                        <td class="text-center">{{$location->components->count() ?? "N/A"}}</td>
                                         <td class="text-center">{{$location->consumable->count() ?? "N/A"}}</td>
                                         <td class="text-center">{{$location->miscellanea->count() ?? "N/A"}}</td>
                                     </tr>
