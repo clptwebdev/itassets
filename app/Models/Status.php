@@ -15,7 +15,7 @@ class Status extends Model
     public function assets(){
         return $this->hasMany(Asset::class);
     }
-    public function component(){
+    public function components(){
         return $this->hasMany(Component::class);
     }
     public function miscellanea()

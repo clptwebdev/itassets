@@ -35,14 +35,6 @@
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
-                    {{-- <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div>
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div> --}}
                 </div>
             </div>
             <!-- Card Body -->
@@ -61,14 +53,6 @@
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
-                    {{-- <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div>
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div> --}}
                 </div>
             </div>
             <!-- Card Body -->
@@ -206,10 +190,6 @@
                     </div>
                 </div>
                 <div class="border-top border-light pt-4">
-                    
-                  {{--   {{ '£'.round($asset_total + $accessory_total)}}
-                    <small class="text-coral">(£{{ round($asset_depreciation + $accessory_depreciation)}})*</small><br>
-                    <span class="text-xs">*calculated depreciation</span> --}}
                 </div>
                 <div class="row no-gutters border-top border-light mt-4 pt-4">
                     <div class="col-12">
@@ -227,7 +207,7 @@
                                 <tr>
                                     <td class="text-center">{{$location->asset->count() ?? "N/A"}}</td>
                                     <td class="text-center">{{$location->accessory->count() ?? "N/A"}}</td>
-                                    <td class="text-center">{{$location->component->count() ?? "N/A"}}</td>
+                                    <td class="text-center">{{$location->components->count() ?? "N/A"}}</td>
                                     <td class="text-center">{{$location->consumable->count() ?? "N/A"}}</td>
                                     <td class="text-center">{{$location->miscellanea->count() ?? "N/A"}}</td>
                                 </tr>
@@ -247,7 +227,10 @@
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Categories</h6>
             </div>
-            <div class="card-body">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="suppliersTable" class="table table-striped">
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -283,7 +266,11 @@
                             </tr>
                         </tr>
                     @endforeach
+                    </tbody>
                 </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -321,7 +308,7 @@
                             <td>{{ $status->name }}</td>
                             <td class="text-center">{{$status->assets->count()}}</td>
                             <td class="text-center">{{$status->accessory->count()}}</td>
-                            <td class="text-center">{{$status->component->count()}}</td>
+                            <td class="text-center">{{$status->components->count()}}</td>
                             <td class="text-center">{{$status->consumable->count()}}</td>
                             <td class="text-center">{{$status->miscellanea->count()}}</td>
                         </tr>
@@ -338,6 +325,7 @@
 <script src="{{ asset('js/chart.js') }}"></script>
 <script src="{{ asset('js/demo/chart-bar-demo.js') }}"></script>
 <script>
+    
     $(document).ready(function () {
         showGraph();
         showValueGraph();

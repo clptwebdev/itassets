@@ -4,6 +4,12 @@
 
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
+          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 @endsection
 
 @section('content')
@@ -49,13 +55,30 @@
     @if(session('success_message'))
         <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
-
+    @php
+        if(auth()->user()->role_id == 1){
+            $limit = \App\Models\Component::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
+            $floor = \App\Models\Component::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first();
+        }else{
+            $limit = auth()->user()->location_components()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_components()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+        }
+        if(session()->has('amount')){
+            $amount = str_replace('£', '', session('amount'));
+            $amount = explode(' - ', $amount);
+            $start_value = intval($amount[0]);
+            $end_value = intval($amount[1]);
+        }else{
+            $start_value = $floor;
+            $end_value = $limit;
+        }
+    @endphp
     <section>
         <p class="mb-4">Below are the different Components stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
 
-        <x-filters.navigation model="Component" :filter=$filter />
-        <x-filters.filter model="Component" relations="components" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories  />
+        <x-filters.navigation model="Component" :filter="$filter" />
+        <x-filters.filter model="Component" relations="components" :filter="$filter" :locations="$locations" :statuses="$statuses" :categories="$categories"  />
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -280,5 +303,19 @@
                 $('#filter').css('right', '0%');
             }
         }
+
+        $(function () {
+            $("#slider-range").slider({
+                range: true,
+                min: {{ floor($floor)}},
+                max: {{ round($limit)}},
+                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
+                slide: function (event, ui) {
+                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
+                }
+            });
+            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
+                " - £" + $("#slider-range").slider("values", 1));
+        });
     </script>
 @endsection

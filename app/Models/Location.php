@@ -23,13 +23,13 @@ class Location extends Model
     public function assets(){
         return $this->hasMany(Asset::class);
     }
-    
+
     public function miscellanea()
     {
         return $this->hasMany(Miscellanea::class);
     }
 
-    public function component(){
+    public function components(){
         return $this->hasMany(Component::class);
     }
 

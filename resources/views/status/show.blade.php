@@ -41,7 +41,7 @@
 </section>
 
 <div id="statusAccordian">
-    
+
     <div class="card shadow m-2" style="border-left: 0.25rem solid 666;">
         <div id="asset_header" class="card-header">
             <h6 class="m-0 font-weight-bold pointer d-block w-100" data-toggle="collapse" data-target="#asset_collapse" aria-expanded="true" aria-controls="asset_collapse">Assigned Assets</h6>
@@ -95,7 +95,7 @@
                                 data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                             <td class="text-center  d-none d-xl-table-cell">
                                 £{{ $asset->purchased_cost }}
-                            
+
                             </td>
                             <td class="text-center d-none d-xl-table-cell">{{$asset->supplier->name ?? "N/A"}}</td>
                             @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
@@ -114,7 +114,7 @@
                                 @else
                                     <?php $age = Carbon\Carbon::now()->floatDiffInDays($asset->audit_date);?>
                                     @switch(true)
-                                        @case($age < 31) 
+                                        @case($age < 31)
                                             <span class="text-warning">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
                                             <br><small>Audit Due Soon</small>
                                             @break
@@ -208,7 +208,7 @@
                                 @else
                                     {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($accessory->location->icon ?? '#666').'">'
                                         .strtoupper(substr($accessory->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                @endif  
+                                @endif
                             </td>
                             <td class="text-center">{{$accessory->manufacturer->name ?? "N/A"}}</td>
                             <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
@@ -290,7 +290,7 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    @foreach($status->component as $component)
+                    @foreach($status->components as $component)
 
                         <tr>
                             <td>{{$component->name}}
@@ -303,7 +303,7 @@
                                 @else
                                     {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($component->location->icon ?? '#666').'">'
                                         .strtoupper(substr($component->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                @endif    
+                                @endif
                             </td>
                             <td class="text-center">{{$component->manufacturer->name ?? "N/A"}}</td>
                             <td>{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
@@ -394,8 +394,8 @@
                                 @else
                                     {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($consumable->location->icon ?? '#666').'">'
                                         .strtoupper(substr($consumable->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                @endif    
-                            </td>  
+                                @endif
+                            </td>
                             <td class="text-center">{{$consumable->manufacturer->name ?? "N/A"}}</td>
                             <td>{{\Carbon\Carbon::parse($consumable->purchased_date)->format("d/m/Y")}}</td>
                             <td>£{{$consumable->purchased_cost}}</td>

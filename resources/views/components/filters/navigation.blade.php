@@ -84,11 +84,11 @@
                 </div>
             </div>
         @endif
-        @if($model == "Component" || $model == "Miscellanea")
+{{--        @if($model == "Component" || $model == "Miscellanea")--}}
 
-        @else
+{{--        @else--}}
             <a href="#" onclick="javascript:toggleFilter();" class="btn btn-blue shadow-sm ml-2">Filter</a>
-        @endif
+{{--        @endif--}}
     </div>
     <div id="searchBar" class="col-4">
         <div class="col-auto">

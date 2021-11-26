@@ -50,7 +50,7 @@ Route::group(['middleware' => 'auth'], function() {
         if(auth()->user()->role_id == 1)
         {
             $locations = \App\Models\Location::all();
-            $assets = \App\Models\Asset::all();
+            $assets = \App\Models\Asset::select(['audit_date','purchased_cost']);
             $transfers = \App\Models\Transfer::all();
             $archived = \App\Models\Archive::all();
         } else
