@@ -16,7 +16,7 @@ class LogController extends Controller
             return redirect(route('errors.forbidden', ['area', 'Logs', 'view']));
         }
         return view('logs.view', [
-            "logs" => Log::Latest('created_at')->get(),
+            "logs" => Log::Latest('created_at')->paginate(),
         ]);
     }
     public function export(Request $request)
@@ -92,7 +92,7 @@ class LogController extends Controller
 
     public function destroy()
     {
-       Log::all()->delete();
+       Log::truncate();
         session()->flash('danger_message', 'All Logs have been cleared!');
         return view('logs.view', [
             "logs" => Log::Latest('created_at')->get(),

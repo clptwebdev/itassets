@@ -63,7 +63,7 @@
         </li>
         @endcan
         <div class="topbar-divider d-none d-sm-block"></div>
-        
+
         @can('handle', App\Models\Requests::class)
         <li class="nav-item mx-1">
             <a class="nav-link" href="{{route("requests.index")}}">
@@ -73,7 +73,7 @@
             </a>
         </li>
         @endcan
-        
+
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">
             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
@@ -82,7 +82,7 @@
                 <!-- Counter - Alerts -->
                 @if($logs->count() >=3)
                 <span class="badge badge-danger badge-counter">{{$logs->count()}}+</span>
-                @else{
+                @else
                 <span class="badge badge-danger badge-counter">{{$logs->count()}}</span>
                 @endif
             </a>

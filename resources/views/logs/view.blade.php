@@ -13,8 +13,10 @@
         <div>
                 <a href="/" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Back to Dashboard</a>
+            @if($logs->count() > 0)
             <a href="{{route('logs.destroy')}}" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"><i
                     class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
+            @endif
             @if($logs->count() > 1)
 {{--                @can('viewAny', auth()->user())--}}
                     <form class="d-inline-block" action="/exportlogs" method="POST">
@@ -71,6 +73,16 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-between align-content-center">
+                        <div>
+                            @if($logs->hasPages())
+                                {{ $logs->links()}}
+                            @endif
+                        </div>
+                        <div class="text-right">
+                            Showing Assets {{ $logs->firstItem() }} to {{ $logs->lastItem() }} ({{ $logs->total() }} Total Results)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,7 +103,9 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
     $(document).ready( function () {
