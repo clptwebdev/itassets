@@ -58,7 +58,6 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 }
             }
         });
-
     }
 
     public function rules(): array
