@@ -250,6 +250,7 @@
                         </tr>
                     </tfoot>
                     <tbody>
+{{--                    add where top 6 largest--}}
                     @foreach($category as $cat)
                         <tr>
                             <tr>

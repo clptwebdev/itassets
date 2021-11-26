@@ -25,6 +25,7 @@ use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Validators\Failure;
 use function PHPUnit\Framework\isEmpty;
 
@@ -41,7 +42,17 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
     {
 
     }
+    public function withValidator($validator){
+        $validator->after(function ($validator) {
+            foreach($validator->getData() as $key=>$data){
 
+               new checkAssetTag($data['location_id']);
+
+            }
+
+        });
+
+    }
     public function rules(): array
     {
         //Asset Tag create rule to check to see if it exists in the same location
@@ -49,6 +60,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             'asset_tag' => [
                 'sometimes',
                 'nullable',
+
             ],'name' => [
                 'required',
             ],

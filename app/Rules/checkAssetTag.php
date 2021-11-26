@@ -13,12 +13,13 @@ class checkAssetTag implements Rule
 
     public function __construct($location)
     {
-        dd($location);
+
         if(is_int($location)){
             $this->location = $location;
         }else{
-            $locations= Location::where(["name" => $location])->first();
-            $this->locations = $location->id;
+            $locations = Location::whereName($location)->first();
+        
+            $this->locations = $locations->id;
         }
     }
 
