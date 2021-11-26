@@ -55,6 +55,7 @@
                 </form>
                 @endcan
             @endif
+            <button type="button" class="btn btn-grey">Bulk Options</button>
         </div>
     </div>
 
@@ -90,8 +91,8 @@
             different options and locations can created, updated, deleted and filtered</p>
         
         <!-- DataTales Example -->
-        <x-filters.navigation model="Asset" :filter=$filter />
-        <x-filters.filter model="Asset" relations="assets" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories/>
+        <x-filters.navigation model="Asset" :filter="$filter" />
+        <x-filters.filter model="Asset" relations="assets" :filter="$filter" :locations="$locations" :statuses="$statuses" :categories="$categories"/>
         
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -129,8 +130,13 @@
                         @if($assets->count() != 0)
                         @foreach($assets as $asset)
                             <tr>
-                                <td>{{$asset->name}}<br><small
-                                        class="d-none d-md-inline-block">{{ $asset->serial_no ?? 'N/A'}}</small></td>
+                                <td>{{$asset->name}}<br>
+                                    @if($asset->serial_no != 0)
+                                    <small class="d-none d-md-inline-block">
+                                        {{ $asset->serial_no ?? 'N/A'}}
+                                    </small>
+                                    @endif
+                                </td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
                                         <img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name }}<br>{{ $asset->room ?? 'Unknown'}}"/>

@@ -32,6 +32,8 @@ use App\Jobs\AssetsPdf;
 use App\Jobs\AssetPdf;
 use App\Models\Report;
 
+use App\Rules\checkAssetTag;
+
 class AssetController extends Controller {
 
     public function index()
@@ -190,7 +192,7 @@ class AssetController extends Controller {
         {
             $v = array_merge($validate_fieldet, [
                 'name' => 'required',
-                'asset_tag' => 'sometimes|nullable',
+                'asset_tag' => ['sometimes', 'nullable', new checkAssetTag($request['location_id'])],
                 'serial_no' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
