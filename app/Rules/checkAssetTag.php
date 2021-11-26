@@ -18,7 +18,7 @@ class checkAssetTag implements Rule
             $this->location = $location;
         }else{
             $locations = Location::whereName($location)->first();
-        
+        dd($locations);
             $this->locations = $locations->id;
         }
     }
