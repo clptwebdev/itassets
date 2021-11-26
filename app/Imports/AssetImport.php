@@ -46,7 +46,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
     public function withValidator($validator)
     {
-        $validator->after(function($validator) {
+        $validator->before(function($validator) {
             foreach($validator->getData() as $key => $data)
             {
                 if(!$data['asset_tag'] == null){
@@ -54,7 +54,6 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                     $validator->errors()->add($key,'The Asset Tag is already assigned in this location .');
                 }}
             }
-
         });
 
     }
