@@ -4,7 +4,6 @@
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
 @section('content')
-
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
         <div>
@@ -21,7 +20,7 @@
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to assets</a>
                 <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
-                <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-geen shadow-sm">
+                <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-green shadow-sm">
                     <i class="far fa-save fa-sm text-dark-50"></i> Save
                 </a>
             </form>
@@ -34,7 +33,6 @@
         on rows {{ $errorRows}}
 
     </div>
-
     @if(session('danger_message'))
         <div class="alert alert-danger"> {{ session('danger_message')}} </div>
     @endif
@@ -60,6 +58,7 @@
                             <th class="text-center"><small>Status</small></th>
                             <th class="text-center"><small>Purchased Date</small></th>
                             <th class="text-center"><small>Purchased Cost</small></th>
+                            <th class="text-center"><small>Donated</small>/small></th>
                             <th class="text-center"><small>Supplier</small></th>
                             <th class="text-center"><small>Order No</small></th>
                             <th class="text-center"><small>Warranty</small></th>
@@ -76,6 +75,7 @@
                             <th class="text-center"><small>Status</small></th>
                             <th class="text-center"><small>Purchased Date</small></th>
                             <th class="text-center"><small>Purchased Cost</small></th>
+                            <th class="text-center"><small>Donated</small></th>
                             <th class="text-center"><small>Supplier</small></th>
                             <th class="text-center"><small>Order No</small></th>
                             <th class="text-center"><small>Warranty</small></th>

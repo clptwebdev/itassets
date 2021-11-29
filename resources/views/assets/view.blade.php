@@ -41,10 +41,7 @@
                 @endif
             @endif
             @endcan
-            @can('create', \App\Models\Asset::class)
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                class="fas fa-download fa-sm text-dark-50 fa-text-width"></i> Import</a>
-            @endcan
+
             @if($assets->count() > 1)
                 @can('generatePDF', \App\Models\Asset::class)
                 <form class="d-inline-block" action="/exportassets" method="POST">
@@ -55,7 +52,19 @@
                 </form>
                 @endcan
             @endif
-            <button type="button" class="btn btn-grey">Bulk Options</button>
+            <div class="dropdown show d-inline">
+                <a class="btn btn-sm btn-grey dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 Bulk Options
+                </a>
+              
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                    @can('create', \App\Models\Asset::class)
+                    <a id="import" class="dropdown-item"> Import</a>
+                    @endcan
+                    <a class="dropdown-item" href="#">Dispose</a>
+                    <a class="dropdown-item" href="#">Transfer</a>
+                </div>
+              </div>
         </div>
     </div>
 
