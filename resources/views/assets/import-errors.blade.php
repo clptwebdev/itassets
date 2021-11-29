@@ -42,7 +42,6 @@
     @if(session('success_message'))
         <div class="alert alert-success"> {{ session('success_message')}} </div>
     @endif
-{{dd($errorArray)}}
     <section>
         <p class="mb-4">Below are the different Import Failures of all the different assets stored in the management system. Each has
             displays the amount of different assets that are assigned the category. If There are many errors please go back and revise the changes in

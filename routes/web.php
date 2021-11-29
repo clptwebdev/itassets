@@ -58,7 +58,11 @@ Route::group(['middleware' => 'auth'], function() {
             $components = App\Models\Component::all();
             $consumables = App\Models\Consumable::all();
             $miscellaneous = App\Models\Miscellanea::all();
-            $category = App\Models\Category::all();
+            $category = App\Models\Category::withCount('assets')->orderBy('id','desc')->take(5)->get();
+
+            dd($category);
+
+
         } else
         {
             $locations = auth()->user()->locations;
