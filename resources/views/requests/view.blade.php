@@ -27,7 +27,7 @@
     @foreach($requests as $request)
     <div class="card shadow mb-4">
         <div class="card-header">
-            <?php 
+            <?php
                 switch($request->type){
                     case 'transfer':
                         $from = \App\Models\Location::find($request->location_from);
@@ -68,7 +68,7 @@
             <a class="btn btn-sm btn-coral m-1" href="{{ route('request.handle', [$request->id, '2'])}}"><i class="fas fa-times"></i> Reject</a>
             @elseif($request->status == 1)
                 @php($super = \App\Models\User::find($request->super_id))
-                <small class="text-success"><i class="fas fa-check-circle"></i> This was approved by {{ $super->name}} on {{ \Carbon\Carbon::parse($request->updated_at)->format("d/m/Y - H:i:s")}}</small> 
+                <small class="text-success"><i class="fas fa-check-circle"></i> This was approved by {{ $super->name}} on {{ \Carbon\Carbon::parse($request->updated_at)->format("d/m/Y - H:i:s")}}</small>
             @else
                 @php($super = \App\Models\User::find($request->super_id))
                 <small class="text-danger"><i class="fas fa-minus-circle"></i> This was rejected by {{ $super->name}} on {{ \Carbon\Carbon::parse($request->updated_at)->format("d/m/Y - H:i:s")}}</small>
