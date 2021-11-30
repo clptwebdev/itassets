@@ -32,7 +32,7 @@
                         <tr>
                         <tr>
                             <td>{{ $cat->name }}</td>
-                            <td class="text-center">{{$cat->assets->count()}}</td>
+                            <td class="text-center">{{$cat->assets_count}}</td>
                             <td class="text-center">{{$cat->accessories->count()}}</td>
                             <td class="text-center">{{$cat->components->count()}}</td>
                             <td class="text-center">{{$cat->consumables->count()}}</td>

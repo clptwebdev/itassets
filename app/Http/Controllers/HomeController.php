@@ -23,7 +23,7 @@ class HomeController extends Controller
             $components = \App\Models\Component::all();
             $consumables = \App\Models\Consumable::all();
             $miscellaneous = \App\Models\Miscellanea::all();
-            $category = \App\Models\Category::withCount('assets')->orderBy('id', 'asc')->take(6)->get();
+            $category = \App\Models\Category::select('name')->withCount('assets', 'accessories', 'components', 'consumables', 'miscellanea')->orderBy('assets_count', 'DESC')->take(6)->get();
         } else
         {
             $locations = auth()->user()->locations;
