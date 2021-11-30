@@ -48,7 +48,7 @@ class AccessoryController extends Controller {
             $locations = Location::all();
         } else
         {
-            $accessories = auth()->user()->location_accessories()
+            $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'))
                 ->leftJoin('locations', 'locations.id', '=', 'accessories.location_id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
