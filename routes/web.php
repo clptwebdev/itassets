@@ -19,78 +19,10 @@ Route::get('login/microsoft/callback', 'App\Http\Controllers\OfficeLoginControll
 require __DIR__ . '/auth.php';
 
 Route::group(['middleware' => 'auth'], function() {
-    Route::get('/', function() {
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = \App\Models\Location::all();
-            $assets = \App\Models\Asset::all();
-            $transfers = \App\Models\Transfer::all();
-            $archived = \App\Models\Archive::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
-            $assets = auth()->user()->location_assets;
-            $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->get();
-            $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->get();
-        }
 
-        return view('dashboard',
-            [
-                'locations' => $locations,
-                'assets' => $assets,
-                'transfers' => $transfers,
-                'archived' => $archived,
-            ]
-        );
-    })->name('home');
 
-    Route::get('/dashboard', function() {
-        if(auth()->user()->role_id == 1)
-        {
-            //$locations = \App\Models\Location::with('asset', 'accessory', 'components', 'consumable', 'miscellanea', 'photo')->get();
-            //Add ->with('depreciation_value');
-            $assets = \App\Models\Asset::with('location', 'supplier', 'model', 'fields', 'status', 'category', 'model')->get();
-            $transfers = \App\Models\Transfer::count();
-            $archived = \App\Models\Archive::count();
-            $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea', 'accessories')->get();
-            $accessories = \App\Models\Accessory::all();
-            $requests = \App\Models\Requests::whereStatus(0)->count();
-            $components = App\Models\Component::with('supplier', 'location', 'status', 'manufacturer', 'category')->get();
-            $consumables = App\Models\Consumable::all();
-            $miscellaneous = App\Models\Miscellanea::all();
-            $category = App\Models\Category::withCount('assets')->orderBy('id', 'asc')->with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->take(6)->get();
-        } else
-        {
-            //$locations = auth()->user()->locations;
-            $assets = auth()->user()->location_assets;
-            $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->get();
-            $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->get();
-            $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea')->get();
-            $category = App\Models\Category::withCount('assets')->orderBy('id', 'asc')->with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->take(6)->get();
-            $requests = \App\Models\Requests::whereStatus(0)->get();
-            $accessories = auth()->user()->location_accessories;
-            $components = auth()->user()->location_components;
-            $consumables = auth()->user()->location_consumables;
-            $miscellaneous = auth()->user()->location_miscellaneous;
-        }
-
-        return view('dashboard',
-            [
-                'assets' => $assets,
-                'transfers' => $transfers,
-                'archived' => $archived,
-                'statuses' => $statuses,
-                'accessories' => $accessories,
-                'components' => $components,
-                'consumables' => $consumables,
-                'miscellaneous' => $miscellaneous,
-                'category' => $category,
-                'requests' => $requests,
-            ]
-        );
-    })->name('dashboard');
-
-    //Super Admmin
+    Route::get('/dashboard',[\App\Http\Controllers\HomeController::class, "index"])->name('dashboard');
+    Route::get('/',[\App\Http\Controllers\HomeController::class, "index"])->name('home');
 
     //Super Admin or Admin
     Route::group(['middleware' => 'admin.role'], function() {
