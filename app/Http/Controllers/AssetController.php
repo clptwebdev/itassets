@@ -60,7 +60,7 @@ class AssetController extends Controller {
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
-                ->paginate(intval(session('limit')) ?? 25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+                ->paginate(25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
             $locations = auth()->user()->locations;
         }
