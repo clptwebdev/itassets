@@ -52,7 +52,6 @@ Route::group(['middleware' => 'auth'], function() {
             $assets = \App\Models\Asset::with('location', 'supplier', 'model', 'fields', 'status', 'category', 'model')->get();
             $assets->map(function($asset) {
                 $asset['depreciation_value'] = $asset->depreciation_value();
-
                 return $asset;
             });
             $transfers = \App\Models\Transfer::all();
