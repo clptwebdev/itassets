@@ -7,31 +7,26 @@
 @endsection
 
 @section('content')
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
-    @endif
+    <!-- session messages -->
+    <x-handlers.alerts/>
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
     </div>
+
     @if($assets->count() != 0)
         <!-- Asset stats -->
-        <x-admin.asset-info :transfers="$transfers" :archived="$archived" :assets="$assets" :accessories="$accessories"
-                            :components="$components" :consumables="$consumables" :miscellaneous="$miscellaneous"/>
+        <x-admin.asset-info :transfers="$transfers" :archived="$archived" :assets="$assets" :accessories="$accessories" :components="$components" :consumables="$consumables" :miscellaneous="$miscellaneous" :requests="$requests"/>
 
         <!-- Content Row -->
-        <x-piecharts.pie :assets="$assets" :statuses="$statuses"/>
+{{--        <x-piecharts.pie :assets="$assets" :statuses="$statuses"/>--}}
 
         <!-- location stats and block -->
-        {{--<x-locations.locations_all :locations="$locations"/>--}}
+{{--        <x-locations.locations_all :locations="$locations"/>--}}
 
         <!-- Category_status info tables stats -->
-        <x-categories_status_info :statuses="$statuses" :category="$category"/>
+{{--        <x-categories_status_info :statuses="$statuses" :category="$category"/>--}}
     @endif
 @endsection
 

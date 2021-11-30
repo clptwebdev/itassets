@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Depreciation extends Model
 {
     use HasFactory;
-
     protected $fillable = ['name', 'years'];
 
     public function models(){

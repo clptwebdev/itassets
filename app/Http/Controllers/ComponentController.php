@@ -56,7 +56,7 @@ class ComponentController extends Controller {
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'components.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'components.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+                ->paginate(intval(session('limit')) ?? 25, ['components.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
             $locations = auth()->user()->locations;
         }

@@ -56,7 +56,7 @@
                 <a class="btn btn-sm btn-grey dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                  Bulk Options
                 </a>
-              
+
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                     @can('create', \App\Models\Asset::class)
                     <a id="import" class="dropdown-item"> Import</a>
@@ -94,15 +94,15 @@
             $end_value = $limit;
         }
     @endphp
-    
+
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
-        
+
         <!-- DataTales Example -->
         <x-filters.navigation model="Asset" :filter="$filter" />
         <x-filters.filter model="Asset" relations="assets" :filter="$filter" :locations="$locations" :statuses="$statuses" :categories="$categories"/>
-        
+
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive" id="table">
@@ -227,16 +227,16 @@
                                                 <a href="{{ route('assets.edit', $asset->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('transfer', $asset)
-                                                <a  href="#" 
-                                                    class="dropdown-item transferBtn" 
+                                                <a  href="#"
+                                                    class="dropdown-item transferBtn"
                                                     data-model-id="{{$asset->id}}"
                                                     data-location-from="{{$asset->location->name ?? 'Unallocated'}}"
                                                     data-location-id="{{ $asset->location_id }}"
                                                 >Transfer</a>
                                             @endcan
                                             @can('dispose', $asset)
-                                                <a  href="#" 
-                                                    class="dropdown-item disposeBtn" 
+                                                <a  href="#"
+                                                    class="dropdown-item disposeBtn"
                                                     data-model-id="{{$asset->id}}"
                                                     data-model-name="{{$asset->name ?? $asset->model->name ?? $asset->asset_tag ?? 'No name'}}"
                                                 >Dispose</a>
@@ -436,7 +436,7 @@
         </div>
     </div>
 
-    
+
 
 @endsection
 
@@ -507,7 +507,7 @@
                 e.preventDefault();
                 @php session()->flash('import-error', ' Please select a file to be uploaded before continuing!');@endphp
             } else {
-                @php session()->flash('import-error', '');@endphp          
+                @php session()->flash('import-error', '');@endphp
             }
         }); */
     </script>

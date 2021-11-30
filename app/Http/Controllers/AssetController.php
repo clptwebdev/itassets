@@ -63,6 +63,7 @@ class AssetController extends Controller {
                 ->fragment('table');
             $locations = auth()->user()->locations;
         }
+
         $this->clearFilter();
         return view('assets.view', [
             "assets" => $assets,

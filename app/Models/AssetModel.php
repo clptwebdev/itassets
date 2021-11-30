@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class AssetModel extends Model
 {
+
     use HasFactory;
-//    protected $with =['manufacturer','photo','fieldset','depreciation'];
 
     protected $fillable = ['name', 'manufacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'];
 
@@ -40,4 +41,23 @@ class AssetModel extends Model
         return $this->belongsTo(Component::class);
     }
 
-}
+    //works out current assets value
+    public function deprecation_value()
+    {
+        if($this->model()->exists() && $this->model->depreciation()->exists()){
+            $eol = Carbon::parse($this->purchased_date)->addYears($this->model->depreciation->years);
+            if($eol->isPast()){
+                return 0;
+            }else{
+                $age = Carbon::now()->floatDiffInYears($this->purchased_date);
+                $percent = 100 / $this->model->depreciation->years;
+                $percentage = floor($age)*$percent;
+                $dep = $this->purchased_cost * ((100 - $percentage) / 100);
+                return $dep;
+            }
+        }else
+        {
+            return $this->purchased_cost;
+        }
+    }}
+

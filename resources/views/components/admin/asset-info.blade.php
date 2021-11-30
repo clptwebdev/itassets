@@ -3,19 +3,9 @@
     //Assets
     $total = 0; $depreciation = 0;
     foreach($assets as $asset){
-        $total = $total + $asset->purchased_cost;
-        if($asset->model()->exists() && $asset->model->depreciation()->exists()){
-            $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
-            if($eol->isPast()){}else{
-                $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
-                $percent = 100 / $asset->model->depreciation->years;
-                $percentage = floor($age)*$percent;
-                $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
-                $depreciation += $dep;
-            }
-        }else{
-            $depreciation += $asset->purchased_cost;
-        }
+    	$total += $asset->purchased_cost;
+    	$depreciation += $asset->depreciation_value;
+
     }
     $asset_total = $total; $asset_depreciation = $depreciation;
     //Accessories
@@ -203,7 +193,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold  text-uppercase mb-1">
                             New Requests</div>
-                        <div class="h5 mb-0 font-weight-bold ">{{ \App\Models\Requests::whereStatus(0)->count() }}</div>
+                        <div class="h5 mb-0 font-weight-bold ">{{ $requests->count() }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-tasks fa-2x d-md-none d-lg-inline-block"></i>

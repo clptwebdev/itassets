@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transfer extends Model
 {
+
     use HasFactory;
 
     protected $fillable = ['model_type', 'model_id', 'location_from', 'location_to', 'value', 'user_id', 'super_id', 'notes', 'date', 'created_at', 'value'];
@@ -31,5 +32,5 @@ class Transfer extends Model
         return $this->belongsTo(User::class, 'super_id')->with('photo');
     }
 
-    
+
 }
