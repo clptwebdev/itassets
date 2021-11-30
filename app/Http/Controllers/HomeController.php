@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Accessory;
+use App\Models\Asset;
 use App\Models\Component;
 use App\Models\Consumable;
 use App\Models\Miscellanea;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
@@ -24,6 +26,7 @@ class HomeController extends Controller
             $consumables = \App\Models\Consumable::all();
             $miscellaneous = \App\Models\Miscellanea::all();
             $category = \App\Models\Category::select('name')->withCount('assets', 'accessories', 'components', 'consumables', 'miscellanea')->orderBy('assets_count', 'DESC')->take(6)->get();
+            Cache::put('name', $category, 60);
         } else
         {
             $locations = auth()->user()->locations;
@@ -31,7 +34,7 @@ class HomeController extends Controller
             $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->count();
             $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->count();
             $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea')->get();
-            $category = \App\Models\Category::withCount('assets')->orderBy('id', 'asc')->with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->take(6)->get();
+            $category = \App\Models\Category::select('name')->withCount('assets', 'accessories', 'components', 'consumables', 'miscellanea')->orderBy('assets_count', 'DESC')->take(6)->get();
             $requests = \App\Models\Requests::whereStatus(0)->count();
             $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'))->get();
             $components = Component::locationFilter(auth()->user()->locations->pluck('id'))->get();
