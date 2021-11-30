@@ -119,7 +119,7 @@ class Asset extends Model {
     public function depreciation_value()
     {
 
-        if($this->asset_model != null && $this->model()->exists() && $this->model->depreciation()->exists()){
+        if($this->depreciation != null && $this->asset_model != null && $this->model()->exists() && $this->model->depreciation()->exists()){
             $eol = Carbon::parse($this->purchased_date)->addYears($this->model->depreciation->years);
             if($eol->isPast()){
                 return 0;
