@@ -26,7 +26,7 @@
 {{--        <x-locations.locations_all :locations="$locations"/>--}}
 
         <!-- Category_status info tables stats -->
-{{--        <x-categories_status_info :statuses="$statuses" :category="$category"/>--}}
+        <x-categories_status_info :statuses="$statuses" :category="$category"/>
     @endif
 @endsection
 

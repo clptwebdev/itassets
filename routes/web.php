@@ -50,10 +50,7 @@ Route::group(['middleware' => 'auth'], function() {
             $locations = \App\Models\Location::with('asset', 'accessory', 'components', 'consumable', 'miscellanea', 'photo')->get();
             //Add ->with('depreciation_value');
             $assets = \App\Models\Asset::with('location', 'supplier', 'model', 'fields', 'status', 'category')->get();
-            $assets->map(function($asset) {
-                $asset['depreciation_value'] = $asset->depreciation_value();
-                return $asset;
-            });
+
             $transfers = \App\Models\Transfer::all();
             $archived = \App\Models\Archive::all();
             $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea', 'accessories')->get();
