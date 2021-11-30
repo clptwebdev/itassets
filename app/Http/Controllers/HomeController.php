@@ -30,7 +30,7 @@ class HomeController extends Controller
         } else
         {
             $locations = auth()->user()->locations;
-            $assets = auth()->user()->location_assets;
+            $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))->with('location', 'model', 'status')->get();
             $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->count();
             $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->count();
             $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea')->get();
