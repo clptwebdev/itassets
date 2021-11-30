@@ -109,6 +109,6 @@ class Accessory extends Model
 
     }
     public function depreciation_years(){
-        return $this->depreciation->years ?? 0;
+        return $this->depreciation()->years ?? 0;
     }
 }
