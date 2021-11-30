@@ -51,7 +51,7 @@ Route::group(['middleware' => 'auth'], function() {
             //Add ->with('depreciation_value');
             $assets = \App\Models\Asset::with('location', 'supplier', 'model', 'fields', 'status', 'category', 'model')->get();
             $assets->map(function($asset) {
-                $asset['deprecation_value'] = $asset->deprecation_value;
+                $asset['deprecation_value'] = $asset->depreciation_value;
 
                 return $asset;
             });
