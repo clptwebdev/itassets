@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -96,11 +97,11 @@ class Accessory extends Model
 
     public function depreciation_value(){
 
-            $eol = \Carbon\Carbon::parse($this->purchased_date)->addYears($this->depreciation_years());
+            $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation_years());
             if($eol->isPast()){
                 return 0;
             }else{
-                $age = \Carbon\Carbon::now()->floatDiffInYears($this->purchased_date);
+                $age = Carbon::now()->floatDiffInYears($this->purchased_date);
                 $percent = 100 / $this->depreciation_years();
                 $percentage = floor($age)*$percent;
                 $dep = $this->purchased_cost * ((100 - $percentage) / 100);

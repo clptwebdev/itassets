@@ -11,7 +11,7 @@
     $total = 0; $depreciation = 0;
     foreach($accessories as $accessory){
         $total += $accessory->purchased_cost;
-    	$depreciation += $accessory->depreciation_value;
+    	$depreciation += $accessory->depreciation_value();
     }
     $accessory_total = $total; $accessory_depreciation = $depreciation;
 
