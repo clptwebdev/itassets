@@ -49,13 +49,13 @@ Route::group(['middleware' => 'auth'], function() {
         {
             //$locations = \App\Models\Location::with('asset', 'accessory', 'components', 'consumable', 'miscellanea', 'photo')->get();
             //Add ->with('depreciation_value');
-            $assets = \App\Models\Asset::with('location')->get();
+            $assets = \App\Models\Asset::with('location', 'supplier', 'model', 'fields', 'status', 'category', 'model')->get();
             $transfers = \App\Models\Transfer::count();
             $archived = \App\Models\Archive::count();
-            $statuses = \App\Models\Status::all();
+            $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea', 'accessories')->get();
             $accessories = \App\Models\Accessory::all();
             $requests = \App\Models\Requests::whereStatus(0)->count();
-            $components = App\Models\Component::all();
+            $components = App\Models\Component::with('supplier', 'location', 'status', 'manufacturer', 'category')->get();
             $consumables = App\Models\Consumable::all();
             $miscellaneous = App\Models\Miscellanea::all();
             $category = App\Models\Category::withCount('assets')->orderBy('id', 'asc')->with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->take(6)->get();
