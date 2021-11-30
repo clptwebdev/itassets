@@ -5,8 +5,6 @@
     foreach($assets as $asset){
     	$total += $asset->purchased_cost;
     	$depreciation += $asset->depreciation_value;
-
-
     }
     $asset_total = $total; $asset_depreciation = $depreciation;
     //Accessories
