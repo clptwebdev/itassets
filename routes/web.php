@@ -76,7 +76,6 @@ Route::group(['middleware' => 'auth'], function() {
 
         return view('dashboard',
             [
-                'locations' => $locations,
                 'assets' => $assets,
                 'transfers' => $transfers,
                 'archived' => $archived,

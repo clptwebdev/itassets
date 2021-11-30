@@ -10,19 +10,8 @@
     //Accessories
     $total = 0; $depreciation = 0;
     foreach($accessories as $accessory){
-        $total = $total + $accessory->purchased_cost;
-        if($accessory->depreciation()->exists()){
-            $eol = Carbon\Carbon::parse($accessory->purchased_date)->addYears($accessory->depreciation->years);
-            if($eol->isPast()){}else{
-                $age = Carbon\Carbon::now()->floatDiffInYears($accessory->purchased_date);
-                $percent = 100 / $accessory->depreciation->years;
-                $percentage = floor($age)*$percent;
-                $dep = $accessory->purchased_cost * ((100 - $percentage) / 100);
-                $depreciation += $dep;
-            }
-        }else{
-            $depreciation += $accessory->purchased_cost;
-        }
+        $total += $accessory->purchased_cost;
+    	$depreciation += $accessory->depreciation_value();
     }
     $accessory_total = $total; $accessory_depreciation = $depreciation;
 
@@ -192,7 +181,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold  text-uppercase mb-1">
                             New Requests</div>
-                        <div class="h5 mb-0 font-weight-bold ">{{ $requests->count() }}</div>
+                        <div class="h5 mb-0 font-weight-bold ">{{ $requests ?? '0' }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-tasks fa-2x d-md-none d-lg-inline-block"></i>
@@ -209,7 +198,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-uppercase mb-1">
                             Transfers</div>
-                        <div class="h5 mb-0 font-weight-bold">{{$transfers->count() ?? '-'}}</div>
+                        <div class="h5 mb-0 font-weight-bold">{{$transfers ?? '0'}}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-exchange-alt fa-2x d-md-none d-lg-inline-block"></i>
@@ -228,7 +217,7 @@
                         <div class="text-xs font-weight-bold text-uppercase mb-1">
                             Archived</div>
                         <div class="h5 mb-0 font-weight-bold ">
-                        {{ $archived->count() ?? '-'}}
+                        {{ $archived ?? '0'}}
                         </div>
                     </div>
                     <div class="col-auto">

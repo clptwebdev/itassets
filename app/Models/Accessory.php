@@ -93,4 +93,22 @@ class Accessory extends Model
         return $query->where('accessories.name', 'LIKE', "%{$search}%")
                     ->orWhere('accessories.serial_no', 'LIKE', "%{$search}%");
     }
+
+    public function depreciation_value(){
+        $total = $total + $this->purchased_cost;
+        if($this->depreciation()->exists()){
+            $eol = Carbon\Carbon::parse($this->purchased_date)->addYears($this->depreciation->years);
+            if($eol->isPast()){
+                return 0;
+            }else{
+                $age = Carbon\Carbon::now()->floatDiffInYears($this->purchased_date);
+                $percent = 100 / $this->depreciation->years;
+                $percentage = floor($age)*$percent;
+                $dep = $this->purchased_cost * ((100 - $percentage) / 100);
+                return $dep;
+            }
+        }else{
+            return $this->purchased_cost;
+        }
+    }
 }
