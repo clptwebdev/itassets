@@ -60,7 +60,7 @@ class MiscellaneaController extends Controller
             $locations = Location::all();
         } else
         {
-            $miscellaneous = auth()->user()->location_accessories()
+            $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'))
                 ->leftJoin('locations', 'locations.id', '=', 'miscellaneas.location_id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'miscellaneas.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'miscellaneas.supplier_id')

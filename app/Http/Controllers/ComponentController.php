@@ -51,7 +51,7 @@ class ComponentController extends Controller {
             $locations = Location::all();
         } else
         {
-            $components = auth()->user()->location_accessories()
+            $components = Component::locationFilter(auth()->user()->locations->pluck('id'))
                 ->leftJoin('locations', 'locations.id', '=', 'components.location_id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'components.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'components.supplier_id')
