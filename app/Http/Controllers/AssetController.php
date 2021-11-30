@@ -65,7 +65,7 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
         $assets->map(function($asset) {
-            $asset['deprecation_value'] = $asset->depreciation_value;
+            $asset['depreciation_value'] = $asset->depreciation_value();
 
             return $asset;
         });

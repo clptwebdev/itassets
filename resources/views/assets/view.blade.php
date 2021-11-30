@@ -139,7 +139,6 @@
                         @if($assets->count() != 0)
                         @foreach($assets as $asset)
                             <tr>
-                                {{dd($asset)}}
                                 <td>{{$asset->name}}<br>
                                     @if($asset->serial_no != 0)
                                     <small class="d-none d-md-inline-block">
