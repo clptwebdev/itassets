@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -115,5 +116,23 @@ class Asset extends Model {
     public function logs(){
         return $this->morphMany(Log::class, 'loggable');
     }
+    public function depreciation_value()
+    {
 
+        if($this->model()->exists() && $this->model->depreciation()->exists()){
+            $eol = Carbon::parse($this->purchased_date)->addYears($this->model->depreciation->years);
+            if($eol->isPast()){
+                return 0;
+            }else{
+                $age = Carbon::now()->floatDiffInYears($this->purchased_date);
+                $percent = 100 / $this->model->depreciation->years;
+                $percentage = floor($age)*$percent;
+                $dep = $this->purchased_cost * ((100 - $percentage) / 100);
+                return $dep;
+            }
+        }else
+        {
+            return $this->purchased_cost;
+        }
+    }
 }

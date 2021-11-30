@@ -64,11 +64,12 @@ class AssetController extends Controller {
                 ->fragment('table');
             $locations = auth()->user()->locations;
         }
+<<<<<<< HEAD
         $assets->map(function($asset) {
             $asset['depreciation_value'] = $asset->depreciation_value;
+=======
+>>>>>>> 2249010374b5e818cb5b472cf0cfe5820028f488
 
-            return $asset;
-        });
         $this->clearFilter();
         return view('assets.view', [
             "assets" => $assets,
