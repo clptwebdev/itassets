@@ -17,7 +17,7 @@
 
     @if($assets->count() != 0)
         <!-- Asset stats -->
-        <x-admin.asset-info :transfers="$transfers" :archived="$archived" :assets="$assets" :accessories="$accessories" :components="$components" :consumables="$consumables" :miscellaneous="$miscellaneous" :requests="$requests"/>
+        <x-admin.asset-info :transfers=$transfers :archived=$archived :assets=$assets :accessories=$accessories :components=$components :consumables=$consumables :miscellaneous=$miscellaneous :requests=$requests />
 
         <!-- Content Row -->
 {{--        <x-piecharts.pie :assets="$assets" :statuses="$statuses"/>--}}
