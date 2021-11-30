@@ -95,8 +95,8 @@ class Accessory extends Model
     }
 
     public function depreciation_value(){
-        if($this->depreciation != null && $this->depreciation()->exists()){
-            $eol = \Carbon\Carbon::parse($this->purchased_date)->addYears($this->depreciation->years);
+
+            $eol = \Carbon\Carbon::parse($this->purchased_date)->addYears($this->depreciation_years());
             if($eol->isPast()){
                 return 0;
             }else{
@@ -106,8 +106,9 @@ class Accessory extends Model
                 $dep = $this->purchased_cost * ((100 - $percentage) / 100);
                 return $dep;
             }
-        }else{
-            return $this->purchased_cost;
-        }
+
+    }
+    public function depreciation_years(){
+        return $this->depreciation->years ?? 0;
     }
 }
