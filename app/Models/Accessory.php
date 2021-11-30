@@ -101,7 +101,7 @@ class Accessory extends Model
                 return 0;
             }else{
                 $age = \Carbon\Carbon::now()->floatDiffInYears($this->purchased_date);
-                $percent = 100 / $this->depreciation->years;
+                $percent = 100 / $this->depreciation_years();
                 $percentage = floor($age)*$percent;
                 $dep = $this->purchased_cost * ((100 - $percentage) / 100);
                 return $dep;
