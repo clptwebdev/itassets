@@ -110,6 +110,6 @@ dd($this->depreciation_years());
 
     }
     public function depreciation_years(){
-        return $this->depreciation()->years ?? 2;
+        return $this->depreciation->years ?? 0;
     }
 }
