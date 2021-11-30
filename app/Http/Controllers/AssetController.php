@@ -54,7 +54,7 @@ class AssetController extends Controller {
 
             $locations = Location::all();
         }else{
-            return dd(auth()->user()->locations()->pluck('id'));
+            return dd(auth()->user()->locations->pluck('id'));
             $assets = Asset::locationFilter(auth()->user()->locations)
                 ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
                 ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
