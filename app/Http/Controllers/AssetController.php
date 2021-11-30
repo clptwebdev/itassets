@@ -54,7 +54,8 @@ class AssetController extends Controller {
 
             $locations = Location::all();
         }else{
-            $assets = auth()->user()->location_assets()->join('locations', 'locations.id', '=', 'assets.location_id')
+            $assets = auth()->user()->location_assets()
+                ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
                 ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
