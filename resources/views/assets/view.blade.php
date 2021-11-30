@@ -160,22 +160,7 @@
                                     data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
                                 <td class="text-center  d-none d-xl-table-cell">
                                     £{{ $asset->purchased_cost }}
-                                    @if($asset->model()->exists() && $asset->model->depreciation()->exists())
-                                        <br>
-                                        @php
-                                            $eol = Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
-                                            if($eol->isPast()){
-                                                $dep = 0;
-                                            }else{
-
-                                                $age = Carbon\Carbon::now()->floatDiffInYears($asset->purchased_date);
-                                                $percent = 100 / $asset->model->depreciation->years;
-                                                $percentage = floor($age)*$percent;
-                                                $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
-                                            }
-                                        @endphp
-                                        <small>(*£{{ number_format($dep, 2)}})</small>
-                                    @endif
+                                    <small>(*£{{ number_format($asset->depreciation_value, 2)}})</small>
                                 </td>
                                 <td class="text-center d-none d-xl-table-cell">{{$asset->supplier->name ?? "N/A"}}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
