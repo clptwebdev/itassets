@@ -68,13 +68,14 @@ class SettingsController extends Controller {
             if($request->location ){
                 $accessories->locationFilter($request->location);
             }
+            $accessory = $accessories->get();
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'export']));
         }
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport($accessories), "/public/csv/accessories-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport($accessory), "/public/csv/accessories-ex-{$date}.csv");
         $url = asset("storage/csv/accessories-ex-{$date}.csv");
 
         return redirect(route('settings.view'))
