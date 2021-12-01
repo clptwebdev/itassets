@@ -9,6 +9,11 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class miscellaneousExport implements FromArray, WithHeadings
 {
+    private $miscellaneous;
+    public function __construct($miscellaneous)
+    {
+        $this->miscellaneous = $miscellaneous;
+    }
     public function headings(): array
     {
         return [
@@ -28,9 +33,9 @@ class miscellaneousExport implements FromArray, WithHeadings
 
     public function array(): array
     {
-        $miscellaneous = \App\Models\Miscellanea::all();
+
         $object = [];
-        foreach($miscellaneous as $miscellanea)
+        foreach($this->miscellaneous as $miscellanea)
         {
             $array = [];
             $array["name"] = $miscellanea->name;

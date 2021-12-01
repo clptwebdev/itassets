@@ -56,6 +56,9 @@ class Asset extends Model {
     public function scopeLocationFilter($query, $locations){
         return $query->whereIn('location_id', $locations);
     }
+    public function scopeAssetModelFilter($query, $assetModel){
+        return $query->whereIn('asset_model', $assetModel);
+    }
 
     public function scopeSearchFilter($query, $search){
         return $query->where('assets.name', 'LIKE', "%{$search}%")

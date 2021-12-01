@@ -424,9 +424,9 @@ class ComponentController extends Controller {
         {
             return redirect(route('errors.forbidden', ['area', 'Components', 'export']));
         }
-
+$components =Component::all();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new ComponentsExport, "/public/csv/components-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new ComponentsExport($components), "/public/csv/components-ex-{$date}.csv");
         $url = asset("storage/csv/components-ex-{$date}.csv");
 
         return redirect(route('components.index'))
