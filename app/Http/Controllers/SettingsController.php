@@ -57,7 +57,6 @@ class SettingsController extends Controller {
 
     public function accessories(Request $request)
     {
-
         $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'));
             if($request->status ){
              $accessories->statusFilter($request->status);
@@ -68,7 +67,8 @@ class SettingsController extends Controller {
             if($request->location ){
                 $accessories->locationFilter($request->location);
             }
-            $accessory = $accessories->get();
+            $accessory = $accessories->with('supplier', 'location')->get();
+
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'export']));
@@ -81,7 +81,6 @@ class SettingsController extends Controller {
         return redirect(route('settings.view'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
-
     }
 
     public function assets()
