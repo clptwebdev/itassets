@@ -17,7 +17,9 @@
     <section>
         <p class="mb-4">Below are the different Settings for the management system. Each has
             different options.</p>
+        <x-handlers.alerts/>
         <a data-toggle="modal" data-target="#exportModal" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"> Exports Items Here</a>
+
     </section>
 @endsection
 @section('modals')

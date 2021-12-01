@@ -30,7 +30,7 @@
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active p-4" id="all" role="tabpanel" aria-labelledby="all-tab">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="{{route("settings.accessories")}}" method="POST" enctype="multipart/form-data">
 {{--                        accessories--}}
                         @csrf
                         <div class="row m-auto d-flex justify-content-start align-items-center">
@@ -38,7 +38,7 @@
 
                         @foreach($statuses as $status)
                                 <div class="col-2">
-                                    <input type="checkbox" value="{{ $status->id }}" name="category[]"
+                                    <input type="checkbox" value="{{ $status->id }}" name="status[]"
                                            id="status{{$status->name}}">
                                     <label for="status{{$status->name}}">{{ $status->name }}</label>
                                 </div>
@@ -64,7 +64,7 @@
                                 <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">location</h3>
                                 @foreach($locations as $location)
                                 <div class="col-2">
-                                    <input type="checkbox" value="{{ $location->id }}" name="category[]"
+                                    <input type="checkbox" value="{{ $location->id }}" name="location[]"
                                            id="location{{$location->name}}">
                                     <label for="location{{$location->name}}">{{ $location->name }}</label>
                                 </div>
@@ -80,7 +80,7 @@
                     </form>
                 </div>
                 <div class="tab-pane fade p-4" id="year" role="tabpanel" aria-labelledby="year-tab">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="{{route("settings.assets")}}" method="POST" enctype="multipart/form-data">
 {{--                        assets--}}
                         @csrf
                         <div class="row m-auto d-flex justify-content-start align-items-center">
@@ -88,7 +88,7 @@
 
                             @foreach($assetModel as $model)
                                 <div class="col-2">
-                                    <input type="checkbox" value="{{ $model->id }}" name="category[]"
+                                    <input type="checkbox" value="{{ $model->id }}" name="model[]"
                                            id="model{{$model->name}}">
                                     <label for="model{{$model->name}}">{{ $model->name }}</label>
                                 </div>
@@ -101,7 +101,7 @@
 
                             @foreach($statuses as $status)
                                 <div class="col-2">
-                                    <input type="checkbox" value="{{ $status->id }}" name="category[]"
+                                    <input type="checkbox" value="{{ $status->id }}" name="status[]"
                                            id="status{{$status->name}}">
                                     <label for="status{{$status->name}}">{{ $status->name }}</label>
                                 </div>
@@ -127,7 +127,7 @@
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">location</h3>
                             @foreach($locations as $location)
                                 <div class="col-2">
-                                    <input type="checkbox" value="{{ $location->id }}" name="category[]"
+                                    <input type="checkbox" value="{{ $location->id }}" name="location[]"
                                            id="location{{$location->name}}">
                                     <label for="location{{$location->name}}">{{ $location->name }}</label>
                                 </div>
@@ -143,7 +143,7 @@
                     </form>
                 </div>
                 <div class="tab-pane fade p-4" id="form" role="tabpanel" aria-labelledby="form-tab">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="{{route("settings.components")}}" method="POST" enctype="multipart/form-data">
 {{--                        components--}}
                         @csrf
                         <div class="row m-auto d-flex justify-content-start align-items-center">
@@ -151,7 +151,7 @@
 
                             @foreach($statuses as $status)
                                 <div class="col-2">
-                                    <input type="checkbox" value="{{ $status->id }}" name="category[]"
+                                    <input type="checkbox" value="{{ $status->id }}" name="status[]"
                                            id="status{{$status->name}}">
                                     <label for="status{{$status->name}}">{{ $status->name }}</label>
                                 </div>
@@ -177,7 +177,7 @@
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">location</h3>
                             @foreach($locations as $location)
                                 <div class="col-2">
-                                    <input type="checkbox" value="{{ $location->id }}" name="category[]"
+                                    <input type="checkbox" value="{{ $location->id }}" name="location[]"
                                            id="location{{$location->name}}">
                                     <label for="location{{$location->name}}">{{ $location->name }}</label>
                                 </div>
@@ -193,7 +193,7 @@
                     </form>
                 </div>
                 <div class="tab-pane fade p-4" id="teacher" role="tabpanel" aria-labelledby="teachers-tab">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="{{route("settings.miscellaneous")}}" method="POST" enctype="multipart/form-data">
 {{--                        misc--}}
                         @csrf
                         <div class="row m-auto d-flex justify-content-start align-items-center">
@@ -201,7 +201,7 @@
 
                             @foreach($statuses as $status)
                                 <div class="col-2">
-                                    <input type="checkbox" value="{{ $status->id }}" name="category[]"
+                                    <input type="checkbox" value="{{ $status->id }}" name="status[]"
                                            id="status{{$status->name}}">
                                     <label for="status{{$status->name}}">{{ $status->name }}</label>
                                 </div>
@@ -227,7 +227,7 @@
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">location</h3>
                             @foreach($locations as $location)
                                 <div class="col-2">
-                                    <input type="checkbox" value="{{ $location->id }}" name="category[]"
+                                    <input type="checkbox" value="{{ $location->id }}" name="location[]"
                                            id="location{{$location->name}}">
                                     <label for="location{{$location->name}}">{{ $location->name }}</label>
                                 </div>

@@ -204,6 +204,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::Post("miscellaneous/export-import-errors", [\App\Http\Controllers\MiscellaneaController::class, "importErrors"])->name("miscellaneaexport.import");
 //settings page
     Route::get("/settings", [\App\Http\Controllers\SettingsController::class, "index"])->name("settings.view");
+    Route::Post("/settings/accessories/export", [\App\Http\Controllers\SettingsController::class, "accessories"])->name("settings.accessories");
+    Route::Post("/settings/assets/export", [\App\Http\Controllers\SettingsController::class, "assets"])->name("settings.assets");
+    Route::Post("/settings/components/export", [\App\Http\Controllers\SettingsController::class, "components"])->name("settings.components");
+    Route::Post("/settings/miscellaneous/export", [\App\Http\Controllers\SettingsController::class, "miscellaneous"])->name("settings.miscellaneous");
 
 //Javascript pie charts for dashboard
     Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');

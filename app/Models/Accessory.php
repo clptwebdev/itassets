@@ -94,6 +94,20 @@ class Accessory extends Model
         return $query->where('accessories.name', 'LIKE', "%{$search}%")
                     ->orWhere('accessories.serial_no', 'LIKE', "%{$search}%");
     }
+    public function scopeExportFilterStatus($query, $status,$category , $location){
+        $pivot = $this->category()->getTable();
+    return    $query->whereHas('category', function ($q) use ($category, $pivot) {
+            $q->whereIn("{$pivot}.category_id", $category);
+        })->orWhereIn('status_id', $status)
+            ->orWhereIn('location_id', $location);
+
+    }
+//    public function scopeTestExport($query, array $filters){
+//        $query->when($filters['status'] ?? false , fn($query ,$status_id) =>
+//        $query->where('accessories.status_id','like','%' . $status_id. '%')
+//          );
+//
+//    }
 
     public function depreciation_value(){
             $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation_years());

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\accessoryExport;
 use App\Models\Accessory;
 use App\Models\Asset;
 use App\Models\AssetModel;
@@ -54,16 +55,46 @@ class SettingsController extends Controller {
         ]);
     }
 
-    public function accessories(){
+    public function accessories(Request $request)
+    {
+
+        $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'));
+            if($request->status ){
+             $accessories->statusFilter($request->status);
+            }
+            if($request->category ){
+                $accessories->categoryFilter($request->category);
+            }
+            if($request->location ){
+                $accessories->locationFilter($request->location);
+            }
+        if(auth()->user()->cant('viewAll', Accessory::class))
+        {
+            return redirect(route('errors.forbidden', ['area', 'Accessory', 'export']));
+        }
+
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport, "/public/csv/accessories-ex-{$date}.csv");
+        $url = asset("storage/csv/accessories-ex-{$date}.csv");
+
+        return redirect(route('settings.view'))
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
 
     }
-    public function assets(){
+
+    public function assets()
+    {
 
     }
-    public function components(){
+
+    public function components()
+    {
 
     }
-    public function miscellaneous(){
+
+    public function miscellaneous()
+    {
 
     }
 
