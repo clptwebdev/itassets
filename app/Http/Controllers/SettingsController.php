@@ -74,7 +74,7 @@ class SettingsController extends Controller {
         }
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport, "/public/csv/accessories-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport($accessories), "/public/csv/accessories-ex-{$date}.csv");
         $url = asset("storage/csv/accessories-ex-{$date}.csv");
 
         return redirect(route('settings.view'))
