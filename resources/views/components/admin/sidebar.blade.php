@@ -205,6 +205,7 @@
             <a class="collapse-item" href="{{ route('fieldsets.index')}}">Fieldsets</a>
             <a class="collapse-item" href="{{ route('fields.index')}}">Custom Fields</a>
             <a class="collapse-item" href="{{ route('status.index')}}">Status Fields</a>
+            <a id="export" class="collapse-item " href="{{route("settings.view")}}"> Settings page </a>
 
             @if(auth()->user()->role_id == 1)    <a class="collapse-item" href="/databasebackups">Database
                 Backups</a>@endif
@@ -224,4 +225,5 @@
     </div>
 
 </ul>
+
 <!-- End of Sidebar -->

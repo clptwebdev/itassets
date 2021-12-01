@@ -202,6 +202,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::Post("consumables/export-import-errors", [\App\Http\Controllers\ConsumableController::class, "importErrors"])->name("consumableexport.import");
     Route::Post("assets/export-import-errors", [\App\Http\Controllers\AssetController::class, "importErrors"])->name("export.import");
     Route::Post("miscellaneous/export-import-errors", [\App\Http\Controllers\MiscellaneaController::class, "importErrors"])->name("miscellaneaexport.import");
+//settings page
+    Route::get("/settings", [\App\Http\Controllers\SettingsController::class, "index"])->name("settings.view");
 
 //Javascript pie charts for dashboard
     Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');
