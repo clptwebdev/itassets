@@ -13,7 +13,6 @@ class checkAssetTag implements Rule
 
     public function __construct($location)
     {
-        return dd($location);
         if(is_int($location)){
             $this->location = $location;
         }else{
