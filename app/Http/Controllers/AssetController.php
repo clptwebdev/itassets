@@ -741,7 +741,7 @@ class AssetController extends Controller {
         $assets = Asset::locationFilter($locations);
         $assets->statusFilter($array);
 
-        $assetss->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
+        $assets->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
                 ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
