@@ -741,8 +741,16 @@ class AssetController extends Controller {
         $assets = Asset::locationFilter($locations);
         $assets->statusFilter($array);
 
+        $assetss->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
+                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+                ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
+                ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
+                ->paginate(intval(session('limit')) ?? 25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+                ->fragment('table');
+
         return view('assets.view', [
-            "assets" => $assets->get(),
+            "assets" => $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
