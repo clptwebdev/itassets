@@ -612,8 +612,6 @@ class AssetController extends Controller {
 
             if(! empty($request->search)){
                 session(['search' => $request->search]);
-            }else{
-                $this->clearFilter();
             }
 
             if(! empty($request->limit)){
