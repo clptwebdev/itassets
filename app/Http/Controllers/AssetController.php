@@ -764,9 +764,9 @@ class AssetController extends Controller {
 
         $filter = 1;
         $locations = auth()->user()->locations->pluck('id');
-        session(['locations' => $locations]);
-        $assets = Asset::locationFilter($locations);
-        
+        session(['locations' => $locations->toArray()]);
+        $assets = Asset::locationFilter($locations->toArray());
+
         $assets->locationFilter([$location->id]);
        
         $assets ->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
