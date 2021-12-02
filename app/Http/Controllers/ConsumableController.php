@@ -232,9 +232,9 @@ class ConsumableController extends Controller
         if (auth()->user()->cant('export', Consumable::class)) {
             return redirect(route('errors.forbidden', ['area', 'consumables', 'export']));
         }
-
+        $consumables = Consumable::all();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new consumableExport, "/public/csv/consumables-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new consumableExport($consumables), "/public/csv/consumables-ex-{$date}.csv");
         $url = asset("storage/csv/consumables-ex-{$date}.csv");
         return redirect(route('consumables.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
@@ -363,13 +363,13 @@ class ConsumableController extends Controller
         }
 
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'consumables-'.$date;
 
         dispatch(new ConsumablesPdf($consumables, $user, $path))->afterResponse();
         //Create Report
-        
+
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
 
@@ -384,7 +384,7 @@ class ConsumableController extends Controller
             return redirect(route('errors.forbidden', ['area', 'consumables', 'export pdf']));
         }
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'consumable-'.$consumable->id.'-'.$date;
 

@@ -9,6 +9,11 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ComponentsExport implements FromArray, WithHeadings
 {
+    private $components;
+    public function __construct($components)
+    {
+        $this->components = $components;
+    }
     public function headings(): array
     {
         return [
@@ -28,13 +33,9 @@ class ComponentsExport implements FromArray, WithHeadings
 
     public function array(): array
     {
-        if(auth()->user()->role_id == 1){
-            $components = Component::all();
-        }else{
-            $components = auth()->user()->location_components;
-        } 
+
         $object = [];
-        foreach($components as $component)
+        foreach($this->components as $component)
         {
             $array = [];
             $array["name"] = $component->name;

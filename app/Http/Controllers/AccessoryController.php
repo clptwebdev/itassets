@@ -428,9 +428,9 @@ class AccessoryController extends Controller {
         {
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'export']));
         }
-
+$accessory = Accessory::locationFilter(auth()->user()->locations->pluck('id'))->get();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport, "/public/csv/accessories-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport($accessory), "/public/csv/accessories-ex-{$date}.csv");
         $url = asset("storage/csv/accessories-ex-{$date}.csv");
 
         return redirect(route('accessories.index'))

@@ -56,6 +56,9 @@ class Asset extends Model {
     public function scopeLocationFilter($query, $locations){
         return $query->whereIn('location_id', $locations);
     }
+    public function scopeAssetModelFilter($query, $assetModel){
+        return $query->whereIn('asset_model', $assetModel);
+    }
 
     public function scopeSearchFilter($query, $search){
         return $query->where('assets.name', 'LIKE', "%{$search}%")
@@ -105,7 +108,7 @@ class Asset extends Model {
         $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
     }
     public function scopeAssetFilter($query , array $filters){
-        $query->when($filters['asset_tag'] ?? false , fn($query ,$asset_tag) =>
+            $query->when($filters['asset_tag'] ?? false , fn($query ,$asset_tag) =>
             $query->where('asset_tag','like','%' . $asset_tag. '%')
                 ->orWhere('name','like','%' . $asset_tag. '%')
                 ->orWhere('serial_no','like','%' . $asset_tag. '%')

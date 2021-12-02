@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -93,15 +94,28 @@ class Accessory extends Model
         return $query->where('accessories.name', 'LIKE', "%{$search}%")
                     ->orWhere('accessories.serial_no', 'LIKE', "%{$search}%");
     }
+    public function scopeExportFilterStatus($query, $status,$category , $location){
+        $pivot = $this->category()->getTable();
+    return    $query->whereHas('category', function ($q) use ($category, $pivot) {
+            $q->whereIn("{$pivot}.category_id", $category);
+        })->orWhereIn('status_id', $status)
+            ->orWhereIn('location_id', $location);
+
+    }
+//    public function scopeTestExport($query, array $filters){
+//        $query->when($filters['status'] ?? false , fn($query ,$status_id) =>
+//        $query->where('accessories.status_id','like','%' . $status_id. '%')
+//          );
+//
+//    }
 
     public function depreciation_value(){
-
-            $eol = \Carbon\Carbon::parse($this->purchased_date)->addYears($this->depreciation_years());
+            $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation_years());
             if($eol->isPast()){
                 return 0;
             }else{
-                $age = \Carbon\Carbon::now()->floatDiffInYears($this->purchased_date);
-                $percent = 100 / $this->depreciation->years;
+                $age = Carbon::now()->floatDiffInYears($this->purchased_date);
+                $percent = 100 / $this->depreciation_years();
                 $percentage = floor($age)*$percent;
                 $dep = $this->purchased_cost * ((100 - $percentage) / 100);
                 return $dep;
@@ -109,6 +123,6 @@ class Accessory extends Model
 
     }
     public function depreciation_years(){
-        return $this->depreciation()->years ?? 0;
+        return $this->depreciation->years ?? 0;
     }
 }

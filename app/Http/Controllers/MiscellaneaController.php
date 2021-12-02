@@ -398,8 +398,9 @@ class MiscellaneaController extends Controller
         if (auth()->user()->cant('export', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export']));
         }
+        $miscellaneous = Miscellanea::all();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport, "/public/csv/miscellaneous-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport($miscellaneous), "/public/csv/miscellaneous-ex-{$date}.csv");
         $url = asset("storage/csv/miscellaneous-ex-{$date}.csv");
         return redirect(route('miscellaneous.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")

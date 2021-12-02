@@ -78,6 +78,7 @@
             $('#loadingModal').modal('show')
         });
     </script>
+
     @yield('js')
 
 </body>

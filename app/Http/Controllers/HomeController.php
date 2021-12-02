@@ -6,6 +6,7 @@ use App\Models\Accessory;
 use App\Models\Asset;
 use App\Models\Component;
 use App\Models\Consumable;
+use App\Models\Location;
 use App\Models\Miscellanea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -29,7 +30,7 @@ class HomeController extends Controller
             Cache::put('name', $category, 60);
         } else
         {
-            $locations = auth()->user()->locations;
+            $locations = Location::locationFilter(auth()->user()->locations->pluck('id'))->get();;
             $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))->with('location', 'model', 'status')->get();
             $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->count();
             $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->count();
