@@ -749,8 +749,9 @@ class AssetController extends Controller {
                 ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
+        return dd($assets->get());
         return view('assets.view', [
-            "assets" => $assets->get(),
+            "assets" => $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
