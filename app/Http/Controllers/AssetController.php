@@ -742,10 +742,10 @@ class AssetController extends Controller {
 
         $assets->statusFilter($array);
 
-        $assets->leftJoin('locations', 'locations.id', '=', 'assets.location_id');
-        return dd($assets->first());
-               /*  ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+        $assets ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
+                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id');
+                return dd($assets->first());
+                /* ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
