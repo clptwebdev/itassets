@@ -731,8 +731,12 @@ class AssetController extends Controller {
 
     public function status(Status $status)
     {
+        $filter = 1;
         $array = [];
         $array[] = $status->id;
+        
+        session(['status' => $array]);
+        
         $locations = auth()->user()->locations->pluck('id');
         $assets = Asset::locationFilter($locations);
         $assets->statusFilter($array);
@@ -743,6 +747,7 @@ class AssetController extends Controller {
             'statuses' => Status::all(),
             'categories' => Category::all(),
             "locations" => auth()->user()->locations,
+            "filter" => $filter,
         ]);
     }
 
