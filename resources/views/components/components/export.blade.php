@@ -137,7 +137,7 @@
                         <div class="d-flex justify-content-center align-items-center g-3 m-auto mt-4">
                             <button type="submit" class="btn btn-primary m-2"
                                     type="button">
-                                Get Accessories
+                                Get Assets
                             </button>
                         </div>
                     </form>
@@ -187,7 +187,7 @@
                         <div class="d-flex justify-content-center align-items-center g-3 m-auto mt-4">
                             <button type="submit" class="btn btn-primary m-2"
                                     type="button">
-                                Get Accessories
+                                Get Components
                             </button>
                         </div>
                     </form>
@@ -237,7 +237,7 @@
                         <div class="d-flex justify-content-center align-items-center g-3 m-auto mt-4">
                             <button type="submit" class="btn btn-primary m-2"
                                     type="button">
-                                Get Accessories
+                                Get Miscellaneous
                             </button>
                         </div>
                     </form>
