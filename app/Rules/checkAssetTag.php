@@ -13,9 +13,8 @@ class checkAssetTag implements Rule
 
     public function __construct($location)
     {
-
-        if(is_int($location)){
-            $this->location = $location;
+        if(is_int(intval($location))){
+            $this->location = intval($location);
         }else{
             $locations = Location::whereName($location)->first();
 
