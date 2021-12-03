@@ -38,34 +38,38 @@ class AssetController extends Controller {
 
     public function index()
     {
-        if (auth()->user()->cant('viewAll', Asset::class)) {
+        if(auth()->user()->cant('viewAll', Asset::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Assets', 'view']));
         }
 
-        if(auth()->user()->role_id == 1){
-            $assets = Asset::with('supplier', 'location','model')
+        if(auth()->user()->role_id == 1)
+        {
+            $assets = Asset::with('supplier', 'location', 'model')
                 ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
                 ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
+                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
 
             $locations = Location::all();
-        }else{
+        } else
+        {
             $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))
                 ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
                 ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date' , session('direction') ?? 'asc')
+                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->paginate(25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
             $locations = auth()->user()->locations;
         }
 
         $this->clearFilter();
+
         return view('assets.view', [
             "assets" => $assets,
             'suppliers' => Supplier::all(),
@@ -78,15 +82,19 @@ class AssetController extends Controller {
 
     public function create()
     {
-        if (auth()->user()->cant('create', Asset::class)) {
+        if(auth()->user()->cant('create', Asset::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'create']));
         }
 
-        if(auth()->user()->role_id == 1){
+        if(auth()->user()->role_id == 1)
+        {
             $locations = Location::all();
-        }else{
+        } else
+        {
             $locations = auth()->user()->locations;
         }
+
         return view('assets.create', [
             "locations" => $locations,
             "manufacturers" => Manufacturer::all(),
@@ -100,10 +108,10 @@ class AssetController extends Controller {
     public function search()
     {
 
-       return view("assets.show",[
-          'asset'=> Asset::latest()->AssetFilter(request()->only(['asset_tag']))->firstOrFail(),
-           'locations' => Location::all(),
-       ]);
+        return view("assets.show", [
+            'asset' => Asset::latest()->AssetFilter(request()->only(['asset_tag']))->firstOrFail(),
+            'locations' => Location::all(),
+        ]);
     }
 
     public function newComment(Request $request)
@@ -114,14 +122,16 @@ class AssetController extends Controller {
         ]);
 
         $asset = Asset::find($request->asset_id);
-        $asset->comment()->create(['title'=>$request->title, 'comment'=>$request->comment, 'user_id'=>auth()->user()->id]);
+        $asset->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
         session()->flash('success_message', $request->title . ' has been created successfully');
+
         return redirect(route('assets.show', $asset->id));
     }
 
     public function store(Request $request)
     {
-        if (auth()->user()->cant('create', Asset::class)) {
+        if(auth()->user()->cant('create', Asset::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'create']));
         }
 
@@ -141,7 +151,8 @@ class AssetController extends Controller {
                     if($field->required == 1)
                     {
                         $val_string .= "required";
-                    }else{
+                    } else
+                    {
                         $val_string .= "nullable";
                     }
 
@@ -183,7 +194,8 @@ class AssetController extends Controller {
                     {
                         $values = $request->$name;
                     }
-                    if($values != null){
+                    if($values != null)
+                    {
                         $array[$field->id] = ['value' => $values];
                     }
                 }
@@ -218,10 +230,12 @@ class AssetController extends Controller {
             'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'room', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id]));
 
-        if(!empty($array)){
+        if(! empty($array))
+        {
             $asset->fields()->attach($array);
         }
-        if(!empty($request->category)){
+        if(! empty($request->category))
+        {
             $asset->category()->attach($request->category);
         }
         session()->flash('success_message', $request->name . ' has been created successfully');
@@ -232,13 +246,16 @@ class AssetController extends Controller {
 
     public function show(Asset $asset)
     {
-        if (auth()->user()->cant('view', $asset)) {
+        if(auth()->user()->cant('view', $asset))
+        {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'view']));
         }
 
-        if(auth()->user()->role_id == 1){
+        if(auth()->user()->role_id == 1)
+        {
             $locations = Location::all();
-        }else{
+        } else
+        {
             $locations = auth()->user()->locations;
         }
 
@@ -251,20 +268,24 @@ class AssetController extends Controller {
     public function edit(Asset $asset)
     {
 
-        if (auth()->user()->cant('update', $asset)) {
+        if(auth()->user()->cant('update', $asset))
+        {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
         }
 
-        if(auth()->user()->role_id == 1){
+        if(auth()->user()->role_id == 1)
+        {
             $locations = Location::all();
-        }else{
+        } else
+        {
             $locations = auth()->user()->locations;
         }
+
         return view('assets.edit', [
-            "asset"=>$asset,
-            "locations"=>$locations,
-            "manufacturers"=>Manufacturer::all(),
-            'models'=>AssetModel::all(),
+            "asset" => $asset,
+            "locations" => $locations,
+            "manufacturers" => Manufacturer::all(),
+            'models' => AssetModel::all(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
@@ -275,7 +296,8 @@ class AssetController extends Controller {
 
     public function update(Request $request, Asset $asset)
     {
-        if (auth()->user()->cant('update', $asset)) {
+        if(auth()->user()->cant('update', $asset))
+        {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'update']));
         }
 
@@ -293,7 +315,8 @@ class AssetController extends Controller {
                 if($field->required == 1)
                 {
                     $val_string .= "required";
-                }else{
+                } else
+                {
                     $val_string .= "nullable";
                 }
 
@@ -335,7 +358,8 @@ class AssetController extends Controller {
                 {
                     $values = $request->$name;
                 }
-                if($values != null){
+                if($values != null)
+                {
                     $array[$field->id] = ['value' => $values];
                 }
 
@@ -366,16 +390,24 @@ class AssetController extends Controller {
 
         $validated = $request->validate($v);
 
-        if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
+        if(isset($request->donated) && $request->donated == 1)
+        {
+            $donated = 1;
+        } else
+        {
+            $donated = 0;
+        }
 
         $asset->fill(array_merge($request->only(
             'name', 'asset_tag', 'asset_model', 'serial_no', 'room', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
         ), ['user_id' => auth()->user()->id, 'donated' => $donated]))->save();
 
-        if(!empty($array)){
+        if(! empty($array))
+        {
             $asset->fields()->sync($array);
         }
-        if(!empty($request->category)){
+        if(! empty($request->category))
+        {
             $asset->category()->sync($request->category);
         }
         session()->flash('success_message', $request->name . ' has been updated successfully');
@@ -386,38 +418,44 @@ class AssetController extends Controller {
     public function destroy(Asset $asset)
     {
 
-        if (auth()->user()->cant('delete', $asset)) {
+        if(auth()->user()->cant('delete', $asset))
+        {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
         }
 
-        $name=$asset->asset_tag;
+        $name = $asset->asset_tag;
 
         $asset->delete();
-        session()->flash('danger_message', "#". $name . ' was sent to the Recycle Bin');
+        session()->flash('danger_message', "#" . $name . ' was sent to the Recycle Bin');
+
         return redirect("/assets");
     }
 
     public function restore($id)
     {
         $asset = Asset::withTrashed()->where('id', $id)->first();
-        if (auth()->user()->cant('delete', $asset)) {
+        if(auth()->user()->cant('delete', $asset))
+        {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'restore']));
         }
-        $name=$asset->asset_tag;
+        $name = $asset->asset_tag;
         $asset->restore();
-        session()->flash('success_message', "#". $name . ' has been restored.');
+        session()->flash('success_message', "#" . $name . ' has been restored.');
+
         return redirect("/assets");
     }
 
     public function forceDelete($id)
     {
         $asset = Asset::withTrashed()->where('id', $id)->first();
-        if (auth()->user()->cant('delete', $asset)) {
+        if(auth()->user()->cant('delete', $asset))
+        {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'force delete']));
         }
-        $name=$asset->name;
+        $name = $asset->name;
         $asset->forceDelete();
-        session()->flash('danger_message', "#". $name . ' was deleted permanently');
+        session()->flash('danger_message', "#" . $name . ' was deleted permanently');
+
         return redirect(route('assets.bin'));
     }
 
@@ -436,13 +474,15 @@ class AssetController extends Controller {
 
     public function export(Request $request)
     {
-        if (auth()->user()->cant('viewAll', Asset::class)) {
+        if(auth()->user()->cant('viewAll', Asset::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Assets', 'export']));
         }
-        $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location','model','status','user')->get();
+        $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location', 'model', 'status', 'user')->get();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new AssetExport($assets), "/public/csv/assets-ex-{$date}.csv");
         $url = asset("storage/csv/assets-ex-{$date}.csv");
+
         return redirect(route('assets.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
@@ -451,7 +491,8 @@ class AssetController extends Controller {
 
     public function import(Request $request)
     {
-        if (auth()->user()->cant('create', Asset::class)) {
+        if(auth()->user()->cant('create', Asset::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Assets', 'import']));
         }
 
@@ -548,7 +589,8 @@ class AssetController extends Controller {
         $export = $request['asset_tag'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
-       return \Maatwebsite\Excel\Facades\Excel::download(new assetErrorsExport($export), 'AssetImportErrors.csv');
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new assetErrorsExport($export), 'AssetImportErrors.csv');
     }
 
     public function ajaxMany(Request $request)
@@ -608,17 +650,21 @@ class AssetController extends Controller {
 
     public function filter(Request $request)
     {
-        if($request->isMethod('post')){
+        if($request->isMethod('post'))
+        {
 
-            if(! empty($request->search)){
+            if(! empty($request->search))
+            {
                 session(['search' => $request->search]);
             }
 
-            if(! empty($request->limit)){
+            if(! empty($request->limit))
+            {
                 session(['limit' => $request->limit]);
             }
 
-            if(! empty($request->orderby)){
+            if(! empty($request->orderby))
+            {
                 $array = explode(' ', $request->orderby);
 
                 session(['orderby' => $array[0]]);
@@ -626,7 +672,8 @@ class AssetController extends Controller {
 
             }
 
-            if(! empty($request->locations)){
+            if(! empty($request->locations))
+            {
                 session(['locations' => $request->locations]);
             }
 
@@ -659,71 +706,83 @@ class AssetController extends Controller {
             session(['amount' => $request->amount]);
         }
 
-        if(auth()->user()->role_id != 1){
+        if(auth()->user()->role_id != 1)
+        {
             $locations = auth()->user()->locations->pluck('id');
             $locs = auth()->user()->locations;
 
-        }else{
+        } else
+        {
             $locations = \App\Models\Location::all()->pluck('id');
             $locs = \App\Models\Location::all();
         }
 
-
         $filter = 0;
         $assets = Asset::locationFilter($locations);
-        if(session()->has('locations')) {
+        if(session()->has('locations'))
+        {
             $assets->locationFilter(session('locations'));
             $filter++;
         }
-        if(session()->has('status')) {
+        if(session()->has('status'))
+        {
             $assets->statusFilter(session('status'));
             $filter++;
         }
-        if(session()->has('category')) {
+        if(session()->has('category'))
+        {
             $assets->categoryFilter(session('category'));
             $filter++;
         }
-        if(session()->has('start') && session()->has('end')){
+        if(session()->has('start') && session()->has('end'))
+        {
             $assets->purchaseFilter(session('start'), session('end'));
             $filter++;
         }
-        if(session()->has('audit') && session('audit') != 0) {
+        if(session()->has('audit') && session('audit') != 0)
+        {
             $assets->auditFilter(session('audit'));
             $filter++;
         }
-        if(session()->has('warranty')) {
+        if(session()->has('warranty'))
+        {
             $assets->warrantyFilter(session('warranty'));
             $filter++;
         }
-        if(session()->has('amount')){
+        if(session()->has('amount'))
+        {
             $assets->costFilter(session('amount'));
             $filter++;
         }
 
-        if(session()->has('search')){
+        if(session()->has('search'))
+        {
             $assets->searchFilter(session('search'));
             $filter++;
         }
 
-        $assets ->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
-                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
+        $assets->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
+            ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
         $limit = session('limit') ?? 25;
+
         return view('assets.view', [
             "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations"=> $locs,
+            "locations" => $locs,
             "filter" => $filter,
         ]);
     }
 
-    public function clearFilter(){
+    public function clearFilter()
+    {
         session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
+
         return redirect(route('assets.index'));
     }
 
@@ -733,21 +792,22 @@ class AssetController extends Controller {
         $this->clearFilter();
         $array = [];
         $array[] = $status->id;
-        
+
         session(['status' => $array]);
-        
+
         $locations = auth()->user()->locations->pluck('id');
         $assets = Asset::locationFilter($locations);
 
         $assets->statusFilter($array);
 
-        $assets ->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
-                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
-                $limit = session('limit') ?? 25;
+        $assets->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
+            ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
+        $limit = session('limit') ?? 25;
+
         return view('assets.view', [
             "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
             'suppliers' => Supplier::all(),
@@ -768,19 +828,20 @@ class AssetController extends Controller {
         $array[] = $location->id;
 
         $locations = auth()->user()->locations->pluck('id');
-        
+
         session(['locations' => $array]);
         $assets = Asset::locationFilter($locations->toArray());
 
         $assets->locationFilter([$location->id]);
-       
-        $assets ->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
-                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
-                $limit = session('limit') ?? 25;
+
+        $assets->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
+            ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
+        $limit = session('limit') ?? 25;
+
         return view('assets.view', [
             "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
             'suppliers' => Supplier::all(),
@@ -793,33 +854,40 @@ class AssetController extends Controller {
 
     public function downloadPDF(Request $request)
     {
-        if (auth()->user()->cant('viewAll', Asset::class)) {
+        if(auth()->user()->cant('viewAll', Asset::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
         }
         $assets = array();
-        $found = Asset::select('name','id','asset_tag','serial_no','purchased_date','purchased_cost','warranty','audit_date', 'location_id', 'asset_model')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier','location','model')->get();
-        foreach($found as $f){
+        $found = Asset::select('name', 'id', 'asset_tag', 'serial_no', 'purchased_date', 'purchased_cost', 'warranty', 'audit_date', 'location_id', 'asset_model')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location', 'model')->get();
+        foreach($found as $f)
+        {
             $array = array();
             $array['name'] = $f->name ?? 'No Name';
             $array['model'] = $f->model->name ?? 'N/A';
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['icon'] = $f->location->icon ?? '#666';
             $array['asset_tag'] = $f->asset_tag ?? 'N/A';
-            if($f->model()->exists()){
+            if($f->model()->exists())
+            {
                 $array['manufacturer'] = $f->model->manufacturer->name ?? 'N/A';
-            }else{
+            } else
+            {
                 $array['manufacturer'] = 'N/A';
             }
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
-            $array['purchased_cost'] = '£'.$f->purchased_cost;
-            if($f->model()->exists() && $f->model->depreciation()->exists()){
+            $array['purchased_cost'] = '£' . $f->purchased_cost;
+            if($f->model()->exists() && $f->model->depreciation()->exists())
+            {
                 $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->model->eol);
-                if($eol->isPast()){
+                if($eol->isPast())
+                {
                     $dep = 0;
-                }else{
+                } else
+                {
                     $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
                     $percent = 100 / $f->model->depreciation->years;
-                    $percentage = floor($age)*$percent;
+                    $percentage = floor($age) * $percent;
                     $dep = $f->purchased_cost * ((100 - $percentage) / 100);
                 }
             }
@@ -834,12 +902,13 @@ class AssetController extends Controller {
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = 'assets-'.$date;
+        $path = 'assets-' . $date;
 
-        AssetsPdf::dispatch( $assets, $user, $path )->afterResponse();
+        AssetsPdf::dispatch($assets, $user, $path)->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
+
         return redirect(route('assets.index'))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
@@ -848,7 +917,8 @@ class AssetController extends Controller {
 
     public function downloadShowPDF(Asset $asset)
     {
-        if (auth()->user()->cant('view', $asset)) {
+        if(auth()->user()->cant('view', $asset))
+        {
             return redirect(route('errors.forbidden', ['asset', $asset->id, 'View PDF']));
         }
 
@@ -856,9 +926,9 @@ class AssetController extends Controller {
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = "asset-{$asset->asset_tag}-{$date}";
-        AssetPdf::dispatch( $asset,$user,$path )->afterResponse();
+        AssetPdf::dispatch($asset, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
         return redirect(route('assets.show', $asset->id))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
@@ -867,23 +937,27 @@ class AssetController extends Controller {
 
     public function recycleBin()
     {
-        if (auth()->user()->cant('viewAll', Asset::class)) {
+        if(auth()->user()->cant('viewAll', Asset::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'Recycle Bin']));
         }
 
-        if(auth()->user()->role_id == 1){
+        if(auth()->user()->role_id == 1)
+        {
             $assets = Asset::onlyTrashed()->get();
             $locations = Location::all();
-        }else{
+        } else
+        {
             $assets = auth()->user()->location_assets()->onlyTrashed();
             $locations = auth()->user()->locations;
         }
+
         return view('assets.bin', [
-            "assets"=> $assets,
+            "assets" => $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations"=>$locations,
+            "locations" => $locations,
         ]);
     }
 
@@ -892,6 +966,7 @@ class AssetController extends Controller {
         $asset->status_id = $request->status;
         $asset->save();
         session()->flash('success_message', $asset->model->name . ' has had its status changed successfully');
+
         return redirect(route('assets.show', $asset->id));
     }
 
