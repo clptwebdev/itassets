@@ -51,7 +51,7 @@ class ManufacturerController extends Controller {
             ]);
         }else{
             return view("Manufacturers.view",[
-                'manufacturers'=> $results->paginate(),
+                'manufacturers'=> $results->latest()->paginate(),
 
             ]);
         }
