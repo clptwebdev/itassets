@@ -88,7 +88,7 @@ class LogController extends Controller {
         } else
         {
             return view("logs.view", [
-                'logs' => $results->paginate(),
+                'logs' => $results->latest()->paginate(),
 
             ]);
         }
