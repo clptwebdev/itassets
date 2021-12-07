@@ -37,16 +37,21 @@ class LogController extends Controller
         return redirect(route('logs.index'));
     }
     public function filter(Request $request){
-        $filtered = Log::latest()->get();
-
+        $filtered = Log::select();
         if($request->isMethod('post')){
-            session('log_search', request()->only(['search']));
+            \Session::put('log_search', $request->search);
         }
-
         if(session('log_search')){
-            $filtered->logFilter(session('log_search'));
+          $results =  $filtered->logFilter(session('log_search'));
+        }elseif(session('log_search') == null){
+            session()->flash('danger_message', "<strong>" . request("search") . "</strong>" . ' could not be found! Please search for something else!');
+
+            return view("logs.view", [
+                'logs' => Log::latest()->paginate(),
+
+            ]);
         }
-    if($filtered->count() == 0)
+    if($results->count() == 0)
     {
         session()->flash('danger_message', "<strong>" . request("search") . "</strong>" . ' could not be found! Please search for something else!');
 
@@ -57,7 +62,7 @@ class LogController extends Controller
     } else
     {
         return view("logs.view", [
-            'logs' => $filtered->paginate(),
+            'logs' => $results->paginate(),
 
         ]);
     }
