@@ -354,7 +354,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-lilac" type="submit">Request Transfer</button>
+                        <button class="btn btn-lilac" type="submit">@if(auth()->user()->role_id == 1){{ 'Transfer' }} @else {{ 'Request Transfer' }} @endif</button>
                     </div>
                 </form>
             </div>
