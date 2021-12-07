@@ -37,7 +37,8 @@ class LogController extends Controller
         return redirect(route('logs.index'));
     }
     public function filter(Request $request){
-        $filtered = Log::select();
+        $filtered = Log::latest();
+
         if($request->isMethod('post')){
             session('log_search', request()->only(['search']));
         }
