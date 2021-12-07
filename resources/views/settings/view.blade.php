@@ -24,6 +24,7 @@
         @if(session('success_message'))
             <div class="alert alert-success"> {!! session('success_message')!!} </div>
         @endif
+        <h3 class="text-primary py-2">Select the button below for custom exports.</h3>
         <a data-toggle="modal" data-target="#exportModal" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"> Exports Items Here</a>
 
     </section>
