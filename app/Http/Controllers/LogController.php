@@ -39,15 +39,15 @@ class LogController extends Controller
     public function filter(Request $request){
         $filtered = Log::select();
         if($request->isMethod('post')){
-            session('log_search', request()->only(['searchLogs']));
+            session('log_search', request()->only(['search']));
         }
 
         if(session('log_search')){
             $filtered->logFilter(session('log_search'));
         }
-    if($filtered->count() <= 0)
+    if($filtered->count() == 0)
     {
-        session()->flash('danger_message', "<strong>" . request("searchLogs") . "</strong>" . ' could not be found! Please search for something else!');
+        session()->flash('danger_message', "<strong>" . request("search") . "</strong>" . ' could not be found! Please search for something else!');
 
         return view("logs.view", [
             'logs' => Log::latest()->paginate(),

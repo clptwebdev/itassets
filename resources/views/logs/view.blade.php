@@ -44,8 +44,8 @@
                     <form method="POST" action="{{route('logs.filter')}}">
                         <div class="input-group mb-2">
                             @csrf
-                            <input type="text" class="form-control" name="searchLogs" placeholder="Search"
-                                   @if(session()->has('searchLogs')) value="{{ session('searchLogs') }}" @endif>
+                            <input type="text" class="form-control" name="search" placeholder="Search"
+                                   @if(session()->has('search')) value="{{ session('search') }}" @endif>
                             <div class="input-group-append">
                                 <button class="btn btn-blue">Search</button>
                             </div>
