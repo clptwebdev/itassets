@@ -38,9 +38,12 @@ class Log extends Model {
     public function scopeLogFilter($query, $filters)
     {
       return $query->when($filters['search'] ?? false, fn($query, $search) => $query->where('data', 'like', '%' . $search . '%')
-            ->orWhere('loggable_type', 'like', '%' . $search . '%')
-            ->orWhereIn('user_id', $search)
     );
+
+    }
+    public function scopeLogTypeFilter($query, $type)
+    {
+      return $query->where('loggable_type' ,'=', $type);
 
     }
 
