@@ -15,17 +15,15 @@
                         class="fas fa-download fa-sm text-white-50"></i> Back to Dashboard</a>
             @if($logs->count() > 0)
             <a href="{{route('logs.destroy')}}" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"><i
-                    class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
+                    class="fas fa-trash fa-sm text-white-50"></i> Delete All logs</a>
             @endif
             @if($logs->count() > 1)
-{{--                @can('viewAny', auth()->user())--}}
                     <form class="d-inline-block" action="/exportlogs" method="POST">
                         @csrf
                         <input type="hidden" value="{{ json_encode($logs->pluck('id'))}}" name="logs"/>
                         <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
                                 class="fas fa-download fa-sm text-dark-50"></i> Export</button>
                     </form>
-{{--                @endcan--}}
             @endif
         </div>
     </div>
@@ -39,17 +37,39 @@
     <section>
         <p class="mb-4">Below are the different Logs of Processes that have taken place stored in the management system.</p>
         <!-- DataTales Example -->
+        <div  class="row">
+            <div id="searchBar" class="col-4">
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInputGroup">Search</label>
+                    <form method="POST" action="{{route('logs.filter')}}">
+                        <div class="input-group mb-2">
+                            @csrf
+                            <input type="text" class="form-control" name="search" placeholder="Search"
+                                   @if(session()->has('search')) value="{{ session('search') }}" @endif>
+                            <div class="input-group-append">
+                                <button class="btn btn-blue">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div  class="col-4">
+                <a href="{{route('logs.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
+            </div>
+        </div>
+
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="logsTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th class="text-center"><small>Data</small></th>
+                            <th ><small>Data</small></th>
                             <th><small>User</small></th>
                             <th><small>Type</small></th>
-                            <th class="text-center"><small> ID</small></th>
-                            <th><small>Date</small></th>
+                            <th ><small> ID</small></th>
+                            <th class="text-center"><small>Date</small></th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -57,8 +77,8 @@
                             <th><small>Data</small></th>
                             <th><small>User</small></th>
                             <th><small>Type</small></th>
-                            <th class="text-center"><small> ID</small></th>
-                            <th><small>Date</small></th>
+                            <th ><small> ID</small></th>
+                            <th class="text-center"><small>Date</small></th>
                         </tr>
                         </tfoot>
                         <tbody>
