@@ -42,12 +42,12 @@ class LogController extends Controller
         if($filtered->count() == 0){
             session()->flash('danger_message', "<strong>" . request("search"). "</strong>".' could not be found! Please search for something else!');
             return view("logs.view",[
-                'logs'=> Log::latest()->LogFilter(request()->only(['search']))->paginate()->withPath('/logs/filter')->fragment('table'),
+                'logs'=> Log::latest()->paginate(),
 
             ]);
         }else{
             return view("logs.view",[
-                'logs'=>Log::latest()->LogFilter(request()->only(['search']))->paginate(),
+                'logs'=>$filtered,
 
             ]);
         }
