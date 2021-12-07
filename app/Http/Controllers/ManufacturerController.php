@@ -26,20 +26,32 @@ class ManufacturerController extends Controller {
 
     }
     public function clearFilter(){
+        session()->forget(['log_search']);
+
         return redirect(route('manufacturers.index'));
     }
-    public function filter(){
-
-        $filtered = Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate();
-        if($filtered->count() == 0){
-            session()->flash('danger_message', "<strong>" . request("search"). "</strong>".' could not be found! Please search for something else!');
+    public function filter(Request $request){
+        $filtered = Manufacturer::select();
+        if($request->isMethod('post'))
+        {
+            if($request->search !== null)
+            {
+                \Session::put('manufacturer_search', $request->search);
+            }
+        }
+        if(session('manufacturer_search'))
+        {
+            $results = $filtered->manufacturerFilter(session('manufacturer_search'));
+        }
+        if($results->count() == 0){
+            session()->flash('danger_message', "<strong>" . request("manufacturer_search"). "</strong>".' could not be found! Please search for something else!');
             return view("Manufacturers.view",[
-                'manufacturers'=> Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate(),
+                'manufacturers'=> Manufacturer::latest()->paginate(),
 
             ]);
         }else{
             return view("Manufacturers.view",[
-                'manufacturers'=> Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate(),
+                'manufacturers'=> $results->latest()->paginate(),
 
             ]);
         }

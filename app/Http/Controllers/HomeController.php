@@ -30,7 +30,7 @@ class HomeController extends Controller
             Cache::put('name', $category, 60);
         } else
         {
-            $locations = Location::locationFilter(auth()->user()->locations->pluck('id'))->get();;
+            $locations = auth()->user()->locations;
             $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))->with('location', 'model', 'status')->get();
             $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->count();
             $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->count();

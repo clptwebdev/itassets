@@ -37,10 +37,10 @@
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">Status</h3>
 
                         @foreach($statuses as $status)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $status->id }}" name="status[]"
+                                <div class="col-2 p-1  d-flex p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $status->id }}" name="status[]"
                                            id="status{{$status->name}}">
-                                    <label for="status{{$status->name}}">{{ $status->name }}</label>
+                                    <label class="my-auto" for="status{{$status->name}}">{{ $status->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -50,10 +50,10 @@
                         <div class="row m-auto d-flex justify-content-start align-items-center">
                                 <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">Category</h3>
                             @foreach($categories as $category)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $category->id }}" name="category[]"
+                                <div class="col-2 p-1  d-flex p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $category->id }}" name="category[]"
                                            id="category{{$category->name}}">
-                                    <label for="category{{$category->name}}">{{ $category->name }}</label>
+                                    <label class="my-auto" for="category{{$category->name}}">{{ $category->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -63,10 +63,10 @@
                             <div class="row m-auto d-flex justify-content-start align-items-center">
                                 <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">location</h3>
                                 @foreach($locations as $location)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $location->id }}" name="location[]"
-                                           id="location{{$location->name}}">
-                                    <label for="location{{$location->name}}">{{ $location->name }}</label>
+                                <div class="col-2 p-1  d-flex p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $location->id }}" name="location[]"
+                                           id="location{{$location->name}}" >
+                                    <label class="my-auto"  for="location{{$location->name}}">{{ $location->name }}</label>
                                 </div>
                                 @endforeach
                             </div>
@@ -87,10 +87,10 @@
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">Asset Models</h3>
 
                             @foreach($assetModel as $model)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $model->id }}" name="model[]"
+                                <div class="col-2 p-1  d-flex p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $model->id }}" name="model[]"
                                            id="model{{$model->name}}">
-                                    <label for="model{{$model->name}}">{{ $model->name }}</label>
+                                    <label class="my-auto" for="model{{$model->name}}">{{ $model->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -100,10 +100,10 @@
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">Status</h3>
 
                             @foreach($statuses as $status)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $status->id }}" name="status[]"
+                                <div class="col-2 p-1  d-flex p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $status->id }}" name="status[]"
                                            id="status{{$status->name}}">
-                                    <label for="status{{$status->name}}">{{ $status->name }}</label>
+                                    <label class="my-auto" for="status{{$status->name}}">{{ $status->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -113,10 +113,10 @@
                         <div class="row m-auto d-flex justify-content-start align-items-center">
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">Category</h3>
                             @foreach($categories as $category)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $category->id }}" name="category[]"
+                                <div class="col-2 p-1  d-flex p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $category->id }}" name="category[]"
                                            id="category{{$category->name}}">
-                                    <label for="category{{$category->name}}">{{ $category->name }}</label>
+                                    <label class="my-auto" for="category{{$category->name}}">{{ $category->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -126,10 +126,10 @@
                         <div class="row m-auto d-flex justify-content-start align-items-center">
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">location</h3>
                             @foreach($locations as $location)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $location->id }}" name="location[]"
+                                <div class="col-2 p-1  d-flex p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $location->id }}" name="location[]"
                                            id="location{{$location->name}}">
-                                    <label for="location{{$location->name}}">{{ $location->name }}</label>
+                                    <label class="my-auto" for="location{{$location->name}}">{{ $location->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -150,10 +150,10 @@
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">Status</h3>
 
                             @foreach($statuses as $status)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $status->id }}" name="status[]"
+                                <div class="col-2 p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $status->id }}" name="status[]"
                                            id="status{{$status->name}}">
-                                    <label for="status{{$status->name}}">{{ $status->name }}</label>
+                                    <label class="my-auto" for="status{{$status->name}}">{{ $status->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -163,10 +163,10 @@
                         <div class="row m-auto d-flex justify-content-start align-items-center">
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">Category</h3>
                             @foreach($categories as $category)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $category->id }}" name="category[]"
+                                <div class="col-2 p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $category->id }}" name="category[]"
                                            id="category{{$category->name}}">
-                                    <label for="category{{$category->name}}">{{ $category->name }}</label>
+                                    <label class="my-auto" for="category{{$category->name}}">{{ $category->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -176,10 +176,10 @@
                         <div class="row m-auto d-flex justify-content-start align-items-center">
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">location</h3>
                             @foreach($locations as $location)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $location->id }}" name="location[]"
+                                <div class="col-2 p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $location->id }}" name="location[]"
                                            id="location{{$location->name}}">
-                                    <label for="location{{$location->name}}">{{ $location->name }}</label>
+                                    <label class="my-auto" for="location{{$location->name}}">{{ $location->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -200,10 +200,10 @@
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">Status</h3>
 
                             @foreach($statuses as $status)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $status->id }}" name="status[]"
+                                <div class="col-2 p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $status->id }}" name="status[]"
                                            id="status{{$status->name}}">
-                                    <label for="status{{$status->name}}">{{ $status->name }}</label>
+                                    <label class="my-auto" for="status{{$status->name}}">{{ $status->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -213,10 +213,10 @@
                         <div class="row m-auto d-flex justify-content-start align-items-center">
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">Category</h3>
                             @foreach($categories as $category)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $category->id }}" name="category[]"
+                                <div class="col-2 p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $category->id }}" name="category[]"
                                            id="category{{$category->name}}">
-                                    <label for="category{{$category->name}}">{{ $category->name }}</label>
+                                    <label class="my-auto" for="category{{$category->name}}">{{ $category->name }}</label>
                                 </div>
                             @endforeach
                         </div>
@@ -226,10 +226,10 @@
                         <div class="row m-auto d-flex justify-content-start align-items-center">
                             <h3 class="text-center text-sm-center d-inline-block col-12 mb-2">location</h3>
                             @foreach($locations as $location)
-                                <div class="col-2">
-                                    <input type="checkbox" value="{{ $location->id }}" name="location[]"
+                                <div class="col-2 p-1  d-flex">
+                                    <input class="mr-2" type="checkbox" value="{{ $location->id }}" name="location[]"
                                            id="location{{$location->name}}">
-                                    <label for="location{{$location->name}}">{{ $location->name }}</label>
+                                    <label class="my-auto" for="location{{$location->name}}">{{ $location->name }}</label>
                                 </div>
                             @endforeach
                         </div>

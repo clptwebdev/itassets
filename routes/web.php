@@ -130,6 +130,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/manufacturer/{manufacturer}/pdf', 'App\Http\Controllers\ManufacturerController@downloadShowPDF')->name('manufacturer.showPdf');
     Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
     Route::Post("/manufacturer/filter", [\App\Http\Controllers\ManufacturerController::class, "filter"])->name("manufacturer.filter");
+    Route::get('/manufacturer/filter', [\App\Http\Controllers\ManufacturerController::class, "filter"])->name('manufacturer.filtered');
+
     Route::get("/manufacturer/clear/filter", [\App\Http\Controllers\ManufacturerController::class, "clearFilter"])->name("manufacturer.clearfilter");
     //Permission Routes
 
@@ -217,6 +219,10 @@ Route::group(['middleware' => 'auth'], function() {
 //Logs View
     Route::get("/logs", [\App\Http\Controllers\LogController::class, "index"])->name("logs.index");
     Route::get("/logs/delete", [\App\Http\Controllers\LogController::class, "destroy"])->name("logs.destroy");
+    Route::get('/logs/filter/clear', [\App\Http\Controllers\LogController::class, "clearFilter"])->name('logs.clear.filter');
+    Route::post('/logs/filter', [\App\Http\Controllers\LogController::class, "filter"])->name('logs.filter');
+    Route::get('/logs/filter', [\App\Http\Controllers\LogController::class, "filter"])->name('logs.filtered');
+
 //documentation link
     Route::get("/help/documentation", function() {
         return view('documentation.Documents');
