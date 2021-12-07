@@ -61,7 +61,7 @@
                     @can('create', \App\Models\Asset::class)
                     <a id="import" class="dropdown-item"> Import</a>
                     @endcan
-                    <a class="dropdown-item" href="#">Dispose</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkDisposalModal">Dispose</a>
                     <a class="dropdown-item" href="#">Transfer</a>
                 </div>
               </div>
@@ -389,15 +389,52 @@
     {{--//import--}}
     <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
          aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form action="/importassets" method="POST" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <p>Select "import" to add Assets to the system.</p>
+                            <input class="form-control shadow-sm"
+                                type="file" placeholder="Upload here" name="csv" accept=".csv" id="importEmpty">
+                        </div>
+                        <div class="modal-footer">
+                            @if(session('import-error'))
+                                <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
+                            @endif
+                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/Eb2RbyCNk_hOuTfMOufGpMsBl0yUs1ZpeCjkCm6YnLfN9Q?e=4t5BVO"
+                            target="_blank" class="btn btn-blue">
+                                Download Import Template
+                            </a>
+                            <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+
+                            <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
+                                Import
+                            </button>
+                            @csrf
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- This is the Modal for Bulk Disposal {SC} --}}
+    <div class="modal fade bd-example-modal-lg" id="bulkDisposalModal" tabindex="-1" role="dialog"
+         aria-labelledby="bulkDisposalModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data</h5>
+                    <h5 class="modal-title" id="bulkDisposalModalLabel">Dispose Data Data</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="/importassets" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('assets.bulk.disposal')}}" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add Assets to the system.</p>
                         <input class="form-control shadow-sm"
@@ -413,7 +450,7 @@
                         </a>
                         <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
+                        <button type="submit" class="btn btn-green" type="button">
                             Import
                         </button>
                     @csrf

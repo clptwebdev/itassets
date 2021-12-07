@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\assetErrorsExport;
 use App\Imports\AssetImport;
+use App\Imports\AssetDispose;
 use App\Models\Asset;
 use App\Models\AssetModel;
 use App\Models\Fieldset;
@@ -541,6 +542,106 @@ class AssetController extends Controller {
 
         }
 
+    }
+
+    public function bulkDisposal(Request $request){
+        /* Check whether the current user has permissions to bulk dispose Assets [SC] */
+        /* Currently - Super Admin permissions requried [SC] */
+        if (auth()->user()->cant('disposeAll', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Assets', 'Bulk Dispose']));
+        }
+
+        /* Accepted File Extensions */
+        $extensions = array("csv");
+
+        /* Files passed through the Request */
+        $result = array($request->file('csv')->getClientOriginalExtension());
+
+        /* If the function accepts the File Extension */
+        if(in_array($result[0], $extensions))
+        {
+            $path = $request->file("csv")->getRealPath();
+            $import = new AssetDispose;
+            $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
+            $row = [];
+            $attributes = [];
+            $errors = [];
+            $values = [];
+            $results = $import->failures();
+            $importErrors = [];
+            foreach($results->all() as $result)
+            {
+                /* Looping through each row to check for errors on the AssetDispose Class */
+                $row[] = $result->row();
+                $attributes[] = $result->attribute();
+                $errors[] = $result->errors();
+                $values[] = $result->values();
+                $importErrors[] = [
+
+                    "row" => $result->row(),
+                    "attributes" => $result->attribute(),
+                    "errors" => $result->errors(),
+                    "value" => $result->values(),
+                ];
+            }
+
+            /* If there are Errors return from AssetDispose */
+            if(! empty($importErrors))
+            {
+                $errorArray = [];
+                $valueArray = [];
+                $errorValues = [];
+
+                foreach($importErrors as $error)
+                {
+                    if(array_key_exists($error['row'], $errorArray))
+                    {
+                        $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
+                    } else
+                    {
+                        $errorArray[$error['row']] = $error['attributes'];
+                    }
+                    $valueArray[$error['row']] = $error['value'];
+
+                    if(array_key_exists($error['row'], $errorValues))
+                    {
+                        $array = $errorValues[$error['row']];
+                    } else
+                    {
+                        $array = [];
+                    }
+
+                    foreach($error['errors'] as $e)
+                    {
+                        $array[$error['attributes']] = $e;
+                    }
+                    $errorValues[$error['row']] = $array;
+
+                }
+                return dd($errorValues);
+                
+                /* return view('assets.import-errors', [
+                    "errorArray" => $errorArray,
+                    "valueArray" => $valueArray,
+                    "errorValues" => $errorValues,
+                    "models" => AssetModel::all(),
+                    "statuses" => Status::all(),
+                    "suppliers" => Supplier::all(),
+                    "locations" => Location::all(),
+                ]); */
+
+            } else
+            {
+
+                return redirect('/assets')->with('success_message', 'All Assets were disposed correctly!');
+
+            }
+
+        } else
+        {
+            return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+
+        } 
     }
 
     public function importErrors(Request $request)
