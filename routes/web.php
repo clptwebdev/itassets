@@ -129,6 +129,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/manufacturer/{manufacturer}/pdf', 'App\Http\Controllers\ManufacturerController@downloadShowPDF')->name('manufacturer.showPdf');
     Route::get("/exportmanufacturers", [\App\Http\Controllers\ManufacturerController::class, "export"]);
     Route::Post("/manufacturer/filter", [\App\Http\Controllers\ManufacturerController::class, "filter"])->name("manufacturer.filter");
+    Route::get('/manufacturer/filter', [\App\Http\Controllers\ManufacturerController::class, "filter"])->name('manufacturer.filtered');
+
     Route::get("/manufacturer/clear/filter", [\App\Http\Controllers\ManufacturerController::class, "clearFilter"])->name("manufacturer.clearfilter");
     //Permission Routes
 

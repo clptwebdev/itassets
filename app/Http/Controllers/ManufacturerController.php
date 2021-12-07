@@ -28,18 +28,24 @@ class ManufacturerController extends Controller {
     public function clearFilter(){
         return redirect(route('manufacturers.index'));
     }
-    public function filter(){
+    public function filter(Request $request){
+        $filtered = Manufacturer::select();
+        if($request->isMethod('post')){
+            session('manufacturer_search', request()->only(['search']));
+        }
 
-        $filtered = Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate();
+        if(session('manufacturer_search')){
+            $filtered->manufacturerFilter(session('manufacturer_search'));
+        }
         if($filtered->count() == 0){
             session()->flash('danger_message', "<strong>" . request("search"). "</strong>".' could not be found! Please search for something else!');
             return view("Manufacturers.view",[
-                'manufacturers'=> Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate(),
+                'manufacturers'=> Manufacturer::latest()->paginate(),
 
             ]);
         }else{
             return view("Manufacturers.view",[
-                'manufacturers'=> Manufacturer::latest()->ManufacturerFilter(request()->only(['search']))->paginate(),
+                'manufacturers'=> $filtered->paginate(),
 
             ]);
         }
