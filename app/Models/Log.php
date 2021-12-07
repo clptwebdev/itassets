@@ -39,7 +39,7 @@ class Log extends Model {
     {
         $query->when($filters['search'] ?? false, fn($query, $search) => $query->where('data', 'like', '%' . $search . '%')
             ->orWhere('loggable_type', 'like', '%' . $search . '%')
-            ->whereIn('user-id', $search)
+            ->whereIn('user_id', $search)
     );
 
     }
