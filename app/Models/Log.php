@@ -35,12 +35,11 @@ class Log extends Model {
         return $this->belongsTo(Miscellanea::class);
     }
 
-    public function scopeLogFilter($query, $filters)
+    public function scopeLogFilter($query, $search)
     {
-      return $query->when($filters['search'] ?? false, fn($query, $search) => $query->where('data', 'like', '%' . $search . '%')
-    );
-
+        return $query->where('logs.data', 'LIKE', "%{$search}%");
     }
+
     public function scopeLogTypeFilter($query, $type)
     {
       return $query->where('loggable_type' ,'=', $type);

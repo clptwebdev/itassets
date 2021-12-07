@@ -70,7 +70,16 @@ class LogController extends Controller {
 
         if($results->count() == 0)
         {
-            session()->flash('danger_message', "<strong>" . session('log_type' ?? 'log_search') . "</strong>" . ' could not be found! Please search for something else!');
+            if(session('log_search') && session('log_type') !== null){
+                session()->flash('danger_message', "<strong>" . session('log_type') ." & ". session('log_search') . "</strong>" . ' could not be found! Please search for something else!');
+
+            }elseif(session('log_search') == null){
+                session()->flash('danger_message', "<strong>" . session('log_type')  . "</strong>" . ' could not be found! Please search for something else!');
+
+            }elseif(session('log_type') == null){
+                session()->flash('danger_message', "<strong>" . session('log_search')  . "</strong>" . ' could not be found! Please search for something else!');
+
+            }
 
             return view("logs.view", [
                 'logs' => Log::latest()->paginate(),

@@ -48,7 +48,7 @@
                         <div class="input-group mb-2">
                             @csrf
                             <input type="text" class="form-control" name="search" placeholder="Search"
-                                   @if(session()->has('search')) value="{{ session('search') }}" @endif>
+                                   @if(session()->has('log_search')) value="{{ session('log_search') }}" @endif>
                             <div class="input-group-append">
                                 <button class="btn btn-blue">Search</button>
                             </div>
@@ -63,16 +63,16 @@
                         @csrf
                         <div class="input-group mb-2 d-flex">
                             <select class="form-control" name="type">
-                                <option value="auth" selected>auth</option>
-                                <option value="manufacturer" selected>manufacturer</option>
-                                <option value="assetModel" selected>assetModel</option>
-                                <option value="location" selected>location</option>
-                                <option value="asset" selected>asset</option>
-                                <option value="supplier" selected>supplier</option>
-                                <option value="accessory" selected>accessory</option>
-                                <option value="user" selected>user</option>
-                                <option value="miscellanea" selected>miscellanea</option>
-                                <option value="component" selected>component</option>
+                                <option value="auth" @if(session('log_type') == "auth") selected @endif>auth</option>
+                                <option value="manufacturer" @if(session('log_type') == "manufacturer") selected @endif >manufacturer</option>
+                                <option value="assetModel"  @if(session('log_type') == "assetModel") selected @endif>assetModel</option>
+                                <option value="location"  @if(session('log_type') == "location") selected @endif>location</option>
+                                <option value="asset"  @if(session('log_type') == "asset") selected @endif>asset</option>
+                                <option value="supplier"  @if(session('log_type') == "supplier") selected @endif>supplier</option>
+                                <option value="accessory"  @if(session('log_type') == "accessory") selected @endif>accessory</option>
+                                <option value="user"  @if(session('log_type') == "user") selected @endif>user</option>
+                                <option value="miscellanea"  @if(session('log_type') == "miscellanea") selected @endif>miscellanea</option>
+                                <option value="component"  @if(session('log_type') == "component") selected @endif>component</option>
                             </select>
                             <div class="input-group-append">
                                 <button class="btn btn-blue">Search</button>
