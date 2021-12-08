@@ -33,10 +33,9 @@ class AlertRequest extends Mailable
     {
         $this->user = $user;
         $this->type = $comment;
-        $m = "\\App\\Models\\".ucfirst($type);
-        $this->model = $m::find($id);
-        $this->from = Location::find($from);
-        $this->to = Location::find($to);
+        $this->model = $type;
+        $this->from = $from;
+        $this->to = $to;
         $this->date = $date;
         $this->comment = $comment;
     }
@@ -48,6 +47,6 @@ class AlertRequest extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->view('view.admin.alert-request');
     }
 }
