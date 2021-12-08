@@ -22,7 +22,7 @@
     </span>
     <span style="font-size: 18px; line-height: 28.8px;">
         {{ $user->name }} has requested to transfer {{$requests_model->name ?? ucfirst($requests_type).' #'.$requests_model->asset_tag}}
-         from {{ $requests_from->name}} to {{ $from->requests_to}} on {{ $requests_date}}.
+         from {{ $requests_from->name}} to {{ $requests_to->name}} on {{ requests_date}}.
     </span>
     <span style="font-size: 18px; line-height: 28.8px;">
         {{ $requests_comment}}
