@@ -106,8 +106,4 @@ class User extends Authenticatable {
 
     }
 
-    public function scopeSuperAdmin($query){
-        return $query->where('role_id', '=', '1');
-    }
-
 }

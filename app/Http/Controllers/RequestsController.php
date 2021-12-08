@@ -70,9 +70,9 @@ class RequestsController extends Controller
             return back()->with('success_message','The Request has been approved');
         }else{
             //Notify by email
-            $admins = User::superAdmin()->get();
+            $admins = User::where('role_id', '=', 1)->get();
             foreach($admins as $admin){
-                Mail::to('stuart.corns@clpt.co.uk')->send(new \App\Mail\AlertRequest(2, $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->comment));
+                Mail::to('stuart.corns@clpt.co.uk')->send(new \App\Mail\AlertRequest(auth()->user()->id, $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->comment));
             }
             return back()->with('success_message', 'The request to transfer the asset has been sent.');
         }  
