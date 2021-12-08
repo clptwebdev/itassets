@@ -29,9 +29,9 @@ class AlertRequest extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, $type, $id, $from, $to, $date, $comment)
+    public function __construct($user, $type, $id, $from, $to, $date, $comment)
     {
-        $this->user = $user;
+        $this->user = User::find($user);
         $this->type = $comment;
         $m = "\\App\\Models\\".ucfirst($type);
         $this->model = $m::find($id);
