@@ -18,7 +18,7 @@ class AlertRequest extends Mailable
 
     protected $user;
     protected $model;
-    protected $from;
+    public $from;
     protected $to;
     protected $date;
     protected $type;
