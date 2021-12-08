@@ -12,7 +12,7 @@
 @endsection
 
  @section('title')
- {{ $user->name }} | Request Transfer of {{$model->name ?? ucfirst($type)}}
+ {{ $user->name }} | Request Transfer of {{$requests_model->name ?? ucfirst($requests_type)}}
   @endsection
 
  @section('content')
@@ -21,10 +21,11 @@
         Hi {{ auth()->user()->name}},
     </span>
     <span style="font-size: 18px; line-height: 28.8px;">
-        {{ $user->name }} has requested to transfer {{$model->name ?? ucfirst($type).' #'.$model->asset_tag}} from {{ $from->name}} to {{ $from->to}} on {{ $date}}.
+        {{ $user->name }} has requested to transfer {{$requests_model->name ?? ucfirst($requests_type).' #'.$requests_model->asset_tag}}
+         from {{ $requests_from->name}} to {{ $from->requests_to}} on {{ $requests_date}}.
     </span>
     <span style="font-size: 18px; line-height: 28.8px;">
-        {{ $comment}}
+        {{ $requests_comment}}
     </span>
     <span style="font-size: 18px; line-height: 28.8px;">
         You can login to your account to Approve or Reject this request by clicking on the button below: 
