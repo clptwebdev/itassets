@@ -7,10 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\User;
-use App\Models\Location;
-use App\Models\Asset;
-use App\Models\Accessory;
+use \App\Models\User;
+use \App\Models\Location;
+use \App\Models\Asset;
+use \App\Models\Accessory;
 
 class AlertRequest extends Mailable
 {
