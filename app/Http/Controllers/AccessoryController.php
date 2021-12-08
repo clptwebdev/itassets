@@ -38,7 +38,7 @@ class AccessoryController extends Controller {
 
         if(auth()->user()->role_id == 1)
         {
-            $accessories = Accessory::with('supplier', 'location')
+            $accessories = Accessory::with('supplier', 'location','manufacturer')
                 ->leftJoin('locations', 'locations.id', '=', 'accessories.location_id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
