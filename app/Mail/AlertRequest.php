@@ -43,7 +43,6 @@ class AlertRequest extends Mailable
         
         $this->comment = $comment;
         
-        return dd($this->comment);
     }
 
     /**
@@ -53,6 +52,8 @@ class AlertRequest extends Mailable
      */
     public function build()
     {
+        
+        return dd($this->user);
         return $this->view('view.admin.alert-request');
     }
 }
