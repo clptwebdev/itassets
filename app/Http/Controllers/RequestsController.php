@@ -72,7 +72,7 @@ class RequestsController extends Controller
             //Notify by email
             $admins = User::superAdmin()->get();
             foreach($admins as $admin){
-                Mail::to('stuart.corns@clpt.co.uk')->send(new \App\Mail\AlertRequest(auth()->user(), 'asset', 3091, 1, 2, '10/12/2021', 'rtertertert'));
+                Mail::to('stuart.corns@clpt.co.uk')->send(new \App\Mail\AlertRequest(34, 'asset', 3091, 1, 2, '10/12/2021', 'rtertertert'));
             }
             return back()->with('success_message', 'The request to transfer the asset has been sent.');
         }  
