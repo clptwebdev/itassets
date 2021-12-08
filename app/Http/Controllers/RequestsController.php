@@ -8,6 +8,8 @@ use App\Models\Asset;
 use App\Models\Archive;
 use App\Models\Requests;
 use App\Models\Transfer;
+use App\Models\User;
+use App\Models\Location;
 
 class RequestsController extends Controller
 {
