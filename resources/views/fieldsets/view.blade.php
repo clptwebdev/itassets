@@ -11,10 +11,8 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Asset Model Custom Fieldsets</h1>
     <div>
-        <a href="{{ route('fieldsets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+        <a href="{{ route('fieldsets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Custom Fieldset</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
 </div>
 
@@ -62,7 +60,7 @@
                             </td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
-                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                    <a class="btn btn-lilac dropdown-toggle" href="#" role="button"
                                         id="dropdownMenuLink"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -71,9 +69,12 @@
                                         class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                         aria-labelledby="dropdownMenuLink">
                                         <div class="dropdown-header">Asset Options:</div>
-                                        <a href="{{ route('fieldsets.show', $fieldset->id) }}" class="dropdown-item">View</a>
+                                        @can('update', $fieldset)
                                         <a href="{{ route('fieldsets.edit', $fieldset->id) }}" class="dropdown-item">Edit</a>
+                                        @endcan
+                                        @can('delete', $fieldset)
                                         <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('fieldsets.destroy', $fieldset->id)}}"">Delete</a>
+                                        @endcan
                                     </div>
                                 </div>
                             </td>
@@ -84,7 +85,13 @@
             </div>
         </div>
     </div>
+    <div class="card shadow mb-3">
+        <div class="card-body">
+            <h4>Help with Fieldsets</h4>
+            <p>Click <a href="{{route("documentation.index").'#collapseEighteenFieldsets'}}">here</a> for the Documentation on FieldSets on Adding and Removing!</p>
 
+        </div>
+    </div>
 </section>
 
 @endsection
@@ -112,8 +119,8 @@
                 <form id="deleteForm" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </form>
             </div>
         </div>
@@ -129,7 +136,7 @@
         //showModal
         $('#removeFieldsetModal').modal('show');
     });
-    
+
     $('#confirmBtn').click(function() {
         $('#deleteForm').submit();
     });

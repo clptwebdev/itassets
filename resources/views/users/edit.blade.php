@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Edit User')
 @section('css')
 
 @endsection
@@ -11,10 +11,13 @@
 
             <div>
                 <a href="{{ route('users.index')}}"
-                   class="d-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                   class="d-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Users</a>
-                <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
-                        class="far fa-save fa-sm text-white-50"></i> Save 
+                <a href="{{ route('documentation.index')."#collapseElevenUsers"}}"
+                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                        class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
+                <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
+                        class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
             </div>
         </div>
@@ -52,6 +55,12 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="telephone">Telephone</label><span class="text-danger">* (Please use 01 Format)</span>
+                                <input type="text" class="form-control <?php if ($errors->has('telephone')) {?>border-danger<?php }?>" name="telephone"
+                                    id="telephone" placeholder="" value="@if(old('telephone') !== NULL){{ old('telephone')}}@else{{$user->telephone}}@endif">
+                            </div>
+
+                            <div class="form-group">
                                 <label for="email">Email Address</label><span class="text-danger">*</span>
                                 <input type="text" class="form-control <?php if ($errors->has('email')) {?>border-danger<?php }?>" name="email"
                                     id="email" placeholder="" value="@if(old('email') !== NULL){{ old('email')}}@else{{$user->email}}@endif">
@@ -79,17 +88,18 @@
                                     <option value="1" @if(old('role_id') == 1){{'selected'}}@elseif($user->role_id == 1){{ 'selected'}}@endif>Super Administrator</option>
                                     @endif
                                     <option value="2" @if(old('role_id') == 2){{'selected'}}@elseif($user->role_id == 2){{ 'selected'}}@endif>Administrator</option>
-                                    <option value="3" @if(old('role_id') == 3){{'selected'}}@elseif($user->role_id == 3){{ 'selected'}}@endif>User Manager</option>
-                                    <option value="4" @if(old('role_id') == 4){{'selected'}}@elseif($user->role_id == 4){{ 'selected'}}@endif>User</option>
+                                    <option value="3" @if(old('role_id') == 3){{'selected'}}@elseif($user->role_id == 3){{ 'selected'}}@endif>Technician</option>
+                                    <option value="4" @if(old('role_id') == 4){{'selected'}}@elseif($user->role_id == 4){{ 'selected'}}@endif>User Manager</option>
+                                    <option value="5" @if(old('role_id') == 5){{'selected'}}@elseif($user->role_id == 5){{ 'selected'}}@endif>User</option>
                                 </select>
                             </div>
                         </div>
-                    </div>                           
+                    </div>
                 </div>
 
                 <div class="col-12 mt-4">
                     <div class="card shadow">
-                        
+
                         <div class="card-body">
                             <div class="card-title">Permissions</div>
                             <div class="form-group">
@@ -98,7 +108,7 @@
                             </div>
 
                             <div class="form-inline">
-                                
+
                                 <select type="text"
                                     class="form-control mb-2 mr-sm-2"
                                     name="permission_id" id="permission_id">
@@ -107,10 +117,7 @@
                                     <option value="{{$location->id}}" @if(old('location_id') == $location->id){{'selected'}}@endif>{{$location->name}}</option>
                                     @endforeach
                                 </select>
-                                <a id="submitPermission" class="btn btn-primary mb-2" onclick="javascript:addPermission();">Add</a>
-                                <small id="passwordHelpBlock" class="form-text text-info">
-                                    Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
-                                </small>
+                                <a id="submitPermission" class="btn btn-blue mb-2" onclick="javascript:addPermission();">Add</a>
                                 <hr>
                                 <div class="w-100">
                                 <div id="permissions" class="p-2 row">
@@ -132,7 +139,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @endforeach  
+                                    @endforeach
                                 </div>
                                 </div>
                             </div>
@@ -145,7 +152,7 @@
     @endsection
 
     @section('modals')
-       
+
     @endsection
 
     @section('js')
@@ -190,11 +197,11 @@
                 $.ajax({
                     url: '/permissions/users',
                     type: 'POST',
-                    data: fData, 
+                    data: fData,
                     processData: false,
                     contentType: false,
                     success: function(data) {
-                        document.getElementById("permissions").innerHTML = data;    
+                        document.getElementById("permissions").innerHTML = data;
                     },
                 });
             }

@@ -13,7 +13,7 @@
                 </div>
                 <div class="pl-3">
                     {{ $location->name}}
-                    <div class="text-white-50 small">{{$location->icon}}</div>
+                    <div class="text-white-50 small">{{$location->address_1}}</div>
                 </div>
                 
             </div>

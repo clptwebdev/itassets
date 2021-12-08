@@ -61,8 +61,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 'date',
             ],
             'supplier_id' => [
-                'required',
-                'string',
+                
             ],
             'location_id' => [
                 'string',

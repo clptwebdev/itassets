@@ -12,15 +12,15 @@
         <h1 class="h3 mb-0 text-gray-800">Database Backups</h1>
         <div>
 
-            <a href="{{route("backupdb.create")}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"
+            <a href="{{route("backupdb.create")}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"
                id="backup1"><i
-                    class="fas fa-plus fa-sm text-white-50"></i>Create a Database BackUp</a>
-            <a href="{{route("backup.create")}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"
+                    class="fas fa-plus fa-sm text-white-50"></i> Create a Database BackUp</a>
+            <a href="{{route("backup.create")}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"
                id="backup2"><i
-                    class="fas fa-plus fa-sm text-white-50"></i>Create a Full BackUp</a>
-            <a href="{{route("backup.clean")}}" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
+                    class="fas fa-plus fa-sm text-white-50"></i> Create a Full BackUp</a>
+            <a href="{{route("backup.clean")}}" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm"
                id="backup3"><i
-                    class="fas fa-plus fa-sm text-white-50"></i>Clean the BackUp Folder</a>
+                    class="fas fa-trash fa-sm text-white-50"></i >Clear the BackUp Folder</a>
         </div>
     </div>
 
@@ -41,15 +41,13 @@
             @foreach($files as $file_name)
                 <div class="col-xl-3 col-md-4 mb-4">
                     <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid;">
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold">{{$file_name}}</h6>
-                        </div>
                         <div class="card-body">
                             <div class="row no-gutters">
                                 <div class="col mr-2">
                                     <div class="mb-1">
+                                        <h6 class="m-0 font-weight-bold mb-3">{{$file_name}}</h6>
                                         <a href="{{ asset('storage/'.$file_name)}}"
-                                           class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm backup">Download
+                                           class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm backup">Download
                                             This Zip</a>
                                     </div>
                                 </div>

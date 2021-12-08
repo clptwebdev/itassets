@@ -39,9 +39,15 @@ class User extends Authenticatable {
     {
         return $this->belongsTo('App\Models\Photo');
     }
+
     public function comment()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
     }
 
     public function asset()
@@ -98,6 +104,10 @@ class User extends Authenticatable {
         }
         return $password;
 
+    }
+
+    public function scopeSuperAdmin($query){
+        return $query->where('role_id', '=', '1');
     }
 
 }

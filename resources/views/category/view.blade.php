@@ -11,10 +11,10 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Categories</h1>
     <div>
-        <a href="#" data-toggle="modal" data-target="#addCategoryModal" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Add New Category</a>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        <a href="#" data-toggle="modal" data-target="#addCategoryModal" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                class="fas fa-plus fa-sm text-white-50"></i> Add New Category</a>{{--
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> --}}
     </div>
 </div>
 
@@ -57,27 +57,24 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                        <?php $categories = App\Models\Category::all();?>
                         @foreach($categories as $category)
                         <tr>
                             <td>{{ $category->name }}</td>
                             <td class="text-center">
-                                <?php $assets = \App\Models\Asset::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($assets)}}
+                                {{ $category->assets()->locationFilter($locations->pluck('id'))->count()}}
                             </td>
                             <td class="text-center">
-                                <?php $accessories = \App\Models\Accessory::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($accessories)}}
+                                {{ $category->accessories()->locationFilter($locations->pluck('id'))->count()}}
                             </td>
                             <td class="text-center">
-                                <?php $components = \App\Models\Component::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($components)}}
+                                {{ $category->components()->locationFilter($locations->pluck('id'))->count()}}
                             </td>
                             <td class="text-center">
-                                <?php $consumables = \App\Models\Consumable::locationFilter($locations->pluck('id'))->categoryFilter([$category->id])->get();?>
-                                {{count($consumables)}}    
+                                {{ $category->consumables()->locationFilter($locations->pluck('id'))->count()}}
                             </td>
-                            <td class="text-center">N/A</td>
+                            <td class="text-center">
+                                {{ $category->miscellanea()->locationFilter($locations->pluck('id'))->count()}}
+                            </td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
                                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$category->id}}Link"
@@ -86,10 +83,13 @@
                                     </a>
                                     <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenu{{$category->id}}Link">
                                         <div class="dropdown-header">Category Options:</div>
-                                        <a href="{{ route('category.show', $category->id) }}" class="dropdown-item">View</a>
-                                        <a href="#" class="dropdown-item updateBtn" 
+                                        @can('update', $category)
+                                            <a href="#" class="dropdown-item updateBtn"
                                         data-id="{{$category->id}}" data-name="{{ $category->name}}" data-route="{{ route('category.update', $category->id)}}">Edit</a>
-                                        <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('category.destroy', $category->id)}}">Delete</a>
+                                        @endcan
+                                        @can('delete', $category)
+                                            <a class="dropdown-item deleteBtn" href="#" data-route="{{ route('category.destroy', $category->id)}}">Delete</a>
+                                        @endcan
                                     </div>
                                 </div>
                             </td>
@@ -100,7 +100,12 @@
             </div>
         </div>
     </div>
-
+    <div class="card shadow mb-3">
+        <div class="card-body">
+            <h4>Help with Category's</h4>
+                <p>Click <a href="{{route("documentation.index").'#collapseSeventeenCategories'}}">here</a> for the Documentation on Categories on Adding and Removing!</p>
+        </div>
+    </div>
 </section>
 
 @endsection
@@ -127,8 +132,8 @@
                     <small class="text-info">**You will be able to assign categories to any assets on the system. These can act as a filter.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Save</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Save</button>
                 </div>
             </form>
         </div>
@@ -158,8 +163,8 @@
                         can act as a filter.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Save</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Save</button>
                 </div>
             </form>
         </div>
@@ -187,8 +192,8 @@
                 <form id="deleteForm" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </form>
             </div>
         </div>
@@ -214,11 +219,11 @@
         var name = $(this).data('name');
         var route = $(this).data('route');
         $('[name="name"]').val(name);
-        $('#updateForm').attr('action', route); 
+        $('#updateForm').attr('action', route);
         $('#updateCategoryModal').modal('show');
     });
-    
-    
+
+
 
     $(document).ready( function () {
         $('#categoryTable').DataTable({

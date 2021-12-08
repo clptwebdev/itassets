@@ -18,7 +18,7 @@ class UpdateUsersTable extends Migration
             $table->integer('role_id')->unsigned()->default(0);
             $table->integer('photo_id')->unsigned()->nullable()->default(0);
             $table->integer('location_id')->unsigned()->nullable()->default(0);
-            $table->string('telephone', 12)->nullable()->default(0);
+            $table->string('telephone', 14)->nullable();
         });
     }
 

@@ -1,19 +1,21 @@
 @extends('layouts.app')
 
+@section('title', 'Add a New Supplier')
+
 @section('css')
 
 @endsection
 
 @section('content')
-<form action="{{ route('supplier.store') }}" method="POST">
+<form action="{{ route('suppliers.store') }}" method="POST">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Add New Supplier</h1>
 
         <div>
-            <a href="{{ route('supplier.index') }}"
-                class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+            <a href="{{ route('suppliers.index') }}"
+                class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Suppliers</a>
-            <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+            <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="far fa-save fa-sm text-white-50"></i> Save</button>
         </div>
     </div>
@@ -49,7 +51,7 @@
                             <label for="address2">Street Address</label>
                             <input type="text"
                                 class="form-control mb-3 <?php if ($errors->has('address_1') || $errors->has('address_2')) {?>border-danger<?php }?>"
-                                name="address_1" id="address_1" required>
+                                name="address_1" id="address_1" >
                             <input type="text" class="form-control" name="address_2" id="address_2">
                         </div>
                         <div class="form-row">
@@ -57,19 +59,19 @@
                                 <label for="city">City</label>
                                 <input type="text"
                                     class="form-control <?php if ($errors->has('city')) {?>border-danger<?php }?>"
-                                    id="city" name="city" required>
+                                    id="city" name="city" >
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="city">County</label>
                                 <input type="text"
                                     class="form-control <?php if ($errors->has('county')) {?>border-danger<?php }?>"
-                                    id="county" name="county" required>
+                                    id="county" name="county" >
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="postcode">Post Code</label>
                                 <input type="text"
                                     class="form-control <?php if ($errors->has('postcode')) {?>border-danger<?php }?>"
-                                    id="postcode" name="postcode" required>
+                                    id="postcode" name="postcode" >
                             </div>
                         </div>
 
@@ -89,8 +91,8 @@
                     <div class="card-body">
                         <div class="w-100">
                             <div class="formgroup mb-2 p-2">
-                                <h4 class="h6 mb-3">Location Image</h4>
-                                <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}" width="100%"
+                                <h4 class="h6 mb-3">Supplier Image</h4>
+                                <img id="profileImage" src="{{ asset('images/svg/suppliers.svg') }}" width="100%"
                                     alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                 <input type="hidden" id="photo_id" name="photo_id" value="0">
                             </div>
@@ -149,7 +151,7 @@
                 @endforeach
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                <button type="button" class="btn btn-blue" data-dismiss="modal" data-toggle="modal"
                     data-target="#uploadModal">Upload
                     file</button>
             </div>
@@ -174,7 +176,7 @@
                 <form id="imageUpload">
                     Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
                     Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                    <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
+                    <button type='submit' class='btn btn-green' id='btn_upload'>Upload</button>
                 </form>
             </div>
 

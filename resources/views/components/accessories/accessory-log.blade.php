@@ -11,7 +11,6 @@
                         <p class="mb-4">Log information regarding {{ $accessory->name}}
                             , view history and activity regarding the selected accessory.</p>
                         <table class="logs table table-striped ">
-                            <th>
                             <tbody>
                                 @foreach($accessory->logs()->orderBy('created_at', 'desc')->take(5)->get() as $log)
                                 <tr>
@@ -20,6 +19,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <a href="{{route("logs.index")}}" class="btn btn-blue">View All Logs</a>
                 </div>
                 </div>
             </div>

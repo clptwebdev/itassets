@@ -30,7 +30,7 @@ class Manufacturer extends Model {
     {
         return $this->hasMany(Accessory::class);
     }
-    
+
     public function consumable()
     {
         return $this->hasMany(Consumable::class);
@@ -39,6 +39,14 @@ class Manufacturer extends Model {
     public function component()
     {
         return $this->hasMany(Component::class);
+    }
+
+    public function scopeManufacturerFilter($query, $search)
+    {
+
+        return $query->where('manufacturers.name', 'LIKE', "%{$search}%")->orWhere('manufacturers.supportUrl', 'LIKE', "%{$search}%");
+
+
     }
 
 }

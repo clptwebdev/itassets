@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Http\Controllers\BackupController;
+use App\Models\Report;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Storage;
@@ -43,13 +44,15 @@ class Kernel extends ConsoleKernel
         })
             ->lastDayOfMonth()
             ->runInBackground();
+
         //deletes all csv's Monthly
         $schedule->call(function(){
             $files = Storage::files('/public/csv');
             Storage::delete($files);
-        })
-            ->weekly()
-            ->runInBackground();
+        })->daily()->runInBackground();
+
+        //deletes all PDF's Monthly
+        $schedule->call(Report::clean())->daily()->runInBackground();
 
     }
 

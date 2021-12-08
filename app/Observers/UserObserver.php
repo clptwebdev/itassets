@@ -8,15 +8,10 @@ use Carbon\Carbon;
 
 class UserObserver
 {
-    /**
-     * Handle the User "created" event.
-     *
-     * @param  \App\Models\User  $user
-     * @return void
-     */
+    
     public function created(User $user)
     {
-        $name = auth()->user()->id ?? 'System';
+        $name = auth()->user()->name ?? 'System';
         switch($user->role_id){
             case 0:
                 $role = 'No Access';

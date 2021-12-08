@@ -1,8 +1,10 @@
 @extends('layouts.pdf-reports')
 
-@section('title', 'Manufacturer Report')
+@section('title', 'Suppliers Report')
 
-@section('page', 'Manufacturers')
+@section('user', $user->name)
+
+@section('page', 'Suppliers')
 
 @section('content')
     <table id="assetsTable" class="table table-striped" width="100%">
@@ -21,26 +23,21 @@
         </thead>
         
         <tbody>
-        @foreach($manufacturers as $manufacturer)
+        @foreach($suppliers as $supplier)
 
             <tr>
-                <td>{{ $manufacturer->name}}</td>
-                <td><small>{{ $manufacturer->supportUrl}}</small></td>
-                <td><small>{{ $manufacturer->supportEmail}}</small></td>
-                <td><small>{{ $manufacturer->supportPhone}}</small></td>
-                <td class="text-center">
-                    @php
-                        $total = 0;
-                        foreach($manufacturer->assetModel as $assetModel){
-                            $total += $assetModel->assets->count();
-                        }   
-                    @endphp
-                    {{ $total}}
+                <td>
+                    {{ $supplier['name']}}<br>
+                    <span class="small">{{ $supplier['line1'].', '.$supplier['line2'].', '.$supplier['city'].', '.$supplier['county'].', '.$supplier['postcode']}}</span>
                 </td>
-                <td class="text-center">{{$manufacturer->accessory->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$manufacturer->component->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$manufacturer->consumable->count() ?? "N/A"}}</td>
-                <td class="text-center">{{$manufacturer->miscellanea->count() ?? "N/A"}}</td>
+                <td><small>{{ $supplier['url']}}</small></td>
+                <td><small>{{ $supplier['email']}}</small></td>
+                <td><small>{{ $supplier['telephone']}}</small></td>
+                <td class="text-center">{{ $supplier['asset']}}</td>
+                <td class="text-center">{{$supplier['accessory']}}</td>
+                <td class="text-center">{{$supplier['component']}}</td>
+                <td class="text-center">{{$supplier['consumable']}}</td>
+                <td class="text-center">{{$supplier['miscellaneous']}}</td>
             </tr>
         @endforeach
         </tbody>

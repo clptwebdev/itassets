@@ -9,6 +9,11 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class accessoryExport implements FromArray, WithHeadings
 {
+    private $accessories;
+    public function __construct($accessories)
+    {
+        $this->accessories = $accessories;
+    }
     public function headings(): array
     {
         return [
@@ -28,9 +33,8 @@ class accessoryExport implements FromArray, WithHeadings
 
     public function array(): array
     {
-        $accessories = \App\Models\Accessory::all();
         $object = [];
-        foreach($accessories as $accessory)
+        foreach($this->accessories as $accessory)
         {
             $array = [];
             $array["name"] = $accessory->name;

@@ -12,11 +12,11 @@
     <h1 class="h3 mb-0 text-gray-800">Asset Models</h1>
     <div>
         @can('create', \App\Models\AssetModel::class)
-        <a href="{{ route('asset-models.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+        <a href="{{ route('asset-models.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Asset Modal</a>
         @endcan
         @can('viewAny', \App\Models\AssetModel::class)
-        <a href="{{ route('asset-model.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
+        <a href="{{ route('asset-model.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
         @endcan
     </div>
@@ -40,7 +40,6 @@
                 <table id="modelsTable" class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="text-center"><small>ID</small></th>
                             <th><small>Name</small></th>
                             <th><small>Manufacturer</small></th>
                             <th><small>Model No:</small></th>
@@ -51,7 +50,6 @@
                     </thead>
                     <tfoot>
                         <tr>
-                            <th class="text-center"><small>ID</small></th>
                             <th><small>Name</small></th>
                             <th><small>Manufacturer</small></th>
                             <th><small>Model No:</small></th>
@@ -64,9 +62,8 @@
                         <?php $models = App\Models\AssetModel::all();?>
                         @foreach($models as $model)
                         <tr>
-                            <td class="text-center">{{ $model->id }}</td>
                             <td>{{ $model->name }}</td>
-                            <td>{{ $model->manufacturer->name}}</td>
+                            <td>{{ $model->manufacturer->name ?? 'N/A'}}</td>
                             <td>{{ $model->model_no }}</td>
                             <td class="text-center">{{ $model->assets->count() }}</td>
                             <td>{{ $model->depreciation->name ?? 'No Depreciation Set' }}</td>
@@ -88,7 +85,7 @@
                                         </form>
                                     </div>
                                 </div>
-                                
+
                             </td>
                         </tr>
                         @endforeach
@@ -100,8 +97,8 @@
 
     <div class="card shadow mb-3">
         <div class="card-body">
-            <h4>Help with Suppliers</h4>
-            <p>This area can be minimised and will contain a little help on the page that the user is currently on.</p>
+            <h4>Help with Asset Models</h4>
+            <p>Click <a href="{{route("documentation.index").'#collapseFithteenAssetModels'}}">here</a> for a the Documentation on Asset Models on Importing ,Exporting , Adding , Removing!</p>
         </div>
     </div>
 
@@ -124,13 +121,13 @@
             </div>
             <div class="modal-body">
                 <input id="model-id" type="hidden" value="">
-                <p>There are currently <span id="asset_count">0</span> Asset(s) linked with this Asset Model. These Assets will be unassigned and related data will be lost. 
+                <p>There are currently <span id="asset_count">0</span> Asset(s) linked with this Asset Model. These Assets will be unassigned and related data will be lost.
                     If you wish to continue please Select "Delete" to remove this Asset Model from the system.</p>
                 <small class="text-danger">**Warning this is permanent. This will unassign any Assets that have this model. </small>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
             </div>
         </div>
     </div>
@@ -146,7 +143,7 @@
             //showModal
             $('#removeModelModal').modal('show')
         });
-        
+
         $('#confirmBtn').click(function() {
             var form = '#'+'form'+$('#model-id').val();
             $(form).submit();
@@ -155,10 +152,10 @@
         $(document).ready( function () {
             $('#modelsTable').DataTable({
                 "columnDefs": [ {
-                    "targets": [3,5],
+                    "targets": [5],
                     "orderable": false,
                 } ],
-                "order": [[ 1, "asc"]]
+                "order": [[ 0, "asc"]]
             });
         } );
 </script>

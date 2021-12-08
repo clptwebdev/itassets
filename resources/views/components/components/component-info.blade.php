@@ -7,7 +7,7 @@
         <div class="card-body">
             <div class="row no-gutters">
                 <div class="col-12"><p class="mb-4 ">Information regarding <strong
-                        class="font-weight-bold d-inline-block btn-sm btn-secondary shadow-sm p-1"><small>{{ $component->name }}</small></strong>
+                        class="font-weight-bold d-inline-block btn-sm btn-grey shadow-sm p-1"><small>{{ $component->name }}</small></strong>
                     , along with additional relational data attached.</p>
                 <hr>
                 </div>
@@ -44,7 +44,7 @@
                         <tr>
                             <td>Device Status: </td>
                             <td><strong><i class="{{$component->status->icon ?? 'fa fa-circle'}}" style="color: {{$component->status->colour ?? '#666'}};"></i> {{ $component->status->name ?? 'No Status Set'}}</strong></td>
-                            <td class="text-right"><button class="btn btn-sm btn-secondary p-1 font-weight-bold" data-toggle="modal" data-target="#componentModalStatus">Change Status</button></td>
+                            <td class="text-right"><button class="btn btn-sm btn-blue p-1 font-weight-bold" data-toggle="modal" data-target="#componentModalStatus">Change Status</button></td>
                         </tr>
                     </table>
 
@@ -61,7 +61,7 @@
                                 <td class="text-right">
                                     @if(isset($component->user->id))
                                     <a href="{{ route('users.show', $component->user->id)}}">
-                                    <button class="font-weight-bold btn btn-sm btn-primary p-1">View User</button></a>
+                                    <button class="font-weight-bold btn btn-sm btn-blue p-1">View User</button></a>
                                     @endif
                                 </td>
                             </tr>

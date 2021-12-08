@@ -13,15 +13,20 @@ use App\Models\Category;
 use App\Models\Miscellanea;
 use App\Models\Location;
 use App\Models\Manufacturer;
+use App\Models\Depreciation;
 use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PDF;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\MiscellaneousPdf;
+use App\Jobs\MiscellaneaPdf;
+use App\Models\Report;
 
 class MiscellaneaController extends Controller
 {
+
     public function newComment(Request $request)
     {
         $request->validate([
@@ -40,9 +45,49 @@ class MiscellaneaController extends Controller
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
         }
 
-        return view('miscellanea.view',[
-            "miscellaneous"=>Miscellanea::all(),
+        session(['orderby' => 'purchased_date']);
+        session(['direction' => 'desc']);
+
+        if(auth()->user()->role_id == 1)
+        {
+            $miscellaneous = Miscellanea::with('supplier', 'location')
+                ->leftJoin('locations', 'locations.id', '=', 'miscellaneas.location_id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'miscellaneas.manufacturer_id')
+                ->leftJoin('suppliers', 'suppliers.id', '=', 'miscellaneas.supplier_id')
+                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+                ->paginate(intval(session('limit')) ?? 25, ['miscellaneas.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+                ->fragment('table');
+            $locations = Location::all();
+        } else
+        {
+            $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'))
+                ->leftJoin('locations', 'locations.id', '=', 'miscellaneas.location_id')
+                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'miscellaneas.manufacturer_id')
+                ->leftJoin('suppliers', 'suppliers.id', '=', 'miscellaneas.supplier_id')
+                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+                ->paginate(intval(session('limit')) ?? 25, ['miscellaneas.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+                ->fragment('table');
+            $locations = auth()->user()->locations;
+        }
+        $this->clearFilter();
+        $filter = 0;
+
+        return view('miscellanea.view', [
+            "miscellaneous" => $miscellaneous,
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations" => $locations,
+            "filter" => 0,
         ]);
+
+//        if (auth()->user()->cant('viewAny', Miscellanea::class)) {
+//            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
+//        }
+//
+//        return view('miscellanea.view',[
+//            "miscellaneous"=>Miscellanea::all(),
+//        ]);
     }
 
     public function create()
@@ -63,6 +108,7 @@ class MiscellaneaController extends Controller
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
             'categories' => Category::all(),
+            'depreciations' => Depreciation::all(),
         ]);
     }
 
@@ -85,11 +131,142 @@ class MiscellaneaController extends Controller
         ]);
 
         $miscellanea = Miscellanea::create($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ));
         $miscellanea->category()->attach($request->category);
         return redirect(route("miscellaneous.index"));
 
+    }
+    public function clearFilter()
+    {
+        session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
+
+        return redirect(route('miscellaneous.index'));
+    }
+
+    public function filter(Request $request)
+    {
+        if($request->isMethod('post'))
+        {
+            if(! empty($request->search))
+            {
+                session(['search' => $request->search]);
+            } else
+            {
+                $this->clearFilter();
+            }
+
+            if(! empty($request->limit))
+            {
+                session(['limit' => $request->limit]);
+            }
+            if(! empty($request->orderby))
+            {
+                $array = explode(' ', $request->orderby);
+                if($array[0] != 'audit_date')
+                {
+                    session(['orderby' => $array[0]]);
+                } else
+                {
+                    session(['orderby' => purchased_date]);
+                }
+                session(['direction' => $array[1]]);
+            }
+
+            if(! empty($request->locations))
+            {
+                session(['locations' => $request->locations]);
+            }
+
+            if(! empty($request->status))
+            {
+                session(['status' => $request->status]);
+            }
+
+            if(! empty($request->category))
+            {
+                session(['category' => $request->category]);
+            }
+
+            if($request->start != '' && $request->end != '')
+            {
+                session(['start' => $request->start]);
+                session(['end' => $request->end]);
+            }
+
+            if($request->audit != 0)
+            {
+                session(['audit' => $request->audit]);
+            }
+
+            if($request->warranty != 0)
+            {
+                session(['warranty' => $request->warranty]);
+            }
+
+            session(['amount' => $request->amount]);
+        }
+
+        if(auth()->user()->role_id != 1)
+        {
+            $locations = auth()->user()->locations->pluck('id');
+            $locs = auth()->user()->locations;
+
+        } else
+        {
+            $locations = \App\Models\Location::all()->pluck('id');
+            $locs = \App\Models\Location::all();
+        }
+        $filter = 0;
+
+        $miscellaneous = Miscellanea::locationFilter($locations);
+        if(session()->has('locations'))
+        {
+            $miscellaneous->locationFilter(session('locations'));
+            $filter++;
+        }
+        if(session()->has('status'))
+        {
+            $miscellaneous->statusFilter(session('status'));
+            $filter++;
+        }
+        if(session()->has('category'))
+        {
+            $miscellaneous->categoryFilter(session('category'));
+            $filter++;
+        }
+        if(session()->has('start') && session()->has('end'))
+        {
+            $miscellaneous->purchaseFilter(session('start'), session('end'));
+            $filter++;
+        }
+        if(session()->has('amount'))
+        {
+            $miscellaneous->costFilter(session('amount'));
+            $filter++;
+        }
+
+        if(session()->has('search'))
+        {
+            $miscellaneous->searchFilter(session('search'));
+            $filter++;
+        }
+
+        $miscellaneous->join('locations', 'miscellaneas.location_id', '=', 'locations.id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'miscellaneas.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'miscellaneas.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->select('miscellaneas.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
+        $limit = session('limit') ?? 25;
+
+        return view('miscellanea.view', [
+            "miscellaneous" => $miscellaneous->paginate(intval($limit))->withPath('/miscellanea/filter')->fragment('table'),
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations" => $locs,
+            "filter" => $filter,
+        ]);
     }
 
     public function importErrors(Request $request)
@@ -110,7 +287,6 @@ class MiscellaneaController extends Controller
                 'serial_no.*' => 'required',
                 'warranty.*' => 'int',
                 'location_id.*' => 'required|gt:0',
-                'supplier_id.*' => 'required|gt:0',
                 'purchased_date.*' => 'nullable|date',
                 'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             ]);
@@ -130,14 +306,16 @@ class MiscellaneaController extends Controller
                     $miscellanea->manufacturer_id = $request->manufacturer_id[$i];
                     $miscellanea->order_no = $request->order_no[$i];
                     $miscellanea->warranty = $request->warranty[$i];
+                    $miscellanea->depreciation_id = $request->depreciation_id[$i];
                     $miscellanea->location_id = $request->location_id[$i];
+                    $miscellanea->room = $request->room[$i];
                     $miscellanea->notes = $request->notes[$i];
                     $miscellanea->photo_id =  0;
 
                     $miscellanea->save();
                 }
 
-                session()->flash('success_message', 'You have successfully added all miscellaneous!');
+                session()->flash('success_message', 'You have successfully added all the Miscellaneous items');
                 return 'Success';
             }
         }
@@ -170,13 +348,14 @@ class MiscellaneaController extends Controller
             "suppliers" => Supplier::all(),
             "manufacturers" => Manufacturer::all(),
             "categories" => Category::all(),
+            'depreciations' => Depreciation::all(),
         ]);
     }
 
-    public function update(Request $request, Miscellanea $miscellanea)
+    public function update(Request $request, Miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('update', $miscellanea)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'update']));
+        if (auth()->user()->cant('update', $miscellaneou)) {
+            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'update']));
         }
 
         $request->validate([
@@ -191,11 +370,12 @@ class MiscellaneaController extends Controller
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
 
-        $miscellanea->fill($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
-        ))->save();
-        $miscellanea->category()->sync($request->category);
-        session()->flash('success_message', $miscellanea->name. ' has been updated successfully');
+        if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
+        $miscellaneou->fill(array_merge($request->only(
+            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+        ), ['donated' => $donated]))->save();
+        $miscellaneou->category()->sync($request->category);
+        session()->flash('success_message', $miscellaneou->name. ' has been updated successfully');
 
         return redirect(route("miscellaneous.index"));
     }
@@ -218,8 +398,9 @@ class MiscellaneaController extends Controller
         if (auth()->user()->cant('export', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export']));
         }
+        $miscellaneous = Miscellanea::all();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport, "/public/csv/miscellaneous-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport($miscellaneous), "/public/csv/miscellaneous-ex-{$date}.csv");
         $url = asset("storage/csv/miscellaneous-ex-{$date}.csv");
         return redirect(route('miscellaneous.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
@@ -326,14 +507,53 @@ class MiscellaneaController extends Controller
         if (auth()->user()->cant('viewAny', Miscellanea::class)) {
             return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export pdf']));
         }
-        $miscellaneous = Miscellanea::withTrashed()->whereIn('id', json_decode($request->miscellaneous))->get();
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('miscellanea.pdf', compact('miscellaneous'));
-        $pdf->setPaper('a4', 'landscape');
+
+        $miscellaneous = array();
+
+        $found = Miscellanea::withTrashed()->whereIn('id', json_decode($request->miscellaneous))->get();
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['serial_no'] = $f->serial_no ?? 'N/A';
+            $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['room'] = $f->room ?? 'Unallocated';
+            $array['icon'] = $f->location->icon ?? '#666';
+            $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
+            $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation->years);
+            if($f->depreciation->exists()){
+                if($eol->isPast()){
+                    $dep = 0;
+                }else{
+
+                    $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
+                    $percent = 100 / $f->depreciation->years;
+                    $percentage = floor($age)*$percent;
+                    $dep = $f->purchased_cost * ((100 - $percentage) / 100);
+                }
+            }
+            $array['depreciation'] = $dep;
+            $array['supplier'] = $f->supplier->name ?? 'N/A';
+            $array['warranty'] = $f->warranty ?? '0';
+            $array['status'] = $f->status->name ?? 'N/A';
+            $array['color'] = $f->status->colour ?? '#666';
+            $miscellaneous[] = $array;
+        }
+
+        $user = auth()->user();
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/miscellaneous-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/miscellaneous-{$date}.pdf");
+        $path = 'miscellaneous-'.$date;
+
+        dispatch(new MiscellaneousPdf($miscellaneous, $user, $path))->afterResponse();
+        //Create Report
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('miscellaneous.index'))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 
@@ -343,13 +563,18 @@ class MiscellaneaController extends Controller
             return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'export pdf']));
         }
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('miscellanea.showPdf', compact('miscellanea'));
-        $pdf->setPaper('a4', 'portrait');
+        $user = auth()->user();
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/{$miscellanea->name}-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/{$miscellanea->name}-{$date}.pdf");
+        $path = 'miscellanea-'.$miscellanea->id.'-'.$date;
+
+        dispatch(new MiscellaneaPdf($miscellanea, $user, $path))->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('miscellaneous.show', $miscellanea->id))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 

@@ -10,38 +10,44 @@ class SupplierPolicy
 {
     use HandlesAuthorization;
 
+    protected $super = [1];
+    protected $admin = [1,2];
+    protected $technician = [1,3];
+    protected $manager = [1,2,3,4];
+    protected $all = [1,2,3,4,5];
+
     public function viewAny(User $user)
     {
-        return $user->role_id != 0 && $user->role_id <= 4;
+        return in_array($user->role_id, $this->all);
     }
 
     public function view(User $user)
     {
-        return $user->role_id != 0 && $user->role_id <= 4;
+        return in_array($user->role_id, $this->all);
     }
 
     public function create(User $user)
     {
-        return $user->role_id <= 3;
+        return in_array($user->role_id, $this->manager);
     }
 
     public function update(User $user, Supplier $supplier)
     {
-        return $user->role_id != 0 && $user->role_id <= 3;
+        return in_array($user->role_id, $this->manager);
     }
 
     public function delete(User $user, Supplier $supplier)
     {
-        return $user->role_id == 1;
+        return in_array($user->role_id, $this->manager);
     }
 
     public function restore(User $user, Supplier $supplier)
     {
-        return $user->role_id == 1;
+        return in_array($user->role_id, $this->manager);
     }
 
     public function forceDelete(User $user, Supplier $supplier)
     {
-        return $user->role_id == 1;
+        return in_array($user->role_id, $this->super);
     }
 }

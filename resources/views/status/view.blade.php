@@ -12,7 +12,7 @@
     <h1 class="h3 mb-0 text-gray-800">Status Fields</h1>
     <div>
         <a href="#" data-toggle="modal" data-target="#addStatusModal"
-            class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+            class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Status</a>
     </div>
 </div>
@@ -103,7 +103,16 @@
                                 @endphp
                                 {{ $consumables->count() }}
                             </td>
-                            <td class="text-center">N/A</td>
+                            <td class="text-center">
+                                @php
+                                    if(auth()->user()->role_id == 1){
+                                        $miscellaneous = App\Models\Miscellanea::statusFilter([$status->id]);
+                                    }else{
+                                        $miscellaneous = auth()->user()->location_miscellaneous()->statusFilter([$status->id]);
+                                    }
+                                @endphp
+                                {{ $miscellaneous->count() }}
+                            </td>
                             <td class="text-right">
                                 <div class="dropdown no-arrow">
                                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenu{{$status->id}}Link"
@@ -119,7 +128,7 @@
                                     </div>
                                 </div>
 
-                                
+
                             </td>
                         </tr>
                         @endforeach
@@ -128,7 +137,13 @@
             </div>
         </div>
     </div>
+    <div class="card shadow mb-3">
+        <div class="card-body">
+            <h4>Help with Status's</h4>
+            <p>Click <a href="{{route("documentation.index").'#collapseFourStatus'}}">here</a> for the Documentation on Status's on Adding and Removing!</p>
 
+        </div>
+    </div>
 </section>
 
 @endsection
@@ -179,8 +194,8 @@
                         can act as a filter.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Save</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-green" type="button" id="confirmBtn">Save</button>
                 </div>
             </form>
         </div>
@@ -233,8 +248,8 @@
                         can act as a filter.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Save</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-green" type="button" id="confirmBtn">Save</button>
                 </div>
             </form>
         </div>
@@ -263,8 +278,8 @@
                 <form id="deleteForm" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </form>
             </div>
         </div>
@@ -288,10 +303,10 @@
     $('.updateBtn').click(function(){
         var val = $(this).data('id');
         var deployable = $(this).data('deploy');
-        if(deployable == 1){ 
+        if(deployable == 1){
             document.getElementById("update_deployable_yes").checked = true;
-        }else{ 
-            document.getElementById("update_deployable_no").checked = true; 
+        }else{
+            document.getElementById("update_deployable_no").checked = true;
         }
         var name = $(this).data('name');
         var route = $(this).data('route');
@@ -300,19 +315,19 @@
         $('#update_name').val(name);
         $('#update_colour').val(colour);
         $('#update_icon').val(icon);
-        $('#updateForm').attr('action', route); 
+        $('#updateForm').attr('action', route);
         $('#updateStatusModal').modal('show');
     });
-    
-    
+
+
 
     $(document).ready( function () {
         $('#categoryTable').DataTable({
             "columnDefs": [ {
-                "targets": [0, 5],
+                "targets": [7],
                 "orderable": false,
             } ],
-            "order": [[ 1, "asc"]]
+            "order": [[ 0, "asc"]]
         });
     } );
 </script>

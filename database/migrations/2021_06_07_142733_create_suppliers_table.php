@@ -21,10 +21,10 @@ class CreateSuppliersTable extends Migration
             $table->string('city')->nullable();
             $table->string('county')->nullable();
             $table->string('postcode', 8)->nullable();
-            $table->string('telephone', 12);
+            $table->string('telephone', 12)->nullable();
             $table->string('fax')->nullable();
-            $table->string('email')->unique();
-            $table->string('url')->unique();
+            $table->string('email')->unique()->nullable();
+            $table->string('url')->unique()->nullable();
             $table->integer('photo_id')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();

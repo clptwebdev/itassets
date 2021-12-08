@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Recycle Bin | Assets')
+
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -11,13 +13,16 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Assets | Recycle Bin</h1>
         <div>
-            <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                class="fas fa-trash-alt fa-sm text-white-50"></i> Back to Assets</a>
+            <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                class="fas fa-chevron-left fa-sm text-dark-50"></i> Back to Assets</a>
+            <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                    class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
             @can('generatePDF', \App\Models\Asset::class)
             <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
                 @csrf
                 <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
-            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
+            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                     class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
             </form>
             @endcan
@@ -36,7 +41,7 @@
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
-        
+
 
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -111,7 +116,7 @@
                                             <div class="dropdown-header">Asset Options:</div>
                                             <a href="{{ route('assets.restore', $asset->id) }}"
                                                 class="dropdown-item">Restore</a>
-                                            <form class="d-block" id="form{{$asset->id}}" action="{{ route('assets.remove', $asset->id) }}" method="POST">   
+                                            <form class="d-block" id="form{{$asset->id}}" action="{{ route('assets.remove', $asset->id) }}" method="POST">
                                                 @csrf
                                                 @can('delete', $asset)
                                                 <a class="deleteBtn dropdown-item" href="#"
@@ -157,12 +162,12 @@
                 <div class="modal-body">
                     <input id="asset-id" type="hidden" value="">
                     <p>Select "Delete" to remove this asset from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assets assigned to this asset will be
+                    <small class="text-coral">**Warning this is permanent. All assets assigned to this asset will be
                         set to Null.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </div>
             </div>
         </div>
@@ -170,7 +175,7 @@
 @endsection
 
 @section('js')
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>

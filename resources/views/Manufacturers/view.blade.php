@@ -9,18 +9,18 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Manufacturers</h1>
         <div>
-            <a href="{{route("manufacturers.create")}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+            <a href="{{route("manufacturers.create")}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Manufacturers</a>
             @can('viewAny', \App\Models\Manufacturer::class)
-            <a href="{{ route('manufacturer.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading">
+            <a href="{{ route('manufacturer.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading">
                 <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
             </a>
             @if($manufacturers->count() >1)
-            <a href="/exportmanufacturers" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
+            <a href="/exportmanufacturers" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
                     class="fas fa-download fa-sm text-white-50"></i> Export</a>
             @endif
             @endcan
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
 
         </div>
@@ -36,8 +36,8 @@
 
     <section>
         <p class="mb-4">Below are different tiles, one for each manufacturers stored in the management system. Each tile
-            has different manufacturers information that can be created, updated, and deleted.</p>
-
+            has different manufacturers information that can be created, updated, and deleted.Need Help Click <a href="{{route("documentation.index").'#collapseThirteenManufacturers'}}">here?</a> </p>
+      <x-search/>
         <div class="row">
             @foreach($manufacturers as $manufacturer)
                 <div class="col-xl-3 col-md-4 mb-4">
@@ -88,11 +88,11 @@
                                     <table width="100%">
                                         <thead>
                                             <tr>
-                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>As</small></span></th>
-                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Ac</small></span></th>
-                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Cm</small></span></th>
-                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Cn</small></span></th>
-                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-secondary px-2"><small>Mi</small></span></th>
+                                                <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Assets"><i class="fas fa-fw fa-tablet-alt"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Accessories"><i class="fas fa-fw fa-keyboard"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Components"><i class="fas fa-fw fa-hdd"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="Consumables"><i class="fas fa-fw fa-tint"></i></span></th>
+                                        <th class="text-center"><span class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2" data-toggle="tooltip" data-placement="top" title="MIscellaneous"><i class="fas fa-fw fa-question"></i></span></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -102,7 +102,7 @@
                                                         $total = 0;
                                                         foreach($manufacturer->assetModel as $assetModel){
                                                             $total += $assetModel->assets->count();
-                                                        }   
+                                                        }
                                                     @endphp
                                                     {{ $total}}
                                                 </td>
@@ -119,6 +119,16 @@
                     </div>
                 </div>
             @endforeach
+        </div>
+        <div class="d-flex justify-content-between align-content-center">
+            <div>
+                @if($manufacturers->hasPages())
+                    {{ $manufacturers->links()}}
+                @endif
+            </div>
+            <div class="text-right">
+                Showing Assets {{ $manufacturers->firstItem() }} to {{ $manufacturers->lastItem() }} ({{ $manufacturers->total() }} Total Results)
+            </div>
         </div>
     </section>
 
@@ -164,19 +174,19 @@
                 <form action="/importmanufacturer" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add Assets to the system.</p>
-                        <input class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        <input class="form-control"
                                type="file" placeholder="Upload here" name="csv" accept=".csv" id="importEmpty">
                     </div>
                     <div class="modal-footer">
                         @if(session('import-error'))
                             <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
                         @endif
-                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERE4_YTdj09OgTKDE0rqW5cBA2GpiFOsH-ziakd4zeYYwA?e=Ba63sC" target="_blank" class="btn btn-info" >
+                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERE4_YTdj09OgTKDE0rqW5cBA2GpiFOsH-ziakd4zeYYwA?e=Ba63sC" target="_blank" class="btn btn-blue" >
                                 Download Import Template
                             </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
+                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
                             Import
                         </button>
                     @csrf

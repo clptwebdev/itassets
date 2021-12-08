@@ -12,9 +12,12 @@
     <h1 class="h3 mb-0 text-gray-800">Update Location</h1>
 
     <div>
-        <a href="{{ route('location.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+        <a href="{{ route('location.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Locations</a>
-        <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+        <a href="{{ route('documentation.index')."#collapseFiveLocations"}}"
+           class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
+        <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                 class="far fa-save fa-sm text-white-50"></i> Save</button>
     </div>
 </div>
@@ -92,7 +95,7 @@
                                 alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                             @else
                             <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}" width="100%"
-                                alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">       
+                                alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                             @endif
                             <input type="hidden" id="photo_id" name="photo_id" value="{{ $location->photo_id }}">
                         </div>

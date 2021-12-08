@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminte\Contracts\Queue\ShouldQueue;
 
 class Supplier extends Model
 {
     use HasFactory;
-
     protected $fillable = ['name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'telephone', 'fax', 'email', 'url', 'photo_id', 'notes'];
 
     public function photo()
@@ -23,7 +23,7 @@ class Supplier extends Model
 
     public function miscellanea()
     {
-        return $this->hasOne(Miscellanea::class);
+        return $this->hasMany(Miscellanea::class);
     }
 
     public function component()

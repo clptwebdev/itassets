@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,11 +12,16 @@ class Accessory extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'notes','manufacturer_id', 'photo_id'];
+    protected $fillable = ['name', 'model', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'room', 'notes','manufacturer_id', 'photo_id', 'depreciation_id', 'user_id'];
 
     public function photo()
     {
         return $this->belongsTo(Photo::class, 'photo_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function comment()
@@ -31,11 +37,16 @@ class Accessory extends Model
     public function location()
     {
         return $this->belongsTo(Location::class);
-    } 
-    
+    }
+
     public function status()
     {
         return $this->belongsTo(Status::class);
+    }
+
+    public function depreciation()
+    {
+        return $this->belongsTo(Depreciation::class);
     }
 
     public function manufacturer()
@@ -67,5 +78,51 @@ class Accessory extends Model
         $query->whereHas('category', function ($q) use ($category, $pivot) {
             $q->whereIn("{$pivot}.category_id", $category);
         });
+    }
+
+    public function scopeCostFilter($query, $amount){
+        $amount = str_replace('£', '', $amount);
+        $amount = explode(' - ', $amount);
+        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
+    }
+
+    public function scopePurchaseFilter($query, $start, $end){
+        $query->whereBetween('purchased_date', [$start, $end]);
+    }
+
+    public function scopeSearchFilter($query, $search){
+        return $query->where('accessories.name', 'LIKE', "%{$search}%")
+                    ->orWhere('accessories.serial_no', 'LIKE', "%{$search}%");
+    }
+    public function scopeExportFilterStatus($query, $status,$category , $location){
+        $pivot = $this->category()->getTable();
+    return    $query->whereHas('category', function ($q) use ($category, $pivot) {
+            $q->whereIn("{$pivot}.category_id", $category);
+        })->orWhereIn('status_id', $status)
+            ->orWhereIn('location_id', $location);
+
+    }
+//    public function scopeTestExport($query, array $filters){
+//        $query->when($filters['status'] ?? false , fn($query ,$status_id) =>
+//        $query->where('accessories.status_id','like','%' . $status_id. '%')
+//          );
+//
+//    }
+
+    public function depreciation_value(){
+            $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation_years());
+            if($eol->isPast()){
+                return 0;
+            }else{
+                $age = Carbon::now()->floatDiffInYears($this->purchased_date);
+                $percent = 100 / $this->depreciation_years();
+                $percentage = floor($age)*$percent;
+                $dep = $this->purchased_cost * ((100 - $percentage) / 100);
+                return $dep;
+            }
+
+    }
+    public function depreciation_years(){
+        return $this->depreciation->years ?? 0;
     }
 }

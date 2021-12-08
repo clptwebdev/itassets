@@ -13,9 +13,12 @@
 
         <div>
             <a href="{{ route('asset-models.index') }}"
-                class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Asset Models</a>
-            <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+            <a href="{{ route('documentation.index')."#collapseFithteenAssetModels"}}"
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                    class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
+            <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="far fa-save fa-sm text-white-50"></i> Save</button>
         </div>
     </div>
@@ -53,7 +56,7 @@
                                 <?php $mans = App\Models\Manufacturer::all();?>
                                 <option value="0">Please select a Manufacturer</option>
                                 @foreach($mans as $man)
-                                <option value="{{$man->id}}" 
+                                <option value="{{$man->id}}"
                                     @if($man->id == $assetModel->manufacturer_id)
                                         selected
                                     @endif
@@ -116,13 +119,7 @@
             </div>
         </div>
 
-        <div class="card shadow mt-4">
-            <div class="card-header bg-primary-blue text-white">Information</div>
-            <div class="card-body">
-                <p>There are currently X Locations on the System</p>
-            </div>
-
-        </div>
+        <x-admin.assetModels.details />
     </section>
 </form>
 @endsection
@@ -150,7 +147,7 @@
                 @endforeach
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                <button type="button" class="btn btn-blue" data-dismiss="modal" data-toggle="modal"
                     data-target="#uploadModal">Upload
                     file</button>
             </div>
@@ -175,7 +172,7 @@
                 <form id="imageUpload">
                     Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
                     Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                    <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
+                    <button type='submit' class='btn btn-green' id='btn_upload'>Upload</button>
                 </form>
             </div>
 

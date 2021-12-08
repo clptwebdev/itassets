@@ -11,7 +11,7 @@
                 <div class="col mr-2">
                     <div class="mb-1">
                         <p class="mb-4">Information regarding <strong
-                                class="font-weight-bold btn btn-sm btn-secondary shadow-sm p-1">{{ $manufacturer->name }}</strong>
+                                class="font-weight-bold btn btn-sm btn-grey shadow-sm p-1">{{ $manufacturer->name }}</strong>
                             , the manufacturer that is currently assigned to the asset and any request information.</p>
 
                         <table class="table table-sm table-bordered table-striped">
@@ -36,24 +36,24 @@
                                     <td>Telephone:</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ $manufacturer->supportPhone }}</td>
+                                    <td>{{ $manufacturer->supportPhone ?? 'No Telephone Number Available'}}</td>
                                 </tr>
                                 <tr>
                                     <td>Email:</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ $manufacturer->supportEmail }}</td>
+                                    <td>{{ $manufacturer->supportEmail ?? 'No Email Address Available' }}</td>
                                 </tr>
                                 <tr>
                                     <td>URL:</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ $manufacturer->supportUrl }}</td>
+                                    <td>{{ $manufacturer->supportUrl ?? 'No Website Available' }}</td>
                                 </tr>
                             </tbody>
                         </table>
                         @if($manufacturer->supportEmail && $manufacturer->supportEmail != "")
-                        <a href="mailto:{{ $manufacturer->supportEmail}}"><button class="btn btn-sm btn-primary"><i class="far fa-envelope"></i> Email Manufacturer</button></a>
+                        <a href="mailto:{{ $manufacturer->supportEmail}}"><button class="btn btn-sm btn-blue"><i class="far fa-envelope"></i> Email Manufacturer</button></a>
                         @endif
                     </div>
                 </div>

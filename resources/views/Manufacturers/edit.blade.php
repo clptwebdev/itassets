@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Edit '.$manufacturer->name)
+
 @section('css')
 
 @endsection
@@ -13,9 +15,12 @@
             <h1 class="h3 mb-0 text-gray-800">Edit Manufacturer Details</h1>
 
             <div>
-                <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Manufacturers</a>
-                <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+                <a href="{{ route('documentation.index')."#collapseThirteenManufacturers"}}"
+                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                        class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
+                <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
             </div>
@@ -46,23 +51,23 @@
                                 <input type="text"
                                        class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
                                        name="name"
-                                       id="name" value="{{$manufacturer->name}}">
+                                       id="name" value="{{old('name') ?? $manufacturer->name}}">
                             </div>
                             <div class="form-group">
                                 <label for="supportPhone">Telephone</label>
                                 <input type="text" class="form-control" name="supportPhone" id="supportPhone"
-                                       value="{{$manufacturer->supportPhone}}">
+                                       value="{{old('supportPhone') ?? $manufacturer->supportPhone}}">
                             </div>
                             <div class="form-group">
                                 <label for="supportUrl">Manufacturer Website</label>
                                 <input type="text" class="form-control" name="supportUrl" id="supportUrl"
-                                       value="{{$manufacturer->supportUrl}}">
+                                       value="{{old('supportUrl') ?? $manufacturer->supportUrl}}">
                             </div>
 
                             <div class="form-group">
                                 <label for="supportEmail">Email Address</label>
                                 <input type="text" class="form-control" name="supportEmail" id="supportEmail"
-                                       value="{{$manufacturer->supportEmail}}">
+                                       value="{{old('supportEmail') ?? $manufacturer->supportEmail}}">
                             </div>
 
                         </div>
@@ -114,7 +119,7 @@
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" data-toggle="modal"
                             data-target="#uploadModal">Upload
                         file
                     </button>
@@ -140,7 +145,7 @@
                     <form id="imageUpload">
                         Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
                         Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                        <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
+                        <button type='submit' class='btn btn-green' id='btn_upload'>Upload</button>
                     </form>
                 </div>
 

@@ -2,7 +2,7 @@
     <div class="card shadow h-100">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold">Comments</h6>
-            <button id="commentModal" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+            <button id="commentModal" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm">
                     Add New Comment
             </button>
         </div>
@@ -18,7 +18,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach($asset->comment as $comment)    
+                            @foreach($asset->comment as $comment)
                                 <tr>
                                     <td class="text-left" data-sort="{{ strtotime($comment->created_at)}}">
                                         <strong>{{$comment->title}}</strong><br>
@@ -35,10 +35,10 @@
                                                 aria-labelledby="dropdownMenuLink">
                                                 <div class="dropdown-header">comment Options:</div>
                                                 @can('update', $comment)
-                                                <a href="#" class="dropdown-item editComment" 
-                                                    data-route="{{ route('comment.update', $comment->id)}}" 
-                                                    data-id="{{ $comment->id}}" 
-                                                    data-title="{{ $comment->title}}" 
+                                                <a href="#" class="dropdown-item editComment"
+                                                    data-route="{{ route('comment.update', $comment->id)}}"
+                                                    data-id="{{ $comment->id}}"
+                                                    data-title="{{ $comment->title}}"
                                                     data-comment="{{ $comment->comment}}"
                                                 >Edit</a>
                                                 @endcan
@@ -47,7 +47,7 @@
                                                     method="POST" class="d-block p-0 m-0">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <a id="comment_button" class="deleteComment dropdown-item" href="#"
+                                                    <a href="#" id="commentModal" class="dropdown-item deleteComment "
                                                     data-id="{{$comment->id}}">Delete</a>
                                                 </form>
                                                 @endcan

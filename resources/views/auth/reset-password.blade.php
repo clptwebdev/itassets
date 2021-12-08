@@ -1,14 +1,29 @@
-<x-guest-layout>
+@extends("layouts.guest")
+
+@section('title', 'Forgot password')
+
+@section('css')
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet" type="text/css" />
+@endsection
+
+@section('content')
+    <div class="container">
+        <div class="flex direct-middle">
+
     <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
+        <x-slot name="logo" >
+            <div class="container-margin-login flex-size margin-centre">
+                <div class="apollo" style="max-width: 300px;">
+                    <x-application-logo/>
+                </div>
+                <div class=" w-100 text-center">
+                    <h3 class="text-yellow-dash">Welcome to Apollo</h3>
+                </div>
         </x-slot>
 
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
+<div style="background-color: #474775 ;">
         <form method="POST" action="{{ route('password.update') }}">
             @csrf
 
@@ -44,5 +59,8 @@
                 </x-button>
             </div>
         </form>
+</div>
     </x-auth-card>
-</x-guest-layout>
+    </div>
+    </div>
+@endsection

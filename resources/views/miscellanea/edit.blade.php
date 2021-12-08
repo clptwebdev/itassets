@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit miscellanea')
+@section('title', 'Edit Miscellanea')
 
 @section('css')
 
@@ -9,13 +9,16 @@
 @section('content')
     <form action="{{ route('miscellaneous.update', $miscellanea->id) }}" method="POST">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Edit miscellanea</h1>
+            <h1 class="h3 mb-0 text-gray-800">Edit Miscellanea</h1>
 
             <div>
                 <a href="{{ route('miscellaneous.index') }}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to miscellaneous</a>
-                <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+                <a href="{{ route('documentation.index')."#collapseTenMiscellaneous"}}"
+                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                        class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
+                <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
             </div>
@@ -43,7 +46,7 @@
                             @endif
 
                             @csrf
-                            {{ method_field('PATCH') }}
+                            @method('PATCH')
 
                             <div class="form-group">
                                 <label for="name">Name</label>
@@ -69,6 +72,12 @@
                                     <input type="text"
                                            class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
                                            id="purchased_cost" name="purchased_cost" value="{{$miscellanea->purchased_cost}}" required>
+                                           <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" value="1" name="donated" id="donated" @if($miscellanea->donated == 1) checked @endif>
+                                            <label class="form-check-label" for="donated">
+                                                Donated
+                                            </label>
+                                            </div>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_date">Purchased Date</label>
@@ -96,15 +105,21 @@
 
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="status">Status</label>
+                                    <label for="warranty">Warranty</label>
+                                    <input type="text"
+                                           class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
+                                           id="warranty" name="warranty" value="{{$miscellanea->warranty}}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="Warranty">Manufacturer</label>
                                     <select
-                                        class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
-                                        id="status_id" name="status_id">
-                                        <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
+                                        class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
+                                        id="manufacturer_id" name="manufacturer_id">
+                                        <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
                                         </option>
-                                        @foreach($statuses as $status)
+                                        @foreach($manufacturers as $manufacturer)
                                             <option
-                                                value="{{ $status->id }}"@isset($miscellanea->status->id) @if($miscellanea->status->id == $status->id){{'selected'}}@endif @endisset>{{ $status->name}}</option>
+                                                value="{{$manufacturer->id}}"@isset($miscellanea->manufacturer->id) @if($miscellanea->manufacturer->id == $manufacturer->id){{'selected'}}@endif @endisset>{{$manufacturer->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -114,7 +129,7 @@
                                 @php( $cat_array[] = $cc->id)
 
                             @endforeach
-                            <div id="categories" class="border border-gray p-2 mb-3">
+                            <div id="categories" class="form-control h-auto p-4 mb-3">
                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                 @foreach($categories as $category)
                                     <div class="form-check form-check-inline">
@@ -137,12 +152,12 @@
                         <div class="card-body">
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
-                                    <h4 class="h6 mb-3">Location Image</h4>
+                                    <h4 class="h6 mb-3">Miscellaneous Image</h4>
                                     @if($miscellanea->photo()->exists())
-                                        <img id="profileImage" src="{{ asset($miscellanea->photo->path) ?? asset('images/svg/accessory_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                        <img id="profileImage" src="{{ asset($miscellanea->photo->path) ?? asset('images/svg/misc-image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     @else
                                         <img id="profileImage"
-                                             src="{{ asset('images/svg/accessory_image.svg') }}"
+                                             src="{{ asset('images/svg/misc-image.svg') }}"
                                              width="100%"
                                              alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     @endif
@@ -159,27 +174,45 @@
                                     </option>
                                     @foreach($locations as $location)
                                         <option
-                                            value="{{ $location->id }}" @if($miscellanea->location->id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
+                                            value="{{ $location->id }}" @if($miscellanea->location_id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="form-group col-md-12">
+                                <label for="warranty">Room</label>
+                                <input type="text"
+                                       class="form-control <?php if ($errors->has('room')) {?>border border-danger<?php }?>"
+                                       id="room" name="room" value="{{ old('room') ?? $miscellanea->room}}">
+                            </div>
 
                             <div class="form-group col-md-12">
-                                <label for="warranty">Warranty</label>
-                                <input type="text"
-                                       class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
-                                       id="warranty" name="warranty" value="{{$miscellanea->warranty}}">
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="Warranty">Manufacturer</label>
-                                <select
-                                    class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
-                                    id="manufacturer_id" name="manufacturer_id">
-                                    <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
+
+                                <label for="suppliers">Depreciation Model</label>
+                                <select type="text"
+                                        class="form-control <?php if ($errors->has('depreciation_id')) {?>border border-danger<?php }?>"
+                                        id="depreciation_id" name="depreciation_id" required>
+                                    <option value="0" @if(old('depreciation_id') == 0){{'selected'}}@endif>No Depreciation
                                     </option>
-                                    @foreach($manufacturers as $manufacturer)
+                                    @foreach($depreciations as $depreciation)
+                                        <option value="{{ $depreciation->id }}" 
+                                            @if(old('depreciation_id') & old('depreciation_id') == $supplier->id){{'selected'}}
+                                            @elseif($miscellanea->depreciation_id == $depreciation->id){{ 'selected'}}
+                                            @endif
+                                        >{{ $depreciation->name}}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="status">Status</label>
+                                <select
+                                    class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
+                                    id="status_id" name="status_id">
+                                    <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
+                                    </option>
+                                    @foreach($statuses as $status)
                                         <option
-                                            value="{{$manufacturer->id}}"@isset($miscellanea->manufacturer->id) @if($miscellanea->manufacturer->id == $manufacturer->id){{'selected'}}@endif @endisset>{{$manufacturer->name}}</option>
+                                            value="{{ $status->id }}"@isset($miscellanea->status->id) @if($miscellanea->status->id == $status->id){{'selected'}}@endif @endisset>{{ $status->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -216,7 +249,7 @@
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" data-toggle="modal"
                             data-target="#uploadModal">Upload
                         file
                     </button>
@@ -242,7 +275,7 @@
                     <form id="imageUpload">
                         Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
                         Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                        <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
+                        <button type='submit' class='btn btn-green' id='btn_upload'>Upload</button>
                     </form>
                 </div>
 

@@ -13,9 +13,9 @@
 
         <div>
             <a href="{{ route('asset-models.index') }}"
-                class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Asset Models</a>
-            <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+            <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="far fa-save fa-sm text-white-50"></i> Save</button>
         </div>
     </div>
@@ -49,7 +49,7 @@
                             <select class="form-control mb-3 <?php if ($errors->has('manufacturer_id')){?>border-danger<?php }?>"
                                 name="manufacturer_id" id="manufacturer_id" required>
                                 <option value="0">Please select a Manufacturer</option>
-                                @foreach($mans as $man)
+                                @foreach($mans->sortBy('name') as $man)
                                 <option value="{{$man->id}}">{{ $man->name}}</option>
                                 @endforeach
                             </select>
@@ -125,7 +125,7 @@
 <!-- Profile Image Modal-->
 <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl .modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary-blue text-white">
                 <h5 class="modal-title" id="imgModalLabel">Select Image</h5>
@@ -144,7 +144,7 @@
                 @endforeach
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                <button type="button" class="btn btn-blue" data-dismiss="modal" data-toggle="modal"
                     data-target="#uploadModal">Upload
                     file</button>
             </div>
@@ -169,7 +169,7 @@
                 <form id="imageUpload">
                     Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
                     Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                    <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
+                    <button type='submit' class='btn btn-green' id='btn_upload'>Upload</button>
                 </form>
             </div>
 

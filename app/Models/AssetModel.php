@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class AssetModel extends Model
 {
+
     use HasFactory;
 
     protected $fillable = ['name', 'manufacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'];
@@ -34,7 +37,11 @@ class AssetModel extends Model
     public function fieldset(){
         return $this->belongsTo(Fieldset::class);
     }
+
     public function component(){
         return $this->belongsTo(Component::class);
     }
+
+
 }
+

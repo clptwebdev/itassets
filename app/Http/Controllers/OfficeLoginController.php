@@ -42,7 +42,7 @@ class OfficeLoginController extends Controller
                 'password' => $password,
             ])->save();
             
-            Mail::to('stuartcorns@outlook.com')->send(new \App\Mail\NewUserPassword($authUser, $unhash));
+            Mail::to($user->email)->send(new \App\Mail\NewUserPassword($authUser, $unhash));
 
             /*  Mail::send('emails.tpl', $data, function($message){
                 $message->to('stuartcorns@outlook.com', 'Stuart')->subject('Email with Laravel and AWS');

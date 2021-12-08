@@ -10,24 +10,24 @@
     <h1 class="h3 mb-0 text-gray-800">Suppliers</h1>
     <div>
         @can('create', \App\Models\Supplier::class)
-        <a href="{{ route('supplier.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+        <a href="{{ route('suppliers.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Supplier</a>
         @endcan
         @can('viewAny', \App\Models\Supplier::class)
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+        <a href="{{ route('suppliers.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-        <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+        <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Export</a>
         @endcan
     </div>
 </div>
 
 @if(session('danger_message'))
-<div class="alert alert-danger"> {{ session('danger_message')}} </div>
+<div class="alert alert-danger"> {!! session('danger_message')!!} </div>
 @endif
 
 @if(session('success_message'))
-<div class="alert alert-success"> {{ session('success_message')}} </div>
+<div class="alert alert-success"> {!! session('success_message')!!} </div>
 @endif
 
 <section>
@@ -91,14 +91,14 @@
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Supplier Options:</div>
                                             @can('view', $supplier)
-                                            <a href="{{ route('supplier.show', $supplier->id) }}"
+                                            <a href="{{ route('suppliers.show', $supplier->id) }}"
                                                class="dropdown-item">View</a>
                                             @endcan
                                             @can('update', $supplier)
-                                                <a href="{{ route('supplier.edit', $supplier->id) }}" class="dropdown-item">Edit</a>
+                                                <a href="{{ route('suppliers.edit', $supplier->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $supplier)
-                                                <form id="form{{$supplier->id}}" action="{{ route('supplier.destroy', $supplier->id) }}" method="POST">
+                                                <form id="form{{$supplier->id}}" action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <a class="deleteBtn dropdown-item" href="#"
@@ -119,7 +119,7 @@
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Suppliers</h4>
-                <p>This area can be minimised and will contain a little help on the page that the user is currently on.</p>
+                <p>Click <a href="{{route("documentation.index").'#collapseFourteenSuppliers'}}">here</a> for the Documentation on Suppliers on exporting,Adding and Removing!</p>
             </div>
         </div>
 
@@ -146,8 +146,8 @@
                     <small class="text-danger">**Warning this is permanent. All assets assigned to this supplier will be set to Null.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </div>
             </div>
         </div>
@@ -171,10 +171,10 @@
         $(document).ready( function () {
             $('#suppliersTable').DataTable({
                 "columnDefs": [ {
-                    "targets": [0, 5],
+                    "targets": [2,3,9],
                     "orderable": false,
                 } ],
-                "order": [[ 1, "asc"]]
+                "order": [[ 0, "asc"]]
             });
         } );
     </script>

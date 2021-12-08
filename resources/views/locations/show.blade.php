@@ -14,15 +14,15 @@
         <a href="{{ route('location.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
                 class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
         @can('delete', $location)
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm deleteBtn"><i
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm bg-coral text-white shadow-sm deleteBtn"><i
                 class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
         @endcan
         @can('update', $location)
-        <a href="{{ route('location.edit', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+        <a href="{{ route('location.edit', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm bg-yellow text-white shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
         @endcan
         @can('view', $location)
-        <a href="{{ route('location.showPdf', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm loading"><i
+        <a href="{{ route('location.showPdf', $location->id)}}" class="d-none d-sm-inline-block btn btn-sm bg-blue text-white shadow-sm loading"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
         @endcan
     </div>
@@ -499,7 +499,7 @@
                                         <a href="{{ route('miscellaneous.show', $miscellanea->id) }}" class="dropdown-item">View</a>
                                         @endcan
                                         @can('update', $miscellanea)
-                                            <a href="{{ route('misclellaneous.edit', $miscellanea->id) }}" class="dropdown-item">Edit</a>
+                                            <a href="{{ route('miscellaneous.edit', $miscellanea->id) }}" class="dropdown-item">Edit</a>
                                         @endcan
                                         @can('delete', $miscellanea)
                                             <form id="form{{$miscellanea->id}}" action="{{ route('miscellaneous.destroy', $miscellanea->id) }}" method="POST" class="d-block p-0 m-0">
@@ -523,18 +523,6 @@
 @endsection
 
 @section('modals')
-
-<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"aria-hidden="true" id="loadingModal">
-    <div class="modal-dialog modal-sm">
-       <div class="modal-content">
-           <button class="btn" type="button" disabled style="background-color: #b087bc; color: #666;">
-               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-               Loading...
-           </button>
-       </div>
-    </div>
-</div>
-
 <!-- User Delete Modal-->
 <div class="modal fade bd-example-modal-lg" id="removeModal" tabindex="-1" role="dialog"
     aria-labelledby="removeModalLabel" aria-hidden="true">
@@ -557,8 +545,8 @@
                         available.</small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="submit">Delete</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="submit">Delete</button>
                 </div>
             </form>
         </div>

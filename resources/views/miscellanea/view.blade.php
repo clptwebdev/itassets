@@ -4,6 +4,12 @@
 
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
+          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 @endsection
 
 @section('content')
@@ -13,32 +19,32 @@
         <h1 class="h3 mb-0 text-gray-800">Miscellaneous</h1>
         <div>
             @can('viewAny', \App\Models\Miscellanea::class)
-                <a href="{{ route('miscellaneous.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <a href="{{ route('miscellaneous.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm">
                     <i class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Miscellanea::onlyTrashed()->count()}})</a>
             @endcan
             @can('create', \App\Models\Miscellanea::class)
-                <a href="{{ route('miscellaneous.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+                <a href="{{ route('miscellaneous.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm">
                     <i class="fas fa-plus fa-sm text-white-50"></i> Add New Miscellanea</a>
             @endcan
             @can('viewAny', \App\Models\Miscellanea::class)
                 @if ($miscellaneous->count() == 1)
-                    <a href="{{ route('miscellaneous.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm mr-1 loading"><i
+                    <a href="{{ route('miscellaneous.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm mr-1 loading"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                 @else
                     <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">
                         @csrf
                         <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
-                        <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm mr-1 loading"><i
+                        <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm mr-1 loading"><i
                                 class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                     </form>
                 @endif
                 @if($miscellaneous->count() >1)
-                    <a href="/exportmiscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
+                    <a href="/exportmiscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
                             class="fas fa-download fa-sm text-white-50"></i>Export</a>
                 @endif
             @endcan
             @can('create', \App\Models\Miscellanea::class)
-                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm">
                     <i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
             @endcan
         </div>
@@ -52,10 +58,30 @@
         <div class="alert alert-success"> {!!session('success_message') !!}  </div>
     @endif
 
+    @php
+        if(auth()->user()->role_id == 1){
+            $limit = \App\Models\Miscellanea::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
+            $floor = \App\Models\Miscellanea::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first();
+        }else{
+            $limit = auth()->user()->location_miscellaneous()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_miscellaneous()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+        }
+        if(session()->has('amount')){
+            $amount = str_replace('£', '', session('amount'));
+            $amount = explode(' - ', $amount);
+            $start_value = intval($amount[0]);
+            $end_value = intval($amount[1]);
+        }else{
+            $start_value = $floor;
+            $end_value = $limit;
+        }
+    @endphp
     <section>
         <p class="mb-4">Below are the different miscellaneous stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
         <!-- DataTales Example -->
+        <x-filters.navigation model="Miscellanea" :filter=$filter />
+        <x-filters.filter model="Miscellanea" relations="components" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories  />
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
@@ -96,7 +122,7 @@
                                 <td class="text-center">
                                     @if($miscellanea->location()->exists())
                                         @if($miscellanea->location->photo()->exists())
-                                            <img src="{{ asset($miscellanea->location->photo->path)}}" height="30px" alt="{{$miscellanea->location->name}}" title="{{ $miscellanea->location->name ?? 'Unnassigned'}}"/>'
+                                            <img src="{{ asset($miscellanea->location->photo->path)}}" height="30px" alt="{{$miscellanea->location->name}}" title="{{ $miscellanea->location->name ?? 'Unnassigned'}}"/>
                                         @else
                                             {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($miscellanea->location->icon ?? '#666').'">'
                                                 .strtoupper(substr($miscellanea->location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -104,15 +130,36 @@
                                     @endif
                                 </td>
                                 <td class="text-center">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
-                                <td>{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
-                                <td>£{{$miscellanea->purchased_cost}}</td>
+                                <td data-sort="{{ strtotime($miscellanea->purchased_date)}}">{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
+                                <td class="text-center">
+                                    £{{$miscellanea->purchased_cost}} @if($miscellanea->donated == 1) <span class="text-sm">*Donated</span> @endif
+                                    @if($miscellanea->depreciation()->exists())
+                                        <br>
+                                        @php
+                                            $eol = Carbon\Carbon::parse($miscellanea->purchased_date)->addYears($miscellanea->depreciation->years);
+                                            if($eol->isPast()){
+                                                $dep = 0;
+                                            }else{
+
+                                                $age = Carbon\Carbon::now()->floatDiffInYears($miscellanea->purchased_date);
+                                                $percent = 100 / $miscellanea->depreciation->years;
+                                                $percentage = floor($age)*$percent;
+                                                $dep = $miscellanea->purchased_cost * ((100 - $percentage) / 100);
+                                            }
+                                        @endphp
+                                        <small>(*£{{ number_format($dep, 2)}})</small>
+                                    @endif
+                                </td>
                                 <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center">{{$miscellanea->status->name ??'N/A'}}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                    {{ $miscellanea->warranty }} Months
-
-                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                    {{ $miscellanea->warranty }} Months<br>
+                                    @if(\Carbon\Carbon::parse($warranty_end)->isPast())
+                                        <span class="text-coral">{{ 'Expired' }}</span>
+                                    @else
+                                    <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
+                                    @endif
                                 </td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
@@ -144,6 +191,16 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-between align-content-center">
+                        <div>
+                            @if($miscellaneous->hasPages())
+                                {{ $miscellaneous->links()}}
+                            @endif
+                        </div>
+                        <div class="text-right">
+                            Showing Assets {{ $miscellaneous->firstItem() }} to {{ $miscellaneous->lastItem() }} ({{ $miscellaneous->total() }} Total Results)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -151,8 +208,8 @@
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with miscellaneous</h4>
-                <p>This area can be minimised and will contain a little help on the page that the miscellanea is currently
-                    on.</p>
+                <p>Click <a href="{{route("documentation.index").'#collapseTenMiscellaneous'}}">here</a> for the Documentation on miscellaneous on importing ,exporting ,Adding and Removing!</p>
+
             </div>
         </div>
 
@@ -179,8 +236,8 @@
                     <small class="text-danger">**This is not permanent and the component can be restored in the Components Recycle Bin. </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>
@@ -199,21 +256,21 @@
                 <form action="/importmiscellaneous" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add miscellaneous to the system.</p>
-                        <input id="importEmpty" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        <input id="importEmpty" class="form-control"
                                type="file" placeholder="Upload here" name="csv" accept=".csv">
 
                     </div>
 
                     <div class="modal-footer">
                         @if(session('import-error'))
-                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
+                            <div class="alert text-warning ml-0"> {{ session('import-error') ?? ' Select a file to be uploaded before continuing!'}} </div>
                         @endif
                         <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/EbntKq_mlTVAgWc6TVyyomUBai1vGhqJFBJy9sULugmz_A?e=83Q40o" target="_blank" class="btn btn-info" >
                             Download Import Template
                         </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
+                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
                             Import
                         </button>
                     @csrf
@@ -221,11 +278,12 @@
             </div>
         </div>
     </div>
-    <?php session()->flash('import-error', ' Select a file to be uploaded before continuing!');?>
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $('.deleteBtn').click(function () {
             $('#user-id').val($(this).data('id'))
@@ -241,10 +299,10 @@
         $(document).ready(function () {
             $('#usersTable').DataTable({
                 "columnDefs": [{
-                    "targets": [3, 4, 5],
+                    "targets": [8],
                     "orderable": false,
                 }],
-                "order": [[1, "asc"]]
+                "order": [[3, "asc"]]
             });
         });
         // import
@@ -263,6 +321,28 @@
                 e.preventDefault();
             }
         })
+        function toggleFilter() {
+            if ($('#filter').hasClass('show')) {
+                $('#filter').removeClass('show');
+                $('#filter').css('right', '-100%');
+            } else {
+                $('#filter').addClass('show');
+                $('#filter').css('right', '0%');
+            }
+        }
+        $(function () {
+            $("#slider-range").slider({
+                range: true,
+                min: {{ floor($floor)}},
+                max: {{ round($limit)}},
+                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
+                slide: function (event, ui) {
+                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
+                }
+            });
+            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
+                " - £" + $("#slider-range").slider("values", 1));
+        });
     </script>
 
 @endsection

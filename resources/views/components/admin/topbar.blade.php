@@ -53,7 +53,7 @@
                 </form>
             </div>
         </li>
-
+        @can("create", App\Models\Asset::class)
         <li class="nav-item mx-1">
             <a class="nav-link" href="{{route("assets.create")}}">
                 <i class="fas fa-fw fa-tablet-alt" data-toggle="tooltip" data-placement="bottom"
@@ -61,23 +61,30 @@
                 <span class="badge badge-success badge-counter">+</span>
             </a>
         </li>
+        @endcan
+        <div class="topbar-divider d-none d-sm-block"></div>
+
+        @can('handle', App\Models\Requests::class)
+        <li class="nav-item mx-1">
+            <a class="nav-link" href="{{route("requests.index")}}">
+                <i class="fas fa-fw fa-tasks" data-toggle="tooltip" data-placement="bottom"
+                   title="Requests"></i>
+                   <span class="badge badge-danger badge-counter">{{\App\Models\Requests::whereStatus(0)->count()}}</span>
+            </a>
+        </li>
+        @endcan
+
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">
             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                @php
-                    if($logs->count() >=3){
-                @endphp
+                @if($logs->count() >=3)
                 <span class="badge badge-danger badge-counter">{{$logs->count()}}+</span>
-                @php
-                    }else{
-                @endphp
+                @else
                 <span class="badge badge-danger badge-counter">{{$logs->count()}}</span>
-                @php
-                    }
-                @endphp
+                @endif
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -85,86 +92,68 @@
                 <h6 class="dropdown-header" style="background-color:#474775; ">
                     Alerts Center
                 </h6>
-                @php
-                    foreach($logs as $log){
-                @endphp
+                @foreach($logs as $log)
                 <a class="dropdown-item d-flex align-items-center" href="{{route("logs.index")}}">
                     <div class="mr-3">
-
-                        @php
-                            if($log->loggable_type == "auth"){
-                        @endphp
+                        @if($log->loggable_type == "auth")
                         <div class="icon-circle bg-success">
                             <i class="fas fa-lock text-white"></i>
                         </div>
-                        @php
-                            }elseif($log->loggable_type == "user"){
-                        @endphp
+                        @elseif($log->loggable_type == "user")
                         <div class="icon-circle bg-warning">
                             <i class="fas fa-user text-white"></i>
                         </div>
-                        @php
-                            }elseif($log->loggable_type == "location"){
-                        @endphp
+                        @elseif($log->loggable_type == "location")
                         <div class="icon-circle bg-info">
                             <i class="fas fa-school text-white"></i>
                         </div>
-                        @php
-                            }elseif($log->loggable_type == "supplier"){
-                        @endphp
+                        @elseif($log->loggable_type == "supplier")
                         <div class="icon-circle bg-info">
                             <i class="fas fa-warehouse text-white"></i>
                         </div>
-                        @php
-                            }elseif($log->loggable_type == "component"){
-                        @endphp
+                        @elseif($log->loggable_type == "component")
                         <div class="icon-circle bg-info">
                             <i class="fas fa-mouse text-white"></i>
                         </div>
-                        @php
-                            }elseif($log->loggable_type == "consumable"){
-                        @endphp
+                        @elseif($log->loggable_type == "consumable")
                         <div class="icon-circle bg-info">
                             <i class="fas fa-tint text-white"></i>
                         </div>
-                        @php
-                            }else{
-                        @endphp
+                        @else
                         <div class="icon-circle bg-primary">
                             <i class="fas fa-file-alt text-white"></i>
                         </div>
-                        @php
-                            }
-                        @endphp
+                        @endif
                     </div>
                     <div>
-                        <div class="small text-gray-500">{{$log->updated_at->diffForHumans()}}</div>
                         @php
                             //This if statement checks if it's older that the sub hours of the current UK time and sets the text to plain not bold
-                                $logTime = $log->updated_at->timestamp;
-                                //change number depending on how long you want it to be until new notifications go old
-                                $newNotificationTime = Carbon\Carbon::now()->subHours(6)->timestamp;
-                                if($logTime >= $newNotificationTime){
+                            $logTime = $log->updated_at->timestamp;
+                            //change number depending on how long you want it to be until new notifications go old
+                            $newNotificationTime = Carbon\Carbon::now()->subHours(6)->timestamp;
                         @endphp
+                        @if($logTime >= $newNotificationTime)
                         <span class="font-weight-bold">{{$log->data}}</span>
-                        @php
-                            }else{
-                        @endphp
+                        @else
                         <span class="">{{$log->data}}</span>
-                        @php
-                            }
-                        @endphp
+                        @endif
+                        <div class="small text-gray-500">{{$log->updated_at->diffForHumans()}}</div>
                     </div>
                 </a>
-                @php
-                    }
-                @endphp
-@can("viewAll",auth()->user())
-                <a class="dropdown-item text-center small text-gray-500" href="{{route("logs.index")}}">Show All Alerts</a>
-    @endcan
+                @endforeach
+                @can("viewAll",auth()->user())
+                    <a class="dropdown-item text-center small text-gray-500" href="{{route("logs.index")}}">Show All Alerts</a>
+                @endcan
             </div>
         </li>
 
+        <li class="nav-item mx-1">
+            <a class="nav-link" href="{{route("documentation.index")}}">
+                <i class="fas fa-fw fa-folder" data-toggle="tooltip" data-placement="bottom"
+                   title="Documentation"></i>
+                   <span class="badge badge-primary badge-counter"><i class="fas fa-eye text-white"></i></span>
+            </a>
+        </li>
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <!-- Nav Item - User Information -->
@@ -191,11 +180,11 @@
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Profile
                 </a>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="{{route("users.edit",auth()->user()->id)}}">
                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Settings
+                    Edit
                 </a>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="{{route("user.details")."/#Recent"}}">
                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                     Activity Log
                 </a>

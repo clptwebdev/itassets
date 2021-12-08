@@ -11,15 +11,50 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use phpDocumentor\Reflection\Location;
 use PDF;
-use Illuminate\Support\Facades\Storage;
+use App\Jobs\ManufacturersPdf;
+use App\Jobs\ManufacturerPdf;
+use App\Models\Report;
 
 class ManufacturerController extends Controller {
 
     public function index()
     {
+        $manufacturers = Manufacturer::orderBy('name')->paginate(12);
         return view('Manufacturers.view', [
-            "manufacturers" => Manufacturer::all(),
+            "manufacturers" => $manufacturers,
         ]);
+
+    }
+    public function clearFilter(){
+        session()->forget(['log_search']);
+
+        return redirect(route('manufacturers.index'));
+    }
+    public function filter(Request $request){
+        $filtered = Manufacturer::select();
+        if($request->isMethod('post'))
+        {
+            if($request->search !== null)
+            {
+                \Session::put('manufacturer_search', $request->search);
+            }
+        }
+        if(session('manufacturer_search'))
+        {
+            $results = $filtered->manufacturerFilter(session('manufacturer_search'));
+        }
+        if($results->count() == 0){
+            session()->flash('danger_message', "<strong>" . request("manufacturer_search"). "</strong>".' could not be found! Please search for something else!');
+            return view("Manufacturers.view",[
+                'manufacturers'=> Manufacturer::latest()->paginate(),
+
+            ]);
+        }else{
+            return view("Manufacturers.view",[
+                'manufacturers'=> $results->latest()->paginate(),
+
+            ]);
+        }
 
     }
 
@@ -29,7 +64,7 @@ class ManufacturerController extends Controller {
             return redirect(route('errors.forbidden', ['Manufacturer', $manufacturer->id, 'view']));
         }
 
-        return view('manufacturers.show', compact('manufacturer'));
+        return view('Manufacturers.show', compact('manufacturer'));
     }
 
     public function create()
@@ -73,9 +108,9 @@ class ManufacturerController extends Controller {
     {
         request()->validate([
             "name" => "required|unique:manufacturers,name|max:255",
-            "supportPhone" => "required|max:14",
+            "supportPhone" => "max:14",
             "supportUrl" => "required",
-            "supportEmail" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
+            "supportEmail" => 'sometimes|nullable|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
             "PhotoId" => "nullable",
         ]);
         Manufacturer::create([
@@ -96,7 +131,7 @@ class ManufacturerController extends Controller {
         {
             $validation = Validator::make($request->all(), [
                 "name.*" => "required|unique:manufacturers,name|max:255",
-                "supportPhone.*" => "required|max:14",
+                "supportPhone.*" => "min:11|max:14",
                 "supportUrl.*" => "required",
                 "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
             ]);
@@ -138,13 +173,13 @@ class ManufacturerController extends Controller {
         if (auth()->user()->cant('viewAny', Manufacturer::class)) {
             return redirect(route('errors.forbidden', ['area', 'manufacturers', 'export']));
         }
-            
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new ManufacturerExport, "/public/csv/manufacturers-ex-{$date}.csv");
         $url = asset("storage/csv/manufacturers-ex-{$date}.csv");
         return redirect(route('manufacturers.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
-            ->withInput(); 
+            ->withInput();
     }
 
     public function import(Request $request)
@@ -239,16 +274,40 @@ class ManufacturerController extends Controller {
             return redirect(route('errors.forbidden', ['area', 'Manufacturers', 'View PDF']));
         }
 
-        $manufacturers = Manufacturer::all();
+        $found = Manufacturer::all();
+        $manufacturers = array();
 
+        foreach($found as $f){
+            $array = array();
+            $array['name'] = $f->name;
+            $array['url'] = $f->supportUrl ?? '#666';
+            $array['email'] = $f->supportEmail ?? 'N/A';
+            $array['telephone'] = $f->supportPhone ?? 'N/A';
+            $total = 0;
+            foreach($f->assetModel as $assetModel){
+                $total += $assetModel->assets->count();
+            }
+            $array['asset'] = $total;
+            $array['accessory'] = $f->accessory->count() ?? 'N/A';
+            $array['component'] = $f->component->count() ?? 'N/A';
+            $array['consumable'] = $f->consumable->count() ?? 'N/A';
+            $array['miscellaneous'] = $f->miscellanea->count() ?? 'N/A';
+            $manufacturers[] = $array;
+        }
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('manufacturers.pdf', compact('manufacturers'));
-        $pdf->setPaper('a4', 'landscape');
+        $user = auth()->user();
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        Storage::put("public/reports/manufacturers-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/manufacturers-{$date}.pdf");
-        return redirect(route('manufacturers.index'))
-            ->with('success_message', "Your Reprot has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+        $path = 'manufacturers-'.$date;
+
+        dispatch(new ManufacturersPdf($manufacturers, $user, $path))->afterResponse();
+        //Create Report
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
+        return redirect(route('manufacturers.'))
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
     }
@@ -258,14 +317,19 @@ class ManufacturerController extends Controller {
         if (auth()->user()->cant('view', Manufacturer::class)) {
             return redirect(route('errors.forbidden', ['manufacturers', $manufacturer->id, 'View PDF']));
         }
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('manufacturers.showPdf', compact('manufacturer'));
+
+        $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        //return $pdf->download("{$location->name}-{$date}.pdf");
-        Storage::put("public/reports/{$manufacturer->name}-{$date}.pdf", $pdf->output());
-        $url = asset("storage/reports/{$manufacturer->name}-{$date}.pdf");
+        $path = str_replace(' ', '-', $manufacturer->name).'-'.$date;
+
+        dispatch(new ManufacturerPdf($manufacturer, $user, $path))->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+
         return redirect(route('manufacturers.show', $manufacturer->id))
-            ->with('success_message', "Your Report has been created successfully. Click Here to <a href='{$url}'>Download PDF</a>")
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 

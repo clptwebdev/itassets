@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Component')
+
 @section('css')
 
 @endsection
@@ -7,13 +9,16 @@
 @section('content')
     <form action="{{ route('components.update', $component->id) }}" method="POST">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Add New Component</h1>
+            <h1 class="h3 mb-0 text-gray-800">Edit Component</h1>
 
             <div>
                 <a href="{{ route('components.index') }}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Components</a>
-                <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
+                <a href="{{ route('documentation.index')."#collapseNineComponent"}}"
+                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                        class="fas fa-question fa-sm text-dark-50"></i>  need Help?</a>
+                <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
             </div>
@@ -109,9 +114,9 @@
                             @php( $cat_array = [])
                             @foreach($component->category as $cc)
                             @php( $cat_array[] = $cc->id)
-                            
+
                             @endforeach
-                            <div id="categories" class="border border-gray p-2 mb-3">
+                            <div id="categories" class="form-control h-auto p-4 mb-3 rounded">
                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                 @foreach($categories as $category)
                                 <div class="form-check form-check-inline">
@@ -133,12 +138,12 @@
                         <div class="card-body">
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
-                                    <h4 class="h6 mb-3">Location Image</h4>
+                                    <h4 class="h6 mb-3">Component Image</h4>
                                     @if($component->photo()->exists())
-                                        <img id="profileImage" src="{{ asset($component->photo->path) ?? asset('images/svg/device-image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal> 
+                                        <img id="profileImage" src="{{ asset($component->photo->path) ?? asset('images/svg/components_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal>
                                     @else
                                     <img id="profileImage"
-                                         src="{{ asset('images/svg/location-image.svg') }}"
+                                         src="{{ asset('images/svg/components_image.svg') }}"
                                          width="100%"
                                          alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     @endif
@@ -155,7 +160,7 @@
                                     </option>
                                     @foreach($locations as $location)
                                         <option
-                                            value="{{ $location->id }}" @if($component->location->id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
+                                            value="{{ $location->id }}" @if($component->location_id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -212,7 +217,7 @@
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" data-toggle="modal"
                             data-target="#uploadModal">Upload
                         file
                     </button>
@@ -238,7 +243,7 @@
                     <form id="imageUpload">
                         Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
                         Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                        <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
+                        <button type='submit' class='btn btn-green' id='btn_upload'>Upload</button>
                     </form>
                 </div>
 

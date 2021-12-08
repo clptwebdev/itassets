@@ -4,6 +4,12 @@
 
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
+          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 @endsection
 
 @section('content')
@@ -12,27 +18,32 @@
         <h1 class="h3 mb-0 text-gray-800">Components</h1>
         <div>
             @can('recycleBin', \App\Models\Component::class)
-            <a href="{{ route('components.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            <a href="{{ route('components.bin')}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                 class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Component::onlyTrashed()->count()}})</a>
             @endcan
             @can('create' , \App\Models\Component::class)
-            <a href="{{ route('components.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+            <a href="{{ route('components.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New Component</a>
             @endcan
             @can('export', \App\Models\Component::class)
-            <form class="d-inline-block" action="{{ route('components.pdf')}}" method="POST">
-                @csrf
-                <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="components"/>
-            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm loading"><i
-                    class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-            </form>
+            @if ($components->count() == 1)
+                <a href="{{ route('components.showPdf', $components[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                    class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
+                @else
+                <form class="d-inline-block" action="{{ route('components.pdf')}}" method="POST">
+                    @csrf
+                    <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="components"/>
+                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
+                        class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</button>
+                </form>
+            @endif
             @if($components->count() >1)
-            <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm loading"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Export</a>
+            <a href="/exportcomponents" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
+                    class="fas fa-download fa-sm text-dark-50"></i> Export</a>
             @endif
             @endcan
             @can('import' , \App\Models\Component::class)
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
+            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
             @endcan
         </div>
     </div>
@@ -44,10 +55,30 @@
     @if(session('success_message'))
         <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
-
+    @php
+        if(auth()->user()->role_id == 1){
+            $limit = \App\Models\Component::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
+            $floor = \App\Models\Component::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first();
+        }else{
+            $limit = auth()->user()->location_components()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_components()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+        }
+        if(session()->has('amount')){
+            $amount = str_replace('£', '', session('amount'));
+            $amount = explode(' - ', $amount);
+            $start_value = intval($amount[0]);
+            $end_value = intval($amount[1]);
+        }else{
+            $start_value = $floor;
+            $end_value = $limit;
+        }
+    @endphp
     <section>
         <p class="mb-4">Below are the different Components stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
+
+        <x-filters.navigation model="Component" :filter="$filter" />
+        <x-filters.filter model="Component" relations="components" :filter="$filter" :locations="$locations" :statuses="$statuses" :categories="$categories"  />
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -134,18 +165,26 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-between align-content-center">
+                        <div>
+                            @if($components->hasPages())
+                                {{ $components->links()}}
+                            @endif
+                        </div>
+                        <div class="text-right">
+                            Showing Assets {{ $components->firstItem() }} to {{ $components->lastItem() }} ({{ $components->total() }} Total Results)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Components </h4>
-                <p>This area can be minimised and will contain a little help on the page that the Component is currently
-                    on.</p>
+                <p>Click <a href="{{route("documentation.index").'#collapseNineComponent'}}">here</a> for a the Documentation on Components on Importing ,Exporting , Adding , Removing!</p>
+
             </div>
         </div>
-
     </section>
 
 @endsection
@@ -169,13 +208,13 @@
                     <small class="text-danger">**This is not permanent and the component can be restored in the Components Recycle Bin. </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
+                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-coral" type="button" id="confirmBtn">Send to Bin</button>
                 </div>
             </div>
         </div>
     </div>
-//import modal
+{{--//import modal--}}
     <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
          aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -189,21 +228,21 @@
                 <form action="/importcomponents" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Select "import" to add components to the system.</p>
-                        <input id="importEmpty" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        <input id="importEmpty" class="form-control"
                                type="file" placeholder="Upload here" name="csv" accept=".csv">
 
                     </div>
 
                     <div class="modal-footer">
                         @if(session('import-error'))
-                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
+                            <div class="alert text-warning ml-0"> {{ session('import-error' ?? ' Select a file to be uploaded before continuing!')}} </div>
                         @endif
-                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b" target="_blank" class="btn btn-info" >
+                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b" target="_blank" class="btn btn-blue" >
                                 Download Import Template
                             </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
 
-                        <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
+                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
                             Import
                         </button>
                     @csrf
@@ -212,11 +251,12 @@
         </div>
     </div>
     </div>
-    <?php session()->flash('import-error', ' Select a file to be uploaded before continuing!');?>
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $('.deleteBtn').click(function () {
             $('#user-id').val($(this).data('id'))
@@ -254,6 +294,28 @@
                 e.preventDefault();
             }
         })
-    </script>
+        function toggleFilter() {
+            if ($('#filter').hasClass('show')) {
+                $('#filter').removeClass('show');
+                $('#filter').css('right', '-100%');
+            } else {
+                $('#filter').addClass('show');
+                $('#filter').css('right', '0%');
+            }
+        }
 
+        $(function () {
+            $("#slider-range").slider({
+                range: true,
+                min: {{ floor($floor)}},
+                max: {{ round($limit)}},
+                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
+                slide: function (event, ui) {
+                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
+                }
+            });
+            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
+                " - £" + $("#slider-range").slider("values", 1));
+        });
+    </script>
 @endsection
