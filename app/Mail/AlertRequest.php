@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 use App\Models\Location;
 
-class CreatedUser extends Mailable
+class AlertRequest extends Mailable
 {
     use Queueable, SerializesModels;
 
