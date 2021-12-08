@@ -11,6 +11,8 @@ use App\Models\Transfer;
 use App\Models\User;
 use App\Models\Location;
 
+use Illuminate\Support\Facades\Mail;
+
 class RequestsController extends Controller
 {
     public function index(){
