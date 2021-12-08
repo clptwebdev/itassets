@@ -109,4 +109,8 @@ class AssetPolicy
         $locations = $user->locations->pluck('id')->toArray();
         return in_array($user->role_id, $this->technician) && in_array($asset->location_id, $locations);
     }
+
+    public function disposeAll(User $user){
+        return in_array($user->role_id, $this->super);
+    }
 }

@@ -8,6 +8,10 @@ use App\Models\Asset;
 use App\Models\Archive;
 use App\Models\Requests;
 use App\Models\Transfer;
+use App\Models\User;
+use App\Models\Location;
+
+use Illuminate\Support\Facades\Mail;
 
 class RequestsController extends Controller
 {
@@ -28,13 +32,50 @@ class RequestsController extends Controller
             'date' => $request->transfer_date,
             'status' => 0,
         ]);
-        //Notify by email
 
         if(auth()->user()->role_id == 1){
-            return redirect(route('requests.index'));
+            $m = "\\App\\Models\\".ucfirst($requests->model_type);
+            $model = $m::find($requests->model_id);
+            $model->update(['location_id'=> $requests->location_to]);
+            if($requests->model_type == 'asset' && $model->model()->exists()){
+                $years = $model->model->depreciation->years;
+            }elseif($model->depreciation_id != 0){
+                $years = $model->depreciation->years;
+            }else{
+                $years = 0;
+            }
+            $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($years);
+            if($eol->isPast()){
+                $dep = 0;
+            }else{
+                $age = \Carbon\Carbon::now()->floatDiffInYears($model->purchased_date);
+                $percent = 100 / $years;
+                $percentage = floor($age)*$percent;
+                $dep = $model->purchased_cost * ((100 - $percentage) / 100);
+            }
+            $transfer = Transfer::create([
+                'type'=>'transfer',
+                'model_type'=> $requests->model_type, 
+                'model_id'=>$requests->model_id,
+                'location_to'=> $requests->location_to, 
+                'location_from' => $requests->location_from, 
+                'value' => number_format($dep, 2),
+                'notes' => $requests->notes,
+                'created_at' => $requests->date,
+                'date' => $requests->date,
+                'user_id' => $requests->user_id,
+                'super_id' => auth()->user()->id,
+            ]);
+            $requests->update(['status' => 1, 'super_id'  => auth()->user()->id]);
+            return back()->with('success_message','The Request has been approved');
         }else{
+            //Notify by email
+            $admins = User::superAdmin()->get();
+            foreach($admins as $admin){
+                Mail::to(auth()->user()->email)->send(new \App\Mail\AlertRequest(auth()->user(), $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->comment));
+            }
             return back()->with('success_message', 'The request to transfer the asset has been sent.');
-        }
+        }  
     }
 
     public function disposal(Request $request){

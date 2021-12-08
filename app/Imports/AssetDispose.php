@@ -17,7 +17,12 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Validators\Failure;
 
-class AssetDispose implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
+use App\Models\Asset;
+use App\Models\Location;
+use App\Models\Requests;
+use App\Models\Archive;
+
+class AssetDispose implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError
 {
     /**
      * @param array     $row
@@ -26,7 +31,6 @@ class AssetDispose implements ToModel, WithValidation, WithHeadingRow, WithBatch
      */
     use  importable, SkipsFailures, SkipsErrors;
 
-    protected $asset;
 
     public function onError(\Throwable $error)
     {
@@ -38,25 +42,22 @@ class AssetDispose implements ToModel, WithValidation, WithHeadingRow, WithBatch
         $validator->after(function($validator) {
             foreach($validator->getData() as $key => $data)
             {
-                    if($data['id'] != null && $asset = Asset::find($data['id'])){
-                        /* If the user has added an ID (Unlikely) */
-                        /* But trys to find it in this instance */
-                        $this->asset = $asset;
-                    }else{
-                        /* If ID is not entered or an Asset is not found using the ID */
-                        /* Location will then be required to try and find the Asset Tag and/or Serial No */
-                        if($data['location_id'] != null && $location = Location::whereName($data['location_id'])){
-                            if$asset = Asset::whereLocationId($location->id)->whereSerialNo($data['serial_no'])->orWhereAssetTag($data['asset_tag'])->first()){
-                                $this->asset = $asset;
-                            }
+                if($data['id'] != null && $asset = Asset::find($data['id'])){
+                    /* If the user has added an ID (Unlikely) */
+                    /* But trys to find it in this instance */
+                    $validator->errors()->add($key.'.id', 'Please enter a Location');
+                }else{
+                    /* If ID is not entered or an Asset is not found using the ID */
+                    /* Location will then be required to try and find the Asset Tag and/or Serial No */
+                    if($data['location_id'] != null && $location = Location::whereName($data['location_id'])->first()){
+                        if($data['serial_no'] != null || $data['asset_tag'] != null){
+                            $validator->errors()->add($key.'.serial_no', 'Please enter the Serial No and/or the Asset Tag - there is not enough information to locate the Asset');
+                            $validator->errors()->add($key.'.asset_tag', 'Please enter the Serial No and/or the Asset Tag - there is not enough information to locate the Asset');
                         }
+                    }else{
+                        $validator->errors()->add($key.'.location_id', 'Please enter a Location');
                     }
-                    
                 }
-            }
-            /* If the protected $asset is null it will return the following Error to the View */
-            if($this->asset == null){
-                $validator->errors()->add($key, 'More information is required in order to accuratley find the correct asset. Please makke su.');
             }
         });
     }
@@ -82,15 +83,25 @@ class AssetDispose implements ToModel, WithValidation, WithHeadingRow, WithBatch
 
     public function model(array $row)
     {
-        $asset = $this->asset;
+        
+        $location = Location::whereName($data['location_id'])->first();
+        $asset = Asset::whereLocationId($location->id);
+        if($data['serial_no'] != ''){
+            $asset->whereSerialNo($data['serial_no']);
+        }
+        if($data['asset_tag'] != ''){
+            $asset->where('asset_tag', '=', $data['asset_tag']);
+        }
+        $asset->first();
         /* If the Validation has been passed successfully */
         /* Create a new request to dispose this Asset [SC]*/
+
         $requests = Requests::create([
             'type'=>'disposal', 
             'model_type'=> 'asset', 
             'model_id'=>$asset->id,
             'notes' => $row['reason'],
-            'date' => $row['date'],
+            'date' => \Carbon\Carbon::parse(str_replace('/', '-', $row["date"]))->format("Y-m-d"),
             'user_id' => auth()->user()->id, 
             'status' => 0,
         ]);
@@ -101,7 +112,7 @@ class AssetDispose implements ToModel, WithValidation, WithHeadingRow, WithBatch
         if(auth()->user()->role_id == 1){
             /* Get the Depreciaiton Years from the Asset Model or 0 */
             /* This is to calculate the Value of the Asset at the time of Disposal [SC] */
-            $years = $asset->model->depreciation->years ?? 0
+            $years = $asset->model->depreciation->years ?? 0;
             $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($years);
             if($eol->isPast()){
                 $dep = 0;
@@ -132,7 +143,7 @@ class AssetDispose implements ToModel, WithValidation, WithHeadingRow, WithBatch
                 'created_on' => $asset->created_at,
                 'user_id' => auth()->user()->id,
                 'super_id' => auth()->user()->id,
-                'date' => \Carbon\Carbon::now()->format('Y-m-d'),
+                'date' => \Carbon\Carbon::parse(str_replace('/', '-', $row["date"]))->format("Y-m-d"),
                 'notes' => $row['reason'],
             ]);
             $asset->forceDelete();
@@ -141,11 +152,17 @@ class AssetDispose implements ToModel, WithValidation, WithHeadingRow, WithBatch
             /* Send an Email to Super Admin requesting the Disposal */
         }
 
+        $this->asset = null;
     }
 
     public function batchSize(): int
     {
         return 1000;
+    }
+
+    public function uniqueBy()
+    {
+        return 'asset_tag';
     }
 
 }

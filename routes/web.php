@@ -79,6 +79,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/asset/{asset}/status', 'App\Http\Controllers\AssetController@changeStatus')->name('change.status');
     Route::get('assets/{model}/model', 'App\Http\Controllers\AssetController@model')->name('asset.model');
     Route::post('assets/comment/create', [\App\Http\Controllers\AssetController::class, "newComment"])->name('asset.comment');
+    Route::post('assets/disposal', 'App\Http\Controllers\AssetController@bulkDisposal')->name('assets.bulk.disposal');
     //Comment Routes
     Route::resource('/comment', 'App\Http\Controllers\CommentController');
     //Component Routes
