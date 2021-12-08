@@ -48,6 +48,6 @@ class AlertRequest extends Mailable
      */
     public function build()
     {
-        return $this->view('admin.user.created-user');
+        return $this->view('admin.user.alert-request');
     }
 }
