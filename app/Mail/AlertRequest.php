@@ -32,10 +32,11 @@ class AlertRequest extends Mailable
     public function __construct(User $user, $type, $id, $from, $to, $date, $comment)
     {
         $this->user = $user;
-        $this->type = $comment;
-        $this->model = $type;
-        $this->from = $from;
-        $this->to = $to;
+        $this->type = $comment;;
+        $this->model = ucfirst($type)::find($id);
+        return dd($this->model);
+        $this->from = Location::find($from);
+        $this->to = Location::find($to);
         $this->date = $date;
         $this->comment = $comment;
     }
