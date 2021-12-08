@@ -22,9 +22,8 @@
                 class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Component::onlyTrashed()->count()}})</a>
             @endcan
             @can('create' , \App\Models\Component::class)
-            <a href="{{ route('components.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Add New Component</a>
-            @endcan
+                    <x-buttons.add :route="route('components.create')" >Component(s)</x-buttons.add>
+                @endcan
             @can('export', \App\Models\Component::class)
             @if ($components->count() == 1)
                 <a href="{{ route('components.showPdf', $components[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i

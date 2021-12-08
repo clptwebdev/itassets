@@ -23,8 +23,7 @@
                     ({{ \App\Models\Asset::onlyTrashed()->count()}})</a>
             @endcan
             @can('create', \App\Models\Asset::class)
-                <a href="{{ route('assets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                        class="fas fa-plus fa-sm text-dark-50"></i> Add New Asset(s)</a>
+                <x-buttons.add :route="route('assets.create')" >Asset(s)</x-buttons.add>
             @endcan
             @can('generatePDF', \App\Models\Asset::class)
             @if($assets->count() != 0)

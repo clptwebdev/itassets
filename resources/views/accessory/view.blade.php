@@ -23,8 +23,7 @@
                 class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Accessory::onlyTrashed()->count()}})</a>
             @endcan
             @can('create', \App\Models\Accessory::class)
-            <a href="{{ route('accessories.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Add New Accessory</a>
+                    <x-buttons.add :route="route('accessories.create')" >Accessory</x-buttons.add>
             @endcan
             @can('generatePDF', \App\Models\Accessory::class)
                 @if ($accessories->count() == 1)

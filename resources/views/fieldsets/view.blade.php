@@ -13,6 +13,8 @@
     <div>
         <a href="{{ route('fieldsets.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Add New Custom Fieldset</a>
+        <x-buttons.add :route="route('fieldsets.create')" >Custom Fieldset</x-buttons.add>
+
     </div>
 </div>
 

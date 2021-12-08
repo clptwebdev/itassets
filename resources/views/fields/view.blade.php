@@ -11,8 +11,7 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Custom Fields</h1>
     <div>
-        <a href="{{ route('fields.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Add New Custom Field</a>
+        <x-buttons.add :route="route('fields.create')" >Custom Field</x-buttons.add>
     </div>
 </div>
 
@@ -66,7 +65,7 @@
                                 @endforeach
                             </td>
                             <td class="text-right">
-                                
+
                                 <div class="dropdown no-arrow">
                                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
                                         id="dropdownMenuLink"
@@ -135,7 +134,7 @@
         $('#deleteForm').attr('action', $(this).data('route'));
         $('#removeCategoryModal').modal('show');
     });
-    
+
     $('#confirmBtn').click(function() {
         $('#deleteForm').submit();
     });

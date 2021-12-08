@@ -12,8 +12,7 @@
     <h1 class="h3 mb-0 text-gray-800">Asset Models</h1>
     <div>
         @can('create', \App\Models\AssetModel::class)
-        <a href="{{ route('asset-models.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Add New Asset Modal</a>
+            <x-buttons.add :route="route('asset-models.create')" >Asset Modal</x-buttons.add>
         @endcan
         @can('viewAny', \App\Models\AssetModel::class)
         <a href="{{ route('asset-model.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i

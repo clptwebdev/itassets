@@ -9,9 +9,8 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Manufacturers</h1>
         <div>
-            <a href="{{route("manufacturers.create")}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Add New Manufacturers</a>
-            @can('viewAny', \App\Models\Manufacturer::class)
+            <x-buttons.add :route="route('manufacturers.create')" >Manufacturer(s)</x-buttons.add>
+        @can('viewAny', \App\Models\Manufacturer::class)
             <a href="{{ route('manufacturer.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading">
                 <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
             </a>

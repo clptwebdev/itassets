@@ -11,10 +11,7 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Categories</h1>
     <div>
-        <a href="#" data-toggle="modal" data-target="#addCategoryModal" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Add New Category</a>{{--
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> --}}
+        <x-buttons.add  :toggle="'modal'" :target="'#addCategoryModal'" >Category</x-buttons.add>
     </div>
 </div>
 
