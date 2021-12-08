@@ -35,8 +35,9 @@ class AlertRequest extends Mailable
         $this->type = $comment;
         $m = "\\App\\Models\\".ucfirst($type);
         $this->model = $m::find($id);
-        return dd($this->model);
         $this->from = Location::find($from);
+        
+        return dd($this->from);
         $this->to = Location::find($to);
         $this->date = $date;
         $this->comment = $comment;
