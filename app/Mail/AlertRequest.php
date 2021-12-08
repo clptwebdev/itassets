@@ -39,8 +39,9 @@ class AlertRequest extends Mailable
         
         $this->to = Location::find($to);
         
-        return dd($this->to);
         $this->date = $date;
+        
+        return dd($this->date);
         $this->comment = $comment;
     }
 
