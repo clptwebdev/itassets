@@ -30,12 +30,12 @@ class AlertRequest extends Mailable
     {
         $this->user = $user;
         $this->requests_type = $requests_type;
-        $m = "\\App\\Models\\".ucfirst($type);
-        $this->requests_model = $m::find($id);
-        $this->requests_from = Location::find($from);
-        $this->requests_to = Location::find($to);
-        $this->requests_date = $date;
-        $this->requests_comment = $comment;
+        $m = "\\App\\Models\\".ucfirst($requests_type);
+        $this->requests_model = $m::find($requests_id);
+        $this->requests_from = Location::find($requests_from);
+        $this->requests_to = Location::find($requests_to);
+        $this->requests_date = $requests_date;
+        $this->requests_comment = $requests_comment;
     }
 
     /**
