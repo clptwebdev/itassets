@@ -16,13 +16,13 @@ class AlertRequest extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $user;
-    protected $model;
+    public $user;
+    public $model;
     public $from;
-    protected $to;
-    protected $date;
-    protected $type;
-    protected $comment;
+    public $to;
+    public $date;
+    public $type;
+    public $comment;
 
     /**
      * Create a new message instance.
