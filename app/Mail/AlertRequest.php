@@ -7,10 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-use \App\Models\User;
-use \App\Models\Location;
-use \App\Models\Asset;
-use \App\Models\Accessory;
+use App\Models\User;
+use App\Models\Location;
+use App\Models\Asset;
+use App\Models\Accessory;
 
 class AlertRequest extends Mailable
 {
@@ -32,8 +32,9 @@ class AlertRequest extends Mailable
     public function __construct(User $user, $type, $id, $from, $to, $date, $comment)
     {
         $this->user = $user;
-        $this->type = $comment;;
-        $this->model = ucfirst($type)::find($id);
+        $this->type = $comment;
+        $m = "\\App\\Models\\".ucfirst($type);
+        $this->model = $m::find($id);
         return dd($this->model);
         $this->from = Location::find($from);
         $this->to = Location::find($to);
