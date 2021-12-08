@@ -41,8 +41,9 @@ class AlertRequest extends Mailable
         
         $this->date = $date;
         
-        return dd($this->date);
         $this->comment = $comment;
+        
+        return dd($this->comment);
     }
 
     /**
