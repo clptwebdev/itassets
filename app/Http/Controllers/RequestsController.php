@@ -68,7 +68,7 @@ class RequestsController extends Controller
             return back()->with('success_message','The Request has been approved');
         }else{
             //Notify by email
-            $admins = User::superAdmin();
+            $admins = User::superAdmin()->get();
             foreach(admins as $admin){
                 Mail::to('stuart.corns@clpt.co.uk')->send(new \App\Mail\AlertRequest(auth()->user(), $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->comment));
             }
