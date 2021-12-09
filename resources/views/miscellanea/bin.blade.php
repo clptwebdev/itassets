@@ -1,4 +1,4 @@
-@extends('layouts.app')
+#@extends('layouts.app')
 
 @section('title', 'Miscellaneous Recycle Bin')
 
@@ -14,10 +14,10 @@
         <div>
             <a href="{{ route('miscellaneous.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+
             <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
                class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
                     class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
-
             @can('viewAny', \App\Models\Miscellanea::class)
                 <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">
                     @csrf
@@ -25,7 +25,6 @@
                     <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
                             class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
                 </form>
-
             @endcan
         </div>
     </div>
