@@ -148,4 +148,48 @@ class SupplierController extends Controller
             ->withInput();
     }
 
+    public function search(Request $request){
+        $suppliers = Supplier::where('name', 'LIKE', '%' . $request->search . "%")->take(3)->get()->unique('name');
+        $output = "<ul id='supplierSelect' class='list-group'>";
+        foreach($suppliers as $supplier){
+            $output .=" <li class='list-group-item d-flex justify-content-between align-items-center pointer' data-id='".$supplier->id."' data-name='".$supplier->name."'>
+                            {$supplier->name}
+                            <span class='badge badge-primary badge-pill'>1</span>
+                        </li>";
+        }
+        $output .= "</ul>";
+        return Response($output);
+    }
+
+    public function preview(Request $request){
+        if($supplier = Supplier::find($request->id)){
+            if($supplier->photo()->exists() && $src = asset($supplier->photo->path)){
+                 
+            }else{
+                $src = asset('images/svg/suppliers.svg');
+            }
+            $output = " <div class='model_title text-center h4 mb-3'>{$supplier->name}</div>
+                        <div class='model_image p-4 d-flex justify-content-center'>
+                            <img id='profileImage' src='{$src}' height='150px'
+                                alt='Select Profile Picture'>
+                        </div>";
+            if($supplier->address_1 != ''){
+                $output .= "<div class='model_no py-2 px-4 text-center'>
+                            Address: {$supplier->address_1}, {$supplier->city}, {$supplier->postcode}
+                        </div>";
+            }
+                        
+            $output .= "<div class='model_no py-2 px-4 text-center'>
+                            Website: {$supplier->url}
+                        </div>
+                        <div class='model_no py-2 px-4 text-center'>
+                            Email: {$supplier->email}
+                        </div>
+                        <div class='model_no py-2 px-4 text-center'>
+                            {$supplier->notes}
+                        </div>";
+            return $output;
+        }
+    }
+
 }

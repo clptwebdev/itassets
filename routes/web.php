@@ -62,6 +62,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
     Route::get('/asset-model/pdf', 'App\Http\Controllers\AssetModelController@downloadPDF')->name('asset-model.pdf');
     Route::get('/asset-model/{assetModel}/pdf', 'App\Http\Controllers\AssetModelController@downloadShowPDF')->name('asset-model.showPdf');
+    Route::post('/search/models/', 'App\Http\Controllers\AssetModelController@search')->name('model.search');
+    Route::post('/model/preview/', 'App\Http\Controllers\AssetModelController@preview')->name('model.preview');
 
     // Asset Routes
     Route::resource('/assets', 'App\Http\Controllers\AssetController');
@@ -119,11 +121,14 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('/category', 'App\Http\Controllers\CategoryController');
     Route::post('/category/pdf', 'App\Http\Controllers\CategoryController@downloadPDF')->name('category.pdf');
     Route::get('/category/{category}/pdf', 'App\Http\Controllers\CategoryController@downloadShowPDF')->name('category.showPdf');
+    Route::post('/search/category/', 'App\Http\Controllers\CategoryController@search')->name('category.search');
     //LocationControllers
     Route::resource('/location', 'App\Http\Controllers\LocationController');
     Route::get('/locations/pdf', 'App\Http\Controllers\LocationController@downloadPDF')->name('location.pdf');
     Route::get('/locations/{location}/pdf', 'App\Http\Controllers\LocationController@downloadShowPDF')->name('location.showPdf');
     Route::get("/exportlocations", [\App\Http\Controllers\LocationController::class, "export"]);
+    Route::post('/search/locations/', 'App\Http\Controllers\LocationController@search')->name('location.search');
+    Route::post('/location/preview/', 'App\Http\Controllers\LocationController@preview')->name('location.preview');
     //Manufacturer Routes
     Route::resource('/manufacturers', \App\Http\Controllers\ManufacturerController::class);
     Route::get('/manufactuer/pdf', 'App\Http\Controllers\ManufacturerController@downloadPDF')->name('manufacturer.pdf');
@@ -147,6 +152,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/supplier/pdf', 'App\Http\Controllers\SupplierController@downloadPDF')->name('suppliers.pdf');
     Route::get('/supplier/{supplier}/pdf', 'App\Http\Controllers\SupplierController@downloadShowPDF')->name('suppliers.showPdf');
     Route::get("/exportsuppliers", [\App\Http\Controllers\SupplierController::class, "export"]);
+    Route::post('/search/suppliers/', 'App\Http\Controllers\SupplierController@search')->name('supplier.search');
+    Route::post('/supplier/preview/', 'App\Http\Controllers\SupplierController@preview')->name('supplier.preview');
     //Transfers
     Route::get('/transfers', 'App\Http\Controllers\TransferController@index')->name('transfers.index');
     Route::get('/asset/transfers', 'App\Http\Controllers\TransferController@assets')->name('transfers.assets');

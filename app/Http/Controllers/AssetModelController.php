@@ -148,4 +148,45 @@ class AssetModelController extends Controller
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
+
+    public function search(Request $request){
+        $models = AssetModel::where('name', 'LIKE', '%' . $request->search . "%")->take(3)->get()->unique('name');
+        $output = "<ul id='modelSelect' class='list-group'>";
+        foreach($models as $model){
+            $output .=" <li class='list-group-item d-flex justify-content-between align-items-center pointer' data-id='".$model->id."' data-name='".$model->name."'>
+                            {$model->name}
+                            <span class='badge badge-primary badge-pill'>1</span>
+                        </li>";
+        }
+        $output .= "</ul>";
+        return Response($output);
+    }
+
+    public function preview(Request $request){
+        if($model = AssetModel::find($request->id)){
+            if($model->photo()->exists() && $src = asset($model->photo->path)){
+                 
+            }else{
+                $src = asset('images/svg/device-image.svg');
+            }
+            $output = " <div class='model_title text-center h4 mb-3'>Asset Model</div>
+                        <div class='model_image p-4'>
+                            <img id='profileImage' src='{$src}' width='100%'
+                                alt='Select Profile Picture'>
+                        </div>
+                        <div class='model_no py-2 px-4'>
+                            Manufacturer: {$model->manufacturer->name}
+                        </div>
+                        <div class='model_no py-2 px-4'>
+                            Model No: {$model->model_no}
+                        </div>
+                        <div class='model_no py-2 px-4'>
+                            Depreication: {$model->depreciation->name} ({$model->depreciation->years} months)
+                        </div>
+                        <div class='model_no py-2 px-4'>
+                            Additional Fieldsets:
+                        </div>";
+            return $output;
+        }
+    }
 }
