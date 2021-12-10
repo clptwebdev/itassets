@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/asset-model/{assetModel}/pdf', 'App\Http\Controllers\AssetModelController@downloadShowPDF')->name('asset-model.showPdf');
     Route::post('/search/models/', 'App\Http\Controllers\AssetModelController@search')->name('model.search');
     Route::post('/model/preview/', 'App\Http\Controllers\AssetModelController@preview')->name('model.preview');
+    Route::post('/model/create/', 'App\Http\Controllers\AssetModelController@ajaxCreate')->name('model.create');
 
     // Asset Routes
     Route::resource('/assets', 'App\Http\Controllers\AssetController');

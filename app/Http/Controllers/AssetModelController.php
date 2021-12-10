@@ -149,7 +149,8 @@ class AssetModelController extends Controller
             ->withInput();
     }
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
         $models = AssetModel::where('name', 'LIKE', '%' . $request->search . "%")->take(3)->get()->unique('name');
         $output = "<ul id='modelSelect' class='list-group'>";
         foreach($models as $model){
@@ -162,7 +163,8 @@ class AssetModelController extends Controller
         return Response($output);
     }
 
-    public function preview(Request $request){
+    public function preview(Request $request)
+    {
         if($model = AssetModel::find($request->id)){
             if($model->photo()->exists() && $src = asset($model->photo->path)){
                  
@@ -181,12 +183,21 @@ class AssetModelController extends Controller
                             Model No: {$model->model_no}
                         </div>
                         <div class='model_no py-2 px-4'>
-                            Depreication: {$model->depreciation->name} ({$model->depreciation->years} months)
+                            Depreciation: {$model->depreciation->name} ({$model->depreciation->years} months)
                         </div>
                         <div class='model_no py-2 px-4'>
-                            Additional Fieldsets:
+                            Additional Fieldsets: {$model->fieldset->name}
                         </div>";
             return $output;
+        }
+    }
+
+    public function ajaxCreate(Request $request)
+    {
+        if($model = AssetModel::create($request->only('name', 'manufacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes'))){
+            return $model->id;
+        }else{
+            return false;
         }
     }
 }

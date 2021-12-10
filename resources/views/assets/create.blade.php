@@ -47,7 +47,7 @@
                                 </div>
                             @endif
 
-                            <ul class="nav nav-tabs">
+                            <ul id="tab-bar" class="nav nav-tabs">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Overview</a>
                                 </li>
@@ -69,7 +69,7 @@
                                         <div class="col-12 col-md-6 p-4 mb-3">
                                             <div class="form-group position-relative">
                                                 <label for="findModel">Asset Model</label>
-                                                <input type="hidden" id="asset_model" name="asset_model" class="form-control mb-3" disabled>
+                                                <input type="hidden" id="asset_model" name="asset_model" class="form-control mb-3" readonly>
                                                 <input class="form-control" type="text" name="find_model" id="findModel" value="" autocomplete="off" placeholder="Search for Model">
                                                 <div id="modelResults" class="w-100 h-auto mb-5 d-block search-modal position-absolute" style="visibility: hidden; z-index: 2;">
                                                     <ul id="modelSelect">
@@ -224,7 +224,7 @@
                                             </div>
                                             <div class="form-group position-relative">
                                                 <label for="findSupplier">Supplier</label>
-                                                <input type="hidden" id="supplier_id" name="supplier_id" class="form-control mb-3" disabled>
+                                                <input type="hidden" id="supplier_id" name="supplier_id" class="form-control mb-3" readonly>
                                                 <input class="form-control" type="text" name="find_supplier" id="findSupplier" value="" placeholder="Search for Supplier">
                                                 <div id="supplierResults" class="w-100 h-auto mb-5 d-block search-modal position-absolute" style="visibility: hidden; z-index: 2;">
                                                     <ul id="supplierSelect">
@@ -270,7 +270,7 @@
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
                                             <div class="form-group position-relative">
                                                 <label for="findLocation">Location</label>
-                                                <input type="hidden" id="location_id" name="location_id" class="form-control mb-3" disabled>
+                                                <input type="hidden" id="location_id" name="location_id" class="form-control mb-3" readonly>
                                                 <input class="form-control" type="text" name="find_location" id="findLocation" value="" placeholder="Search for Supplier">
                                                 <div id="locationResults" class="w-100 h-auto mb-5 d-block search-modal position-absolute" style="visibility: hidden; z-index: 2;">
                                                     <ul id="locationSelect">
@@ -327,8 +327,8 @@
                                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                                 <div class="position-relative">
                                                     @csrf
-                                                    <input type="hidden" id="category_id" name="category" class="form-control mb-3" disabled>
-                                                    <input class="form-control" type="text" name="find_category" id="findCategory" value="cateogrtrtrt" placeholder="Search for Categories">
+                                                    <input type="hidden" id="category_id" name="category" class="form-control mb-3" readonly>
+                                                    <input class="form-control" type="text" name="find_category" id="findCategory" value="" placeholder="Search for Categories">
                                                     <div id="categoryResults" class="w-100 h-auto mb-5 d-block search-modal position-absolute" style="visibility: hidden; z-index: 2;">
                                                         <ul id="categorySelect">
                                                             <li>Nothing to Return</li>
@@ -371,344 +371,9 @@
 @endsection
 
 @section('modals')
-    <div class="modal fade" id="newModel" tabindex="-1" role="dialog" aria-labelledby="newModelLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="newModelLabel">Create a New Asset Modal</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                
-                @csrf
-
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text"
-                        class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                        name="name" id="name" placeholder="">
-                </div>
-                <div class="form-group">
-                    <label for="manufacturer">Manufacturer:</label>
-                    <select class="form-control mb-3 <?php if ($errors->has('manufacturer_id')){?>border-danger<?php }?>"
-                        name="manufacturer_id" id="manufacturer_id" required>
-                        <option value="0">Please select a Manufacturer</option>
-                        @foreach($mans->sortBy('name') as $man)
-                        <option value="{{$man->id}}">{{ $man->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="model_no">Model No:</label>
-                    <input type="text"
-                        class="form-control mb-3 <?php if ($errors->has('model_no')){?>border-danger<?php }?>"
-                        name="model_no" id="model_no" placeholder="#" required>
-                </div>
-                <div class="form-group">
-                    <label for="depreciation_id">Depreciation</label>
-                    <select
-                        class="form-control <?php if ($errors->has('depreciation_id')){?>border-danger<?php }?>"
-                        name="depreciation_id" id="depreciation_id" required>
-                        <option value="0">No Depreciation Set</option>
-                        @foreach($depreciation as $dep)
-                            <option value="{{ $dep->id}}">{{ $dep->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="eol">EOL (End of Life) Months</label>
-                    <input type="text" class="form-control" name="eol" id="eol"
-                        placeholder="36">
-                </div>
-                <div class="form-group">
-                    <label for="fieldset_id">Additional Fieldsets</label>
-                    <select class="form-control" name="fieldset_id" id="fieldset_id">
-                        <option value="0">No Additional Fieldsets Required</option>
-                        @foreach($fieldsets as $fieldset)
-                        <option value="{{ $fieldset->id }}">{{ $fieldset->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="notes">Notes</label>
-                    <textarea type="text" class="form-control" rows="10" name="notes" id="notes"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-        </div>
-    </div>
+    <x-models.create :mans="$mans" :depreciation="$depreciation" :fieldsets="$fieldsets"/>
 @endsection
 
 @section('js')
-    <script>
-        function getFields(value) {
-            $.ajax({
-                url: `/assets/${value}/model`,
-                success: function (data) {
-                    document.getElementById("additional-fields").innerHTML = data;
-                    document.getElementById("additional-fields").style.display = "block";
-                },
-                error: function () {
-                    document.getElementById("additional-fields").innerHTML = "";
-                    document.getElementById("additional-fields").style.display = "none";
-                },
-            });
-        }
-
-        //Search Categories
-        const categorySearch = document.querySelector('#findCategory');
-        const categoryResults = document.querySelector('#categoryResults');
-        const categorySelect = document.querySelector('#categorySelect');
-
-        categorySearch.addEventListener('input', function(e){
-            let value = e.target.value;
-            if (value.length > 2) {
-                const xhttp = new XMLHttpRequest();
-
-                xhttp.onload = function(){
-                    categoryResults.innerHTML = xhttp.responseText;
-                    categoryResults.style.visibility = "visible";
-                    initItems();
-                }
-
-                xhttp.open("POST", "/search/category/");
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send(`search=${value}`); 
-            }
-        });
-
-        document.addEventListener('click', function(e){
-            //If the click is outside of the Search Results or the input then hide the results dropdown
-            if (!categorySearch.contains(event.target) && !categoryResults.contains(event.target)) {
-                categoryResults.style.visibility = "hidden";
-            }            
-        });
-
-        function initItems(){
-            //Gets all of the list items and adds an event listener to them
-            //This has to be re-initialised everytime a result set is returned.
-            document.querySelector('#categoryResults').querySelectorAll('li').forEach(function(item) {
-                item.addEventListener('click', function() {
-                    //Get the information required
-                    let name = this.getAttribute('data-name');
-                    let id = this.getAttribute('data-id');
-                    //Select the Elements
-                    const cats = document.querySelector('#category_id');
-                    const elements = document.querySelector('#selectedCategories');
-                    const array = cats.value.split(',');
-                    //Check and see if it already exists
-                    const index = array.indexOf(id);
-                    if (index == -1) {
-                        if(cats.value != ''){ cats.value += ','+id}else{ cats.value = id;}
-                        let html = `<div id="cat${id}" class="p-2 col-4">
-                                        <div class="border border-gray shadow bg-white p-2 rounded d-flex justify-content-between align-items-center">
-                                            <span>${name}</span> 
-                                            <i class="fas fa-times ml-4 text-danger pointer" data-name="${id}" onclick="javascript:removeCategory(this);"></i>
-                                        </div>
-                                    </div>`;
-                        elements.insertAdjacentHTML('beforeend', html);
-                        categoryResults.style.visibility = "hidden";
-                        document.querySelector('#findCategory').value = '';
-                    }
-                })
-            })
-        }
-
-        function removeCategory(element){
-            const id = element.dataset.name;
-            const div = document.querySelector('#cat'+id);
-            const cats = document.querySelector('#category_id');
-            //Split the String by (,) and put them into an array
-            const array = cats.value.split(',');
-            //Find the index of the element you would like to remove
-            const index = array.indexOf(id);
-            console.log(index)
-            if (index > -1) {
-                //If found remove the index from the array
-                array.splice(index, 1);
-            }
-            //Join the Array (Back to String). join() is empty so by default seperates by a comma
-            div.remove();
-            cats.value = array.join();
-        }
-
-        //Search for the Model
-        const modelSearch = document.querySelector('#findModel');
-        const modelResults = document.querySelector('#modelResults');
-
-        modelSearch.addEventListener('input', function(e){
-            let value = e.target.value;
-            if (value.length > 2) {
-                const xhttp = new XMLHttpRequest();
-
-                xhttp.onload = function(){
-                    modelResults.innerHTML = xhttp.responseText;
-                    modelResults.style.visibility = "visible";
-                    initModelItems();
-                    
-                }
-
-                xhttp.open("POST", "/search/models/");
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send(`search=${value}`); 
-            }
-        });
-
-        function initModelItems(){
-            //Gets all of the list items and adds an event listener to them
-            //This has to be re-initialised everytime a result set is returned.
-            document.querySelector('#modelResults').querySelectorAll('li').forEach(function(item) {
-                item.addEventListener('click', function() {
-                    //Get the information required
-                    let name = this.getAttribute('data-name');
-                    let id = this.getAttribute('data-id');
-                    //Select the Elements
-                    const cats = document.querySelector('#asset_model');
-                    cats.value = id;
-                    modelResults.style.visibility = "hidden";
-                    document.querySelector('#findModel').value = name;
-                    getFields(id);
-                    getInfo(id);
-                })
-            })
-        }
-
-        const modelInfo = document.querySelector('#modelInfo');
-
-        function getInfo(id){
-            const xhttp = new XMLHttpRequest;
-            xhttp.onload = function(){
-                modelInfo.innerHTML = xhttp.responseText;
-            }
-
-            xhttp.open("POST", "/model/preview/");
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send(`id=${id}`); 
-        
-        }
-
-        //Search for the Supplier
-        const supplierSearch = document.querySelector('#findSupplier');
-        const supplierResults = document.querySelector('#supplierResults');
-
-        supplierSearch.addEventListener('input', function(e){
-            let value = e.target.value;
-            if (value.length > 2) {
-                const xhttp = new XMLHttpRequest();
-
-                xhttp.onload = function(){
-                    supplierResults.innerHTML = xhttp.responseText;
-                    supplierResults.style.visibility = "visible";
-                    initSupplierItems();
-                    
-                }
-
-                xhttp.open("POST", "/search/suppliers/");
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send(`search=${value}`); 
-            }
-        });
-
-        function initSupplierItems(){
-            //Gets all of the list items and adds an event listener to them
-            //This has to be re-initialised everytime a result set is returned.
-            document.querySelector('#supplierResults').querySelectorAll('li').forEach(function(item) {
-                item.addEventListener('click', function() {
-                    //Get the information required
-                    let name = this.getAttribute('data-name');
-                    let id = this.getAttribute('data-id');
-                    //Select the Elements
-                    const cats = document.querySelector('#supplier_id');
-                    cats.value = id;
-                    supplierResults.style.visibility = "hidden";
-                    document.querySelector('#findSupplier').value = name;
-                    getSupplierInfo(id);
-                })
-            })
-        }
-
-        const supplierInfo = document.querySelector('#supplierInfo');
-
-        function getSupplierInfo(id){
-            const xhttp = new XMLHttpRequest;
-            xhttp.onload = function(){
-                supplierInfo.innerHTML = xhttp.responseText;
-            }
-
-            xhttp.open("POST", "/supplier/preview/");
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send(`id=${id}`); 
-        
-        }
-
-        //Search for the Location
-        const locationSearch = document.querySelector('#findLocation');
-        const locationResults = document.querySelector('#locationResults');
-
-        locationSearch.addEventListener('input', function(e){
-            let value = e.target.value;
-            if (value.length > 2) {
-                const xhttp = new XMLHttpRequest();
-
-                xhttp.onload = function(){
-                    locationResults.innerHTML = xhttp.responseText;
-                    locationResults.style.visibility = "visible";
-                    initLocationItems();
-                    
-                }
-
-                xhttp.open("POST", "/search/locations/");
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send(`search=${value}`); 
-            }
-        });
-
-        function initLocationItems(){
-            //Gets all of the list items and adds an event listener to them
-            //This has to be re-initialised everytime a result set is returned.
-            document.querySelector('#locationResults').querySelectorAll('li').forEach(function(item) {
-                item.addEventListener('click', function() {
-                    //Get the information required
-                    let name = this.getAttribute('data-name');
-                    let id = this.getAttribute('data-id');
-                    //Select the Elements
-                    const cats = document.querySelector('#location_id');
-                    cats.value = id;
-                    locationResults.style.visibility = "hidden";
-                    document.querySelector('#findLocation').value = name;
-                    getLocationInfo(id);
-                })
-            })
-        }
-
-        const locationInfo = document.querySelector('#locationInfo');
-
-        function getLocationInfo(id){
-            const xhttp = new XMLHttpRequest;
-            xhttp.onload = function(){
-                alert(xhttp.responseText);
-                locationInfo.innerHTML = xhttp.responseText;
-            }
-
-            xhttp.open("POST", "/location/preview/");
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send(`id=${id}`); 
-        
-        }
-
-        const button = document.querySelector('#submitButton');
-
-        const name = document.querySelector('[name="name"]');
-
-        function sendData(){
-            console.log('sending data');
-
-        }
-    </script>
+    <script type="text/javascript" src="{{ asset('js/assets.js')}}"></script>
 @endsection

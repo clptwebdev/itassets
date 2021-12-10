@@ -4047,7 +4047,7 @@ input[type="button"].btn-block {
 }
 
 .nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
-  border-color: #eaecf4 #eaecf4 #dddfeb;
+  border-color: #eaecf4 #eaecf4 #dddfeb;  
 }
 
 .nav-tabs .nav-link.disabled {
@@ -11694,3 +11694,10 @@ tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
 
 }
 
+#tab-bar .nav-item:hover{
+  background-color: transparent !important;
+}
+
+#tab-bar .nav-item .nav-link:hover{
+  background-color: transparent !important;
+}

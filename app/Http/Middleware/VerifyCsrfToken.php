@@ -20,5 +20,6 @@ class VerifyCsrfToken extends Middleware
         'supplier/preview',
         'search/locations',
         'location/preview',
+        'model/create',
     ];
 }

@@ -296,6 +296,9 @@ class AssetController extends Controller {
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
+            'mans' => Manufacturer::all(),
+            'fieldsets' => Fieldset::all(),
+            'depreciation' => Depreciation::all(),
         ]);
 
 
