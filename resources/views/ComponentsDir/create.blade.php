@@ -41,84 +41,39 @@
                                     </ul>
                                 </div>
                             @endif
-
                             @csrf
                             <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text"
-                                       class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name" id="name" placeholder="Component Name">
+                                <x-form.input name="name" formAttributes="required"/>
                             </div>
                             <div class="form-group">
-                                <label for="serial_no">Serial_no</label>
-                                <input type="text"
-                                       class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                       name="serial_no" id="serial_no" required>
+                                <x-form.input name="serial_no" formAttributes="required"/>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="order_no">Order_no</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                           id="order_no" name="order_no" required>
+                                    <x-form.input name="order_no" formAttributes="required"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="purchased_cost">Purchased Cost</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
-                                           id="purchased_cost" name="purchased_cost" required>
+                                    <x-form.input name="purchased_cost" formAttributes="required"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="purchased_date">Purchased Date</label>
-                                    <input type="date"
-                                           class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
-                                           id="purchased_date" name="purchased_date" required>
+                                    <x-form.date name="purchased_date" formAttributes="required "/>
                                 </div>
-
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-
-                                    <label for="suppliers">Supplier</label>
-                                    <select type="text"
-                                            class="form-control <?php if ($errors->has('supplier_id')) {?>border-danger<?php }?>"
-                                            id="supplier_id" name="supplier_id" required>
-                                        <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif>No Supplier
-                                        </option>
-                                        @foreach($suppliers as $supplier)
-                                            <option
-                                                value="{{ $supplier->id }}" @if(old('supplier_id') == $supplier->id){{'selected'}}@endif>{{ $supplier->name}}</option>
-                                        @endforeach
-                                    </select>
-
+                                    <x-form.select name="supplier_id" formAttributes="required" :models="$suppliers"/>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="status">Status</label>
-                                    <select
-                                        class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
-                                        id="status_id" name="status_id">
-                                        <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset</option>
-                                        @foreach($statuses as $status)
-                                            <option
-                                                value="{{ $status->id }}" @if(old('status_id') == $status->id){{'selected'}}@endif>{{ $status->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <x-form.select name="status_id" formAttributes="required" :models="$statuses"/>
                                 </div>
                             </div>
-                            <div id="categories" class="form-control h-auto p-4 mb-3 rounded">
-                                <h4 class="h6 mb-4 text-center">Categories</h4>
-                                @foreach($categories as $category)
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}">
-                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
-                                </div>
-                                @endforeach
+                            <div class="form-control h-auto p-4 mb-3 rounded">
+                                <x-form.checkbox name="category" :models="$categories" formAttributes=""/>
                             </div>
                             <div class="form-group">
-                                <label for="notes">Notes</label>
-                                <textarea name="notes" id="notes" class="form-control" rows="10"></textarea>
+                                <x-form.textarea name="notes" formAttributes="rows='10'"/>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -138,37 +93,13 @@
                             </div>
                             <hr>
                             <div class="form-group col-md-12">
-                                <label for=" school location">Location</label>
-                                <select
-                                    class="form-control <?php if ($errors->has('location_id')) {?>border-danger<?php }?>"
-                                    id="location_id" name="location_id" required>
-                                    <option value="0" @if(old('location_id') == 0){{'selected'}}@endif>Unallocated
-                                    </option>
-                                    @foreach($locations as $location)
-                                        <option
-                                            value="{{$location->id}}" @if(old('location_id') == $location->id){{'selected'}}@endif>{{$location->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <label for="warranty">Warranty</label>
-                                <input type="text"
-                                       class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
-                                       id="warranty" name="warranty">
+                                <x-form.select formAttributes="required" name="location_id" :models="$locations"/>
                             </div>
                             <div class="form-group col-md-12">
-                                <label for="Warranty">Manufacturer</label>
-                                <select
-                                    class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
-                                    id="manufacturer_id" name="manufacturer_id">
-                                    <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
-                                    </option>
-                                    @foreach($manufacturers as $manufacturer)
-                                        <option
-                                            value="{{$manufacturer->id}}" @if(old('manufacturer_id') == $manufacturer->id){{'selected'}}@endif>{{$manufacturer->name}}</option>
-                                    @endforeach
-                                </select>
+                                <x-form.input name="warranty"/>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <x-form.select name="manufacturer_id" :models="$manufacturers"/>
                             </div>
                         </div>
                     </div>

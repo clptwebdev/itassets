@@ -23,17 +23,7 @@
                 </button>
             </div>
         </div>
-
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
+        <x-form.errors/>
         <section>
             <p class="mb-4">Edit {{ $component->name}}, Component stored in the Apollo Asset Management System. Change the information
                 and
@@ -46,88 +36,48 @@
                         <div class="card-body">
                             @csrf
                             @method('PATCH')
-
                             <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text"
-                                        class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                        name="name" id="name" placeholder="Component Name" value="{{$component->name}}">
+                                <?php $name = $component->name;  ?>
+                                <x-form.input name="name" formAttributes="required" :value="$name"/>
                             </div>
                             <div class="form-group">
-                                <label for="serial_no">Serial_no</label>
-                                <input type="text"
-                                        class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                        name="serial_no" id="serial_no" value="{{$component->serial_no}}" required>
+                                <?php $serial_no = $component->serial_no;  ?>
+                                <x-form.input name="serial_no" formAttributes="required" :value="$serial_no"/>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="order_no">Order_no</label>
-                                    <input type="text"
-                                            class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                            id="order_no" name="order_no"  value="{{$component->order_no}}" required>
+                                    <?php $order_no = $component->order_no;  ?>
+                                    <x-form.input name="order_no" formAttributes="required" :value="$order_no"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="purchased_cost">Purchased Cost</label>
-                                    <input type="text"
-                                            class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
-                                            id="purchased_cost" name="purchased_cost" value="{{$component->purchased_cost}}" required>
+                                    <?php $cost = $component->purchased_cost;  ?>
+                                    <x-form.input name="purchased_cost" formAttributes="required" :value="$cost"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="purchased_date">Purchased Date</label>
-                                    <input type="date"
-                                            class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
-                                            id="purchased_date" name="purchased_date" value="{{ \Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')}}" required>
+                                    <?php  $date =  \Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')?>
+                                    <x-form.date name="purchased_date" formAttributes="required" :value="$date" />
                                 </div>
-
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-
-                                    <label for="suppliers">Supplier</label>
-                                    <select type="text"
-                                            class="form-control <?php if ($errors->has('supplier_id')) {?>border-danger<?php }?>"
-                                            id="supplier_id" name="supplier_id" required>
-                                        <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif >No
-                                            Supplier
-                                        </option>
-                                        @foreach($suppliers as $supplier)
-                                            <option
-                                                value="{{ $supplier->id }}"@isset($component->supplier->id) @if($component->supplier->id == $supplier->id){{'selected'}}@endif @endisset>{{ $supplier->name}}</option>
-                                        @endforeach
-                                    </select>
-
+                                    <?php $selected = $component->supplier->id; ?>
+                                    <x-form.select name="supplier_id" formAttributes="required" :models="$suppliers" :selected="$selected"/>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="status">Status</label>
-                                    <select
-                                        class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
-                                        id="status_id" name="status_id">
-                                        <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
-                                        </option>
-                                        @foreach($statuses as $status)
-                                            <option
-                                                value="{{ $status->id }}" @isset($component->status->id)@if($component->status->id == $status->id){{'selected'}}@endif @endisset>{{ $status->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <?php $selected = $component->status->id; ?>
+                                    <x-form.select name="status_id" formAttributes="required" :models="$statuses" :selected="$selected"/>
                                 </div>
                             </div>
                             @php( $cat_array = [])
                             @foreach($component->category as $cc)
                             @php( $cat_array[] = $cc->id)
-
                             @endforeach
-                            <div id="categories" class="form-control h-auto p-4 mb-3 rounded">
-                                <h4 class="h6 mb-4 text-center">Categories</h4>
-                                @foreach($categories as $category)
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}" @if(in_array($category->id, $cat_array)){{ 'checked'}}@endif>
-                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
-                                </div>
-                                @endforeach
+                            <div class="form-control h-auto p-4 mb-3 rounded">
+                                <x-form.checkbox  :models="$categories" name="category" :checked="$cat_array"/>
                             </div>
                             <div class="form-group">
-                                <label for="notes">Notes</label>
-                                <textarea name="notes" id="notes" class="form-control" rows="10">{{$component->notes}}</textarea>
+                                <?php $notes = $component->notes; ?>
+                                <x-form.textarea  name="notes" formAttributes="rows='10'" :value="$notes"/>
                             </div>
                         </div>
                     </div>
@@ -140,7 +90,7 @@
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Component Image</h4>
                                     @if($component->photo()->exists())
-                                        <img id="profileImage" src="{{ asset($component->photo->path) ?? asset('images/svg/components_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal>
+                                        <img id="profileImage" src="{{ asset($component->photo->path) ?? asset('images/svg/components_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     @else
                                     <img id="profileImage"
                                          src="{{ asset('images/svg/components_image.svg') }}"
@@ -152,37 +102,17 @@
                             </div>
                             <hr>
                             <div class="form-group col-md-12">
-                                <label for=" school location">Location</label>
-                                <select
-                                    class="form-control <?php if ($errors->has('location_id')) {?>border-danger<?php }?>"
-                                    id="location_id" name="location_id" required>
-                                    <option value="0" @if(old('location_id') == 0){{'selected'}}@endif>Unallocated
-                                    </option>
-                                    @foreach($locations as $location)
-                                        <option
-                                            value="{{ $location->id }}" @if($component->location_id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
-                                    @endforeach
-                                </select>
+                                <?php $selected = $component->location_id; ?>
+                                <x-form.select name="location_id" formAttributes="required" :models="$locations" :selected="$selected"/>
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="warranty">Warranty</label>
-                                <input type="text"
-                                       class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
-                                       id="warranty" name="warranty" value="{{$component->warranty}}">
+                                <?php $warranty = $component->warranty  ?>
+                                <x-form.input name="warranty"  :value="$warranty"/>
                             </div>
                             <div class="form-group col-md-12">
-                                <label for="Warranty">Manufacturer</label>
-                                <select
-                                    class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
-                                    id="manufacturer_id" name="manufacturer_id">
-                                    <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
-                                    </option>
-                                    @foreach($manufacturers as $manufacturer)
-                                        <option
-                                            value="{{$manufacturer->id}}"@isset($component->manufacturer->id) @if($component->manufacturer->id == $manufacturer->id){{'selected'}}@endif @endisset>{{$manufacturer->name}}</option>
-                                    @endforeach
-                                </select>
+                                <?php $selected = $component->manufacturer->id; ?>
+                                <x-form.select name="manufacturer_id" :models="$manufacturers" :selected="$selected"/>
                             </div>
                         </div>
                     </div>
@@ -207,7 +137,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Select an image below:.</p>
+                    <p>Select an image below:</p>
                     <?php $photos = App\Models\Photo::all();?>
                     <img src="{{ asset('images/svg/location-image.svg') }}" width="80px" alt="Default Picture"
                          onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">
