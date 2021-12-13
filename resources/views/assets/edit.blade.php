@@ -23,6 +23,7 @@
         </div>
     </div>
 
+
     <section>
         <p class="mb-4">Change or Update an Asset in the asset management system. Enter or change in the following
             information and click
@@ -34,15 +35,7 @@
                 <div class="card shadow h-100">
                     <div class="card-body">
 
-                        @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif
+                        <x-form.errors
 
                         @csrf
                         @method('PATCH')
@@ -72,7 +65,7 @@
 
                                 <div class="form-group">
                                     <label for="room">Location</label>
-                                    <input type="text" class="form-control <?php if ($errors->has('room')) {?> border border-danger<?php }?>" 
+                                    <input type="text" class="form-control <?php if ($errors->has('room')) {?> border border-danger<?php }?>"
                                         id="location" placeholder="" value="{{ $asset->location->name}}" disabled>
                                 </div>
 
