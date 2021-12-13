@@ -87,7 +87,7 @@
                                     <input type="date"
                                            class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
                                            id="purchased_date" name="purchased_date" value="{{old('purchased_date') ??  \Carbon\Carbon::parse($accessory->purchased_date)->format('Y-m-d')}}" required>
-                                    
+
                                 </div>
 
                             </div>
@@ -100,7 +100,7 @@
                                         <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
                                         </option>
                                         @foreach($manufacturers as $manufacturer)
-                                            <option value="{{$manufacturer->id}}" 
+                                            <option value="{{$manufacturer->id}}"
                                                 @if(old('manufacturer_id') & old('manufacturer_id') == $manufacturer->id){{'selected'}}
                                                 @elseif($accessory->manufacturer_id == $manufacturer->id){{ 'selected'}}
                                                 @endif
@@ -118,7 +118,7 @@
                                             Supplier
                                         </option>
                                         @foreach($suppliers as $supplier)
-                                            <option value="{{ $supplier->id }}" 
+                                            <option value="{{ $supplier->id }}"
                                                 @if(old('supplier_id') & old('supplier_id') == $supplier->id){{'selected'}}
                                                 @elseif($accessory->supplier_id == $supplier->id){{ 'selected'}}
                                                 @endif
@@ -127,7 +127,7 @@
                                     </select>
 
                                 </div>
-                                
+
                                 <div class="form-group col-md-4">
                                     <label for="warranty">Warranty</label>
                                     <input type="text"
@@ -208,7 +208,7 @@
                                     <option value="0" @if(old('depreciation_id') == 0){{'selected'}}@endif>No Depreciation
                                     </option>
                                     @foreach($depreciations as $depreciation)
-                                        <option value="{{ $depreciation->id }}" 
+                                        <option value="{{ $depreciation->id }}"
                                             @if(old('depreciation_id') & old('depreciation_id') == $supplier->id){{'selected'}}
                                             @elseif($accessory->depreciation_id == $depreciation->id){{ 'selected'}}
                                             @endif
@@ -226,7 +226,7 @@
                                     <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
                                     </option>
                                     @foreach($statuses as $status)
-                                        <option value="{{ $status->id }}" 
+                                        <option value="{{ $status->id }}"
                                             @if(old('status_id') & old('status_id') == $status->id){{'selected'}}
                                             @elseif($accessory->status_id == $status->id){{ 'selected'}}
                                             @endif
@@ -234,7 +234,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
