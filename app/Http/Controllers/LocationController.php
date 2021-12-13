@@ -194,4 +194,46 @@ class LocationController extends Controller
             ->withInput();
     }
 
+    
+    public function search(Request $request){
+        $locations = Location::where('name', 'LIKE', '%' . $request->search . "%")->take(3)->get()->unique('name');
+        $output = "<ul id='locationSelect' class='list-group'>";
+        foreach($locations as $location){
+            $output .=" <li class='list-group-item d-flex justify-content-between align-items-center pointer' data-id='".$location->id."' data-name='".$location->name."'>
+                            {$location->name}
+                            <span class='badge badge-primary badge-pill'>1</span>
+                        </li>";
+        }
+        $output .= "</ul>";
+        return Response($output);
+    }
+
+    public function preview(Request $request){
+        if($location = Location::find($request->id)){
+            if($location->photo()->exists() && $src = asset($location->photo->path)){
+                 
+            }else{
+                $src = asset('images/svg/location-image.svg');
+            }
+            $output = " <div class='model_title text-center h4 mb-3'>{$location->name}</div>
+                        <div class='model_image p-4 d-flex justify-content-center'>
+                            <img id='profileImage' src='{$src}' height='200px'
+                                alt='Select Profile Picture'>
+                        </div>";
+            if($location->address_1 != ''){
+                $output .= "<div class='model_no py-2 px-4 text-center'>
+                            Address: {$location->address_1}, {$location->city}, {$location->postcode}
+                        </div>";
+            }
+                        
+            $output .= "<div class='model_no py-2 px-4 text-center'>
+                            Website: {$location->url}
+                        </div>
+                        <div class='model_no py-2 px-4 text-center'>
+                            Email: {$location->email}
+                        </div>";
+            return $output;
+        }
+    }
+
 }

@@ -7,6 +7,7 @@ use App\Imports\AssetImport;
 use App\Imports\AssetDispose;
 use App\Models\Asset;
 use App\Models\AssetModel;
+use App\Models\Depreciation;
 use App\Models\Fieldset;
 use App\Models\Location;
 use App\Models\Manufacturer;
@@ -96,6 +97,8 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
 
+        
+
         return view('assets.create', [
             "locations" => $locations,
             "manufacturers" => Manufacturer::all(),
@@ -103,6 +106,9 @@ class AssetController extends Controller {
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
+            'mans' => Manufacturer::all(),
+            'fieldsets' => Fieldset::all(),
+            'depreciation' => Depreciation::all(),
         ]);
     }
 
@@ -235,9 +241,9 @@ class AssetController extends Controller {
         {
             $asset->fields()->attach($array);
         }
-        if(! empty($request->category))
+        if(! empty(explode(',',$request->category)))
         {
-            $asset->category()->attach($request->category);
+            $asset->category()->attach(explode(',',$request->category));
         }
         session()->flash('success_message', $request->name . ' has been created successfully');
 
@@ -290,6 +296,9 @@ class AssetController extends Controller {
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
+            'mans' => Manufacturer::all(),
+            'fieldsets' => Fieldset::all(),
+            'depreciation' => Depreciation::all(),
         ]);
 
 

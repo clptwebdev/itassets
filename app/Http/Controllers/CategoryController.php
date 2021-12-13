@@ -66,4 +66,17 @@ class CategoryController extends Controller
         session()->flash('danger_message', $name.' has been successfully deleted from the system');
         return redirect(route('category.index'));
     }
+
+    public function search(Request $request){
+        $categories = Category::where('name', 'LIKE', '%' . $request->search . "%")->take(3)->get()->unique('name');
+        $output = "<ul id='categorySelect' class='list-group'>";
+        foreach($categories as $category){
+            $output .=" <li class='list-group-item d-flex justify-content-between align-items-center pointer' data-id='".$category->id."' data-name='".$category->name."'>
+                            {$category->name}
+                            <span class='badge badge-primary badge-pill'>1</span>
+                        </li>";
+        }
+        $output .= "</ul>";
+        return Response($output);
+    }
 }
