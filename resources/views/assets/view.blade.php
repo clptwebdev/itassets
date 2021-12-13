@@ -67,6 +67,7 @@
         </div>
     </div>
 
+
     @if(session('danger_message'))
         <div class="alert alert-danger"> {!!session('danger_message')!!} </div>
     @endif

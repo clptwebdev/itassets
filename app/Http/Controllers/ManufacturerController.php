@@ -83,16 +83,18 @@ class ManufacturerController extends Controller {
 
     }
 
-    public function update(Manufacturer $manufacturers)
+    public function update(Manufacturer $manufacturer , Request $request)
     {
-        request()->validate([
+
+        $request->validate([
             "name" => "required|max:255",
             "supportPhone" => "required|max:14",
             "supportUrl" => "required",
-            'supportEmail' => ['required', \Illuminate\Validation\Rule::unique('manufacturers')->ignore($manufacturers->id)],
+            'supportEmail' => [ \Illuminate\Validation\Rule::unique('manufacturers')->ignore($manufacturer->id)],
             "PhotoId" => "nullable",
         ]);
-        $manufacturers->fill([
+
+        $manufacturer->fill([
             "name" => request("name"),
             "supportPhone" => request("supportPhone"),
             "supportUrl" => request("supportUrl"),
@@ -306,7 +308,7 @@ class ManufacturerController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
 
-        return redirect(route('manufacturers.'))
+        return redirect(route('manufacturer.pdf'))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 

@@ -8,24 +8,19 @@
 
 @section('content')
     <form action="{{ route('components.update', $component->id) }}" method="POST">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Edit Component</h1>
-
-            <div>
-                <a href="{{ route('components.index') }}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Components</a>
-                <a href="{{ route('documentation.index')."#collapseNineComponent"}}"
-                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
-                        class="fas fa-question fa-sm text-dark-50"></i>  need Help?</a>
-                <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
-                        class="far fa-save fa-sm text-white-50"></i> Save
-                </button>
-            </div>
-        </div>
+        <x-wrappers.nav title="Edit components">
+            <x-buttons.return :route="route('components.index')">Components</x-buttons.return>
+            <x-buttons.help :route=" route('documentation.index').'#collapseNineComponent'"></x-buttons.help>
+            <x-buttons.submit>Save</x-buttons.submit>
+        </x-wrappers.nav>
+        @php
+        preg_match_all('!\d+!', url()->current(), $test);
+        $component = \App\Models\Component::findOrFail(intval($test[0][0]));
+        @endphp
         <x-form.errors/>
         <section>
-            <p class="mb-4">Edit {{ $component->name}}, Component stored in the Apollo Asset Management System. Change the information
+            <p class="mb-4">Edit {{ $component->name}}, Component stored in the Apollo Asset Management System. Change
+                the information
                 and
                 click the 'Save' button. Or click the 'Back' button
                 to return the Components page.
@@ -54,30 +49,32 @@
                                     <x-form.input name="purchased_cost" formAttributes="required" :value="$cost"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <?php  $date =  \Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')?>
-                                    <x-form.date name="purchased_date" formAttributes="required" :value="$date" />
+                                    <?php  $date = \Carbon\Carbon::parse($component->purchased_date)->format('Y-m-d')?>
+                                    <x-form.date name="purchased_date" formAttributes="required" :value="$date"/>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <?php $selected = $component->supplier->id; ?>
-                                    <x-form.select name="supplier_id" formAttributes="required" :models="$suppliers" :selected="$selected"/>
+                                    <x-form.select name="supplier_id" formAttributes="required" :models="$suppliers"
+                                                   :selected="$selected"/>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <?php $selected = $component->status->id; ?>
-                                    <x-form.select name="status_id" formAttributes="required" :models="$statuses" :selected="$selected"/>
+                                    <x-form.select name="status_id" formAttributes="required" :models="$statuses"
+                                                   :selected="$selected"/>
                                 </div>
                             </div>
                             @php( $cat_array = [])
                             @foreach($component->category as $cc)
-                            @php( $cat_array[] = $cc->id)
+                                @php( $cat_array[] = $cc->id)
                             @endforeach
                             <div class="form-control h-auto p-4 mb-3 rounded">
-                                <x-form.checkbox  :models="$categories" name="category" :checked="$cat_array"/>
+                                <x-form.checkbox :models="$categories" name="category" :checked="$cat_array"/>
                             </div>
                             <div class="form-group">
                                 <?php $notes = $component->notes; ?>
-                                <x-form.textarea  name="notes" formAttributes="rows='10'" :value="$notes"/>
+                                <x-form.textarea name="notes" formAttributes="rows='10'" :value="$notes"/>
                             </div>
                         </div>
                     </div>
@@ -90,12 +87,15 @@
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Component Image</h4>
                                     @if($component->photo()->exists())
-                                        <img id="profileImage" src="{{ asset($component->photo->path) ?? asset('images/svg/components_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                        <img id="profileImage"
+                                             src="{{ asset($component->photo->path) ?? asset('images/svg/components_image.svg')}}"
+                                             width="100%" alt="Select Profile Picture" data-toggle="modal"
+                                             data-target="#imgModal">
                                     @else
-                                    <img id="profileImage"
-                                         src="{{ asset('images/svg/components_image.svg') }}"
-                                         width="100%"
-                                         alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                        <img id="profileImage"
+                                             src="{{ asset('images/svg/components_image.svg') }}"
+                                             width="100%"
+                                             alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     @endif
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>
@@ -103,12 +103,13 @@
                             <hr>
                             <div class="form-group col-md-12">
                                 <?php $selected = $component->location_id; ?>
-                                <x-form.select name="location_id" formAttributes="required" :models="$locations" :selected="$selected"/>
+                                <x-form.select name="location_id" formAttributes="required" :models="$locations"
+                                               :selected="$selected"/>
                             </div>
 
                             <div class="form-group col-md-12">
                                 <?php $warranty = $component->warranty  ?>
-                                <x-form.input name="warranty"  :value="$warranty"/>
+                                <x-form.input name="warranty" :value="$warranty"/>
                             </div>
                             <div class="form-group col-md-12">
                                 <?php $selected = $component->manufacturer->id; ?>
@@ -118,7 +119,6 @@
                     </div>
                 </div>
             </div>
-
         </section>
     </form>
 @endsection

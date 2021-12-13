@@ -1,10 +1,10 @@
-@props(['name','formAttributes' ,'value' => null])
+@props(['name'=> 'title', 'title' ,'formAttributes' ,'value' => null , 'type'=>'text' , 'label'=>true])
 
 {{--form input Dynamic--}}
-
-<label for="name">{{str_replace(array('_','id'), ' ',ucfirst($name))}}</label>
-
-<input type="text"
+@if($label == true)
+<label for="{{$name}}">{{str_replace(array('_','id'), ' ',ucfirst($title ?? $name))}}</label>
+@endif
+<input type="{{$type}}"
        class="form-control <?php if ($errors->has("{!! $name !!}")) {?>border-danger<?php }?>"
        name="{{$name}}" id="{{$name}}"
        placeholder="{{ucfirst($name)}}"
