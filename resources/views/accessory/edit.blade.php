@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-    <x-form.layout :action="route('accessories.index', $accessory->id)" method="PATCH">
+    <x-form.layout :action="route('accessories.update', $accessory->id)" method="PATCH">
 
         <x-wrappers.nav title="Edit Accessory">
             <x-buttons.return :route="route('accessories.index')">Accessories</x-buttons.return>
@@ -24,6 +24,7 @@
                     <div class="card shadow h-100">
                         <div class="card-body">
                             <x-form.errors/>
+
                             <div class="form-group">
                                 <x-form.input name="name" formAttributes="required" :value="$accessory->name"/>
                             </div>
