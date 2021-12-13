@@ -7,154 +7,78 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('accessories.update', $accessory->id) }}" method="POST">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Edit Accessory</h1>
-
-            <div>
-                <a href="{{ route('accessories.index') }}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                        class="fas fa-chevron-left fa-sm text-dark-50"></i> Back to Accessories</a>
-                <a href="{{ route('documentation.index')."#collapseEightAccessory"}}"
-                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
-                        class="fas fa-question fa-sm text-dark-50"></i>  need Help?</a>
-                <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
-                        class="far fa-save fa-sm text-white-50"></i> Save
-                </button>
-            </div>
-        </div>
+    <x-form.layout :action="route('accessories.index', $accessory->id)" method="PATCH">
+        
+        <x-wrappers.nav title="Edit Accessory">
+            <x-buttons.return :route="route('accessories.index')">Accessories</x-buttons.return>
+            <x-buttons.help :route=" route('documentation.index').'#collapseEightAccessory'"/>
+            <x-buttons.submit>Save</x-buttons.submit>
+        </x-wrappers.nav>
         <section>
-            <p class="mb-4">Edit {{ $accessory->name}} and change any of the following information. Click the 'Save' button. Or click the 'Back' button
+            <p class="mb-4">Edit {{ $accessory->name}} and change any of the following information. Click the 'Save'
+                button. Or click the 'Back' button
                 to return the Accessories page.
             </p>
             <div class="row row-eq-height">
                 <div class="col-12 col-md-8 col-lg-9">
                     <div class="card shadow h-100">
                         <div class="card-body">
-
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-
-                                @csrf
-                                {{ method_field('PATCH') }}
-
+                            <x-form.errors/>
                             <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text"
-                                       class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name" id="name" placeholder="accessory Name" value="{{old('name') ?? $accessory->name}}">
+                                <x-form.input name="name" formAttributes="required" :value="$accessory->name"/>
                             </div>
                             <div class="form-group">
-                                <label for="model">Model</label>
-                                <input type="text"
-                                       class="form-control mb-3 <?php if ($errors->has('model')){?>border border-danger<?php }?>"
-                                       name="model" id="model" value="{{old('model') ?? $accessory->model}}">
+                                <x-form.input name="model" :value="$accessory->model"/>
                             </div>
                             <div class="form-group">
-                                <label for="serial_no">Serial_no</label>
-                                <input type="text"
-                                       class="form-control mb-3 <?php if ($errors->has('serial_no')){?>border-danger<?php }?>"
-                                       name="serial_no" id="serial_no" value="{{old('serial_no') ?? $accessory->serial_no}}" required>
+                                <x-form.input name="Serial_no" :value="$accessory->serial_no"
+                                              formAttributes="required"/>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="order_no">Order_no</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                           id="order_no" name="order_no"  value="{{old('order_no') ?? $accessory->order_no}}">
+                                    <x-form.input name="order_no" :value="$accessory->order_no"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="purchased_cost">Purchased Cost</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
-                                           id="purchased_cost" name="purchased_cost" value="{{old('purchased_cost') ?? $accessory->purchased_cost}}" required>
-                                           <div class="form-check mt-2">
-                                            <input class="form-check-input" type="checkbox" value="1" name="donated" id="donated" @if($accessory->donated == 1) checked @endif>
-                                            <label class="form-check-label" for="donated">
-                                                Donated
-                                            </label>
-                                            </div>
+                                    <x-form.input name="purchased_cost" :value="$accessory->purchased_cost"
+                                                  formAttributes="required"/>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="1" name="donated"
+                                               id="donated" @if($accessory->donated == 1) checked @endif>
+                                        <label class="form-check-label" for="donated">Donated</label>
+                                    </div>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="purchased_date">Purchased Date</label>
-                                    <input type="date"
-                                           class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
-                                           id="purchased_date" name="purchased_date" value="{{old('purchased_date') ??  \Carbon\Carbon::parse($accessory->purchased_date)->format('Y-m-d')}}" required>
-                                    
+                                    <x-form.date name="purchased_date"
+                                                 :value="\Carbon\Carbon::parse($accessory->purchased_date)->format('Y-m-d')"
+                                                 formAttributes="required"/>
                                 </div>
-
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="Warranty">Manufacturer</label>
-                                    <select
-                                        class="form-control <?php if ($errors->has('manufacturer')) {?>border-danger<?php }?>"
-                                        id="manufacturer_id" name="manufacturer_id">
-                                        <option value="0" @if(old('manufacturer_id') == 0){{'selected'}}@endif>Unallocated
-                                        </option>
-                                        @foreach($manufacturers as $manufacturer)
-                                            <option value="{{$manufacturer->id}}" 
-                                                @if(old('manufacturer_id') & old('manufacturer_id') == $manufacturer->id){{'selected'}}
-                                                @elseif($accessory->manufacturer_id == $manufacturer->id){{ 'selected'}}
-                                                @endif
-                                            >{{$manufacturer->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <x-form.select name="manufacturer_id" :models="$manufacturers"
+                                                   :selected="$accessory->manufacturer_id"/>
                                 </div>
                                 <div class="form-group col-md-4">
-
-                                    <label for="suppliers">Supplier</label>
-                                    <select type="text"
-                                            class="form-control <?php if ($errors->has('supplier_id')) {?>border-danger<?php }?>"
-                                            id="supplier_id" name="supplier_id" required>
-                                        <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif >No
-                                            Supplier
-                                        </option>
-                                        @foreach($suppliers as $supplier)
-                                            <option value="{{ $supplier->id }}" 
-                                                @if(old('supplier_id') & old('supplier_id') == $supplier->id){{'selected'}}
-                                                @elseif($accessory->supplier_id == $supplier->id){{ 'selected'}}
-                                                @endif
-                                            >{{ $supplier->name}}</option>
-                                        @endforeach
-                                    </select>
-
+                                    <x-form.select name="supplier_id" :models="$suppliers"
+                                                   :selected="$accessory->supplier_id"/>
                                 </div>
-                                
+
                                 <div class="form-group col-md-4">
-                                    <label for="warranty">Warranty</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('warranty')) {?>border-danger<?php }?>"
-                                           id="warranty" name="warranty" value="{{old('warranty') ?? $accessory->warranty}}">
+                                    <x-form.input name="warranty" :value="$accessory->warranty"/>
                                 </div>
 
                             </div>
                             @php( $cat_array = [])
                             @foreach($accessory->category as $cc)
-                            @php( $cat_array[] = $cc->id)
+                                @php( $cat_array[] = $cc->id)
 
                             @endforeach
-                            <div id="categories" class="form-control h-auto p-4 mb-3">
-                                <h4 class="h6 mb-4 text-center">Categories</h4>
-                                @foreach($categories as $category)
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}" @if(in_array($category->id, $cat_array)){{ 'checked'}}@endif>
-                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
-                                </div>
-                                @endforeach
+                            <div class="form-control h-auto p-4 mb-3 rounded">
+                                <x-form.checkbox :models="$categories" name="category" :checked="$cat_array"/>
                             </div>
                             <div class="form-group">
-                                <label for="notes">Notes</label>
-                                <textarea name="notes" id="notes" class="form-control" rows="10">{{ old('notes') ?? $accessory->notes}}</textarea>
+                                <x-form.textarea name="notes" formAttributes="rows='10'" :value="$accessory->notes"/>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -166,12 +90,15 @@
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Image</h4>
                                     @if($accessory->photo()->exists())
-                                        <img id="profileImage" src="{{ asset($accessory->photo->path) ?? asset('images/svg/accessory_image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                        <img id="profileImage"
+                                             src="{{ asset($accessory->photo->path) ?? asset('images/svg/accessory_image.svg')}}"
+                                             width="100%" alt="Select Profile Picture" data-toggle="modal"
+                                             data-target="#imgModal">
                                     @else
-                                    <img id="profileImage"
-                                         src="{{ asset('images/svg/accessory_image.svg') }}"
-                                         width="100%"
-                                         alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                        <img id="profileImage"
+                                             src="{{ asset('images/svg/accessory_image.svg') }}"
+                                             width="100%"
+                                             alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
                                     @endif
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>
@@ -179,69 +106,31 @@
                             <hr>
 
                             <div class="form-group col-md-12">
-                                <label for=" school location">Location</label>
-                                <select
-                                    class="form-control <?php if ($errors->has('location_id')) {?>border-danger<?php }?>"
-                                    id="location_id" name="location_id" required>
-                                    <option value="0" @if(old('location_id') == 0){{'selected'}}@endif>Unallocated
-                                    </option>
-                                    @foreach($locations as $location)
-                                        <option
-                                            value="{{ $location->id }}" @if($accessory->location->id == $location->id){{'selected'}}@endif>{{ $location->name}}</option>
-                                    @endforeach
-                                </select>
+                                <x-form.select name="location_id" :models="$locations"
+                                               :selected="$accessory->location->id"/>
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="warranty">Room</label>
-                                <input type="text"
-                                       class="form-control <?php if ($errors->has('room')) {?>border-danger<?php }?>"
-                                       id="room" name="room" value="{{old('room') ?? $accessory->room}}">
+                                <x-form.input name="room"/>
                             </div>
 
                             <div class="form-group col-md-12">
-
-                                <label for="suppliers">Depreciation Model</label>
-                                <select type="text"
-                                        class="form-control <?php if ($errors->has('depreciation_id')) {?>border border-danger<?php }?>"
-                                        id="depreciation_id" name="depreciation_id" required>
-                                    <option value="0" @if(old('depreciation_id') == 0){{'selected'}}@endif>No Depreciation
-                                    </option>
-                                    @foreach($depreciations as $depreciation)
-                                        <option value="{{ $depreciation->id }}" 
-                                            @if(old('depreciation_id') & old('depreciation_id') == $supplier->id){{'selected'}}
-                                            @elseif($accessory->depreciation_id == $depreciation->id){{ 'selected'}}
-                                            @endif
-                                        >{{ $depreciation->name}}</option>
-                                    @endforeach
-                                </select>
-
+                                <x-form.select name="depreciation_id" :models="$depreciations"
+                                               :selected="$accessory->depreciation_id"/>
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="status">Status</label>
-                                <select
-                                    class="form-control <?php if ($errors->has('status_id')) {?>border-danger<?php }?>"
-                                    id="status_id" name="status_id">
-                                    <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>Unset
-                                    </option>
-                                    @foreach($statuses as $status)
-                                        <option value="{{ $status->id }}" 
-                                            @if(old('status_id') & old('status_id') == $status->id){{'selected'}}
-                                            @elseif($accessory->status_id == $status->id){{ 'selected'}}
-                                            @endif
-                                        >{{ $status->name}}</option>
-                                    @endforeach
-                                </select>
+                                <x-form.select name="status_id" :models="$statuses"
+                                               :selected="$accessory->status_id"/>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
             </div>
 
         </section>
-    </form>
+    </x-form.layout>
 @endsection
 
 @section('modals')

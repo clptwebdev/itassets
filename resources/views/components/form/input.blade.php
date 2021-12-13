@@ -5,8 +5,8 @@
 <label for="{{$name}}">{{str_replace(array('_','id'), ' ',ucfirst($title ?? $name))}}</label>
 @endif
 <input type="{{$type}}"
-       class="form-control <?php if ($errors->has("{!! $name !!}")) {?>border-danger<?php }?>"
+       class="form-control  <?php if ($errors->has("{!! $name !!}")) {?>border-danger<?php }?>"
        name="{{$name}}" id="{{$name}}"
-       placeholder="{{ucfirst($name)}}"
+       placeholder="{{str_replace(array('_','id'), ' ',ucfirst($title ?? $name))}}"
        value="{{old("{!! $name !!}") ?? $value}}"
       {!!$formAttributes ?? null!!}>  {{--  pass attribues seperated with spaces  --}}

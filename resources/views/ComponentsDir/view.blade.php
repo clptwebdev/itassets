@@ -22,8 +22,7 @@
             @endcan
             @can('export', \App\Models\Component::class)
                 @if ($components->count() == 1)
-                    <x-buttons.reports :route="route('components.showPdf', $components[0]->id)">Generate Report
-                    </x-buttons.reports>
+                    <x-buttons.reports :route="route('components.showPdf', $components[0]->id)"/>
                 @else
                     <x-form.layout class="d-inline-block" :action="route('components.pdf')">
                         <x-form.input   type="hidden" name="components" :label="false" formAttributes="required"
