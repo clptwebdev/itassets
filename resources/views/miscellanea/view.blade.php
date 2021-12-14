@@ -23,9 +23,9 @@
                     <i class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Miscellanea::onlyTrashed()->count()}})</a>
             @endcan
             @can('create', \App\Models\Miscellanea::class)
-                <a href="{{ route('miscellaneous.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm">
-                    <i class="fas fa-plus fa-sm text-white-50"></i> Add New Miscellanea</a>
-            @endcan
+                    <x-buttons.add :route="route('miscellaneous.create')" >Miscellanea</x-buttons.add>
+
+                @endcan
             @can('viewAny', \App\Models\Miscellanea::class)
                 @if ($miscellaneous->count() == 1)
                     <a href="{{ route('miscellaneous.showPdf', $miscellaneous[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm mr-1 loading"><i

@@ -15,6 +15,7 @@
         <a href="{{ route('location.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm">
             <i class="fas fa-plus fa-sm text-white-50"></i> Add New Location
         </a>
+            <x-buttons.add :route="route('location.create')" >Location(s)</x-buttons.add>
         @endcan
         @can('viewAny', \App\Models\Location::class)
         <a href="{{ route('location.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading">

@@ -23,6 +23,7 @@
         </div>
     </div>
 
+
     <section>
         <p class="mb-4">Change or Update an Asset in the asset management system. Enter or change in the following
             information and click
@@ -34,15 +35,7 @@
                 <div class="card shadow h-100">
                     <div class="card-body">
 
-                        @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif
+                        <x-form.errors/>
 
                             <ul id="tab-bar" class="nav nav-tabs">
                                 <li class="nav-item">
@@ -73,7 +66,7 @@
                                                         <li>Nothing to Return</li>
                                                     </ul>
                                                 </div>
-                                                <small class="form-text text-muted">Can't find the Model your after?  
+                                                <small class="form-text text-muted">Can't find the Model your after?
                                                     <a href="#" data-toggle="modal" data-target="#newModel">Click Here</a> to create one.</small>
                                             </div>
                                             <div class="form-group">
@@ -83,7 +76,7 @@
                                                     name="name"
                                                     id="name" placeholder="" value="{{ old('name') ?? $asset->name}}" required>
                                             </div>
-        
+
                                             <div class="form-group">
                                                 <label for="asset_tag">Asset Tag Number</label>
                                                 <input type="text"
@@ -91,7 +84,7 @@
                                                     name="asset_tag"
                                                     id="asset_tag" placeholder="" value="{{ old('asset_tag') ?? $asset->asset_tag}}">
                                             </div>
-        
+
                                             <div class="form-group">
                                                 <label for="serial_no">Serial Number</label><span class="text-danger">*</span>
                                                 <input type="text"
@@ -176,7 +169,7 @@
                                             <div id="modelInfo" class="bg-light p-4">
                                                 <div class="model_title text-center h4 mb-3">{{ $asset->model->name ?? 'Asset Model' }}</div>
                                                 <div class="model_image p-4">
-                                                    @if($asset->model()->exists() && $asset->model->photo()->exists()) 
+                                                    @if($asset->model()->exists() && $asset->model->photo()->exists())
                                                         @php($path = $asset->model->photo()->path ?? asset('images/svg/device-image.svg'))
                                                     @else
                                                         @php($path = asset('images/svg/device-image.svg'))
@@ -248,15 +241,15 @@
                                                     class="form-control <?php if ($errors->has('warranty')) {?>border border-danger<?php }?>"
                                                     name="warranty" id="warranty" value="{{ old('warranty') ?? $asset->warranty}}">
                                             </div>
-        
-                                            
+
+
                                         </div>
 
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
                                             <div id="supplierInfo" class="bg-light p-4">
                                                 <div class="model_title text-center h4 mb-3">{{ $asset->supplier->name ?? 'Supplier Name'}}</div>
                                                 <div class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                    @if($asset->supplier()->exists() && $asset->supplier->photo()->exists()) 
+                                                    @if($asset->supplier()->exists() && $asset->supplier->photo()->exists())
                                                         @php($path = $asset->supplier->photo()->path ?? asset('images/svg/suppliers.svg'))
                                                     @else
                                                         @php($path = asset('images/svg/suppliers.svg'))
@@ -308,7 +301,7 @@
                                             <div id="locationInfo" class="bg-light p-4">
                                                 <div class="model_title text-center h4 mb-3">{{ $asset->location->name ?? 'Location Name' }}</div>
                                                 <div class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                    @if($asset->location()->exists() && $asset->location->photo()->exists()) 
+                                                    @if($asset->location()->exists() && $asset->location->photo()->exists())
                                                         @php($path = $asset->location->photo()->path ?? asset('images/svg/location-image.svg'))
                                                     @else
                                                         @php($path = asset('images/svg/location-image.svg'))
@@ -345,8 +338,8 @@
                                                     class="form-control <?php if ($errors->has('audit_date')) {?>border-danger<?php }?>"
                                                     name="audit_date" id="audit_date" value="{{ \Carbon\Carbon::parse($date)->format('Y-m-d')}}">
                                             </div>
-                                            
-        
+
+
                                             <div id="categories" class="form-control h-auto p-4 mb-3 bg-light">
                                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                                 <div class="position-relative">
@@ -361,16 +354,16 @@
                                                         @foreach($asset->category as $category)
                                                         <div id="cat{{$category->id}}" class="p-2 col-4">
                                                             <div class="border border-gray shadow bg-white p-2 rounded d-flex justify-content-between align-items-center">
-                                                                <span>{{$category->name}}</span> 
+                                                                <span>{{$category->name}}</span>
                                                                 <i class="fas fa-times ml-4 text-danger pointer" data-name="{{$category->id}}" onclick="javascript:removeCategory(this);"></i>
                                                             </div>
                                                         </div>
                                                         @endforeach
                                                     </div>
                                                 </div>
-                                                
+
                                             </div>
-        
+
                                             <div class="form-row">
                                                 <label for="status">Current Status</label><span class="text-danger">*</span>
                                                 <select type="text"
@@ -387,10 +380,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-                            
-
                         </div>
                     </div>
                 </div>

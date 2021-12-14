@@ -11,9 +11,8 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Users</h1>
     <div class="mt-4 mt-sm-0">
-        <a href="{{ route('users.create')}}" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Add New User</a>
-        @can('viewAll', auth()->user())
+        <x-buttons.add :route="route('users.create')" >User(s)</x-buttons.add>
+    @can('viewAll', auth()->user())
             <form class="d-inline-block" action="{{ route('users.pdf')}}" method="POST">
                 @csrf
                 <input type="hidden" value="{{ json_encode($users->pluck('id'))}}" name="users"/>

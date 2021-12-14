@@ -253,7 +253,7 @@ class ComponentController extends Controller {
         ));
         $component->category()->attach($request->category);
 
-        return redirect(route("components.index"));
+        return redirect(route("components.index"))->with('success_message' , $request->name . ' Has been successfully added!');
     }
 
     public function importErrors(Request $request)

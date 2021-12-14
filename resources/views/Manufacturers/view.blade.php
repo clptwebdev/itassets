@@ -5,35 +5,17 @@
 @endsection
 
 @section('content')
-
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Manufacturers</h1>
-        <div>
-            <a href="{{route("manufacturers.create")}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Add New Manufacturers</a>
-            @can('viewAny', \App\Models\Manufacturer::class)
-            <a href="{{ route('manufacturer.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading">
-                <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
-            </a>
-            @if($manufacturers->count() >1)
-            <a href="/exportmanufacturers" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Export</a>
-            @endif
-            @endcan
-            <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                    class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Import</a>
-
-        </div>
-    </div>
-
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
-
+<x-wrappers.nav title="Manufacturers">
+    <x-buttons.add :route="route('manufacturers.create')" >Manufacturer(s)</x-buttons.add>
+    @can('viewAny', \App\Models\Manufacturer::class)
+    <x-buttons.reports :route="route('manufacturer.pdf')">Generate Report</x-buttons.reports>
+        @if($manufacturers->count() >1)
+        <x-buttons.export route="/exportmanufacturers" />
+        @endif
+        <x-buttons.import id="import" />
+    @endcan
+</x-wrappers.nav>
+<x-handlers.alerts/>
     <section>
         <p class="mb-4">Below are different tiles, one for each manufacturers stored in the management system. Each tile
             has different manufacturers information that can be created, updated, and deleted.Need Help Click <a href="{{route("documentation.index").'#collapseThirteenManufacturers'}}">here?</a> </p>
@@ -120,16 +102,7 @@
                 </div>
             @endforeach
         </div>
-        <div class="d-flex justify-content-between align-content-center">
-            <div>
-                @if($manufacturers->hasPages())
-                    {{ $manufacturers->links()}}
-                @endif
-            </div>
-            <div class="text-right">
-                Showing Assets {{ $manufacturers->firstItem() }} to {{ $manufacturers->lastItem() }} ({{ $manufacturers->total() }} Total Results)
-            </div>
-        </div>
+        <x-paginate :model="$manufacturers"/>
     </section>
 
 @endsection

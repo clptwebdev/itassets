@@ -17,9 +17,8 @@
                 <i class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin ({{ \App\Models\Consumable::onlyTrashed()->count()}})</a>
             @endcan
             @can('create', \App\Models\Consumable::class)
-            <a href="{{ route('consumables.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm">
-                <i class="fas fa-plus fa-sm text-white-50"></i> Add New Consumable</a>
-            @endcan
+                    <x-buttons.add :route="route('consumables.create')" >Consumable(s)</x-buttons.add>
+                @endcan
             @can('generatePDF', \App\Models\Consumable::class)
                 @if ($consumables->count() == 1)
                     <a href="{{ route('consumables.showPdf', $consumables[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i

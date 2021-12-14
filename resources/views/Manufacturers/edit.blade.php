@@ -7,25 +7,12 @@
 @endsection
 
 @section('content')
-
-    <form action="{{route("manufacturers.edit" , $manufacturer->id)}}" method="POST">
-        @csrf
-        @method("put")
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Edit Manufacturer Details</h1>
-
-            <div>
-                <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Manufacturers</a>
-                <a href="{{ route('documentation.index')."#collapseThirteenManufacturers"}}"
-                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
-                        class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
-                <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
-                        class="far fa-save fa-sm text-white-50"></i> Save
-                </button>
-            </div>
-        </div>
-
+    <x-form.layout :action="route('manufacturers.update' , $manufacturer->id)" method="PATCH">
+        <x-wrappers.nav title="Edit Manufacturer Details">
+            <x-buttons.return :route="route('manufacturers.index')">Manufacturers</x-buttons.return>
+            <x-buttons.help :route="route('documentation.index').'#collapseThirteenManufacturers'"/>
+            <x-buttons.submit>Save</x-buttons.submit>
+        </x-wrappers.nav>
         <section>
             <p class="mb-4">Below is the {{$manufacturer->name}} tile ,this is for the Manufacturer stored in the
                 management system.</p>
@@ -33,47 +20,23 @@
                 <div class="col-12 col-md-8 col-lg-9 col-xl-10">
                     <div class="card shadow h-100">
                         <div class="card-body">
-
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-
-                            @csrf
-
+                            <x-form.errors/>
                             <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text"
-                                       class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name"
-                                       id="name" value="{{old('name') ?? $manufacturer->name}}">
+                                <x-form.input name="name" :value="$manufacturer->name"/>
                             </div>
                             <div class="form-group">
-                                <label for="supportPhone">Telephone</label>
-                                <input type="text" class="form-control" name="supportPhone" id="supportPhone"
-                                       value="{{old('supportPhone') ?? $manufacturer->supportPhone}}">
+                                <x-form.input name="supportPhone" :value="$manufacturer->supportPhone"/>
                             </div>
                             <div class="form-group">
-                                <label for="supportUrl">Manufacturer Website</label>
-                                <input type="text" class="form-control" name="supportUrl" id="supportUrl"
-                                       value="{{old('supportUrl') ?? $manufacturer->supportUrl}}">
+                                <x-form.input title="Manufacturer Website" name="supportUrl" :value="$manufacturer->supportUrl"/>
                             </div>
 
                             <div class="form-group">
-                                <label for="supportEmail">Email Address</label>
-                                <input type="text" class="form-control" name="supportEmail" id="supportEmail"
-                                       value="{{old('supportEmail') ?? $manufacturer->supportEmail}}">
+                                <x-form.input title="Email Address" name="supportEmail" :value="$manufacturer->supportEmail"/>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
                 <div class="col-12 col-md-4 col-lg-3 col-xl-2">
                     <div class="card shadow h-100">
                         <div class="card-body">
@@ -91,8 +54,7 @@
                 </div>
             </div>
         </section>
-    </form>
-
+    </x-form.layout>
 @endsection
 
 @section('modals')
@@ -110,7 +72,7 @@
                 </div>
                 <div class="modal-body">
                     <p>Select an image below:.</p>
-                    <?php $photos=App\Models\Photo::all();?>
+                    <?php $photos = App\Models\Photo::all();?>
                     <img src="{{ asset('images/svg/location-image.svg') }}" width="80px" alt="Default Picture"
                          onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">
                     @foreach($photos as $photo)

@@ -10,8 +10,7 @@
     <h1 class="h3 mb-0 text-gray-800">Suppliers</h1>
     <div>
         @can('create', \App\Models\Supplier::class)
-        <a href="{{ route('suppliers.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Add New Supplier</a>
+            <x-buttons.add :route="route('suppliers.create')" >Supplier(s)</x-buttons.add>
         @endcan
         @can('viewAny', \App\Models\Supplier::class)
         <a href="{{ route('suppliers.pdf')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
