@@ -42,7 +42,7 @@
         @endcan
 
     </x-wrappers.nav>
-    <x-handlers.alerts
+    <x-handlers.alerts/>
     @php
         if(auth()->user()->role_id == 1){
             $limit = \App\Models\Accessory::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
