@@ -346,7 +346,7 @@ class ComponentController extends Controller {
         }
 
         return view('ComponentsDir.edit', [
-            "component" => $component,
+            "data" => $component,
             "locations" => $locations,
             "statuses" => Status::all(),
             "suppliers" => Supplier::all(),
