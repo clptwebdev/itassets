@@ -16,15 +16,13 @@
         </x-wrappers.nav>
         <section>
             <p class="mb-4">Edit {{ $accessory->name}} and change any of the following information. Click the 'Save'
-                button. Or click the 'Back' button
-                to return the Accessories page.
+                button. Or click the 'Back' button to return the Accessories page.
             </p>
             <div class="row row-eq-height">
                 <div class="col-12 col-md-8 col-lg-9">
                     <div class="card shadow h-100">
                         <div class="card-body">
                             <x-form.errors/>
-
                             <div class="form-group">
                                 <x-form.input name="name" formAttributes="required" :value="$accessory->name"/>
                             </div>

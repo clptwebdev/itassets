@@ -38,7 +38,7 @@
             @endif
         @endcan
         @can('import', \App\Models\Accessory::class)
-            <x-buttons.import id="import"></x-buttons.import>
+            <x-buttons.import id="import"/>
         @endcan
 
     </x-wrappers.nav>
@@ -87,7 +87,7 @@
             different options and locations can created, updated, and deleted.</p>
 
         <!-- DataTales Example -->
-        <x-filters.navigation model="Accessory" :filter=$filter/>
+        <x-filters.navigation model="Accessory" :filter=$filter />
             <x-filters.filter model="Accessory" relations="accessories" :filter=$filter :locations=$locations
                               :statuses=$statuses :categories="$categories"/>
 
@@ -123,7 +123,6 @@
                             </tfoot>
                             <tbody>
                             @foreach($accessories as $accessory)
-
                                 <tr>
                                     <td>{{$accessory->name}}
                                         <br>
@@ -231,172 +230,20 @@
 @endsection
 
 @section('modals')
-    <!-- Disposal Modal-->
-    <div class="modal fade bd-example-modal-lg" id="requestDisposal" tabindex="-1" role="dialog"
-         aria-labelledby="requestDisposalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <form action="{{ route('request.disposal')}}" method="POST">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="requestDisposalLabel">Request to Dispose of the Accessory?
-                        </h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @csrf
-                            <input name="model_type" type="hidden" value="accessory">
-                            <input id="dispose_id" name="model_id" type="hidden" value="">
-                            <input type="text" value="" id="accessory_name" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="disposal_date">Date of Disposal</label>
-                            <input type="date" value="" id="disposed_date" name="disposed_date" class="form-control"
-                                   value="{{\Carbon\Carbon::now()->format('Y-m-d')}}">
-                        </div>
-                        <div class="form-group">
-                            <label for="notes">Reasons for:</label>
-                            <textarea name="notes" class="form-control" rows="5"></textarea>
-                        </div>
-                        <small>This will send a request to the administrator. The administrator will then decide to
-                            approve or reject the request. You will be notified via email.</small>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-coral" type="submit">Request Disposal</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Transfer Modal-->
-    <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog"
-         aria-labelledby="requestTransferLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <form action="{{ route('request.transfer')}}" method="POST">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="requestTransferLabel">Request to Transfer this Accessory to another
-                            Location?
-                        </h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @csrf
-                            <input name="model_type" type="hidden" value="accessory">
-                            <input id="model_id" name="model_id" type="hidden" value="">
-                            <input id="location_id" name="location_from" type="hidden" value="">
-                            <input id="location_from" type="text" class="form-control"
-                                   value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="disposal_date">Date of Transfer</label>
-                            <input type="date" value="" id="transfer_date" name="transfer_date" class="form-control"
-                                   value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="School Location">Transfer to:</label><span
-                                class="text-danger">*</span>
-                            <select type="text"
-                                    class="form-control mb-3 @if($errors->has('location_id')){{'border-danger'}}@endif"
-                                    name="location_to" required>
-                                <option value="0" selected>Please select a Location</option>
-                                @foreach($locations as $location)
-                                    <option
-                                        value="{{$location->id}}" @if(old('location_id')== $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="notes">Additional Comments:</label>
-                            <textarea name="notes" class="form-control" rows="5"></textarea>
-                        </div>
-                        <small>This will send a request to the administrator. The administrator will then decide to
-                            approve or reject the request. You will be notified via email.</small>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-lilac" type="submit">Request Transfer</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this Accessory to
-                        the Recycle Bin?
-                    </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="user-id" type="hidden" value="">
-                    <p>Select "Send to Bin" to send this accessory to the Recycle Bin.</p>
-                    <small class="text-danger">**Warning this is not permanent and the Accessory can be restored from
-                        the Recycle Bin. </small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
-         aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form action="/importacessories" method="POST" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <p>Select "import" to add Accessories to the system.</p>
-                        <input id="importEmpty" class="form-control"
-                               type="file" placeholder="Upload here" name="csv" accept=".csv">
-
-                    </div>
-
-                    <div class="modal-footer">
-                        @if(session('import-error'))
-                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
-                        @endif
-                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/EUS0PE9tn-xFsPAqFeza6OQB9Cm8EONyQNd4eTdkmXJnXw?e=wCJU5b"
-                           target="_blank" class="btn btn-blue">
-                            Download Import Template
-                        </a>
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-
-                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
-                            Import
-                        </button>
-                    @csrf
-                </form>
-            </div>
-        </div>
-    </div>
-    <?php session()->flash('import-error', ' Select a file to be uploaded before continuing!');?>
+        <x-modals.delete />
+        <x-modals.transfer :models="$locations"/>
+        <x-modals.dispose />
+        <x-modals.import />
 @endsection
 
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
             integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script  src="{{asset('js/delete.js')}}"></script>
+    <script  src="{{asset('js/import.js')}}"></script>
+    <script  src="{{asset('js/transfer.js')}}"></script>
+    <script  src="{{asset('js/dispose.js')}}"></script>
     <script>
 
         function toggleFilter() {
@@ -422,51 +269,6 @@
             $("#amount").val("£" + $("#slider-range").slider("values", 0) +
                 " - £" + $("#slider-range").slider("values", 1));
         });
-
-        $('.deleteBtn').click(function () {
-            $('#user-id').val($(this).data('id'))
-            //showModal
-            $('#removeUserModal').modal('show')
-        });
-
-        $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#user-id').val();
-            $(form).submit();
-        });
-
-        $('.transferBtn').click(function () {
-            $('#model_id').val($(this).data('model-id'));
-            $('#location_id').val($(this).data('location-id'));
-            $('#location_from').val($(this).data('location-from'));
-            $('#requestTransfer').modal('show');
-        });
-
-        $('.disposeBtn').click(function () {
-            $('#accessory_name').val($(this).data('model-name'));
-            $('#dispose_id').val($(this).data('model-id'));
-            $('#requestDisposal').modal('show');
-        });
-
-        $(document).ready(function () {
-
-
-            $('#import').click(function () {
-                $('#manufacturer-id-test').val($(this).data('id'))
-                //showModal
-                $('#importManufacturerModal').modal('show')
-
-            });
-
-
-            // file input empty
-            $("#confirmBtnImport").click(":submit", function (e) {
-
-                if (!$('#importEmpty').val()) {
-                    e.preventDefault();
-                }
-            });
-        });
-
     </script>
 
 @endsection
