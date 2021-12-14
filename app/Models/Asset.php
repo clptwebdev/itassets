@@ -121,7 +121,6 @@ class Asset extends Model {
     }
     public function depreciation_value()
     {
-
             $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation());
             if($eol->isPast()){
                 return 0;
@@ -134,6 +133,7 @@ class Asset extends Model {
             }
 
     }
+
     public function depreciation(){
         return $this->model->depreciation->years ?? 0;
     }

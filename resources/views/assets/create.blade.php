@@ -37,15 +37,7 @@
                     <div class="card shadow h-100">
                         <div class="card-body">
 
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
+                            <x-handlers.alerts />
 
                             <ul id="tab-bar" class="nav nav-tabs">
                                 <li class="nav-item">

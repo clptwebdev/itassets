@@ -16,8 +16,12 @@ class HomeController extends Controller
     public function index(){
         if(auth()->user()->role_id == 1)
         {
-            $locations = \App\Models\Location::with('asset', 'accessory', 'components', 'consumable', 'miscellanea', 'photo')->get();
-            $assets = \App\Models\Asset::with('location', 'model', 'status')->get();
+            $locations = \App\Models\Location::with('asset', 'accessory', 'components', 'consumable', 'miscellanea', 'photo')->get();                        
+            $assets = \App\Models\Asset::with('location', 'model', 'status')->get()
+                        ->map(function($item, $key){
+                            $item['depreciation_value'] = $item->depreciation_value();
+                            return $item;
+                        });
             $transfers = \App\Models\Transfer::count();
             $archived = \App\Models\Archive::count();
             $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea', 'accessories')->get();
@@ -31,7 +35,14 @@ class HomeController extends Controller
         } else
         {
             $locations = auth()->user()->locations;
-            $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))->with('location', 'model', 'status')->get();
+            $assets = Asset::locationFilter(auth()->user()
+                        ->locations->pluck('id'))
+                        ->with('location', 'model', 'status')
+                        ->map(function($item){
+                            $item['depreciation_value'] = $item->depreciation_value();
+                            return $item;
+                        })
+                        ->get();
             $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->count();
             $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->count();
             $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea')->get();
@@ -43,6 +54,7 @@ class HomeController extends Controller
             $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'))->get();
         }
 
+        //return dd($assets[0]);
         return view('dashboard',
             [
                 'assets' => $assets,

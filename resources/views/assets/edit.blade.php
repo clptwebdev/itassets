@@ -58,15 +58,15 @@
                                     <a class="nav-link" id="attributes-tab" data-toggle="tab" href="#attributes" role="tab" aria-controls="home" aria-selected="true">Attributes</a>
                                 </li>
                             </ul>
-
                             @csrf
+                            @method('PATCH')
                             <div class="tab-content border-left border-right border-bottom border-gray" id="myTabContent">
                                 <div class="tab-pane fade show p-2 pt-4 active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                     <div class="row">
                                         <div class="col-12 col-md-6 p-4 mb-3">
                                             <div class="form-group position-relative">
                                                 <label for="findModel">Asset Model</label>
-                                                <input type="hidden" id="asset_model" name="asset_model" class="form-control mb-3" value="{{ $asset->model->id ?? 0 }}" disabled>
+                                                <input type="hidden" id="asset_model" name="asset_model" class="form-control mb-3" value="{{ $asset->model->id ?? 0 }}" readyonly>
                                                 <input class="form-control" type="text" name="find_model" id="findModel" value="{{ $asset->model->name ?? null }}" autocomplete="off" placeholder="Search for Model">
                                                 <div id="modelResults" class="w-100 h-auto mb-5 d-block search-modal position-absolute" style="visibility: hidden; z-index: 2;">
                                                     <ul id="modelSelect">
@@ -234,7 +234,7 @@
                                             </div>
                                             <div class="form-group position-relative">
                                                 <label for="findSupplier">Supplier</label>
-                                                <input type="hidden" id="supplier_id" name="supplier_id" value="{{ $asset->supplier->id ?? '' }}" class="form-control mb-3" disabled>
+                                                <input type="hidden" id="supplier_id" name="supplier_id" value="{{ $asset->supplier->id ?? '' }}" class="form-control mb-3" readyonly>
                                                 <input class="form-control" type="text" name="find_supplier" id="findSupplier" value="{{ $asset->supplier->name ?? ''}}" placeholder="Search for Supplier">
                                                 <div id="supplierResults" class="w-100 h-auto mb-5 d-block search-modal position-absolute" style="visibility: hidden; z-index: 2;">
                                                     <ul id="supplierSelect">
@@ -287,7 +287,7 @@
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
                                             <div class="form-group position-relative">
                                                 <label for="findLocation">Location</label>
-                                                <input type="hidden" id="location_id" name="location_id" value="{{ $asset->location_id}}" class="form-control mb-3" disabled>
+                                                <input type="hidden" id="location_id" name="location_id" value="{{ $asset->location_id}}" class="form-control mb-3" readyonly>
                                                 <input class="form-control" type="text" name="find_location" id="findLocation" value="{{ $asset->location->name }}" placeholder="Search for Supplier">
                                                 <div id="locationResults" class="w-100 h-auto mb-5 d-block search-modal position-absolute" style="visibility: hidden; z-index: 2;">
                                                     <ul id="locationSelect">
@@ -350,9 +350,7 @@
                                             <div id="categories" class="form-control h-auto p-4 mb-3 bg-light">
                                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                                 <div class="position-relative">
-                                                    @method('PATCH')
-                                                    @csrf
-                                                    <input type="hidden" id="category_id" name="category" value="{{ implode(",",$asset->category->pluck('id')->toArray())}}" class="form-control mb-3" disabled>
+                                                    <input type="hidden" id="category_id" name="category" value="{{ implode(",",$asset->category->pluck('id')->toArray())}}" class="form-control mb-3" readyonly>
                                                     <input class="form-control" type="text" name="find_category" id="findCategory" value="" placeholder="Search for Categories">
                                                     <div id="categoryResults" class="w-100 h-auto mb-5 d-block search-modal position-absolute" style="visibility: hidden; z-index: 2;">
                                                         <ul id="categorySelect">
