@@ -1,4 +1,4 @@
-{{--@props(['route'=>'/' , 'templateLink'=>'https://clpt.sharepoint.com/sites/WebDevelopmentTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FWebDevelopmentTeam%2FShared%20Documents%2FSystems%2FSystems%2FImport%20Template%20Files&viewid=5add7e78%2D1a32%2D45b0%2D8e87%2Df6719cd7331d'])--}}
+@props(['route'=>'/' , 'templateLink'=>'https://clpt.sharepoint.com/sites/WebDevelopmentTeam/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FWebDevelopmentTeam%2FShared%20Documents%2FSystems%2FSystems%2FImport%20Template%20Files&viewid=5add7e78%2D1a32%2D45b0%2D8e87%2Df6719cd7331d'])
 {{--import modal--}}
 <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
      aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
@@ -10,7 +10,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="/" method="POST" enctype="multipart/form-data">
+            <form action="{{$route}}" method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
                     <p>Select "import" to add items to the system.</p>
                     <input id="importEmpty" class="form-control"
@@ -20,7 +20,7 @@
 
                 <div class="modal-footer">
                    <x-handlers.alerts/>
-                    <a href="/"
+                    <a href="{{$templateLink}}"
                        target="_blank" class="btn btn-blue">
                         Download Import Template
                     </a>

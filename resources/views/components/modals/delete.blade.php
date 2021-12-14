@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this Accessory to
+                <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this {{ucfirst($slot)}} to
                     the Recycle Bin?
                 </h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
@@ -13,8 +13,8 @@
             </div>
             <div class="modal-body">
                 <input id="user-id" type="hidden" value="">
-                <p>Select "Send to Bin" to send this accessory to the Recycle Bin.</p>
-                <small class="text-danger">**Warning this is not permanent and the Accessory can be restored from
+                <p>Select "Send to Bin" to send this {{ucfirst($slot)}} to the Recycle Bin.</p>
+                <small class="text-danger">**Warning this is not permanent and the {{ucfirst($slot)}} can be restored from
                     the Recycle Bin. </small>
             </div>
             <div class="modal-footer">
