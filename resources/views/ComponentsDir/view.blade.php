@@ -15,7 +15,7 @@
 @section('content')
 <x-wrappers.nav title="Components">
             @can('recycleBin', \App\Models\Component::class)
-                <x-buttons.recycle :route="route('components.bin')"/>
+                <x-buttons.recycle :route="route('components.bin')" :count="\App\Models\Component::onlyTrashed()->count()"/>
             @endcan
             @can('create' , \App\Models\Component::class)
                 <x-buttons.add :route="route('components.create')">Component(s)</x-buttons.add>
