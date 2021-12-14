@@ -3,7 +3,7 @@
 <h4 class="h6 mb-4 text-center">{{str_replace(array('_','id'), ' ',ucfirst($name))}}</h4>
 {{--enter your models plural name--}}
 @foreach($models as $model)
-    <div class="form-check form-check-inline p-3">
+    <div class="form-check form-check-inline pl-1">
         <input class="form-check-input" type="checkbox"
                value="{{ $model->id }}" name="{!! str_replace(array('id','_') , '' , strtolower($name)) !!}[]"
                id="{!! str_replace(array('id','_') , '' , strtolower($name)) !!}{{$model->id}}"
