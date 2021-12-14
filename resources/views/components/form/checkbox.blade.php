@@ -12,6 +12,6 @@
                 @endif
         >
 
-        <label class="form-check-label" for="{!! str_replace(array('id','_') , '' , strtolower($name)) !!}{{$model->id}}">{{ $model->name }}</label>
+        <label class="form-check-label my-auto" for="{!! str_replace(array('id','_') , '' , strtolower($name)) !!}{{$model->id}}">{{ $model->name }}</label>
     </div>
 @endforeach
