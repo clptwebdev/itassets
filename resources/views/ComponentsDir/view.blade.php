@@ -151,7 +151,7 @@
                             </tr>
                         @endforeach
                         @else
-                            <td colspan="10" class="text-center">No Assets Returned</td>
+                            <td colspan="10" class="text-center">No Components Returned</td>
                         @endif
                         </tbody>
                     </table>
