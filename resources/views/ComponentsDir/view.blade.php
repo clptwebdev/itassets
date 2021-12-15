@@ -20,7 +20,7 @@
             @can('create' , \App\Models\Component::class)
                 <x-buttons.add :route="route('components.create')">Component(s)</x-buttons.add>
             @endcan
-            @can('export', \App\Models\Component::class)
+            @can('viewAll', \App\Models\Component::class)
                 @if ($components->count() == 1)
                     <x-buttons.reports :route="route('components.showPdf', $components[0]->id)"/>
                 @else
