@@ -145,51 +145,35 @@
                                         @endif
                                     </td>
                                     <td class="text-right">
-                                        <div class="dropdown no-arrow">
-                                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                               id="dropdownMenu{{$accessory->id}}Link"
-                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                            </a>
-                                            <div
-                                                class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                                aria-labelledby="dropdownMenu{{$accessory->id}}Link">
-                                                <div class="dropdown-header">Accessory Options:</div>
-                                                @can('view', $accessory)
-                                                    <a href="{{ route('accessories.show', $accessory->id) }}"
-                                                       class="dropdown-item">View</a>
-                                                @endcan
-                                                @can('update', $accessory)
-                                                    <a href="{{ route('accessories.edit', $accessory->id) }}"
-                                                       class="dropdown-item">Edit</a>
-                                                @endcan
+                                        <x-wrappers.table-settings>
+                                            @can('view', $accessory)
+                                                <x-buttons.dropdown-item :route="route('accessories.show', $accessory->id)">
+                                                    View
+                                                </x-buttons.dropdown-item>
+                                            @endcan
+                                            @can('update', $accessory)
+                                                <x-buttons.dropdown-item :route=" route('accessories.edit', $accessory->id)">
+                                                    Edit
+                                                </x-buttons.dropdown-item>
+                                            @endcan
                                                 @can('transfer', $accessory)
-                                                    <a href="#"
-                                                       class="dropdown-item transferBtn"
-                                                       data-model-id="{{$accessory->id}}"
-                                                       data-location-from="{{$accessory->location->name ?? 'Unallocated' }}"
-                                                       data-location-id="{{ $accessory->location_id }}"
-                                                    >Transfer</a>
+                                                    <x-buttons.dropdown-item class="transferBtn" formRequirements="data-model-id='{{$accessory->id}}' data-location-from='{{$accessory->location->name ?? 'Unallocated' }}' data-location-id='{{ $accessory->location_id }}'">
+                                                        Transfer
+                                                    </x-buttons.dropdown-item>
                                                 @endcan
                                                 @can('dispose', $accessory)
-                                                    <a href="#"
-                                                       class="dropdown-item disposeBtn"
-                                                       data-model-id="{{$accessory->id}}"
-                                                       data-model-name="{{$accessory->name ?? 'No name'}}"
-                                                    >Dispose</a>
+                                                    <x-buttons.dropdown-item class="disposeBtn" formRequirements="data-model-id='{{$accessory->id}}' data-model-name='{{$accessory->name ?? 'No name' }}'">
+                                                        Dispose
+                                                    </x-buttons.dropdown-item>
                                                 @endcan
-                                                @can('delete', $accessory)
-                                                    <form id="form{{$accessory->id}}"
-                                                          action="{{ route('accessories.destroy', $accessory->id) }}"
-                                                          method="POST" class="d-block p-0 m-0">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <a class="deleteBtn dropdown-item" href="#"
-                                                           data-id="{{$accessory->id}}">Delete</a>
-                                                    </form>
-                                                @endcan
-                                            </div>
-                                        </div>
+                                            @can('delete', $accessory)
+                                                <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$accessory->id" :action="route('accessories.destroy', $accessory->id)">
+                                                    <x-buttons.dropdown-item :data="$accessory->id" class="deleteBtn" >
+                                                        Delete
+                                                    </x-buttons.dropdown-item>
+                                                </x-form.layout>
+                                            @endcan
+                                        </x-wrappers.table-settings>
                                     </td>
                                 </tr>
                             @endforeach

@@ -150,36 +150,25 @@
                                     @endif
                                 </td>
                                 <td class="text-right">
-                                    <div class="dropdown no-arrow">
-                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink"
-                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div
-                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">miscellanea Options:</div>
+                               <x-wrappers.table-settings>
                                             @can('view', $miscellanea)
-                                                <a href="{{ route('miscellaneous.show', $miscellanea->id) }}"
-                                                   class="dropdown-item">View</a>
+                                                <x-buttons.dropdown-item :route="route('miscellaneous.show', $miscellanea->id)">
+                                                    View
+                                                </x-buttons.dropdown-item>
                                             @endcan
                                             @can('update', $miscellanea)
-                                                <a href="{{ route('miscellaneous.edit', $miscellanea->id) }}"
-                                                   class="dropdown-item">Edit</a>
+                                                    <x-buttons.dropdown-item :route=" route('miscellaneous.edit', $miscellanea->id)">
+                                                        Edit
+                                                    </x-buttons.dropdown-item>
                                             @endcan
                                             @can('delete', $miscellanea)
-                                                <form id="form{{$miscellanea->id}}"
-                                                      action="{{ route('miscellaneous.destroy', $miscellanea->id) }}"
-                                                      method="POST" class="d-block p-0 m-0">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a class="deleteBtn dropdown-item" href="#"
-                                                       data-id="{{$miscellanea->id}}">Delete</a>
-                                                </form>
+                                                <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$miscellanea->id" :action="route('miscellaneous.destroy', $miscellanea->id)">
+                                                    <x-buttons.dropdown-item :data="$miscellanea->id" class="deleteBtn" >
+                                                        Delete
+                                                    </x-buttons.dropdown-item>
+                                                </x-form.layout>
                                             @endcan
-                                        </div>
-                                    </div>
+                               </x-wrappers.table-settings>
                                 </td>
                             </tr>
                         @endforeach

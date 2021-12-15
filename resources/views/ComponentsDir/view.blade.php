@@ -125,35 +125,27 @@
                                     <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
                                         Remaining</small>
                                 </td>
+                                <?php $data = $component ;?>
                                 <td class="text-right">
-                                    <div class="dropdown no-arrow">
-                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink"
-                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div
-                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Component Options:</div>
-                                            <a href="{{ route('components.show', $component->id) }}"
-                                               class="dropdown-item">View</a>
-                                            @can('update', $component)
-                                                <a href="{{ route('components.edit', $component->id) }}"
-                                                   class="dropdown-item">Edit</a>
-                                            @endcan
-                                            @can('delete', $component)
-                                                <form id="form{{$component->id}}"
-                                                      action="{{ route('components.destroy', $component->id) }}"
-                                                      method="POST" class="d-block p-0 m-0">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a class="deleteBtn dropdown-item" href="#"
-                                                       data-id="{{$component->id}}">Delete</a>
-                                                </form>
-                                            @endcan
-                                        </div>
-                                    </div>
+                                    <x-wrappers.table-settings>
+                                        @can('view', $data)
+                                            <x-buttons.dropdown-item :route="route('components.show', $data->id)">
+                                                View
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('update', $data)
+                                            <x-buttons.dropdown-item :route=" route('components.edit', $data->id)">
+                                                Edit
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('delete', $data)
+                                            <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$data->id" :action="route('components.destroy', $data->id)">
+                                                <x-buttons.dropdown-item :data="$data->id" class="deleteBtn" >
+                                                    Delete
+                                                </x-buttons.dropdown-item>
+                                            </x-form.layout>
+                                        @endcan
+                                    </x-wrappers.table-settings>
                                 </td>
                             </tr>
                         @endforeach
