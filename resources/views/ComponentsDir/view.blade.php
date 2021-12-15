@@ -96,6 +96,7 @@
                         </tr>
                         </tfoot>
                         <tbody>
+                        @if($components->count() != 0)
                         @foreach($components as $component)
 
                             <tr>
@@ -149,6 +150,9 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @else
+                            <td colspan="10" class="text-center">No Assets Returned</td>
+                        @endif
                         </tbody>
                     </table>
                     <x-paginate :model="$components"/>
