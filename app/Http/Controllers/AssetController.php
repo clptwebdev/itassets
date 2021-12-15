@@ -69,7 +69,6 @@ class AssetController extends Controller {
                 ->fragment('table');
             $locations = auth()->user()->locations;
         }
-
         $this->clearFilter();
 
         return view('assets.view', [
@@ -97,7 +96,7 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
 
-        
+
 
         return view('assets.create', [
             "locations" => $locations,
@@ -669,7 +668,7 @@ class AssetController extends Controller {
 
                 }
                 return dd($errorValues);
-                
+
                 /* return view('assets.import-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
@@ -691,7 +690,7 @@ class AssetController extends Controller {
         {
             return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-        } 
+        }
     }
 
     public function importErrors(Request $request)
