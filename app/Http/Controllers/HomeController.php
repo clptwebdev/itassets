@@ -35,14 +35,13 @@ class HomeController extends Controller
         } else
         {
             $locations = auth()->user()->locations;
-            $assets = Asset::locationFilter(auth()->user()
-                        ->locations->pluck('id'))
+            $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))
                         ->with('location', 'model', 'status')
+                        ->get()
                         ->map(function($item){
                             $item['depreciation_value'] = $item->depreciation_value();
                             return $item;
-                        })
-                        ->get();
+                        });
             $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->count();
             $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->count();
             $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea')->get();

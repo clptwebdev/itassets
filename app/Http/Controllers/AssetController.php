@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Exports\assetErrorsExport;
+use App\Exports\AssetDisposalErrors;
+use App\Exports\AssetTransferErrors;
 use App\Imports\AssetImport;
 use App\Imports\AssetDispose;
+use App\Imports\AssetTransfer;
 use App\Models\Asset;
 use App\Models\AssetModel;
 use App\Models\Depreciation;
@@ -53,8 +56,7 @@ class AssetController extends Controller {
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->paginate(intval(session('limit')) ?? 25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
-                ->fragment('table');
+                ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
 
             $locations = Location::all();
         } else
@@ -65,15 +67,15 @@ class AssetController extends Controller {
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->paginate(25, ['assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
-                ->fragment('table');
+                ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
             $locations = auth()->user()->locations;
         }
 
         $this->clearFilter();
+        $limit = session('limit') ?? 25;
 
         return view('assets.view', [
-            "assets" => $assets,
+            "assets" => $assets->paginate(intval($limit))->fragment('table'),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
@@ -668,17 +670,12 @@ class AssetController extends Controller {
                     $errorValues[$error['row']] = $array;
 
                 }
-                return dd($errorValues);
                 
-                /* return view('assets.import-errors', [
+                return view('assets.dispose-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
-                    "models" => AssetModel::all(),
-                    "statuses" => Status::all(),
-                    "suppliers" => Supplier::all(),
-                    "locations" => Location::all(),
-                ]); */
+                ]);
 
             } else
             {
@@ -692,6 +689,121 @@ class AssetController extends Controller {
             return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
         } 
+    }
+
+    public function bulkTransfers(Request $request){
+        if (auth()->user()->cant('transferAll', Asset::class)) {
+            return redirect(route('errors.forbidden', ['area', 'Assets', 'Bulk Transfer']));
+        }
+
+        /* Accepted File Extensions */
+        $extensions = array("csv");
+
+        /* Files passed through the Request */
+        $result = array($request->file('csv')->getClientOriginalExtension());
+
+        /* If the function accepts the File Extension */
+        if(in_array($result[0], $extensions))
+        {
+            $path = $request->file("csv")->getRealPath();
+            $import = new AssetTransfer;
+            $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
+            $row = [];
+            $attributes = [];
+            $errors = [];
+            $values = [];
+            $results = $import->failures();
+            $importErrors = [];
+            foreach($results->all() as $result)
+            {
+                /* Looping through each row to check for errors on the AssetDispose Class */
+                $row[] = $result->row();
+                $attributes[] = $result->attribute();
+                $errors[] = $result->errors();
+                $values[] = $result->values();
+                $importErrors[] = [
+
+                    "row" => $result->row(),
+                    "attributes" => $result->attribute(),
+                    "errors" => $result->errors(),
+                    "value" => $result->values(),
+                ];
+            }
+
+            /* If there are Errors return from AssetDispose */
+            if(! empty($importErrors))
+            {
+                $errorArray = [];
+                $valueArray = [];
+                $errorValues = [];
+
+                foreach($importErrors as $error)
+                {
+                    if(array_key_exists($error['row'], $errorArray))
+                    {
+                        $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
+                    } else
+                    {
+                        $errorArray[$error['row']] = $error['attributes'];
+                    }
+                    $valueArray[$error['row']] = $error['value'];
+
+                    if(array_key_exists($error['row'], $errorValues))
+                    {
+                        $array = $errorValues[$error['row']];
+                    } else
+                    {
+                        $array = [];
+                    }
+
+                    foreach($error['errors'] as $e)
+                    {
+                        $array[$error['attributes']] = $e;
+                    }
+                    $errorValues[$error['row']] = $array;
+
+                }
+                
+                return view('assets.transfer-errors', [
+                    "errorArray" => $errorArray,
+                    "valueArray" => $valueArray,
+                    "errorValues" => $errorValues,
+                ]);
+
+            } else
+            {
+
+                return redirect('/assets')->with('success_message', 'All Assets were disposed correctly!');
+
+            }
+
+        } else
+        {
+            return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+
+        } 
+    }
+
+    public function exportDisposeErrors(Request $request){
+
+        //Receives the JSON Object with the errors and passes them to the Export function for Maatwebsite
+        $export = $request['assets'];
+        $code = (htmlspecialchars_decode($export));
+        $export = json_decode($code);
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new AssetDisposalErrors($export), "dispose-errors-{$date}.csv");
+    }
+
+    public function exportTransferErrors(Request $request){
+
+        //Receives the JSON Object with the errors and passes them to the Export function for Maatwebsite
+        $export = $request['assets'];
+        $code = (htmlspecialchars_decode($export));
+        $export = json_decode($code);
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new AssetTransferErrors($export), "dispose-errors-{$date}.csv");
     }
 
     public function importErrors(Request $request)

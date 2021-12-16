@@ -24,7 +24,68 @@
 <section>
     <p class="mb-4">Below are the requests made by the Users of the system. These can include requesting access, asset transfer or asset disposal.</p>
     <!-- DataTales Example -->
-    @foreach($requests as $request)
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive" id="table">
+                <table id="assetsTable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th><small>Type</small></th>
+                        <th><small>Model</small></th>
+                        <th><small>Requested By</small></th>
+                        <th><small>Notes</small></th>
+                        <th><small>Date</small></th>
+                        <th><small>Status</small></th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th><small>Type</small></th>
+                        <th><small>Model</small></th>
+                        <th><small>Requested By</small></th>
+                        <th><small>Notes</small></th>
+                        <th><small>Date</small></th>
+                        <th><small>Status</small></th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach($requests as $request)
+                        <tr>
+                            <td>
+                                @if($request->type == 'disposal')
+                                <i class="fas fa-trash text-coral"></i>
+                                @else
+                                <i class="fas fa-exchange-alt text-green"></i>
+                                @endif
+                            </td>
+                            <td>{{ 'Model Name' }}</td>
+                            <td>
+                                @php($user = App\Models\User::find($request->user_id))
+                                {{ $user->name ?? 'Unknown'}}
+                            </td>
+                            <td>{{ $request->notes }}</td>
+                            <td>{{ \Carbon\Carbon::parse($request->date)->format('d-m-Y') }}</td>
+                            <td>{{ $request->status }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                {{-- <div class="d-flex justify-content-between align-content-center">
+                    <div>
+                        @if($assets->hasPages())
+                        {{ $assets->links()}}
+                        @endif
+                    </div>
+                    <div class="text-right">
+                        Showing Assets {{ $assets->firstItem() }} to {{ $assets->lastItem() }} ({{ $assets->total() }} Total Results)
+                    </div>
+                </div> --}}
+            </div>
+        </div>
+    </div>
+
+    {{-- @foreach($requests as $request)
     <div class="card shadow mb-4">
         <div class="card-header">
             <?php
@@ -77,7 +138,7 @@
     </div>
     @endforeach
 
-    {{ $requests->links() }}
+    {{ $requests->links() }} --}}
 </section>
 
 @endsection

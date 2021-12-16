@@ -89,7 +89,7 @@
                             <tr>
                                 <td>{{$archive->name}}<br><small
                                         class="d-none d-md-inline-block">{{ $archive->serial_no ?? 'N/A'}}</small></td>
-                                <td class="text-center d-none d-xl-table-cell">{{ $asset->asset_model ?? 'N/A' }}<br></td>
+                                <td class="text-center d-none d-xl-table-cell">{{ $archive->asset_model ?? 'N/A' }}<br></td>
                                 <td class="text-center text-md-left" data-sort="{{ $archive->location->name ?? 'Unnassigned'}}">
                                     @if(isset($archive->location->photo->path))
                                         <img src="{{ asset($archive->location->photo->path)}}" height="30px" alt="{{$archive->location->name}}" title="{{ $archive->location->name }}<br>{{ $asset->room ?? 'Unknown'}}"/>

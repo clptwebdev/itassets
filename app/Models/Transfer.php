@@ -10,7 +10,7 @@ class Transfer extends Model
 
     use HasFactory;
 
-    protected $fillable = ['model_type', 'model_id', 'location_from', 'location_to', 'value', 'user_id', 'super_id', 'notes', 'date', 'created_at', 'value'];
+    protected $fillable = ['model_type', 'model_id', 'location_from', 'location_to', 'value', 'user_id', 'super_id', 'notes', 'date', 'created_at', 'value', 'old_tag', 'new_tag'];
 
     public function from()
     {

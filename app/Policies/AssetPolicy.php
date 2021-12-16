@@ -113,4 +113,8 @@ class AssetPolicy
     public function disposeAll(User $user){
         return in_array($user->role_id, $this->super);
     }
+
+    public function transferAll(User $user){
+        return in_array($user->role_id, $this->super);
+    }
 }

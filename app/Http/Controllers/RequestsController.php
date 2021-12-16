@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Mail;
 class RequestsController extends Controller
 {
     public function index(){
+
+        //Returns the View for the list of requests
         $requests = Requests::orderBy('created_at', 'desc')->paginate(5);        
         return view('requests.view', compact('requests'));
     }
@@ -72,7 +74,7 @@ class RequestsController extends Controller
             //Notify by email
             $admins = User::superAdmin()->get();
             foreach($admins as $admin){
-                Mail::to(auth()->user()->email)->send(new \App\Mail\AlertRequest(auth()->user(), $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->comment));
+                Mail::to($admin->email)->send(new \App\Mail\TransferRequest($admin, auth()->user(), $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->notes));
             }
             return back()->with('success_message', 'The request to transfer the asset has been sent.');
         }  
@@ -131,26 +133,33 @@ class RequestsController extends Controller
                 'created_on' => $model->created_at,
                 'user_id' => auth()->user()->id,
                 'super_id' => auth()->user()->id,
-                'date' => \Carbon\Carbon::now()->format('Y-m-d'),
-                'notes' => $request->notes,
+                'date' => $requests->date,
+                'notes' => $requests->notes,
             ]);
             $model->forceDelete();
             $requests->update(['status' => 1, 'super_id'  => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
-            $message = "The Disposal has been successful. It has been moved to the Archive";
+            return back()->with('success_message', $message ?? 'The Disposal has been successful. It has been moved to the Archive');
+        }else{
+             //Notify by email
+             $admins = User::superAdmin()->get();
+             foreach($admins as $admin){
+                 Mail::to($admin->email)->send(new \App\Mail\DisposeRequest(auth()->user(), $admin, $requests->model_type, $requests->model_id, \Carbon\Carbon::parse($requests->date)->format('d-m-Y'), $requests->notes));
+             }
+             return back()->with('success_message', 'The request to dispose the asset has been sent. Now awaiting confirmation');
         }
 
-        session()->flash('success_message', $message ?? 'The request to transfer the asset has been sent.');
-        return back();
+        
     }
 
     public function handle(Requests $requests, $status){
+        $user = User::find($requests->user_id);
         if($status == 1){
-            
             switch($requests->type){
                 case 'transfer':
                     $m = "\\App\\Models\\".ucfirst($requests->model_type);
                     $model = $m::find($requests->model_id);
-                    $model->update(['location_id'=> $requests->location_to]);
+                   
+
                     if($requests->model_type == 'asset' && $model->model()->exists()){
                         $years = $model->model->depreciation->years;
                     }elseif($model->depreciation_id != 0){
@@ -180,14 +189,14 @@ class RequestsController extends Controller
                         'user_id' => $requests->user_id,
                         'super_id' => auth()->user()->id,
                     ]);
-                    $requests->update(['status' => 1, 'super_id'  => auth()->user()->id]);
-                    return back()->with('success_message','The Request has been approved');
-                    
+                    $requests->update(['status' => 1, 'super_id'  => auth()->user()->id]); 
+                    $model->update(['location_id' => $requests->location_to]); 
+                    $comment = "The request by {$user->name} to transfer the {$requests->model_type} has been approved by ".auth()->user()->name;
+                    $model->comment()->create(['title' => 'Transfer Request Approved', 'comment' => $comment, 'user_id' => auth()->user()->id]);                 
                     break;
                 case 'disposal':
                     $m = "\\App\\Models\\".ucfirst($requests->model_type);
                     $model = $m::find($requests->model_id);
-
                     if($requests->model_type == 'asset' && $model->model()->exists()){
                         $years = $model->model->depreciation->years;
                     }elseif($model->depreciation_id != 0){
@@ -204,7 +213,6 @@ class RequestsController extends Controller
                         $percentage = floor($age)*$percent;
                         $dep = $model->purchased_cost * ((100 - $percentage) / 100);
                     }
-
                     $archive = Archive::create([
                         'model_type' => $requests->model_type ?? 'unknown',
                         'name' => $model->name ?? 'No Name',
@@ -230,14 +238,26 @@ class RequestsController extends Controller
                     ]);
                     $model->forceDelete();
                     $requests->update(['status' => 1, 'super_id'  => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
-                    return back()->with('success_message','The Request has been approved');
                     break;
                 default:
 
             }
+            $admin = auth()->user();
+            $title = ucfirst($requests->type)." Request Approved";
+            $message = "Your request to {$requests->type} the {$requests->model_type} was denied by {$admin->name}";
+            Mail::to($user->email)->send(new \App\Mail\ApproveRequest($user, 'Approved',$requests->type, $title, $message));
+            return back()->with('success_message',"The {$requests->type} Request has been approved and an email has been sent to {$user->name} about the decision");
         }elseif($status == 2){
             $requests->update(['status' => 2, 'super_id' => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
-            return back()->with('danger_message','The Request has been denied');
+            $m = "\\App\\Models\\".ucfirst($requests->model_type);
+            $model = $m::find($requests->model_id);
+            $admin = auth()->user();
+            $title = ucfirst($requests->type)." Request Denied";
+            $message = "Your request to {$requests->type} the {$requests->model_type} was denied by {$admin->name}";
+            Mail::to($user->email)->send(new \App\Mail\ApproveRequest($user, 'Denied', $requests->type, $title, $message));
+            $comment = "The request by {$user->name} to {$requests->type} the {$requests->model_type} has been denied by ".auth()->user()->name;
+            $model->comment()->create(['title' => 'Transfer Request Denied', 'comment' => $comment, 'user_id' => auth()->user()->id]); 
+            return back()->with('danger_message',"The Request has been denied and an email has been sent to {$user->name} about the decision");
         }
     }
 }
