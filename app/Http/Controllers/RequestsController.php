@@ -18,8 +18,26 @@ class RequestsController extends Controller
     public function index(){
 
         //Returns the View for the list of requests
-        $requests = Requests::orderBy('created_at', 'desc')->paginate(5);        
-        return view('requests.view', compact('requests'));
+        $locations = Location::all();
+        $requests = Requests::orderBy('created_at', 'desc')->paginate(25);        
+        return view('requests.view', compact('requests', 'locations'));
+    }
+
+    public function access(){
+        $requests = Requests::create([
+            'type'=>'access', 
+            'notes' => 'Requesting Access to the Apollo Asset Management System at CLPT',
+            'user_id' => auth()->user()->id, 
+            'date' => \Carbon\Carbon::now(),
+            'status' => 0,
+        ]);
+
+        //Notify by email
+        $admins = User::superAdmin()->get();
+        foreach($admins as $admin){
+            Mail::to($admin->email)->send(new \App\Mail\AccessRequest($admin, auth()->user()));
+        }
+        return back()->with('success_message', 'Your request to access the Asset Management System has been sent. Please allow 24hours for a response.');
     }
 
     public function transfer(Request $request){
@@ -149,6 +167,22 @@ class RequestsController extends Controller
         }
 
         
+    }
+
+    public function handleAccess(Request $request){
+        /* Get the Request */
+        $req = Requests::find($request->request_id);
+        //Get the User
+        $user = User::find($req->user_id);
+        $user->update(['location_id' => $request->location_id, 'role_id' => $request->role_id]);
+        $array = explode(',', $request->permission_ids);
+        $user->locations()->attach($array);
+        $req->update(['status' => 1, 'super_id'  => auth()->user()->id]); 
+        $admin = auth()->user();
+        $title = "Access Approved";
+        $message = "Your request to access the Apollo Asset Management System was approved by {$admin->name}";
+        Mail::to($user->email)->send(new \App\Mail\ApproveRequest($user, 'Approved','access', $title, $message));
+        return back()->with('success_message',"The Access Request has been approved and an email has been sent to {$user->name} about the decision");
     }
 
     public function handle(Requests $requests, $status){

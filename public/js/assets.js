@@ -265,8 +265,6 @@
         const modal = document.querySelector('#newModal');
 
         function sendData(){
-            console.log('sending data');
-            console.log(name.value);
             const errors = [];
 
             if(name.value == null){
@@ -289,7 +287,6 @@
                 console.log('Recieving Response');
                 const response = xhttp.responseText;
                 if(response !== false){
-                    console.log('Recieved Response')
                     const model = document.querySelector('#asset_model');
                     const modelName = document.querySelector('#findModel');
                     model.value = response;

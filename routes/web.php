@@ -148,7 +148,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/request/transfer', 'App\Http\Controllers\RequestsController@transfer')->name('request.transfer');
     Route::post('/request/dispose', 'App\Http\Controllers\RequestsController@disposal')->name('request.disposal');
     Route::get('/request/{requests}/handle/{status}', 'App\Http\Controllers\RequestsController@handle')->name('request.handle');
+    Route::post('/request/access', 'App\Http\Controllers\RequestsController@handleAccess')->name('request.access.handle');
     Route::get('/requests', 'App\Http\Controllers\RequestsController@index')->name('requests.index');
+    Route::get('/requests/access', 'App\Http\Controllers\RequestsController@access')->name('requests.access');
     //Reports
     Route::get('/reports', '\App\Http\Controllers\ReportController@index')->name('reports.index');
     //Supplier
