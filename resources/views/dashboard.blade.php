@@ -21,7 +21,10 @@
                             :components=$components :consumables=$consumables :miscellaneous=$miscellaneous
                             :requests=$requests/>
         <x-categories_status_info :statuses="$statuses" :category="$category"/>
-    @elseif(auth()->user()->role_id == 0)
+    @else
+        @if(auth()->user())
                 <x-admin.request-access/>
+            @endif
     @endif
+
 @endsection
