@@ -77,7 +77,7 @@
     <div class="row mb-4">
         {{-- Expenditure --}}
         <div class="col-12 col-md-6">
-            <div class="card shadow h-100">
+            <div class="card shadow h-100 p-4">
                 <div id="chart" style="height: 300px;"></div>
             </div>
         </div>
