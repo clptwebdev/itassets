@@ -154,10 +154,10 @@
  <script src="https://unpkg.com/@chartisan/chartjs@^2.1.0/dist/chartisan_chartjs.umd.js"></script>
  <!-- Your application script -->
  <script>
-    const location = querySelector('#location_id').value;
+    const location = querySelector('#location_id');
     const chart = new Chartisan({
         el: '#chart',
-        url: `@chart('exp_chart')?id=${location}`,
+        url: `@chart('exp_chart')?id=${location.value}`,
         // You can also pass the data manually instead of the url:
         // data: { ... }
         hooks: new ChartisanHooks()
