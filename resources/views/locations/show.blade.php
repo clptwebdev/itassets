@@ -304,6 +304,7 @@
                     </tr>
                     </tfoot>
                     <tbody>
+                    @if($location->component()->count() != 0)
                     @foreach($location->component as $component)
 
                         <tr>
@@ -348,6 +349,7 @@
                             </td>
                         </tr>
                     @endforeach
+                    @endif
                     </tbody>
                 </table>
             </div>
