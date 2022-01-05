@@ -158,6 +158,8 @@
      url: "@chart('exp_chart')",
      // You can also pass the data manually instead of the url:
      // data: { ... }
+     hooks: new ChartisanHooks()
+     .colors()
    })
  </script>
 
