@@ -159,7 +159,8 @@
      // You can also pass the data manually instead of the url:
      // data: { ... }
      hooks: new ChartisanHooks()
-     .colors()
+        .colors()
+        .datasets('line')
    })
  </script>
 
