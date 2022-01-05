@@ -11,17 +11,19 @@ use App\Models\Miscellanea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class HomeController extends Controller
-{
-    public function index(){
+class HomeController extends Controller {
+
+    public function index()
+    {
         if(auth()->user()->role_id == 1)
         {
-            $locations = \App\Models\Location::with('asset', 'accessory', 'components', 'consumable', 'miscellanea', 'photo')->get();                        
+            $locations = \App\Models\Location::with('asset', 'accessory', 'components', 'consumable', 'miscellanea', 'photo')->get();
             $assets = \App\Models\Asset::with('location', 'model', 'status')->get()
-                        ->map(function($item, $key){
-                            $item['depreciation_value'] = $item->depreciation_value();
-                            return $item;
-                        });
+                ->map(function($item, $key) {
+                    $item['depreciation_value'] = $item->depreciation_value();
+
+                    return $item;
+                });
             $transfers = \App\Models\Transfer::count();
             $archived = \App\Models\Archive::count();
             $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea', 'accessories')->get();
@@ -35,14 +37,13 @@ class HomeController extends Controller
         } else
         {
             $locations = auth()->user()->locations;
-            $assets = Asset::locationFilter(auth()->user()
-                        ->locations->pluck('id'))
-                        ->with('location', 'model', 'status')
-                        ->map(function($item){
-                            $item['depreciation_value'] = $item->depreciation_value();
-                            return $item;
-                        })
-                        ->get();
+            $assets = \App\Models\Asset::locationFilter(auth()->user()
+                ->locations->pluck('id'))->with('location', 'model', 'status')->get()
+                ->map(function($item, $key) {
+                    $item['depreciation_value'] = $item->depreciation_value();
+
+                    return $item;
+                });
             $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->count();
             $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->count();
             $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea')->get();
@@ -70,4 +71,5 @@ class HomeController extends Controller
             ]
         );
     }
+
 }
