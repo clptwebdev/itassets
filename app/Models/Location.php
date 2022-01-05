@@ -59,7 +59,7 @@ class Location extends Model
                 $expenditure += $asset->purchased_cost;
             }
         }
-        return $expenditure;
+        return dd($expenditure);
         
     }
 }
