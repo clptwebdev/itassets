@@ -51,7 +51,7 @@ class Location extends Model
             ->using(LocationUser::class);
     }
 
-    public function getExpenditure($year){
+    public function expenditure($year){
         $expenditure = 0;
         $assets = $this->assets()->whereYear('purchase_date', $year)->select('donated', 'purchase_cost');
         foreach($assets as $asset){
