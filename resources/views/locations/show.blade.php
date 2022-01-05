@@ -40,7 +40,7 @@
     <p class="mb-4">Information regarding {{ $location->name }}, the assets that are currently assigned to the location and any request information.</p>
 
     <div class="row pl-4 pr-2">
-        <div class="col-12 col-sm-4 col-md-3 col-xl-2 bg-white rounded overflow-hidden" style="border: solid 3px {{ $location->icon ?? '#666'}};">
+        <div class="col-12 col-sm-4 col-md-3 col-xl-2 bg-white rounded overflow-hidden d-flex justify-content-center align-items-center" style="border: solid 3px {{ $location->icon ?? '#666'}};">
             @if($location->photo()->exists())
             <img src="{{ asset($location->photo->path) }}" width="100%" alt="{{ $location->name }}" title="{{ $location->name }}">
             @endif
