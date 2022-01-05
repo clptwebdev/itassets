@@ -155,7 +155,7 @@
  <script>
    const chart = new Chartisan({
      el: '#chart',
-     url: 'api/chart/exp_chart ',
+     url: "@chart('exp_chart')",
      // You can also pass the data manually instead of the url:
      // data: { ... }
    })
