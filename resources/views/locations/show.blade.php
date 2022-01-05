@@ -304,7 +304,7 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    @if($location->component()->count() != 0)
+                    @if($location->component->count() != 0)
                     @foreach($location->component as $component)
 
                         <tr>
