@@ -55,9 +55,11 @@ class Location extends Model
         $expenditure = 0;
         $assets = $this->assets()->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
         foreach($assets as $asset){
-            $expenditure += $asset->purchased_cost;
+            if($asset->donated !== 1){
+                $expenditure += $asset->purchased_cost;
+            }
         }
-        return dd($expenditure);
+        return $expenditure;
         
     }
 }
