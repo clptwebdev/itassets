@@ -63,6 +63,7 @@
                                     {{ $location->postcode }}</p>
                                 <p>Tel: {{ $location->telephone }}</p>
                                 <p>Email: {{ $location->email }}</p>
+                                <p>* Spent £{{number_format($location->expenditure('2021'), 11, 2)}} in the Year 2021</p>
                             </div>
                         </div>
                     </div>
