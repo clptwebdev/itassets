@@ -53,7 +53,7 @@ class Location extends Model
 
     public function expenditure($year){
         $expenditure = 0;
-        $assets = $this->assets()->whereYear('purchased_date', $year)->select('donated', 'purchase_cost')->get();
+        $assets = $this->assets()->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
         foreach($assets as $asset){
             $expenditure += $asset->purchased_cost;
         }
