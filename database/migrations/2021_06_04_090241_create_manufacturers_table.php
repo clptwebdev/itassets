@@ -15,7 +15,7 @@ class CreateManufacturersTable extends Migration
     {
         Schema::create('manufacturers', function (Blueprint $table) {
             $table->string("name")->unique();
-            $table->string("supportUrl");
+            $table->string("supportUrl")->nullable();
             $table->string("supportPhone");
             $table->string("supportEmail");
             $table->string("photoId")->nullable();

@@ -16,14 +16,16 @@ class AssetObserver
      */
     public function created(Asset $asset)
     {
+
         $name = $asset->model->name ?? "Unknown".' ['.$asset->asset_tag.']' ?? $asset->asset_tag;
         $location = 'It has been assigned to '.$asset->location->name ?? 'It has not been assigned to a location.';
+
         Log::create([
             'user_id'=>auth()->user()->id ?? 0,
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
             'loggable_id'=> $asset->id ?? 0,
-            'data'=> auth()->user()->name.' has added a new asset: '.$name.'. '.$location,
+            'data'=> auth()->user()->name ?? 'A Un-Authorised'.' has added a new asset: '.$name.'. '.$location,
         ]);
     }
 
@@ -42,7 +44,7 @@ class AssetObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
             'loggable_id'=> $asset->id ?? 0,
-            'data'=> auth()->user()->name.' has added a new asset: '.$name.'. '.$location,
+            'data'=> auth()->user()->name ?? 'A Un-Authorised'.' has added a new asset: '.$name.'. '.$location,
         ]);
     }
 
@@ -60,7 +62,7 @@ class AssetObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
             'loggable_id'=> $asset->id ?? 0,
-            'data'=> auth()->user()->name.' has placed the Asset: '.$name.' into the recycling bin',
+            'data'=> auth()->user()->name ?? 'A Un-Authorised'.' has placed the Asset: '.$name.' into the recycling bin',
         ]);
     }
 
@@ -78,7 +80,7 @@ class AssetObserver
             'loggable_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
             'loggable_id'=> $asset->id ?? 0,
-            'data'=> auth()->user()->name.' has restored the Asset: '.$name,
+            'data'=> auth()->user()->name ?? 'A Un-Authorised'.' has restored the Asset: '.$name,
         ]);
     }
 
@@ -96,7 +98,7 @@ class AssetObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
             'loggable_id'=> $asset->id ?? 0,
-            'data'=> auth()->user()->name.' has permanently removed the Asset: '.$name,
+            'data'=> auth()->user()->name ?? 'A Un-Authorised'.' has permanently removed the Asset: '.$name,
         ]);
     }
 }

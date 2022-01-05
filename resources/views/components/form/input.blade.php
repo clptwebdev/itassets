@@ -2,11 +2,12 @@
 
 {{--form input Dynamic--}}
 @if($label == true)
-<label for="{{$name}}">{{str_replace(array('_','id'), ' ',ucfirst($title ?? $name))}}</label>
+<label for="{{$name}}">{{str_replace(array('_','id'), ' ',ucfirst($title ?? $name))}}</label>      {{-- @if(in_array('required',$formAttributes ,true))<span class="text-danger">*</span>@endif --}}
 @endif
 <input type="{{$type}}"
        class="form-control  <?php if ($errors->has("{!! $name !!}")) {?>border-danger<?php }?>"
        name="{{$name}}" id="{{$name}}"
        placeholder="{{str_replace(array('_','id'), ' ',ucfirst($title ?? $name))}}"
        value="{{old("{!! $name !!}") ?? $value}}"
-      {!!$formAttributes ?? null!!}>  {{--  pass attribues seperated with spaces  --}}
+      {!!$formAttributes ?? null!!}
+>  {{--  pass attribues seperated with spaces  --}}

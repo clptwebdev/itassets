@@ -89,7 +89,6 @@ class ManufacturerController extends Controller {
         $request->validate([
             "name" => "required|max:255",
             "supportPhone" => "required|max:14",
-            "supportUrl" => "required",
             'supportEmail' => [ \Illuminate\Validation\Rule::unique('manufacturers')->ignore($manufacturer->id)],
             "PhotoId" => "nullable",
         ]);
@@ -111,8 +110,7 @@ class ManufacturerController extends Controller {
         request()->validate([
             "name" => "required|unique:manufacturers,name|max:255",
             "supportPhone" => "max:14",
-            "supportUrl" => "required",
-            "supportEmail" => 'sometimes|nullable|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
+            "supportEmail" => 'sometimes|nullable|unique:manufacturers,supportEmail|email:rfc,dns,filter',
             "PhotoId" => "nullable",
         ]);
         Manufacturer::create([
@@ -124,7 +122,7 @@ class ManufacturerController extends Controller {
             session()->flash('success_message', request("name") . ' has been created successfully'),
         ]);
 
-        return redirect('/manufacturers');
+        return redirect()->action([ManufacturerController::class, 'index']);
     }
 
     public function ajaxMany(Request $request)
