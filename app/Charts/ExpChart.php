@@ -31,6 +31,8 @@ class ExpChart extends BaseChart
             $location->expenditure($year3->format('Y')), 
             $location->expenditure($year4->format('Y')), 
         ];
+
+        return dd($expenditure);
         return Chartisan::build()
             ->labels($years)
             ->dataset('Costs', $expenditure)
