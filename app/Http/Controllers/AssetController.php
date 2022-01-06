@@ -70,7 +70,6 @@ class AssetController extends Controller {
                 ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
             $locations = auth()->user()->locations;
         }
-
         $this->clearFilter();
         $limit = session('limit') ?? 25;
 
@@ -99,7 +98,7 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
 
-        
+
 
         return view('assets.create', [
             "locations" => $locations,
@@ -670,8 +669,14 @@ class AssetController extends Controller {
                     $errorValues[$error['row']] = $array;
 
                 }
+<<<<<<< HEAD
                 
                 return view('assets.dispose-errors', [
+=======
+                return dd($errorValues);
+
+                /* return view('assets.import-errors', [
+>>>>>>> b776c015070e13c44fce8b97db9ea976cfd4cf48
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
@@ -688,7 +693,7 @@ class AssetController extends Controller {
         {
             return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-        } 
+        }
     }
 
     public function bulkTransfers(Request $request){

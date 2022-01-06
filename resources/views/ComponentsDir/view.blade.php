@@ -15,12 +15,12 @@
 @section('content')
 <x-wrappers.nav title="Components">
             @can('recycleBin', \App\Models\Component::class)
-                <x-buttons.recycle :route="route('components.bin')">Recycle Bin</x-buttons.recycle>
+                <x-buttons.recycle :route="route('components.bin')" :count="\App\Models\Component::onlyTrashed()->count()"/>
             @endcan
             @can('create' , \App\Models\Component::class)
                 <x-buttons.add :route="route('components.create')">Component(s)</x-buttons.add>
             @endcan
-            @can('export', \App\Models\Component::class)
+            @can('viewAll', \App\Models\Component::class)
                 @if ($components->count() == 1)
                     <x-buttons.reports :route="route('components.showPdf', $components[0]->id)"/>
                 @else
@@ -96,6 +96,7 @@
                         </tr>
                         </tfoot>
                         <tbody>
+                        @if($components->count() != 0)
                         @foreach($components as $component)
 
                             <tr>
@@ -125,38 +126,33 @@
                                     <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
                                         Remaining</small>
                                 </td>
+                                <?php $data = $component ;?>
                                 <td class="text-right">
-                                    <div class="dropdown no-arrow">
-                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink"
-                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div
-                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Component Options:</div>
-                                            <a href="{{ route('components.show', $component->id) }}"
-                                               class="dropdown-item">View</a>
-                                            @can('update', $component)
-                                                <a href="{{ route('components.edit', $component->id) }}"
-                                                   class="dropdown-item">Edit</a>
-                                            @endcan
-                                            @can('delete', $component)
-                                                <form id="form{{$component->id}}"
-                                                      action="{{ route('components.destroy', $component->id) }}"
-                                                      method="POST" class="d-block p-0 m-0">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a class="deleteBtn dropdown-item" href="#"
-                                                       data-id="{{$component->id}}">Delete</a>
-                                                </form>
-                                            @endcan
-                                        </div>
-                                    </div>
+                                    <x-wrappers.table-settings>
+                                        @can('view', $data)
+                                            <x-buttons.dropdown-item :route="route('components.show', $data->id)">
+                                                View
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('update', $data)
+                                            <x-buttons.dropdown-item :route=" route('components.edit', $data->id)">
+                                                Edit
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('delete', $data)
+                                            <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$data->id" :action="route('components.destroy', $data->id)">
+                                                <x-buttons.dropdown-item :data="$data->id" class="deleteBtn" >
+                                                    Delete
+                                                </x-buttons.dropdown-item>
+                                            </x-form.layout>
+                                        @endcan
+                                    </x-wrappers.table-settings>
                                 </td>
                             </tr>
                         @endforeach
+                        @else
+                            <td colspan="10" class="text-center">No Components Returned</td>
+                        @endif
                         </tbody>
                     </table>
                     <x-paginate :model="$components"/>
@@ -176,125 +172,18 @@
 @endsection
 
 @section('modals')
-    <!-- Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this Component to
-                        the Recycle Bin?
-                    </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="user-id" type="hidden" value="">
-                    <p>Select "Send to Bin" to send this Component to the Recycle Bin.</p>
-                    <small class="text-danger">**This is not permanent and the component can be restored in the
-                        Components Recycle Bin. </small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-coral" type="button" id="confirmBtn">Send to Bin</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{--//import modal--}}
-    <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
-         aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form action="/importcomponents" method="POST" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <p>Select "import" to add components to the system.</p>
-                        <input id="importEmpty" class="form-control"
-                               type="file" placeholder="Upload here" name="csv" accept=".csv">
-
-                    </div>
-
-                    <div class="modal-footer">
-                        @if(session('import-error'))
-                            <div
-                                class="alert text-warning ml-0"> {{ session('import-error' ?? ' Select a file to be uploaded before continuing!')}} </div>
-                        @endif
-                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b"
-                           target="_blank" class="btn btn-blue">
-                            Download Import Template
-                        </a>
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-
-                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
-                            Import
-                        </button>
-                    @csrf
-                </form>
-            </div>
-        </div>
-    </div>
-    </div>
+    <x-modals.delete> Component</x-modals.delete>
+    <x-modals.import route="/importcomponents"/>
 @endsection
 
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
             integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script  src="{{asset('js/delete.js')}}"></script>
+    <script  src="{{asset('js/import.js')}}"></script>
+    <script  src="{{asset('js/filter.js')}}"></script>
     <script>
-        $('.deleteBtn').click(function () {
-            $('#user-id').val($(this).data('id'))
-            //showModal
-            $('#removeUserModal').modal('show')
-        });
-
-        $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#user-id').val();
-            $(form).submit();
-        });
-
-        $(document).ready(function () {
-            $('#usersTable').DataTable({
-                "columnDefs": [{
-                    "targets": [8],
-                    "orderable": false,
-                }],
-                "order": [[4, "desc"]]
-            });
-        });
-        // import
-
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
-
-        });
-
-        // file input empty
-        $("#confirmBtnImport").click(":submit", function (e) {
-
-            if (!$('#importEmpty').val()) {
-                e.preventDefault();
-            }
-        })
-
-        function toggleFilter() {
-            if ($('#filter').hasClass('show')) {
-                $('#filter').removeClass('show');
-                $('#filter').css('right', '-100%');
-            } else {
-                $('#filter').addClass('show');
-                $('#filter').css('right', '0%');
-            }
-        }
-
         $(function () {
             $("#slider-range").slider({
                 range: true,

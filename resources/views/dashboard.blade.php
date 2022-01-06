@@ -24,4 +24,5 @@
                             :requests=$requests/>
         <x-categories_status_info :statuses="$statuses" :category="$category"/>
     @endif
+
 @endsection
