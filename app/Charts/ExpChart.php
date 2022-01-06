@@ -18,7 +18,7 @@ class ExpChart extends BaseChart
     public function handler(Request $request): Chartisan
     {
         $now = \Carbon\Carbon::now();
-        $years = [$now->subYear()->format('Y'), $now->subYear()->format('Y'), $now->subYear()->format('Y')];
+        $years = [$now->format('Y'), $now->subYear()->format('Y'), $now->subYear()->format('Y')];
         return Chartisan::build()
             ->labels($years)
             ->dataset('Sample', [76, 21, 43])
