@@ -62,4 +62,74 @@ class Location extends Model
         return $expenditure;
         
     }
+
+    public function donations($year){
+        $donations = 0;
+        $assets = $this->assets()->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
+        foreach($assets as $asset){
+            if($asset->donated === 1){
+                $donations += $asset->purchased_cost;
+            }
+        }
+        return $donations;
+        
+    }
+
+    public function depreciation($y){
+        $depreciation = 0;
+        $year = \Carbon\Carbon::parse($y);
+        $assets = $this->assets()->select('asset_model', 'donated', 'purchased_cost', 'purchased_date')->get();
+        foreach($assets as $asset){
+            if($asset->model()->exists() && $asset->model->depreciation()->exists()){
+                $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                if($eol->isPast()){}else{
+                    $age = $year->floatDiffInYears($asset->purchased_date); 
+                    $percent = 100 / $asset->model->depreciation->years;
+                    $percentage = floor($age)*$percent; 
+                    $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                    if($dep < 0){ $dep = 0;}
+                    $depreciation += $dep;
+                }
+            }else{
+                $depreciation += $asset->purchased_cost;
+            }
+        }
+        return round($depreciation); 
+    }
+
+    public function depreciations(){
+        $values = [];
+        $assets = $this->assets()->select('asset_model', 'donated', 'purchased_cost', 'purchased_date')->get();
+        foreach($assets as $asset){
+            foreach (range(\Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year + 3) as $y){
+                $depreciation = 0;
+                $year = \Carbon\Carbon::parse('01-01-'.$y);
+                if($asset->model()->exists() && $asset->model->depreciation()->exists()){
+                    $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                    if($eol->isPast()){
+
+                    }else{
+                        $age = $year->floatDiffInYears($asset->purchased_date);
+                        $percent = 100 / $asset->model->depreciation->years;
+                        $percentage = floor($age)*$percent; 
+                        $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                        $depreciation += $dep;
+                    }
+                }else{
+                    $depreciation += $asset->purchased_cost;
+                }
+
+                if($depreciation < 0) $depreciation = 0;
+
+
+                if(array_key_exists($y, $values)){
+                    $values[$y] = $values[$y] + round($depreciation);
+                }else{
+                    $values[$y] = round($depreciation);
+                }
+                
+            }
+        }   
+        return $values; 
+    }
 }

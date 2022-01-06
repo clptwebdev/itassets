@@ -64,7 +64,6 @@
                                     {{ $location->postcode }}</p>
                                 <p>Tel: {{ $location->telephone }}</p>
                                 <p>Email: {{ $location->email }}</p>
-                                <p>** Spent £{{number_format($location->expenditure('2021'), 2, '.', '');}} in the Year 2015</p>
                             </div>
                         </div>
                     </div>
@@ -79,10 +78,16 @@
         {{-- Expenditure --}}
         <div class="col-12 col-md-6">
             <div class="card shadow h-100 p-4">
-                <div id="chart" style="height: 300px;"></div>
+                <div id="chart" style="height: 500px;"></div>
             </div>
         </div>
-        {{-- Donated Information --}}
+        {{-- Depreication Information --}}
+
+        <div class="col-12 col-md-6">
+            <div class="card shadow h-100 p-4">
+                <div id="dep_chart" style="height: 500px;"></div>
+            </div>
+        </div>
     </div>
 
     <div class="row mb-4">
@@ -161,8 +166,24 @@
         // You can also pass the data manually instead of the url:
         // data: { ... }
         hooks: new ChartisanHooks()
-            .colors()
             .datasets('line')
+            .beginAtZero('false')
+            .stepSize(1000, 'x')
+            .colors(['#ECC94B', '#4299E1'])
+            .title('Asset Expenditure')
+    })
+
+    const dep_chart = new Chartisan({
+        el: '#dep_chart',
+        url: `@chart('dep_chart')?id=${loc}`,
+        // You can also pass the data manually instead of the url:
+        // data: { ... }
+        hooks: new ChartisanHooks()
+            .datasets('bar')
+            .beginAtZero('false')
+            .stepSize(1000, 'x')
+            .colors(['#F99'])
+            .title('Asset Depreciation')
     })
  </script>
 

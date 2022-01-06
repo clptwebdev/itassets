@@ -9,7 +9,7 @@ use ConsoleTVs\Charts\BaseChart;
 use Illuminate\Http\Request;
 use App\Models\Location;
 
-class ExpChart extends BaseChart
+class DepChart extends BaseChart
 {
     /**
      * Handles the HTTP request for the given chart.
@@ -20,18 +20,14 @@ class ExpChart extends BaseChart
     {
         $location = Location::find($request->id);
         $years = [];
-        $costs = [];
-        $donations = [];
-        foreach (range(\Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year - 4) as $year){
+        $depreciation = [];
+        foreach (range(\Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year + 3) as $year){
             $years[] = $year;
-            $costs[] = round($location->expenditure($year));
-            $donations[] = round($location->donations($year));
         }
         
 
         return Chartisan::build()
-            ->labels(array_reverse($years))
-            ->dataset('Costs', array_reverse($costs))
-            ->dataset('Donations',  array_reverse($donations));
+            ->labels($years)
+            ->dataset('Depreciation Cost', $location->depreciations());
     }
 }

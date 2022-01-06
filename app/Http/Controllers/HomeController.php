@@ -37,7 +37,6 @@ class HomeController extends Controller {
         } else
         {
             $locations = auth()->user()->locations;
-<<<<<<< HEAD
             $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))
                         ->with('location', 'model', 'status')
                         ->get()
@@ -45,15 +44,6 @@ class HomeController extends Controller {
                             $item['depreciation_value'] = $item->depreciation_value();
                             return $item;
                         });
-=======
-            $assets = \App\Models\Asset::locationFilter(auth()->user()
-                ->locations->pluck('id'))->with('location', 'model', 'status')->get()
-                ->map(function($item, $key) {
-                    $item['depreciation_value'] = $item->depreciation_value();
-
-                    return $item;
-                });
->>>>>>> 940a008cb03ce83c29bf02fdf5195815568ed03a
             $transfers = \App\Models\Transfer::whereIn('location_from', $locations->pluck('id'))->orWhereIn('location_to', $locations->pluck('id'))->count();
             $archived = \App\Models\Archive::whereIn('location_id', $locations->pluck('id'))->count();
             $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea')->get();
