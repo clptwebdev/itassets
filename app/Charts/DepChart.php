@@ -24,10 +24,16 @@ class DepChart extends BaseChart
         foreach (range(\Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year + 3) as $year){
             $years[] = $year;
         }
+
+        $array = [];
+
+        foreach($location->depreciations() as $id => $key){
+            $array[] = round($key);
+        }
         
 
         return Chartisan::build()
             ->labels($years)
-            ->dataset('Depreciation Cost', $location->depreciations());
+            ->dataset('Depreciation Cost', $array);
     }
 }

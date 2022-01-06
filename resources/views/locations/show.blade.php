@@ -184,6 +184,7 @@
             .stepSize(1000, 'x')
             .colors(['#F99'])
             .title('Asset Depreciation')
+            .responsive()
     })
  </script>
 
