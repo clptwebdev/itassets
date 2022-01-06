@@ -21,7 +21,7 @@ class ExpChart extends BaseChart
         $years = [$now->subYear()->format('Y'), $now->subYears(2)->format('Y'), $now->subYears(3)->format('Y')];
         return Chartisan::build()
             ->labels($years)
-            ->dataset('Sample', [1, 2, 3])
-            ->dataset('Sample 2', [3, 2, 1]);
+            ->dataset('Sample', [76, 21, 43])
+            ->dataset('Sample 2', [38, 92, 12]);
     }
 }
