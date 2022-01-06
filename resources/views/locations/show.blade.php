@@ -54,7 +54,7 @@
                     <div class="row no-gutters">
                         <div class="col mr-2">
                             <div class="mb-1">
-                                <input type="hidden" value="{{$location->id}}" id="location_id">
+                                <input type="hidden" value="{{$location->id}}" id="chart_id">
                                 {{ $location->name }}<br>
                                 <p>{{ $location->address_1 }}<br>
                                     @if($location->address_2 != "")
@@ -154,9 +154,10 @@
  <script src="https://unpkg.com/@chartisan/chartjs@^2.1.0/dist/chartisan_chartjs.umd.js"></script>
  <!-- Your application script -->
  <script>
+    const location = document.querySelector('#chart_id').value; 
     const chart = new Chartisan({
         el: '#chart',
-        url: "@chart('exp_chart')",
+        url: `@chart('exp_chart')?id=${location}`,
         // You can also pass the data manually instead of the url:
         // data: { ... }
         hooks: new ChartisanHooks()

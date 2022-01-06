@@ -17,11 +17,23 @@ class ExpChart extends BaseChart
      */
     public function handler(Request $request): Chartisan
     {
+        $location = Location::find($request->id);
         $now = \Carbon\Carbon::now();
-        $years = [$now->format('Y'), $now->subYear()->format('Y'), $now->subYear()->format('Y')];
+        $year1 = \Carbon\Carbon::now()->subYear();
+        $year2 = \Carbon\Carbon::now()->subYears(2);
+        $year3 = \Carbon\Carbon::now()->subYears(3);
+        $year4 = \Carbon\Carbon::now()->subYears(4);
+        $years = [$now->format('Y'), $year1->format('Y'), $year2->format('Y'), $year3->format('Y'), $year4->format('Y')];
+        $expenditure = [
+            $location->expenditure($now->format('Y')), 
+            $location->expenditure($year1->format('Y')), 
+            $location->expenditure($year2->format('Y')), 
+            $location->expenditure($year3->format('Y')), 
+            $location->expenditure($year4->format('Y')), 
+        ];
         return Chartisan::build()
             ->labels($years)
-            ->dataset('Sample', [76, 21, 43])
-            ->dataset('Sample 2', [38, 92, 12]);
+            ->dataset('Costs', $expenditure)
+            ->dataset('Donations', [38, 92, 12]);
     }
 }
