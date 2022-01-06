@@ -10,19 +10,19 @@
     <!-- session messages -->
     <x-handlers.alerts/>
 
-    
-    @if(auth()->user()->role_id == 0)
-        <x-admin.request-access/>
-    @elseif($assets->count() != 0)
-        <!-- Page Heading -->
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-        </div>
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    </div>
+
+    @if($assets->count() != 0 or auth()->user()->role_id != 1)
         <!-- Asset stats -->
         <x-admin.asset-info :transfers=$transfers :archived=$archived :assets=$assets :accessories=$accessories
                             :components=$components :consumables=$consumables :miscellaneous=$miscellaneous
                             :requests=$requests/>
         <x-categories_status_info :statuses="$statuses" :category="$category"/>
+    @else
+        <x-admin.request-access/>
     @endif
 
 @endsection

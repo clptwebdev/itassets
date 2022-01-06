@@ -50,4 +50,16 @@ class Location extends Model
         return $this->belongsToMany(User::class)
             ->using(LocationUser::class);
     }
+
+    public function expenditure($year){
+        $expenditure = 0;
+        $assets = $this->assets()->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
+        foreach($assets as $asset){
+            if($asset->donated !== 1){
+                $expenditure += $asset->purchased_cost;
+            }
+        }
+        return $expenditure;
+        
+    }
 }

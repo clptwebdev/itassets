@@ -39,8 +39,8 @@
 <section>
     <p class="mb-4">Information regarding {{ $location->name }}, the assets that are currently assigned to the location and any request information.</p>
 
-    <div class="row pl-4 pr-2">
-        <div class="col-12 col-sm-4 col-md-3 col-xl-2 bg-white rounded overflow-hidden" style="border: solid 3px {{ $location->icon ?? '#666'}};">
+    <div class="row pl-4 pr-2 mb-4">
+        <div class="col-12 col-sm-4 col-md-3 col-xl-2 bg-white rounded overflow-hidden d-flex justify-content-center align-items-center" style="border: solid 3px {{ $location->icon ?? '#666'}};">
             @if($location->photo()->exists())
             <img src="{{ asset($location->photo->path) }}" width="100%" alt="{{ $location->name }}" title="{{ $location->name }}">
             @endif
@@ -54,6 +54,7 @@
                     <div class="row no-gutters">
                         <div class="col mr-2">
                             <div class="mb-1">
+                                <input type="hidden" value="{{$location->id}}" id="location_id">
                                 {{ $location->name }}<br>
                                 <p>{{ $location->address_1 }}<br>
                                     @if($location->address_2 != "")
@@ -63,6 +64,7 @@
                                     {{ $location->postcode }}</p>
                                 <p>Tel: {{ $location->telephone }}</p>
                                 <p>Email: {{ $location->email }}</p>
+                                <p>** Spent £{{number_format($location->expenditure('2021'), 2, '.', '');}} in the Year 2015</p>
                             </div>
                         </div>
                     </div>
@@ -70,456 +72,33 @@
             </div>
         </div>
     </div>
+    {{-- Asset Informationn --}}
+
+    
+    <div class="row mb-4">
+        {{-- Expenditure --}}
+        <div class="col-12 col-md-6">
+            <div class="card shadow h-100 p-4">
+                <div id="chart" style="height: 300px;"></div>
+            </div>
+        </div>
+        {{-- Donated Information --}}
+    </div>
+
+    <div class="row mb-4">
+        {{-- Depreciation Information --}}
+        <div class="col-12 col-md-6">
+            <div class="card shadow h-100">
+
+            </div>
+        </div>
+        {{-- Audit Information --}}
+    </div>
+
+
 </section>
 
 
-<div id="statusAccordian">
-    
-    <div class="card shadow m-2" style="border-left: 0.25rem solid 666;">
-        <div id="asset_header" class="card-header">
-            <h6 class="m-0 font-weight-bold pointer d-block w-100" data-toggle="collapse" data-target="#asset_collapse" aria-expanded="true" aria-controls="asset_collapse">Assigned Assets</h6>
-        </div>
-        <div id="asset_collapse" class="collapse show" aria-labelledby="asset_header" data-parent="#statusAccordian">
-            <div class="card-body">
-                <table class="table table-striped logs">
-                    <thead>
-                    <tr>
-                        <th class="col-9 col-md-2"><small>Item</small></th>
-                        <th class="col-1 col-md-auto text-center"><small>Manufacturer</small></th>
-                        <th class="col-1 col-md-auto"><small>Tag</small></th>
-                        <th class="d-none d-xl-table-cell"><small>Date</small></th>
-                        <th class="d-none d-xl-table-cell text-center"><small>Cost</small></th>
-                        <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
-                        <th class="col-auto d-none d-xl-table-cell text-center"><small>Warranty (M)</small></th>
-                        <th class="col-auto text-center d-none d-md-table-cell"><small>Audit Due</small></th>
-                        <th class="text-right col-1"><small>Options</small></th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                    <tr>
-                        <th><small>Item</small></th>
-                        <th class="text-center"><small>Manufacturer</small></th>
-                        <th><small>Tag</small></th>
-                        <th class=" d-none d-xl-table-cell"><small>Date</small></th>
-                        <th class=" d-none d-xl-table-cell"><small>Cost</small></th>
-                        <th class=" d-none d-xl-table-cell text-center"><small>Supplier</small></th>
-                        <th class=" d-none d-xl-table-cell text-center"><small>Warranty (M)</small></th>
-                        <th class="text-center  d-none d-md-table-cell"><small>Audit Due</small></th>
-                        <th class="text-right col-1"><small>Options</small></th>
-                    </tr>
-                    </tfoot>
-                    <tbody>
-                    @foreach($location->asset as $asset)
-                        <tr>
-                            <td>{{ $asset->name ?? 'No Model'}}<br>
-                                {{ $asset->model->name ?? 'No Model'}}<br><small
-                                    class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
-                            <td class="text-center">{{ $asset->model->manufacturer->name ?? 'No Model'}}</td>
-                            </td>
-                            <td>{{ $asset->asset_tag }}</td>
-                            <td class="d-none d-md-table-cell"
-                                data-sort="{{ strtotime($asset->purchased_date)}}">{{ \Carbon\Carbon::parse($asset->purchased_date)->format('d/m/Y')}}</td>
-                            <td class="text-center  d-none d-xl-table-cell">
-                                £{{ $asset->purchased_cost }}
-                            
-                            </td>
-                            <td class="text-center d-none d-xl-table-cell">{{$asset->supplier->name ?? "N/A"}}</td>
-                            @php $warranty_end = \Carbon\Carbon::parse($asset->purchased_date)->addMonths($asset->warranty);@endphp
-                            <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                {{ $asset->warranty }} Months
-
-                                <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
-                                    Remaining</small>
-                            </td>
-                            <td class="text-center d-none d-xl-table-cell"
-                                data-sort="{{ strtotime($asset->audit_date)}}">
-                                @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
-                                    <span
-                                        class="text-danger">{{\Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
-                                    <br><small>Audit Overdue</small>
-                                @else
-                                    <?php $age = Carbon\Carbon::now()->floatDiffInDays($asset->audit_date);?>
-                                    @switch(true)
-                                        @case($age < 31) 
-                                            <span class="text-warning">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
-                                            <br><small>Audit Due Soon</small>
-                                            @break
-                                        @default
-                                            <span class="text-secondary">{{ \Carbon\Carbon::parse($asset->audit_date)->format('d/m/Y') }}</span>
-                                            <br><small>Audit due in {{floor($age)}} days</small>
-                                    @endswitch
-                                @endif
-                            </td>
-                            <td class="text-right">
-                                <div class="dropdown no-arrow">
-                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                    id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div
-                                        class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                        aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Asset Options:</div>
-                                        <a href="{{ route('assets.show', $asset->id) }}"
-                                        class="dropdown-item">View</a>
-                                        @can('edit', $asset)
-                                            <a href="{{ route('assets.edit', $asset->id) }}" class="dropdown-item">Edit</a>
-                                        @endcan
-                                        @can('delete', $asset)
-                                            <form id="form{{$asset->id}}"
-                                                action="{{ route('assets.destroy', $asset->id) }}" method="POST"
-                                                class="d-block p-0 m-0">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a class="deleteBtn dropdown-item" href="#"
-                                                data-id="{{$asset->id}}">Delete</a>
-                                            </form>
-                                        @endcan
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="card shadow  m-2" style="border-left: 0.25rem solid 666;">
-        <div id="accessories_header" class="card-header">
-            <h6 class="m-0 font-weight-bold pointer d-block w-100" data-toggle="collapse" data-target="#accessories_collapse" aria-expanded="true" aria-controls="accessories_collapse">Accessories</h6>
-        </div>
-        <div id="accessories_collapse" class="collapse" aria-labelledby="accessories_header" data-parent="#statusAccordian">
-            <div class="card-body">
-                <table class="table table-striped logs">
-                    <thead>
-                    <tr>
-                        <th><small>Name</small></th>
-                        <th class="text-center"><small>Manufacturers</small></th>
-                        <th><small>Date</small></th>
-                        <th><small>Cost</small></th>
-                        <th><small>Supplier</small></th>
-                        <th class="text-center"><small>Status</small></th>
-                        <th class="text-center"><small>Warranty</small></th>
-                        <th class="text-right"><small>Options</small></th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th><small>Name</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
-                            <th><small>Purchased Date</small></th>
-                            <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="text-center"><small>Status</small></th>
-                            <th class="text-center"><small>Warranty</small></th>
-                            <th class="text-right"><small>Options</small></th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                    @foreach($location->accessory as $accessory)
-
-                        <tr>
-                            <td>{{$accessory->name}}
-                                <br>
-                                <small>{{$accessory->serial_no}}</small>
-                            </td>
-                            <td class="text-center">{{$accessory->manufacturer->name ?? "N/A"}}</td>
-                            <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
-                            <td>£{{$accessory->purchased_cost}}</td>
-                            <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
-                            <td class="text-center"  style="color: {{$accessory->status->colour}};">
-                                <i class="{{$accessory->status->icon}}"></i> {{ $accessory->status->name }}
-                            </td>
-                            @php $warranty_end = \Carbon\Carbon::parse($accessory->purchased_date)->addMonths($accessory->warranty);@endphp
-                            <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                {{ $accessory->warranty }} Months
-
-                                <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small></td>
-                            <td class="text-right">
-                                <div class="dropdown no-arrow">
-                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                        aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">accessory Options:</div>
-                                        @can('view', $accessory)
-                                        <a href="{{ route('accessories.show', $accessory->id) }}" class="dropdown-item">View</a>
-                                        @endcan
-                                        @can('update', $accessory)
-                                            <a href="{{ route('accessories.edit', $accessory->id) }}" class="dropdown-item">Edit</a>
-                                        @endcan
-                                        @can('delete', $accessory)
-                                            <form id="form{{$accessory->id}}" action="{{ route('accessories.destroy', $accessory->id) }}" method="POST" class="d-block p-0 m-0">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a class="deleteBtn dropdown-item" href="#"
-                                                data-id="{{$accessory->id}}">Delete</a>
-                                            </form>
-                                        @endcan
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="card shadow m-2" style="border-left: 0.25rem solid 666;">
-        <div id="componentHeader" class="card-header">
-            <h6 class="m-0 font-weight-bold pointer d-block w-100" data-toggle="collapse" data-target="#componentCollapse" aria-expanded="true" aria-controls="componentCollapse">Components</h6>
-        </div>
-        <div id="componentCollapse" class="collapse" aria-labelledby="componentHeader" data-parent="#statusAccordian">
-            <div class="card-body">
-                <table class="table table-striped logs">
-                    <thead>
-                    <tr>
-                        <th><small>Name</small></th>
-                        <th class="text-center"><small>Manufacturers</small></th>
-                        <th><small>Purchased Date</small></th>
-                        <th><small>Purchased Cost</small></th>
-                        <th><small>Supplier</small></th>
-                        <th class="text-center"><small>Status</small></th>
-                        <th class="text-center"><small>Warranty</small></th>
-                        <th class="text-right"><small>Options</small></th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                    <tr>
-                        <th><small>Name</small></th>
-                        <th class="text-center"><small>Manufacturers</small></th>
-                        <th><small>Purchased Date</small></th>
-                        <th><small>Purchased Cost</small></th>
-                        <th><small>Supplier</small></th>
-                        <th class="text-center"><small>Status</small></th>
-                        <th class="text-center"><small>Warranty</small></th>
-                        <th class="text-right"><small>Options</small></th>
-                    </tr>
-                    </tfoot>
-                    <tbody>
-                    @foreach($location->component as $component)
-
-                        <tr>
-                            <td>{{$component->name}}
-                                <br>
-                                <small>{{$component->serial_no}}</small>
-                            </td>
-                            <td class="text-center">{{$component->manufacturer->name ?? "N/A"}}</td>
-                            <td>{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
-                            <td>{{$component->purchased_cost}}</td>
-                            <td>{{$component->supplier->name ?? 'N/A'}}</td>
-                            <td class="text-center">{{$component->status->name ??'N/A'}}</td>
-                            @php $warranty_end = \Carbon\Carbon::parse($component->purchased_date)->addMonths($component->warranty);@endphp
-                            <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                {{ $component->warranty }} Months
-
-                                <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
-                            </td>
-                            <td class="text-right">
-                                <div class="dropdown no-arrow">
-                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                        aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Component Options:</div>
-                                        <a href="{{ route('components.show', $component->id) }}" class="dropdown-item">View</a>
-                                        @can('edit', $component)
-                                            <a href="{{ route('components.edit', $component->id) }}" class="dropdown-item">Edit</a>
-                                        @endcan
-                                        @can('delete', $component)
-                                            <form id="form{{$component->id}}" action="{{ route('components.destroy', $component->id) }}" method="POST" class="d-block p-0 m-0">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a class="deleteBtn dropdown-item" href="#"
-                                                data-id="{{$component->id}}">Delete</a>
-                                            </form>
-                                        @endcan
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="card shadow m-2" style="border-left: 0.25rem solid 666;">
-        <div id="consumable_header" class="card-header">
-            <h6 class="m-0 font-weight-bold pointer d-block w-100" data-toggle="collapse" data-target="#consumable_collapse" aria-expanded="true" aria-controls="consumable_collapse">Consumables</h6>
-        </div>
-        <div id="consumable_collapse" class="collapse " aria-labelledby="consumable_header" data-parent="#statusAccordian">
-            <div class="card-body">
-                <table class="table table-striped logs">
-                    <thead>
-                    <tr>
-                        <th><small>Name</small></th>
-                        <th class="text-center"><small>Manufacturers</small></th>
-                        <th><small>Purchased Date</small></th>
-                        <th><small>Purchased Cost</small></th>
-                        <th><small>Supplier</small></th>
-                        <th class="text-center"><small>Status</small></th>
-                        <th class="text-center"><small>Warranty</small></th>
-                        <th class="text-right"><small>Options</small></th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th><small>Name</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
-                            <th><small>Purchased Date</small></th>
-                            <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="text-center"><small>Status</small></th>
-                            <th class="text-center"><small>Warranty</small></th>
-                            <th class="text-right"><small>Options</small></th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                    @foreach($location->consumable as $consumable)
-                        <tr>
-                            <td>{{$consumable->name}}
-                                <br>
-                                <small>{{$consumable->serial_no}}</small>
-                            </td>
-                            <td class="text-center">{{$consumable->manufacturer->name ?? "N/A"}}</td>
-                            <td>{{\Carbon\Carbon::parse($consumable->purchased_date)->format("d/m/Y")}}</td>
-                            <td>£{{$consumable->purchased_cost}}</td>
-                            <td>{{$consumable->supplier->name ?? 'N/A'}}</td>
-                            <td class="text-center">{{$consumable->status->name ??'N/A'}}</td>
-                            @php $warranty_end = \Carbon\Carbon::parse($consumable->purchased_date)->addMonths($consumable->warranty);@endphp
-                            <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                {{ $consumable->warranty }} Months
-
-                                <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
-                            </td>
-                            <td class="text-right">
-                                <div class="dropdown no-arrow">
-                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                        aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Consumable Options:</div>
-                                        @can('view', $consumable)
-                                        <a href="{{ route('consumables.show', $consumable->id) }}" class="dropdown-item">View</a>
-                                        @endcan
-                                        @can('update', $consumable)
-                                            <a href="{{ route('consumables.edit', $consumable->id) }}" class="dropdown-item">Edit</a>
-                                        @endcan
-                                        @can('delete', $consumable)
-                                            <form id="form{{$consumable->id}}" action="{{ route('consumables.destroy', $consumable->id) }}" method="POST" class="d-block p-0 m-0">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a class="deleteBtn dropdown-item" href="#"
-                                                data-id="{{$consumable->id}}">Delete</a>
-                                            </form>
-                                        @endcan
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="card shadow m-2" style="border-left: 0.25rem solid 666;">
-        <div id="consumable_header" class="card-header">
-            <h6 class="m-0 font-weight-bold pointer d-block w-100" data-toggle="collapse" data-target="#miscellaneous_collapse" aria-expanded="true" aria-controls="miscellaneous_collapse">Miscellaneous</h6>
-        </div>
-        <div id="miscellaneous_collapse" class="collapse " aria-labelledby="miscellaneous_header" data-parent="#statusAccordian">
-            <div class="card-body">
-                <table class="table table-striped logs">
-                    <thead>
-                    <tr>
-                        <th><small>Name</small></th>
-                        <th class="text-center"><small>Manufacturer</small></th>
-                        <th><small>Purchased Date</small></th>
-                        <th><small>Purchased Cost</small></th>
-                        <th><small>Supplier</small></th>
-                        <th class="text-center"><small>Status</small></th>
-                        <th class="text-center"><small>Warranty</small></th>
-                        <th class="text-right"><small>Options</small></th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th><small>Name</small></th>
-                            <th class="text-center"><small>Manufacturer</small></th>
-                            <th><small>Purchased Date</small></th>
-                            <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="text-center"><small>Status</small></th>
-                            <th class="text-center"><small>Warranty</small></th>
-                            <th class="text-right"><small>Options</small></th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                    @foreach($location->miscellanea as $miscellanea)
-                        <tr>
-                            <td>{{$miscellanea->name}}
-                                <br>
-                                <small>{{$miscellanea->serial_no}}</small>
-                            </td>
-                            <td class="text-center">{{ $miscellanea->manufacturer->name ?? 'Unallocated'}}</td>
-                            <td>{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
-                            <td>£{{$miscellanea->purchased_cost}}</td>
-                            <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
-                            <td class="text-center">{{$miscellanea->status->name ??'N/A'}}</td>
-                            @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
-                            <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                {{ $miscellanea->warranty }} Months
-
-                                <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small>
-                            </td>
-                            <td class="text-right">
-                                <div class="dropdown no-arrow">
-                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                        aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Consumable Options:</div>
-                                        @can('view', $miscellanea)
-                                        <a href="{{ route('miscellaneous.show', $miscellanea->id) }}" class="dropdown-item">View</a>
-                                        @endcan
-                                        @can('update', $miscellanea)
-                                            <a href="{{ route('miscellaneous.edit', $miscellanea->id) }}" class="dropdown-item">Edit</a>
-                                        @endcan
-                                        @can('delete', $miscellanea)
-                                            <form id="form{{$miscellanea->id}}" action="{{ route('miscellaneous.destroy', $miscellanea->id) }}" method="POST" class="d-block p-0 m-0">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a class="deleteBtn dropdown-item" href="#"
-                                                data-id="{{$miscellanea->id}}">Delete</a>
-                                            </form>
-                                        @endcan
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @section('modals')
@@ -569,5 +148,21 @@
             });
     } );
 </script>
+ <!-- Charting library -->
+ <script src="https://unpkg.com/chart.js@2.9.3/dist/Chart.min.js"></script>
+ <!-- Chartisan -->
+ <script src="https://unpkg.com/@chartisan/chartjs@^2.1.0/dist/chartisan_chartjs.umd.js"></script>
+ <!-- Your application script -->
+ <script>
+    const chart = new Chartisan({
+        el: '#chart',
+        url: "@chart('exp_chart')",
+        // You can also pass the data manually instead of the url:
+        // data: { ... }
+        hooks: new ChartisanHooks()
+            .colors()
+            .datasets('line')
+    })
+ </script>
 
 @endsection

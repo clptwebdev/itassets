@@ -4,6 +4,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
+use ConsoleTVs\Charts\Registrar as Charts;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Charts $charts)
     {
         Paginator::useBootstrap();
         Relation::morphMap([
@@ -34,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
             'assetModel' => 'App\Models\AssetModel',
             'location' => 'App\Models\Location',
             'supplier' => 'App\Models\Supplier',
+        ]);
+
+        $charts->register([
+            \App\Charts\ExpChart::class
         ]);
     }
 }
