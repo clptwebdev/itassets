@@ -121,7 +121,6 @@ class Location extends Model
 
                 if($depreciation < 0) $depreciation = 0;
 
-
                 if(array_key_exists($y, $values)){
                     $values[$y] = $values[$y] + round($depreciation);
                 }else{
