@@ -44,11 +44,7 @@ class AssetObserver
             'log_date'=> Carbon::now(),
             'loggable_type'=> 'asset',
             'loggable_id'=> $asset->id ?? 0,
-<<<<<<< HEAD
             'data'=> auth()->user()->name.' has added a updated asset: '.$name.'. '.$location,
-=======
-            'data'=> auth()->user()->name ?? 'A Un-Authorised'.' has added a new asset: '.$name.'. '.$location,
->>>>>>> b776c015070e13c44fce8b97db9ea976cfd4cf48
         ]);
     }
 
