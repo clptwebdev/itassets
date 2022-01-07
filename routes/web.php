@@ -58,6 +58,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/accessory/archives', 'App\Http\Controllers\ArchiveController@accessories')->name('archives.accessories');
     Route::post('/archive/pdf', 'App\Http\Controllers\ArchiveController@downloadPDF')->name('archives.pdf');
     Route::get('/archive/{archive}/pdf', 'App\Http\Controllers\ArchiveController@downloadShowPDF')->name('archives.showPdf');
+    Route::get('/archive/{archive}/restore', 'App\Http\Controllers\ArchiveController@restoreArchive')->name('archives.restore');
     //Asset Model Routes
     Route::resource('/asset-models', 'App\Http\Controllers\AssetModelController');
     Route::get('/asset-model/pdf', 'App\Http\Controllers\AssetModelController@downloadPDF')->name('asset-model.pdf');

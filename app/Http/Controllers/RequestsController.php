@@ -132,7 +132,7 @@ class RequestsController extends Controller
                 $dep = $model->purchased_cost * ((100 - $percentage) / 100);
             }
 
-            foreach($model->comments as $comment){
+            foreach($model->comment as $comment){
                 $array = [];
                 $array['title'] = $comment->title;
                 $array['comment'] = $comment->comment;
@@ -152,6 +152,7 @@ class RequestsController extends Controller
             ];
 
             $comments[] = $array;
+
 
             $archive = Archive::create([
                 'model_type' => $request->model_type ?? 'unknown',

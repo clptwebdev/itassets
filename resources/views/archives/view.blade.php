@@ -9,13 +9,7 @@
 
 @section('content')
     <x-wrappers.nav :title="$title">
-
-
-    </x-wrappers.nav>
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">{{ $title}}</h1>
-        <div>
-            @can('generatePDF', \App\Models\Archive::class)
+        @can('generatePDF', \App\Models\Archive::class)
                 @if($archives->count() != 0)
                     @if ($archives->count() == 1)
                         <a href="{{ route('archives.showPdf', $archives[0]->id)}}"
@@ -45,8 +39,8 @@
                     </form>
                 @endcan
             @endif
-        </div>
-    </div>
+
+    </x-wrappers.nav>
 
     @if(session('danger_message'))
         <div class="alert alert-danger"> {!!session('danger_message')!!} </div>
@@ -156,6 +150,8 @@
                                             class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenu{{$archive->id}}Link">
                                             <div class="dropdown-header">Archive Options:</div>
+                                            <a href="{{ route('archives.restore', $archive->id) }}"
+                                                class="dropdown-item">Restore</a>
                                             @can('view', $archive)
                                                 <a href="{{ route('archives.show', $archive->id) }}"
                                                    class="dropdown-item">View</a>

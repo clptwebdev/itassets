@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Archive;
+use App\Models\Asset;
+use App\Models\Accessory;
 use App\Models\Location;
+use App\Models\AssetModel;
 
 class ArchiveController extends Controller
 {
@@ -139,6 +142,49 @@ class ArchiveController extends Controller
         return redirect(route('assets.show', $asset->id))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
+    }
+
+    public function restoreArchive(Archive $archive)
+    {
+        if($archive->model_type === 'asset'){
+            $model = new Asset;
+            $asset_model = AssetModel::where('name', '=', $archive->asset_model)->first();
+            $model->asset_model = $asset_model->id ?? 0;
+        }else{
+            $model = new Accessory;
+        }
+
+        $model->name = $archive->name;
+        $model->asset_tag = $archive->asset_tag;
+        $model->serial_no = $archive->serial_no;
+        $model->purchased_date = $archive->purchased_date;
+        $model->purchased_cost = $archive->purchased_cost;
+        $model->donated = 0;
+        $model->status_id = 0;
+        $model->supplier_id = $archive->supplier_id;
+        $model->order_no = $archive->model_no;
+        $model->warranty = $archive->warranty;
+        $model->location_id = $archive->location_id;
+        $model->room = $archive->room;
+        $date = \Carbon\Carbon::parse('01 September');
+        $date->isPast() ? $date->addYear() : $date;
+        $model->audit_date = $date;
+
+        
+
+        if($model->save()){
+            /* Foreach the Comments stored in the JSON Object within the Archive */
+            if($archive->comments != null){
+                $comments = json_decode($archive->comments);
+                foreach($comments as $comment){
+                    $model->comment()->create((array) $comment);
+                }
+            }
+            $model->comment()->create(['title' => 'Archived Asset has been restored', 'comment' => 'The Archived Asset has been restored by '.auth()->user()->name, 'user_id' => auth()->user()->id]);
+            $archive->delete();
+        }
+
+        return back()->with('success_message', $message ?? 'The Asset has been successfully restored. You will now be able to view it in Assets');
     }
 
 }
