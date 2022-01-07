@@ -51,7 +51,7 @@
                             <div class="text-xs font-weight-bold text-lilac text-uppercase mb-1">
                                 Total</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Count: {{ $assets->count() + $accessories->count()}}</small><br>
+                                <small>Count: <span id="total_count" class="countup"></span></small><br>
                                 {{ '£'.round($asset_total + $accessory_total)}}
                                 <small class="text-coral">(£{{ round($asset_depreciation + $accessory_depreciation)}})*</small><br>
                                 <span class="text-xs">*calculated depreciation</span>
@@ -73,7 +73,7 @@
                             <div class="text-xs font-weight-bold text-coral text-uppercase mb-1">
                                 Assets</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: {{ $assets->count()}}</small><br>
+                                <small>Total: <span id="assets_count" class="countup"></span></small><br>
                                 <small>{{ '£'.round($asset_total)}}</small>
                                 <small class="text-coral">(£{{ round($asset_depreciation)}})*</small><br>
                                 <span class="text-xs">*calculated depreciation</span>
@@ -95,7 +95,7 @@
                             <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
                                 Accessories</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: {{ $accessories->count()}}</small><br>
+                                <small>Total: <span id="accessory_count" class="countup"></span></small><br>
                                 {{ '£'.round($accessory_total)}}
                                 <small class="text-coral">(£{{ round($accessory_depreciation)}})*</small><br>
                                 <span class="text-xs">*calculated depreciation</span>
