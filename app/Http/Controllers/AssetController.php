@@ -669,14 +669,8 @@ class AssetController extends Controller {
                     $errorValues[$error['row']] = $array;
 
                 }
-<<<<<<< HEAD
                 
                 return view('assets.dispose-errors', [
-=======
-                return dd($errorValues);
-
-                /* return view('assets.import-errors', [
->>>>>>> b776c015070e13c44fce8b97db9ea976cfd4cf48
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,

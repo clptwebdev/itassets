@@ -1,0 +1,12 @@
+
+#accordionSidebar{
+    display: none;
+}
+
+.col-xl-2{
+    width: 16.6%;
+}
+
+.chart{
+    break-before:always;
+}

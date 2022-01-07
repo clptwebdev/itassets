@@ -4,6 +4,7 @@
 
 @section('css')
 <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
+<link rel="stylesheet" media="print" href="{{asset('css/print.css')}}" />
 @endsection
 
 @section('content')
@@ -73,33 +74,179 @@
     </div>
     {{-- Asset Informationn --}}
 
+    <div class="row p-4">
+        <div class="col-12 text-dark text-xs font-weight-bold text-uppercase">Statistics</div>
     
+        <!-- Requests -->
+        <div class="col-xl-2 col-md-4 mb-4">
+            <div class="card border-left-lilac shadow h-100 pt-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center mb-4">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                                Total Assets</div>
+                            <div class="h5 mb-0 font-weight-bold ">
+                                {{ $location->assets->count() ?? 0}}
+                            </div>
+                            
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-tasks fa-2x d-md-none d-lg-inline-block"></i>
+                        </div>
+                    </div>
+                    <div class="row no-gutter align-items-center">
+                            <button class="btn btn-lilac"><small>View all Assets</small></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-xl-2 col-md-4 mb-4">
+            <div class="card border-left-coral shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                Total Accessories</div>
+                            <div class="h5 mb-0 font-weight-bold">
+                                {{ $location->accessories->count() ?? 0}}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exchange-alt fa-2x d-md-none d-lg-inline-block"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+          <!-- Earnings (Monthly) Card Example -->
+          <div class="col-xl-2 col-md-4 mb-4">
+            <div class="card border-left-blue shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                Components</div>
+                            <div class="h5 mb-0 font-weight-bold ">
+                                {{ $location->components->count() ?? 0}}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-archive fa-2x d-md-none d-lg-inline-block"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+          <!-- Earnings (Monthly) Card Example -->
+          <div class="col-xl-2 col-md-4 mb-4">
+            <div class="card border-left-green shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                Miscellaneous</div>
+                            <div class="h5 mb-0 font-weight-bold ">
+                                {{ $location->miscellanea->count() ?? 0}}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-archive fa-2x d-md-none d-lg-inline-block"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Undeployable -->
+        @if($location->assets->count() != 0)
+        <div class="col-xl-2 col-md-4 mb-4">
+            <div class="card bg-grey shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Undeployable
+                            </div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    @php
+                                        $ud = 0; $total = $location->assets->count();
+                                        foreach($location->assets as $asset){
+                                            if($asset->status_id != 0 && $asset->status->deployable == 0){
+                                                $ud++;
+                                            }
+                                        }
+                                    @endphp
+                                    <div class="h5 mb-0 mr-3 font-weight-bold">{{ $ud}}</div>
+                                </div>
+    
+                                <div class="col">
+                                    <div class="progress progress-sm mr-2">
+                                        <div class="progress-bar bg-coral" role="progressbar" style="width: {{ ($ud/$total) * 100 }}%"
+                                            aria-valuenow="{{ ($ud/$total) * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-skull-crossbones fa-2x d-md-none d-lg-inline-block"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        @php
+            $audits_due = 0; $audits_over = 0;
+        @endphp
+        <!-- Pending Requests Card Example -->
+        @foreach($location->assets as $asset)
+        @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
+            @php($audits_over++)
+        @else
+            @php($age = Carbon\Carbon::now()->floatDiffInDays($asset->audit_date))
+            @if($age < 31)@php($audits_due++)@endif
+        @endif
+        @endforeach
+    
+        <div class="col-xl-2 col-md-4 mb-4">
+            <div class="card bg-coral shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                                Audits</div>
+                            <div class="h5 mb-0 font-weight-bold">
+                                Due Soon: {{$audits_due}}
+                                Overdue: {{ $audits_over }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-tools  fa-2x d-md-none d-lg-inline-block"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
+
     <div class="row mb-4">
         {{-- Expenditure --}}
-        <div class="col-12 col-md-6">
-            <div class="card shadow h-100 p-4">
+        <div class="col-12 col-md-6 mb-3 chart">
+            <div class="card shadow h-100 p-4 chart">
                 <div id="chart" style="height: 500px;"></div>
             </div>
         </div>
         {{-- Depreication Information --}}
 
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 mb-3 chart">
             <div class="card shadow h-100 p-4">
                 <div id="dep_chart" style="height: 500px;"></div>
             </div>
         </div>
     </div>
-
-    <div class="row mb-4">
-        {{-- Depreciation Information --}}
-        <div class="col-12 col-md-6">
-            <div class="card shadow h-100">
-
-            </div>
-        </div>
-        {{-- Audit Information --}}
-    </div>
-
 
 </section>
 
@@ -166,10 +313,10 @@
         // You can also pass the data manually instead of the url:
         // data: { ... }
         hooks: new ChartisanHooks()
-            .datasets('line')
+            .datasets('bar')
             .beginAtZero('false')
             .stepSize(1000, 'x')
-            .colors(['#ECC94B', '#4299E1'])
+            .colors(['#b087bc', '#474775'])
             .title('Asset Expenditure')
     })
 
@@ -179,7 +326,7 @@
         // You can also pass the data manually instead of the url:
         // data: { ... }
         hooks: new ChartisanHooks()
-            .datasets('bar')
+            .datasets([{ type: 'line', fill: false, borderColor: '#b087bc'}])
             .beginAtZero('false')
             .stepSize(1000, 'x')
             .colors(['#F99'])

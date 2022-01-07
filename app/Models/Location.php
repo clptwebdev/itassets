@@ -99,18 +99,23 @@ class Location extends Model
 
     public function depreciations(){
         $values = [];
-        $assets = $this->assets()->select('asset_model', 'donated', 'purchased_cost', 'purchased_date')->get();
+        $assets = $this->assets()
+                        ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+                        ->leftJoin('depreciations', 'depreciations.id', '=', 'asset_models.depreciation_id')
+                        ->select('assets.donated', 'assets.purchased_cost', 'assets.purchased_date', 'depreciations.years')
+                        ->get();
+                
         foreach($assets as $asset){
             foreach (range(\Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year + 3) as $y){
                 $depreciation = 0;
                 $year = \Carbon\Carbon::parse('01-01-'.$y);
-                if($asset->model()->exists() && $asset->model->depreciation()->exists()){
-                    $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                if($asset->years != 0){
+                    $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->years);
                     if($eol->isPast()){
 
                     }else{
                         $age = $year->floatDiffInYears($asset->purchased_date);
-                        $percent = 100 / $asset->model->depreciation->years;
+                        $percent = 100 / $asset->years;
                         $percentage = floor($age)*$percent; 
                         $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
                         $depreciation += $dep;

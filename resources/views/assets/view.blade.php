@@ -37,7 +37,6 @@
                         <x-buttons.submit class="btn-yellow">export</x-buttons.submit>
                     </x-form.layout>
             @endif
-<<<<<<< HEAD
             <div class="dropdown show d-inline">
                 <a class="btn btn-sm btn-lilac dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                  Bulk Options
@@ -49,22 +48,6 @@
                     @endcan
                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkDisposalModal">Dispose</a>
                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkTransferModal">Transfer</a>
-=======
-        @endcan
-        @can('create' , \App\Models\Asset::class)
-                <div class="dropdown show d-inline">
-                    <a class="btn btn-sm btn-grey dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Bulk Options
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                        @can('create', \App\Models\Asset::class)
-                            <a id="import" class="dropdown-item"> Import</a>
-                        @endcan
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkDisposalModal">Dispose</a>
-                        <a class="dropdown-item" href="#">Transfer</a>
-                    </div>
->>>>>>> b776c015070e13c44fce8b97db9ea976cfd4cf48
                 </div>
         @endcan
     </x-wrappers.nav>
@@ -239,152 +222,10 @@
     </section>
 @endsection
 @section('modals')
-<<<<<<< HEAD
-    <!-- Disposal Modal-->
-    <div class="modal fade bd-example-modal-lg" id="requestDisposal" tabindex="-1" role="dialog" aria-labelledby="requestDisposalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <form action="{{ route('request.disposal')}}" method="POST">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="requestDisposalLabel">Request to Dispose of the Asset?
-                        </h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @csrf
-                            <input name="model_type" type="hidden" value="asset">
-                            <input id="dispose_id" name="model_id" type="hidden" value="">
-                            <input type="text" value="" id="asset_name" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="disposal_date">Date of Disposal</label>
-                            <input type="date" value="" id="disposed_date" name="disposed_date" class="form-control" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="notes">Reasons for:</label>
-                            <textarea name="notes" class="form-control" rows="5"></textarea>
-                        </div>
-                        <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-coral" type="submit">Request Disposal</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Transfer Modal-->
-    <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog" aria-labelledby="requestTransferLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <form action="{{ route('request.transfer')}}" method="POST">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="requestTransferLabel">Request to Transfer this Asset to another Location?
-                        </h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @csrf
-                            <input name="model_type" type="hidden" value="asset">
-                            <input id="model_id" name="model_id" type="hidden" value="">
-                            <input id="location_id" name="location_from" type="hidden" value="">
-                            <input id="location_from" type="text" class="form-control" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="disposal_date">Date of Transfer</label>
-                            <input type="date" value="" id="transfer_date" name="transfer_date" class="form-control" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}">
-                        </div>
-                        <div class="form-group">
-                            <label for="School Location">Transfer to:</label><span
-                                class="text-danger">*</span>
-                            <select type="text"
-                                class="form-control mb-3 @if($errors->has('location_id')){{'border-danger'}}@endif"
-                                name="location_to" required>
-                                <option value="0" selected>Please select a Location</option>
-                                @foreach($locations as $location)
-                                <option value="{{$location->id}}" @if(old('location_id') == $location->id){{ 'selected'}}@endif>{{$location->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="notes">Additional Comments:</label>
-                            <textarea name="notes" class="form-control" rows="5"></textarea>
-                        </div>
-                        <small>This will send a request to the administrator. The administrator will then decide to approve or reject the request. You will be notified via email.</small>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-lilac" type="submit">@if(auth()->user()->role_id == 1){{ 'Transfer' }} @else {{ 'Request Transfer' }} @endif</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeAssetModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeassetModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeassetModalLabel">Are you sure you want to send this asset to the
-                        recycle bin?
-                    </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="asset-id" type="hidden" value="">
-                    <p>Select "Send to Bin" to send this asset to the recycle bin from the system.</p>
-                    <small class="text-coral">**This is not permanent and the Asset can be restored. Whilst in the
-                        Recycle Bin, the Asset will not be included in any statistics and data.</small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-coral" type="button" id="confirmBtn">Send to Bin</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{--//import--}}
-    <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
-         aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <form action="/importassets" method="POST" enctype="multipart/form-data">
-                        <div class="modal-body">
-                            <p>Select "import" to add Assets to the system.</p>
-                            <input class="form-control shadow-sm"
-                                type="file" placeholder="Upload here" name="csv" accept=".csv" id="importEmpty" required>
-                        </div>
-                        <div class="modal-footer">
-                            @if(session('import-error'))
-                                <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
-                            @endif
-                            <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/Eb2RbyCNk_hOuTfMOufGpMsBl0yUs1ZpeCjkCm6YnLfN9Q?e=4t5BVO"
-                            target="_blank" class="btn btn-blue">
-                                Download Import Template
-                            </a>
-                            <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-=======
     <x-modals.dispose />
     <x-modals.transfer :models="$locations" />
     <x-modals.delete />
     <x-modals.import />
->>>>>>> b776c015070e13c44fce8b97db9ea976cfd4cf48
 
     {{-- This is the Modal for Bulk Disposal {SC} --}}
     <div class="modal fade bd-example-modal-lg" id="bulkDisposalModal" tabindex="-1" role="dialog"
