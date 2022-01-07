@@ -158,8 +158,7 @@ class RequestsController extends Controller {
                 $percentage = floor($age) * $percent;
                 $dep = $model->purchased_cost * ((100 - $percentage) / 100);
             }
-
-            foreach($model->comments as $comment)
+            foreach($model->comment as $comment)
             {
                 $array = [];
                 $array['title'] = $comment->title;

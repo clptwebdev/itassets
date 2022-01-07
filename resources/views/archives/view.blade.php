@@ -121,7 +121,8 @@
                                 </td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
-
+                                        <a href="{{ route('archives.restore', $archive->id) }}"
+                                           class="dropdown-item">Restore</a>
                                         <x-buttons.dropdown-item :route="route('archives.show', $archive->id)">
                                             View
                                         </x-buttons.dropdown-item>
@@ -133,32 +134,6 @@
                                             </x-buttons.dropdown-item>
                                         </x-form.layout>
                                     </x-wrappers.table-settings>
-                                    {{--                                    <div class="dropdown no-arrow">--}}
-                                    {{--                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"--}}
-                                    {{--                                           id="dropdownMenu{{$archive->id}}Link"--}}
-                                    {{--                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-                                    {{--                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>--}}
-                                    {{--                                        </a>--}}
-                                    {{--                                        <div--}}
-                                    {{--                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"--}}
-                                    {{--                                            aria-labelledby="dropdownMenu{{$archive->id}}Link">--}}
-                                    {{--                                            <div class="dropdown-header">Archive Options:</div>--}}
-                                    {{--                                            @can('view', $archive)--}}
-                                    {{--                                                <a href="{{ route('archives.show', $archive->id) }}"--}}
-                                    {{--                                                   class="dropdown-item">View</a>--}}
-                                    {{--                                            @endcan--}}
-                                    {{--                                            @can('delete', $archive)--}}
-                                    {{--                                                <form id="form{{$archive->id}}"--}}
-                                    {{--                                                      action="{{ route('archives.destroy', $archive->id) }}"--}}
-                                    {{--                                                      method="POST" class="d-block p-0 m-0">--}}
-                                    {{--                                                    @csrf--}}
-                                    {{--                                                    @method('DELETE')--}}
-                                    {{--                                                    <a class="deleteBtn dropdown-item" href="#"--}}
-                                    {{--                                                       data-id="{{$archive->id}}">Delete</a>--}}
-                                    {{--                                                </form>--}}
-                                    {{--                                            @endcan--}}
-                                    {{--                                        </div>--}}
-                                    {{--                                    </div>--}}
                                 </td>
                             </tr>
                         @endforeach
