@@ -4,8 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateArchivedTable extends Migration
-{
+class CreateArchivedTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -13,9 +13,10 @@ class CreateArchivedTable extends Migration
      */
     public function up()
     {
-        Schema::create('archives', function (Blueprint $table) {
+        Schema::create('archives', function(Blueprint $table) {
             $table->id();
             $table->string("asset_model");
+            $table->string("model_type");
             $table->text('name');
             $table->string("asset_tag")->nullable();
             $table->string("serial_no")->nullable();
@@ -33,7 +34,7 @@ class CreateArchivedTable extends Migration
             $table->foreignId("super_id");
             $table->text('comments')->nullable();
             $table->text('logs')->nullable();
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->timestamp('date');
             $table->timestamps();
         });
@@ -48,4 +49,5 @@ class CreateArchivedTable extends Migration
     {
         Schema::dropIfExists('archive');
     }
+
 }
