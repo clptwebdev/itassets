@@ -1,4 +1,4 @@
-@props(['models'=>null , 'model'])
+@props(['models'=>null , 'model' ,'tag'=>null])
 <!-- Transfer Modal-->
 <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog"
      aria-labelledby="requestTransferLabel" aria-hidden="true">
@@ -15,6 +15,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
+                        <label for="disposal_date">Asset Tag</label>
+                        <input type="text" value="{{$tag}}" id="asset_tag" name="asset_tag"
+                               class="form-control">
+                        <small class="text-warning">Enter a new Asset Tag if required</small>
+                    </div>
+                    <div class="form-group">
                         @csrf
                         <input name="model_type" type="hidden" value="{{$model}}">
                         <input id="model_id" name="model_id" type="hidden" value="">
@@ -24,7 +30,8 @@
                     </div>
                     <div class="form-group">
                         <label for="disposal_date">Date of Transfer</label>
-                        <input type="date" value="" id="transfer_date" name="transfer_date" class="form-control">
+                        <input type="date" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" id="transfer_date"
+                               name="transfer_date" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="School Location">Transfer to:</label><span
@@ -39,6 +46,7 @@
                             @endforeach
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="notes">Additional Comments:</label>
                         <textarea name="notes" class="form-control" rows="5"></textarea>

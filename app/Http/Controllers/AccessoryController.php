@@ -38,7 +38,7 @@ class AccessoryController extends Controller {
 
         if(auth()->user()->role_id == 1)
         {
-            $accessories = Accessory::with('supplier', 'location','manufacturer')
+            $accessories = Accessory::with('supplier', 'location', 'manufacturer')
                 ->leftJoin('locations', 'locations.id', '=', 'accessories.location_id')
                 ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
@@ -72,29 +72,37 @@ class AccessoryController extends Controller {
 
     public function filter(Request $request)
     {
-        if($request->isMethod('post')){
+        if($request->isMethod('post'))
+        {
 
-            if(! empty($request->search)){
+            if(! empty($request->search))
+            {
                 session(['search' => $request->search]);
-            }else{
+            } else
+            {
                 $this->clearFilter();
             }
 
-            if(! empty($request->limit)){
+            if(! empty($request->limit))
+            {
                 session(['limit' => $request->limit]);
             }
 
-            if(! empty($request->orderby)){
+            if(! empty($request->orderby))
+            {
                 $array = explode(' ', $request->orderby);
-                if($array[0] != 'audit_date'){
+                if($array[0] != 'audit_date')
+                {
                     session(['orderby' => $array[0]]);
-                }else{
+                } else
+                {
                     session(['orderby' => purchased_date]);
                 }
                 session(['direction' => $array[1]]);
             }
 
-            if(! empty($request->locations)){
+            if(! empty($request->locations))
+            {
                 session(['locations' => $request->locations]);
             }
 
@@ -127,40 +135,47 @@ class AccessoryController extends Controller {
             session(['amount' => $request->amount]);
         }
 
-        if(auth()->user()->role_id != 1){
+        if(auth()->user()->role_id != 1)
+        {
             $locations = auth()->user()->locations->pluck('id');
             $locs = auth()->user()->locations;
 
-        }else{
+        } else
+        {
             $locations = \App\Models\Location::all()->pluck('id');
             $locs = \App\Models\Location::all();
         }
 
-
         $filter = 0;
         $accessories = Accessory::locationFilter($locations);
-        if(session()->has('locations')) {
+        if(session()->has('locations'))
+        {
             $accessories->locationFilter(session('locations'));
             $filter++;
         }
-        if(session()->has('status')) {
+        if(session()->has('status'))
+        {
             $accessories->statusFilter(session('status'));
             $filter++;
         }
-        if(session()->has('category')) {
+        if(session()->has('category'))
+        {
             $accessories->categoryFilter(session('category'));
             $filter++;
         }
-        if(session()->has('start') && session()->has('end')){
+        if(session()->has('start') && session()->has('end'))
+        {
             $accessories->purchaseFilter(session('start'), session('end'));
             $filter++;
         }
-        if(session()->has('amount')){
+        if(session()->has('amount'))
+        {
             $accessories->costFilter(session('amount'));
             $filter++;
         }
 
-        if(session()->has('search')){
+        if(session()->has('search'))
+        {
             $accessories->searchFilter(session('search'));
             $filter++;
         }
@@ -169,7 +184,7 @@ class AccessoryController extends Controller {
             ->leftJoin('manufacturers', 'manufacturers.id', '=', 'accessories.manufacturer_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'accessories.supplier_id')
             ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-            ->select('accessories.*','locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
+            ->select('accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
         $limit = session('limit') ?? 25;
 
         return view('accessory.view', [
@@ -177,7 +192,7 @@ class AccessoryController extends Controller {
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),
-            "locations"=> $locs,
+            "locations" => $locs,
             "filter" => $filter,
         ]);
     }
@@ -343,6 +358,7 @@ class AccessoryController extends Controller {
 
         return view('accessory.show', [
             "accessory" => $accessory,
+            'locations' => Location::all(),
         ]);
     }
 
@@ -428,7 +444,7 @@ class AccessoryController extends Controller {
         {
             return redirect(route('errors.forbidden', ['area', 'Accessory', 'export']));
         }
-$accessory = Accessory::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $accessory = Accessory::locationFilter(auth()->user()->locations->pluck('id'))->get();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport($accessory), "/public/csv/accessories-ex-{$date}.csv");
         $url = asset("storage/csv/accessories-ex-{$date}.csv");

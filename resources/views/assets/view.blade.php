@@ -235,7 +235,7 @@
 @endsection
 @section('modals')
     <x-modals.dispose model="asset"/>
-    <x-modals.transfer :models="$locations" model="asset"/>
+    <x-modals.transfer :models="$locations" model="asset" :tag="$asset->asset_tag"/>
     <x-modals.delete/>
     <x-modals.import/>
 

@@ -9,57 +9,31 @@
 
 @section('content')
     <x-wrappers.nav :title="$title">
-
-
-    </x-wrappers.nav>
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">{{ $title}}</h1>
-        <div>
-            @can('generatePDF', \App\Models\Archive::class)
-                @if($archives->count() != 0)
-                    @if ($archives->count() == 1)
-                        <a href="{{ route('archives.showPdf', $archives[0]->id)}}"
-                           class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                                class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</a>
-                    @else
-                        <form class="d-inline-block" action="{{ route('archives.pdf')}}" method="POST">
-                            @csrf
-                            <input type="hidden" value="{{ json_encode($archives->pluck('id'))}}" name="assets"/>
-                            <button type="submit"
-                                    class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
-                                    class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report
-                            </button>
-                        </form>
-                    @endif
+        @can('generatePDF', \App\Models\Archive::class)
+            @if($archives->count() != 0)
+                @if ($archives->count() == 1)
+                    <x-buttons.reports :route="route('archives.showPdf', $archives[0]->id)"/>
+                @else
+                    <x-form.layout class="d-inline-block" :action="route('archives.pdf')">
+                        <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
+                                      :value="json_encode($archives->pluck('id'))"/>
+                        <x-buttons.submit>Generate Report</x-buttons.submit>
+                    </x-form.layout>
                 @endif
-            @endcan
-            @if($archives->count() > 1)
-                @can('generatePDF', \App\Models\Archive::class)
-                    <form class="d-inline-block" action="/exportassets" method="POST">
-                        @csrf
-                        <input type="hidden" value="{{ json_encode($archives->pluck('id'))}}" name="assets"/>
-                        <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading">
-                            <i
-                                class="fas fa-download fa-sm text-dark-50"></i> Export
-                        </button>
-                    </form>
-                @endcan
             @endif
-        </div>
-    </div>
-
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!!session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
-
+            @if($archives->count() > 1)
+                <x-form.layout class="d-inline-block" action="/exportassets">
+                    <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
+                                  :value="json_encode($archives->pluck('id'))"/>
+                    <x-buttons.submit class="btn-yellow">export</x-buttons.submit>
+                </x-form.layout>
+            @endcan
+        @endcan
+    </x-wrappers.nav>
+    <x-handlers.alerts/>
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
-
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
@@ -146,6 +120,22 @@
                                     <small>{{ \Carbon\Carbon::parse($archive->updated_at)->format("d/m/Y") }}</small>
                                 </td>
                                 <td class="text-right">
+                                    <x-wrappers.table-settings>
+                                        @can('view', $asset)
+                                            <x-buttons.dropdown-item :route="route('assets.show', $asset->id)">
+                                                View
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('delete', $asset)
+                                            <x-form.layout method="DELETE" class="d-block p-0 m-0"
+                                                           :id="'form'.$asset->id"
+                                                           :action="route('assets.destroy', $asset->id)">
+                                                <x-buttons.dropdown-item :data="$asset->id" class="deleteBtn">
+                                                    Delete
+                                                </x-buttons.dropdown-item>
+                                            </x-form.layout>
+                                        @endcan
+                                    </x-wrappers.table-settings>
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
                                            id="dropdownMenu{{$archive->id}}Link"
