@@ -235,11 +235,11 @@
 @endsection
 @section('modals')
 
-    <x-modals.dispose />
+    <x-modals.dispose model="asset" />
     <x-modals.transfer :models="$locations" />
     <x-modals.delete />
     <x-modals.import />
-    
+
     {{-- This is the Modal for Bulk Disposal {SC} --}}
     <div class="modal fade bd-example-modal-lg" id="bulkDisposalModal" tabindex="-1" role="dialog"
          aria-labelledby="bulkDisposalModalLabel" aria-hidden="true">
