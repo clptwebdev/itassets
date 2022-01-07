@@ -164,12 +164,12 @@
                                                     Transfer
                                                 </x-buttons.dropdown-item>
                                             @endcan
-                                            {{--                                                @can('dispose', $accessory)--}}
-                                            <x-buttons.dropdown-item class="disposeBtn"
-                                                                     formRequirements="data-model-id='{{$accessory->id}}' data-model-name='{{$accessory->name ?? 'No name' }}'">
-                                                Dispose
-                                            </x-buttons.dropdown-item>
-                                            {{--                                                @endcan--}}
+                                            @can('dispose', $accessory)
+                                                <x-buttons.dropdown-item class="disposeBtn"
+                                                                         formRequirements="data-model-id='{{$accessory->id}}' data-model-name='{{$accessory->name ?? 'No name' }}'">
+                                                    Dispose
+                                                </x-buttons.dropdown-item>
+                                            @endcan
                                             @can('delete', $accessory)
                                                 <x-form.layout method="DELETE" class="d-block p-0 m-0"
                                                                :id="'form'.$accessory->id"

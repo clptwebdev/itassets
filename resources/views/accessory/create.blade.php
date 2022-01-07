@@ -13,7 +13,7 @@
             <x-buttons.submit>Save</x-buttons.submit>
         </x-wrappers.nav>
         <section>
-            <p class="mb-4">Adding a new Accessory to the Apollo Asset Management System. Enter in the following
+            <p class="mb-4">Adding a new Accessory to the Apollo Asset Management System. Enter the following
                 required information and click the 'Save' button. Or click the 'Back' button
                 to return the accessories page.
             </p>
