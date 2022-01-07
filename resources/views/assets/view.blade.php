@@ -37,21 +37,20 @@
                     <x-buttons.submit class="btn-yellow">export</x-buttons.submit>
                 </x-form.layout>
             @endif
-        @endcan
-        <div class="dropdown show d-inline">
-            <a class="btn btn-sm btn-lilac dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Bulk Options
-            </a>
+            <div class="dropdown show d-inline">
+                <a class="btn btn-sm btn-lilac dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Bulk Options
+                </a>
 
-            <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                @can('create', \App\Models\Asset::class)
-                    <a id="import" class="dropdown-item"> Import</a>
-                @endcan
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkDisposalModal">Dispose</a>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkTransferModal">Transfer</a>
+                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
+                    @can('create', \App\Models\Asset::class)
+                        <a id="import" class="dropdown-item"> Import</a>
+                    @endcan
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkDisposalModal">Dispose</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkTransferModal">Transfer</a>
+                </div>
             </div>
-        </div>
         @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
