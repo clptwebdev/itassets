@@ -234,11 +234,11 @@
     </section>
 @endsection
 @section('modals')
+    <x-modals.dispose model="asset"/>
+    <x-modals.transfer :models="$locations" model="asset"/>
+    <x-modals.delete/>
+    <x-modals.import/>
 
-    <x-modals.dispose model="asset" />
-    <x-modals.transfer :models="$locations" />
-    <x-modals.delete />
-    <x-modals.import />
 
     {{-- This is the Modal for Bulk Disposal {SC} --}}
     <div class="modal fade bd-example-modal-lg" id="bulkDisposalModal" tabindex="-1" role="dialog"
@@ -309,7 +309,7 @@
         </div>
     </div>
 
-    
+
 
 @endsection
 

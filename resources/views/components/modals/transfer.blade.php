@@ -1,4 +1,4 @@
-@props(['models'=>null])
+@props(['models'=>null , 'model'])
 <!-- Transfer Modal-->
 <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog"
      aria-labelledby="requestTransferLabel" aria-hidden="true">
@@ -16,7 +16,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @csrf
-                        <input name="model_type" type="hidden" value="accessory">
+                        <input name="model_type" type="hidden" value="{{$model}}">
                         <input id="model_id" name="model_id" type="hidden" value="">
                         <input id="location_id" name="location_from" type="hidden" value="">
                         <input id="location_from" type="text" class="form-control"
