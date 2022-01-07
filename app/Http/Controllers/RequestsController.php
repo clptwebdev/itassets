@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 
 class RequestsController extends Controller
 {
+    
     public function index(){
 
         //Returns the View for the list of requests
@@ -131,6 +132,27 @@ class RequestsController extends Controller
                 $dep = $model->purchased_cost * ((100 - $percentage) / 100);
             }
 
+            foreach($model->comments as $comment){
+                $array = [];
+                $array['title'] = $comment->title;
+                $array['comment'] = $comment->comment;
+                $array['user_id'] = $comment->user_id;
+                $array['created_at'] = $comment->created_at;
+                $array['updated_at'] = $comment->updated_at;
+
+                $comments[] = $array;
+            }
+
+            $array = [
+                'title' => 'The Asset has been Archived!', 
+                'comment' => "The Asset has been disposed of by ".auth()->user()->name." for the following reasons: {$request->notes}",
+                'user_id' => auth()->user()->id,
+                'created_at' => \Carbon\Carbon::now()->format('Y-m-d h:i:s'),
+                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d h:i:s')
+            ];
+
+            $comments[] = $array;
+
             $archive = Archive::create([
                 'model_type' => $request->model_type ?? 'unknown',
                 'name' => $model->name ?? 'No Name',
@@ -153,6 +175,7 @@ class RequestsController extends Controller
                 'super_id' => auth()->user()->id,
                 'date' => $requests->date,
                 'notes' => $requests->notes,
+                'comments' => json_encode($comments),
             ]);
             $model->forceDelete();
             $requests->update(['status' => 1, 'super_id'  => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);

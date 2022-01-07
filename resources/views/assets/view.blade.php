@@ -239,6 +239,7 @@
     <x-modals.delete/>
     <x-modals.import/>
 
+
     {{-- This is the Modal for Bulk Disposal {SC} --}}
     <div class="modal fade bd-example-modal-lg" id="bulkDisposalModal" tabindex="-1" role="dialog"
          aria-labelledby="bulkDisposalModalLabel" aria-hidden="true">
@@ -273,6 +274,7 @@
             </div>
         </div>
     </div>
+
     {{-- This is the Modal for Bulk Transfers {SC} --}}
     <div class="modal fade bd-example-modal-lg" id="bulkTransferModal" tabindex="-1" role="dialog"
          aria-labelledby="bulkTransferModalLabel" aria-hidden="true">
