@@ -5,8 +5,8 @@ namespace Database\Factories;
 use App\Models\Photo;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PhotoFactory extends Factory
-{
+class PhotoFactory extends Factory {
+
     /**
      * The name of the factory's corresponding model.
      *
@@ -22,8 +22,9 @@ class PhotoFactory extends Factory
     public function definition()
     {
         return [
-            "name"=>$this->faker->unique()->word,
-            "path"=>$this->faker->unique()->imageUrl()
+            "name" => $this->faker->word,
+            "path" => $this->faker->unique()->url,
         ];
     }
+
 }

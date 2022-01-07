@@ -69,7 +69,7 @@
             different options and locations can created, updated, and deleted.</p>
 
         <!-- DataTales Example -->
-        <x-filters.navigation model="Accessory" :filter=$filter />
+        <x-filters.navigation model="Accessory" :filter=$filter/>
             <x-filters.filter model="Accessory" relations="accessories" :filter=$filter :locations=$locations
                               :statuses=$statuses :categories="$categories"/>
 
@@ -147,28 +147,34 @@
                                     <td class="text-right">
                                         <x-wrappers.table-settings>
                                             @can('view', $accessory)
-                                                <x-buttons.dropdown-item :route="route('accessories.show', $accessory->id)">
+                                                <x-buttons.dropdown-item
+                                                    :route="route('accessories.show', $accessory->id)">
                                                     View
                                                 </x-buttons.dropdown-item>
                                             @endcan
                                             @can('update', $accessory)
-                                                <x-buttons.dropdown-item :route=" route('accessories.edit', $accessory->id)">
+                                                <x-buttons.dropdown-item
+                                                    :route=" route('accessories.edit', $accessory->id)">
                                                     Edit
                                                 </x-buttons.dropdown-item>
                                             @endcan
-                                                @can('transfer', $accessory)
-                                                    <x-buttons.dropdown-item class="transferBtn" formRequirements="data-model-id='{{$accessory->id}}' data-location-from='{{$accessory->location->name ?? 'Unallocated' }}' data-location-id='{{ $accessory->location_id }}'">
-                                                        Transfer
-                                                    </x-buttons.dropdown-item>
-                                                @endcan
-                                                @can('dispose', $accessory)
-                                                    <x-buttons.dropdown-item class="disposeBtn" formRequirements="data-model-id='{{$accessory->id}}' data-model-name='{{$accessory->name ?? 'No name' }}'">
-                                                        Dispose
-                                                    </x-buttons.dropdown-item>
-                                                @endcan
+                                            @can('transfer', $accessory)
+                                                <x-buttons.dropdown-item class="transferBtn"
+                                                                         formRequirements="data-model-id='{{$accessory->id}}' data-location-from='{{$accessory->location->name ?? 'Unallocated' }}' data-location-id='{{ $accessory->location_id }}'">
+                                                    Transfer
+                                                </x-buttons.dropdown-item>
+                                            @endcan
+                                            @can('dispose', $accessory)
+                                                <x-buttons.dropdown-item class="disposeBtn"
+                                                                         formRequirements="data-model-id='{{$accessory->id}}' data-model-name='{{$accessory->name ?? 'No name' }}'">
+                                                    Dispose
+                                                </x-buttons.dropdown-item>
+                                            @endcan
                                             @can('delete', $accessory)
-                                                <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$accessory->id" :action="route('accessories.destroy', $accessory->id)">
-                                                    <x-buttons.dropdown-item :data="$accessory->id" class="deleteBtn" >
+                                                <x-form.layout method="DELETE" class="d-block p-0 m-0"
+                                                               :id="'form'.$accessory->id"
+                                                               :action="route('accessories.destroy', $accessory->id)">
+                                                    <x-buttons.dropdown-item :data="$accessory->id" class="deleteBtn">
                                                         Delete
                                                     </x-buttons.dropdown-item>
                                                 </x-form.layout>
@@ -196,21 +202,21 @@
 @endsection
 
 @section('modals')
-        <x-modals.delete />
-        <x-modals.transfer :models="$locations"/>
-        <x-modals.dispose />
-        <x-modals.import route="/importacessories"/>
+    <x-modals.delete/>
+    <x-modals.transfer :models="$locations"/>
+    <x-modals.dispose model="accessory"/>
+    <x-modals.import route="/importacessories"/>
 @endsection
 
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
             integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script  src="{{asset('js/delete.js')}}"></script>
-    <script  src="{{asset('js/import.js')}}"></script>
-    <script  src="{{asset('js/transfer.js')}}"></script>
-    <script  src="{{asset('js/dispose.js')}}"></script>
-    <script  src="{{asset('js/filter.js')}}"></script>
+    <script src="{{asset('js/delete.js')}}"></script>
+    <script src="{{asset('js/import.js')}}"></script>
+    <script src="{{asset('js/transfer.js')}}"></script>
+    <script src="{{asset('js/dispose.js')}}"></script>
+    <script src="{{asset('js/filter.js')}}"></script>
     <script>
         $(function () {
             $("#slider-range").slider({

@@ -24,21 +24,21 @@ class DatabaseSeeder extends Seeder {
      */
     public function run()
     {
-        \App\Models\User::factory(20)->create();
-        \App\Models\Asset::factory(20)->create();
-        \App\Models\Supplier::factory(20)->create();
-        \App\Models\Location::factory(20)->create();
-        \App\Models\Manufacturer::factory(20)->create();
-        \App\Models\AssetModel::factory(20)->create();
-        \App\Models\Field::factory(20)->create();
-        \App\Models\Fieldset::factory(20)->create();
-        \App\Models\Component::factory(20)->create();
-        \App\Models\Accessory::factory(20)->create();
-        \App\Models\Status::factory(20)->create();
-        \App\Models\Comment::factory(20)->create();
-        \App\Models\Consumable::factory(20)->create();
-        \App\Models\Miscellanea::factory(20)->create();
-        for($i = 0; $i < 20; $i++)
+        \App\Models\User::factory(5)->create();
+        \App\Models\Asset::factory(5)->create();
+        \App\Models\Supplier::factory(5)->create();
+        \App\Models\Location::factory(5)->create();
+        \App\Models\Manufacturer::factory(5)->create();
+        \App\Models\AssetModel::factory(5)->create();
+        \App\Models\Field::factory(5)->create();
+        \App\Models\Fieldset::factory(5)->create();
+        \App\Models\Component::factory(5)->create();
+        \App\Models\Accessory::factory(5)->create();
+        \App\Models\Status::factory(5)->create();
+        \App\Models\Comment::factory(5)->create();
+        \App\Models\Consumable::factory(5)->create();
+        \App\Models\Miscellanea::factory(5)->create();
+        for($i = 0; $i < 5; $i++)
         {
             DB::table('field_fieldset')->insert(
                 [
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder {
                 ]
             );
         }
-        for($i = 0; $i < 20; $i++)
+        for($i = 0; $i < 5; $i++)
         {
             DB::table('location_user')->insert(
                 [
@@ -56,20 +56,18 @@ class DatabaseSeeder extends Seeder {
                 ]
             );
         }
-        $array =['asset', 'App\Models\Consumable', 'App\Models\accessory', 'App\Models\component'];
-        for($i = 0; $i < 20; $i++)
+        $array = ['asset', 'App\Models\Consumable', 'App\Models\accessory', 'App\Models\component'];
+        for($i = 0; $i < 5; $i++)
         {
 
             DB::table('commentables')->insert(
                 [
                     'comment_id' => Comment::select('id')->orderByRaw("RAND()")->first()->id,
-                    'commentables_type' =>$array[array_rand($array)],
-                    'commentables_id' => rand(1,20),
+                    'commentables_type' => $array[array_rand($array)],
+                    'commentables_id' => rand(1, 5),
                 ]
             );
         }
-
-
 
 
     }

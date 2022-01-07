@@ -5,8 +5,8 @@ namespace Database\Factories;
 use App\Models\Manufacturer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ManufacturerFactory extends Factory
-{
+class ManufacturerFactory extends Factory {
+
     /**
      * The name of the factory's corresponding model.
      *
@@ -22,11 +22,12 @@ class ManufacturerFactory extends Factory
     public function definition()
     {
         return [
-            "name"=>$this->faker->unique()->company,
-            "supportUrl"=>$this->faker->url,
-            "supportPhone"=>$this->faker->unique()->phoneNumber,
-            "supportEmail"=>$this->faker->unique()->safeEmail,
-            "photoId"=>$this->faker->unique()->imageUrl()
+            "name" => $this->faker->unique->name,
+            "supportUrl" => $this->faker->url,
+            "supportPhone" => $this->faker->unique()->phoneNumber,
+            "supportEmail" => $this->faker->unique()->safeEmail,
+            "photoId" => $this->faker->unique()->imageUrl(),
         ];
     }
+
 }
