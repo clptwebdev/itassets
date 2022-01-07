@@ -203,7 +203,7 @@
 
 @section('modals')
     <x-modals.delete/>
-    <x-modals.transfer :models="$locations"/>
+    <x-modals.transfer :models="$locations" model="accessory"/>
     <x-modals.dispose model="accessory"/>
     <x-modals.import route="/importacessories"/>
 @endsection
