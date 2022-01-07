@@ -114,16 +114,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.208.9",
+            "version": "3.208.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "acc9e8f88f568e03e00c2a57c27b550740e6c493"
+                "reference": "a7802ac9289e0c4de2c76cfe0ea0f11f72955754"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/acc9e8f88f568e03e00c2a57c27b550740e6c493",
-                "reference": "acc9e8f88f568e03e00c2a57c27b550740e6c493",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a7802ac9289e0c4de2c76cfe0ea0f11f72955754",
+                "reference": "a7802ac9289e0c4de2c76cfe0ea0f11f72955754",
                 "shasum": ""
             },
             "require": {
@@ -199,9 +199,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.208.9"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.208.10"
             },
-            "time": "2022-01-04T19:15:39+00:00"
+            "time": "2022-01-05T19:19:54+00:00"
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -746,16 +746,16 @@
         },
         {
             "name": "dragonmantank/cron-expression",
-            "version": "v3.2.2",
+            "version": "v3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dragonmantank/cron-expression.git",
-                "reference": "c9e208317b0cf679097cf976ffbb0b0eec81d4df"
+                "reference": "47c53bbb260d3c398fba9bfa9683dcf67add2579"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/c9e208317b0cf679097cf976ffbb0b0eec81d4df",
-                "reference": "c9e208317b0cf679097cf976ffbb0b0eec81d4df",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/47c53bbb260d3c398fba9bfa9683dcf67add2579",
+                "reference": "47c53bbb260d3c398fba9bfa9683dcf67add2579",
                 "shasum": ""
             },
             "require": {
@@ -795,7 +795,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dragonmantank/cron-expression/issues",
-                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.2.2"
+                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.2.3"
             },
             "funding": [
                 {
@@ -803,7 +803,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-05T06:05:42+00:00"
+            "time": "2022-01-06T05:35:07+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -1519,16 +1519,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.78.0",
+            "version": "v8.78.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "3b0e46985c65e06bfe3fafd2a28ab122667b20f4"
+                "reference": "16359b5ebafba6579b397d7505b082a6d1bb2e31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/3b0e46985c65e06bfe3fafd2a28ab122667b20f4",
-                "reference": "3b0e46985c65e06bfe3fafd2a28ab122667b20f4",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/16359b5ebafba6579b397d7505b082a6d1bb2e31",
+                "reference": "16359b5ebafba6579b397d7505b082a6d1bb2e31",
                 "shasum": ""
             },
             "require": {
@@ -1687,7 +1687,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-01-04T16:23:21+00:00"
+            "time": "2022-01-05T14:52:50+00:00"
         },
         {
             "name": "laravel/horizon",
@@ -8068,6 +8068,9 @@
             "require": {
                 "php": "^7.1 || ^8.0"
             },
+            "replace": {
+                "myclabs/deep-copy": "self.version"
+            },
             "require-dev": {
                 "doctrine/collections": "^1.0",
                 "doctrine/common": "^2.6",
@@ -9977,5 +9980,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.1.0"
 }

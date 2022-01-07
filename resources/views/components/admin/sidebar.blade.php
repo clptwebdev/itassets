@@ -17,8 +17,11 @@
             <i class="fas fa-fw fa-tachometer-alt sidebar-icon"></i>
             <span class="sidebar-title">Dashboard</span></a>
     </li>
+    
     <!-- Divider -->
+    
     <hr class="sidebar-divider">
+    @if(auth()->user()->role_id != 0)
     <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('assets.index')}}" data-toggle="collapse"
            data-target="#collapseTwo" aria-expanded="true"
@@ -217,12 +220,12 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
-
+   
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
-
+    @endif
 </ul>
 
 <!-- End of Sidebar -->

@@ -9,14 +9,13 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 use App\Models\Location;
 
-class AlertRequest extends Mailable
+class DisposeRequest extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $user;
+    public $admin;
     public $requests_model;
-    public $requests_from;
-    public $requests_to;
     public $requests_date;
     public $requests_type;
     public $requests_comment;
@@ -26,14 +25,13 @@ class AlertRequest extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, $requests_type, $requests_id, $requests_from, $requests_to, $requests_date, $requests_comment)
+    public function __construct(User $user, User $admin, $requests_type, $requests_id, $requests_date, $requests_comment)
     {
         $this->user = $user;
+        $this->admin = $admin;
         $this->requests_type = $requests_type;
         $m = "\\App\\Models\\".ucfirst($requests_type);
         $this->requests_model = $m::find($requests_id);
-        $this->requests_from = Location::find($requests_from);
-        $this->requests_to = Location::find($requests_to);
         $this->requests_date = $requests_date;
         $this->requests_comment = $requests_comment;
     }
@@ -45,6 +43,6 @@ class AlertRequest extends Mailable
      */
     public function build()
     {
-        return $this->view('admin.user.alert-request');
+        return $this->view('admin.user.dispose-request');
     }
 }

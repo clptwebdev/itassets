@@ -20,11 +20,9 @@
         <x-admin.asset-info :transfers=$transfers :archived=$archived :assets=$assets :accessories=$accessories
                             :components=$components :consumables=$consumables :miscellaneous=$miscellaneous
                             :requests=$requests/>
-            <x-categories_status_info :statuses="$statuses" :category="$category"/>
-            @else
-                @if(auth()->user())
-                    <x-admin.request-access/>
-    @endif
+        <x-categories_status_info :statuses="$statuses" :category="$category"/>
+    @else
+        <x-admin.request-access/>
     @endif
 
 @endsection
