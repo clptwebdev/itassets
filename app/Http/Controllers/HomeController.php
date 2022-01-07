@@ -18,12 +18,13 @@ class HomeController extends Controller {
         if(auth()->user()->role_id == 1)
         {
             $locations = \App\Models\Location::with('asset', 'accessory', 'components', 'consumable', 'miscellanea', 'photo')->get();
+
             $assets = \App\Models\Asset::with('location', 'model', 'status')->get()
                 ->map(function($item, $key) {
                     $item['depreciation_value'] = $item->depreciation_value();
-
                     return $item;
                 });
+            
             $transfers = \App\Models\Transfer::count();
             $archived = \App\Models\Archive::count();
             $statuses = \App\Models\Status::with('assets', 'accessory', 'components', 'consumable', 'miscellanea', 'accessories')->get();

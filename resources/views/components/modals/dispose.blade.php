@@ -14,7 +14,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @csrf
-                        <input name="model_type" type="hidden" value="accessory">
+                        <input name="model_type" type="text" value="accessory">
                         <input id="dispose_id" name="model_id" type="hidden" value="">
                         <input type="text" value="" id="accessory_name" class="form-control" disabled>
                     </div>

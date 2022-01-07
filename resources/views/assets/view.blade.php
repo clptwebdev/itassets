@@ -49,6 +49,7 @@
                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkDisposalModal">Dispose</a>
                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkTransferModal">Transfer</a>
                 </div>
+            </div>
         @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
@@ -222,11 +223,6 @@
     </section>
 @endsection
 @section('modals')
-    <x-modals.dispose />
-    <x-modals.transfer :models="$locations" />
-    <x-modals.delete />
-    <x-modals.import />
-
     {{-- This is the Modal for Bulk Disposal {SC} --}}
     <div class="modal fade bd-example-modal-lg" id="bulkDisposalModal" tabindex="-1" role="dialog"
          aria-labelledby="bulkDisposalModalLabel" aria-hidden="true">
@@ -260,6 +256,7 @@
             </div>
         </div>
     </div>
+
     {{-- This is the Modal for Bulk Transfers {SC} --}}
     <div class="modal fade bd-example-modal-lg" id="bulkTransferModal" tabindex="-1" role="dialog"
          aria-labelledby="bulkTransferModalLabel" aria-hidden="true">
@@ -293,7 +290,10 @@
         </div>
     </div>
 
-
+    <x-modals.dispose />
+    <x-modals.transfer :models="$locations" />
+    <x-modals.delete />
+    <x-modals.import />
 
 @endsection
 

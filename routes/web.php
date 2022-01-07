@@ -144,6 +144,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get("/manufacturer/clear/filter", [\App\Http\Controllers\ManufacturerController::class, "clearFilter"])->name("manufacturer.clearfilter");
     //Permission Routes
 
+    
     //Request
     Route::post('/request/transfer', 'App\Http\Controllers\RequestsController@transfer')->name('request.transfer');
     Route::post('/request/dispose', 'App\Http\Controllers\RequestsController@disposal')->name('request.disposal');
