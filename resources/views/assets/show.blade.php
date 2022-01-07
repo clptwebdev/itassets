@@ -7,39 +7,30 @@
 @endsection
 
 @section('content')
-
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">View Asset</h1>
-        <div>
-            <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                    class="fas fa-chevron-left fa-sm text-dark-50"></i> Back</a>
+    <x-wrappers.nav title="View Asset">
+        <x-buttons.return :route="route('assets.index')">Assets</x-buttons.return>
+        @can('dispose', $asset)
             <x-buttons.dispose
                 formRequirements="data-model-id='{{$asset->id}}' data-model-name='{{$asset->name ?? 'No name' }}'"/>
+        @endcan
+        @can('transfer', $asset)
             <x-buttons.transfer
                 formRequirements="data-model-id='{{$asset->id}}' data-location-from='{{$asset->location->name ?? 'Unallocated' }}' data-location-id='{{ $asset->location_id }}'"/>
-            @can('generatePDF', $asset)
-                <a href="{{ route('asset.showPdf', $asset->id)}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm loading"><i
-                        class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</a>
-            @endcan
-            @can('update', $asset)
-                <a href="{{ route('assets.edit', $asset->id)}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
-                        class="fas fa-edit fa-sm text-dark-50"></i> Edit</a>
-            @endcan
-            @can('delete', $asset)
-                <form class="d-inline-block" id="form{{$asset->id}}" action="{{ route('assets.destroy', $asset->id) }}"
-                      method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"
-                       data-id="{{$asset->id}}"><i
-                            class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
-                </form>
-            @endcan
-        </div>
-    </div>
-
+        @endcan
+        @can('generatePDF', \App\Models\Asset::class)
+            <x-buttons.reports :route="route('asset.showPdf', $asset->id)"/>
+        @endcan
+        @can('update', $asset)
+            <x-buttons.edit :route="route('assets.edit', $asset->id)"/>
+        @endcan
+        @can('delete', $asset)
+            <x-form.layout method="DELETE" class="d-sm-inline-block"
+                           :id="'form'.$asset->id"
+                           :action="route('assets.destroy', $asset->id)">
+                <x-buttons.delete formAttributes="data-id='{{$asset->id}}'"/>
+            </x-form.layout>
+        @endcan
+    </x-wrappers.nav>
     <x-handlers.alerts/>
 
     <div class="row row-eq-height">
@@ -74,6 +65,7 @@
 @section('modals')
     <x-modals.dispose model="asset"/>
     <x-modals.transfer :models="$locations" model="asset" :tag="$asset->asset_tag"/>
+    <x-modals.delete/>
     <!-- asset Status Model Modal-->
     <div class="modal fade bd-example-modal-lg" id="assetModalStatus" tabindex="-1" role="dialog"
          aria-labelledby="assetModalStatusLabel" aria-hidden="true">
@@ -101,32 +93,6 @@
                         <button class="btn btn-green" type="submit">Update</button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- asset Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeAssetModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeAssetModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeAssetModalLabel">Are you sure you want to delete this item?
-                    </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="asset-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this item from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assigned items will be
-                        set to Null.</small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
-                </div>
             </div>
         </div>
     </div>
@@ -246,12 +212,9 @@
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/transfer.js')}}"></script>
+    <script src="{{asset('js/delete.js')}}"></script>
+
     <script>
-        $('.deleteBtn').click(function () {
-            $('#asset-id').val($(this).data('id'))
-            //showModal
-            $('#removeAssetModal').modal('show')
-        });
 
         $('.transferBtn').click(function () {
             $('#requestTransfer').modal('show')

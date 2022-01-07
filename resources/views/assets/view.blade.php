@@ -201,10 +201,10 @@
                                                 </x-buttons.dropdown-item>
                                             @endcan
                                             @can('delete', $asset)
-                                                <x-form.layout method="DELETE" class="d-block p-0 m-0"
+                                                <x-form.layout method="DELETE"
                                                                :id="'form'.$asset->id"
                                                                :action="route('assets.destroy', $asset->id)">
-                                                    <x-buttons.dropdown-item :data="$asset->id" class="deleteBtn">
+                                                    <x-buttons.dropdown-item class="deleteBtn" :data="$asset->id">
                                                         Delete
                                                     </x-buttons.dropdown-item>
                                                 </x-form.layout>

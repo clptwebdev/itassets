@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-    <x-wrappers.nav title="View Accessories">
+    <x-wrappers.nav title="View Accessory">
         <x-buttons.return :route="route('accessories.index')">Accessories</x-buttons.return>
         @can('dispose', $accessory)
             <x-buttons.dispose
@@ -21,11 +21,12 @@
             <x-buttons.reports :route="route('accessories.showPdf', $accessory->id)"/>
         @endcan
         <x-buttons.edit :route="route('accessories.edit', $accessory->id)"/>
+
         @can('delete', $accessory)
             <x-form.layout method="DELETE" class="d-sm-inline-block"
                            :id="'form'.$accessory->id"
                            :action="route('accessories.destroy', $accessory->id)">
-                <x-buttons.submit class="bg-danger">Delete</x-buttons.submit>
+                <x-buttons.delete formAttributes="data-id='{{$accessory->id}}'"/>
             </x-form.layout>
         @endcan
     </x-wrappers.nav>
@@ -62,7 +63,7 @@
 @section('modals')
     <x-modals.dispose model="accessory"/>
     <x-modals.transfer :models="$locations" model="accessory" :tag="$accessory->asset_tag"/>
-    {{--    <x-modals.delete/>--}}
+    <x-modals.delete/>
     <x-modals.status :model="$accessory" :route="route('accessories.status',$accessory->id)"/>
     <x-modals.add-comment :route="route('accessories.comment', $accessory->id)" :model="$accessory"/>
     <x-modals.edit-comment :model="$accessory"/>
@@ -74,12 +75,8 @@
     <script src="{{asset('js/transfer.js')}}"></script>
     <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/comment.js')}}"></script>
+    <script src="{{asset('js/delete.js')}}"></script>
     <script>
-        // $('.deleteBtn').click(function () {
-        //     $('#location-id').val($(this).data('id'))
-        //     //showModal
-        //     $('#removeLocationModal').modal('show')
-        // });
         $('#confirmBtn').click(function () {
             var form = '#' + 'form' + $('#location-id').val();
             $(form).submit();

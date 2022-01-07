@@ -121,47 +121,44 @@
                                 </td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
-                                        @can('view', $asset)
-                                            <x-buttons.dropdown-item :route="route('assets.show', $asset->id)">
-                                                View
+
+                                        <x-buttons.dropdown-item :route="route('archives.show', $archive->id)">
+                                            View
+                                        </x-buttons.dropdown-item>
+                                        <x-form.layout method="DELETE" class="d-block p-0 m-0"
+                                                       :id="'form'.$archive->id"
+                                                       :action="route('archives.destroy', $archive->id)">
+                                            <x-buttons.dropdown-item class="deleteBtn" :data="$archive->id">
+                                                Delete
                                             </x-buttons.dropdown-item>
-                                        @endcan
-                                        @can('delete', $asset)
-                                            <x-form.layout method="DELETE" class="d-block p-0 m-0"
-                                                           :id="'form'.$asset->id"
-                                                           :action="route('assets.destroy', $asset->id)">
-                                                <x-buttons.dropdown-item :data="$asset->id" class="deleteBtn">
-                                                    Delete
-                                                </x-buttons.dropdown-item>
-                                            </x-form.layout>
-                                        @endcan
+                                        </x-form.layout>
                                     </x-wrappers.table-settings>
-                                    <div class="dropdown no-arrow">
-                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenu{{$archive->id}}Link"
-                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div
-                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenu{{$archive->id}}Link">
-                                            <div class="dropdown-header">Archive Options:</div>
-                                            @can('view', $archive)
-                                                <a href="{{ route('archives.show', $archive->id) }}"
-                                                   class="dropdown-item">View</a>
-                                            @endcan
-                                            @can('delete', $archive)
-                                                <form id="form{{$archive->id}}"
-                                                      action="{{ route('archives.destroy', $archive->id) }}"
-                                                      method="POST" class="d-block p-0 m-0">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a class="deleteBtn dropdown-item" href="#"
-                                                       data-id="{{$archive->id}}">Delete</a>
-                                                </form>
-                                            @endcan
-                                        </div>
-                                    </div>
+                                    {{--                                    <div class="dropdown no-arrow">--}}
+                                    {{--                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"--}}
+                                    {{--                                           id="dropdownMenu{{$archive->id}}Link"--}}
+                                    {{--                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                    {{--                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>--}}
+                                    {{--                                        </a>--}}
+                                    {{--                                        <div--}}
+                                    {{--                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"--}}
+                                    {{--                                            aria-labelledby="dropdownMenu{{$archive->id}}Link">--}}
+                                    {{--                                            <div class="dropdown-header">Archive Options:</div>--}}
+                                    {{--                                            @can('view', $archive)--}}
+                                    {{--                                                <a href="{{ route('archives.show', $archive->id) }}"--}}
+                                    {{--                                                   class="dropdown-item">View</a>--}}
+                                    {{--                                            @endcan--}}
+                                    {{--                                            @can('delete', $archive)--}}
+                                    {{--                                                <form id="form{{$archive->id}}"--}}
+                                    {{--                                                      action="{{ route('archives.destroy', $archive->id) }}"--}}
+                                    {{--                                                      method="POST" class="d-block p-0 m-0">--}}
+                                    {{--                                                    @csrf--}}
+                                    {{--                                                    @method('DELETE')--}}
+                                    {{--                                                    <a class="deleteBtn dropdown-item" href="#"--}}
+                                    {{--                                                       data-id="{{$archive->id}}">Delete</a>--}}
+                                    {{--                                                </form>--}}
+                                    {{--                                            @endcan--}}
+                                    {{--                                        </div>--}}
+                                    {{--                                    </div>--}}
                                 </td>
                             </tr>
                         @endforeach
@@ -184,36 +181,13 @@
 <?php session()->flash('import-error', 'Select a file to be uploaded before continuing!');?>
 
 @section('modals')
-    <!-- Archive Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeArchiveModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeArchiveModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeArchiveModalLabel">Are you sure you want to delete this item?
-                    </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="archive-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this item from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assigned items will be
-                        set to Null.</small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-modals.delete archive="true"/>
 @endsection
 
 @section('js')
 
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="{{asset('js/delete.js')}}"></script>
     <script>
         $('.deleteBtn').click(function () {
             $('#archive-id').val($(this).data('id'))
