@@ -148,27 +148,14 @@
                                         <div class="col-12 col-sm-6 p-4 mb-3" >
                                             <h3 class="h6 text-center mb-3" >Purchase Information</h3 >
                                             <div class="form-group" >
-                                                <label for="order_no" >Order No</label >
-                                                <input type="text"
-                                                       class="form-control <?php if ($errors->has('order_no')) {?>border border-danger<?php }?>"
-                                                       name="order_no" id="order_no" value="{{ old('order_no')}}" >
+                                                <x-form.input name="order_no" />
                                             </div >
                                             <div class="form-group" >
-                                                <label for="purchased_date" >Purchased Date<span
-                                                        class="text-danger" >*</span ></label >
-                                                <input type="date"
-                                                       class="form-control <?php if ($errors->has('purchased_date')) {?>border border-danger<?php }?>"
-                                                       name="purchased_date" id="purchased_date"
-                                                       value="{{ old('purchased_date') ?? \Carbon\Carbon::now()->format('Y-m-d')}}" >
+                                                <x-form.date name="purchased_date" formAttributes="required" />
                                             </div >
                                             <div class="form-group" >
-                                                <label for="purchased_cost" >Purchased Cost<span
-                                                        class="text-danger" >*</span ></label >
-                                                <input type="text"
-                                                       class="form-control <?php if ($errors->has('purchased_cost')) {?>border border-danger<?php }?>"
-                                                       name="purchased_cost" id="purchased_cost"
-                                                       value="{{ old('purchased_cost')}}" placeholder="£" >
-                                                <div class="form-check mt-2" >
+                                                <x-form.input name="purchased_cost" formAttributes="required" />
+                                                <div class="form-check mt-2 ml-1" >
                                                     <input class="form-check-input" type="checkbox" value="1"
                                                            name="donated" id="donated" >
                                                     <label class="form-check-label" for="donated" >
@@ -191,14 +178,8 @@
                                                 </div >
                                             </div >
                                             <div class="form-group" >
-                                                <label for="purchased_date" >Warranty (Months)</label >
-                                                <input type="number"
-                                                       class="form-control <?php if ($errors->has('warranty')) {?>border border-danger<?php }?>"
-                                                       name="warranty" id="warranty"
-                                                       value="{{ old('warranty') ?? 24}}" >
+                                                <x-form.input name="warranty" />
                                             </div >
-
-
                                         </div >
 
                                         <div class="col-12 col-md-6 p-4 mb-3 " >
@@ -246,11 +227,7 @@
                                             </div >
 
                                             <div class="form-group" >
-                                                <label for="room" >Room</label >
-                                                <input type="text"
-                                                       class="form-control <?php if ($errors->has('room')) {?> border border-danger<?php }?>"
-                                                       name="room"
-                                                       id="room" placeholder="" value="{{ old('room')}}" >
+                                                <x-form.input name="room" />
                                             </div >
                                         </div >
                                         <div class="col-12 col-md-6 p-4 mb-3 " >
@@ -285,14 +262,8 @@
                                         <div class="col-12 p-4 mb-3" >
 
                                             <div class="form-group" >
-                                                <label for="audit_date" >Audit Date</label >
-                                                <input type="date"
-                                                       class="form-control <?php if ($errors->has('audit_date')) {?>border border-danger<?php }?>"
-                                                       name="audit_date" id="audit_date"
-                                                       value="{{ old('audit_date') ?? \Carbon\Carbon::now()->addYear()->format('Y-m-d')}}" >
+                                                <x-form.date name="audit_date" />
                                             </div >
-
-
                                             <div id="categories" class="form-control h-auto p-4 mb-3 bg-light" >
                                                 <h4 class="h6 mb-4 text-center" >Categories</h4 >
                                                 <div class="position-relative" >
@@ -313,30 +284,14 @@
 
                                                     </div >
                                                 </div >
-
                                             </div >
-
                                             <div class="form-row" >
-                                                <label for="status" >Current Status</label ><span
-                                                    class="text-danger" >*</span >
-                                                <select type="text"
-                                                        class="form-control mb-3 <?php if ($errors->has('status')) {?>border-danger<?php }?>"
-                                                        name="status_id" id="status_id" value="Stored" >
-                                                    <option value="0" @if(old('status_id') == 0){{'selected'}}@endif>
-                                                        Unset
-                                                    </option >
-                                                    @foreach($statuses as $status)
-                                                        <option
-                                                            value="{{ $status->id }}" @if(old('status_id') == $status->id){{'selected'}}@endif>{{ $status->name}}</option >
-                                                    @endforeach
-                                                </select >
+                                                <x-form.select name="status_id" :models="$statuses" />
                                             </div >
                                         </div >
                                     </div >
                                 </div >
                             </div >
-
-
                         </div >
                     </div >
                 </div >
