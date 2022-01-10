@@ -199,7 +199,7 @@ class LocationController extends Controller
         $locations = Location::where('name', 'LIKE', '%' . $request->search . "%")->take(3)->get()->unique('name');
         $output = "<ul id='locationSelect' class='list-group'>";
         foreach($locations as $location){
-            $output .=" <li class='list-group-item d-flex justify-content-between align-items-center pointer' data-id='".$location->id."' data-name='".$location->name."'>
+            $output .=" <li class='list-group-item d-flex justify-content-between align-items-center pointer' data-id='{$location->id}' data-name=\"{$location->name}\">
                             {$location->name}
                             <span class='badge badge-primary badge-pill'>1</span>
                         </li>";

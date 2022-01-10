@@ -93,6 +93,7 @@
                                                                     {{--                                                                           name="{{str_replace(' ', '_', strtolower($field->name))}}"--}}
                                                                     {{--                                                                           value="{{ old(str_replace(' ', '_', strtolower($field->name)))}}"--}}
                                                                     {{--                                                                    >--}}
+                                                                    
                                                                     @break
                                                                     @case('Textarea')
                                                                     <textarea
