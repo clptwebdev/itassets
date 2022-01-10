@@ -17,6 +17,3 @@
        placeholder="{{str_replace(array('_','id'), ' ',ucfirst($title ?? $name))}}"
     {!!$formAttributes ?? null!!}
 >  {{--  pass attribues seperated with spaces  --}}
-
-
-name="operating_system"

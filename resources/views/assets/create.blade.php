@@ -87,16 +87,17 @@
                                                                 @switch($field->type)
                                                                     @case('Text'):
                                                                     <x-form.input :name="$field->name"/>
-
                                                                     @break
                                                                     @case('Textarea')
-                                                                    <textarea
-                                                                        name="{{str_replace(' ', '_', strtolower($field->name))}}"
-                                                                        cols="30"
-                                                                        rows="10"
-                                                                        class="form-contol
-                                                    <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>">{{ old(str_replace(' ', '_', strtolower($field->name)))}}
-                                                </textarea>
+                                                                    <x-form.textarea :name="$field->name"
+                                                                                     formAttributes=" cols=' 30' rows='10' "/>
+                                                                    {{--                                                                    <textarea--}}
+                                                                    {{--                                                                        name="{{str_replace(' ', '_', strtolower($field->name))}}"--}}
+                                                                    {{--                                                                        cols="30"--}}
+                                                                    {{--                                                                        rows="10"--}}
+                                                                    {{--                                                                        class="form-contol--}}
+                                                                    {{--                                                    <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border-danger<?php }?>">{{ old(str_replace(' ', '_', strtolower($field->name)))}}--}}
+                                                                    {{--                                                </textarea>--}}
                                                                     @break
                                                                     @case('Select')
                                                                     <?php $array = explode("\r\n", $field->value);?>
