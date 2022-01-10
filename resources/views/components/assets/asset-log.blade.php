@@ -11,16 +11,17 @@
                         <p class="mb-4">Log information regarding {{ $asset->name}} <strong
                                 class="font-weight-bold btn btn-sm btn-grey shadow-sm p-1"><small>#{{ $asset->asset_tag }}</small></strong>
                             , view history and activity regarding the selected asset.</p>
-                            <table class="logs table table-bordered ">
-                                <tbody>
-                                    @foreach($asset->logs()->orderBy('created_at', 'desc')->take(5)->get() as $log)
-                                    <tr>
-                                        <td class="text-left"><small>{{$log->data}}<br><span class="text-info">{{ $log->user->name }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $log->created_at, 'Europe/London');}}</span></small></td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <a href="{{route("logs.index")}}" class="btn btn-blue">View All Logs</a>
+                        <table class="logs table table-bordered ">
+                            <tbody>
+                            @foreach($asset->logs()->orderBy('created_at', 'desc')->take(5)->get() as $log)
+                                <tr>
+                                    <td class="text-left"><small>{{$log->data}}<br><span class="text-info">{{ $log->user->name ?? "No User Found" }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $log->created_at, 'Europe/London');}}</span></small>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                        <a href="{{route("logs.index")}}" class="btn btn-blue">View All Logs</a>
                     </div>
                 </div>
             </div>

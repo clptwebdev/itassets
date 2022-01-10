@@ -8,19 +8,20 @@
             <div class="row no-gutters">
                 <div class="col mr-2">
                     <div class="mb-1">
-                        <p class="mb-4">Log information regarding {{ $accessory->name}}
+                        <p class="mb-4">Log information regarding {{ $accessory->name ?? "no name found"}}
                             , view history and activity regarding the selected accessory.</p>
                         <table class="logs table table-striped ">
                             <tbody>
-                                @foreach($accessory->logs()->orderBy('created_at', 'desc')->take(5)->get() as $log)
+                            @foreach($accessory->logs()->orderBy('created_at', 'desc')->take(5)->get() as $log)
                                 <tr>
-                                    <td class="text-left"><small>{{$log->data}}<br><span class="text-info">{{ $log->user->name }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $log->created_at, 'Europe/London');}}</span></small></td>
+                                    <td class="text-left"><small>{{$log->data}}<br><span class="text-info">{{ $log->user->name ?? "No user found" }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $log->created_at, 'Europe/London');}}</span></small>
+                                    </td>
                                 </tr>
-                                @endforeach
+                            @endforeach
                             </tbody>
                         </table>
                         <a href="{{route("logs.index")}}" class="btn btn-blue">View All Logs</a>
-                </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -10,50 +10,30 @@
 @section('content')
     <x-wrappers.nav :title="$title">
         @can('generatePDF', \App\Models\Archive::class)
-                @if($archives->count() != 0)
-                    @if ($archives->count() == 1)
-                        <a href="{{ route('archives.showPdf', $archives[0]->id)}}"
-                           class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                                class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</a>
-                    @else
-                        <form class="d-inline-block" action="{{ route('archives.pdf')}}" method="POST">
-                            @csrf
-                            <input type="hidden" value="{{ json_encode($archives->pluck('id'))}}" name="assets"/>
-                            <button type="submit"
-                                    class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
-                                    class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report
-                            </button>
-                        </form>
-                    @endif
+            @if($archives->count() != 0)
+                @if ($archives->count() == 1)
+                    <x-buttons.reports :route="route('archives.showPdf', $archives[0]->id)"/>
+                @else
+                    <x-form.layout class="d-inline-block" :action="route('archives.pdf')">
+                        <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
+                                      :value="json_encode($archives->pluck('id'))"/>
+                        <x-buttons.submit>Generate Report</x-buttons.submit>
+                    </x-form.layout>
                 @endif
-            @endcan
-            @if($archives->count() > 1)
-                @can('generatePDF', \App\Models\Archive::class)
-                    <form class="d-inline-block" action="/exportassets" method="POST">
-                        @csrf
-                        <input type="hidden" value="{{ json_encode($archives->pluck('id'))}}" name="assets"/>
-                        <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading">
-                            <i
-                                class="fas fa-download fa-sm text-dark-50"></i> Export
-                        </button>
-                    </form>
-                @endcan
             @endif
-
+            @if($archives->count() > 1)
+                <x-form.layout class="d-inline-block" action="/exportassets">
+                    <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
+                                  :value="json_encode($archives->pluck('id'))"/>
+                    <x-buttons.submit class="btn-yellow">export</x-buttons.submit>
+                </x-form.layout>
+            @endcan
+        @endcan
     </x-wrappers.nav>
-
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!!session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
-
+    <x-handlers.alerts/>
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
-
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
@@ -140,34 +120,20 @@
                                     <small>{{ \Carbon\Carbon::parse($archive->updated_at)->format("d/m/Y") }}</small>
                                 </td>
                                 <td class="text-right">
-                                    <div class="dropdown no-arrow">
-                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenu{{$archive->id}}Link"
-                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div
-                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenu{{$archive->id}}Link">
-                                            <div class="dropdown-header">Archive Options:</div>
-                                            <a href="{{ route('archives.restore', $archive->id) }}"
-                                                class="dropdown-item">Restore</a>
-                                            @can('view', $archive)
-                                                <a href="{{ route('archives.show', $archive->id) }}"
-                                                   class="dropdown-item">View</a>
-                                            @endcan
-                                            @can('delete', $archive)
-                                                <form id="form{{$archive->id}}"
-                                                      action="{{ route('archives.destroy', $archive->id) }}"
-                                                      method="POST" class="d-block p-0 m-0">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a class="deleteBtn dropdown-item" href="#"
-                                                       data-id="{{$archive->id}}">Delete</a>
-                                                </form>
-                                            @endcan
-                                        </div>
-                                    </div>
+                                    <x-wrappers.table-settings>
+                                        <a href="{{ route('archives.restore', $archive->id) }}"
+                                           class="dropdown-item">Restore</a>
+                                        <x-buttons.dropdown-item :route="route('archives.show', $archive->id)">
+                                            View
+                                        </x-buttons.dropdown-item>
+                                        <x-form.layout method="DELETE" class="d-block p-0 m-0"
+                                                       :id="'form'.$archive->id"
+                                                       :action="route('archives.destroy', $archive->id)">
+                                            <x-buttons.dropdown-item class="deleteBtn" :data="$archive->id">
+                                                Delete
+                                            </x-buttons.dropdown-item>
+                                        </x-form.layout>
+                                    </x-wrappers.table-settings>
                                 </td>
                             </tr>
                         @endforeach
@@ -190,36 +156,13 @@
 <?php session()->flash('import-error', 'Select a file to be uploaded before continuing!');?>
 
 @section('modals')
-    <!-- Archive Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeArchiveModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeArchiveModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeArchiveModalLabel">Are you sure you want to delete this item?
-                    </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="archive-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this item from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assigned items will be
-                        set to Null.</small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-modals.delete archive="true"/>
 @endsection
 
 @section('js')
 
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="{{asset('js/delete.js')}}"></script>
     <script>
         $('.deleteBtn').click(function () {
             $('#archive-id').val($(this).data('id'))

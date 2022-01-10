@@ -98,8 +98,6 @@ class AssetController extends Controller {
             $locations = auth()->user()->locations;
         }
 
-
-
         return view('assets.create', [
             "locations" => $locations,
             "manufacturers" => Manufacturer::all(),
@@ -242,9 +240,9 @@ class AssetController extends Controller {
         {
             $asset->fields()->attach($array);
         }
-        if(! empty(explode(',',$request->category)))
+        if(! empty(explode(',', $request->category)))
         {
-            $asset->category()->attach(explode(',',$request->category));
+            $asset->category()->attach(explode(',', $request->category));
         }
         session()->flash('success_message', $request->name . ' has been created successfully');
 
@@ -595,10 +593,12 @@ class AssetController extends Controller {
 
     }
 
-    public function bulkDisposal(Request $request){
+    public function bulkDisposal(Request $request)
+    {
         /* Check whether the current user has permissions to bulk dispose Assets [SC] */
         /* Currently - Super Admin permissions requried [SC] */
-        if (auth()->user()->cant('disposeAll', Asset::class)) {
+        if(auth()->user()->cant('disposeAll', Asset::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Assets', 'Bulk Dispose']));
         }
 
@@ -669,7 +669,7 @@ class AssetController extends Controller {
                     $errorValues[$error['row']] = $array;
 
                 }
-                
+
                 return view('assets.dispose-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
@@ -690,8 +690,10 @@ class AssetController extends Controller {
         }
     }
 
-    public function bulkTransfers(Request $request){
-        if (auth()->user()->cant('transferAll', Asset::class)) {
+    public function bulkTransfers(Request $request)
+    {
+        if(auth()->user()->cant('transferAll', Asset::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'Assets', 'Bulk Transfer']));
         }
 
@@ -762,7 +764,7 @@ class AssetController extends Controller {
                     $errorValues[$error['row']] = $array;
 
                 }
-                
+
                 return view('assets.transfer-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
@@ -780,10 +782,11 @@ class AssetController extends Controller {
         {
             return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-        } 
+        }
     }
 
-    public function exportDisposeErrors(Request $request){
+    public function exportDisposeErrors(Request $request)
+    {
 
         //Receives the JSON Object with the errors and passes them to the Export function for Maatwebsite
         $export = $request['assets'];
@@ -794,7 +797,8 @@ class AssetController extends Controller {
         return \Maatwebsite\Excel\Facades\Excel::download(new AssetDisposalErrors($export), "dispose-errors-{$date}.csv");
     }
 
-    public function exportTransferErrors(Request $request){
+    public function exportTransferErrors(Request $request)
+    {
 
         //Receives the JSON Object with the errors and passes them to the Export function for Maatwebsite
         $export = $request['assets'];
@@ -1062,7 +1066,6 @@ class AssetController extends Controller {
             ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
             ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
         $limit = session('limit') ?? 25;
-
 
         return view('assets.view', [
             "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),

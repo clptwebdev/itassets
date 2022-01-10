@@ -13,20 +13,22 @@
         <h1 class="h3 mb-0 text-gray-800">Accessories | Recycle Bin</h1>
         <div>
             <a href="{{ route('accessories.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                class="fas fa-chevron-left fa-sm text-dark-50"></i> Back</a>
+                    class="fas fa-chevron-left fa-sm text-dark-50"></i> Back</a>
             <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
                class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
                     class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
             @can('generatePDF', \App\Models\Accessory::class)
                 @if ($accessories->count() == 1)
-                    <a href="{{ route('accessories.showPdf', $accessories[0]->id)}}" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
-                        class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
-                    @else
+                    <a href="{{ route('accessories.showPdf', $accessories[0]->id)}}"
+                       class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
+                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</a>
+                @else
                     <form class="d-inline-block" action="{{ route('accessories.pdf')}}" method="POST">
                         @csrf
                         <input type="hidden" value="{{ json_encode($accessories->pluck('id'))}}" name="accessories"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
-                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
+                        <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
+                                class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report
+                        </button>
                     </form>
                 @endif
             @endcan
@@ -63,17 +65,17 @@
                         </tr>
                         </thead>
                         <tfoot>
-                            <tr>
-                                <th><small>Name</small></th>
-                                <th class="text-center"><small>Location</small></th>
-                                <th class="text-center"><small>Manufacturers</small></th>
-                                <th><small>Purchased Date</small></th>
-                                <th><small>Purchased Cost</small></th>
-                                <th><small>Supplier</small></th>
-                                <th class="text-center"><small>Status</small></th>
-                                <th class="text-center"><small>Warranty</small></th>
-                                <th class="text-right"><small>Options</small></th>
-                            </tr>
+                        <tr>
+                            <th><small>Name</small></th>
+                            <th class="text-center"><small>Location</small></th>
+                            <th class="text-center"><small>Manufacturers</small></th>
+                            <th><small>Purchased Date</small></th>
+                            <th><small>Purchased Cost</small></th>
+                            <th><small>Supplier</small></th>
+                            <th class="text-center"><small>Status</small></th>
+                            <th class="text-center"><small>Warranty</small></th>
+                            <th class="text-right"><small>Options</small></th>
+                        </tr>
                         </tfoot>
                         <tbody>
                         @foreach($accessories as $accessory)
@@ -84,8 +86,10 @@
                                     <small>{{$accessory->serial_no}}</small>
                                 </td>
                                 <td class="text-center">
-                                    @if($accessory->location->photo()->exists())
-                                        <img src="{{ asset($accessory->location->photo->path)}}" height="30px" alt="{{$accessory->location->name}}" title="{{ $accessory->location->name ?? 'Unnassigned'}}"/>
+                                    @if($accessory->location->photo())
+                                        <img src="{{ asset($accessory->location->photo->path)}}" height="30px"
+                                             alt="{{$accessory->location->name}}"
+                                             title="{{ $accessory->location->name ?? 'Unnassigned'}}"/>
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($accessory->location->icon ?? '#666').'">'
                                             .strtoupper(substr($accessory->location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -95,7 +99,7 @@
                                 <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
                                 <td class="text-center">
                                     £{{$accessory->purchased_cost}}
-                                    @if($accessory->depreciation->exists())
+                                    @if($accessory->depreciation)
                                         <br>
                                         @php
                                             $eol = Carbon\Carbon::parse($accessory->purchased_date)->addYears($accessory->depreciation->years);
@@ -113,30 +117,35 @@
                                     @endif
                                 </td>
                                 <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
-                                <td class="text-center"  style="color: {{$accessory->status->colour}};">
+                                <td class="text-center" style="color: {{$accessory->status->colour}};">
                                     <i class="{{$accessory->status->icon}}"></i> {{ $accessory->status->name }}
                                 </td>
                                 @php $warranty_end = \Carbon\Carbon::parse($accessory->purchased_date)->addMonths($accessory->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
                                     {{ $accessory->warranty }} Months
 
-                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }} Remaining</small></td>
+                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
+                                        Remaining</small></td>
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
-                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                           id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
-                                        <div class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                        <div
+                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Accessory Options:</div>
                                             <a href="{{ route('accessories.restore', $accessory->id) }}"
-                                                class="dropdown-item">Restore</a>
-                                            <form class="d-block" id="form{{$accessory->id}}" action="{{ route('accessories.remove', $accessory->id) }}" method="POST">
+                                               class="dropdown-item">Restore</a>
+                                            <form class="d-block" id="form{{$accessory->id}}"
+                                                  action="{{ route('accessories.remove', $accessory->id) }}"
+                                                  method="POST">
                                                 @csrf
                                                 @can('delete', $accessory)
-                                                <a class="deleteBtn dropdown-item" href="#"
-                                                    data-id="{{$accessory->id}}">Delete</a>
+                                                    <a class="deleteBtn dropdown-item" href="#"
+                                                       data-id="{{$accessory->id}}">Delete</a>
                                                 @endcan
                                             </form>
                                         </div>
@@ -169,7 +178,8 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to permantley delete this Accessory?
+                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to permantley delete this
+                        Accessory?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -178,7 +188,8 @@
                 <div class="modal-body">
                     <input id="user-id" type="hidden" value="">
                     <p>Select "Delete" to permantley delete this accessory.</p>
-                    <small class="text-danger">**Warning this is permanent and the Accessory will be removed from the system </small>
+                    <small class="text-danger">**Warning this is permanent and the Accessory will be removed from the
+                        system </small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>

@@ -111,10 +111,10 @@
                                         <small>{{$accessory->serial_no}}</small>
                                     </td>
                                     <td class="text-center">
-                                        @if($accessory->location->photo()->exists())
-                                            <img src="{{ asset($accessory->location->photo->path)}}" height="30px"
-                                                 alt="{{$accessory->location->name}}"
-                                                 title="{{ $accessory->location->name ?? 'Unnassigned'}}"/>
+                                        @if($accessory->location != null) {{--  ->exists() may break later--}}
+                                        <img src="{{ asset($accessory->location->photo->path)}}" height="30px"
+                                             alt="{{$accessory->location->name}}"
+                                             title="{{ $accessory->location->name ?? 'Unnassigned'}}"/>
                                         @else
                                             {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($accessory->location->icon ?? '#666').'">'
                                                 .strtoupper(substr($accessory->location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -192,7 +192,7 @@
             <div class="card shadow mb-3">
                 <div class="card-body">
                     <h4>Help with Accessories</h4>
-                    <p>Click <a href="{{route("documentation.index").'#collapseEightAccessory'}}">here</a> for a the
+                    <p>Click <a href="{{route("documentation.index").'#collapseEightAccessory'}}">here</a> for the
                         Documentation on Accessories on Importing ,Exporting , Adding , Removing!</p>
                 </div>
             </div>
