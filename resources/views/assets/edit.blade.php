@@ -145,16 +145,14 @@
                                                                     $vid = 0;
                                                                 }?>
                                                                 <?php $array = explode("\r\n", $field->value);?>
-                                                                <x-form.select :name="$field->name"
-                                                                               :models="$vid" />
-                                                                {{--                                                                <select--}}
-                                                                {{--                                                                    name="{{str_replace(' ', '_', strtolower($field->name))}}"--}}
-                                                                {{--                                                                    class="form-control" >--}}
-                                                                {{--                                                                    @foreach($array as $id=>$key)--}}
-                                                                {{--                                                                        <option--}}
-                                                                {{--                                                                            value="{{ $key }}" @if($vid == $key){{ 'selected'}}@endif>{{ $key }}</option >--}}
-                                                                {{--                                                                    @endforeach--}}
-                                                                {{--                                                                </select >--}}
+                                                                <select
+                                                                    name="{{str_replace(' ', '_', strtolower($field->name))}}"
+                                                                    class="form-control" >
+                                                                    @foreach($array as $id=>$key)
+                                                                        <option
+                                                                            value="{{ $key }}" @if($vid == $key){{ 'selected'}}@endif>{{ $key }}</option >
+                                                                    @endforeach
+                                                                </select >
                                                                 @break
                                                                 @case('Checkbox')
                                                                 <?php $array = explode("\r\n", $field->value);?>
