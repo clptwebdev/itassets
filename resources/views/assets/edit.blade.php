@@ -222,7 +222,7 @@
                                         <div class="col-12 col-sm-6 p-4 mb-3" >
                                             <h3 class="h6 text-center mb-3" >Purchase Information</h3 >
                                             <div class="form-group" >
-                                                <x-form.input name="order_no" :value="$asset->order_no" />
+                                                {{--                                                <x-form.input name="order_no" :value="$asset->order_no" />--}}
                                             </div >
                                             <div class="form-group" >
                                                 <?php if(old('purchased_date'))
@@ -237,8 +237,8 @@
                                                 {{--                                                             :value="\Carbon\Carbon::parse($date)->format('Y-m-d')" />--}}
                                             </div >
                                             <div class="form-group" >
-                                                <x-form.input name="purchased_cost" formAttributes="required"
-                                                              :value="$asset->purchased_cost" />
+                                                {{--                                                <x-form.input name="purchased_cost" formAttributes="required"--}}
+                                                {{--                                                              :value="$asset->purchased_cost" />--}}
                                                 <div class="form-check mt-2" >
                                                     <input class="form-check-input" type="checkbox" value="1"
                                                            name="donated" id="donated"
@@ -265,7 +265,7 @@
                                                 </div >
                                             </div >
                                             <div class="form-group" >
-                                                <x-form.input name="warranty" :value="$asset->warranty" />
+                                                {{--                                                <x-form.input name="warranty" :value="$asset->warranty" />--}}
                                             </div >
 
 
