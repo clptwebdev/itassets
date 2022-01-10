@@ -8,8 +8,8 @@
 @endif
 
 <input type="date"
-       class="form-control <?php if ($errors->has("{!! $name !!}")) {?>border-danger<?php }?>"
-       name="{{$name}}" id="{{$name}}"
-       placeholder="{{ucfirst($name)}}"
+       class="form-control @if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
+       name="{{str_replace(' ', '_', strtolower($name))}}" id="{{str_replace(' ', '_', strtolower($name))}}"
+       placeholder="{{ucfirst($name)}}" id="{{str_replace(' ', '_', strtolower($name))}}"
        value="{{$value ?? null}}"
     {!!$formAttributes ?? null!!}>  {{--  pass attribues seperated with spaces  --}}

@@ -274,7 +274,7 @@ class AccessoryController extends Controller {
         ), ['user_id' => auth()->user()->id]));
         $accessory->category()->attach($request->category);
 
-        return redirect(route("accessories.index"));
+        return redirect(route("accessories.index"))->with('success_message', $request->name . 'has been successfully created!');
     }
 
     public function importErrors(Request $request)
