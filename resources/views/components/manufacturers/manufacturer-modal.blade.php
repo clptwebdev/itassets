@@ -53,7 +53,7 @@
                         </tr>
                         </tbody>
                     </table>
-                    @if($manufacturer->supportEmail && $manufacturer->supportEmail != "")
+                    @if(!isset($manufacturer->supportEmail))
                         <a href="mailto:{{ $manufacturer->supportEmail ?? "No Manufacturer"}}">
                             <button class="btn btn-sm btn-blue"><i class="far fa-envelope"></i> Email Manufacturer
                             </button>
