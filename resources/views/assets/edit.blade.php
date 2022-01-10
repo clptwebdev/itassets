@@ -116,7 +116,7 @@
                                                             @switch($field->type)
                                                                 @case('Text')
                                                                 <x-form.input :name="$field->name"
-                                                                              value="old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''" />
+                                                                              :value="old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''" />
                                                                 {{--                                                                <input type="text" class="form-control"--}}
                                                                 {{--                                                                       name="{{str_replace(' ', '_', strtolower($field->name))}}"--}}
                                                                 {{--                                                                       placeholder="{{ $field->name }}"--}}
