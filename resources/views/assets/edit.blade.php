@@ -370,8 +370,6 @@
                                             <div class="form-group" >
                                                 <x-form.date name="audit_date" :value="$asset->audit_date" />
                                             </div >
-
-
                                             <div id="categories" class="form-control h-auto p-4 mb-3 bg-light" >
                                                 <h4 class="h6 mb-4 text-center" >Categories</h4 >
                                                 <div class="position-relative" >
@@ -406,6 +404,9 @@
                                             </div >
 
                                             <div class="form-row" >
+                                                <x-form.select name="status_id" :models="$statuses"
+                                                               :selected="$asset->status_id" />
+
                                                 <label for="status" >Current Status</label ><span
                                                     class="text-danger" >*</span >
                                                 <select type="text"
