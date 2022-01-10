@@ -146,7 +146,7 @@
                                                                 }?>
                                                                 <?php $array = explode("\r\n", $field->value);?>
                                                                 <x-form.select :name="$field->name"
-                                                                               :models="$array" />
+                                                                               :models="$field->value" />
                                                                 {{--                                                                <select--}}
                                                                 {{--                                                                    name="{{str_replace(' ', '_', strtolower($field->name))}}"--}}
                                                                 {{--                                                                    class="form-control" >--}}
