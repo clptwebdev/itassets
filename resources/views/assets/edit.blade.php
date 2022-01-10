@@ -222,7 +222,7 @@
                                         <div class="col-12 col-sm-6 p-4 mb-3" >
                                             <h3 class="h6 text-center mb-3" >Purchase Information</h3 >
                                             <div class="form-group" >
-                                                
+
                                                 <x-form.input name="order_no" :value="$asset->order_no" />
                                             </div >
                                             <div class="form-group" >
@@ -326,12 +326,7 @@
                                             </div >
 
                                             <div class="form-group" >
-                                                <label for="room" >Room</label >
-                                                <input type="text"
-                                                       class="form-control <?php if ($errors->has('room')) {?> border border-danger<?php }?>"
-                                                       name="room"
-                                                       id="room" placeholder=""
-                                                       value="{{ old('room') ?? $asset->room}}" >
+                                                <x-form.input name="room" :value="$asset->room" />
                                             </div >
                                         </div >
                                         <div class="col-12 col-md-6 p-4 mb-3 " >
@@ -373,18 +368,7 @@
                                         <div class="col-12 p-4 mb-3" >
 
                                             <div class="form-group" >
-                                                <label for="audit_date" >Audit Date</label >
-                                                <?php if(old('audit_date'))
-                                                {
-                                                    $date = old('audit_date');
-                                                } else
-                                                {
-                                                    $date = $asset->audit_date;
-                                                } ?>
-                                                <input type="date"
-                                                       class="form-control <?php if ($errors->has('audit_date')) {?>border-danger<?php }?>"
-                                                       name="audit_date" id="audit_date"
-                                                       value="{{ \Carbon\Carbon::parse($date)->format('Y-m-d')}}" >
+                                                <x-form.date name="audit_date" :value="$asset->audit_date" />
                                             </div >
 
 
