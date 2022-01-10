@@ -20,7 +20,7 @@
                             <td class="text-center">
                                 @if($manufacturer->photo())
                                     <img
-                                        src="{{ asset($manufacturer->photo->path) ?? asset('images/svg/device-image.svg')}}"
+                                        src="{{ asset($manufacturer->photo->path ?? null) ?? asset('images/svg/device-image.svg')}}"
                                         width="250px" alt="{{$manufacturer->name ?? "No Manufacturer"}}">
                                 @else
                                     <img src="{{asset('images/svg/manufacturer-image.svg')}}" width="250px"
