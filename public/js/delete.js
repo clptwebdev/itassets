@@ -1,4 +1,7 @@
-document.querySelector('.deleteBtn').addEventListener('click', function () {
+document.querySelectorAll('.deleteBtn')
+
+.addEventListener('click', function () {
+    alert('CLick');
     document.querySelector('#user-id').value = this.getAttribute('data-id');
     //showModal
     $('#removeUserModal').modal('show');
