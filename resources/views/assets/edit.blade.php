@@ -404,23 +404,9 @@
                                             </div >
 
                                             <div class="form-row" >
-                                                <x-form.select name="status_id" :models="$statuses"
+                                                <x-form.select name="status_id"
+                                                               :models="$statuses"
                                                                :selected="$asset->status_id" />
-
-                                                <label for="status" >Current Status</label ><span
-                                                    class="text-danger" >*</span >
-                                                <select type="text"
-                                                        class="form-control mb-3 <?php if ($errors->has('status')) {?>border-danger<?php }?>"
-                                                        name="status_id" id="status_id" value="Stored" >
-                                                    <option
-                                                        value="0" @if(old('status_id') == 0){{'selected'}}@endif>
-                                                        Unset
-                                                    </option >
-                                                    @foreach($statuses as $status)
-                                                        <option
-                                                            value="{{ $status->id }}" @if(old('status_id') == $status->id){{'selected'}}@endif>{{ $status->name}}</option >
-                                                    @endforeach
-                                                </select >
                                             </div >
                                         </div >
                                     </div >
