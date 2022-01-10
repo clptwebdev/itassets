@@ -32,6 +32,9 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/users/{id}/locations', 'App\Http\Controllers\UserController@getLocations')->name('user.permission');
     });
 
+    //Dashboard
+    Route::get('/statistics', 'App\Http\Controllers\HomeController@statistics')->name('dashboard.statistics');
+
     //User Manager
 
     //User

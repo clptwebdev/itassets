@@ -4,9 +4,11 @@ namespace App\Console;
 
 use App\Http\Controllers\BackupController;
 use App\Models\Report;
+use App\Models\Location;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class Kernel extends ConsoleKernel
 {
@@ -53,6 +55,19 @@ class Kernel extends ConsoleKernel
 
         //deletes all PDF's Monthly
         $schedule->call(Report::clean())->daily()->runInBackground();
+
+        $schedule->call(function(){
+            $total = Cache::rememberForever('total_assets', function () {
+                return \App\Models\Asset::count();
+            });
+
+            foreach(Location::all() as $location){
+                $total = Cache::rememberForever("location_{$location->id}_assets_total", function () {
+                    return \App\Models\Asset::where('location_id', '=', $location->id)->count();
+                });
+            }
+
+        })->daily()->runInBackground();
 
     }
 
