@@ -8,7 +8,7 @@
 
 @section('content')
     <x-form.layout :action="route('assets.update', $asset->id)" >
-        <x-wrappers.nav title="Add New Asset(s)" >
+        <x-wrappers.nav title="Edit New Asset(s)" >
             <x-buttons.return :route="route('assets.index')" > Assets</x-buttons.return >
             <a href="{{ route('documentation.index')."#collapseThreeAssets"}}"
                class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm" ><i
@@ -85,8 +85,7 @@
                                             </div >
 
                                             <div class="form-group" >
-                                                <x-form.input name="asset_tag"
-                                                              :value="$asset->asset_tag" />
+                                                <x-form.input name="asset_tag" :value="$asset->asset_tag" />
                                             </div >
 
                                             <div class="form-group" >
@@ -116,8 +115,10 @@
                                                                 for="{{str_replace(' ', '_', strtolower($field->name))}}" >{{$field->name}}</label >
                                                             @switch($field->type)
                                                                 @case('Text')
-                                                                <x-form.input :name="$field->name"
-                                                                              :value="$field->name" />
+                                                                <input type="text" class="form-control"
+                                                                       name="{{str_replace(' ', '_', strtolower($field->name))}}"
+                                                                       placeholder="{{ $field->name }}"
+                                                                       value="{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''}}" >
                                                                 @break
                                                                 @case('Textarea')
                                                                 <textarea
