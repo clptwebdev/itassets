@@ -27,7 +27,6 @@ class BackupController extends Controller {
 
     public function download(Request $request)
     {
-
         Storage::download($request->file);
     }
 
