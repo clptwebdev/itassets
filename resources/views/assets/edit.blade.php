@@ -222,7 +222,7 @@
                                         <div class="col-12 col-sm-6 p-4 mb-3" >
                                             <h3 class="h6 text-center mb-3" >Purchase Information</h3 >
                                             <div class="form-group" >
-                                                {{--                                                <x-form.input name="order_no" :value="$asset->order_no" />--}}
+                                                <x-form.input name="order_no" :value="$asset->order_no" />
                                             </div >
                                             <div class="form-group" >
                                                 <?php if(old('purchased_date'))
