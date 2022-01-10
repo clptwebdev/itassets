@@ -233,7 +233,7 @@
                     const cats = document.querySelector('#location_id');
                     cats.value = id;
                     locationResults.style.visibility = "hidden";
-                    document.querySelector('#findLocation').value = name;
+                    locationSearch.value = name;
                     getLocationInfo(id);
                 })
             })
@@ -244,7 +244,6 @@
         function getLocationInfo(id){
             const xhttp = new XMLHttpRequest;
             xhttp.onload = function(){
-                alert(xhttp.responseText);
                 locationInfo.innerHTML = xhttp.responseText;
             }
 

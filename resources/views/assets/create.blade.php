@@ -87,6 +87,7 @@
                                                                 @switch($field->type)
                                                                     @case('Text'):
                                                                     <x-form.input :name="$field->name"/>
+
                                                                     @break
                                                                     @case('Textarea')
                                                                     <textarea
