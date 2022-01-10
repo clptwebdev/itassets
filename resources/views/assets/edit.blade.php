@@ -222,15 +222,9 @@
                                         <div class="col-12 col-sm-6 p-4 mb-3" >
                                             <h3 class="h6 text-center mb-3" >Purchase Information</h3 >
                                             <div class="form-group" >
-                                                <label for="order_no" >Order No</label >
-                                                <input type="text"
-                                                       class="form-control <?php if ($errors->has('order_no')) {?>border border-danger<?php }?>"
-                                                       name="order_no" id="order_no"
-                                                       value="{{ old('order_no') ?? $asset->order_no}}" >
+                                                <x-form.input name="order_no" :value="$asset->order_no" />
                                             </div >
                                             <div class="form-group" >
-                                                <label for="purchased_date" >Purchased Date<span
-                                                        class="text-danger" >*</span ></label >
                                                 <?php if(old('purchased_date'))
                                                 {
                                                     $date = old('purchased_date');
@@ -238,18 +232,13 @@
                                                 {
                                                     $date = $asset->purchased_date;
                                                 } ?>
-                                                <input type="date"
-                                                       class="form-control @if($errors->has('purchased_date')){{'border-danger'}}@endif"
-                                                       name="purchased_date" id="purchased_date"
-                                                       value="{{ \Carbon\Carbon::parse($date)->format('Y-m-d')}}" >
+                                                <x-form.date name="purchased_date"
+                                                             formAttributes="required"
+                                                             :value="\Carbon\Carbon::parse($date)->format('Y-m-d')" />
                                             </div >
                                             <div class="form-group" >
-                                                <label for="purchased_cost" >Purchased Cost<span
-                                                        class="text-danger" >*</span ></label >
-                                                <input type="text"
-                                                       class="form-control @if($errors->has('purchased_cost')){{'border-danger'}}@endif"
-                                                       name="purchased_cost" id="purchased_cost" placeholder="£"
-                                                       value="{{ old('purchased_cost') ?? $asset->purchased_cost}}" >
+                                                <x-form.input name="purchased_cost" formAttributes="required"
+                                                              :value="$asset->purchased_cost" />
                                                 <div class="form-check mt-2" >
                                                     <input class="form-check-input" type="checkbox" value="1"
                                                            name="donated" id="donated"
@@ -276,11 +265,7 @@
                                                 </div >
                                             </div >
                                             <div class="form-group" >
-                                                <label for="purchased_date" >Warranty (Months)</label >
-                                                <input type="number"
-                                                       class="form-control <?php if ($errors->has('warranty')) {?>border border-danger<?php }?>"
-                                                       name="warranty" id="warranty"
-                                                       value="{{ old('warranty') ?? $asset->warranty}}" >
+                                                <x-form.input name="warranty" :value="$asset->warranty" />
                                             </div >
 
 
