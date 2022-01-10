@@ -8,10 +8,10 @@
     @if(str_contains($formAttributes,'required' ))<span class="text-danger">*</span>@endif
 @endif
 <textarea
-    name="{{$name}}"
-    id="{{$name}}"
-    class="form-control <?php if ($errors->has("{!! $name !!}")) {?>border-danger<?php }?>"
+    name="{{str_replace(' ', '_', strtolower($name))}}"
+    id="{{str_replace(' ', '_', strtolower($name))}}"
+    class="form-control @if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
     {!!$formAttributes ?? null!!}
->{{old("{!! $name !!}")?? $value}}</textarea>
+>{{old(str_replace(' ', '_', strtolower($name))) ?? $value}}</textarea>
 
 {{--  pass attribues seperated with spaces  --}}

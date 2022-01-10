@@ -86,13 +86,7 @@
                                                                     for="{{str_replace(' ', '_', strtolower($field->name))}}">{{$field->name}}</label>
                                                                 @switch($field->type)
                                                                     @case('Text'):
-                                                                    <x-form.input :name="$field->name" :switch="true"/>
-                                                                    {{--                                                                    <input type="text"--}}
-                                                                    {{--                                                                           class="form-control--}}
-                                                                    {{--                                                                                                                            <?php if ($errors->has(str_replace(' ', '_', strtolower($field->name)))) {?>border border-danger<?php }?>"--}}
-                                                                    {{--                                                                           name="{{str_replace(' ', '_', strtolower($field->name))}}"--}}
-                                                                    {{--                                                                           value="{{ old(str_replace(' ', '_', strtolower($field->name)))}}"--}}
-                                                                    {{--                                                                    >--}}
+                                                                    <x-form.input :name="$field->name"/>
                                                                     @break
                                                                     @case('Textarea')
                                                                     <textarea

@@ -1,4 +1,4 @@
-@props(['name'=> 'title', 'title' ,'formAttributes'=>" " ,'value' => null , 'type'=>'text' , 'label'=>true , 'switch' =>false])
+@props(['name'=> 'title', 'title' ,'formAttributes'=>" " ,'value' => null , 'type'=>'text' , 'label'=>true ])
 
 {{--form input Dynamic--}}
 @if($label == true)
@@ -10,7 +10,7 @@
     @endif
 @endif
 <input type="{{$type}}"
-       class="form-control@if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
+       class="form-control @if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
        name="{{str_replace(' ', '_', strtolower($name))}}"
        value="{{ old(str_replace(' ', '_', strtolower($name)))}}"
        id="{{ old(str_replace(' ', '_', strtolower($name)))}}"
