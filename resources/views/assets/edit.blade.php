@@ -237,8 +237,8 @@
                                                 {{--                                                             :value="\Carbon\Carbon::parse($date)->format('Y-m-d')" />--}}
                                             </div >
                                             <div class="form-group" >
-                                                {{--                                                <x-form.input name="purchased_cost" formAttributes="required"--}}
-                                                {{--                                                              :value="$asset->purchased_cost" />--}}
+                                                <x-form.input name="purchased_cost" formAttributes="required"
+                                                              :value="$asset->purchased_cost" />
                                                 <div class="form-check mt-2" >
                                                     <input class="form-check-input" type="checkbox" value="1"
                                                            name="donated" id="donated"
