@@ -9,7 +9,7 @@
 <select type="text"
         class="form-control @if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
         id="{{$id}}" name="{{str_replace(' ', '_', strtolower($name))}}" {!!$formAttributes ?? null!!}>
-    <option value="0" @if(old(str_replace(' ', '_', strtolower($selected))) == 0){{'selected'}}@endif>
+    <option value="0" @if(old(str_replace(' ', '_', strtolower($name))) == 0){{'selected'}}@endif>
         No {{str_replace(array('_','id'), ' ',ucfirst($name))}}</option >
     @foreach($models as $model)
         <option
