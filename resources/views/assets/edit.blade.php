@@ -115,10 +115,12 @@
                                                                 for="{{str_replace(' ', '_', strtolower($field->name))}}" >{{$field->name}}</label >
                                                             @switch($field->type)
                                                                 @case('Text')
-                                                                <input type="text" class="form-control"
-                                                                       name="{{str_replace(' ', '_', strtolower($field->name))}}"
-                                                                       placeholder="{{ $field->name }}"
-                                                                       value="{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''}}" >
+                                                                <x-form.input :name="$field->name"
+                                                                              value="old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''" />
+                                                                {{--                                                                <input type="text" class="form-control"--}}
+                                                                {{--                                                                       name="{{str_replace(' ', '_', strtolower($field->name))}}"--}}
+                                                                {{--                                                                       placeholder="{{ $field->name }}"--}}
+                                                                {{--                                                                       value="{{ old(str_replace(' ', '_', strtolower($field->name))) ?? $field_array[$field->id] ?? ''}}" >--}}
                                                                 @break
                                                                 @case('Textarea')
                                                                 <textarea
