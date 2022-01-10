@@ -265,7 +265,7 @@
                                                 </div >
                                             </div >
                                             <div class="form-group" >
-                                                {{--                                                <x-form.input name="warranty" :value="$asset->warranty" />--}}
+                                                <x-form.input name="warranty" :value="$asset->warranty" />
                                             </div >
 
 
