@@ -18,12 +18,10 @@
        
     </div>
 
-    @if($assets->count() != 0 or auth()->user()->role_id != 1)
+    @if(auth()->user()->role_id != 1)
         <!-- Asset stats -->
-        <x-admin.asset-info :transfers=$transfers :archived=$archived :assets=$assets :accessories=$accessories
-                            :components=$components :consumables=$consumables :miscellaneous=$miscellaneous
-                            :requests=$requests/>
-        <x-categories_status_info :statuses="$statuses" :category="$category"/>
+        <x-admin.asset-info />
+        {{-- <x-categories_status_info :statuses="$statuses" :category="$category"/> --}}
     @else
         <x-admin.request-access/>
     @endif
@@ -35,8 +33,22 @@
     <script type="text/javascript">
     
         const totalCount = document.querySelector('#total_count');
+        const totalCost = document.querySelector('#total_cost');
+        const totalDep = document.querySelector('#total_dep');
         const assetsCount = document.querySelector('#assets_count');
+        const assetsCost = document.querySelector('#assets_cost');
+        const assetsDep = document.querySelector('#assets_dep');
         const accessoryCount = document.querySelector('#accessory_count');
+        const accessoryCost = document.querySelector('#accessory_cost');
+        const accessoryDep = document.querySelector('#accessory_dep');
+        const componentsCount = document.querySelector('#components_count');
+        const componentsCost = document.querySelector('#components_cost');
+        const consumablesCount = document.querySelector('#consumables_count');
+        const consumablesCost = document.querySelector('#consumables_cost');
+        const miscCount = document.querySelector('#miscellanea_count');
+        const miscCost = document.querySelector('#miscellanea_cost');
+
+        const loader = document.querySelectorAll('.stats_loading');
 
         // How long you want the animation to take, in ms
         const animationDuration = 2000;
@@ -82,13 +94,33 @@
         const xhttp = new XMLHttpRequest();
 
         xhttp.onload = function(){
+            loader.forEach(function(el) {
+                el.classList.remove('d-flex');
+                el.classList.add('d-none');
+            });
             //Fetch the return JSON Object
-            alert(xhttp.responseText);
             const obj = JSON.parse(xhttp.responseText);
-            console.log('obj');
-            accessoryCount.innerHTML = '457';
+            //Asset
             assetsCount.innerHTML = obj.asset.count;
-            totalCount.innerHTML = parseInt(assetsCount.innerHTML) + parseInt(accessoryCount.innerHTML);
+            assetsCost.innerHTML = obj.asset.cost;
+            assetsDep.innerHTML = obj.asset.dep;
+            //Accessory
+            accessoryCount.innerHTML = obj.accessories.count;
+            accessoryCost.innerHTML = obj.accessories.cost;
+            accessoryDep.innerHTML = obj.accessories.dep;
+
+            componentsCount.innerHTML = obj.components.count;
+            componentsCost.innerHTML = obj.components.cost;
+
+            consumablesCount.innerHTML = obj.consumables.count;
+            consumablesCost.innerHTML = obj.consumables.cost;
+
+            miscCount.innerHTML = obj.miscellaneous.count;
+            miscCost.innerHTML = obj.miscellaneous.cost;
+
+            totalCount.innerHTML = obj.asset.count + obj.accessories.count;
+            totalCost.innerHTML = obj.asset.cost + obj.accessories.cost;
+            totalDep.innerHTML = obj.asset.dep + obj.accessories.dep;
             runAnimations();
         }
 
@@ -97,7 +129,9 @@
 
         function addListenener(xhr){
             xhr.addListenener('loadstart', function(){
-
+                assetsCount.innerHTML = `<div class="spinner-border text-secondary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                        </div>`;
             });
         }
 

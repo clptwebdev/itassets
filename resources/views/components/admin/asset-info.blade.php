@@ -1,42 +1,3 @@
-@php
-
-    //Assets
-    $total = 0; $depreciation = 0;
-    foreach($assets as $asset){
-    	$total += $asset->purchased_cost;
-    	$depreciation += $asset->depreciation_value;
-    }
-    $asset_total = $total; $asset_depreciation = $depreciation;
-    //Accessories
-    $total = 0; $depreciation = 0;
-    foreach($accessories as $accessory){
-        $total += $accessory->purchased_cost;
-    	$depreciation += $accessory->depreciation_value();
-    }
-    $accessory_total = $total; $accessory_depreciation = $depreciation;
-
-    $total = 0;
-    foreach($components as $component){
-        $total = $total + $component->purchased_cost;
-    }
-    $component_total = $total;
-
-    $total = 0;
-    foreach($consumables as $consumable){
-        $total = $total + $consumable->purchased_cost;
-    }
-    $consumable_total = $total;
-
-    $total = 0;
-    foreach($miscellaneous as $miscellanea){
-        $total = $total + $miscellanea->purchased_cost;
-    }
-    $miscellanea_total = $total;
-
-
-
-
-@endphp
 
 <!-- Content Row -->
 <div class="d-flex p-2 mb-1 justify-content-around">
@@ -52,8 +13,8 @@
                                 Total</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 <small>Count: <span id="total_count" class="countup"></span></small><br>
-                                {{ '£'.round($asset_total + $accessory_total)}}
-                                <small class="text-coral">(£{{ round($asset_depreciation + $accessory_depreciation)}})*</small><br>
+                                £<span id="total_cost" class="countup"></span><br>
+                                <small class="text-coral">£<span id="total_dep" class="countup"></small><br>
                                 <span class="text-xs">*calculated depreciation</span>
                             </div>
                         </div>
@@ -62,11 +23,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-lg-4">
-            <div class="card border-left-coral shadow h-100 py-2">
+            <div class="card border-left-coral shadow h-100 py-2 postion-relative">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-1">
@@ -74,14 +40,19 @@
                                 Assets</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 <small>Total: <span id="assets_count" class="countup"></span></small><br>
-                                <small>{{ '£'.round($asset_total)}}</small>
-                                <small class="text-coral">(£{{ round($asset_depreciation)}})*</small><br>
+                                £<span id="assets_cost" class="countup"></span><br>
+                                <small class="text-coral">(£<span id="assets_dep" class="countup"></span>)*</small><br>
                                 <span class="text-xs">*calculated depreciation</span>
                             </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-tablet-alt fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                         </div>
+                    </div>
+                </div>
+                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
             </div>
@@ -96,14 +67,19 @@
                                 Accessories</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                {{ '£'.round($accessory_total)}}
-                                <small class="text-coral">(£{{ round($accessory_depreciation)}})*</small><br>
+                                £<span id="accessory_cost" class="countup"></span><br>
+                                <small class="text-coral">(£<span id="accessory_dep" class="countup"></span>)</small><br>
                                 <span class="text-xs">*calculated depreciation</span>
                             </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                         </div>
+                    </div>
+                </div>
+                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
             </div>
@@ -119,12 +95,17 @@
                         <div class="col mr-1">
                             <div class="text-xs font-weight-bold text-green text-uppercase mb-1">
                                 Components</div>
-                                <small>Total Spent: {{ $components->count()}}</small><br>
-                                {{ '£'.round($component_total)}}
+                                <small>Total Items: <span id="components_count" class="countup"></span></small><br>
+                                £<span id="components_cost" class="countup"></span>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-hdd fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                         </div>
+                    </div>
+                </div>
+                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
             </div>
@@ -138,12 +119,17 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-yellow text-uppercase mb-1">
                                 Consumables</div>
-                                <small>Total Spent: {{ $consumables->count()}}</small><br>
-                                {{ '£'.round($consumable_total)}}
+                                <small>Total Items: <span id="consumables_count" class="countup"></span></small><br>
+                                £<span id="consumables_cost" class="countup"></span>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-tint fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                         </div>
+                    </div>
+                </div>
+                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
             </div>
@@ -157,19 +143,24 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
                                 Miscellaneous</div>
-                                <small>Total Spent: {{ $miscellaneous->count()}}</small><br>
-                                {{ '£'.round($miscellanea_total)}}
+                                <small>Total Items: <span id="miscellanea_count" class="countup"></span></small><br>
+                                £<span id="miscellanea_cost" class="countup"></span>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-question fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                         </div>
                     </div>
                 </div>
+                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Content Row -->
+{{-- <!-- Content Row -->
 <div class="row p-4">
     <div class="col-12 text-dark text-xs font-weight-bold text-uppercase">Statistics</div>
 
@@ -313,4 +304,4 @@
         </div>
     </div>
 </div>
-@endif
+@endif --}}

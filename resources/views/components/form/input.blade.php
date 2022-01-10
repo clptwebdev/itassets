@@ -10,13 +10,10 @@
     @endif
 @endif
 <input type="{{$type}}"
-       class="form-control@if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
+       class="form-control @if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
        name="{{str_replace(' ', '_', strtolower($name))}}"
        value="{{ old(str_replace(' ', '_', strtolower($name)))}}"
        id="{{ old(str_replace(' ', '_', strtolower($name)))}}"
        placeholder="{{str_replace(array('_','id'), ' ',ucfirst($title ?? $name))}}"
     {!!$formAttributes ?? null!!}
 >  {{--  pass attribues seperated with spaces  --}}
-
-
-name="operating_system"
