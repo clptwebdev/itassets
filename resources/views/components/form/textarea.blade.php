@@ -3,7 +3,10 @@
 {{--form input Dynamic || value should be current data stored--}}
 
 <label for="name">{{str_replace(array('_','id'), ' ',ucfirst($name))}}</label>
-@if(str_contains('required', $formAttributes))<span class="text-danger">*</span>@endif
+@if(isset($formAttributes))
+
+    @if(str_contains($formAttributes,'required' ))<span class="text-danger">*</span>@endif
+@endif
 <textarea
     name="{{$name}}"
     id="{{$name}}"

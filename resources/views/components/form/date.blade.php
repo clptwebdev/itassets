@@ -2,7 +2,10 @@
 {{--form input Dynamic || enter a valid date which is parsed--}}
 
 <label for="name">{{str_replace(array('_','id'), ' ',ucfirst($name))}}</label>
-@if(str_contains('required', $formAttributes))<span class="text-danger">*</span>@endif
+@if(isset($formAttributes))
+
+    @if(str_contains($formAttributes,'required' ))<span class="text-danger">*</span>@endif
+@endif
 
 <input type="date"
        class="form-control <?php if ($errors->has("{!! $name !!}")) {?>border-danger<?php }?>"

@@ -64,8 +64,8 @@
     <x-modals.dispose model="accessory"/>
     <x-modals.transfer :models="$locations" model="accessory" :tag="$accessory->asset_tag"/>
     <x-modals.delete/>
-    <x-modals.status :model="$accessory" :route="route('accessories.status',$accessory->id)"/>
-    <x-modals.add-comment :route="route('accessories.comment', $accessory->id)" :model="$accessory"/>
+    <x-modals.status :model="$accessory" :route="route('accessories.status',$accessory->id)" title="accessory"/>
+    <x-modals.add-comment :route="route('accessories.comment', $accessory->id)" :model="$accessory" title="accessory"/>
     <x-modals.edit-comment :model="$accessory"/>
     <x-modals.delete-comment/>
 @endsection

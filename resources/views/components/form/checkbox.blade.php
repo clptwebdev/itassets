@@ -1,7 +1,10 @@
 @props(['name','formAttributes' ,'models' ,'checked' => null])
 {{--checked value should pass foreach of all Relationship categories pushed into an array--}}
 <h4 class="h6 mb-4 text-center">{{str_replace(array('_','id'), ' ',ucfirst($name))}}</h4>
-@if(str_contains('required', $formAttributes))<span class="text-danger">*</span>@endif
+@if(isset($formAttributes))
+
+    @if(str_contains($formAttributes,'required' ))<span class="text-danger">*</span>@endif
+@endif
 {{--enter your models plural name--}}
 @foreach($models as $model)
     <div class="form-check form-check-inline mr-2 p-2 ">

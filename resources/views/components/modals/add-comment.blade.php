@@ -1,4 +1,4 @@
-@props(['route'=>"#" , 'model'=>null])
+@props(['route'=>"#" , 'model'=>null , 'title'=>''])
 <!-- comments Modal-->
 <div class="modal fade bd-example-modal-lg" id="commentModalOpen" tabindex="-1" role="dialog"
      aria-labelledby="commentModalOpen" aria-hidden="true">
@@ -15,7 +15,7 @@
                   enctype="multipart/form-data">
                 <div class="modal-body">
                     <p>Fill Out the Title Field and Body to continue...</p>
-                    <input type="hidden" name="accessory_id" value="{{ $model->id }}">
+                    <input type="hidden" name="{{lcfirst($title)}}_id" value="{{ $model->id }}">
                 </div>
                 <div class="form-group pr-3 pl-3">
                     <label class="font-weight-bold" for="title">Comment Title</label>

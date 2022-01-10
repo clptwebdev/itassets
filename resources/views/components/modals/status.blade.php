@@ -1,11 +1,11 @@
-@props(['route'=>"#" , 'model'=>null])
+@props(['route'=>"#" , 'model'=>null , 'title' => ''])
 <!-- Status Model Modal-->
-<div class="modal fade bd-example-modal-lg" id="accessoryModalStatus" tabindex="-1" role="dialog"
-     aria-labelledby="accessoryModalStatusLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="{{lcfirst($title)}}ModalStatus" tabindex="-1" role="dialog"
+     aria-labelledby="{{lcfirst($title)}}ModalStatusLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="accessoryModalStatusLabel">Change the Status
+                <h5 class="modal-title" id="{{lcfirst($title)}}ModalStatusLabel">Change the Status
                 </h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>

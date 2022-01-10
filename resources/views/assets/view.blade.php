@@ -42,13 +42,18 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Bulk Options
                 </a>
-
                 <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
                     @can('create', \App\Models\Asset::class)
-                        <a id="import" class="dropdown-item"> Import</a>
+                        <x-buttons.dropdown-item id="import">
+                            import
+                        </x-buttons.dropdown-item>
                     @endcan
-                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkDisposalModal">Dispose</a>
-                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulkTransferModal">Transfer</a>
+                    <x-buttons.dropdown-item
+                        form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">Dispose
+                    </x-buttons.dropdown-item>
+                    <x-buttons.dropdown-item
+                        form-requirements=" data-toggle='modal' data-target='#bulkTransferModal'">Transfer
+                    </x-buttons.dropdown-item>
                 </div>
             </div>
         @endcan
@@ -237,80 +242,9 @@
     <x-modals.dispose model="asset"/>
     <x-modals.transfer :models="$locations" model="asset" :tag="$asset->asset_tag"/>
     <x-modals.delete/>
+    <x-modals.bulk-file title="disposal" :route="route('assets.bulk.disposal')"/>
+    <x-modals.bulk-file title="transfer" :route="route('assets.bulk.transfer')"/>
     <x-modals.import/>
-
-
-    {{-- This is the Modal for Bulk Disposal {SC} --}}
-    <div class="modal fade bd-example-modal-lg" id="bulkDisposalModal" tabindex="-1" role="dialog"
-         aria-labelledby="bulkDisposalModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="bulkDisposalModalLabel">Bulk Disposal Assets - Upload</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form action="{{ route('assets.bulk.disposal')}}" method="POST" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <p>Select "import disposals" to bulk dispose of Assets on the system</p>
-                        <input class="form-control shadow-sm"
-                               type="file" placeholder="Upload here" name="csv" accept=".csv" id="disposeAssets"
-                               required>
-                    </div>
-                    <div class="modal-footer">
-                        @if(session('import-error'))
-                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
-                        @endif
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-
-                        <button type="submit" class="btn btn-danger" type="button">
-                            Import Disposals
-                        </button>
-
-                        @csrf
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {{-- This is the Modal for Bulk Transfers {SC} --}}
-    <div class="modal fade bd-example-modal-lg" id="bulkTransferModal" tabindex="-1" role="dialog"
-         aria-labelledby="bulkTransferModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="bulkTransferModalLabel">Bulk Transfer Assets - Upload</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form action="{{ route('assets.bulk.transfer')}}" method="POST" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <p>Select "import transfers" to bulk transfer assets to different locations on the system</p>
-                        <input class="form-control shadow-sm"
-                               type="file" placeholder="Upload here" name="csv" accept=".csv" id="transferAssets"
-                               required>
-                    </div>
-                    <div class="modal-footer">
-                        @if(session('import-error'))
-                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
-                        @endif
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-
-                        <button type="submit" class="btn btn-danger" type="button">
-                            Import Transfers
-                        </button>
-                        @csrf
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-
 @endsection
 
 @section('js')
