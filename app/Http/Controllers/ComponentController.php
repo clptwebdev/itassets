@@ -253,7 +253,7 @@ class ComponentController extends Controller {
         ));
         $component->category()->attach($request->category);
 
-        return redirect(route("components.index"))->with('success_message' , $request->name . ' Has been successfully added!');
+        return redirect(route("components.index"))->with('success_message', $request->name . ' Has been successfully added!');
     }
 
     public function importErrors(Request $request)
@@ -328,7 +328,7 @@ class ComponentController extends Controller {
             return redirect(route('errors.forbidden', ['component', $component->id, 'view']));
         }
 
-        return view('ComponentsDir.show', ["component" => $component,]);
+        return view('ComponentsDir.show', ["data" => $component,]);
     }
 
     public function edit(Component $component)
@@ -424,7 +424,7 @@ class ComponentController extends Controller {
         {
             return redirect(route('errors.forbidden', ['area', 'Components', 'export']));
         }
-$components =Component::all();
+        $components = Component::all();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new ComponentsExport($components), "/public/csv/components-ex-{$date}.csv");
         $url = asset("storage/csv/components-ex-{$date}.csv");

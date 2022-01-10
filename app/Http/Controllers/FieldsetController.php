@@ -53,10 +53,6 @@ class FieldsetController extends Controller {
 
     public function edit(Fieldset $fieldset)
     {
-//        if (auth()->user()->cant('update', Fieldset::class)) {
-//            return redirect(route('errors.forbidden', ['area', 'Category', 'edit']));
-//        }
-
         $fields = Field::all();
 
         return view('fieldsets.edit', compact('fieldset', 'fields'));
