@@ -232,9 +232,9 @@
                                                 {
                                                     $date = $asset->purchased_date;
                                                 } ?>
-                                                {{--                                                <x-form.date name="purchased_date"--}}
-                                                {{--                                                             formAttributes="required"--}}
-                                                {{--                                                             :value="\Carbon\Carbon::parse($date)->format('Y-m-d')" />--}}
+                                                <x-form.date name="purchased_date"
+                                                             formAttributes="required"
+                                                             :value="\Carbon\Carbon::parse($date)->format('Y-m-d')" />
                                             </div >
                                             <div class="form-group" >
                                                 <x-form.input name="purchased_cost" formAttributes="required"
