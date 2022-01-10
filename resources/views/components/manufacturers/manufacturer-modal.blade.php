@@ -18,7 +18,7 @@
                         <thead>
                         <tr>
                             <td class="text-center">
-                                @if($manufacturer->photo())
+                                @if(isset($manufacturer->photo->path))
                                     <img
                                         src="{{ asset($manufacturer->photo->path ?? null) ?? asset('images/svg/device-image.svg')}}"
                                         width="250px" alt="{{$manufacturer->name ?? "No Manufacturer"}}">
