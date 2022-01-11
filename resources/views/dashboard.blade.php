@@ -50,6 +50,10 @@
 
         const loader = document.querySelectorAll('.stats_loading');
 
+        const requests = document.querySelector('#requests_count');
+        const transfers = document.querySelector('#transfers_count');
+        const archives = document.querySelector('#archived_count');
+
         // How long you want the animation to take, in ms
         const animationDuration = 2000;
         // Calculate how long each ‘frame’ should last if we want to update the animation 60 times per second
@@ -121,19 +125,15 @@
             totalCount.innerHTML = obj.asset.count + obj.accessories.count;
             totalCost.innerHTML = obj.asset.cost + obj.accessories.cost;
             totalDep.innerHTML = obj.asset.dep + obj.accessories.dep;
+
+            requests.innerHTML = obj.requests.count;
+            transfers.innerHTML = obj.transfer.count;
+            archives.innerHTML = obj.archived.count;
             runAnimations();
         }
 
         xhttp.open("GET", "/statistics");
         xhttp.send(); 
-
-        function addListenener(xhr){
-            xhr.addListenener('loadstart', function(){
-                assetsCount.innerHTML = `<div class="spinner-border text-secondary" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                        </div>`;
-            });
-        }
 
     </script>
 
