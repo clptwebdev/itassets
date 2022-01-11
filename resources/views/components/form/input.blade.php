@@ -1,4 +1,4 @@
-@props(['name'=> 'title', 'title' ,'formAttributes'=>" " ,'value' => null , 'type'=>'text' , 'label'=>true ])
+@props(['name'=> 'title', 'title' ,'formAttributes'=>" " ,'value' => '' , 'type'=>'text' , 'label'=>true ])
 
 {{--form input Dynamic--}}
 @if($label == true)

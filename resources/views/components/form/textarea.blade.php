@@ -1,4 +1,4 @@
-@props(['name','formAttributes', 'value' => null])
+@props(['name','formAttributes', 'value' => ''])
 
 {{--form input Dynamic || value should be current data stored--}}
 
