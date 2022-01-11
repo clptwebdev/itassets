@@ -48,11 +48,11 @@
                             import
                         </x-buttons.dropdown-item>
                     @endcan
-                    <x-buttons.dropdown-item
-                        form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">Dispose
+                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">
+                        Dispose
                     </x-buttons.dropdown-item>
-                    <x-buttons.dropdown-item
-                        form-requirements=" data-toggle='modal' data-target='#bulkTransferModal'">Transfer
+                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkTransferModal'">
+                        Transfer
                     </x-buttons.dropdown-item>
                 </div>
             </div>
@@ -79,7 +79,7 @@
     @endphp
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
-            different options and locations can created, updated, deleted and filtered</p>
+                        different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
         <x-filters.navigation model="Asset" :filter="$filter"/>
         <x-filters.filter model="Asset" relations="assets" :filter="$filter" :locations="$locations"
@@ -195,7 +195,7 @@
                                             @endcan
                                             @can('transfer', $asset)
                                                 <x-buttons.dropdown-item class="transferBtn"
-                                                                         formRequirements="data-model-id='{{$asset->id}}' data-location-from='{{$asset->location->name ?? 'Unallocated' }}' data-location-id='{{ $asset->location_id }}'">
+                                                                         formRequirements="data-model-id='{{$asset->id}}' data-model-tag='{{$asset->asset_tag}}' data-location-from='{{$asset->location->name ?? 'Unallocated' }}' data-location-id='{{ $asset->location_id }}'">
                                                     Transfer
                                                 </x-buttons.dropdown-item>
                                             @endcan
@@ -206,8 +206,7 @@
                                                 </x-buttons.dropdown-item>
                                             @endcan
                                             @can('delete', $asset)
-                                                <x-form.layout method="DELETE"
-                                                               :id="'form'.$asset->id"
+                                                <x-form.layout method="DELETE" :id="'form'.$asset->id"
                                                                :action="route('assets.destroy', $asset->id)">
                                                     <x-buttons.dropdown-item class="deleteBtn" :data="$asset->id">
                                                         Delete
@@ -232,7 +231,7 @@
             <div class="card-body">
                 <h4>Help with Assets</h4>
                 <p>Click <a href="{{route("documentation.index").'#collapseThreeAssets'}}">here</a> for the
-                    Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
+                   Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
             </div>
         </div>
 
@@ -240,7 +239,7 @@
 @endsection
 @section('modals')
     <x-modals.dispose model="asset"/>
-    <x-modals.transfer :models="$locations" model="asset" :tag="$asset->asset_tag"/>
+    <x-modals.transfer :models="$locations" model="asset"/>
     <x-modals.delete/>
     <x-modals.bulk-file title="disposal" :route="route('assets.bulk.disposal')"/>
     <x-modals.bulk-file title="transfer" :route="route('assets.bulk.transfer')"/>

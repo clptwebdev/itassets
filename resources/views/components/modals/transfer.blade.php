@@ -7,8 +7,7 @@
             <form action="{{ route('request.transfer')}}" method="POST">
                 <div class="modal-header">
                     <h5 class="modal-title" id="requestTransferLabel">Request to Transfer this Item to another
-                        Location?
-                    </h5>
+                                                                      Location? </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -16,7 +15,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="disposal_date">Asset Tag</label>
-                        <input type="text" value="{{$tag}}" id="asset_tag" name="asset_tag"
+                        <input type="text" value="{{$tag}}" id="asset_tag_transfer" name="asset_tag"
                                class="form-control">
                         <small class="text-warning">Enter a new Asset Tag if required</small>
                     </div>
@@ -34,8 +33,7 @@
                                name="transfer_date" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="School Location">Transfer to:</label><span
-                            class="text-danger">*</span>
+                        <label for="School Location">Transfer to:</label><span class="text-danger">*</span>
                         <select type="text"
                                 class="form-control mb-3 @if($errors->has('location_id')){{'border-danger'}}@endif"
                                 name="location_to" required>
@@ -52,7 +50,7 @@
                         <textarea name="notes" class="form-control" rows="5"></textarea>
                     </div>
                     <small>This will send a request to the administrator. The administrator will then decide to
-                        approve or reject the request. You will be notified via email.</small>
+                           approve or reject the request. You will be notified via email.</small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
