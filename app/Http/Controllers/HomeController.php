@@ -34,12 +34,12 @@ class HomeController extends Controller {
             $locations = auth()->user()->locations;
         }
 
-        if(Cache::has('total_assets') && Cache::has('asset_cost') && Cache::has('asset_dep') && Cache::has('asset_deploy')){
+        if(Cache::has('total_assets') && Cache::has('asset_cost') && Cache::has('asset_dep') && Cache::has('asset_deploy') && Cache::has('audits_due') && Cache::has('audits_overdue')){
             $everything += Cache::has('total_assets');
         }else{ 
             $assets = Asset::locationFilter($locations->pluck('id'))
                             ->with('model', 'status')
-                            ->select('asset_model', 'purchased_cost', 'purchased_date', 'status_id')
+                            ->select('asset_model', 'purchased_cost', 'purchased_date', 'status_id', 'audit_date')
                             ->get()
                             ->map(function($item, $key) {
                                 $item['depreciation_value'] = $item->depreciation_value();
@@ -53,12 +53,21 @@ class HomeController extends Controller {
             });
 
             $cost_total = 0;
+            $audits_due = 0;
+            $audits_overdue = 0;
             $dep_total = 0;
             $deploy_assets = 0;
 
             foreach($assets as $asset){
                 $cost_total += $asset->purchased_cost;
                 $dep_total += $asset->depreciation_value;
+                $audit_date = \Carbon\Carbon::parse($asset->audit_date);
+                $now = \Carbon\Carbon::now();
+                if($audit_date->isPast()){
+                    $audits_overdue++;
+                }elseif($audit_date->diffInMonths($now) < 3){
+                    $audits_due++;
+                }
                 if($asset->deployable !== 1){ $deploy_assets++;}
             }
 
@@ -72,6 +81,14 @@ class HomeController extends Controller {
 
             $deploy = Cache::rememberForever('assets_deploy', function() use($deploy_assets){
                 return round($deploy_assets);
+            });
+
+            $due = Cache::rememberForever('audits_due', function() use($audits_due){
+                return round($audits_due);
+            });
+
+            $due = Cache::rememberForever('audits_overdue', function() use($audits_overdue){
+                return round($audits_overdue);
             });
         }
 
@@ -87,7 +104,7 @@ class HomeController extends Controller {
                                         $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
                                         return $item;
                                     });
-                                    
+
             $total = Cache::rememberForever('total_accessories', function () use($accessories){
                 return $accessories->count();
             });
@@ -235,9 +252,10 @@ class HomeController extends Controller {
                         'requests' => ['count' => $requests],
                         'transfer' => ['count' => $transfers],
                         'archived' => ['count' => $archived],
-                        'everything' => ['count' => Cache::get('count_everything'), 'undeployable' => $undeployable],
-                        'undeployable' => ['assets' => Cache::get('assets_deploy'), 'accessories' => Cache::get('accessories_deploy'), 'components' => Cache::get('components_deploy'), 'consumables' => Cache::get('consumables_deploy'), 'miscellanea' => Cache::get('miscellanea_deploy')]
-        );
+                        'everything' => ['count' => Cache::get('count_everything'), 'undeployable' => round(((Cache::get('count_everything') - $undeployable) / Cache::get('count_everything')) * 100)],
+                        'undeployable' => ['assets' => Cache::get('assets_deploy'), 'accessories' => Cache::get('accessories_deploy'), 'components' => Cache::get('components_deploy'), 'consumables' => Cache::get('consumables_deploy'), 'miscellanea' => Cache::get('miscellanea_deploy')],
+                        'audits' => ['due' => Cache::get('audits_due'), 'overdue' => Cache::get('audits_overdue')]
+                    );
 
 
 

@@ -225,16 +225,16 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-uppercase mb-1">Undeployable
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Deployable
                         </div>
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
-                                <div class="h5 mb-0 mr-3 font-weight-bold"><span id="undeployable_count" class="countup"></span></div>
+                                <div class="h5 mb-0 mr-3 font-weight-bold"><span id="undeployable_count" class="countup"></span>%</div>
                             </div>
 
                             <div class="col">
                                 <div class="progress progress-sm mr-2">
-                                    <div id="undeployable_progress" class="progress-bar bg-coral" role="progressbar" style="width: 0%"
+                                    <div id="undeployable_progress" class="progress-bar bg-green" role="progressbar" style="width: 0%"
                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>

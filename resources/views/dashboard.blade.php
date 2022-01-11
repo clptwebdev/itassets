@@ -22,6 +22,22 @@
         <!-- Asset stats -->
         <x-admin.asset-info />
         {{-- <x-categories_status_info :statuses="$statuses" :category="$category"/> --}}
+
+        <div class="row no-gutters mb-4">
+            {{-- Expenditure --}}
+            <div class="col-12 col-md-6 mb-3 chart">
+                <div class="card shadow h-100 p-4 chart">
+                    <div id="chart" style="height: 500px;"></div>
+                </div>
+            </div>
+            {{-- Depreication Information --}}
+    
+            <div class="col-12 col-md-6 mb-3 chart">
+                <div class="card shadow h-100 p-4">
+                    <div id="dep_chart" style="height: 500px;"></div>
+                </div>
+            </div>
+        </div>
     @else
         <x-admin.request-access/>
     @endif
@@ -53,7 +69,11 @@
         const requests = document.querySelector('#requests_count');
         const transfers = document.querySelector('#transfers_count');
         const archives = document.querySelector('#archived_count');
-
+        const progress = document.querySelector('#undeployable_progress');
+        const progressCount = document.querySelector('#undeployable_count');
+        const auditsDue = document.querySelector('#audits_due_count');
+        const auditsOver = document.querySelector('#audits_over_count');
+        
         // How long you want the animation to take, in ms
         const animationDuration = 2000;
         // Calculate how long each ‘frame’ should last if we want to update the animation 60 times per second
@@ -129,6 +149,13 @@
             requests.innerHTML = obj.requests.count;
             transfers.innerHTML = obj.transfer.count;
             archives.innerHTML = obj.archived.count;
+
+            progress.style.width = obj.everything.undeployable+'px';
+            progressCount.innerHTML = obj.everything.undeployable;
+
+            auditsDue.innerHTML = obj.audits.due;
+            auditsOver.innerHTML = obj.audits.overdue;
+
             runAnimations();
         }
 
