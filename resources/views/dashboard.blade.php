@@ -14,16 +14,18 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
     </div>
-    <div class="p-2 border-danger">
-       
-    </div>
 
     @if(auth()->user()->role_id != 0)
         <!-- Asset stats -->
         <x-admin.asset-info />
         {{-- <x-categories_status_info :statuses="$statuses" :category="$category"/> --}}
 
-        <div class="row no-gutters mb-4">
+        <div class="row m-2">
+            <div class="col-12 chart mb-4">
+                <div class="card shadow h-100 p-4">
+                    <div id="expenditure_chart" style="height: 500px;"></div>
+                </div>
+            </div>
             {{-- Expenditure --}}
             <div class="col-12 col-md-6 mb-3 chart">
                 <div class="card shadow h-100 p-4 chart">
@@ -150,7 +152,7 @@
             transfers.innerHTML = obj.transfer.count;
             archives.innerHTML = obj.archived.count;
 
-            progress.style.width = obj.everything.undeployable+'px';
+            progress.style.width = obj.everything.undeployable+'%';
             progressCount.innerHTML = obj.everything.undeployable;
 
             auditsDue.innerHTML = obj.audits.due;
@@ -162,6 +164,52 @@
         xhttp.open("GET", "/statistics");
         xhttp.send(); 
 
+    </script>
+
+     <!-- Charting library -->
+    <script src="https://unpkg.com/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <!-- Chartisan -->
+    <script src="https://unpkg.com/@chartisan/chartjs@^2.1.0/dist/chartisan_chartjs.umd.js"></script>
+    <!-- Your application script -->
+    <script>
+        const expenditure = new Chartisan({
+            el: '#expenditure_chart',
+            url: `@chart('expenditure_chart')`,
+            // You can also pass the data manually instead of the url:
+            // data: { ... }
+            hooks: new ChartisanHooks()
+                .datasets([{ type: 'line', fill: false}])
+                .responsive()
+                .colors()
+                .title('Expenditure')
+                .responsive()
+        });
+
+        const chart = new Chartisan({
+            el: '#dep_chart',
+            url: `@chart('depreciation_chart')`,
+            // You can also pass the data manually instead of the url:
+            // data: { ... }
+            hooks: new ChartisanHooks()
+                .datasets([{ type: 'line', fill: false}])
+                .responsive()
+                .colors(['#F99'])
+                .title('Asset Depreciation')
+                .responsive()
+        })
+
+        const dep_chart = new Chartisan({
+            el: '#chart',
+            url: `@chart('exp_chart')?id=1`,
+            // You can also pass the data manually instead of the url:
+            // data: { ... }
+            hooks: new ChartisanHooks()
+            .datasets('bar')
+            .beginAtZero('false')
+            .stepSize(1000, 'x')
+            .colors(['#b087bc', '#474775'])
+            .title('Asset Expenditure')
+        })
     </script>
 
 @endsection
