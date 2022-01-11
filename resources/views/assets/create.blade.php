@@ -216,11 +216,7 @@
                                                 <input type="hidden" id="location_id" name="location_id"
                                                        class="form-control mb-3" readonly >
                                                 <input class="form-control" type="text" name="find_location"
-<<<<<<< HEAD
                                                        id="findLocation" value="" placeholder="Search for Location">
-=======
-                                                       id="findLocation" value="" placeholder="Search for Supplier" >
->>>>>>> ed741839e43eddc571b282edda39cf912e627dfa
                                                 <div id="locationResults"
                                                      class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                      style="visibility: hidden; z-index: 2;" >

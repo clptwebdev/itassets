@@ -160,7 +160,7 @@
         </div>
     </div>
 </div>
-{{-- <!-- Content Row -->
+<!-- Content Row -->
 <div class="row p-4">
     <div class="col-12 text-dark text-xs font-weight-bold text-uppercase">Statistics</div>
 
@@ -172,7 +172,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold  text-uppercase mb-1">
                             New Requests</div>
-                        <div class="h5 mb-0 font-weight-bold ">{{ $requests ?? '0' }}</div>
+                        <div class="h5 mb-0 font-weight-bold "><span id="requests_count" class="countup"></span></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-tasks fa-2x d-md-none d-lg-inline-block"></i>
@@ -189,7 +189,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-uppercase mb-1">
                             Transfers</div>
-                        <div class="h5 mb-0 font-weight-bold">{{$transfers ?? '0'}}</div>
+                        <div class="h5 mb-0 font-weight-bold"><span id="transfers_count" class="countup"></span></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-exchange-alt fa-2x d-md-none d-lg-inline-block"></i>
@@ -208,7 +208,7 @@
                         <div class="text-xs font-weight-bold text-uppercase mb-1">
                             Archived</div>
                         <div class="h5 mb-0 font-weight-bold ">
-                        {{ $archived ?? '0'}}
+                            <span id="archived_count" class="countup"></span>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -220,7 +220,6 @@
     </div>
 
     <!-- Undeployable -->
-    @if($assets->count() != 0)
     <div class="col-xl-2 col-md-4 mb-4">
         <div class="card bg-grey shadow h-100 py-2">
             <div class="card-body">
@@ -230,21 +229,13 @@
                         </div>
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
-                                @php
-                                    $ud = 0; $total = $assets->count();
-                                    foreach($assets as $asset){
-                                        if($asset->status_id != 0 && $asset->status->deployable == 0){
-                                            $ud++;
-                                        }
-                                    }
-                                @endphp
-                                <div class="h5 mb-0 mr-3 font-weight-bold">{{ $ud}}</div>
+                                <div class="h5 mb-0 mr-3 font-weight-bold"><span id="undeployable_count" class="countup"></span></div>
                             </div>
 
                             <div class="col">
                                 <div class="progress progress-sm mr-2">
-                                    <div class="progress-bar bg-coral" role="progressbar" style="width: {{ ($ud/$total) * 100 }}%"
-                                        aria-valuenow="{{ ($ud/$total) * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div id="undeployable_progress" class="progress-bar bg-coral" role="progressbar" style="width: 0%"
+                                        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
                         </div>
@@ -257,19 +248,6 @@
         </div>
     </div>
 
-    @php
-        $audits_due = 0; $audits_over = 0;
-    @endphp
-    <!-- Pending Requests Card Example -->
-    @foreach($assets as $asset)
-    @if(\Carbon\Carbon::parse($asset->audit_date)->isPast())
-        @php($audits_over++)
-    @else
-        @php($age = Carbon\Carbon::now()->floatDiffInDays($asset->audit_date))
-        @if($age < 31)@php($audits_due++)@endif
-    @endif
-    @endforeach
-
     <div class="col-xl-2 col-md-4 mb-4">
         <div class="card bg-yellow shadow h-100 py-2">
             <div class="card-body">
@@ -277,7 +255,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-uppercase mb-1">
                             Audits Due</div>
-                        <div class="h5 mb-0 font-weight-bold">{{ $audits_due }}</div>
+                        <div class="h5 mb-0 font-weight-bold"><span id="audits_due_count" class="countup"></span></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-tools fa-2x d-md-none d-lg-inline-block"></i>
@@ -294,7 +272,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold  text-uppercase mb-1">
                             Overdue Audits</div>
-                        <div class="h5 mb-0 font-weight-bold">{{ $audits_over }}</div>
+                        <div class="h5 mb-0 font-weight-bold"><span id="audits_over_count" class="countup"></span></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-tools  fa-2x d-md-none d-lg-inline-block"></i>
@@ -304,4 +282,3 @@
         </div>
     </div>
 </div>
-@endif --}}
