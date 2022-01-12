@@ -15,7 +15,7 @@
         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
     </div>
     <div class="p-2 border-danger">
-       
+
     </div>
 
     @if(auth()->user()->role_id != 0)
@@ -31,7 +31,7 @@
 @section('js')
 
     <script type="text/javascript">
-    
+
         const totalCount = document.querySelector('#total_count');
         const totalCost = document.querySelector('#total_cost');
         const totalDep = document.querySelector('#total_dep');
@@ -133,7 +133,7 @@
         }
 
         xhttp.open("GET", "/statistics");
-        xhttp.send(); 
+        xhttp.send();
 
     </script>
 
