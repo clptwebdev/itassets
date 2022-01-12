@@ -43,7 +43,6 @@ class ExpenditureChart extends BaseChart
                     $total = Cache::rememberForever('location-'.$location->id.'-'.$y, function () use($location, $y){
                         return $location->expenditure($y);
                     });
-                    $location_values[] = $location->expenditure($y);
                 }
                 $location_values[] = Cache::get('location-'.$location->id.'-'.$y);
             }
