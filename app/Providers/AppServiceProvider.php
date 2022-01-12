@@ -39,7 +39,9 @@ class AppServiceProvider extends ServiceProvider
 
         $charts->register([
             \App\Charts\ExpChart::class,
-            \App\Charts\DepChart::class
+            \App\Charts\DepChart::class,
+            \App\Charts\DepreciationChart::class,
+            \App\Charts\ExpenditureChart::class
         ]);
     }
 }
