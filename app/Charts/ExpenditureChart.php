@@ -12,6 +12,8 @@ use App\Models\Asset;
 use App\Models\Location;
 use App\Models\User;
 
+use Illuminate\Support\Facades\Cache;
+
 class ExpenditureChart extends BaseChart
 {
     /**
@@ -37,9 +39,15 @@ class ExpenditureChart extends BaseChart
         foreach($locations as $location){
             $location_values = [];
             foreach(array_reverse($years) as $id => $y){
-                $location_values[] = $location->expenditure($y);
+                if(!Cache::get('location-'.$location->id.'-'.$y)){
+                    $total = Cache::rememberForever('location-'.$location->id.'-'.$y, function () use($location, $y){
+                        return $location->expenditure($y);
+                    });
+                    $location_values[] = $location->expenditure($y);
+                }
+                $location_values[] = Cache::get('location-'.$location->id.'-'.$y);
             }
-            $chart->advancedDataset($location->name, $location_values, ['color'=> '#F90']);
+            $chart->advancedDataset($location->name, $location_values, ['borderColor'=> $location->icon, 'backgroundColor' => $location->icon]);
         }
 
         return $chart;

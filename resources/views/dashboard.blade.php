@@ -13,6 +13,7 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+        <button class="btn btn-grey"><i class="fas fa-sync-alt"></i></button>
     </div>
 
     @if(auth()->user()->role_id != 0)
@@ -178,11 +179,27 @@
             // You can also pass the data manually instead of the url:
             // data: { ... }
             hooks: new ChartisanHooks()
-                .datasets([{ type: 'line', fill: false}])
+                .datasets([
+                    { type: 'line', fill: false }
+                ])
                 .responsive()
-                .colors()
-                .title('Expenditure')
+                .title('Expenditure for Schools')
                 .responsive()
+                .custom(function({ data, merge, server }) {
+                    //---> loop through extra from server
+                    for (let i = 0; i < server.datasets.length; i++) {
+                        const extras = server.datasets[i].extra; // extra object
+                        for (const [key, value] of Object.entries(extras)) { // loop through extras
+                            data.data.datasets[i][key] = value; // add extras to data
+                        }
+                                    
+                    }
+                    return merge(data, {
+                        options: {
+                            aspectRatio: 1,
+                        }
+                    })
+                })
         });
 
         const chart = new Chartisan({
@@ -208,7 +225,7 @@
             .beginAtZero('false')
             .stepSize(1000, 'x')
             .colors(['#b087bc', '#474775'])
-            .title('Asset Expenditure')
+            .title('CLPT Expenditure')
         })
     </script>
 
