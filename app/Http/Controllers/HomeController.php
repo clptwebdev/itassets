@@ -263,4 +263,9 @@ class HomeController extends Controller {
         return json_encode($obj);
     }
 
+
+    public function clear_cache(){
+        return Cache::flush();
+    }
+
 }
