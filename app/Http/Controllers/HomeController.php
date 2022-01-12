@@ -34,7 +34,8 @@ class HomeController extends Controller {
             $locations = auth()->user()->locations;
         }
 
-        if(Cache::has('total_assets') && Cache::has('asset_cost') && Cache::has('asset_dep') && Cache::has('asset_deploy') && Cache::has('audits_due') && Cache::has('audits_overdue')){
+
+        if(Cache::has('total_assets') && Cache::has('asset_cost') && Cache::has('asset_dep') && Cache::has('assets_deploy') && Cache::has('audits_due') && Cache::has('audits_overdue')){
             $everything += Cache::has('total_assets');
         }else{ 
             $assets = Asset::locationFilter($locations->pluck('id'))
