@@ -154,7 +154,7 @@ class HomeController extends Controller {
             $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100);
         }
 
-        return  Cache::get('assets_total');
+        return  Cache::get('count_everything');
         $obj = array(   'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')], 
                         'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
                         'components' => ['count' => Cache::get('components_total'), 'cost' => Cache::get('components_cost')],
