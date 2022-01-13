@@ -52,21 +52,49 @@ class HomeController extends Controller {
             $id = $location->id;
 
 
-            if( !Cache::has("assets-total") && 
-                !Cache::has("assets-cost") &&
-                !Cache::has("assets-dep") &&
-                !Cache::has("assets-deploy") &&
-                !Cache::has("assets-due") && 
-                !Cache::has("assets-overdue")
+            if( !Cache::has("assets-L{$id}-total") && 
+                !Cache::has("assets-L{$id}-cost") &&
+                !Cache::has("assets-L{$id}-dep") &&
+                !Cache::has("assets-L{$id}-deploy") &&
+                !Cache::has("assets-L{$id}-due") && 
+                !Cache::has("assets-L{$id}-overdue")
             ){   
                 /* This is to calculate all the assets for the individual schools and the grand total */
                 Asset::updateCache();
+            }
+
+    
+            /* This is to calculate the Accessories */
+            if( !Cache::has("accessories-L{$id}-total") &&
+                !Cache::has("accessories-L{$id}-cost") && 
+                !Cache::has("accessories-L{$id}-depr") &&
+                !Cache::has("accessories-L{$id}-deploy")
+            ){
                 Accessory::updateCache();
-                Component::updateCache();
+            }
+
+            if( !Cache::has("components-L{$id}-total") &&
+                !Cache::has("components-L{$id}-cost") &&
+                !Cache::has("components-L{$id}-deploy")
+            ){
+                Component::updateCache();                
+            }
+
+            if( !Cache::has("consumables-L{$id}-total") &&
+                !Cache::has("consumables-L{$id}-cost") &&
+                !Cache::has("consumables-L{$id}-deploy")
+            ){
                 Consumable::updateCache();
+            }
+
+            if( !Cache::has("misc-L{$id}-total") &&
+                !Cache::has("misc-L{$id}-cost") &&
+                !Cache::has("misc-L{$id}-deploy")
+            ){
                 Miscellanea::updateCache();
             }
         }
+
 
         //This needs to be a foreach and run through all of the locations to get the values else everything will be Zero
 
@@ -75,7 +103,6 @@ class HomeController extends Controller {
         $depreciation += Cache::get('assets_dep');
         $deployed += Cache::get('assets_deploy');
 
-        
         //Accessories
         $everything += Cache::get('accessories_total');
         $cost += Cache::get('accessories_cost');
