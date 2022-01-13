@@ -139,14 +139,13 @@ class HomeController extends Controller {
         Cache::rememberForever('request_count', function(){
             \App\Models\Requests::updateCache();
         });
-    
+
+        Cache::rememberForever('archive_count', function(){
+            \App\Models\Archive::updateCache();
+        });    
 
         if(!Cache::get('transfers_count')){
             \App\Models\Transfer::updateCache();
-        }
-
-        if(!Cache::get('archive_count')){
-            \App\Models\Archive::updateCache();
         }
 
         if(Cache::get('count_undeployed') == 0){
