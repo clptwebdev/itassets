@@ -136,16 +136,16 @@ class HomeController extends Controller {
             return round($deployed);
         });
 
-        Cache::rememberForever('request_count', function(){
+        if(!Cache::get('request_count')){
             \App\Models\Requests::updateCache();
-        });
-
-        Cache::rememberForever('archive_count', function(){
-            \App\Models\Archive::updateCache();
-        });    
+        }
 
         if(!Cache::get('transfers_count')){
             \App\Models\Transfer::updateCache();
+        }
+
+        if(!Cache::get('archive_count')){
+            \App\Models\Archive::updateCache();
         }
 
         if(Cache::get('count_undeployed') == 0){
