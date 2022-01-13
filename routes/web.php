@@ -195,6 +195,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/miscellanea/filter/clear', 'App\Http\Controllers\MiscellaneaController@clearFilter')->name('miscellanea.clear.filter');
     Route::get('/miscellanea/filter', 'App\Http\Controllers\MiscellaneaController@filter')->name('miscellanea.filtered');
 
+//Caching
+    Route::get('/cache/clear', 'App\Http\Controllers\HomeController@clearCache')->name('cache.clear');
+
 //exports
     Route::post("/exportassets", [\App\Http\Controllers\AssetController::class, "export"]);
     Route::get("/exportmiscellaneous", [\App\Http\Controllers\MiscellaneaController::class, "export"]);

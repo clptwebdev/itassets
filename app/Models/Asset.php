@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Illuminate\Support\Facades\Cache;
+
 class Asset extends Model {
 
     use HasFactory;
@@ -78,11 +80,13 @@ class Asset extends Model {
         });
     }
 
-    public function scopePurchaseFilter($query, $start, $end){
+    public function scopePurchaseFilter($query, $start, $end)
+    {
         $query->whereBetween('purchased_date', [$start, $end]);
     }
 
-    public function scopeAuditFilter($query, $date){
+    public function scopeAuditFilter($query, $date)
+    {
         switch($date){
             case 1:
                 $query->where('audit_date', '<', \Carbon\Carbon::now()->toDateString());
@@ -102,12 +106,15 @@ class Asset extends Model {
         }
     }
 
-    public function scopeCostFilter($query, $amount){
+    public function scopeCostFilter($query, $amount)
+    {
         $amount = str_replace('£', '', $amount);
         $amount = explode(' - ', $amount);
         $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
     }
-    public function scopeAssetFilter($query , array $filters){
+
+    public function scopeAssetFilter($query , array $filters)
+    {
             $query->when($filters['asset_tag'] ?? false , fn($query ,$asset_tag) =>
             $query->where('asset_tag','like','%' . $asset_tag. '%')
                 ->orWhere('name','like','%' . $asset_tag. '%')
@@ -116,9 +123,11 @@ class Asset extends Model {
 
     }
 
-    public function logs(){
+    public function logs()
+    {
         return $this->morphMany(Log::class, 'loggable');
     }
+
     public function depreciation_value()
     {
             $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation());
@@ -134,7 +143,100 @@ class Asset extends Model {
 
     }
 
-    public function depreciation(){
+    public function depreciation()
+    {
         return $this->model->depreciation->years ?? 0;
+    }
+
+    public static function updateCache()
+    {
+        //The Variables holding the total of Assets available to the User
+        $assets_total = 0;
+        $cost_total = 0;
+        $audits_due = 0;
+        $audits_overdue = 0;
+        $dep_total = 0;
+        $deploy_assets = 0;
+
+        
+
+        foreach(Location::all() as $location){
+            $loc_cost_total = 0;
+            $loc_audits_due = 0;
+            $loc_audits_overdue = 0;
+            $loc_dep_total = 0;
+            $loc_deploy_assets = 0;
+            $id = $location->id;            
+
+            $assets = Asset::whereLocationId($location->id)
+                            ->with('model', 'status')
+                            ->select('asset_model', 'purchased_cost', 'purchased_date', 'status_id', 'audit_date')
+                            ->get()
+                            ->map(function($item, $key) {
+                                $item['depreciation_value'] = $item->depreciation_value();
+                                $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+                                return $item;
+                            });
+            
+            //Get the Total Amount of Assets available for this location and set it in Cache
+            $loc_total = $assets->count();
+            Cache::rememberForever("assets-L{$id}-total", function () use($loc_total){
+                return $loc_total;
+            });
+
+            //Add the total to the Total amount of Assets
+            $assets_total += $loc_total;
+
+            foreach($assets as $asset){
+                $loc_cost_total += $asset->purchased_cost;
+                $loc_dep_total += $asset->depreciation_value;
+                $loc_audit_date = \Carbon\Carbon::parse($asset->audit_date);
+                $now = \Carbon\Carbon::now();
+                if($loc_audit_date->isPast()){
+                    $loc_audits_overdue++;
+                }elseif($loc_audit_date->diffInMonths($now) < 3){
+                    $loc_audits_due++;
+                }
+                if($asset->deployable !== 1){ $loc_deploy_assets++;}
+            }
+
+            /* The Cache Values for the Location */
+            Cache::set("assets-L{$id}-cost", round($loc_cost_total));
+            $cost_total += $loc_cost_total;
+            Cache::set("assets-L{$id}-depr", round($loc_dep_total));
+            $dep_total += $loc_dep_total;
+            Cache::set("assets-L{$id}-deploy", round($loc_deploy_assets));
+            $deploy_assets += $loc_deploy_assets;
+            Cache::set("assets-L{$id}-due", round($loc_audits_due));
+            $audits_due += $loc_audits_due;
+            Cache::set("assets-L{$id}-overdue", round($loc_audits_overdue));
+            $audits_overdue += $loc_audits_overdue; 
+
+        }
+
+        //Totals of the Assets
+        Cache::rememberForever('assets_total', function() use($assets_total){
+            return round($assets_total);
+        });
+
+        Cache::rememberForever('assets_cost', function() use($cost_total){
+            return round($cost_total);
+        });
+
+        Cache::rememberForever('assets_dep', function() use($dep_total){
+            return round($dep_total);
+        });
+
+        Cache::rememberForever('assets_deploy', function() use($deploy_assets){
+            return round($deploy_assets);
+        });
+
+        Cache::rememberForever('audits_due', function() use($audits_due){
+            return round($audits_due);
+        });
+
+        Cache::rememberForever('audits_overdue', function() use($audits_overdue){
+            return round($audits_overdue);
+        });
     }
 }

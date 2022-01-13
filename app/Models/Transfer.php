@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Transfer extends Model
 {
@@ -30,6 +31,11 @@ class Transfer extends Model
     public function approved()
     {
         return $this->belongsTo(User::class, 'super_id')->with('photo');
+    }
+
+    public static function updateCache(){
+        Cache::flush('transfer_count');
+        Cache::set('transfers_count', Transfer::all()->count());
     }
 
 

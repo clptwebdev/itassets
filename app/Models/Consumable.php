@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Illuminate\Support\Facades\Cache;
+
 class Consumable extends Model
 {
     protected $fillable = [
@@ -65,5 +67,58 @@ class Consumable extends Model
     
     public function scopeStatusFilter($query, $status){
         return $query->whereIn('status_id', $status);
+    }
+
+    public static function updateCache(){
+
+        //The Variables holding the total of Accessories available to the User
+        $consumables_total = 0;
+        $consumables_cost_total = 0;
+        $consumables_deployed_total = 0;
+
+        foreach(Location::all() as $location){
+            $id = $location->id;
+            //Variables to Hold the Accessories for that Location
+            $consumables_loc_total = 0;
+            $consumables_cost = 0;
+            $consumables_deployed = 0;
+
+            $consumables = Consumable::whereLocationId($id)
+                            ->select('purchased_cost', 'status_id')
+                            ->get() 
+                            ->map(function($item, $key) {
+                                $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+                                return $item;
+                            });
+
+            $consumables_loc_total = $consumables->count();
+            Cache::rememberForever("consumables-L{$id}-total", function () use($consumables_loc_total){
+                return $consumables_loc_total;
+            });
+
+            $consumables_total += $consumables_loc_total;
+
+            foreach($consumables as $consumable){
+                $consumables_cost += $consumables->purchased_cost;
+                if($consumable->deployable != 1){ $consumables_deployed++;}
+            }
+
+            Cache::set("consumables-L{$id}-cost", round($consumables_cost));
+            $consumables_cost_total += $consumables_cost;
+            Cache::set("consumables-L{$id}-deploy", round($consumables_deployed));
+            $consumables_deployed_total += $consumables_deployed;
+        }
+
+        Cache::rememberForever('consumables_total', function() use($consumables_total){
+            return round($consumables_total);
+        });
+
+        Cache::rememberForever('consumables_cost', function() use($consumables_cost_total){
+            return round($consumables_cost_total);
+        });
+
+        Cache::rememberForever('consumables_deploy', function() use($consumables_deployed_total){
+            return round($consumables_deployed_total);
+        });
     }
 }

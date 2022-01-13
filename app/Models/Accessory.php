@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Illuminate\Support\Facades\Cache;
+
 class Accessory extends Model
 {
     use HasFactory;
@@ -64,15 +66,18 @@ class Accessory extends Model
         return $this->morphMany(Log::class, 'loggable');
     }
 
-    public function scopeStatusFilter($query, $status){
+    public function scopeStatusFilter($query, $status)
+    {
         return $query->whereIn('status_id', $status);
     }
 
-    public function scopeLocationFilter($query, $locations){
+    public function scopeLocationFilter($query, $locations)
+    {
         return $query->whereIn('location_id', $locations);
     }
 
-    public function scopeCategoryFilter($query, $category){
+    public function scopeCategoryFilter($query, $category)
+    {
         $pivot = $this->category()->getTable();
 
         $query->whereHas('category', function ($q) use ($category, $pivot) {
@@ -80,28 +85,36 @@ class Accessory extends Model
         });
     }
 
-    public function scopeCostFilter($query, $amount){
+    public function scopeCostFilter($query, $amount)
+    {
         $amount = str_replace('£', '', $amount);
         $amount = explode(' - ', $amount);
         $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
     }
 
-    public function scopePurchaseFilter($query, $start, $end){
+    public function scopePurchaseFilter($query, $start, $end)
+    {
         $query->whereBetween('purchased_date', [$start, $end]);
     }
 
-    public function scopeSearchFilter($query, $search){
+    public function scopeSearchFilter($query, $search)
+    {
         return $query->where('accessories.name', 'LIKE', "%{$search}%")
                     ->orWhere('accessories.serial_no', 'LIKE', "%{$search}%");
     }
-    public function scopeExportFilterStatus($query, $status,$category , $location){
+
+    public function scopeExportFilterStatus($query, $status,$category , $location)
+    {
         $pivot = $this->category()->getTable();
-    return    $query->whereHas('category', function ($q) use ($category, $pivot) {
-            $q->whereIn("{$pivot}.category_id", $category);
-        })->orWhereIn('status_id', $status)
-            ->orWhereIn('location_id', $location);
+        return  $query->whereHas('category', function ($q) use ($category, $pivot) {
+                    $q->whereIn("{$pivot}.category_id", $category);
+                })
+                ->orWhereIn('status_id', $status)
+                ->orWhereIn('location_id', $location);
 
     }
+
+
 //    public function scopeTestExport($query, array $filters){
 //        $query->when($filters['status'] ?? false , fn($query ,$status_id) =>
 //        $query->where('accessories.status_id','like','%' . $status_id. '%')
@@ -109,7 +122,8 @@ class Accessory extends Model
 //
 //    }
 
-    public function depreciation_value(){
+    public function depreciation_value()
+    {
             $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation_years());
             if($eol->isPast()){
                 return 0;
@@ -122,7 +136,75 @@ class Accessory extends Model
             }
 
     }
-    public function depreciation_years(){
+
+    public function depreciation_years()
+    {
         return $this->depreciation->years ?? 0;
+    }
+
+    public static function updateCache(){
+        //The Variables holding the total of Accessories available to the User
+        $accessories_total = 0;
+        $accessories_cost_total = 0;
+        $accessories_dep_total = 0;
+        $accessories_deployed_total = 0;
+
+        foreach(Location::all() as $location){
+            $id = $location->id;
+
+            //Variables to Hold the Accessories for that Location
+            $accessories_loc_total = 0;
+            $accessories_cost = 0;
+            $accessories_dep = 0;
+            $accessories_deployed = 0;
+
+            $accessories = Accessory::whereLocationId($id)
+            ->with('status', 'depreciation')
+            ->select('purchased_cost', 'purchased_date', 'depreciation_id', 'status_id', 'location_id')
+            ->get()
+            ->map(function($item, $key) {
+                $item['depreciation_value'] = $item->depreciation_value();
+                $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+                return $item;
+            });
+
+            $accessories_loc_total = $accessories->count();
+            Cache::rememberForever("accessories-L{$id}-total", function () use($accessories_loc_total){
+                return $accessories_loc_total;
+            });
+            
+            $accessories_total += $accessories_loc_total;
+
+            foreach($accessories as $accessory){
+                $accessories_cost += $accessory->purchased_cost;
+                $accessories_dep += $accessory->depreciation_value;
+                if($accessory->deployable !== 1){ $accessories_deployed++;}
+            }
+
+            Cache::set("accessories-L{$id}-cost", round($accessories_cost));
+            $accessories_cost_total += $accessories_cost;
+            Cache::set("accessories-L{$id}-depr", round($accessories_dep));
+            $accessories_dep_total += $accessories_dep;
+            Cache::set("accessories-L{$id}-deploy", round($accessories_deployed));
+            $accessories_deployed_total += $accessories_deployed;
+        }
+
+        //Accessories
+
+        Cache::rememberForever('accessories_total', function() use($accessories_total){
+            return round($accessories_total);
+        });
+
+        Cache::rememberForever('accessories_cost', function() use($accessories_cost_total){
+            return round($accessories_cost_total);
+        });
+
+        Cache::rememberForever('accessories_dep', function() use($accessories_dep_total){
+            return round($accessories_dep_total);
+        });
+
+        Cache::rememberForever('accessories_deploy', function() use($accessories_deployed_total){
+            return round($accessories_deployed_total);
+        });
     }
 }

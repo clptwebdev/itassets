@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Archive extends Model
 {
@@ -34,6 +35,11 @@ class Archive extends Model
     public function created_user()
     {
         return $this->belongsTo(User::class, 'created_user')->with('photo');
+    }
+
+    public static function updateCache(){
+        Cache::flush('archive_count');
+        Cache::set('archive_count', Archive::all()->count());
     }
 
 
