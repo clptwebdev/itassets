@@ -61,38 +61,9 @@ class HomeController extends Controller {
             ){   
                 /* This is to calculate all the assets for the individual schools and the grand total */
                 Asset::updateCache();
-            }else{
-
-            }
-
-    
-            /* This is to calculate the Accessories */
-            if( !Cache::has("accessories-L{$id}-total") &&
-                !Cache::has("accessories-L{$id}-cost") && 
-                !Cache::has("accessories-L{$id}-depr") &&
-                !Cache::has("accessories-L{$id}-deploy")
-            ){
                 Accessory::updateCache();
-            }
-
-            if( !Cache::has("components-L{$id}-total") &&
-                !Cache::has("components-L{$id}-cost") &&
-                !Cache::has("components-L{$id}-deploy")
-            ){
-                Component::updateCache();                
-            }
-
-            if( !Cache::has("consumables-L{$id}-total") &&
-                !Cache::has("consumables-L{$id}-cost") &&
-                !Cache::has("consumables-L{$id}-deploy")
-            ){
+                Component::updateCache();
                 Consumable::updateCache();
-            }
-
-            if( !Cache::has("misc-L{$id}-total") &&
-                !Cache::has("misc-L{$id}-cost") &&
-                !Cache::has("misc-L{$id}-deploy")
-            ){
                 Miscellanea::updateCache();
             }
         }
