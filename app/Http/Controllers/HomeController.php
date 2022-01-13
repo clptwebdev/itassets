@@ -48,11 +48,7 @@ class HomeController extends Controller {
             $locations = auth()->user()->locations;
         }
 
-        if( !Cache::has('count_everything') &&
-            !Cache::has('count_cost') &&
-            !Cache::has('count_depreciation') &&
-            !Cache::has('count_undeployed')
-        ){
+       
 
             foreach($locations as $location){
                 $id = $location->id;
@@ -141,7 +137,7 @@ class HomeController extends Controller {
             Cache::rememberForever('count_undeployed', function() use($deployed){
                 return round($deployed);
             });
-        }
+        
 
         if(!Cache::get('request_count')){
             \App\Models\Requests::updateCache();
@@ -155,7 +151,7 @@ class HomeController extends Controller {
             \App\Models\Archive::updateCache();
         }
 
-        return Cache::get('count_everything');
+        return Cache::get('count_undeployed');
         $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100);
         $obj = array(   'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')], 
                         'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
