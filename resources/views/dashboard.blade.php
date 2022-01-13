@@ -18,7 +18,7 @@
 
     @if(auth()->user()->role_id != 0)
         <!-- Asset stats -->
-        <x-admin.asset-info />
+        <x-admin.asset-info/>
         {{-- <x-categories_status_info :statuses="$statuses" :category="$category"/> --}}
 
         <div class="row m-2">
@@ -34,7 +34,7 @@
                 </div>
             </div>
             {{-- Depreication Information --}}
-    
+
             <div class="col-12 col-md-6 mb-3 chart">
                 <div class="card shadow h-100 p-4">
                     <div id="dep_chart" style="height: 500px;"></div>
@@ -50,7 +50,7 @@
 @section('js')
 
     <script type="text/javascript">
-    
+
         const totalCount = document.querySelector('#total_count');
         const totalCost = document.querySelector('#total_cost');
         const totalDep = document.querySelector('#total_dep');
@@ -76,52 +76,52 @@
         const progressCount = document.querySelector('#undeployable_count');
         const auditsDue = document.querySelector('#audits_due_count');
         const auditsOver = document.querySelector('#audits_over_count');
-        
+
         // How long you want the animation to take, in ms
         const animationDuration = 2000;
         // Calculate how long each ‘frame’ should last if we want to update the animation 60 times per second
         const frameDuration = 1000 / 60;
         // Use that to calculate how many frames we need to complete the animation
-        const totalFrames = Math.round( animationDuration / frameDuration );
+        const totalFrames = Math.round(animationDuration / frameDuration);
         // An ease-out function that slows the count as it progresses
-        const easeOutQuad = t => t * ( 2 - t );
+        const easeOutQuad = t => t * (2 - t);
 
         // The animation function, which takes an Element
         const animateCountUp = el => {
             let frame = 0;
-            const countTo = parseInt( el.innerHTML, 10 );
+            const countTo = parseInt(el.innerHTML, 10);
             // Start the animation running 60 times per second
-            const counter = setInterval( () => {
+            const counter = setInterval(() => {
                 frame++;
                 // Calculate our progress as a value between 0 and 1
                 // Pass that value to our easing function to get our
                 // progress on a curve
-                const progress = easeOutQuad( frame / totalFrames );
+                const progress = easeOutQuad(frame / totalFrames);
                 // Use the progress value to calculate the current count
-                const currentCount = Math.round( countTo * progress );
+                const currentCount = Math.round(countTo * progress);
 
                 // If the current count has changed, update the element
-                if ( parseInt( el.innerHTML, 10 ) !== currentCount ) {
+                if (parseInt(el.innerHTML, 10) !== currentCount) {
                     el.innerHTML = currentCount;
                 }
 
                 // If we’ve reached our last frame, stop the animation
-                if ( frame === totalFrames ) {
-                    clearInterval( counter );
+                if (frame === totalFrames) {
+                    clearInterval(counter);
                 }
-            }, frameDuration );
+            }, frameDuration);
         };
 
         // Run the animation on all elements with a class of ‘countup’
         const runAnimations = () => {
-            const countupEls = document.querySelectorAll( '.countup' );
-            countupEls.forEach( animateCountUp );
+            const countupEls = document.querySelectorAll('.countup');
+            countupEls.forEach(animateCountUp);
         };
 
         const xhttp = new XMLHttpRequest();
 
-        xhttp.onload = function(){
-            loader.forEach(function(el) {
+        xhttp.onload = function () {
+            loader.forEach(function (el) {
                 el.classList.remove('d-flex');
                 el.classList.add('d-none');
             });
@@ -153,7 +153,7 @@
             transfers.innerHTML = obj.transfer.count;
             archives.innerHTML = obj.archived.count;
 
-            progress.style.width = obj.everything.undeployable+'%';
+            progress.style.width = obj.everything.undeployable + '%';
             progressCount.innerHTML = obj.everything.undeployable;
 
             auditsDue.innerHTML = obj.audits.due;
@@ -163,11 +163,11 @@
         }
 
         xhttp.open("GET", "/statistics");
-        xhttp.send(); 
+        xhttp.send();
 
     </script>
 
-     <!-- Charting library -->
+    <!-- Charting library -->
     <script src="https://unpkg.com/chart.js@2.9.3/dist/Chart.min.js"></script>
     <!-- Chartisan -->
     <script src="https://unpkg.com/@chartisan/chartjs@^2.1.0/dist/chartisan_chartjs.umd.js"></script>
@@ -180,19 +180,19 @@
             // data: { ... }
             hooks: new ChartisanHooks()
                 .datasets([
-                    { type: 'line', fill: false }
+                    {type: 'line', fill: false}
                 ])
                 .responsive()
                 .title('Expenditure for Schools')
                 .responsive()
-                .custom(function({ data, merge, server }) {
+                .custom(function ({data, merge, server}) {
                     //---> loop through extra from server
                     for (let i = 0; i < server.datasets.length; i++) {
                         const extras = server.datasets[i].extra; // extra object
                         for (const [key, value] of Object.entries(extras)) { // loop through extras
                             data.data.datasets[i][key] = value; // add extras to data
                         }
-                                    
+
                     }
                     return merge(data, {
                         options: {
@@ -208,7 +208,7 @@
             // You can also pass the data manually instead of the url:
             // data: { ... }
             hooks: new ChartisanHooks()
-                .datasets([{ type: 'line', fill: false}])
+                .datasets([{type: 'line', fill: false}])
                 .responsive()
                 .colors(['#F99'])
                 .title('Asset Depreciation')
@@ -221,11 +221,11 @@
             // You can also pass the data manually instead of the url:
             // data: { ... }
             hooks: new ChartisanHooks()
-            .datasets('bar')
-            .beginAtZero('false')
-            .stepSize(1000, 'x')
-            .colors(['#b087bc', '#474775'])
-            .title('CLPT Expenditure')
+                .datasets('bar')
+                .beginAtZero('false')
+                .stepSize(1000, 'x')
+                .colors(['#b087bc', '#474775'])
+                .title('CLPT Expenditure')
         })
     </script>
 

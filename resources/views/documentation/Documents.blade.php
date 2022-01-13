@@ -13,7 +13,7 @@
         <h1 class="h3 mb-0 text-gray-800">Help</h1>
         <div>
             <a href="/" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Dashboard</a>
+                    class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Dashboard</a>
         </div>
     </div>
 
@@ -28,8 +28,9 @@
     <section>
         <div id="accordion">
             <p class="mb-4">Below are different Buttons, one for each Item in the management system. Each tile
-                has different information that can Help you understand how to use this system. If you require Anymore
-                assistance please email <strong>apollo@clpt.co.uk</strong></p>
+                            has different information that can Help you understand how to use this system. If you
+                            require Anymore
+                            assistance please email <strong>apollo@clpt.co.uk</strong></p>
             {{--      heading one      --}}
             <div id="headingOne" class="slide">
                 <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseOne"
@@ -45,7 +46,8 @@
                     <h2 class="text-info">How do I Export the data i need?</h2>
 
                     <p class="text-gray-700">Most Interfaces have in the top right hand corner have a Button which once
-                        clicked will return all results of your current page to a <strong>'.csv'</strong> file.</p>
+                                             clicked will return all results of your current page to a
+                        <strong>'.csv'</strong> file.</p>
                     <div class="d-sm-flex align-items-center ">
                         <button class="btn btn-sm btn-warning shadow-sm m-2">Export</button>
                         <p class="text-gray-600 mt-3">This is an example export button</p>
@@ -79,17 +81,21 @@
                     <h2 class="text-info">I've Lost my Password What can i do?</h2>
                     <p class="text-gray-700">If You have Forgot your password you can click <a
                             href="{{route("forgot.my.password")}}" class="text-capitalize">here</a> to reset your
-                        password by your email! else please contact your Admin and they will reset this for you!</p>
+                                             password by your email! else please contact your Admin and they will reset
+                                             this for you!</p>
                     <h2 class="text-info mt-2">I know my password How can i reset this?</h2>
                     <p class="text-gray-700">If you know your password you can navigate through the profile link in the
-                        top right or Click <a href="{{route("user.details")}}" class="text-capitalize">here</a>.</p>
+                                             top right or Click <a href="{{route("user.details")}}"
+                                                                   class="text-capitalize">here</a>.</p>
                     <h4 class="text-info">Steps to reset:</h4>
                     <ol>
                         <li>Find Out your password from your original sign up email.</li>
                         <li>Navigate to the link above and click reset password</li>
                         <li>Input your current password to the top box</li>
                         <li>Think of a new password and match this in both Boxes <strong class="text-danger">(Capitals
-                                are included!)</strong></li>
+                                                                                                             are
+                                                                                                             included!)</strong>
+                        </li>
                     </ol>
                 </div>
             </div>
@@ -105,21 +111,29 @@
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Devices?</h2>
                     <p class="text-gray-700">Assets can be located within the left hand side menu Labeled 'Assets' Can't
-                        find it? Click<a href="{{route("assets.index")}}" class="text-capitalize"> here</a></p>
+                                             find it? Click<a href="{{route("assets.index")}}" class="text-capitalize">
+                            here</a></p>
                     <p class="text-gray-700">All Items can be <strong class="text-info">edited , Deleted and
-                            viewed</strong> With the Drop out selector on the right have side!</p>
+                                                                                        viewed</strong> With the Drop
+                                             out selector on the right have side!</p>
                     <h4 class="text-info">I need to find all the devices at my current School How can i do this?</h4>
                     <p class="text-gray-700">Our Asset Area has a Search Helper.This allows for easy searching. On the
-                        top right of the page a filter button can be found where you can select all sorts of Columns to
-                        see only The Selected data you need.</p>
+                                             top right of the page a filter button can be found where you can select all
+                                             sorts of Columns to
+                                             see only The Selected data you need.</p>
                     <p class="text-info">You can use the filter function included with the export function to only get
-                        specified data to your <strong>Csv's</strong> and <strong>PDf</strong> documents!</p>
+                                         specified data to your <strong>Csv's</strong> and <strong>PDf</strong>
+                                         documents!</p>
                     <h4 class="text-info">How do i add new Devices/Assets?</h4>
                     <p class="text-gray-700">All Computers should be added to assets as all other Products have there
-                        related columns <strong class="text-info">Not sure where to Put an un-related Item Use
-                            Miscellaneous!</strong> At the Top of the screen you will find a button which takes you to
-                        adding a new asset.<a class="text-warning" href="{{route("assets.create")}}"> Stuck? Click here
-                            to add a new Asset</a></p>
+                                             related columns <strong class="text-info">Not sure where to Put an
+                                                                                       un-related Item Use
+                                                                                       Miscellaneous!</strong> At the
+                                             Top of the screen you will find a button which takes you to
+                                             adding a new asset.<a class="text-warning"
+                                                                   href="{{route("assets.create")}}"> Stuck? Click here
+                                                                                                      to add a new
+                                                                                                      Asset</a></p>
                     <h4 class="text-info">Guide to adding new Assets:</h4>
                     <ol>
                         <li>Firstly, Does Your asset have a name? if so fill this in in the first box.</li>
@@ -130,14 +144,17 @@
                         <li>Fourth,Please select when the device where purchased.</li>
                         <li>Fifth,You will need to a serial number corresponding to the device your adding.</li>
                         <li>Sixth,a purchase cost will be needed <strong class="text-info">(No need to enter a '£' sign
-                                this will be done automatically)</strong></li>
+                                                                                           this will be done
+                                                                                           automatically)</strong></li>
                         <li>Seventh,Which school is this located to ? Assign this here on the dropdown menu.</li>
                         <li>Eighth,Who is the supplier of this asset? fill this in here in the select menu.</li>
                         <li>Ninth,Does this need a check up in a few month's? Place a date in the box.<strong
                                 class="text-info">(You will be reminded when this device need's Auditing!)</strong></li>
                         <li>Tenth,select a date for how long of a warranty you have left on this device!</li>
                         <li>Eleventh,Is This a specific type of Device E.g<strong class="text-info">(HP ProDesk
-                                ,Optiplex 9020 ,EliteDesktop 800 G2)</strong></li>
+                                                                                                    ,Optiplex 9020
+                                                                                                    ,EliteDesktop 800
+                                                                                                    G2)</strong></li>
                         <li>Finally,Click <strong>save</strong> in the top Right corner and see if this all saves
                             correctly. If you have any errors this will be displayed in a red box at the top ,like the
                             screen like below!
@@ -151,18 +168,22 @@
                     <p class="text-info">A Few quick Notes before we begin ,</p>
                     <ul class="">
                         <li class="text-danger">There is a template provided which needs to be used No other templates
-                            can be used!
+                                                can be used!
                         </li>
                         <li class="text-danger">Always remember to upload a file before clicking import!</li>
                         <li class="text-danger">Once you have added all your data to the excel spreadsheet Try uploading
-                            this! This input only accepts<strong>.Csv</strong> files.
+                                                this! This input only accepts<strong>.Csv</strong> files.
                         </li>
                         <li class="text-danger">Errors can always occur when uploading files This is why any rows which
-                            has no issues will be pushed through and added for you. Your next option after this is to
-                            1.export all the errors back to <strong>.Csv </strong>and then correct the current issues
-                            and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong> file has been uploaded
-                            there is a friendly user interface which allows you to manually edit all the rows which are
-                            incorrect with tool tips to help you across the way!
+                                                has no issues will be pushed through and added for you. Your next option
+                                                after this is to
+                                                1.export all the errors back to <strong>.Csv </strong>and then correct
+                                                the current issues
+                                                and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong>
+                                                file has been uploaded
+                                                there is a friendly user interface which allows you to manually edit all
+                                                the rows which are
+                                                incorrect with tool tips to help you across the way!
                         </li>
                     </ul>
                     <ol>
@@ -179,7 +200,8 @@
                             the system process your file.
                         </li>
                         <li>Fifth,If you don't have any errors this will return with a <strong class="text-success">success
-                                message</strong> which tell you all of your data fields were added. Else, Your will be
+                                                                                                                    message</strong>
+                            which tell you all of your data fields were added. Else, Your will be
                             moved to a new page with the <strong class="text-danger">incorrect </strong> fields which
                             have errors to change your errors. Click <strong class="text-info">save</strong> or <strong
                                 class="text-info">export</strong> all of your errors to CSv and Re-Uploaded this after
@@ -191,10 +213,13 @@
                     </ol>
                     <h4 class="text-info mt-3">How to Generate a live report:</h4>
                     <p class="text-gray-700">You are able to Create a <strong>Pdf report</strong> file based on the data
-                        of
-                        the page you are currently accessing.This proccess takes sometime to generate so once you have
-                        clicked the button like 'below' Please navigate to the link in the green box or follow settings
-                        in your navigation and <strong>click</strong> <strong class="text-info"> Generated
+                                             of
+                                             the page you are currently accessing.This proccess takes sometime to
+                                             generate so once you have
+                                             clicked the button like 'below' Please navigate to the link in the green
+                                             box or follow settings
+                                             in your navigation and <strong>click</strong> <strong class="text-info">
+                            Generated
                             Reports.</strong>
 
                         <a class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
@@ -217,12 +242,15 @@
                 <div class="card-body">
                     <h4 class="text-info mt-3">What are status'?</h4>
                     <p class="text-gray-700">Creating and assigning assets allow the User to know weather or not a item
-                        is <strong class="text-success">deployable</strong> or at its <strong class="text-warning">EOL(End
-                            of Life)</strong> or <strong class="text-danger">Broken and in for repair.</strong></p>
+                                             is <strong class="text-success">deployable</strong> or at its <strong
+                            class="text-warning">EOL(End
+                                                 of Life)</strong> or <strong class="text-danger">Broken and in for
+                                                                                                  repair.</strong></p>
                     <h4 class="text-info mt-3">How do i assign new status'?</h4>
                     <ol>
                         <li class="text-gray-700">Within your settings tab locate the <strong class="text-info">'status
-                                Fields'</strong> Area or click <a href="{{route("status.index")}}">here</a></li>
+                                                                                                                Fields'</strong>
+                                                  Area or click <a href="{{route("status.index")}}">here</a></li>
                         <li class="text-gray-700">Secondly, Find the 'Add new Status' button in the <strong
                                 class="text-info">top right</strong><a
                                 class="m-1 d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
@@ -230,12 +258,13 @@
                         <li class="text-gray-700">Follow the steps within the Open window and proceed to click <strong
                                 class="text-success">save</strong></li>
                         <li class="text-gray-700">All Items can be <strong class="text-info">edited , Deleted and
-                                viewed</strong> With the Drop out selector on the right have side!
+                                                                                             viewed</strong> With the
+                                                  Drop out selector on the right have side!
                         </li>
                         <li class="text-info">This status can now be found accessibly to set to all items</li>
                     </ol>
                     <p class="text-danger font-weight-bold">Warning, deleting a status un-assign's all related
-                        items!</p>
+                                                            items!</p>
 
                 </div>
             </div>
@@ -254,37 +283,43 @@
                 <div class="card-body">
                     <h4 class="text-info mt-3">What are locations?</h4>
                     <p class="text-gray-700">Locations are All of the school's within the Trust at the current date!
-                        This allows for you to keep track of where all the items are kept. Click <a
+                                             This allows for you to keep track of where all the items are kept. Click <a
                             href="{{route("location.index")}}">here</a> to navigate to locations </p>
                     <h4 class="text-info mt-3">How do i find and Manage Locations?</h4>
                     <ul>
                         <li class="text-gray-700">All Items can be <strong class="text-info">edited , Deleted and
-                                viewed</strong> With the Drop out selector on the right have side!
+                                                                                             viewed</strong> With the
+                                                  Drop out selector on the right have side!
                         </li>
                         <li class="text-gray-700">Finding the <strong class="text-info">Locations</strong> tab will take
-                            you to all the current schools within Apollo.
+                                                  you to all the current schools within Apollo.
                         </li>
                         <li class="text-gray-700">The <strong class="text-info">Attribute</strong> boxes display the
-                            amount of each items are assigned to each location?
+                                                  amount of each items are assigned to each location?
                         </li>
                     </ul>
                     <h4 class="text-info mt-3">Creating , updating and edit locations...</h4>
                     <p class="text-info font-weight-bold"> All these settings can be changed through the 3 dot menu in
-                        the top of each location modal.</p>
+                                                           the top of each location modal.</p>
                     <ul>
                         <li class="text-gray-700">Finding the <strong class="text-info">Locations</strong> tab will take
-                            you to all the current schools within Apollo.
+                                                  you to all the current schools within Apollo.
                         </li>
                         <li class="text-gray-700">The <strong class="text-info">Attribute</strong> boxes display the
-                            amount of each items are assigned to each location?
+                                                  amount of each items are assigned to each location?
                         </li>
                         <li class="text-gray-700">Updating Locations can be carried out through the <strong>Pop
-                                up</strong> menu Then clicking <strong>Edit</strong> Then Follow in instructions on the
-                            page and change any inputs which details need updating then just click save in the <strong
-                                class="text-info">top right.</strong></li>
+                                                                                                            up</strong>
+                                                  menu Then clicking <strong>Edit</strong> Then Follow in instructions
+                                                  on the
+                                                  page and change any inputs which details need updating then just click
+                                                  save in the <strong class="text-info">top right.</strong></li>
                         <li class="text-gray-700">Want to <strong class="text-danger">Delete</strong> a Location? You
-                            will be <strong class="text-warning">warned</strong> before this process is confirmed ,Then
-                            click delete permanently<strong class="text-danger">(This will un-assign all items)</strong>.
+                                                  will be <strong class="text-warning">warned</strong> before this
+                                                  process is confirmed ,Then
+                                                  click delete permanently<strong class="text-danger">(This will
+                                                                                                      un-assign all
+                                                                                                      items)</strong>.
                         </li>
                     </ul>
 
@@ -305,13 +340,19 @@
                 <div class="card-body">
                     <h4 class="text-info mt-3">What are recycle Bins?</h4>
                     <p class="text-gray-700">Recycle bins allow you to carefully delete certain items in the database
-                        but give you a <strong class="text-info">backup restore</strong> option increase you
-                        accidentally delete something <small><strong class="text-gray-200">(It happens to all of
-                                us..)</strong></small></p>
+                                             but give you a <strong class="text-info">backup restore</strong> option
+                                             increase you
+                                             accidentally delete something <small><strong class="text-gray-200">(It
+                                                                                                                happens
+                                                                                                                to all
+                                                                                                                of
+                                                                                                                us..)</strong></small>
+                    </p>
 
                     <h4 class="text-info mt-3">Why Do i need to use this?</h4>
                     <p class="text-gray-700">This Element is there in case of accidental deletion as a Back up. Below is
-                        an example button which will be displayed on pages that have this feature!</p>
+                                             an example button which will be displayed on pages that have this
+                                             feature!</p>
                     <a class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                             class="fas fa-trash-alt fa-sm text-white-50"></i> Recycle Bin</a>
                 </div>
@@ -333,18 +374,22 @@
                     <p class="text-info">A Few quick Notes before we begin ,</p>
                     <ul class="">
                         <li class="text-danger">There is a template provided which needs to be used No other templates
-                            can be used!
+                                                can be used!
                         </li>
                         <li class="text-danger">Always remember to upload a file before clicking import!</li>
                         <li class="text-danger">Once you have added all your data to the excel spreadsheet Try uploading
-                            this! This input only accepts<strong>.Csv</strong> files.
+                                                this! This input only accepts<strong>.Csv</strong> files.
                         </li>
                         <li class="text-danger">Errors can always occur when uploading files This is why any rows which
-                            has no issues will be pushed through and added for you. Your next option after this is to
-                            1.export all the errors back to <strong>.Csv </strong>and then correct the current issues
-                            and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong> file has been uploaded
-                            there is a friendly user interface which allows you to manually edit all the rows which are
-                            incorrect with tool tips to help you across the way!
+                                                has no issues will be pushed through and added for you. Your next option
+                                                after this is to
+                                                1.export all the errors back to <strong>.Csv </strong>and then correct
+                                                the current issues
+                                                and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong>
+                                                file has been uploaded
+                                                there is a friendly user interface which allows you to manually edit all
+                                                the rows which are
+                                                incorrect with tool tips to help you across the way!
                         </li>
                     </ul>
                     <ol>
@@ -361,7 +406,8 @@
                             the system process your file.
                         </li>
                         <li>Fifth,If you don't have any errors this will return with a <strong class="text-success">success
-                                message</strong> which tell you all of your data fields were added. Else, Your will be
+                                                                                                                    message</strong>
+                            which tell you all of your data fields were added. Else, Your will be
                             moved to a new page with the <strong class="text-danger">incorrect </strong> fields which
                             have errors to change your errors. Click <strong class="text-info">save</strong> or <strong
                                 class="text-info">export</strong> all of your errors to CSv and Re-Uploaded this after
@@ -387,20 +433,29 @@
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Devices?</h2>
                     <p class="text-gray-700">Accessories can be located within the left hand side menu Labeled
-                        'Accessories' Can't
-                        find it? Click<a href="{{route("accessories.index")}}" class="text-capitalize"> here</a></p>
+                                             'Accessories' Can't
+                                             find it? Click<a href="{{route("accessories.index")}}"
+                                                              class="text-capitalize"> here</a></p>
                     <p class="text-gray-700">All Items can be <strong class="text-info">edited , Deleted and
-                            viewed</strong> With the Drop out selector on the right have side of the tables!</p>
+                                                                                        viewed</strong> With the Drop
+                                             out selector on the right have side of the tables!</p>
                     <h4 class="text-info">I need to find all the devices at my current School How can i do this?</h4>
                     <p class="text-gray-700">Our Asset Area has a Search Helper.This allows for easy searching.</p>
                     <h4 class="text-info">How do i add new Devices/Accessories?</h4>
                     <p class="text-gray-700">All <strong class="text-info">(Keyboards,mice,Monitors etc)</strong> should
-                        be added to Accessories as all other Products have there
-                        related columns <strong class="text-info">Not sure where to Put an un-related Item Use
-                            Miscellaneous!</strong> At the Top of the screen you will find a button which takes you to
-                        adding a new accessory.<a class="text-warning" href="{{route("accessories.create")}}"> Stuck?
-                            Click here
-                            to add a new accessory</a></p>
+                                             be added to Accessories as all other Products have there
+                                             related columns <strong class="text-info">Not sure where to Put an
+                                                                                       un-related Item Use
+                                                                                       Miscellaneous!</strong> At the
+                                             Top of the screen you will find a button which takes you to
+                                             adding a new accessory.<a class="text-warning"
+                                                                       href="{{route("accessories.create")}}"> Stuck?
+                                                                                                               Click
+                                                                                                               here
+                                                                                                               to add a
+                                                                                                               new
+                                                                                                               accessory</a>
+                    </p>
                     <h4 class="text-info">Guide to adding new Accessories:</h4>
                     <ol>
                         <li>Firstly, Does Your accessory have a name? if so fill this in in the first box.<strong
@@ -412,7 +467,8 @@
                         <li>Thirdly,Please select when the device was purchased.</li>
                         <li>Fourth,You will need to a serial number corresponding to the device your adding.</li>
                         <li>Fifth,a purchase cost will be needed <strong class="text-info">(No need to enter a '£' sign
-                                this will be done automatically)</strong></li>
+                                                                                           this will be done
+                                                                                           automatically)</strong></li>
                         <li>Sixth,Which school is this located to ? Assign this here on the dropdown menu.</li>
                         <li>Seventh,Who is the supplier of this accessory? fill this in here in the select menu.</li>
                         <li>Eighth,select a date for how long of a warranty you have left on this device!<strong
@@ -436,18 +492,22 @@
                     <p class="text-info">A Few quick Notes before we begin ,</p>
                     <ul class="">
                         <li class="text-danger">There is a template provided which needs to be used No other templates
-                            can be used!
+                                                can be used!
                         </li>
                         <li class="text-danger">Always remember to upload a file before clicking import!</li>
                         <li class="text-danger">Once you have added all your data to the excel spreadsheet Try uploading
-                            this! This input only accepts<strong>.Csv</strong> files.
+                                                this! This input only accepts<strong>.Csv</strong> files.
                         </li>
                         <li class="text-danger">Errors can always occur when uploading files This is why any rows which
-                            has no issues will be pushed through and added for you. Your next option after this is to
-                            1.export all the errors back to <strong>.Csv </strong>and then correct the current issues
-                            and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong> file has been uploaded
-                            there is a friendly user interface which allows you to manually edit all the rows which are
-                            incorrect with tool tips to help you across the way!
+                                                has no issues will be pushed through and added for you. Your next option
+                                                after this is to
+                                                1.export all the errors back to <strong>.Csv </strong>and then correct
+                                                the current issues
+                                                and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong>
+                                                file has been uploaded
+                                                there is a friendly user interface which allows you to manually edit all
+                                                the rows which are
+                                                incorrect with tool tips to help you across the way!
                         </li>
                     </ul>
                     <ol>
@@ -464,7 +524,8 @@
                             the system process your file.
                         </li>
                         <li>Fifth,If you don't have any errors this will return with a <strong class="text-success">success
-                                message</strong> which tell you all of your data fields were added. Else, Your will be
+                                                                                                                    message</strong>
+                            which tell you all of your data fields were added. Else, Your will be
                             moved to a new page with the <strong class="text-danger">incorrect </strong> fields which
                             have errors to change your errors. Click <strong class="text-info">save</strong> or <strong
                                 class="text-info">export</strong> all of your errors to CSv and Re-Uploaded this after
@@ -476,11 +537,14 @@
                     </ol>
                     <h4 class="text-info mt-3">How to Generate a live report:</h4>
                     <p class="text-gray-700">You are able to Create a <strong>Pdf report</strong> file based on the data
-                        of
-                        the page you are currently accessing.This process takes sometime to generate so once you have
-                        clicked the button like 'below' Please navigate to the link in the green box or follow settings
-                        in your navigation and <strong>click</strong> <a class="text-info"
-                                                                         href="{{route("reports.index")}}"> Generated
+                                             of
+                                             the page you are currently accessing.This process takes sometime to
+                                             generate so once you have
+                                             clicked the button like 'below' Please navigate to the link in the green
+                                             box or follow settings
+                                             in your navigation and <strong>click</strong> <a class="text-info"
+                                                                                              href="{{route("reports.index")}}">
+                            Generated
                             Reports.</a>
 
                         <a class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
@@ -502,20 +566,28 @@
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Devices?</h2>
                     <p class="text-gray-700">Components can be located within the left hand side menu Labeled
-                        'Components' Can't
-                        find it? Click<a href="{{route("components.index")}}" class="text-capitalize"> here</a></p>
+                                             'Components' Can't
+                                             find it? Click<a href="{{route("components.index")}}"
+                                                              class="text-capitalize"> here</a></p>
                     <p class="text-gray-700">All Items can be <strong class="text-info">edited , Deleted and
-                            viewed</strong> With the Drop out selector on the right have side of the tables!</p>
+                                                                                        viewed</strong> With the Drop
+                                             out selector on the right have side of the tables!</p>
                     <h4 class="text-info">I need to find all the devices at my current School How can i do this?</h4>
                     <p class="text-gray-700">Our Asset Area has a Search Helper.This allows for easy searching.</p>
                     <h4 class="text-info">How do i add new Devices/Components?</h4>
                     <p class="text-gray-700">All <strong class="text-info">(Keyboards,mice,Monitors etc)</strong> should
-                        be added to Components as all other Products have there
-                        related columns <strong class="text-info">Not sure where to Put an un-related Item Use
-                            Miscellaneous!</strong> At the Top of the screen you will find a button which takes you to
-                        adding a new Component.<a class="text-warning" href="{{route("components.create")}}"> Stuck?
-                            Click here
-                            to add a new Component</a></p>
+                                             be added to Components as all other Products have there
+                                             related columns <strong class="text-info">Not sure where to Put an
+                                                                                       un-related Item Use
+                                                                                       Miscellaneous!</strong> At the
+                                             Top of the screen you will find a button which takes you to
+                                             adding a new Component.<a class="text-warning"
+                                                                       href="{{route("components.create")}}"> Stuck?
+                                                                                                              Click here
+                                                                                                              to add a
+                                                                                                              new
+                                                                                                              Component</a>
+                    </p>
                     <h4 class="text-info">Guide to adding new Components:</h4>
                     <ol>
                         <li>Firstly, Does Your Component have a name? if so fill this in in the first box.<strong
@@ -527,7 +599,8 @@
                         <li>Thirdly,Please select when the device was purchased.</li>
                         <li>Fourth,You will need to a serial number corresponding to the device your adding.</li>
                         <li>Fifth,a purchase cost will be needed <strong class="text-info">(No need to enter a '£' sign
-                                this will be done automatically)</strong></li>
+                                                                                           this will be done
+                                                                                           automatically)</strong></li>
                         <li>Sixth,Which school is this located to ? Assign this here on the dropdown menu.</li>
                         <li>Seventh,Who is the supplier of this Component? fill this in here in the select menu.</li>
                         <li>Eighth,select a date for how long of a warranty you have left on this device!<strong
@@ -551,18 +624,22 @@
                     <p class="text-info">A Few quick Notes before we begin ,</p>
                     <ul class="">
                         <li class="text-danger">There is a template provided which needs to be used No other templates
-                            can be used!
+                                                can be used!
                         </li>
                         <li class="text-danger">Always remember to upload a file before clicking import!</li>
                         <li class="text-danger">Once you have added all your data to the excel spreadsheet Try uploading
-                            this! This input only accepts<strong>.Csv</strong> files.
+                                                this! This input only accepts<strong>.Csv</strong> files.
                         </li>
                         <li class="text-danger">Errors can always occur when uploading files This is why any rows which
-                            has no issues will be pushed through and added for you. Your next option after this is to
-                            1.export all the errors back to <strong>.Csv </strong>and then correct the current issues
-                            and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong> file has been uploaded
-                            there is a friendly user interface which allows you to manually edit all the rows which are
-                            incorrect with tool tips to help you across the way!
+                                                has no issues will be pushed through and added for you. Your next option
+                                                after this is to
+                                                1.export all the errors back to <strong>.Csv </strong>and then correct
+                                                the current issues
+                                                and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong>
+                                                file has been uploaded
+                                                there is a friendly user interface which allows you to manually edit all
+                                                the rows which are
+                                                incorrect with tool tips to help you across the way!
                         </li>
                     </ul>
                     <ol>
@@ -579,7 +656,8 @@
                             the system process your file.
                         </li>
                         <li>Fifth,If you don't have any errors this will return with a <strong class="text-success">success
-                                message</strong> which tell you all of your data fields were added. Else, Your will be
+                                                                                                                    message</strong>
+                            which tell you all of your data fields were added. Else, Your will be
                             moved to a new page with the <strong class="text-danger">incorrect </strong> fields which
                             have errors to change your errors. Click <strong class="text-info">save</strong> or <strong
                                 class="text-info">export</strong> all of your errors to CSv and Re-Uploaded this after
@@ -591,11 +669,14 @@
                     </ol>
                     <h4 class="text-info mt-3">How to Generate a live report:</h4>
                     <p class="text-gray-700">You are able to Create a <strong>Pdf report</strong> file based on the data
-                        of
-                        the page you are currently accessing.This process takes sometime to generate so once you have
-                        clicked the button like 'below' Please navigate to the link in the green box or follow settings
-                        in your navigation and <strong>click</strong> <a class="text-info"
-                                                                         href="{{route("reports.index")}}"> Generated
+                                             of
+                                             the page you are currently accessing.This process takes sometime to
+                                             generate so once you have
+                                             clicked the button like 'below' Please navigate to the link in the green
+                                             box or follow settings
+                                             in your navigation and <strong>click</strong> <a class="text-info"
+                                                                                              href="{{route("reports.index")}}">
+                            Generated
                             Reports.</a>
 
                         <a class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
@@ -618,18 +699,23 @@
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Devices?</h2>
                     <p class="text-gray-700">Miscellaneous can be located within the left hand side menu Labeled
-                        'Miscellaneous' Can't
-                        find it? Click<a href="{{route("miscellaneous.index")}}" class="text-capitalize"> here</a></p>
+                                             'Miscellaneous' Can't
+                                             find it? Click<a href="{{route("miscellaneous.index")}}"
+                                                              class="text-capitalize"> here</a></p>
                     <p class="text-gray-700">All Items can be <strong class="text-info">edited , Deleted and
-                            viewed</strong> With the Drop out selector on the right have side of the tables!</p>
+                                                                                        viewed</strong> With the Drop
+                                             out selector on the right have side of the tables!</p>
                     <h4 class="text-info">I need to find all the devices at my current School How can i do this?</h4>
                     <p class="text-gray-700">Our Asset Area has a Search Helper.This allows for easy searching.</p>
                     <h4 class="text-info">How do i add new Devices/Miscellaneous?</h4>
                     <p class="text-gray-700">All <strong class="text-info">(Keyboards,mice,Monitors etc)</strong> should
-                        be added to Miscellaneous as all other Products have there
-                        related columns <strong class="text-info">Not sure where to Put an un-related Item Use
-                            Miscellaneous!</strong> At the Top of the screen you will find a button which takes you to
-                        adding a new Miscellanea.<a class="text-warning" href="{{route("miscellaneous.create")}}">
+                                             be added to Miscellaneous as all other Products have there
+                                             related columns <strong class="text-info">Not sure where to Put an
+                                                                                       un-related Item Use
+                                                                                       Miscellaneous!</strong> At the
+                                             Top of the screen you will find a button which takes you to
+                                             adding a new Miscellanea.<a class="text-warning"
+                                                                         href="{{route("miscellaneous.create")}}">
                             Stuck? Click here
                             to add a new Miscellanea</a></p>
                     <h4 class="text-info">Guide to adding new Miscellaneous:</h4>
@@ -643,7 +729,8 @@
                         <li>Thirdly,Please select when the device was purchased.</li>
                         <li>Fourth,You will need to a serial number corresponding to the device your adding.</li>
                         <li>Fifth,a purchase cost will be needed <strong class="text-info">(No need to enter a '£' sign
-                                this will be done automatically)</strong></li>
+                                                                                           this will be done
+                                                                                           automatically)</strong></li>
                         <li>Sixth,Which school is this located to ? Assign this here on the dropdown menu.</li>
                         <li>Seventh,Who is the supplier of this Miscellanea? fill this in here in the select menu.</li>
                         <li>Eighth,select a date for how long of a warranty you have left on this device!<strong
@@ -667,18 +754,22 @@
                     <p class="text-info">A Few quick Notes before we begin ,</p>
                     <ul class="">
                         <li class="text-danger">There is a template provided which needs to be used No other templates
-                            can be used!
+                                                can be used!
                         </li>
                         <li class="text-danger">Always remember to upload a file before clicking import!</li>
                         <li class="text-danger">Once you have added all your data to the excel spreadsheet Try uploading
-                            this! This input only accepts<strong>.Csv</strong> files.
+                                                this! This input only accepts<strong>.Csv</strong> files.
                         </li>
                         <li class="text-danger">Errors can always occur when uploading files This is why any rows which
-                            has no issues will be pushed through and added for you. Your next option after this is to
-                            1.export all the errors back to <strong>.Csv </strong>and then correct the current issues
-                            and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong> file has been uploaded
-                            there is a friendly user interface which allows you to manually edit all the rows which are
-                            incorrect with tool tips to help you across the way!
+                                                has no issues will be pushed through and added for you. Your next option
+                                                after this is to
+                                                1.export all the errors back to <strong>.Csv </strong>and then correct
+                                                the current issues
+                                                and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong>
+                                                file has been uploaded
+                                                there is a friendly user interface which allows you to manually edit all
+                                                the rows which are
+                                                incorrect with tool tips to help you across the way!
                         </li>
                     </ul>
                     <ol>
@@ -695,7 +786,8 @@
                             the system process your file.
                         </li>
                         <li>Fifth,If you don't have any errors this will return with a <strong class="text-success">success
-                                message</strong> which tell you all of your data fields were added. Else, Your will be
+                                                                                                                    message</strong>
+                            which tell you all of your data fields were added. Else, Your will be
                             moved to a new page with the <strong class="text-danger">incorrect </strong> fields which
                             have errors to change your errors. Click <strong class="text-info">save</strong> or <strong
                                 class="text-info">export</strong> all of your errors to CSv and Re-Uploaded this after
@@ -707,11 +799,14 @@
                     </ol>
                     <h4 class="text-info mt-3">How to Generate a live report:</h4>
                     <p class="text-gray-700">You are able to Create a <strong>Pdf report</strong> file based on the data
-                        of
-                        the page you are currently accessing.This process takes sometime to generate so once you have
-                        clicked the button like 'below' Please navigate to the link in the green box or follow settings
-                        in your navigation and <strong>click</strong> <a class="text-info"
-                                                                         href="{{route("reports.index")}}"> Generated
+                                             of
+                                             the page you are currently accessing.This process takes sometime to
+                                             generate so once you have
+                                             clicked the button like 'below' Please navigate to the link in the green
+                                             box or follow settings
+                                             in your navigation and <strong>click</strong> <a class="text-info"
+                                                                                              href="{{route("reports.index")}}">
+                            Generated
                             Reports.</a>
 
                         <a class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
@@ -733,20 +828,29 @@
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Devices?</h2>
                     <p class="text-gray-700">Consumables can be located within the left hand side menu Labeled
-                        'Consumables' Can't
-                        find it? Click<a href="{{route("consumables.index")}}" class="text-capitalize"> here</a></p>
+                                             'Consumables' Can't
+                                             find it? Click<a href="{{route("consumables.index")}}"
+                                                              class="text-capitalize"> here</a></p>
                     <p class="text-gray-700">All Items can be <strong class="text-info">edited , Deleted and
-                            viewed</strong> With the Drop out selector on the right have side of the tables!</p>
+                                                                                        viewed</strong> With the Drop
+                                             out selector on the right have side of the tables!</p>
                     <h4 class="text-info">I need to find all the devices at my current School How can i do this?</h4>
                     <p class="text-gray-700">Our Asset Area has a Search Helper.This allows for easy searching.</p>
                     <h4 class="text-info">How do i add new Devices/Consumables?</h4>
                     <p class="text-gray-700">All <strong class="text-info">(Keyboards,mice,Monitors etc)</strong> should
-                        be added to Consumables as all other Products have there
-                        related columns <strong class="text-info">Not sure where to Put an un-related Item Use
-                            Consumables!</strong> At the Top of the screen you will find a button which takes you to
-                        adding a new Consumable.<a class="text-warning" href="{{route("consumables.create")}}"> Stuck?
-                            Click here
-                            to add a new Consumable</a></p>
+                                             be added to Consumables as all other Products have there
+                                             related columns <strong class="text-info">Not sure where to Put an
+                                                                                       un-related Item Use
+                                                                                       Consumables!</strong> At the Top
+                                             of the screen you will find a button which takes you to
+                                             adding a new Consumable.<a class="text-warning"
+                                                                        href="{{route("consumables.create")}}"> Stuck?
+                                                                                                                Click
+                                                                                                                here
+                                                                                                                to add a
+                                                                                                                new
+                                                                                                                Consumable</a>
+                    </p>
                     <h4 class="text-info">Guide to adding new Consumables:</h4>
                     <ol>
                         <li>Firstly, Does Your Consumable have a name? if so fill this in in the first box.<strong
@@ -758,7 +862,8 @@
                         <li>Thirdly,Please select when the device was purchased.</li>
                         <li>Fourth,You will need to a serial number corresponding to the device your adding.</li>
                         <li>Fifth,a purchase cost will be needed <strong class="text-info">(No need to enter a '£' sign
-                                this will be done automatically)</strong></li>
+                                                                                           this will be done
+                                                                                           automatically)</strong></li>
                         <li>Sixth,Which school is this located to ? Assign this here on the dropdown menu.</li>
                         <li>Seventh,Who is the supplier of this Consumable? fill this in here in the select menu.</li>
                         <li>Eighth,select a date for how long of a warranty you have left on this device!<strong
@@ -782,18 +887,22 @@
                     <p class="text-info">A Few quick Notes before we begin ,</p>
                     <ul class="">
                         <li class="text-danger">There is a template provided which needs to be used No other templates
-                            can be used!
+                                                can be used!
                         </li>
                         <li class="text-danger">Always remember to upload a file before clicking import!</li>
                         <li class="text-danger">Once you have added all your data to the excel spreadsheet Try uploading
-                            this! This input only accepts<strong>.Csv</strong> files.
+                                                this! This input only accepts<strong>.Csv</strong> files.
                         </li>
                         <li class="text-danger">Errors can always occur when uploading files This is why any rows which
-                            has no issues will be pushed through and added for you. Your next option after this is to
-                            1.export all the errors back to <strong>.Csv </strong>and then correct the current issues
-                            and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong> file has been uploaded
-                            there is a friendly user interface which allows you to manually edit all the rows which are
-                            incorrect with tool tips to help you across the way!
+                                                has no issues will be pushed through and added for you. Your next option
+                                                after this is to
+                                                1.export all the errors back to <strong>.Csv </strong>and then correct
+                                                the current issues
+                                                and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong>
+                                                file has been uploaded
+                                                there is a friendly user interface which allows you to manually edit all
+                                                the rows which are
+                                                incorrect with tool tips to help you across the way!
                         </li>
                     </ul>
                     <ol>
@@ -810,7 +919,8 @@
                             the system process your file.
                         </li>
                         <li>Fifth,If you don't have any errors this will return with a <strong class="text-success">success
-                                message</strong> which tell you all of your data fields were added. Else, Your will be
+                                                                                                                    message</strong>
+                            which tell you all of your data fields were added. Else, Your will be
                             moved to a new page with the <strong class="text-danger">incorrect </strong> fields which
                             have errors to change your errors. Click <strong class="text-info">save</strong> or <strong
                                 class="text-info">export</strong> all of your errors to CSv and Re-Uploaded this after
@@ -822,11 +932,14 @@
                     </ol>
                     <h4 class="text-info mt-3">How to Generate a live report:</h4>
                     <p class="text-gray-700">You are able to Create a <strong>Pdf report</strong> file based on the data
-                        of
-                        the page you are currently accessing.This process takes sometime to generate so once you have
-                        clicked the button like 'below' Please navigate to the link in the green box or follow settings
-                        in your navigation and <strong>click</strong> <a class="text-info"
-                                                                         href="{{route("reports.index")}}"> Generated
+                                             of
+                                             the page you are currently accessing.This process takes sometime to
+                                             generate so once you have
+                                             clicked the button like 'below' Please navigate to the link in the green
+                                             box or follow settings
+                                             in your navigation and <strong>click</strong> <a class="text-info"
+                                                                                              href="{{route("reports.index")}}">
+                            Generated
                             Reports.</a>
 
                         <a class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
@@ -850,28 +963,35 @@
                     <p class="text-gray-700">User Details can be changed from the <strong
                             class="text-info">Profile</strong> display menu for your own profile Only Click <a
                             href="{{route("user.details")}}">here </a>to access this area or navigate to the <strong>top
-                            right menu.</strong> </br> <strong class="text-info">(Unless you are a super admin or admin
-                            of a School area you can edit all users details)</strong></p>
+                                                                                                                     right
+                                                                                                                     menu.</strong> </br>
+                        <strong class="text-info">(Unless you are a super admin or admin
+                                                  of a School area you can edit all users details)</strong></p>
                     <h4 class="text-info mt-3">I am a Full admin how i reset a users password for them?</h4>
                     <p class="text-gray-700">If you already have permissions , Please Direct all users with lost
-                        passwords to <a href="{{route("forgot.my.password")}}">here</a> <strong class="text-warning">All
-                            they need is there email</strong></p>
+                                             passwords to <a href="{{route("forgot.my.password")}}">here</a> <strong
+                            class="text-warning">All
+                                                 they need is there email</strong></p>
                     <p class="text-gray-700">Else Use the <strong class="text-info">365 Office</strong> log-in On the
-                        Homepage and use your <strong class="text-info">CLPT</strong> Account!</p>
+                                             Homepage and use your <strong class="text-info">CLPT</strong> Account!</p>
                     <h4 class="text-info">I've Lost my Password What can i do?</h4>
                     <p class="text-gray-700">If You have Forgot your password you can click <a
                             href="{{route("forgot.my.password")}}" class="text-capitalize">here</a> to reset your
-                        password by your email! else please contact your Admin and they will reset this for you!</p>
+                                             password by your email! else please contact your Admin and they will reset
+                                             this for you!</p>
                     <h4 class="text-info mt-2">I know my password How can i reset this?</h4>
                     <p class="text-gray-700">If you know your password you can navigate through the profile link in the
-                        top right or Click <a href="{{route("user.details")}}" class="text-capitalize">here</a>.</p>
+                                             top right or Click <a href="{{route("user.details")}}"
+                                                                   class="text-capitalize">here</a>.</p>
                     <h4 class="text-info">Steps to reset:</h4>
                     <ol>
                         <li>Find Out your password from your original sign up email.</li>
                         <li>Navigate to the link above and click reset password</li>
                         <li>Input your current password to the top box</li>
                         <li>Think of a new password and match this in both Boxes <strong class="text-danger">(Capitals
-                                are included!)</strong></li>
+                                                                                                             are
+                                                                                                             included!)</strong>
+                        </li>
                     </ol>
 
                 </div>
@@ -891,7 +1011,9 @@
                     <h2 class="text-info">I Can't see all the schools in my organisation what's wrong?</h2>
                     <ul>
                         <li class="text-gray-700">All Users have a user role and locations there are allowed to see, If
-                            you can see another school you <strong class="text-danger">May Not</strong> have access.
+                                                  you can see another school you <strong class="text-danger">May
+                                                                                                             Not</strong>
+                                                  have access.
                         </li>
                         <li class="text-gray-700">If you think you should have access please contact your <strong
                                 class="text-info">local technician</strong> admin for more information or Email <strong>Apollo@clpt.co.uk</strong>
@@ -899,19 +1021,22 @@
                     </ul>
                     <h4 class="text-info">Im getting a Permissions 401 page why?</h4>
                     <p class="text-gray-700">This Means you <strong class="text-danger">do not</strong> have access to
-                        this information, please contact your <strong class="text-info">local technician</strong> admin
-                        for more information or Email <strong>Apollo@clpt.co.uk</strong></p>
+                                             this information, please contact your <strong class="text-info">local
+                                                                                                             technician</strong>
+                                             admin
+                                             for more information or Email <strong>Apollo@clpt.co.uk</strong></p>
                     <h4 class="text-info">Im an Admin how can i assign permissions?</h4>
                     <ol>
                         <li class="text-gray-700">Navigate to the Users>permissions tab on the left hand side and select
-                            a user you would like to add locations to Or click <a href="{{route("users.index")}}"></a>here
+                                                  a user you would like to add locations to Or click <a
+                                href="{{route("users.index")}}"></a>here
                         </li>
                         <li class="text-gray-700">Find your Designated users and select <strong
                                 class="text-info">Edit</strong> on the drop down menu
                         </li>
                         <li class="text-gray-700">Locate the <strong class="text-info">Permissions</strong> box at the
                             <strong class="text-info">bottom</strong> of the page and select all the schools you would
-                            like adding to this users profile.
+                                                  like adding to this users profile.
                         </li>
                         <li class="text-info">Any Admins roles can also be assigned here too!</li>
                     </ol>
@@ -931,15 +1056,19 @@
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Manufacturers?</h2>
                     <p class="text-gray-700">Manufacturers can be located within the left hand side menu Labeled
-                        'Manufacturers' Can't
-                        find it? Click<a href="{{route("manufacturers.index")}}" class="text-capitalize"> here</a></p>
+                                             'Manufacturers' Can't
+                                             find it? Click<a href="{{route("manufacturers.index")}}"
+                                                              class="text-capitalize"> here</a></p>
                     <p class="text-gray-700">All Items can be <strong class="text-info">edited , Deleted and
-                            viewed</strong> With the Drop out selector on the right have side of the blocks!</p>
+                                                                                        viewed</strong> With the Drop
+                                             out selector on the right have side of the blocks!</p>
                     <h4 class="text-info">How do i add new Manufacturer?</h4>
                     <p class="text-gray-700">All <strong class="text-info">Manufacturers</strong> should be added to
-                        Manufacturers as all other Products have there
-                        related columns <strong class="text-info">Not sure where to Put an un-related Item Use
-                            Miscellaneous.</strong><a class="text-warning" href="{{route("miscellaneous.create")}}">
+                                             Manufacturers as all other Products have there
+                                             related columns <strong class="text-info">Not sure where to Put an
+                                                                                       un-related Item Use
+                                                                                       Miscellaneous.</strong><a
+                            class="text-warning" href="{{route("miscellaneous.create")}}">
                             Stuck? Click here
                             to add a new Miscellanea.</a></p>
                     <h4 class="text-info">Guide to adding new Manufacturers:</h4>
@@ -963,7 +1092,7 @@
                         </li>
                     </ol>
                     <p class="text-gray-700 text-info">A Picture can be added in the top right if you would like nay
-                        visual aid!</p>
+                                                       visual aid!</p>
                     <div class="d-sm-flex align-items-center ">
                         <div class="text-gray-700">Example Errors Box:</div>
                         <div class="alert alert-danger m-5 d-inline">red box</div>
@@ -972,18 +1101,22 @@
                     <p class="text-info">A Few quick Notes before we begin ,</p>
                     <ul class="">
                         <li class="text-danger">There is a template provided which needs to be used No other templates
-                            can be used!
+                                                can be used!
                         </li>
                         <li class="text-danger">Always remember to upload a file before clicking import!</li>
                         <li class="text-danger">Once you have added all your data to the excel spreadsheet Try uploading
-                            this! This input only accepts<strong>.Csv</strong> files.
+                                                this! This input only accepts<strong>.Csv</strong> files.
                         </li>
                         <li class="text-danger">Errors can always occur when uploading files This is why any rows which
-                            has no issues will be pushed through and added for you. Your next option after this is to
-                            1.export all the errors back to <strong>.Csv </strong>and then correct the current issues
-                            and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong> file has been uploaded
-                            there is a friendly user interface which allows you to manually edit all the rows which are
-                            incorrect with tool tips to help you across the way!
+                                                has no issues will be pushed through and added for you. Your next option
+                                                after this is to
+                                                1.export all the errors back to <strong>.Csv </strong>and then correct
+                                                the current issues
+                                                and Re-Upload your new file. </br> 2.Once your <strong>.Csv</strong>
+                                                file has been uploaded
+                                                there is a friendly user interface which allows you to manually edit all
+                                                the rows which are
+                                                incorrect with tool tips to help you across the way!
                         </li>
                     </ul>
                     <ol>
@@ -1000,7 +1133,8 @@
                             the system process your file.
                         </li>
                         <li>Fifth,If you don't have any errors this will return with a <strong class="text-success">success
-                                message</strong> which tell you all of your data fields were added. Else, Your will be
+                                                                                                                    message</strong>
+                            which tell you all of your data fields were added. Else, Your will be
                             moved to a new page with the <strong class="text-danger">incorrect </strong> fields which
                             have errors to change your errors. Click <strong class="text-info">save</strong> or <strong
                                 class="text-info">export</strong> all of your errors to CSv and Re-Uploaded this after
@@ -1012,11 +1146,14 @@
                     </ol>
                     <h4 class="text-info mt-3">How to Generate a live report:</h4>
                     <p class="text-gray-700">You are able to Create a <strong>Pdf report</strong> file based on the data
-                        of
-                        the page you are currently accessing.This process takes sometime to generate so once you have
-                        clicked the button like 'below' Please navigate to the link in the green box or follow settings
-                        in your navigation and <strong>click</strong> <a class="text-info"
-                                                                         href="{{route("reports.index")}}"> Generated
+                                             of
+                                             the page you are currently accessing.This process takes sometime to
+                                             generate so once you have
+                                             clicked the button like 'below' Please navigate to the link in the green
+                                             box or follow settings
+                                             in your navigation and <strong>click</strong> <a class="text-info"
+                                                                                              href="{{route("reports.index")}}">
+                            Generated
                             Reports.</a>
 
                         <a class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
@@ -1039,15 +1176,19 @@
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Suppliers?</h2>
                     <p class="text-gray-700">Suppliers can be located within the left hand side menu Labeled 'Suppliers'
-                        Can't
-                        find it? Click<a href="{{route("suppliers.index")}}" class="text-capitalize"> here</a></p>
+                                             Can't
+                                             find it? Click<a href="{{route("suppliers.index")}}"
+                                                              class="text-capitalize"> here</a></p>
                     <p class="text-gray-700">All Items can be <strong class="text-info">edited , Deleted and
-                            viewed</strong> With the Drop out selector on the right have side of the blocks!</p>
+                                                                                        viewed</strong> With the Drop
+                                             out selector on the right have side of the blocks!</p>
                     <h4 class="text-info">How do i add new Supplier?</h4>
                     <p class="text-gray-700">All <strong class="text-info">Suppliers</strong> should be added to
-                        Suppliers as all other Products have there
-                        related columns <strong class="text-info">Not sure where to Put an un-related Item Use
-                            Miscellaneous.</strong><a class="text-warning" href="{{route("miscellaneous.create")}}">
+                                             Suppliers as all other Products have there
+                                             related columns <strong class="text-info">Not sure where to Put an
+                                                                                       un-related Item Use
+                                                                                       Miscellaneous.</strong><a
+                            class="text-warning" href="{{route("miscellaneous.create")}}">
                             Stuck? Click here
                             to add a new Miscellanea.</a></p>
                     <h4 class="text-info">Guide to adding new Suppliers:</h4>
@@ -1060,7 +1201,7 @@
                         <li>Secondly, Fill out your Street Address for the Supplier.</li>
                         <li>Thirdly,Please Enter a <strong class="text-info">Secondary address</strong> for the <strong
                                 class="text-info">Supplier</strong> you have named <strong class="text-danger">Only if
-                                necessary</strong>.
+                                                                                                               necessary</strong>.
                         </li>
                         <li>Fourth,Please Enter a <strong class="text-info">City, County, Postcode</strong> for the
                             <strong class="text-info">Supplier</strong> you have named.
@@ -1069,7 +1210,14 @@
                                 class="text-info">Supplier</strong> you have named.
                         </li>
                         <li>Sixth, Some contact detail will needed to be filled in on the right hand side like <strong>(Website
-                                Url , Telephone ,Fax and Email address)</strong></li>
+                                                                                                                       Url
+                                                                                                                       ,
+                                                                                                                       Telephone
+                                                                                                                       ,Fax
+                                                                                                                       and
+                                                                                                                       Email
+                                                                                                                       address)</strong>
+                        </li>
                         <li>Finally,Click <strong class="text-success">save</strong> in the top Right corner and see if
                             this all saves
                             correctly. If you have any errors this will be displayed in a red box at the top ,like the
@@ -1077,18 +1225,21 @@
                         </li>
                     </ol>
                     <p class="text-gray-700 text-info">A Picture can be added in the top right if you would like nay
-                        visual aid!</p>
+                                                       visual aid!</p>
                     <div class="d-sm-flex align-items-center ">
                         <div class="text-gray-700">Example Errors Box:</div>
                         <div class="alert alert-danger m-5 d-inline">red box</div>
                     </div>
                     <h4 class="text-info mt-3">How to Generate a live report:</h4>
                     <p class="text-gray-700">You are able to Create a <strong>Pdf report</strong> file based on the data
-                        of
-                        the page you are currently accessing.This process takes sometime to generate so once you have
-                        clicked the button like 'below' Please navigate to the link in the green box or follow settings
-                        in your navigation and <strong>click</strong> <a class="text-info"
-                                                                         href="{{route("reports.index")}}"> Generated
+                                             of
+                                             the page you are currently accessing.This process takes sometime to
+                                             generate so once you have
+                                             clicked the button like 'below' Please navigate to the link in the green
+                                             box or follow settings
+                                             in your navigation and <strong>click</strong> <a class="text-info"
+                                                                                              href="{{route("reports.index")}}">
+                            Generated
                             Reports.</a>
 
                         <a class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
@@ -1110,23 +1261,33 @@
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Models of devices?</h2>
                     <p class="text-gray-700">Consumables can be located within the left hand side menu Labeled
-                        'Consumables' Can't
-                        find it? Click<a href="{{route("asset-models.index")}}" class="text-capitalize"> here</a></p>
+                                             'Consumables' Can't
+                                             find it? Click<a href="{{route("asset-models.index")}}"
+                                                              class="text-capitalize"> here</a></p>
                     <p class="text-gray-700">All Items can be <strong class="text-info">edited , Deleted and
-                            viewed</strong> With the Drop out selector on the right have side of the tables!</p>
+                                                                                        viewed</strong> With the Drop
+                                             out selector on the right have side of the tables!</p>
                     <h4 class="text-info">I need to find your specific model?</h4>
                     <p class="text-gray-700">Our Asset Model Area has a Search Helper.This allows for easy
-                        searching.</p>
+                                             searching.</p>
                     <h2 class="text-info">I want to Add a new Device we have in stock. How?</h2>
                     <p class="text-gray-700">Our Asset Model Area has a Search Helper.This allows for easy
-                        searching.</p>
+                                             searching.</p>
                     <p class="text-gray-700">All <strong class="text-info">New Devices To be registered</strong> should
-                        be added to Assets Models as all other Products have there
-                        related columns <strong class="text-info">Not sure where to Put an un-related Item Use
-                            Miscellaneous!</strong> At the Top of the screen you will find a button which takes you to
-                        adding a new Asset Model.<a class="text-warning" href="{{route("asset-models.create")}}"> Stuck?
-                            Click here
-                            to add a new Asset Mode</a></p>
+                                             be added to Assets Models as all other Products have there
+                                             related columns <strong class="text-info">Not sure where to Put an
+                                                                                       un-related Item Use
+                                                                                       Miscellaneous!</strong> At the
+                                             Top of the screen you will find a button which takes you to
+                                             adding a new Asset Model.<a class="text-warning"
+                                                                         href="{{route("asset-models.create")}}"> Stuck?
+                                                                                                                  Click
+                                                                                                                  here
+                                                                                                                  to add
+                                                                                                                  a new
+                                                                                                                  Asset
+                                                                                                                  Mode</a>
+                    </p>
                     <h4 class="text-info">Guide to adding new Asset Models to assign to your Items:</h4>
                     <ol>
                         <li>Firstly,Fill in your name field with the name of you new device <strong class="text-info">(Eg.Hp-ProDesk)</strong>
@@ -1140,7 +1301,8 @@
                         <li>Fourth, The deprecation column allows you to select how quick this model will loose its
                             value. so if an Ipad looses it value 2 times quicker than a Laptop this is where you would
                             select this.<strong class="text-danger">If nothing is shown you need to add a depreciation
-                                models first click <a href="{{route("depreciation.index")}}">here</a></strong></li>
+                                                                    models first click <a
+                                    href="{{route("depreciation.index")}}">here</a></strong></li>
                         <li>Fifth,How long Will this Item be usable for? Select a time in <strong>Months</strong> Of
                             when the Item will no longer be any use to the organisation!
                         </li>
@@ -1174,16 +1336,19 @@
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Depreciation Models?</h2>
                     <p class="text-gray-700">Depreciation Models can be located within the left hand side menu Labeled
-                        'Depreciation' Under <strong class="text-info">Settings</strong> Can't
-                        find it? Click<a href="{{route("depreciation.index")}}" class="text-capitalize"> here</a></p>
+                                             'Depreciation' Under <strong class="text-info">Settings</strong> Can't
+                                             find it? Click<a href="{{route("depreciation.index")}}"
+                                                              class="text-capitalize"> here</a></p>
                 </div>
                 <h4 class="text-info">Why do i need to create a new Depreciation Model?</h4>
                 <p class="text-gray-700">Depreciation Models May want to be created so if your assets go <strong
                         class="text-danger">down</strong> in value after <strong class="text-warning">(Eg.36
-                        Months)</strong> and now <strong class="text-success">hold</strong> there value this can be
-                    dynamic and changed for the whole application through this tab! </br><strong class="text-info">Edited
-                        , Deleted and viewed</strong> With the Drop out selector on the right have side of the tables!
-                </p>
+                                                                                                      Months)</strong>
+                                         and now <strong class="text-success">hold</strong> there value this can be
+                                         dynamic and changed for the whole application through this tab! </br><strong
+                        class="text-info">Edited
+                                          , Deleted and viewed</strong> With the Drop out selector on the right have
+                                         side of the tables! </p>
 
             </div>
             {{--     headingSixteen end       --}}
@@ -1199,14 +1364,20 @@
             <div id="collapseSeventeen" class="collapse" aria-labelledby="headingSeventeen" data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Categories?</h2>
-                    <p class="text-gray-700">Depreciation Models can be located within the left hand side menu Labeled
-                        'Depreciation' Under <strong class="text-info">Settings</strong> Can't
-                        find it? Click<a href="{{route("category.index")}}" class="text-capitalize"> here</a></p>
+                    <p class="text-gray-700">Categories can be located within the left hand side menu Labeled
+                                             'Depreciation' Under <strong class="text-info">Settings</strong> Can't
+                                             find it? Click<a href="{{route("category.index")}}"
+                                                              class="text-capitalize"> here</a></p>
                 </div>
                 <h4 class="text-info">Why do i need to create a category?</h4>
                 <p class="text-gray-700"><strong>Categories</strong> allow you to create sections to assign new Items to
-                    like for example <strong class="text-info">(Student's, Staff, Business etc)</strong>. So when
-                    looking at an asset you can know who this belongs too!</p>
+                                                                     like for example <strong class="text-info">(Student's,
+                                                                                                                Staff,
+                                                                                                                Business
+                                                                                                                etc)</strong>.
+                                                                     So when
+                                                                     looking at an asset you can know who this belongs
+                                                                     too!</p>
 
             </div>
             {{--     headingSeventeen end       --}}
@@ -1223,19 +1394,26 @@
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Sets of internal components?</h2>
                     <p class="text-gray-700">These are known as Fieldset's.These can be located within the left hand
-                        side menu Labeled 'Depreciation' Under <strong class="text-info">Settings</strong> Can't
-                        find it? Click<a href="{{route("fieldsets.index")}}" class="text-capitalize"> here</a></p>
+                                             side menu Labeled 'Depreciation' Under <strong
+                            class="text-info">Settings</strong> Can't
+                                             find it? Click<a href="{{route("fieldsets.index")}}"
+                                                              class="text-capitalize"> here</a></p>
                 </div>
                 <h4 class="text-info">Why do i need to create a Fieldset's?</h4>
                 <p class="text-gray-700"><strong>FieldSet's</strong> allow you to create Section to assign new Items to
-                    like for example <strong class="text-info">(Laptops, ipads, smartboards etc)</strong>. So when
-                    looking at an asset you can know What internal it has without tearing it apart!</p>
+                                                                     like for example <strong class="text-info">(Laptops,
+                                                                                                                ipads,
+                                                                                                                smartboards
+                                                                                                                etc)</strong>.
+                                                                     So when
+                                                                     looking at an asset you can know What internal it
+                                                                     has without tearing it apart!</p>
                 <h4 class="text-info">How do i make new internal components an option? <strong>(Ram, CPU etc)</strong>
                 </h4>
                 <p class="text-gray-700">You can navigate to <strong class="text-info">Custom Fields</strong> in the
-                    navigation menu or click <a href="/fields">here</a>!</p>
+                                         navigation menu or click <a href="/fields">here</a>!</p>
                 <p class="text-gray-700">From here Click your <strong class="text-success">Add new Field</strong>
-                    button. </p>
+                                         button. </p>
                 <ol>
                     <li>Firstly,Fill in your name field with the name of you new device <strong class="text-info">(Eg.Ram)</strong>
                         you will need a <strong>Unique</strong> name which is <strong>not</strong> already in the
@@ -1245,11 +1423,17 @@
                         <strong class="text-info"> examples below:</strong>
                     </li>
                     <li class="text-info ">Text: <input type="text" class="ml-5"></li>
-                    <li class="text-info ">Select Field: <select class="ml-5"><option>Example Option</option></select></li>
+                    <li class="text-info ">Select Field: <select class="ml-5">
+                            <option>Example Option</option>
+                        </select></li>
                     <li class="text-info" style="resize:none;">Multi-Line: <textarea></textarea></li>
-                    <li class="text-info">Checkbox: <input  type="checkbox"></li>
-                    <li>What <strong class="text-info">Data</strong> Form do you require? please select your specific one!</li>
-                    <li>If you would like to <strong class="text-success">help</strong> the user while filling out these fields please enter any help text on what data you would want to be filled out!</li>
+                    <li class="text-info">Checkbox: <input type="checkbox"></li>
+                    <li>What <strong class="text-info">Data</strong> Form do you require? please select your specific
+                        one!
+                    </li>
+                    <li>If you would like to <strong class="text-success">help</strong> the user while filling out these
+                        fields please enter any help text on what data you would want to be filled out!
+                    </li>
                     <li>Finally,Click <strong class="text-success">save</strong> in the top Right corner and see if this
                         all saves
                         correctly. If you have any errors this will be displayed in a red box at the top ,like the
@@ -1275,8 +1459,8 @@
             $("#accordion").accordion();
         });
         var hash = window.location.hash;
-        var anchor = $('a[href$="'+hash+'"]');
-        if (anchor.length > 0){
+        var anchor = $('a[href$="' + hash + '"]');
+        if (anchor.length > 0) {
             anchor.click();
         }
     </script>
