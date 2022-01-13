@@ -50,53 +50,53 @@ class HomeController extends Controller {
 
        
 
-            foreach($locations as $location){
-                $id = $location->id;
+        foreach($locations as $location){
+            $id = $location->id;
 
-                if( !Cache::has("assets-L{$id}-total") && 
-                    !Cache::has("assets-L{$id}-cost") &&
-                    !Cache::has("assets-L{$id}-depr") &&
-                    !Cache::has("assets-L{$id}-deploy") &&
-                    !Cache::has("assets-L{$id}-due") && 
-                    !Cache::has("assets-L{$id}-overdue")
-                ){   
-                    /* This is to calculate all the assets for the individual schools and the grand total */
-                    Asset::updateCache();
-                }
-
-        
-                /* This is to calculate the Accessories */
-                if( !Cache::has("accessories-L{$id}-total") &&
-                    !Cache::has("accessories-L{$id}-cost") && 
-                    !Cache::has("accessories-L{$id}-depr") &&
-                    !Cache::has("accessories-L{$id}-deploy")
-                ){
-                    Accessory::updateCache();
-                }
-
-                if( !Cache::has("components-L{$id}-total") &&
-                    !Cache::has("components-L{$id}-cost") &&
-                    !Cache::has("components-L{$id}-deploy")
-                ){
-                    Component::updateCache();                
-                }
-
-                if( !Cache::has("consumables-L{$id}-total") &&
-                    !Cache::has("consumables-L{$id}-cost") &&
-                    !Cache::has("consumables-L{$id}-deploy")
-                ){
-                    Consumable::updateCache();
-                }
-
-                if( !Cache::has("misc-L{$id}-total") &&
-                    !Cache::has("misc-L{$id}-cost") &&
-                    !Cache::has("misc-L{$id}-deploy")
-                ){
-                    Miscellanea::updateCache();
-                }
+            if( !Cache::has("assets-L{$id}-total") && 
+                !Cache::has("assets-L{$id}-cost") &&
+                !Cache::has("assets-L{$id}-depr") &&
+                !Cache::has("assets-L{$id}-deploy") &&
+                !Cache::has("assets-L{$id}-due") && 
+                !Cache::has("assets-L{$id}-overdue")
+            ){   
+                /* This is to calculate all the assets for the individual schools and the grand total */
+                Asset::updateCache();
             }
 
-            //This needs to be a foreach and run through all of the locations to get the values else everything will be Zero
+    
+            /* This is to calculate the Accessories */
+            if( !Cache::has("accessories-L{$id}-total") &&
+                !Cache::has("accessories-L{$id}-cost") && 
+                !Cache::has("accessories-L{$id}-depr") &&
+                !Cache::has("accessories-L{$id}-deploy")
+            ){
+                Accessory::updateCache();
+            }
+
+            if( !Cache::has("components-L{$id}-total") &&
+                !Cache::has("components-L{$id}-cost") &&
+                !Cache::has("components-L{$id}-deploy")
+            ){
+                Component::updateCache();                
+            }
+
+            if( !Cache::has("consumables-L{$id}-total") &&
+                !Cache::has("consumables-L{$id}-cost") &&
+                !Cache::has("consumables-L{$id}-deploy")
+            ){
+                Consumable::updateCache();
+            }
+
+            if( !Cache::has("misc-L{$id}-total") &&
+                !Cache::has("misc-L{$id}-cost") &&
+                !Cache::has("misc-L{$id}-deploy")
+            ){
+                Miscellanea::updateCache();
+            }
+        }
+
+        //This needs to be a foreach and run through all of the locations to get the values else everything will be Zero
 
 
             
@@ -151,7 +151,7 @@ class HomeController extends Controller {
             \App\Models\Archive::updateCache();
         }
 
-        $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100);
+        $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100) ?? 0;
         $obj = array(   'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')], 
                         'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
                         'components' => ['count' => Cache::get('components_total'), 'cost' => Cache::get('components_cost')],
