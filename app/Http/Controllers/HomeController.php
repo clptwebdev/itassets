@@ -96,6 +96,7 @@ class HomeController extends Controller {
             }
         }
 
+        return Cache::get('assets_total');
 
         //This needs to be a foreach and run through all of the locations to get the values else everything will be Zero
 
@@ -122,8 +123,12 @@ class HomeController extends Controller {
             //Miscellaneous
             $deployed += Cache::get('miscellaneous_deploy');
 
+            
+            Cache::rememberForever('count_everything', function() use($everything){
+                return round($everything);
+            });
 
-            Cache::set('count_everything', $everything);
+            return Cache::get('count_everything');
 
             Cache::rememberForever('count_cost', function() use($cost){
                 return round($cost);
