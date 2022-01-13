@@ -28,13 +28,13 @@ class HomeController extends Controller {
 
         //If cached user_id is different to the auth()->user()->id then the data needs to be refreshed
         //This is becuase if two users with different roles may use the same machine and see other items they are not permitted for.
-       /*  if(Cache::has('user_id') && Cache::get('user_id') != auth()->user()->id){
+        if(Cache::has('user_id') && Cache::get('user_id') != auth()->user()->id){
             //If the User ID is different Flush all of the Cache
             Cache::flush();
             //Set the new cached user id to the current user
             Cache::set('user_id', auth()->user()->id);
         }
- */
+
         //These are the total that will be needed at the End.
         $everything = 0;
         $cost = 0;
@@ -52,16 +52,9 @@ class HomeController extends Controller {
             $id = $location->id;
 
 
-            if( !Cache::has("assets-L{$id}-total") && 
-                !Cache::has("assets-L{$id}-cost") &&
-                !Cache::has("assets-L{$id}-dep") &&
-                !Cache::has("assets-L{$id}-deploy") &&
-                !Cache::has("assets-L{$id}-due") && 
-                !Cache::has("assets-L{$id}-overdue")
-            ){   
+             
                 /* This is to calculate all the assets for the individual schools and the grand total */
                 Asset::updateCache();
-            }
 
     
             /* This is to calculate the Accessories */
