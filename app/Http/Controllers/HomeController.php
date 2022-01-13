@@ -75,12 +75,13 @@ class HomeController extends Controller {
         $depreciation += Cache::get('assets_dep');
         $deployed += Cache::get('assets_deploy');
 
-        return $everything;
+        
         //Accessories
         $everything += Cache::get('accessories_total');
         $cost += Cache::get('accessories_cost');
         $depreciation += Cache::get('accessories_dep');
         $deployed += Cache::get('accessories_deploy');
+        return $everything;
 
         /* Components Calcualtions */
         $deployed += Cache::get('components_deploy');
