@@ -128,7 +128,6 @@ class HomeController extends Controller {
                 return round($everything);
             });
 
-            return Cache::get('count_everything');
 
             Cache::rememberForever('count_cost', function() use($cost){
                 return round($cost);
@@ -141,6 +140,8 @@ class HomeController extends Controller {
             Cache::rememberForever('count_undeployed', function() use($deployed){
                 return round($deployed);
             });
+
+            return Cache::get('count_deployed');
         
 
         if(!Cache::get('request_count')){
@@ -155,7 +156,11 @@ class HomeController extends Controller {
             \App\Models\Archive::updateCache();
         }
 
-        $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100) ? $underployable :  $underdeployable = 0;
+        if(Cache::get('count_undeployed') == 0){
+            $undeployable = 100;
+        }else{
+            $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100);
+        }
         $obj = array(   'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')], 
                         'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
                         'components' => ['count' => Cache::get('components_total'), 'cost' => Cache::get('components_cost')],
