@@ -124,9 +124,7 @@ class HomeController extends Controller {
             $deployed += Cache::get('miscellaneous_deploy');
 
 
-            Cache::rememberForever('count_everything', function() use($everything){
-                return round($everything);
-            });
+            Cache::set('count_everything', $everything);
 
             Cache::rememberForever('count_cost', function() use($cost){
                 return round($cost);
