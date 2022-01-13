@@ -28,13 +28,13 @@ class HomeController extends Controller {
 
         //If cached user_id is different to the auth()->user()->id then the data needs to be refreshed
         //This is becuase if two users with different roles may use the same machine and see other items they are not permitted for.
-        if(Cache::has('user_id') && Cache::get('user_id') != auth()->user()->id){
+       /*  if(Cache::has('user_id') && Cache::get('user_id') != auth()->user()->id){
             //If the User ID is different Flush all of the Cache
             Cache::flush();
             //Set the new cached user id to the current user
             Cache::set('user_id', auth()->user()->id);
         }
-
+ */
         //These are the total that will be needed at the End.
         $everything = 0;
         $cost = 0;
@@ -154,7 +154,6 @@ class HomeController extends Controller {
             $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100);
         }
 
-        return  Cache::get('count_everything');
         $obj = array(   'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')], 
                         'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
                         'components' => ['count' => Cache::get('components_total'), 'cost' => Cache::get('components_cost')],
