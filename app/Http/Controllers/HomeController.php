@@ -68,7 +68,6 @@ class HomeController extends Controller {
             }
         }
 
-        return Cache::get('assets_total');
         //This needs to be a foreach and run through all of the locations to get the values else everything will be Zero
 
         $everything += Cache::get('assets_total');
@@ -76,6 +75,7 @@ class HomeController extends Controller {
         $depreciation += Cache::get('assets_dep');
         $deployed += Cache::get('assets_deploy');
 
+        return $everything;
         //Accessories
         $everything += Cache::get('accessories_total');
         $cost += Cache::get('accessories_cost');
