@@ -52,9 +52,18 @@ class HomeController extends Controller {
             $id = $location->id;
 
 
-             
+            if( !Cache::has("assets-L{$id}-total") && 
+                !Cache::has("assets-L{$id}-cost") &&
+                !Cache::has("assets-L{$id}-dep") &&
+                !Cache::has("assets-L{$id}-deploy") &&
+                !Cache::has("assets-L{$id}-due") && 
+                !Cache::has("assets-L{$id}-overdue")
+            ){   
                 /* This is to calculate all the assets for the individual schools and the grand total */
                 Asset::updateCache();
+            }
+
+            return Cache::get('assets-L2-total');
 
     
             /* This is to calculate the Accessories */
