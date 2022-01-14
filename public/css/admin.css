@@ -11701,3 +11701,33 @@ tr.even:hover .btn, .table-striped tbody tr:nth-of-type(2n+1):hover .btn{
 #tab-bar .nav-item .nav-link:hover{
   background-color: transparent !important;
 }
+
+.statistics{
+  display: flex;
+}
+
+.stats-box{ 
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.chart{
+  height: 500px;
+}
+
+@media (max-width: 768px) {
+  .statistics{
+    display: block;
+  }
+
+  .stats-box{ 
+    width: 100%;
+  }
+
+  .chart{
+    height: 300px;
+  }
+}

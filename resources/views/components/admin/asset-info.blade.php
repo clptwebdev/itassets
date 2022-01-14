@@ -1,10 +1,10 @@
 
 <!-- Content Row -->
-<div class="d-flex p-2 mb-1 justify-content-around">
+<div class="statistics p-2 mb-1 justify-content-around">
     <!-- Total-->
-    <div class="w-50 row rounded p-2 pb-4" style="background-color: #EEE">
-        <div class="col-12 text-dark text-xs font-weight-bold text-uppercase">Assets</div>
-        <div class="col-lg-4">
+    <div class="stats-box rounded p-2 pb-4" style="background-color: #EEE">
+        <div class="col-12 text-dark text-xs font-weight-bold text-uppercase mb-4 mb-md-0">Assets</div>
+        <div class="col-12 col-lg-4 mb-2 mb-md-0">
             <div class="card border-left-lilac shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -31,7 +31,7 @@
             </div>
         </div>
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4 mb-2 mb-md-0">
             <div class="card border-left-coral shadow h-100 py-2 postion-relative">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4 mb-2 mb-md-0">
             <div class="card border-left-blue shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -86,9 +86,12 @@
         </div>
     </div>
 
-    <div class="w-50 row rounded p-2 pb-4">
-        <div class="col-12 text-dark text-xs font-weight-bold text-uppercase">Other Items</div>
-        <div class="col-lg-4">
+
+
+
+    <div class="stats-box rounded p-2 pb-4">
+        <div class="col-12 text-dark text-xs font-weight-bold text-uppercase  mb-4 mb-md-0">Other Items</div>
+        <div class="col-12 col-lg-4 mb-2 mb-md-0">
             <div class="card border-left-green shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -112,7 +115,7 @@
         </div>
 
         <!-- Requests -->
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4 mb-2 mb-md-0">
             <div class="card border-left-yellow shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -136,7 +139,7 @@
         </div>
 
         <!-- Requests -->
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4 mb-2 mb-md-0">
             <div class="card border-left-blue shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -160,12 +163,15 @@
         </div>
     </div>
 </div>
+
+
+
 <!-- Content Row -->
 <div class="row p-4">
     <div class="col-12 text-dark text-xs font-weight-bold text-uppercase">Statistics</div>
 
     <!-- Requests -->
-    <div class="col-xl-2 col-md-4 mb-4">
+    <div class="col-xl-2 col-6 mb-4">
         <div class="card bg-yellow shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -174,7 +180,7 @@
                             New Requests</div>
                         <div class="h5 mb-0 font-weight-bold "><span id="requests_count" class="countup"></span></div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-auto d-none d-lg-inline-block">
                         <i class="fas fa-tasks fa-2x d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
@@ -182,7 +188,7 @@
         </div>
     </div>
 
-    <div class="col-xl-2 col-md-4 mb-4">
+    <div class="col-xl-2 col-6 mb-4">
         <div class="card bg-green shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -191,7 +197,7 @@
                             Transfers</div>
                         <div class="h5 mb-0 font-weight-bold"><span id="transfers_count" class="countup"></span></div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-auto d-none d-lg-inline-block">
                         <i class="fas fa-exchange-alt fa-2x d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
@@ -200,7 +206,7 @@
     </div>
 
       <!-- Earnings (Monthly) Card Example -->
-      <div class="col-xl-2 col-md-4 mb-4">
+      <div class="col-xl-2 col-6 mb-4">
         <div class="card bg-blue shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -211,7 +217,7 @@
                             <span id="archived_count" class="countup"></span>
                         </div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-auto d-none d-lg-inline-block">
                         <i class="fas fa-archive fa-2x d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
@@ -220,7 +226,7 @@
     </div>
 
     <!-- Undeployable -->
-    <div class="col-xl-2 col-md-4 mb-4">
+    <div class="col-xl-2 col-6 mb-4">
         <div class="card bg-grey shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -240,7 +246,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-auto d-none d-lg-inline-block">
                         <i class="fas fa-skull-crossbones fa-2x d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
@@ -248,7 +254,7 @@
         </div>
     </div>
 
-    <div class="col-xl-2 col-md-4 mb-4">
+    <div class="col-xl-2 col-6 mb-4">
         <div class="card bg-yellow shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -257,7 +263,7 @@
                             Audits Due</div>
                         <div class="h5 mb-0 font-weight-bold"><span id="audits_due_count" class="countup"></span></div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-auto d-none d-lg-inline-block">
                         <i class="fas fa-tools fa-2x d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>
@@ -265,7 +271,7 @@
         </div>
     </div>
 
-    <div class="col-xl-2 col-md-4 mb-4">
+    <div class="col-xl-2 col-6 mb-4">
         <div class="card bg-coral shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -274,7 +280,7 @@
                             Overdue Audits</div>
                         <div class="h5 mb-0 font-weight-bold"><span id="audits_over_count" class="countup"></span></div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-auto d-none d-lg-inline-block">
                         <i class="fas fa-tools  fa-2x d-md-none d-lg-inline-block"></i>
                     </div>
                 </div>

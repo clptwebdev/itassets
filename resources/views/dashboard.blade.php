@@ -11,7 +11,7 @@
     <x-handlers.alerts/>
 
     <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
         <a href="{{ route('cache.clear')}}"" class="btn btn-grey"><i class="fas fa-sync-alt"></i></a>
     </div>
@@ -22,22 +22,22 @@
         {{-- <x-categories_status_info :statuses="$statuses" :category="$category"/> --}}
 
         <div class="row m-2">
-            <div class="col-12 chart mb-4">
+            <div class="col-12  mb-4">
                 <div class="card shadow h-100 p-4">
-                    <div id="expenditure_chart" style="height: 500px;"></div>
+                    <div id="expenditure_chart" class="chart"></div>
                 </div>
             </div>
             {{-- Expenditure --}}
-            <div class="col-12 col-md-6 mb-3 chart">
-                <div class="card shadow h-100 p-4 chart">
-                    <div id="chart" style="height: 500px;"></div>
+            <div class="col-12 col-md-6 mb-3 ">
+                <div class="card shadow h-100 p-4 ">
+                    <div id="chart"  class="chart"></div>
                 </div>
             </div>
             {{-- Depreication Information --}}
 
-            <div class="col-12 col-md-6 mb-3 chart">
+            <div class="col-12 col-md-6 mb-3 ">
                 <div class="card shadow h-100 p-4">
-                    <div id="dep_chart" style="height: 500px;"></div>
+                    <div id="dep_chart"  class="chart"></div>
                 </div>
             </div>
         </div>
@@ -173,6 +173,9 @@
     <script src="https://unpkg.com/@chartisan/chartjs@^2.1.0/dist/chartisan_chartjs.umd.js"></script>
     <!-- Your application script -->
     <script>
+
+        const device = legend = (screen.width < 575) ? false : true; //when viewport will be under 575px
+
         const expenditure = new Chartisan({
             el: '#expenditure_chart',
             url: `@chart('expenditure_chart')`,
@@ -185,6 +188,8 @@
                 .responsive()
                 .title('Expenditure for Schools')
                 .responsive()
+                .legend(device)
+                .displayAxes(device)
                 .custom(function ({data, merge, server}) {
                     //---> loop through extra from server
                     for (let i = 0; i < server.datasets.length; i++) {
@@ -212,9 +217,10 @@
                 .responsive()
                 .colors(['#F99'])
                 .title('Asset Depreciation')
-                .responsive()
+                .legend(device)
+                .displayAxes(device)
         })
-
+        
         const dep_chart = new Chartisan({
             el: '#chart',
             url: `@chart('exp_chart')?id=1`,
@@ -222,10 +228,11 @@
             // data: { ... }
             hooks: new ChartisanHooks()
                 .datasets('bar')
-                .beginAtZero('false')
-                .stepSize(1000, 'x')
                 .colors(['#b087bc', '#474775'])
                 .title('CLPT Expenditure')
+                .legend(device)
+                .responsive()
+                .displayAxes(device)
         })
     </script>
 
