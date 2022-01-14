@@ -214,7 +214,7 @@ class Miscellanea extends Model
     public static function expenditure($year, $locations)
     {
         $expenditure = 0;
-        $miscellaneous = Miscellanea::whereYear('purchased_date', $year)->select('purchased_cost')->get();
+        $miscellaneous = Miscellanea::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('purchased_cost', 'location_id')->get();
         foreach($miscellaneous as $miscellanea){
             $expenditure += $miscellanea->purchased_cost;
         }

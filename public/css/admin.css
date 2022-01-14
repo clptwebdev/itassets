@@ -10570,7 +10570,7 @@ a:focus {
   }
   .sidebar.toggled {
     overflow: visible;
-    width: 6.5rem !important;
+    width: 0;
   }
   .sidebar.toggled .nav-item .collapse {
     position: absolute;

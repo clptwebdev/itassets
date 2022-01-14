@@ -294,7 +294,7 @@ class Accessory extends Model
     public static function expenditure($year, $locations)
     {
         $expenditure = 0;
-        $accessories = Accessory::whereLocationId($locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
+        $accessories = Accessory::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost', 'location_id')->get();
         foreach($accessories as $accessory){
             if($accessory->donated !== 1){
                 $expenditure += $accessory->purchased_cost;
@@ -306,7 +306,7 @@ class Accessory extends Model
     public static function donations($year, $locations)
     {
         $donations = 0;
-        $accessories = Accessory::whereLocationId($locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
+        $accessories = Accessory::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost', 'location_id')->get();
         foreach($accessories as $accessory){
             if($accessory->donated === 1){
                 $donations += $accessory->purchased_cost;
@@ -316,25 +316,4 @@ class Accessory extends Model
         
     }
 
-    public static function depreciation_total($y, $locations){
-        $depreciation = 0;
-        $year = \Carbon\Carbon::parse($y);
-        $accessories = Accessory::whereIn('location_id', $locations)->select('depreciation_id', 'location_id', 'donated', 'purchased_cost', 'purchased_date')->get();
-        foreach($accessories as $accessory){
-            if($accessory->depreciation()->exists()){
-                $eol = \Carbon\Carbon::parse($accessory->purchased_date)->addYears($accessory->depreciation->years);
-                if($eol->isPast()){}else{
-                    $age = $year->floatDiffInYears($accessory->purchased_date); 
-                    $percent = 100 / $accessory->depreciation->years;
-                    $percentage = floor($age)*$percent; 
-                    $dep = $accessory->purchased_cost * ((100 - $percentage) / 100);
-                    if($dep < 0){ $dep = 0;}
-                    $depreciation += $dep;
-                }
-            }else{
-                $depreciation += $accessory->purchased_cost;
-            }
-        }
-        return $depreciation;
-    }
 }

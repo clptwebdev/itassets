@@ -193,7 +193,7 @@ class Consumable extends Model
     public static function expenditure($year, $locations)
     {
         $expenditure = 0;
-        $consumables = Consumable::whereYear('purchased_date', $year)->select('purchased_cost')->get();
+        $consumables = Consumable::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('purchased_cost', 'location_id')->get();
         foreach($consumables as $consumable){
             $expenditure += $consumable->purchased_cost;
         }

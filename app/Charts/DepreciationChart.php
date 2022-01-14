@@ -11,10 +11,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Location;
 use App\Models\Asset;
-use App\Models\Accessory;
-
-
-use Illuminate\Support\Facades\Cache;
 
 class DepreciationChart extends BaseChart
 {
@@ -25,31 +21,27 @@ class DepreciationChart extends BaseChart
      */
     public function handler(Request $request): Chartisan
     {
-        $locations = auth()->user()->locations->pluck('id');
+        $locations = auth()->user()->locations;
 
         $years = [];
-        $values = [];
-
+        $depreciation = [];
         foreach (range(\Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year + 3) as $year){
             $years[] = $year;
-            $total = 0;
-
-            if(!Cache::has('assets_depreciation_'.$year)){
-                Cache::set('assets_depreciation_'.$year, round(Asset::depreciation_total($year, $locations)));
-            }
-
-            $total += Cache::get('assets_depreciation_'.$year);
-
-            if(!Cache::has('accessories_depreication_'.$year)){
-                Cache::set('accessories_depreciation_'.$year, round(Accessory::depreciation_total($year, $locations)));
-            }
-
-            $total += Cache::get('accessories_depreication_'.$year);
-
-            $values[] = $total;
         }
 
+        $array = [];
+        foreach($locations as $location){
+            foreach($location->depreciations() as $id => $key){
+                if(array_key_exists($id, $array)){
+                    $array[$id] += $key;
+                }else{
+                    $array[$id] = $key;
+                }
+            }
+        }
 
+        $values = [...$array];
+              
         return Chartisan::build()
             ->labels($years)
             ->dataset('Depreciation Cost', $values);

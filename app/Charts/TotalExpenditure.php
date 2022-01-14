@@ -26,7 +26,7 @@ class TotalExpenditure extends BaseChart
     public function handler(Request $request): Chartisan
     {
 
-        $locations = auth()->user()->locations;
+        $locations = auth()->user()->locations->pluck('id');
 
         $years = [];
         $costs = [];

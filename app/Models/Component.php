@@ -209,7 +209,7 @@ class Component extends Model
 
     public static function expenditure($year, $locations){
         $expenditure = 0;
-        $components = Component::whereYear('purchased_date', $year)->select('purchased_cost')->get();
+        $components = Component::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('purchased_cost', 'location_id')->get();
         foreach($components as $component){
             $expenditure += $component->purchased_cost;
         }

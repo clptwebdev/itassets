@@ -320,9 +320,10 @@ class Asset extends Model {
         });
     }
 
-    public static function expenditure($year, $locations){
+    public static function expenditure($year, $locations)
+    {
         $expenditure = 0;
-        $assets = Asset::whereLocationId($locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
+        $assets = Asset::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost', 'location_id')->get();
         foreach($assets as $asset){
             if($asset->donated !== 1){
                 $expenditure += $asset->purchased_cost;
@@ -331,9 +332,10 @@ class Asset extends Model {
         return $expenditure;
     }
 
-    public static function donations($year, $locations){
+    public static function donations($year, $locations)
+    {
         $donations = 0;
-        $assets = Asset::whereLocationId($locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
+        $assets = Asset::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost', 'location_id')->get();
         foreach($assets as $asset){
             if($asset->donated === 1){
                 $donations += $asset->purchased_cost;
@@ -341,27 +343,5 @@ class Asset extends Model {
         }
         return $donations;
         
-    }
-
-    public static function depreciation_total($y, $locations){
-        $depreciation = 0;
-        $year = \Carbon\Carbon::parse($y);
-        $assets = Asset::whereIn('location_id', $locations)->select('asset_model', 'donated', 'purchased_cost', 'purchased_date', 'location_id')->get();
-        foreach($assets as $asset){
-            if($asset->model()->exists() && $asset->model->depreciation()->exists()){
-                $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
-                if($eol->isPast()){}else{
-                    $age = $year->floatDiffInYears($asset->purchased_date); 
-                    $percent = 100 / $asset->model->depreciation->years;
-                    $percentage = floor($age)*$percent; 
-                    $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
-                    if($dep < 0){ $dep = 0;}
-                    $depreciation += $dep;
-                }
-            }else{
-                $depreciation += $asset->purchased_cost;
-            }
-        }
-        return $depreciation;
     }
 }
