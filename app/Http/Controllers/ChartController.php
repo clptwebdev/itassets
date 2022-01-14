@@ -100,4 +100,5 @@ class ChartController extends Controller
         }
         return json_encode($data);
     }
+
 }

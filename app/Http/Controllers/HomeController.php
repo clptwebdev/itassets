@@ -48,14 +48,13 @@ class HomeController extends Controller {
             $locations = auth()->user()->locations;
         }
 
-       
-
         foreach($locations as $location){
             $id = $location->id;
 
+
             if( !Cache::has("assets-L{$id}-total") && 
                 !Cache::has("assets-L{$id}-cost") &&
-                !Cache::has("assets-L{$id}-depr") &&
+                !Cache::has("assets-L{$id}-dep") &&
                 !Cache::has("assets-L{$id}-deploy") &&
                 !Cache::has("assets-L{$id}-due") && 
                 !Cache::has("assets-L{$id}-overdue")
@@ -63,6 +62,8 @@ class HomeController extends Controller {
                 /* This is to calculate all the assets for the individual schools and the grand total */
                 Asset::updateCache();
             }
+
+            return Cache::get('assets-L2-total');
 
     
             /* This is to calculate the Accessories */
@@ -96,48 +97,46 @@ class HomeController extends Controller {
             }
         }
 
+
         //This needs to be a foreach and run through all of the locations to get the values else everything will be Zero
 
+        $everything += Cache::get('assets_total');
+        $cost += Cache::get('assets_cost');
+        $depreciation += Cache::get('assets_dep');
+        $deployed += Cache::get('assets_deploy');
 
-            
+        //Accessories
+        $everything += Cache::get('accessories_total');
+        $cost += Cache::get('accessories_cost');
+        $depreciation += Cache::get('accessories_dep');
+        $deployed += Cache::get('accessories_deploy');
 
-            $everything += Cache::get('assets_total');
-            $cost += Cache::get('assets_cost');
-            $depreciation += Cache::get('assets_dep');
-            $deployed += Cache::get('assets_deploy');
+        /* Components Calcualtions */
+        $deployed += Cache::get('components_deploy');
 
-            //Accessories
-            $everything += Cache::get('accessories_total');
-            $cost += Cache::get('accessories_cost');
-            $depreciation += Cache::get('accessories_dep');
-            $deployed += Cache::get('accessories_deploy');
+        //Consumables
+        $deployed += Cache::get('consumables_deploy');
 
-            /* Components Calcualtions */
-            $deployed += Cache::get('components_deploy');
+        //Miscellaneous
+        $deployed += Cache::get('miscellaneous_deploy');
 
-            //Consumables
-            $deployed += Cache::get('consumables_deploy');
-
-            //Miscellaneous
-            $deployed += Cache::get('miscellaneous_deploy');
-
-
-            Cache::rememberForever('count_everything', function() use($everything){
-                return round($everything);
-            });
-
-            Cache::rememberForever('count_cost', function() use($cost){
-                return round($cost);
-            });
-
-            Cache::rememberForever('count_depreciation', function() use($depreciation){
-                return round($depreciation);
-            });
-
-            Cache::rememberForever('count_undeployed', function() use($deployed){
-                return round($deployed);
-            });
         
+        Cache::rememberForever('count_everything', function() use($everything){
+            return round($everything);
+        });
+
+
+        Cache::rememberForever('count_cost', function() use($cost){
+            return round($cost);
+        });
+
+        Cache::rememberForever('count_depreciation', function() use($depreciation){
+            return round($depreciation);
+        });
+
+        Cache::rememberForever('count_undeployed', function() use($deployed){
+            return round($deployed);
+        });
 
         if(!Cache::get('request_count')){
             \App\Models\Requests::updateCache();
@@ -151,7 +150,16 @@ class HomeController extends Controller {
             \App\Models\Archive::updateCache();
         }
 
+<<<<<<< HEAD
         $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100) ? $undeployable :  $undedeployable = 0;
+=======
+        if(Cache::get('count_undeployed') == 0){
+            $undeployable = 100;
+        }else{
+            $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100);
+        }
+
+>>>>>>> 4c58019a8c0e15a6b112ecddfaa5f2766a85bac8
         $obj = array(   'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')], 
                         'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
                         'components' => ['count' => Cache::get('components_total'), 'cost' => Cache::get('components_cost')],
