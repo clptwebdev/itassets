@@ -142,4 +142,72 @@ class Miscellanea extends Model
             return round($miscellaneous_deployed_total);
         });
     }
+
+    public static function updateLocationCache(Location $location){ 
+        $id = $location->id;
+
+        //Variables to Hold the Accessories for that Location
+        $misc_cost = 0;
+        $misc_deployed = 0;
+
+        $miscellanea = Miscellanea::whereLocationId($id)
+        ->select('purchased_cost', 'status_id')
+        ->get()
+        ->map(function($item, $key) {
+            $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+            return $item;
+        });
+
+        $misc_loc_total = $miscellanea->count();
+        Cache::rememberForever("miscellaneous-L{$id}-total", function () use($misc_loc_total){
+            return $misc_loc_total;
+        });
+
+        foreach($miscellanea as $misc){
+            $misc_cost += $misc->purchased_cost;
+            if($misc->deployable != 1){ $misc_deployed++;}
+        }
+
+        Cache::set("miscellaneous-L{$id}-cost", round($misc_cost));
+        Cache::set("miscellaneous-L{$id}-deploy", round($misc_deployed));
+    }
+
+    public static function getCache($ids){
+         //The Variables holding the total of Accessories available to the User
+         $misc_total = 0;
+         $misc_cost_total = 0;
+         $misc_deployed_total = 0;
+ 
+
+        $locations = Location::find($ids);
+
+        foreach($locations as $location){
+            $id = $location->id;
+            /* The Cache Values for the Location */
+            if( !Cache::has("miscellaneous-L{$id}-total") && 
+                !Cache::has("miscellaneous-L{$id}-cost") &&
+                !Cache::has("miscellaneous-L{$id}-deploy")
+            ){
+                Miscellanea::updateLocationCache($location);
+            }
+
+            $misc_total += Cache::get("miscellaneous-L{$id}-total");
+            $misc_cost_total += Cache::get("miscellaneous-L{$id}-cost");
+            $misc_deployed_total += Cache::get("miscellaneous-L{$id}-deploy");
+        }
+
+         /* consumables Calcualtions */
+            
+         Cache::rememberForever('miscellaneous_total', function() use($misc_total){
+            return round($misc_total);
+        });
+
+        Cache::rememberForever('miscellaneous_cost', function() use($misc_cost_total){
+            return round($misc_cost_total);
+        });
+
+        Cache::rememberForever('miscellaneous_deploy', function() use($misc_deployed_total){
+            return round($misc_deployed_total);
+        });
+    }
 }

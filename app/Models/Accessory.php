@@ -207,4 +207,84 @@ class Accessory extends Model
             return round($accessories_deployed_total);
         });
     }
+
+    public static function updateLocationCache(Location $location){
+        
+        $accessories_cost = 0;
+        $accessories_dep = 0;
+        $accessories_deployed = 0;
+
+        $id = $location->id;
+        
+        $accessories = Accessory::whereLocationId($id)
+        ->with('status', 'depreciation')
+        ->select('purchased_cost', 'purchased_date', 'depreciation_id', 'status_id', 'location_id')
+        ->get()
+        ->map(function($item, $key) {
+            $item['depreciation_value'] = $item->depreciation_value();
+            $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+            return $item;
+        });
+
+        $accessories_loc_total = $accessories->count();
+        Cache::rememberForever("accessories-L{$id}-total", function () use($accessories_loc_total){
+            return $accessories_loc_total;
+        });
+
+        foreach($accessories as $accessory){
+            $accessories_cost += $accessory->purchased_cost;
+            $accessories_dep += $accessory->depreciation_value;
+            if($accessory->deployable !== 1){ $accessories_deployed++;}
+        }
+
+        Cache::set("accessories-L{$id}-cost", round($accessories_cost));
+        Cache::set("accessories-L{$id}-depr", round($accessories_dep));
+        Cache::set("accessories-L{$id}-deploy", round($accessories_deployed));
+    }
+
+    public static function getCache($ids){
+        //The Variables holding the total of Accessories available to the User
+        $accessories_total = 0;
+        $accessories_cost_total = 0;
+        $accessories_dep_total = 0;
+        $accessories_deployed_total = 0;
+ 
+
+        $locations = Location::find($ids);
+
+        foreach($locations as $location){
+            $id = $location->id;
+            /* The Cache Values for the Location */
+            if( !Cache::has("accessories-L{$id}-total") && 
+                !Cache::has("accessories-L{$id}-cost") &&
+                !Cache::has("accessories-L{$id}-dep") &&
+                !Cache::has("accessories-L{$id}-deploy")
+            ){
+                Accessory::updateLocationCache($location);
+            }
+
+            $accessories_total += Cache::get("accessories-L{$id}-total");
+            $accessories_cost_total += Cache::get("accessories-L{$id}-cost");
+            $accessories_dep_total += Cache::get("accessories-L{$id}-depr");
+            $accessories_deployed_total += Cache::get("accessories-L{$id}-deploy");
+        }
+
+        //Accessories
+
+        Cache::rememberForever('accessories_total', function() use($accessories_total){
+            return round($accessories_total);
+        });
+
+        Cache::rememberForever('accessories_cost', function() use($accessories_cost_total){
+            return round($accessories_cost_total);
+        });
+
+        Cache::rememberForever('accessories_dep', function() use($accessories_dep_total){
+            return round($accessories_dep_total);
+        });
+
+        Cache::rememberForever('accessories_deploy', function() use($accessories_deployed_total){
+            return round($accessories_deployed_total);
+        });
+    }
 }

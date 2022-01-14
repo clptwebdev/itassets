@@ -97,7 +97,6 @@ class Component extends Model
             $id = $location->id;
 
             //Variables to Hold the Accessories for that Location
-            $components_loc_total = 0;
             $components_cost = 0;
             $components_deployed = 0;
 
@@ -122,9 +121,7 @@ class Component extends Model
             }
 
             Cache::set("components-L{$id}-cost", round($components_cost));
-            $components_cost_total += $components_cost;
             Cache::set("components-L{$id}-deploy", round($components_deployed));
-            $components_deployed_total += $components_deployed;
         }
 
          /* Components Calcualtions */
@@ -141,5 +138,74 @@ class Component extends Model
             return round($components_deployed_total);
         });
     }
+
+    public static function updateLocationCache(Location $location){ 
+        $id = $location->id;
+
+        //Variables to Hold the Accessories for that Location
+        $components_cost = 0;
+        $components_deployed = 0;
+
+        $components = Component::whereLocationId($id)
+        ->select('purchased_cost', 'status_id')
+        ->get()
+        ->map(function($item, $key) {
+            $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+            return $item;
+        });
+
+        $components_loc_total = $components->count();
+        Cache::rememberForever("components-L{$id}-total", function () use($components_loc_total){
+            return $components_loc_total;
+        });
+
+        foreach($components as $component){
+            $components_cost += $component->purchased_cost;
+            if($component->deployable != 1){ $components_deployed++;}
+        }
+
+        Cache::set("components-L{$id}-cost", round($components_cost));
+        Cache::set("components-L{$id}-deploy", round($components_deployed));
+    }
+
+    public static function getCache($ids){
+         //The Variables holding the total of Accessories available to the User
+         $components_total = 0;
+         $components_cost_total = 0;
+         $components_deployed_total = 0;
+ 
+
+        $locations = Location::find($ids);
+
+        foreach($locations as $location){
+            $id = $location->id;
+            /* The Cache Values for the Location */
+            if( !Cache::has("components-L{$id}-total") && 
+                !Cache::has("components-L{$id}-cost") &&
+                !Cache::has("components-L{$id}-deploy")
+            ){
+                Component::updateLocationCache($location);
+            }
+
+            $components_total += Cache::get("components-L{$id}-total");
+            $components_cost_total += Cache::get("components-L{$id}-cost");
+            $components_deployed_total += Cache::get("components-L{$id}-deploy");
+        }
+
+         /* Components Calcualtions */
+            
+         Cache::rememberForever('components_total', function() use($components_total){
+            return round($components_total);
+        });
+
+        Cache::rememberForever('components_cost', function() use($components_cost_total){
+            return round($components_cost_total);
+        });
+
+        Cache::rememberForever('components_deploy', function() use($components_deployed_total){
+            return round($components_deployed_total);
+        });
+    }
+    
 
 }

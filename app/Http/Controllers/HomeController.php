@@ -49,25 +49,66 @@ class HomeController extends Controller {
         }
 
         if( !Cache::has("assets-total") && 
-            !Cache::has("assets-cost") &&
-            !Cache::has("assets-dep") &&
-            !Cache::has("assets-deploy") &&
-            !Cache::has("assets-due") && 
-            !Cache::has("assets-overdue")
+        !Cache::has("assets-cost") &&
+        !Cache::has("assets-dep") &&
+        !Cache::has("assets-deploy") &&
+        !Cache::has("assets-due") && 
+        !Cache::has("assets-overdue")
         ){   
             /* This is to calculate all the assets for the individual schools and the grand total */
             Asset::getCache($locations->pluck('id'));
         }
-
-
         //This needs to be a foreach and run through all of the locations to get the values else everything will be Zero
-
         $everything += Cache::get('assets_total');
         $cost += Cache::get('assets_cost');
         $depreciation += Cache::get('assets_dep');
         $deployed += Cache::get('assets_deploy');
+    
+        /* This is to calculate the Accessories */
+        if( !Cache::has("accessories-total") &&
+            !Cache::has("accessories-cost") && 
+            !Cache::has("accessories-depr") &&
+            !Cache::has("accessories-deploy")
+        ){
+            Accessory::getCache($locations->pluck('id'));
+        }
 
-       
+        //Accessories
+        $everything += Cache::get('accessories_total');
+        $cost += Cache::get('accessories_cost');
+        $depreciation += Cache::get('accessories_dep');
+        $deployed += Cache::get('accessories_deploy');
+
+        /* This is to calculate the Components */
+        if( !Cache::has("components-total") &&
+            !Cache::has("components-cost") &&
+            !Cache::has("components-deploy")
+        ){
+            Component::getCache($locations->pluck('id'));               
+        }
+
+        /* Components Calcualtions */
+        $deployed += Cache::get('components_deploy');
+
+        if( !Cache::has("consumables-total") &&
+            !Cache::has("consumables-cost") &&
+            !Cache::has("consumables-deploy")
+        ){
+            Consumable::getCache($locations->pluck('id')); 
+        }
+        
+        //Consumables
+        $deployed += Cache::get('consumables_deploy');
+
+        if( !Cache::has("miscellaneous-total") &&
+            !Cache::has("miscellaneous-cost") &&
+            !Cache::has("miscellaneous-deploy")
+        ){
+            Miscellanea::getCache($locations->pluck('id')); 
+        }
+
+        //Miscellaneous
+        $deployed += Cache::get('miscellaneous_deploy');
 
         
         Cache::rememberForever('count_everything', function() use($everything){
