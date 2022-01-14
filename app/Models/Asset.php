@@ -158,8 +158,6 @@ class Asset extends Model {
         $dep_total = 0;
         $deploy_assets = 0;
 
-        
-
         foreach(Location::all() as $location){
             $loc_cost_total = 0;
             $loc_audits_due = 0;
@@ -198,6 +196,8 @@ class Asset extends Model {
                     $loc_audits_due++;
                 }
                 if($asset->deployable !== 1){ $loc_deploy_assets++;}
+
+                
             }
 
             /* The Cache Values for the Location */
@@ -211,7 +211,85 @@ class Asset extends Model {
             $audits_due += $loc_audits_due;
             Cache::set("assets-L{$id}-overdue", round($loc_audits_overdue));
             $audits_overdue += $loc_audits_overdue; 
+        }
+    }
 
+    public static function updateLocationCache(Location $location){
+        $loc_cost_total = 0;
+        $loc_audits_due = 0;
+        $loc_audits_overdue = 0;
+        $loc_dep_total = 0;
+        $loc_deploy_assets = 0;
+        $id = $location->id;            
+
+        $assets = Asset::whereLocationId($location->id)
+                        ->with('model', 'status')
+                        ->select('asset_model', 'purchased_cost', 'purchased_date', 'status_id', 'audit_date')
+                        ->get()
+                        ->map(function($item, $key) {
+                            $item['depreciation_value'] = $item->depreciation_value();
+                            $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+                            return $item;
+                        });
+        
+        //Get the Total Amount of Assets available for this location and set it in Cache
+        $loc_total = $assets->count();
+        Cache::rememberForever("assets-L{$id}-total", function () use($loc_total){
+            return $loc_total;
+        });
+
+        foreach($assets as $asset){
+            $loc_cost_total += $asset->purchased_cost;
+            $loc_dep_total += $asset->depreciation_value;
+            $loc_audit_date = \Carbon\Carbon::parse($asset->audit_date);
+            $now = \Carbon\Carbon::now();
+            if($loc_audit_date->isPast()){
+                $loc_audits_overdue++;
+            }elseif($loc_audit_date->diffInMonths($now) < 3){
+                $loc_audits_due++;
+            }
+            if($asset->deployable !== 1){ $loc_deploy_assets++;}
+
+            
+        }
+
+        /* The Cache Values for the Location */
+        Cache::set("assets-L{$id}-cost", round($loc_cost_total));
+        Cache::set("assets-L{$id}-depr", round($loc_dep_total));
+        Cache::set("assets-L{$id}-deploy", round($loc_deploy_assets));
+        Cache::set("assets-L{$id}-due", round($loc_audits_due));
+        Cache::set("assets-L{$id}-overdue", round($loc_audits_overdue));
+    }
+
+    public static function getCache($ids){
+        $assets_total = 0;
+        $cost_total = 0;
+        $audits_due = 0;
+        $audits_overdue = 0;
+        $dep_total = 0;
+        $deploy_assets = 0;
+
+        $locations = Location::find($ids);
+
+        foreach($locations as $location){
+            $id = $location->id;
+            /* The Cache Values for the Location */
+            if( !Cache::has("assets-L{$id}-total") && 
+                !Cache::has("assets-L{$id}-cost") &&
+                !Cache::has("assets-L{$id}-dep") &&
+                !Cache::has("assets-L{$id}-deploy") &&
+                !Cache::has("assets-L{$id}-due") && 
+                !Cache::has("assets-L{$id}-overdue")
+            ){
+                Asset::updateLocationCache($location);
+            }
+
+            $assets_total += Cache::get("assets-L{$id}-total");
+            $cost_total += Cache::get("assets-L{$id}-cost");
+            $dep_total += Cache::get("assets-L{$id}-depr");
+            $deploy_assets += Cache::get("assets-L{$id}-deploy");
+            $audits_due += Cache::get("assets-L{$id}-due");
+            $audits_overdue += Cache::get("assets-L{$id}-overdue");
         }
 
         //Totals of the Assets

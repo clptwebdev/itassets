@@ -48,22 +48,22 @@ class HomeController extends Controller {
             $locations = auth()->user()->locations;
         }
 
+        if( !Cache::has("assets-total") && 
+            !Cache::has("assets-cost") &&
+            !Cache::has("assets-dep") &&
+            !Cache::has("assets-deploy") &&
+            !Cache::has("assets-due") && 
+            !Cache::has("assets-overdue")
+        ){   
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            Asset::getCache($locations->pluck('id'));
+        }
+
         foreach($locations as $location){
             $id = $location->id;
 
 
-            if( !Cache::has("assets-L{$id}-total") && 
-                !Cache::has("assets-L{$id}-cost") &&
-                !Cache::has("assets-L{$id}-dep") &&
-                !Cache::has("assets-L{$id}-deploy") &&
-                !Cache::has("assets-L{$id}-due") && 
-                !Cache::has("assets-L{$id}-overdue")
-            ){   
-                /* This is to calculate all the assets for the individual schools and the grand total */
-                Asset::updateCache();
-            }
-
-            return Cache::get('assets-L2-total');
+            
 
     
             /* This is to calculate the Accessories */
@@ -150,16 +150,12 @@ class HomeController extends Controller {
             \App\Models\Archive::updateCache();
         }
 
-<<<<<<< HEAD
-        $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100) ? $undeployable :  $undedeployable = 0;
-=======
         if(Cache::get('count_undeployed') == 0){
             $undeployable = 100;
         }else{
             $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100);
         }
 
->>>>>>> 4c58019a8c0e15a6b112ecddfaa5f2766a85bac8
         $obj = array(   'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')], 
                         'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
                         'components' => ['count' => Cache::get('components_total'), 'cost' => Cache::get('components_cost')],
