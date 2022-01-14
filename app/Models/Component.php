@@ -206,6 +206,16 @@ class Component extends Model
             return round($components_deployed_total);
         });
     }
+
+    public static function expenditure($year, $locations){
+        $expenditure = 0;
+        $components = Component::whereYear('purchased_date', $year)->select('purchased_cost')->get();
+        foreach($components as $component){
+            $expenditure += $component->purchased_cost;
+        }
+        return $expenditure;
+    }
+
     
 
 }

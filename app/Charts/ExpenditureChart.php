@@ -41,10 +41,10 @@ class ExpenditureChart extends BaseChart
             foreach(array_reverse($years) as $id => $y){
                 if(!Cache::get('location-'.$location->id.'-'.$y)){
                     $total = Cache::rememberForever('location-'.$location->id.'-'.$y, function () use($location, $y){
-                        return $location->expenditure($y);
+                        return round($location->expenditure($y));
                     });
                 }
-                $location_values[] = Cache::get('location-'.$location->id.'-'.$y);
+                $location_values[] = round(Cache::get('location-'.$location->id.'-'.$y));
             }
             $chart->advancedDataset($location->name, $location_values, ['borderColor'=> $location->icon, 'backgroundColor' => $location->icon]);
         }

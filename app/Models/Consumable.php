@@ -189,4 +189,14 @@ class Consumable extends Model
             return round($consumables_deployed_total);
         });
     }
+
+    public static function expenditure($year, $locations)
+    {
+        $expenditure = 0;
+        $consumables = Consumable::whereYear('purchased_date', $year)->select('purchased_cost')->get();
+        foreach($consumables as $consumable){
+            $expenditure += $consumable->purchased_cost;
+        }
+        return $expenditure;
+    }
 }

@@ -142,7 +142,8 @@ class Accessory extends Model
         return $this->depreciation->years ?? 0;
     }
 
-    public static function updateCache(){
+    public static function updateCache()
+    {
         //The Variables holding the total of Accessories available to the User
         $accessories_total = 0;
         $accessories_cost_total = 0;
@@ -208,7 +209,8 @@ class Accessory extends Model
         });
     }
 
-    public static function updateLocationCache(Location $location){
+    public static function updateLocationCache(Location $location)
+    {
         
         $accessories_cost = 0;
         $accessories_dep = 0;
@@ -242,7 +244,8 @@ class Accessory extends Model
         Cache::set("accessories-L{$id}-deploy", round($accessories_deployed));
     }
 
-    public static function getCache($ids){
+    public static function getCache($ids)
+    {
         //The Variables holding the total of Accessories available to the User
         $accessories_total = 0;
         $accessories_cost_total = 0;
@@ -286,5 +289,52 @@ class Accessory extends Model
         Cache::rememberForever('accessories_deploy', function() use($accessories_deployed_total){
             return round($accessories_deployed_total);
         });
+    }
+
+    public static function expenditure($year, $locations)
+    {
+        $expenditure = 0;
+        $accessories = Accessory::whereLocationId($locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
+        foreach($accessories as $accessory){
+            if($accessory->donated !== 1){
+                $expenditure += $accessory->purchased_cost;
+            }
+        }
+        return $expenditure;
+    }
+
+    public static function donations($year, $locations)
+    {
+        $donations = 0;
+        $accessories = Accessory::whereLocationId($locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
+        foreach($accessories as $accessory){
+            if($accessory->donated === 1){
+                $donations += $accessory->purchased_cost;
+            }
+        }
+        return $donations;
+        
+    }
+
+    public static function depreciation_total($y, $locations){
+        $depreciation = 0;
+        $year = \Carbon\Carbon::parse($y);
+        $accessories = Accessory::whereIn('location_id', $locations)->select('depreciation_id', 'location_id', 'donated', 'purchased_cost', 'purchased_date')->get();
+        foreach($accessories as $accessory){
+            if($accessory->depreciation()->exists()){
+                $eol = \Carbon\Carbon::parse($accessory->purchased_date)->addYears($accessory->depreciation->years);
+                if($eol->isPast()){}else{
+                    $age = $year->floatDiffInYears($accessory->purchased_date); 
+                    $percent = 100 / $accessory->depreciation->years;
+                    $percentage = floor($age)*$percent; 
+                    $dep = $accessory->purchased_cost * ((100 - $percentage) / 100);
+                    if($dep < 0){ $dep = 0;}
+                    $depreciation += $dep;
+                }
+            }else{
+                $depreciation += $accessory->purchased_cost;
+            }
+        }
+        return $depreciation;
     }
 }

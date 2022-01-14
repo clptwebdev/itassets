@@ -223,7 +223,7 @@
         
         const dep_chart = new Chartisan({
             el: '#chart',
-            url: `@chart('exp_chart')?id=1`,
+            url: `@chart('total_expenditure')`,
             // You can also pass the data manually instead of the url:
             // data: { ... }
             hooks: new ChartisanHooks()

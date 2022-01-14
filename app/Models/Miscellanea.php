@@ -210,4 +210,14 @@ class Miscellanea extends Model
             return round($misc_deployed_total);
         });
     }
+
+    public static function expenditure($year, $locations)
+    {
+        $expenditure = 0;
+        $miscellaneous = Miscellanea::whereYear('purchased_date', $year)->select('purchased_cost')->get();
+        foreach($miscellaneous as $miscellanea){
+            $expenditure += $miscellanea->purchased_cost;
+        }
+        return $expenditure;
+    }
 }

@@ -214,7 +214,8 @@ class Asset extends Model {
         }
     }
 
-    public static function updateLocationCache(Location $location){
+    public static function updateLocationCache(Location $location)
+    {
         $loc_cost_total = 0;
         $loc_audits_due = 0;
         $loc_audits_overdue = 0;
@@ -261,7 +262,8 @@ class Asset extends Model {
         Cache::set("assets-L{$id}-overdue", round($loc_audits_overdue));
     }
 
-    public static function getCache($ids){
+    public static function getCache($ids)
+    {
         $assets_total = 0;
         $cost_total = 0;
         $audits_due = 0;
@@ -316,5 +318,50 @@ class Asset extends Model {
         Cache::rememberForever('audits_overdue', function() use($audits_overdue){
             return round($audits_overdue);
         });
+    }
+
+    public static function expenditure($year, $locations){
+        $expenditure = 0;
+        $assets = Asset::whereLocationId($locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
+        foreach($assets as $asset){
+            if($asset->donated !== 1){
+                $expenditure += $asset->purchased_cost;
+            }
+        }
+        return $expenditure;
+    }
+
+    public static function donations($year, $locations){
+        $donations = 0;
+        $assets = Asset::whereLocationId($locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
+        foreach($assets as $asset){
+            if($asset->donated === 1){
+                $donations += $asset->purchased_cost;
+            }
+        }
+        return $donations;
+        
+    }
+
+    public static function depreciation_total($y, $locations){
+        $depreciation = 0;
+        $year = \Carbon\Carbon::parse($y);
+        $assets = Asset::whereIn('location_id', $locations)->select('asset_model', 'donated', 'purchased_cost', 'purchased_date', 'location_id')->get();
+        foreach($assets as $asset){
+            if($asset->model()->exists() && $asset->model->depreciation()->exists()){
+                $eol = \Carbon\Carbon::parse($asset->purchased_date)->addYears($asset->model->depreciation->years);
+                if($eol->isPast()){}else{
+                    $age = $year->floatDiffInYears($asset->purchased_date); 
+                    $percent = 100 / $asset->model->depreciation->years;
+                    $percentage = floor($age)*$percent; 
+                    $dep = $asset->purchased_cost * ((100 - $percentage) / 100);
+                    if($dep < 0){ $dep = 0;}
+                    $depreciation += $dep;
+                }
+            }else{
+                $depreciation += $asset->purchased_cost;
+            }
+        }
+        return $depreciation;
     }
 }
