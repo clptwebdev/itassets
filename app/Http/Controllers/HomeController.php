@@ -59,8 +59,6 @@ class HomeController extends Controller {
             Asset::getCache($locations->pluck('id'));
         }
 
-        return Cache::get("assets-total");
-
 
         //This needs to be a foreach and run through all of the locations to get the values else everything will be Zero
 
