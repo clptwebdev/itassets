@@ -34,7 +34,7 @@ class Transfer extends Model
     }
 
     public static function updateCache(){
-        Cache::flush('transfer_count');
+        Cache::forget('transfer_count');
         Cache::set('transfers_count', Transfer::all()->count());
     }
 

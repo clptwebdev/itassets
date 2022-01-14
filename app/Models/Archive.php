@@ -38,7 +38,7 @@ class Archive extends Model
     }
 
     public static function updateCache(){
-        Cache::flush('archive_count');
+        Cache::forget('archive_count');
         Cache::set('archive_count', Archive::all()->count());
     }
 
