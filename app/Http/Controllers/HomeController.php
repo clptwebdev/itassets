@@ -59,43 +59,7 @@ class HomeController extends Controller {
             Asset::getCache($locations->pluck('id'));
         }
 
-        foreach($locations as $location){
-            $id = $location->id;
-
-
-            
-
-    
-            /* This is to calculate the Accessories */
-            if( !Cache::has("accessories-L{$id}-total") &&
-                !Cache::has("accessories-L{$id}-cost") && 
-                !Cache::has("accessories-L{$id}-depr") &&
-                !Cache::has("accessories-L{$id}-deploy")
-            ){
-                Accessory::updateCache();
-            }
-
-            if( !Cache::has("components-L{$id}-total") &&
-                !Cache::has("components-L{$id}-cost") &&
-                !Cache::has("components-L{$id}-deploy")
-            ){
-                Component::updateCache();                
-            }
-
-            if( !Cache::has("consumables-L{$id}-total") &&
-                !Cache::has("consumables-L{$id}-cost") &&
-                !Cache::has("consumables-L{$id}-deploy")
-            ){
-                Consumable::updateCache();
-            }
-
-            if( !Cache::has("misc-L{$id}-total") &&
-                !Cache::has("misc-L{$id}-cost") &&
-                !Cache::has("misc-L{$id}-deploy")
-            ){
-                Miscellanea::updateCache();
-            }
-        }
+        return Cache::has("assets-total")
 
 
         //This needs to be a foreach and run through all of the locations to get the values else everything will be Zero
@@ -105,20 +69,7 @@ class HomeController extends Controller {
         $depreciation += Cache::get('assets_dep');
         $deployed += Cache::get('assets_deploy');
 
-        //Accessories
-        $everything += Cache::get('accessories_total');
-        $cost += Cache::get('accessories_cost');
-        $depreciation += Cache::get('accessories_dep');
-        $deployed += Cache::get('accessories_deploy');
-
-        /* Components Calcualtions */
-        $deployed += Cache::get('components_deploy');
-
-        //Consumables
-        $deployed += Cache::get('consumables_deploy');
-
-        //Miscellaneous
-        $deployed += Cache::get('miscellaneous_deploy');
+       
 
         
         Cache::rememberForever('count_everything', function() use($everything){
