@@ -1,17 +1,36 @@
 (function($) {
   "use strict"; // Start of use strict
 
+  const body = document.querySelector('body');
+  const sidebar = document.querySelector('.sidebar');
+  const topButton = document.querySelector('#sidebarToggleTop');
+  const sideButton = document.querySelector('#sidebarToggle');
+  const sideTitles = document.querySelectorAll('.sidebar-title');
+  const sideIcons = document.querySelectorAll('.sidebar-icon');
+
    // Toggle the side navigation when window is resized below 480px
-   if ($(window).width() <= 480 && !$(".sidebar").hasClass("toggled")) {
-    $("body").addClass("sidebar-toggled");
-    $(".sidebar").addClass("toggled");
-    
+  if (window.innerWidth < 768 && sidebar.classList.contains('toggled') === false) {
+    body.classList.add("sidebar-toggled");
+    sidebar.classList.add("toggled");  
   };
+
+  //Two buttons should have seperate add eventlisteners as one should shrink the sidebar and only be available on small screens
+  //And other one should showing the items 
 
   // Toggle the side navigation
   $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
-    $("body").toggleClass("sidebar-toggled");
-    $(".sidebar").toggleClass("toggled");
+    body.classList.toggle('sidebar-toggled');
+    sidebar.classList.toggle("toggled");
+
+    if(window.innerWidth < 768){
+      sideTitles.forEach(item => {
+        item.classList.add('d-none');
+      });
+      sideIcons.forEach(item => {
+        item.classList.toggle('fa-2x');
+      });
+    }
+
     $(".sidebar-title").toggleClass('d-none');
     $(".sidebar-icon").toggleClass('fa-2x');
     if ($(".sidebar").hasClass("toggled")) {
