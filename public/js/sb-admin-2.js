@@ -22,14 +22,14 @@
     body.classList.toggle('sidebar-toggled');
     sidebar.classList.toggle("toggled");
 
-    if(window.innerWidth < 768){
+    /* if(window.innerWidth < 768){
       sideTitles.forEach(item => {
         item.classList.add('d-none');
       });
       sideIcons.forEach(item => {
         item.classList.toggle('fa-2x');
       });
-    }
+    } */
 
     $(".sidebar-title").toggleClass('d-none');
     $(".sidebar-icon").toggleClass('fa-2x');
