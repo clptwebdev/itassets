@@ -38,7 +38,7 @@
         sidebar.classList.toggle("toggled");
         if (sidebar.classList.contains("toggled")) {
             dropdowns.forEach((item) => {
-                item.style.display = none;
+                item.classList.add("collapse");
             });
         }
     });

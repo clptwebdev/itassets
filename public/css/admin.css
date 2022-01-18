@@ -10949,14 +10949,14 @@ a:focus {
 
 @media (min-width: 768px) {
     .sidebar {
-        width: 6.5rem !important;
+        width: 4.5rem !important;
         transition: all 0.5s ease-in-out;
         position: relative;
         z-index: 10px;
     }
     .sidebar .nav-item .collapse {
         position: absolute;
-        left: calc(6.5rem + 1.5rem / 2);
+        left: calc(4.5rem + 1rem / 2);
         z-index: 1;
         top: 2px;
     }
