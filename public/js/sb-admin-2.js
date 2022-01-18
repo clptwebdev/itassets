@@ -7,6 +7,7 @@
     const sideButton = document.querySelector("#sidebarToggle");
     const sideTitles = document.querySelectorAll(".sidebar-title");
     const sideIcons = document.querySelectorAll(".sidebar-icon");
+    const dropdowns = document.querySelectorAll(".sidebar .nav-item div");
 
     // Toggle the side navigation when window is resized below 480px
     if (
@@ -36,7 +37,9 @@
         body.classList.toggle("sidebar-toggled");
         sidebar.classList.toggle("toggled");
         if (sidebar.classList.contains("toggled")) {
-            $(".sidebar .collapse").collapse("hide");
+            dropdowns.forEach((item) => {
+                item.style.display = none;
+            });
         }
     });
 

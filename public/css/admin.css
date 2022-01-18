@@ -10786,10 +10786,12 @@ a:focus {
 }
 
 .sidebar .nav-item .collapse {
-    position: absolute;
-    left: calc(6.5rem + 1.5rem / 2);
+    position: relative;
+    left: 0;
     z-index: 1;
-    top: 2px;
+    top: 0;
+    -webkit-animation: none;
+    animation: none;
 }
 
 .sidebar .nav-item .collapse .collapse-inner {
@@ -10950,14 +10952,13 @@ a:focus {
         width: 6.5rem !important;
         transition: all 0.5s ease-in-out;
         position: relative;
+        z-index: 10px;
     }
     .sidebar .nav-item .collapse {
-        position: relative;
-        left: 0;
+        position: absolute;
+        left: calc(6.5rem + 1.5rem / 2);
         z-index: 1;
-        top: 0;
-        -webkit-animation: none;
-        animation: none;
+        top: 2px;
     }
     .sidebar .nav-item .collapse .collapse-inner {
         border-radius: 0;
@@ -11188,6 +11189,15 @@ a:focus {
 @media (min-width: 992px) {
     .sidebar {
         width: 14rem;
+    }
+
+    .sidebar .nav-item .collapse {
+        position: relative;
+        left: 0;
+        z-index: 1;
+        top: 0;
+        -webkit-animation: none;
+        animation: none;
     }
 }
 
