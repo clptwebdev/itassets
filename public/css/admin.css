@@ -11872,7 +11872,7 @@ body.sidebar-toggled footer.sticky-footer {
 .sidebar .nav-item .collapsing {
     padding: 0.5rem 1rem;
     background-color: var(--light-blue);
-    width: 14rem;
+    width: 100%;
 }
 
 .auto-width {
