@@ -10763,6 +10763,12 @@ a:focus {
     z-index: 10;
 }
 
+@media (min-width: 578px) {
+    .sidebar {
+        width: 50vw;
+    }
+}
+
 .sidebar .nav-item {
     position: relative;
 }
