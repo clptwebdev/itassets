@@ -10760,6 +10760,7 @@ a:focus {
     width: 100vw;
     min-height: 100vh;
     position: absolute;
+    z-index: 10;
 }
 
 .sidebar .nav-item {
