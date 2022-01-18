@@ -65,6 +65,11 @@
             body.classList.add("sidebar-toggled");
             sidebar.classList.add("toggled");
         }
+
+        if (window.innerWidth > 992) {
+            body.classList.remove("sidebar-toggled");
+            sidebar.classList.remove("toggled");
+        }
     });
 
     // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
