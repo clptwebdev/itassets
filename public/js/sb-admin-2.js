@@ -44,31 +44,26 @@
     });
 
     // Close any open menu accordions when window is resized below 768px
-    $(window).resize(function () {
-        if ($(window).width() >= 768) {
-            $("body").removeClass("sidebar-toggled");
-            $(".sidebar").removeClass("toggled");
-            $(".sidebar-title").removeClass("d-none");
-            $(".sidebar-icon").removeClass("fa-2x");
+    window.addEventListener("resize", function () {
+        if (window.innerWidth > 768 && window.innerWidth <= 992) {
+            sideTitles.forEach((item) => {
+                item.classList.add("d-none");
+            });
+            sideIcons.forEach((item) => {
+                item.classList.add("fa-2x");
+            });
+        } else {
+            sideTitles.forEach((item) => {
+                item.classList.remove("d-none");
+            });
+            sideIcons.forEach((item) => {
+                item.classList.remove("fa-2x");
+            });
         }
 
-        if ($(window).width() > 480 && $(window).width() < 768) {
-            $(".sidebar-title").addClass("d-none");
-            $(".sidebar-icon").addClass("fa-2x");
-            $(".sidebar .collapse").collapse("hide");
-        }
-
-        // Toggle the side navigation when window is resized below 480px
-        if ($(window).width() <= 480 && !$(".sidebar").hasClass("toggled")) {
-            $("body").addClass("sidebar-toggled");
-            $(".sidebar").addClass("toggled");
-        }
-
-        if ($(window).width() < 480) {
-            $(".sidebar").addClass("toggled");
-            $(".sidebar-title").addClass("d-none");
-            $(".sidebar-icon").addClass("fa-2x");
-            $(".sidebar .collapse").collapse("hide");
+        if (window.innerWidth <= 768) {
+            body.classList.add("sidebar-toggled");
+            sidebar.classList.add("toggled");
         }
     });
 
