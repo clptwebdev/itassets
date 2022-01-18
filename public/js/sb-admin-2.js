@@ -64,8 +64,8 @@
         }
 
         if (window.innerWidth <= 768) {
-            body.classList.remove("sidebar-toggled");
-            sidebar.classList.remove("toggled");
+            body.classList.add("sidebar-toggled");
+            sidebar.classList.add("toggled");
         }
 
         if (window.innerWidth > 992) {
