@@ -10777,7 +10777,6 @@ a:focus {
 }
 
 .sidebar .nav-item .nav-link span {
-    font-size: 0.65rem;
     display: block;
 }
 
@@ -10792,6 +10791,7 @@ a:focus {
     top: 0;
     -webkit-animation: none;
     animation: none;
+    width: 100%;
 }
 
 .sidebar .nav-item .collapse .collapse-inner {
