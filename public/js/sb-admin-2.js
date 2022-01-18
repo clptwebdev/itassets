@@ -46,6 +46,8 @@
     // Close any open menu accordions when window is resized below 768px
     window.addEventListener("resize", function () {
         if (window.innerWidth > 768 && window.innerWidth <= 992) {
+            body.classList.remove("sidebar-toggled");
+            sidebar.classList.remove("toggled");
             sideTitles.forEach((item) => {
                 item.classList.add("d-none");
             });
@@ -62,8 +64,8 @@
         }
 
         if (window.innerWidth <= 768) {
-            body.classList.add("sidebar-toggled");
-            sidebar.classList.add("toggled");
+            body.classList.remove("sidebar-toggled");
+            sidebar.classList.remove("toggled");
         }
 
         if (window.innerWidth > 992) {
