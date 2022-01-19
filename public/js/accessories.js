@@ -1,18 +1,3 @@
-function getFields(value) {
-    $.ajax({
-        url: `/assets/${value}/model`,
-        success: function (data) {
-            document.getElementById("additional-fields").innerHTML = data;
-            document.getElementById("additional-fields").style.display =
-                "block";
-        },
-        error: function () {
-            document.getElementById("additional-fields").innerHTML = "";
-            document.getElementById("additional-fields").style.display = "none";
-        },
-    });
-}
-
 //Search Categories
 const categorySearch = document.querySelector("#findCategory");
 const categoryResults = document.querySelector("#categoryResults");
@@ -101,65 +86,6 @@ function removeCategory(element) {
     //Join the Array (Back to String). join() is empty so by default seperates by a comma
     div.remove();
     cats.value = array.join();
-}
-
-//Search for the Model
-const modelSearch = document.querySelector("#findModel");
-const modelResults = document.querySelector("#modelResults");
-
-modelSearch.addEventListener("input", function (e) {
-    let value = e.target.value;
-    if (value.length > 2) {
-        const xhttp = new XMLHttpRequest();
-
-        xhttp.onload = function () {
-            modelResults.innerHTML = xhttp.responseText;
-            modelResults.style.visibility = "visible";
-            initModelItems();
-        };
-
-        xhttp.open("POST", "/search/models/");
-        xhttp.setRequestHeader(
-            "Content-type",
-            "application/x-www-form-urlencoded"
-        );
-        xhttp.send(`search=${value}`);
-    }
-});
-
-function initModelItems() {
-    //Gets all of the list items and adds an event listener to them
-    //This has to be re-initialised everytime a result set is returned.
-    document
-        .querySelector("#modelResults")
-        .querySelectorAll("li")
-        .forEach(function (item) {
-            item.addEventListener("click", function () {
-                //Get the information required
-                let name = this.getAttribute("data-name");
-                let id = this.getAttribute("data-id");
-                //Select the Elements
-                const cats = document.querySelector("#asset_model");
-                cats.value = id;
-                modelResults.style.visibility = "hidden";
-                document.querySelector("#findModel").value = name;
-                getFields(id);
-                getInfo(id);
-            });
-        });
-}
-
-const modelInfo = document.querySelector("#modelInfo");
-
-function getInfo(id) {
-    const xhttp = new XMLHttpRequest();
-    xhttp.onload = function () {
-        modelInfo.innerHTML = xhttp.responseText;
-    };
-
-    xhttp.open("POST", "/model/preview/");
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(`id=${id}`);
 }
 
 //Search for the Supplier
@@ -277,58 +203,3 @@ function getLocationInfo(id) {
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(`id=${id}`);
 }
-
-const button = document.querySelector("#submitButton");
-const name = document.querySelector('[name="model_name"]');
-const model = document.querySelector('[name="model_no"]');
-const manufacturer_id = document.querySelector('[name="manufacturer_id"]');
-const depreciation_id = document.querySelector('[name="depreciation_id"]');
-const eol = document.querySelector('[name="eol"]');
-const fieldset = document.querySelector('[name="fieldset_id"]');
-const notes = document.querySelector('[name="notes"]');
-const modal = document.querySelector("#newModal");
-
-function sendData() {
-    const errors = [];
-
-    if (name.value == null) {
-        name.classList.add("border-danger");
-        errors.push("Please enter a name for your Model");
-    } else {
-        name.classList.remove("border-danger");
-    }
-
-    if (model.value == null) {
-        model.classList.add("border-danger");
-        errors.push("Please enter a Model No");
-    } else {
-        model.classList.remove("border-danger");
-    }
-
-    const xhttp = new XMLHttpRequest();
-
-    xhttp.onload = function () {
-        console.log("Recieving Response");
-        const response = xhttp.responseText;
-        if (response !== false) {
-            const model = document.querySelector("#asset_model");
-            const modelName = document.querySelector("#findModel");
-            model.value = response;
-            modelName.value = name.value;
-            getFields(response);
-            getInfo(response);
-            $("#newModel").modal("hide");
-        }
-    };
-
-    xhttp.open("POST", "/model/create/");
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(
-        `name=${name.value}&manufacturer_id=${manufacturer_id.value}&model_no=${model.value}&depreciation_id=${depreciation_id.value}&eol=${eol.value}&fieldset_id=${fieldset.value}&notes=${notes.value}`
-    );
-}
-
-button.addEventListener("click", function (e) {
-    console.log("button clicked");
-    sendData();
-});
