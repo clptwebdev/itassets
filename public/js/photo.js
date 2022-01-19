@@ -7,7 +7,7 @@ function selectPhoto(id, src) {
     $("#imgModal").modal("hide");
 }
 
-const imgUploadForm = document.querySelector("form#imageUpload");
+/* const imgUploadForm = document.querySelector("form#imageUpload");
 
 imgUploadForm.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -26,9 +26,9 @@ imgUploadForm.addEventListener("submit", function (e) {
     xhttp.open("POST", urlto);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(`data=${formData}`);
-});
+}); */
 
-/* $(document).ready(function () {
+$(document).ready(function () {
     $("form#imageUpload").submit(function (e) {
         e.preventDefault();
         const formData = new FormData(this);
@@ -52,4 +52,4 @@ imgUploadForm.addEventListener("submit", function (e) {
             },
         });
     });
-}); */
+});
