@@ -28,6 +28,7 @@
       sideIcons.forEach((item) => {
           item.classList.add("fa-2x");
       });
+
     }
 
     //Two buttons should have seperate add eventlisteners as one should shrink the sidebar and only be available on small screens

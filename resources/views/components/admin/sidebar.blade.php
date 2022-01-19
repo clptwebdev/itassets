@@ -87,7 +87,7 @@
                title="Accessories"></i>
             <span class="sidebar-title">Accessories</span>
         </a>
-        <div id="accessoryDD" class="collapse p-0" aria-labelledby="accessoryTitle" data-parent="#accordionSidebar">
+        <div id="accessoryDD" class="collapse p-0 text-center text-lg-left" aria-labelledby="accessoryTitle" data-parent="#accordionSidebar">
             <a class="collapse-item sub-link" href="{{ route('accessories.index')}}"><i
                     class="far fa-circle text-secondary"></i> View All</a>
             <a class="collapse-item sub-link" href="{{ route('accessories.create')}}"><i
