@@ -129,7 +129,7 @@
                                         @endif
                                     </td>
                                     <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
-                                        @if(isset($asset->location->photo->path) && file_exists(asset($asset->location->photo->path)))
+                                        @if(isset($asset->location->photo->path))
                                             <img src="{{ asset($asset->location->photo->path)}}" height="30px"
                                                  alt="{{$asset->location->name}}"
                                                  title="{{ $asset->location->name }}<br>{{ $asset->room ?? 'Unknown'}}"/>

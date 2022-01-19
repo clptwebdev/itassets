@@ -75,7 +75,7 @@
 
             <div class="card shadow mb-4">
                 <div class="card-body">
-                    <div class="table-responsive">
+                    <div class="table-responsive" id="table">
                         <table id="usersTable" class="table table-striped">
                             <thead>
                             <tr>
@@ -113,7 +113,7 @@
                                         <small>{{$accessory->serial_no ?? 'N/A'}}</small>
                                     </td>
                                     <td class="text-center">
-                                        @if(isset($accessory->location->photo->path) && file_exists(asset($accessory->location->photo->path)))
+                                        @if(isset($accessory->location->photo->path))
                                         <img src="{{ asset($accessory->location->photo->path)}}" height="30px"
                                              alt="{{$accessory->location->name}}"
                                              title="{{ $accessory->location->name ?? 'Unnassigned'}}"/>
