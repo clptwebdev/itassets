@@ -2,9 +2,9 @@
 <!-- Content Row -->
 <div class="statistics p-2 mb-1 justify-content-around">
     <!-- Total-->
-    <div class="stats-box rounded p-2 pb-4" style="background-color: #EEE">
-        <div class="col-12 text-dark text-xs font-weight-bold text-uppercase mb-4 mb-md-0">Assets</div>
-        <div class="col-12 col-lg-4 mb-2 mb-md-0">
+    <div class="stats-box rounded p-2 pb-lg-4" style="background-color: #EEE">
+        <div class="col-12 text-dark text-xs font-weight-bold text-uppercase mb-4 mb-lg-0 text-center text-lg-left">Assets</div>
+        <div class="col-12 col-sm-8 col-lg-4 mb-4 mb-lg-0 order-3 order-lg-1">
             <div class="card border-left-lilac shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -31,7 +31,7 @@
             </div>
         </div>
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-12 col-lg-4 mb-2 mb-md-0">
+        <div class="col-12 col-sm-6 col-lg-4 mb-4 mb-lg-0 order-1 order-lg-2">
             <div class="card border-left-coral shadow h-100 py-2 postion-relative">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-lg-4 mb-2 mb-md-0">
+        <div class="col-12 col-sm-6 col-lg-4 mb-4 mb-lg-0 order-2 order-lg-3">
             <div class="card border-left-blue shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -89,9 +89,9 @@
 
 
 
-    <div class="stats-box rounded p-2 pb-4">
-        <div class="col-12 text-dark text-xs font-weight-bold text-uppercase  mb-4 mb-md-0">Other Items</div>
-        <div class="col-12 col-lg-4 mb-2 mb-md-0">
+    <div class="stats-box rounded mt-4 mt-lg-0 p-2 pb-4">
+        <div class="col-12 text-dark text-xs font-weight-bold text-uppercase mb-4 mb-lg-0 text-center text-lg-left">Other Items</div>
+        <div class="col-12 col-sm-6 col-lg-4 mb-4 mb-lg-0">
             <div class="card border-left-green shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -115,7 +115,7 @@
         </div>
 
         <!-- Requests -->
-        <div class="col-12 col-lg-4 mb-2 mb-md-0">
+        <div class="col-12 col-sm-6 col-lg-4 mb-4 mb-lg-0">
             <div class="card border-left-yellow shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -139,7 +139,7 @@
         </div>
 
         <!-- Requests -->
-        <div class="col-12 col-lg-4 mb-2 mb-md-0">
+        <div class="col-12 col-sm-6 col-lg-4 mb-4 mb-lg-0">
             <div class="card border-left-blue shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">

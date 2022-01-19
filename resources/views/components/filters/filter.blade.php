@@ -22,17 +22,16 @@
                     <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader"
                          data-parent="#accordion">
                         <div class="option-body">
+                            <?php $count = $relations."_count";?>
                             @foreach($statuses as $status)
-                                @if(is_countable($status->${"relations"}))
-                                @if($status->${"relations"}->count() != 0 )
+                                @if($status->$count != 0 )
                                 <div class="form-check">
                                     <label class="form-check-label mr-4"
-                                           for="{{'status'.$status->id}}">{{ $status->name }}  ({{$status->${"relations"}->count()}})</label>
+                                           for="{{'status'.$status->id}}">{{ $status->name }}  ({{$status->$count}})</label>
                                     <input class="form-check-input" type="checkbox" name="status[]"
                                            value="{{ $status->id}}" id="{{'status'.$status->id}}"
                                            @if(session()->has('status') && in_array($status->id, session('status'))) {{ 'checked'}} @endif>
                                 </div>
-                                @endif
                                 @endif
                             @endforeach
                         </div>
@@ -78,10 +77,10 @@
                         <div class="option-body">
                             @foreach($locations as $location)
                                 @if(is_countable($status->${"relations"}))
-                                @if($location->${"relations"}->count() != 0)
+                                @if($location->$count != 0)
                             <div class="form-check">
                                 <label class="form-check-label mr-4"
-                                        for="{{'location'.$location->id}}">{{ $location->name }} ({{$location->${"relations"}->count()}})</label>
+                                        for="{{'location'.$location->id}}">{{ $location->name }} ({{$location->$count}})</label>
                                 <input class="form-check-input" type="checkbox" name="locations[]"
                                         value="{{ $location->id}}" id="{{'location'.$location->id}}"
                                         @if(session()->has('locations') && in_array($location->id, session('locations'))) {{ 'checked'}} @endif>

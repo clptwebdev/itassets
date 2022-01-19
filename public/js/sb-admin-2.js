@@ -10,6 +10,29 @@
     const dropdowns = document.querySelectorAll(".sidebar .nav-item div");
     const closeButton = document.querySelector('#close_sidebar');
 
+    const subMenu = document.querySelector('#subMenu');
+    const subMenuLinks = document.querySelectorAll('#subMenu > a > i');
+    const subMenuFormBtns = document.querySelectorAll('#subMenu > form > button > i');
+    const subMenuBtns = document.querySelectorAll('#subMenu > button > i');
+
+    if(window.innerWidth < 768){
+        subMenuLinks.forEach(item => {
+            item.classList.remove('fa-sm');
+            item.classList.add('fa-lg');
+        })
+
+        subMenuBtns.forEach(item => {
+            item.classList.remove('fa-sm');
+            item.classList.add('fa-lg');
+        })
+
+        subMenuFormBtns.forEach(item => {
+            item.classList.remove('fa-sm');
+            item.classList.add('fa-lg');
+        })
+    }
+
+
     // Toggle the side navigation when window is resized below 480px
     if (
         window.innerWidth < 768 &&

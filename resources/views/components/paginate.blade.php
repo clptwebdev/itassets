@@ -1,11 +1,11 @@
 @props(['model'])
-<div class="d-flex justify-content-between align-content-center">
-    <div>
+<div class="d-flex flex-column flex-md-row justify-content-between align-content-center ">
+    <div class="d-block d-md-inline-block">
         @if($model->hasPages())
-            {{ $model->links()}}
+            {!!$model->onEachSide(2)->links()!!}
         @endif
     </div>
-    <div class="text-right">
+    <div class="text-left text-md-right d-block d-md-inline-block">
         Showing Assets {{ $model->firstItem() }} to {{ $model->lastItem() }} ({{ $model->total() }} Total Results)
     </div>
 </div>

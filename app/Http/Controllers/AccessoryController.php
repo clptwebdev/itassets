@@ -45,7 +45,7 @@ class AccessoryController extends Controller {
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
-            $locations = Location::all();
+                $locations = Location::select('id', 'name')->withCount('accessories')->get();
         } else
         {
             $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'))
@@ -55,16 +55,19 @@ class AccessoryController extends Controller {
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
-            $locations = auth()->user()->locations;
+                $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('accessories')->get();
         }
         $this->clearFilter();
         $filter = 0;
 
+        $categories = Category::with('accessories')->select('id', 'name')->get();
+        $statuses = Status::select('id', 'name', 'deployable')->withCount('accessories')->get();
+
         return view('accessory.view', [
             "accessories" => $accessories,
             'suppliers' => Supplier::all(),
-            'statuses' => Status::all(),
-            'categories' => Category::all(),
+            'statuses' => $statuses,
+            'categories' => $categories,
             "locations" => $locations,
             "filter" => 0,
         ]);

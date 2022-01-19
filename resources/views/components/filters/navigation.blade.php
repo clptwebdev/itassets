@@ -1,14 +1,16 @@
-<div class="d-flex justify-content-between flex-row-reverse mb-2 p-2">
+<div class="d-flex justify-content-between flex-wrap flex-row-reverse mb-2">
     @php
         $route = strtolower($model);
     @endphp
-    <div id="filterDiv" class="col-3 text-right">
+    <div id="filterDiv" class="col-12 mb-4 text-right">
+        <a id="sortButton" href="#" class="btn btn-blue d-lg-none"><i class="fas fa-lg fa-sort"></i></a>
+        <a id="searchButton" href="#" class="btn btn-blue d-lg-none"><i class="fas fa-lg fa-search"></i></a>
         @if(isset($filter) && $filter != 0)
             <a href="{{ route($route.'.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
-            <div class="dropdown d-inline ml-2">
+            <div class="dropdown d-inline ml-lg-2">
                 <button class="btn btn-green dropdown-toggle" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    View Filter
+                        <i class="far fa-eye mr-lg-1"></i><span class="d-none d-lg-inline-block">View Filter</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="dropdownMenuButton">
 
@@ -84,14 +86,10 @@
                 </div>
             </div>
         @endif
-{{--        @if($model == "Component" || $model == "Miscellanea")--}}
-
-{{--        @else--}}
-            <a href="#" onclick="javascript:toggleFilter();" class="btn btn-blue shadow-sm ml-2">Filter</a>
-{{--        @endif--}}
+        <a id="filterBtn" href="#" onclick="javascript:toggleFilter();" class="btn btn-blue shadow-sm ml-lg-2"><i class="fas fa-filter mr-lg-1"></i><span class="d-none d-lg-inline-block">Filter</span></a>
     </div>
-    <div id="searchBar" class="col-4">
-        <div class="col-auto">
+    <div id="searchBar" class="d-none d-lg-inline-block col-12 col-lg-4 mb-4 mb-lg-0">
+        <div class="w-100">
             <label class="sr-only" for="inlineFormInputGroup">Search</label>
             <form method="POST" action="{{ route($route.'.filter')}}">
                 <div class="input-group mb-2">
@@ -106,16 +104,17 @@
             </form>
         </div>
     </div>
-    <div id="Sort" class="col-5">
-        <form class="form-inline" method="POST" action="{{ route($route.'.filter')}}">
+
+    <div id="sortBar" class="d-none d-lg-inline-block col-12 col-lg-8">
+        <form class="form-inline w-100" method="POST" action="{{ route($route.'.filter')}}">
             @csrf
-            <label class="my-1 mr-2">Amount:</label>
+            <label class="my-1 mr-2"><i class="fas fa-list-ol"></i></label>
             <select class="form-control mr-2" name="limit">
                 <option value="25" @if(session('limit') == 25) selected @endif>25</option>
                 <option value="50" @if(session('limit') == 50) selected @endif>50</option>
                 <option value="100" @if(session('limit') == 100) selected @endif>100</option>
             </select>
-            <label class="my-1 mr-2">Order By:</label>
+            <label class="my-1 mr-2"><i class="fas fa-sort"></i></label>
             <select class="form-control mr-2" name="orderby">
                 <option value="name asc"
                         @if(session('orderby') == 'name' && (session('direction')) == 'asc') selected @endif>Name (A-Z)

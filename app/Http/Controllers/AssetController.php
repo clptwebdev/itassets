@@ -58,7 +58,7 @@ class AssetController extends Controller {
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
 
-            $locations = Location::all();
+            $locations = Location::select('id', 'name')->withCount('assets')->get();
         } else
         {
             $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))
@@ -68,16 +68,20 @@ class AssetController extends Controller {
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
-            $locations = auth()->user()->locations;
+            $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('assets')->get();
         }
         $this->clearFilter();
         $limit = session('limit') ?? 25;
 
+        $categories = Category::with('assets')->select('id', 'name')->get();
+        $statuses = Status::select('id', 'name', 'deployable')->withCount('assets')->get();
+
+
         return view('assets.view', [
             "assets" => $assets->paginate(intval($limit))->fragment('table'),
             'suppliers' => Supplier::all(),
-            'statuses' => Status::all(),
-            'categories' => Category::all(),
+            'statuses' => $statuses,
+            'categories' => $categories,
             "locations" => $locations,
             "filter" => 0,
         ]);
@@ -100,7 +104,7 @@ class AssetController extends Controller {
 
         return view('assets.create', [
             "locations" => $locations,
-            "manufacturers" => Manufacturer::all(),
+            "manufacturers" => Manufacturer::select('id', 'name')->get(),
             'models' => AssetModel::all(),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),

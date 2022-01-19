@@ -174,7 +174,7 @@
     <!-- Your application script -->
     <script>
 
-        const device = legend = (screen.width < 575) ? false : true; //when viewport will be under 575px
+        const device = legend = (screen.width < 768) ? false : true; //when viewport will be under 575px
 
         const expenditure = new Chartisan({
             el: '#expenditure_chart',

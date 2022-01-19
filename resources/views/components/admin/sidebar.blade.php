@@ -28,11 +28,10 @@
     <hr class="sidebar-divider">
     @if(auth()->user()->role_id != 0)
     <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('assets.index')}}" data-toggle="collapse"
+        <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('assets.index')}}" data-toggle="collapse"
            data-target="#collapseTwo" aria-expanded="true"
            aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-tablet-alt sidebar-icon" data-toggle="tooltip" data-placement="right"
-               title="Components"></i>
+            <i class="fas fa-fw fa-tablet-alt sidebar-icon"></i>
             <span class="sidebar-title">Assets</span>
         </a>
         <div id="collapseTwo" class="collapse p-0" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -80,11 +79,10 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('components.index')}}" data-toggle="collapse"
+        <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('components.index')}}" data-toggle="collapse"
            data-target="#accessoryDD" aria-expanded="true"
            aria-controls="accessoryDD">
-            <i class="fas fa-fw fa-keyboard sidebar-icon" data-toggle="tooltip" data-placement="right"
-               title="Accessories"></i>
+            <i class="fas fa-fw fa-keyboard sidebar-icon" ></i>
             <span class="sidebar-title">Accessories</span>
         </a>
         <div id="accessoryDD" class="collapse p-0 text-center text-lg-left" aria-labelledby="accessoryTitle" data-parent="#accordionSidebar">
@@ -103,11 +101,10 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('components.index')}}" data-toggle="collapse"
+        <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('components.index')}}" data-toggle="collapse"
            data-target="#componentsDD" aria-expanded="true"
            aria-controls="componentsDD">
-            <i class="far fa-fw fa-hdd sidebar-icon" data-toggle="tooltip" data-placement="right"
-               title="Components"></i>
+            <i class="far fa-fw fa-hdd sidebar-icon" ></i>
             <span class="sidebar-title">Components</span>
         </a>
         <div id="componentsDD" class="collapse" aria-labelledby="componentsTitle" data-parent="#accordionSidebar">
@@ -118,7 +115,7 @@
     </li>
 
     {{-- <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('consumables.index')}}" data-toggle="collapse" data-target="#consumableDD" aria-expanded="true"
+        <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('consumables.index')}}" data-toggle="collapse" data-target="#consumableDD" aria-expanded="true"
             aria-controls="consumableDD">
             <i class="fas fa-fw fa-tint sidebar-icon" data-toggle="tooltip" data-placement="right" title="Consumables"></i>
             <span class="sidebar-title">Consumables</span>
@@ -130,11 +127,10 @@
         </div>
     </li> --}}
     <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('miscellaneous.index')}}" data-toggle="collapse"
+        <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('miscellaneous.index')}}" data-toggle="collapse"
            data-target="#miscellaneousDD" aria-expanded="true"
            aria-controls="miscellaneousDD">
-            <i class="fas fa-fw fa-question sidebar-icon" data-toggle="tooltip" data-placement="right"
-               title="Miscellaneous"></i>
+            <i class="fas fa-fw fa-question sidebar-icon"></i>
             <span class="sidebar-title">Miscellaneous</span>
         </a>
         <div id="miscellaneousDD" class="collapse" aria-labelledby="consumableTitle" data-parent="#accordionSidebar">
@@ -147,19 +143,19 @@
     <hr class="sidebar-divider">
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link text-left text-sm-center text-md-left" href="#">
             <i class="far fa-fw fa-id-badge sidebar-icon"></i>
             <span class="sidebar-title">Licenses</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link text-left text-sm-center text-md-left" href="#">
             <i class="fas fa-fw fa-wifi sidebar-icon"></i>
             <span class="sidebar-title">Broadband</span></a>
     </li>
     <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
+        <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
            aria-controls="collapsePages">
             <i class="fas fa-fw fa-users sidebar-icon"></i>
             <span class="sidebar-title">Users</span>
@@ -173,34 +169,34 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('location.index')}}">
+        <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('location.index')}}">
             <i class="far fa-fw fa-map sidebar-icon"></i>
             <span class="sidebar-title">Locations</span></a>
     </li>
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="{{route("manufacturers.index")}}">
+        <a class="nav-link text-left text-sm-center text-md-left" href="{{route("manufacturers.index")}}">
             <i class="fas fa-fw fa-tools sidebar-icon"></i>
             <span class="sidebar-title">Manufacturers</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('suppliers.index') }}">
+        <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('suppliers.index') }}">
             <i class="fas fa-fw fa-tags sidebar-icon"></i>
             <span class="sidebar-title">Suppliers</span></a>
     </li>
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
     <li class="nav-item">
-        <a href="{{ route('archives.index')}}" title="Archived" class="nav-link">
+        <a href="{{ route('archives.index')}}" title="Archived" class="nav-link text-left text-sm-center text-md-left">
             <i class="fas fa-fw fa-archive sidebar-icon"></i> <span class="sidebar-title">Disposed/Archived</span></a>
     </li>
     <!-- Divider -->
     <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#settingPages" aria-expanded="true"
+        <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-toggle="collapse" data-target="#settingPages" aria-expanded="true"
            aria-controls="settingPages">
             <i class="fas fa-fw fa-cogs sidebar-icon"></i>
             <span class="sidebar-title">Settings</span>

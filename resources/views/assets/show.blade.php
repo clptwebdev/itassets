@@ -6,6 +6,7 @@
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
 @endsection
 
+
 @section('content')
     <x-wrappers.nav title="View Asset">
         <x-buttons.return :route="route('assets.index')">Assets</x-buttons.return>
@@ -24,7 +25,7 @@
             <x-buttons.edit :route="route('assets.edit', $asset->id)"/>
         @endcan
         @can('delete', $asset)
-            <x-form.layout method="DELETE" class="d-sm-inline-block"
+            <x-form.layout method="DELETE" class="d-inline-block"
                            :id="'form'.$asset->id"
                            :action="route('assets.destroy', $asset->id)">
                 <x-buttons.delete formAttributes="data-id='{{$asset->id}}'"/>

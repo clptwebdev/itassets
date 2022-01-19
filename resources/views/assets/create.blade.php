@@ -11,8 +11,8 @@
         <x-wrappers.nav title="Add New Asset(s)" >
             <x-buttons.return :route="route('assets.index')" > Assets</x-buttons.return >
             <a href="{{ route('documentation.index')."#collapseThreeAssets"}}"
-               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm" ><i
-                    class="fas fa-question fa-sm text-dark-50" ></i > Asset Help</a >
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
+                    class="fas fa-question fa-sm text-dark-50 mr-lg-1" ></i ><span class="d-none d-lg-inline-block">Help</span></a >
             <x-buttons.submit >Save</x-buttons.submit >
         </x-wrappers.nav >
         <section >
@@ -20,7 +20,7 @@
                              click
                              the 'Save' button. Or click the 'Back' button to return the Assets page.
             </p >
-            <div class="row row-eq-height container m-auto" >
+            <div class="row row-eq-height no-gutters p-0 p-md-4 container m-auto" >
                 <div class="col-12" >
                     <div class="card shadow h-100" >
                         <div class="card-body" >
@@ -145,7 +145,7 @@
                                 <div class="tab-pane fade  p-2 pt-4 " id="purchase" role="tabpanel"
                                      aria-labelledby="purchase-tab" >
                                     <div class="row" >
-                                        <div class="col-12 col-sm-6 p-4 mb-3" >
+                                        <div class="col-12 col-md-6 p-4 mb-3" >
                                             <h3 class="h6 text-center mb-3" >Purchase Information</h3 >
                                             <div class="form-group" >
                                                 <x-form.input name="order_no" />

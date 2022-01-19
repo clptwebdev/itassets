@@ -591,17 +591,23 @@ pre code {
 }
 
 @media (min-width: 576px) {
-    .container,
     .container-sm {
         max-width: 540px;
+    }
+
+    .container{
+        max-width: 100%;
     }
 }
 
 @media (min-width: 768px) {
-    .container,
     .container-sm,
     .container-md {
         max-width: 720px;
+    }
+
+    .container{
+        max-width: 100%;
     }
 }
 
@@ -11808,6 +11814,7 @@ body.sidebar-toggled footer.sticky-footer {
 
 #filter {
     position: fixed;
+    overflow-y: scroll;
     top: 0px;
     right: -100%;
     width: 25%;
@@ -12214,7 +12221,7 @@ tr.even:hover .btn,
     height: 500px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .statistics {
         display: block;
     }
@@ -12226,4 +12233,9 @@ tr.even:hover .btn,
     .chart {
         height: 300px;
     }
+}
+
+#barcode{
+    max-width: 250px;
+    max-height: 160px;
 }
