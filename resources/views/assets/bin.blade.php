@@ -9,33 +9,24 @@
 
 @section('content')
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Assets | Recycle Bin</h1>
-        <div>
-            <a href="{{ route('assets.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                class="fas fa-chevron-left fa-sm text-dark-50"></i> Back to Assets</a>
-            <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
-               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
-                    class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
-            @can('generatePDF', \App\Models\Asset::class)
-            <form class="d-inline-block" action="{{ route('assets.pdf')}}" method="POST">
-                @csrf
-                <input type="hidden" value="{{ json_encode($assets->pluck('id'))}}" name="assets"/>
-            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
-                    class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report</button>
-            </form>
-            @endcan
-        </div>
-    </div>
+    <x-wrappers.nav title="Assets | Recycle Bin">
+        <x-buttons.return :route="route('assets.index')" > Assets</x-buttons.return >
+        @can('generatePDF', \App\Models\Asset::class)
+            @if($assets->count() >1)
+                <x-form.layout class="d-inline-block" :action="route('assets.pdf')">
+                    <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
+                                    :value="json_encode($assets->pluck('id'))"/>
+                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                </x-form.layout>
+            @endif
+        @endcan 
+        <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
+               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
+                    class="fas fa-question fa-sm text-dark-50 mr-lg-1" ></i ><span class="d-none d-lg-inline-block">Help</span></a >
+                  
+    </x-wrappers.nav>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
-    @endif
-
+    <x-handlers.alerts/>
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
             different options and locations can created, updated, deleted and filtered</p>
