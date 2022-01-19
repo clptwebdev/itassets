@@ -1,6 +1,9 @@
+const profileImage = document.querySelector("profileImage");
+const photoId = document.querySelector("photoId");
+
 function selectPhoto(id, src) {
-    document.getElementById("profileImage").src = src;
-    document.getElementById("photo_id").value = id;
+    profileImage.src = src;
+    photoId.value = id;
     $("#imgModal").modal("hide");
 }
 
@@ -24,8 +27,8 @@ $(document).ready(function () {
             contentType: false,
             success: function (data) {
                 $("#uploadModal").modal("hide");
-                document.getElementById("profileImage").src = route + data.path;
-                document.getElementById("photo_id").value = data.id;
+                profileImage.src = route + data.path;
+                photoId.value = data.id;
             },
         });
     });
