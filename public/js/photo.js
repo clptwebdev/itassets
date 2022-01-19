@@ -26,7 +26,7 @@ $(document).ready(function () {
             contentType: false,
             success: function (data) {
                 $("#uploadModal").modal("hide");
-                profileImage.src = `{{asset(${data.path})}}`;
+                profileImage.src = `/${data.path}`;
                 photoId.value = data.id;
             },
         });
