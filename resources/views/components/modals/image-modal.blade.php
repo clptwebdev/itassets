@@ -55,6 +55,3 @@
 
     </div>
 </div>
-@section('js')
-    <script  src="{{asset('js/photo.js')}}"></script>
-@endsection

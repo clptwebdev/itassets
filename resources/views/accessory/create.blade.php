@@ -6,20 +6,6 @@
 
 @endsection
 
-@section('modals')
-    <x-modals.image-modal/>
-@endsection
-
-
-@section('js')
-    <script type="text/javascript" src="{{ asset('js/accessories.js')}}"></script>
-    <script>
-        window.load( function(){
-            alert('Loaded');
-        })
-    </script>
-@endsection
-
 @section('content')
     <x-form.layout :action="route('accessories.store')">
         <x-wrappers.nav title="Add New Accessory">
@@ -253,4 +239,12 @@
     </x-form.layout>
 @endsection
 
+@section('modals')
+    <x-modals.image-modal/>
+@endsection
 
+
+@section('js')
+    <script type="text/javascript" src="{{ asset('js/accessories.js')}}"></script>
+    <script  src="{{asset('js/photo.js')}}"></script>
+@endsection
