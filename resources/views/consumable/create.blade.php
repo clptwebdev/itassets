@@ -269,7 +269,7 @@
                     contentType: false,
                     success: function (data) {
                         $('#uploadModal').modal('hide');
-                        document.getElementById("profileImage").src = route + data.path;
+                        document.getElementById("profileImage").src = `{{asset(${data.path})}}`;
                         document.getElementById("photo_id").value = data.id;
                     }
                 });

@@ -12,7 +12,6 @@ $(document).ready(function () {
         e.preventDefault();
         var formData = new FormData(this);
         var urlto = "/photo/upload";
-        var route = '{{asset("/")}}';
         $.ajaxSetup({
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
