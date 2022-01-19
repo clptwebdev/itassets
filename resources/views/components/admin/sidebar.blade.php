@@ -28,7 +28,7 @@
            aria-controls="collapseTwo">
             <i class="fas fa-fw fa-tablet-alt sidebar-icon" data-toggle="tooltip" data-placement="right"
                title="Components"></i>
-            <span class="sidebar-title">Assets</span>
+            <span class="sidebar-title d-inline-block d-lg-none d-lg-inline-block">Assets</span>
         </a>
         <div id="collapseTwo" class="collapse p-0" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i
