@@ -23,7 +23,7 @@ imgUploadForm.addEventListener("submit", function (e) {
         }
     };
 
-    xhttp.open("POST", "/model/create/");
+    xhttp.open("POST", urlto);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(`data=${formData}`);
 });
