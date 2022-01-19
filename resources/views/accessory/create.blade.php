@@ -18,7 +18,7 @@
                 to return the accessories page.
             </p>
             <div class="row row-eq-height no-gutters p-0 p-md-4 container m-auto"">
-                <div class="col-12 col-md-8 col-lg-9">
+                <div class="col-12">
                     <div class="card shadow h-100">
                         <div class="card-body">
                             <x-form.errors/>
