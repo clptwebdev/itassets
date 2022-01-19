@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
 
-                                < class="tab-pane fade  p-2 pt-4 " id="purchase" role="tabpanel" aria-labelledby="purchase-tab" >
+                                <div class="tab-pane fade  p-2 pt-4 " id="purchase" role="tabpanel" aria-labelledby="purchase-tab" >
                                     <div class="row" >
                                         <div class="col-12 col-md-6 p-4 mb-3" >
                                             <h3 class="h6 text-center mb-3" >Purchase Information</h3 >
