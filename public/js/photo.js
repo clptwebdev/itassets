@@ -1,13 +1,16 @@
-const profileImage = document.querySelector("profileImage");
-const photoId = document.querySelector("photoId");
-
 function selectPhoto(id, src) {
+    const profileImage = document.querySelector("profileImage");
+    const photoId = document.querySelector("photoId");
+
     profileImage.src = src;
     photoId.value = id;
     $("#imgModal").modal("hide");
 }
 
 $(document).ready(function () {
+    const profileImage = document.querySelector("profileImage");
+    const photoId = document.querySelector("photoId");
+
     $("form#imageUpload").submit(function (e) {
         e.preventDefault();
         var formData = new FormData(this);
