@@ -234,32 +234,6 @@
                                     </div >
                                 </div >
                             </div>
-
-
-                            
-                            
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-4 col-lg-3">
-                    <div class="card shadow h-100">
-                        <div class="card-body">
-                            <x-admin.image-upload/>
-                            <hr>
-                            <div class="form-group col-md-12">
-                                <x-form.select name="location_id" :models="$locations"/>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <x-form.input name="room"/>
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <x-form.select name="depreciation_id" :models="$depreciations"/>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <x-form.select name="status_id" :models="$statuses"/>
-                            </div>
                         </div>
                     </div>
                 </div>
