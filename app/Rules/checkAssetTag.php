@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use App\Models\Asset;
+use App\Models\Accessory;
 use App\Models\Location;
 
 class checkAssetTag implements Rule
