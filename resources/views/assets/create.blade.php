@@ -11,7 +11,7 @@
         <x-wrappers.nav title="Add New Asset(s)" >
             <x-buttons.return :route="route('assets.index')" > Assets</x-buttons.return >
             <a href="{{ route('documentation.index')."#collapseThreeAssets"}}"
-               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
+               class="btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
                     class="fas fa-question fa-sm text-dark-50 mr-lg-1" ></i ><span class="d-none d-lg-inline-block">Help</span></a >
             <x-buttons.submit >Save</x-buttons.submit >
         </x-wrappers.nav >

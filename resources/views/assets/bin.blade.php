@@ -21,7 +21,7 @@
             @endif
         @endcan 
         <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
-               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
+               class="btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
                     class="fas fa-question fa-sm text-dark-50 mr-lg-1" ></i ><span class="d-none d-lg-inline-block">Help</span></a >
                   
     </x-wrappers.nav>
@@ -138,31 +138,7 @@
 @endsection
 
 @section('modals')
-    <!-- Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeAssetModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeassetModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeassetModalLabel">Are you sure you want to delete this asset?
-                    </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="asset-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this asset from the system.</p>
-                    <small class="text-coral">**Warning this is permanent. All assets assigned to this asset will be
-                        set to Null.</small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<x-modals.delete/>
 @endsection
 
 @section('js')
