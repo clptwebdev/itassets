@@ -50,7 +50,7 @@
                                     <div class="row" >
                                         <div class="col-12 col-md-6 p-4 mb-3" >
                                             <div class="form-group">
-                                                <x-form.input name="name" formAttributes="required"/>
+                                                <x-form.input name="name" formAttributes="required" value="{{old('name')}}" />
                                             </div>
                                             <div class="form-group">
                                                 <x-form.select name="manufacturer_id" :models="$manufacturers"/>
@@ -74,7 +74,7 @@
                                                             alt="Select Profile Picture"
                                                             data-toggle="modal" data-target="#imgModal"
                                                             >
-                                                    <input type="hidden" id="photo_id" name="photo_id" value="0">
+                                                    <input type="hidden" id="photo_id" name="photo_id" value="{{ old('photo_id') ?? 0}}">
                                                 </div >
                                             </div>
                                         </div>
@@ -106,7 +106,7 @@
                                                 <input type="hidden" id="supplier_id" name="supplier_id"
                                                         class="form-control mb-3" readonly >
                                                 <input class="form-control" type="text" name="find_supplier"
-                                                        id="findSupplier" value="" placeholder="Search for Supplier" >
+                                                        id="findSupplier" value="" placeholder="Search for Supplier" autocomplete="off">
                                                 <div id="supplierResults"
                                                         class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                         style="visibility: hidden; z-index: 2;" >
@@ -155,7 +155,7 @@
                                                 <input type="hidden" id="location_id" name="location_id"
                                                        class="form-control mb-3" readonly >
                                                 <input class="form-control" type="text" name="find_location"
-                                                       id="findLocation" value="" placeholder="Search for Location">
+                                                       id="findLocation" value="" autocomplete="off" placeholder="Search for Location">
                                                 <div id="locationResults"
                                                      class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                      style="visibility: hidden; z-index: 2;" >
@@ -208,7 +208,7 @@
                                                            class="form-control mb-3" readonly >
                                                     <input class="form-control" type="text" name="find_category"
                                                            id="findCategory" value=""
-                                                           placeholder="Search for Categories" >
+                                                           placeholder="Search for Categories" autocomplete="off">
                                                     <div id="categoryResults"
                                                          class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                          style="visibility: hidden; z-index: 2;" >
@@ -221,7 +221,7 @@
                                                     </div >
                                                 </div >
                                             </div >
-                                            <div class="form-row" >
+                                            <div class="form-row mb-3" >
                                                 <x-form.select name="status_id" :models="$statuses" />
                                             </div >
                                             <div class="form-row">

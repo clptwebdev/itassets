@@ -12,7 +12,7 @@
 <input type="{{$type}}"
        class="form-control @if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
        name="{{str_replace(' ', '_', strtolower($name))}}"
-       value="{{old($value) ?? $value ?? ''}}"
+       value="{{$value ?? ''}}"
        id="{{ old(str_replace(' ', '_', strtolower($name)))}}"
        placeholder="{{str_replace(array('_','id'), ' ',ucfirst($title ?? $name))}}"
     {!!$formAttributes ?? null!!}
