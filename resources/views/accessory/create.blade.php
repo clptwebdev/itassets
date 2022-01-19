@@ -243,7 +243,7 @@
     <x-modals.image-modal/>
 @endsection
 
-@section('js')
-    <script type="text/javascript" src="{{ asset('js/accessories.js')}}"></script>
-@endsection
 
+@section('js')
+    <script type="text/javascript" src="{{ asset('js/assets.js')}}"></script>
+@endsection
