@@ -19,9 +19,7 @@ imgUploadForm.addEventListener("submit", function (e) {
     xhttp.onload = function () {
         const response = xhttp.responseText;
         if (response !== false) {
-            $("#uploadModal").modal("hide");
-            profileImage.src = `/${data.path}`;
-            photoId.value = data.id;
+            console.log(response);
         }
     };
 
