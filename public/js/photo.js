@@ -1,6 +1,6 @@
 function selectPhoto(id, src) {
-    const profileImage = document.querySelector("profileImage");
-    const photoId = document.querySelector("photoId");
+    const profileImage = document.querySelector("#profileImage");
+    const photoId = document.querySelector("#photoId");
 
     profileImage.src = src;
     photoId.value = id;
@@ -8,9 +8,6 @@ function selectPhoto(id, src) {
 }
 
 $(document).ready(function () {
-    const profileImage = document.querySelector("profileImage");
-    const photoId = document.querySelector("photoId");
-
     $("form#imageUpload").submit(function (e) {
         e.preventDefault();
         var formData = new FormData(this);
