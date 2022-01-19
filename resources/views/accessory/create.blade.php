@@ -71,7 +71,9 @@
                                                 <div class="model_image p-4" >
                                                     <img id="profileImage"
                                                             src="{{ asset('images/svg/device-image.svg') }}" width="100%"
-                                                            alt="Select Profile Picture" >
+                                                            alt="Select Profile Picture"
+                                                            data-toggle="modal" data-target="#imgModal"
+                                                            >
                                                 </div >
                                             </div>
                                         </div>
@@ -246,5 +248,5 @@
 
 @section('js')
     <script type="text/javascript" src="{{ asset('js/accessories.js')}}"></script>
-    <script  src="{{asset('js/photo.js')}}"></script>
+    <script src="{{asset('js/photo.js')}}"></script>
 @endsection

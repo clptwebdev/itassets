@@ -4,7 +4,6 @@ const categoryResults = document.querySelector("#categoryResults");
 const categorySelect = document.querySelector("#categorySelect");
 
 categorySearch.addEventListener("input", function (e) {
-    alert("Clicked");
     let value = e.target.value;
     if (value.length > 2) {
         const xhttp = new XMLHttpRequest();
