@@ -1,8 +1,13 @@
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
+    <div class="d-flex justify-content-end align-items-center mr-2 mt-2">
+        <button id="close_sidebar" class="btn btn-link text-light d-md-none rounded-circle mr-3">
+            <i class="fas fa-2x fa-times"></i>
+        </button>
+    </div>
+    
     <!-- Sidebar - Brand -->
-    <a class="d-flex flex-column align-items-center justify-content-center p-4" href="{{ route('dashboard') }}">
+    <a class="d-flex flex-column align-items-center justify-content-center p-2 pt-0 pb-4" href="{{ route('dashboard') }}">
         <div id="app-logo">
             <x-application-logo/>
         </div>
@@ -28,7 +33,7 @@
            aria-controls="collapseTwo">
             <i class="fas fa-fw fa-tablet-alt sidebar-icon" data-toggle="tooltip" data-placement="right"
                title="Components"></i>
-            <span class="sidebar-title d-inline-block d-lg-none d-lg-inline-block">Assets</span>
+            <span class="sidebar-title">Assets</span>
         </a>
         <div id="collapseTwo" class="collapse p-0" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i

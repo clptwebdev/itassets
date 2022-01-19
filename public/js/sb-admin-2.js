@@ -8,6 +8,7 @@
     const sideTitles = document.querySelectorAll(".sidebar-title");
     const sideIcons = document.querySelectorAll(".sidebar-icon");
     const dropdowns = document.querySelectorAll(".sidebar .nav-item div");
+    const closeButton = document.querySelector('#close_sidebar');
 
     // Toggle the side navigation when window is resized below 480px
     if (
@@ -16,6 +17,17 @@
     ) {
         body.classList.add("sidebar-toggled");
         sidebar.classList.add("toggled");
+    }
+
+    if(window.innerWidth > 768 && window.innerWidth < 992){
+      body.classList.remove("sidebar-toggled");
+      sidebar.classList.remove("toggled");
+      sideTitles.forEach((item) => {
+          item.classList.add("d-none");
+      });
+      sideIcons.forEach((item) => {
+          item.classList.add("fa-2x");
+      });
     }
 
     //Two buttons should have seperate add eventlisteners as one should shrink the sidebar and only be available on small screens
@@ -45,7 +57,7 @@
 
     // Close any open menu accordions when window is resized below 768px
     window.addEventListener("resize", function () {
-        if (window.innerWidth > 768 && window.innerWidth <= 992) {
+        if (window.innerWidth > 768 && window.innerWidth < 992) {
             body.classList.remove("sidebar-toggled");
             sidebar.classList.remove("toggled");
             sideTitles.forEach((item) => {
@@ -72,6 +84,11 @@
             body.classList.remove("sidebar-toggled");
             sidebar.classList.remove("toggled");
         }
+    });
+
+    closeButton.addEventListener('click', function(){
+      body.classList.toggle("sidebar-toggled");
+        sidebar.classList.toggle("toggled");
     });
 
     // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
