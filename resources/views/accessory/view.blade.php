@@ -79,39 +79,41 @@
                         <table id="usersTable" class="table table-striped">
                             <thead>
                             <tr>
-                                <th><small>Name</small></th>
-                                <th class="text-center"><small>Location</small></th>
-                                <th class="text-center"><small>Model</small></th>
-                                <th><small>Date</small></th>
-                                <th class="text-center"><small>Cost (Value)</small></th>
-                                <th><small>Supplier</small></th>
-                                <th class="text-center"><small>Status</small></th>
-                                <th class="text-center"><small>Warranty</small></th>
-                                <th class="text-right"><small>Options</small></th>
+                                <th class="col-4 col-md-2"><small>Item</small></th>
+                                <th class="col-1 col-md-auto text-center"><small>Location</small></th>
+                                <th class="text-center col-1 col-md-auto"><small>Tag</small></th>
+                                <th class="text-center col-5 col-md-auto"><small>Manufacturer</small></th>
+                                <th class="d-none d-xl-table-cell"><small>Date</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Cost</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Supplier</small></th>
+                                <th class="text-center col-auto d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                                <th class="col-auto text-center d-none d-md-table-cell"><small>Status</small></th>
+                                <th class="text-right col-1"><small>Options</small></th>
                             </tr>
                             </thead>
                             <tfoot>
-                            <tr>
-                                <th><small>Name</small></th>
-                                <th class="text-center"><small>Location</small></th>
-                                <th class="text-center"><small>Model</small></th>
-                                <th><small>Purchased Date</small></th>
-                                <th class="text-center"><small>Cost (Value)</small></th>
-                                <th><small>Supplier</small></th>
-                                <th class="text-center"><small>Status</small></th>
-                                <th class="text-center"><small>Warranty</small></th>
-                                <th class="text-right"><small>Options</small></th>
-                            </tr>
+                                <tr>
+                                    <th><small>Item</small></th>
+                                    <th><small>Location</small></th>
+                                    <th class="text-center"><small>Tag</small></th>
+                                    <th class="text-center"><small>Manufacturer</small></th>
+                                    <th class=" d-none d-xl-table-cell"><small>Date</small></th>
+                                    <th class="text-center d-none d-xl-table-cell"><small>Cost</small></th>
+                                    <th class="text-center d-none d-xl-table-cell"><small>Supplier</small></th>
+                                    <th class="text-center d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                                    <th class="text-center d-none d-md-table-cell"><small>Status</small></th>
+                                    <th class="text-right"><small>Options</small></th>
+                                </tr>
                             </tfoot>
                             <tbody>
                             @foreach($accessories as $accessory)
                                 <tr>
                                     <td>{{$accessory->name}}
                                         <br>
-                                        <small>{{$accessory->serial_no}}</small>
+                                        <small>{{$accessory->serial_no ?? 'N/A'}}</small>
                                     </td>
                                     <td class="text-center">
-                                        @if($accessory->location != null) {{--  ->exists() may break later--}}
+                                        @if(isset($accessory->location->photo->path) && file_exists(asset($accessory->location->photo->path)))
                                         <img src="{{ asset($accessory->location->photo->path)}}" height="30px"
                                              alt="{{$accessory->location->name}}"
                                              title="{{ $accessory->location->name ?? 'Unnassigned'}}"/>
@@ -121,21 +123,22 @@
                                         @endif
                                         @if($accessory->room != "")<br><small>Room: {{ $accessory->room }}</small>@endif
                                     </td>
+                                    <td>{{ $accessory->asset_tag}}</td>
                                     <td class="text-center">{{ $accessory->model ?? 'No Model'}}
                                         <br><small>{{$accessory->manufacturer->name ?? "N/A"}}</small></td>
-                                    <td>{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
-                                    <td class="text-center">
+                                    <td class="d-none d-xl-table-cell">{{\Carbon\Carbon::parse($accessory->purchased_date)->format("d/m/Y")}}</td>
+                                    <td class="text-center d-none d-xl-table-cell">
                                         £{{$accessory->purchased_cost}} @if($accessory->donated == 1) <span
                                             class="text-sm">*Donated</span> @endif
                                         <br>
                                         <small>(*£{{ number_format($accessory->depreciation_value(), 2)}})</small>
                                     </td>
-                                    <td>{{$accessory->supplier->name ?? 'N/A'}}</td>
-                                    <td class="text-center" style="color: {{$accessory->status->colour ?? '#666'}};">
+                                    <td class="d-none d-xl-table-cell">{{$accessory->supplier->name ?? 'N/A'}}</td>
+                                    <td class="text-center d-none d-xl-table-cell" style="color: {{$accessory->status->colour ?? '#666'}};">
                                         <i class="{{$accessory->status->icon ?? 'fas fa-circle'}}"></i> {{ $accessory->status->name ?? 'No Status' }}
                                     </td>
                                     @php $warranty_end = \Carbon\Carbon::parse($accessory->purchased_date)->addMonths($accessory->warranty);@endphp
-                                    <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
+                                    <td class="text-center d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
                                         {{ $accessory->warranty }} Months<br>
                                         @if(\Carbon\Carbon::parse($warranty_end)->isPast())
                                             <span class="text-coral">{{ 'Expired' }}</span>
@@ -143,6 +146,9 @@
                                             <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
                                                 Remaining</small>
                                         @endif
+                                    </td>
+                                    <td class="text-center d-none d-xl-table-cell" style="color: {{$accessory->status->colour ?? '#666'}};">
+                                        <i class="{{$accessory->status->icon ?? 'fas fa-circle'}}"></i> {{ $accessory->status->name ?? 'No Status' }}
                                     </td>
                                     <td class="text-right">
                                         <x-wrappers.table-settings>
