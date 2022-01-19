@@ -1,6 +1,6 @@
 function selectPhoto(id, src) {
     const profileImage = document.querySelector("#profileImage");
-    const photoId = document.querySelector("#photoId");
+    const photoId = document.querySelector("#photo_id");
 
     profileImage.src = src;
     photoId.value = id;
