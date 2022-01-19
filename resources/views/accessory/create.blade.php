@@ -52,7 +52,7 @@
                                             <div class="form-group">
                                                 <x-form.input name="name" formAttributes="required"/>
                                             </div>
-                                            <div class="form-group col-md-4">
+                                            <div class="form-group">
                                                 <x-form.select name="manufacturer_id" :models="$manufacturers"/>
                                             </div>
                                             <div class="form-group">

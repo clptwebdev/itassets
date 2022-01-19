@@ -199,11 +199,6 @@ class AccessoryController extends Controller {
             "filter" => $filter,
         ]);
     }
-//    public function filter(Request $request)
-//    {
-//        return $this->testFilter($request);
-//
-//    }
 
     public function clearFilter()
     {
@@ -259,6 +254,7 @@ class AccessoryController extends Controller {
 
         $request->validate([
             "name" => "required|max:255",
+            "asset_tag" => ['sometimes', 'nullable', new checkAssetTag($request['location_id'])],
             "model" => "nullable",
             "supplier_id" => "required",
             "location_id" => "required",
@@ -273,7 +269,7 @@ class AccessoryController extends Controller {
         ]);
 
         $accessory = Accessory::create(array_merge($request->only(
-            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id', 'user_id'
+            'name', 'asset_tag', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id', 'user_id'
         ), ['user_id' => auth()->user()->id]));
         $accessory->category()->attach($request->category);
 
