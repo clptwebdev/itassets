@@ -10,8 +10,8 @@ function selectPhoto(id, src) {
 $(document).ready(function () {
     $("form#imageUpload").submit(function (e) {
         e.preventDefault();
-        var formData = new FormData(this);
-        var urlto = "/photo/upload";
+        const formData = new FormData(this);
+        const urlto = "/photo/upload";
         $.ajaxSetup({
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -26,7 +26,7 @@ $(document).ready(function () {
             contentType: false,
             success: function (data) {
                 $("#uploadModal").modal("hide");
-                profileImage.src = route + data.path;
+                profileImage.src = `{{asset(${data.path})}}`;
                 photoId.value = data.id;
             },
         });
