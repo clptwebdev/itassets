@@ -1182,7 +1182,7 @@ class AssetController extends Controller {
         }
 
         return view('assets.bin', [
-            "assets" => $assets,
+            "assets" => $assets->paginate(25)->fragment('table'),
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),

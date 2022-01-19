@@ -3,7 +3,6 @@
 @section('title', 'Recycle Bin | Assets')
 
 @section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css" integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
@@ -177,7 +176,7 @@
 @section('js')
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
     <script>
 
         $('.deleteBtn').click(function() {
@@ -189,18 +188,6 @@
         $('#confirmBtn').click(function() {
         var form = '#'+'form'+$('#asset-id').val();
         $(form).submit();
-        });
-
-        $(document).ready( function () {
-            $('#assetsTable').DataTable({
-                "autoWidth": false,
-                "pageLength": 25,
-                "columnDefs": [ {
-                "targets": [7],
-                "orderable": false
-                    }],
-                "order": [[ 1, "asc"]],
-            });
         });
     </script>
 @endsection
