@@ -1173,7 +1173,7 @@ class AssetController extends Controller {
 
         if(auth()->user()->role_id == 1)
         {
-            $assets = Asset::onlyTrashed()->get();
+            $assets = Asset::onlyTrashed();
             $locations = Location::all();
         } else
         {
