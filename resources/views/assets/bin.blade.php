@@ -73,10 +73,10 @@
                         <tbody>
                         @foreach($assets as $asset)
                             <tr>
-                                <td>{{ $asset->name }}<br><small class="d-none d-md-inline-block">{{ $asset->model->name ?? 'No Model'}}<</small></td>
+                                <td>{{ $asset->name }}<br><small class="d-none d-md-inline-block">{{ $asset->model->name ?? 'No Model'}}</small></td>
                                 <td class="text-center" data-sort="{{ $asset->location->name ?? 'Unnassigned'}}">
                                     @if(isset($asset->location->photo->path))
-                                        '<img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>'
+                                        <img src="{{ asset($asset->location->photo->path)}}" height="30px" alt="{{$asset->location->name}}" title="{{ $asset->location->name ?? 'Unnassigned'}}"/>
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'">'
                                             .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -130,6 +130,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$assets"/>
                 </div>
             </div>
         </div>
