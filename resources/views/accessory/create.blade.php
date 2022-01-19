@@ -17,7 +17,7 @@
                 required information and click the 'Save' button. Or click the 'Back' button
                 to return the accessories page.
             </p>
-            <div class="row row-eq-height">
+            <div class="row row-eq-height no-gutters p-0 p-md-4 container m-auto"">
                 <div class="col-12 col-md-8 col-lg-9">
                     <div class="card shadow h-100">
                         <div class="card-body">
@@ -242,5 +242,9 @@
 
 @section('modals')
     <x-modals.image-modal/>
+@endsection
+
+@section('js')
+    <script type="text/javascript" src="{{ asset('js/accessories.js')}}"></script>
 @endsection
 

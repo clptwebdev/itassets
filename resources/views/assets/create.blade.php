@@ -27,7 +27,7 @@
                             <x-form.errors />
                             <x-handlers.alerts />
 
-                            
+
                             <ul id="tab-bar" class="nav nav-tabs" >
                                 <li class="nav-item" >
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
@@ -307,5 +307,5 @@
 @endsection
 
 @section('js')
-    <script type="text/javascript" src="{{ asset('js/assets.js')}}" ></script >
+    <script type="text/javascript" src="{{ asset('js/assets.js')}}"></script>
 @endsection

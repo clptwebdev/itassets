@@ -329,5 +329,6 @@ function sendData() {
 }
 
 button.addEventListener("click", function (e) {
+    console.log("button clicked");
     sendData();
 });
