@@ -74,6 +74,7 @@
                                                             alt="Select Profile Picture"
                                                             data-toggle="modal" data-target="#imgModal"
                                                             >
+                                                    <input type="hidden" id="photo_id" name="photo_id" value="0">
                                                 </div >
                                             </div>
                                         </div>
