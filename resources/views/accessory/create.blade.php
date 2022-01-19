@@ -197,7 +197,6 @@
                                      aria-labelledby="attributes-tab" >
                                     <div class="row" >
                                         <div class="col-12 p-4 mb-3" >
-
                                             <div class="form-group" >
                                                 <x-form.date name="audit_date" />
                                             </div >
