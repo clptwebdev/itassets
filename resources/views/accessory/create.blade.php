@@ -78,71 +78,69 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane fade  p-2 pt-4 " id="purchase" role="tabpanel"
-                                     aria-labelledby="purchase-tab" >
+                                < class="tab-pane fade  p-2 pt-4 " id="purchase" role="tabpanel" aria-labelledby="purchase-tab" >
                                     <div class="row" >
                                         <div class="col-12 col-md-6 p-4 mb-3" >
                                             <h3 class="h6 text-center mb-3" >Purchase Information</h3 >
-                                                <div class="form-group" >
-                                                    <x-form.input name="order_no" />
-                                                </div >
-                                                <div class="form-group" >
-                                                    <x-form.date name="purchased_date" formAttributes="required" />
-                                                </div >
-                                                <div class="form-group" >
-                                                    <x-form.input name="purchased_cost" formAttributes="required" />
-                                                    <div class="form-check mt-2 ml-1" >
-                                                        <input class="form-check-input" type="checkbox" value="1"
-                                                               name="donated" id="donated" >
-                                                        <label class="form-check-label" for="donated" >
-                                                            Donated
-                                                        </label >
-                                                    </div >
-                                                </div >
-                                                <div class="form-group position-relative" >
-                                                    <label for="findSupplier" >Supplier</label >
-                                                    <input type="hidden" id="supplier_id" name="supplier_id"
-                                                           class="form-control mb-3" readonly >
-                                                    <input class="form-control" type="text" name="find_supplier"
-                                                           id="findSupplier" value="" placeholder="Search for Supplier" >
-                                                    <div id="supplierResults"
-                                                         class="w-100 h-auto mb-5 d-block search-modal position-absolute"
-                                                         style="visibility: hidden; z-index: 2;" >
-                                                        <ul id="supplierSelect" >
-                                                            <li >Nothing to Return</li >
-                                                        </ul >
-                                                    </div >
-                                                </div >
-                                                <div class="form-group" >
-                                                    <x-form.input name="warranty" />
+                                            <div class="form-group" >
+                                                <x-form.input name="order_no" />
+                                            </div >
+                                            <div class="form-group" >
+                                                <x-form.date name="purchased_date" formAttributes="required" />
+                                            </div >
+                                            <div class="form-group" >
+                                                <x-form.input name="purchased_cost" formAttributes="required" />
+                                                <div class="form-check mt-2 ml-1" >
+                                                    <input class="form-check-input" type="checkbox" value="1"
+                                                            name="donated" id="donated" >
+                                                    <label class="form-check-label" for="donated" >
+                                                        Donated
+                                                    </label >
                                                 </div >
                                             </div >
+                                            <div class="form-group position-relative" >
+                                                <label for="findSupplier" >Supplier</label >
+                                                <input type="hidden" id="supplier_id" name="supplier_id"
+                                                        class="form-control mb-3" readonly >
+                                                <input class="form-control" type="text" name="find_supplier"
+                                                        id="findSupplier" value="" placeholder="Search for Supplier" >
+                                                <div id="supplierResults"
+                                                        class="w-100 h-auto mb-5 d-block search-modal position-absolute"
+                                                        style="visibility: hidden; z-index: 2;" >
+                                                    <ul id="supplierSelect" >
+                                                        <li >Nothing to Return</li >
+                                                    </ul >
+                                                </div >
+                                            </div >
+                                            <div class="form-group" >
+                                                <x-form.input name="warranty" />
+                                            </div >
+                                        </div >
     
-                                            <div class="col-12 col-md-6 p-4 mb-3 " >
-                                                <div id="supplierInfo" class="bg-light p-4" >
-                                                    <div class="model_title text-center h4 mb-3" >Supplier Name</div >
-                                                    <div
-                                                        class="model_image p-4 d-flex justify-content-center align-items-middle" >
-                                                        <img id="profileImage" src="{{ asset('images/svg/suppliers.svg') }}"
-                                                             height="150px"
-                                                             alt="Select Profile Picture" >
-                                                    </div >
-                                                    <div class="model_no py-2 px-4 text-center" >
-                                                        Address
-                                                    </div >
-                                                    <div class="model_no py-2 px-4 text-center" >
-                                                        Website
-                                                    </div >
-                                                    <div class="model_no py-2 px-4 text-center" >
-                                                        Email
-                                                    </div >
-                                                    <div class="model_no py-2 px-4 text-center" >
-                                                        Notes
-                                                    </div >
+                                        <div class="col-12 col-md-6 p-4 mb-3 " >
+                                            <div id="supplierInfo" class="bg-light p-4" >
+                                                <div class="model_title text-center h4 mb-3" >Supplier Name</div >
+                                                <div
+                                                    class="model_image p-4 d-flex justify-content-center align-items-middle" >
+                                                    <img id="profileImage" src="{{ asset('images/svg/suppliers.svg') }}"
+                                                            height="150px"
+                                                            alt="Select Profile Picture" >
+                                                </div >
+                                                <div class="model_no py-2 px-4 text-center" >
+                                                    Address
+                                                </div >
+                                                <div class="model_no py-2 px-4 text-center" >
+                                                    Website
+                                                </div >
+                                                <div class="model_no py-2 px-4 text-center" >
+                                                    Email
+                                                </div >
+                                                <div class="model_no py-2 px-4 text-center" >
+                                                    Notes
                                                 </div >
                                             </div >
                                         </div >
-                                    </div>
+                                    </div >
                                 </div>
 
                                 <div class="tab-pane fade p-2 pt-4" id="location" role="tabpanel"
