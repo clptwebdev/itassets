@@ -45,6 +45,7 @@
             <div class="modal-body">
                 <!-- Form -->
                 <form id="imageUpload">
+                    @csrf
                     Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
                     Select file : <input type='file' name='file' id='file' class='form-control'><br>
                     <button type='submit' class='btn btn-green' id='btn_upload'>Upload</button>

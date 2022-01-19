@@ -7,7 +7,30 @@ function selectPhoto(id, src) {
     $("#imgModal").modal("hide");
 }
 
-$(document).ready(function () {
+const imgUploadForm = document.querySelector("form#imageUpload");
+
+imgUploadForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const urlto = "/photo/upload";
+
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.onload = function () {
+        const response = xhttp.responseText;
+        if (response !== false) {
+            $("#uploadModal").modal("hide");
+            profileImage.src = `/${data.path}`;
+            photoId.value = data.id;
+        }
+    };
+
+    xhttp.open("POST", "/model/create/");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(`data=${formData}`);
+});
+
+/* $(document).ready(function () {
     $("form#imageUpload").submit(function (e) {
         e.preventDefault();
         const formData = new FormData(this);
@@ -31,4 +54,4 @@ $(document).ready(function () {
             },
         });
     });
-});
+}); */
