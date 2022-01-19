@@ -200,9 +200,6 @@
                                      aria-labelledby="attributes-tab" >
                                     <div class="row" >
                                         <div class="col-12 p-4 mb-3" >
-                                            <div class="form-group" >
-                                                <x-form.date name="audit_date" />
-                                            </div >
                                             <div id="categories" class="form-control h-auto p-4 mb-3 bg-light" >
                                                 <h4 class="h6 mb-4 text-center" >Categories</h4 >
                                                 <div class="position-relative" >
@@ -227,7 +224,7 @@
                                             <div class="form-row" >
                                                 <x-form.select name="status_id" :models="$statuses" />
                                             </div >
-                                            <div class="form-group">
+                                            <div class="form-row">
                                                 <x-form.textarea name="notes" formAttributes="rows='10'"/>
                                             </div>
                                         </div >

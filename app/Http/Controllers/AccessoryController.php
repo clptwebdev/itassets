@@ -23,6 +23,7 @@ use App\Jobs\AccessoriesPdf;
 use App\Jobs\AccessoryPdf;
 use App\Models\Report;
 use PHPUnit\Util\Test;
+use App\Rules\checkAssetTag;
 
 class AccessoryController extends Controller {
 
