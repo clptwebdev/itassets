@@ -232,7 +232,7 @@
                                                     @csrf
                                                     <input type="hidden" id="category_id" name="category"
                                                            class="form-control mb-3" readonly 
-                                                           value="{{ implode(",",$asset->category->pluck('id')->toArray())}}" >
+                                                           value="{{ implode(",",$accessory->category->pluck('id')->toArray())}}" >
                                                     <input class="form-control" type="text" name="find_category"
                                                            id="findCategory" value=""
                                                            placeholder="Search for Categories" autocomplete="off" value="{{old('find_category')}}">
