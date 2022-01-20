@@ -108,9 +108,12 @@
                             <tbody>
                             @foreach($accessories as $accessory)
                                 <tr>
-                                    <td>{{$accessory->name}}
+                                    <td>
+                                        {{$accessory->name}}
                                         <br>
+                                        @if($accessory->serial_no != 0)
                                         <small>{{$accessory->serial_no ?? 'N/A'}}</small>
+                                        @endif
                                     </td>
                                     <td class="text-center">
                                         @if(isset($accessory->location->photo->path))

@@ -56,13 +56,13 @@
                                                 <x-form.select name="manufacturer_id" :models="$manufacturers"/>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="model"/>
+                                                <x-form.input name="model" value="{{old('model')}}" />
                                             </div>
                                             <div class="form-group" >
-                                                <x-form.input name="asset_tag" />
+                                                <x-form.input name="asset_tag" value="{{old('asset_tag')}}" />
                                             </div >
                                             <div class="form-group">
-                                                <x-form.input name="serial_no" formAttributes="required"/>
+                                                <x-form.input name="serial_no" formAttributes="required" value="{{old('serial_no')}}"/>
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 " >
@@ -86,16 +86,16 @@
                                         <div class="col-12 col-md-6 p-4 mb-3" >
                                             <h3 class="h6 text-center mb-3" >Purchase Information</h3 >
                                             <div class="form-group" >
-                                                <x-form.input name="order_no" />
+                                                <x-form.input name="order_no" value="{{old('order_no')}}" />
                                             </div >
                                             <div class="form-group" >
                                                 <x-form.date name="purchased_date" formAttributes="required" />
                                             </div >
                                             <div class="form-group" >
-                                                <x-form.input name="purchased_cost" formAttributes="required" />
+                                                <x-form.input name="purchased_cost" formAttributes="required" value="{{old('purchased_cost')}}" />
                                                 <div class="form-check mt-2 ml-1" >
                                                     <input class="form-check-input" type="checkbox" value="1"
-                                                            name="donated" id="donated" >
+                                                            name="donated" id="donated" @if(old('donated') == 1) {{ 'checked'}} @endif >
                                                     <label class="form-check-label" for="donated" >
                                                         Donated
                                                     </label >
@@ -104,9 +104,9 @@
                                             <div class="form-group position-relative" >
                                                 <label for="findSupplier" >Supplier</label >
                                                 <input type="hidden" id="supplier_id" name="supplier_id"
-                                                        class="form-control mb-3" readonly >
+                                                        class="form-control mb-3" readonly value="{{old('supplier_id')}}" >
                                                 <input class="form-control" type="text" name="find_supplier"
-                                                        id="findSupplier" value="" placeholder="Search for Supplier" autocomplete="off">
+                                                        id="findSupplier" value="" value="{{old('find_supplier')}}" placeholder="Search for Supplier" autocomplete="off">
                                                 <div id="supplierResults"
                                                         class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                         style="visibility: hidden; z-index: 2;" >
@@ -116,7 +116,7 @@
                                                 </div >
                                             </div >
                                             <div class="form-group" >
-                                                <x-form.input name="warranty" />
+                                                <x-form.input name="warranty" value="{{old('warranty')}}"/>
                                             </div >
                                         </div >
     
@@ -153,9 +153,9 @@
                                             <div class="form-group position-relative" >
                                                 <label for="findLocation" >Location</label >
                                                 <input type="hidden" id="location_id" name="location_id"
-                                                       class="form-control mb-3" readonly >
+                                                       class="form-control mb-3" readonly value="{{old('location_id')}}">
                                                 <input class="form-control" type="text" name="find_location"
-                                                       id="findLocation" value="" autocomplete="off" placeholder="Search for Location">
+                                                       id="findLocation" value="" autocomplete="off" placeholder="Search for Location" value="{{old('find_location')}}">
                                                 <div id="locationResults"
                                                      class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                      style="visibility: hidden; z-index: 2;" >
@@ -205,10 +205,10 @@
                                                 <div class="position-relative" >
                                                     @csrf
                                                     <input type="hidden" id="category_id" name="category"
-                                                           class="form-control mb-3" readonly >
+                                                           class="form-control mb-3" readonly value="{{old('category')}}" >
                                                     <input class="form-control" type="text" name="find_category"
                                                            id="findCategory" value=""
-                                                           placeholder="Search for Categories" autocomplete="off">
+                                                           placeholder="Search for Categories" autocomplete="off" value="{{old('find_category')}}">
                                                     <div id="categoryResults"
                                                          class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                          style="visibility: hidden; z-index: 2;" >
@@ -225,7 +225,7 @@
                                                 <x-form.select name="status_id" :models="$statuses" />
                                             </div >
                                             <div class="form-row">
-                                                <x-form.textarea name="notes" formAttributes="rows='10'"/>
+                                                <x-form.textarea name="notes" formAttributes="rows='10'" value="{{old('notes')}}"/>
                                             </div>
                                         </div >
                                     </div >
