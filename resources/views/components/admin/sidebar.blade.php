@@ -153,6 +153,12 @@
             <span class="sidebar-title">Broadband</span></a>
     </li>
     <hr class="sidebar-divider">
+    <li class="nav-item">
+        <a class="nav-link text-left text-sm-center text-md-left" href="#">
+            <i class="fas fa-fw money-check sidebar-icon"></i>
+            <span class="sidebar-title">Orders</span></a>
+    </li>
+    <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
