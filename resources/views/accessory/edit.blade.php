@@ -113,7 +113,7 @@
                                             <div class="form-group position-relative" >
                                                 <label for="findSupplier" >Supplier</label >
                                                 <input type="hidden" id="supplier_id" name="supplier_id"
-                                                        class="form-control mb-3" readonly value="{{old('supplier_id') ?? $accsory->supplier_id}}" >
+                                                        class="form-control mb-3" readonly value="{{old('supplier_id') ?? $accessory->supplier_id}}" >
                                                 <input class="form-control" type="text" name="find_supplier"
                                                         id="findSupplier" value="" value="{{old('find_supplier') ?? $accessory->supplier->name ?? ''}}" placeholder="Search for Supplier" autocomplete="off">
                                                 <div id="supplierResults"

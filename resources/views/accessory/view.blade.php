@@ -137,9 +137,6 @@
                                         <small>(*£{{ number_format($accessory->depreciation_value(), 2)}})</small>
                                     </td>
                                     <td class="d-none d-xl-table-cell">{{$accessory->supplier->name ?? 'N/A'}}</td>
-                                    <td class="text-center d-none d-xl-table-cell" style="color: {{$accessory->status->colour ?? '#666'}};">
-                                        <i class="{{$accessory->status->icon ?? 'fas fa-circle'}}"></i> {{ $accessory->status->name ?? 'No Status' }}
-                                    </td>
                                     @php $warranty_end = \Carbon\Carbon::parse($accessory->purchased_date)->addMonths($accessory->warranty);@endphp
                                     <td class="text-center d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
                                         {{ $accessory->warranty }} Months<br>
