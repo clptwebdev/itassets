@@ -272,7 +272,7 @@ class AccessoryController extends Controller {
         $accessory = Accessory::create(array_merge($request->only(
             'name', 'asset_tag', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id', 'user_id'
         ), ['user_id' => auth()->user()->id]));
-        $accessory->category()->attach($request->category);
+        $accessory->category()->attach(explode(',', $request->category));
 
         return redirect(route("accessories.index"))->with('success_message', $request->name . 'has been successfully created!');
     }
@@ -397,6 +397,7 @@ class AccessoryController extends Controller {
 
         $request->validate([
             "name" => "required|max:255",
+            "asset_tag" => ['sometimes', 'nullable'],
             "model" => "nullable",
             "supplier_id" => "required",
             "location_id" => "required",
@@ -416,10 +417,13 @@ class AccessoryController extends Controller {
             $donated = 0;
         }
         $accessory->fill(array_merge($request->only(
-            'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+            'name', 'asset_tag', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ), ['donated' => $donated]))->save();
         session()->flash('success_message', $accessory->name . ' has been Updated successfully');
-        $accessory->category()->sync($request->category);
+        if(! empty($request->category))
+        {
+            $accessory->category()->sync(explode(',', $request->category));
+        }
 
         return redirect(route("accessories.index"));
     }

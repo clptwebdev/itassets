@@ -63,36 +63,38 @@
         <p class="mb-4">Below are the different miscellaneous stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
         <!-- DataTales Example -->
+        @if($miscellaneous->count() != 0)
         <x-filters.navigation model="Miscellanea" :filter=$filter/>
         <x-filters.filter model="Miscellanea" relations="components" :filter=$filter :locations=$locations
                           :statuses=$statuses :categories=$categories/>
+        @endif
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="usersTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th><small>Name</small></th>
-                            <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
-                            <th><small>Purchased Date</small></th>
-                            <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="text-center"><small>Status</small></th>
-                            <th class="text-center"><small>Warranty</small></th>
-                            <th class="text-right"><small>Options</small></th>
+                            <th class="col-4 col-md-2"><small>Name</small></th>
+                            <th class="col-2 col-md-1 text-center"><small>Location</small></th>
+                            <th class="text-center col-5 col-md-2 d-none d-sm-table-cell"><small>Manufacturers</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
+                            <th class="d-none d-xl-table-cell col-2"><small>Supplier</small></th>
+                            <th class="text-cente d-none d-xl-table-cell"><small>Status</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
+                            <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
                             <th><small>Name</small></th>
                             <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
-                            <th><small>Purchased Date</small></th>
-                            <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="text-center"><small>Status</small></th>
-                            <th class="text-center"><small>Warranty</small></th>
+                            <th class="text-center d-none d-sm-table-cell"><small>Manufacturers</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
                             <th class="text-right"><small>Options</small></th>
                         </tr>
                         </tfoot>
@@ -100,8 +102,10 @@
                         @foreach($miscellaneous as $miscellanea)
                             <tr>
                                 <td>{{$miscellanea->name}}
+                                    @if($miscellanea->serial_no != 0)
                                     <br>
                                     <small>{{$miscellanea->serial_no}}</small>
+                                    @endif
                                 </td>
                                 <td class="text-center">
                                     @if($miscellanea->location()->exists())
@@ -115,9 +119,9 @@
                                         @endif
                                     @endif
                                 </td>
-                                <td class="text-center">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
-                                <td data-sort="{{ strtotime($miscellanea->purchased_date)}}">{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
-                                <td class="text-center">
+                                <td class="text-center d-none d-sm-inline-block">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
+                                <td class="d-none d-xl-table-cell" data-sort="{{ strtotime($miscellanea->purchased_date)}}">{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
+                                <td class="text-center d-none d-xl-table-cell">
                                     £{{$miscellanea->purchased_cost}} @if($miscellanea->donated == 1) <span
                                         class="text-sm">*Donated</span> @endif
                                     @if($miscellanea->depreciation()->exists())
@@ -137,8 +141,8 @@
                                         <small>(*£{{ number_format($dep, 2)}})</small>
                                     @endif
                                 </td>
-                                <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
-                                <td class="text-center">{{$miscellanea->status->name ??'N/A'}}</td>
+                                <td class="d-none d-xl-table-cell">{{$miscellanea->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center d-none d-xl-table-cell">{{$miscellanea->status->name ??'N/A'}}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
                                     {{ $miscellanea->warranty }} Months<br>

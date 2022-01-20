@@ -63,14 +63,14 @@
                                                 <x-form.input name="asset_tag" value="{{old('asset_tag') ?? $accessory->asset_tag}}" />
                                             </div >
                                             <div class="form-group">
-                                                <x-form.input name="serial_no" formAttributes="required" value="{{old('serial_no') ?? $accessory->asset_tag}}"/>
+                                                <x-form.input name="serial_no" formAttributes="required" value="{{old('serial_no') ?? $accessory->serial_no}}"/>
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 " >
                                             <div id="modelInfo" class="bg-light p-4" >
-                                                <div class="model_title text-center h4 mb-3" >Asset Model</div >
+                                                <div class="model_title text-center h4 mb-3" >Accessory Image</div >
                                                 <div class="model_image p-4" >
-                                                    @if($accessory->photo()->exists())
+                                                    @if($accessory->photo()->exists() && $accessory->photo()->exists())
                                                     <img id="profileImage"
                                                             src="{{ asset($accessory->photo->path) ?? asset('images/svg/device-image.svg') }}" width="100%"
                                                             alt="Select Profile Picture"
@@ -115,7 +115,7 @@
                                                 <input type="hidden" id="supplier_id" name="supplier_id"
                                                         class="form-control mb-3" readonly value="{{old('supplier_id') ?? $accessory->supplier_id}}" >
                                                 <input class="form-control" type="text" name="find_supplier"
-                                                        id="findSupplier" value="" value="{{old('find_supplier') ?? $accessory->supplier->name ?? ''}}" placeholder="Search for Supplier" autocomplete="off">
+                                                        id="findSupplier" value="" value="{{old('find_supplier') ?? $accessory->supplier->name}}" placeholder="Search for Supplier" autocomplete="off">
                                                 <div id="supplierResults"
                                                         class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                         style="visibility: hidden; z-index: 2;" >
@@ -133,7 +133,7 @@
                                             <div id="supplierInfo" class="bg-light p-4" >
                                                 <div class="model_title text-center h4 mb-3" >Supplier Name</div >
                                                 <div class="model_image p-4 d-flex justify-content-center align-items-middle" >
-                                                    @if($accessory->supplier->photo()->exists())
+                                                    @if($accessory->supplier()->exists() && $accessory->supplier->photo()->exists())
                                                     <img id="profileImage" src="{{ asset($accessory->supplier->photo->path) }}"
                                                             height="150px"
                                                             alt="Select Profile Picture" >
@@ -145,7 +145,7 @@
                                                 </div >
                                                 <div class="model_no py-2 px-4 text-center" >
                                                     @if($accessory->supplier()->exists())
-                                                        {{$accessory->supplier->address_1 ?? 'Address'}}, {{$accessory->supplier->city}}. {{$accessory->supplier->postcode}}
+                                                        {{$accessory->supplier->address_1 ?? 'Address Line 1'}}, {{$accessory->supplier->city ?? 'City'}}. {{$accessory->supplier->postcode, 'Post Code'}}
                                                     @else
                                                     Address
                                                     @endif
@@ -192,7 +192,7 @@
                                                 <div class="model_title text-center h4 mb-3" >Location Name</div >
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle" >
-                                                    @if($accessory->location->photo()->exists())
+                                                    @if($accessory->location()->exists() && $accessory->location->photo()->exists())
                                                     <img id="profileImage"
                                                          src="{{ asset($accessory->location->photo->path) }}"
                                                          height="200px"
@@ -279,6 +279,12 @@
 
 @section('modals')
     <x-modals.image-modal/>
+@endsection
+
+
+@section('js')
+    <script type="text/javascript" src="{{ asset('js/accessories.js')}}"></script>
+    <script src="{{asset('js/photo.js')}}"></script>
 @endsection
 
 

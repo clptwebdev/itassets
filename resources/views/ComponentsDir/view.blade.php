@@ -18,7 +18,7 @@
                 <x-buttons.recycle :route="route('components.bin')" :count="\App\Models\Component::onlyTrashed()->count()"/>
             @endcan
             @can('create' , \App\Models\Component::class)
-                <x-buttons.add :route="route('components.create')">Component(s)</x-buttons.add>
+                <x-buttons.add :route="route('components.create')">Component</x-buttons.add>
             @endcan
             @can('viewAll', \App\Models\Component::class)
                 @if ($components->count() == 1)
@@ -60,10 +60,11 @@
     <section>
         <p class="mb-4">Below are the different Components stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
-
+            @if($components->count() != 0)
         <x-filters.navigation model="Component" :filter="$filter"/>
         <x-filters.filter model="Component" relations="components" :filter="$filter" :locations="$locations"
                           :statuses="$statuses" :categories="$categories"/>
+                          @endif
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -71,27 +72,27 @@
                     <table id="usersTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th><small>Name</small></th>
+                            <th class="col-4 col-xl-2"><small>Name</small></th>
                             <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
-                            <th><small>Purchased Date</small></th>
-                            <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="text-center"><small>Status</small></th>
-                            <th class="text-center"><small>Warranty</small></th>
-                            <th class="text-right"><small>Options</small></th>
+                            <th class="text-center d-none d-sm-table-cell col-5 col-xl-2"><small>Manufacturers</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
+                            <th class="d-none d-xl-table-cell col-2"><small>Supplier</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
+                            <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
                             <th><small>Name</small></th>
                             <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
-                            <th><small>Purchased Date</small></th>
-                            <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="text-center"><small>Status</small></th>
-                            <th class="text-center"><small>Warranty</small></th>
+                            <th class="text-center d-none d-sm-table-cell"><small>Manufacturers</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
                             <th class="text-right"><small>Options</small></th>
                         </tr>
                         </tfoot>
@@ -108,16 +109,16 @@
                                     @if(isset($component->location->photo->path))
                                         <img src="{{ asset($component->location->photo->path)}}" height="30px"
                                              alt="{{$component->location->name}}"
-                                             title="{{ $component->location->name ?? 'Unnassigned'}}"/>'
+                                             title="{{ $component->location->name ?? 'Unnassigned'}}"/>
                                     @else
                                         {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($component->location->icon ?? '#666').'">'
                                             .strtoupper(substr($component->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                 </td>
-                                <td class="text-center">{{$component->manufacturer->name ?? "N/A"}}</td>
-                                <td>{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
-                                <td>{{$component->purchased_cost}}</td>
-                                <td>{{$component->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center d-none d-sm-table-cell">{{$component->manufacturer->name ?? "N/A"}}</td>
+                                <td class="d-none d-xl-table-cell">{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
+                                <td class="d-none d-xl-table-cell">{{$component->purchased_cost}}</td>
+                                <td class="d-none d-xl-table-cell">{{$component->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center">{{$component->status->name ??'N/A'}}</td>
                                 @php $warranty_end = \Carbon\Carbon::parse($component->purchased_date)->addMonths($component->warranty);@endphp
                                 <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">

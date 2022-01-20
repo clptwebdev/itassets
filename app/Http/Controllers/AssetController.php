@@ -76,6 +76,7 @@ class AssetController extends Controller {
         $categories = Category::with('assets')->select('id', 'name')->get();
         $statuses = Status::select('id', 'name', 'deployable')->withCount('assets')->get();
 
+        
 
         return view('assets.view', [
             "assets" => $assets->paginate(intval($limit))->fragment('table'),
@@ -421,7 +422,7 @@ class AssetController extends Controller {
         }
         if(! empty($request->category))
         {
-            $asset->category()->sync($request->category);
+            $asset->category()->sync(explode(',', $request->category));
         }
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
@@ -1173,7 +1174,7 @@ class AssetController extends Controller {
 
         if(auth()->user()->role_id == 1)
         {
-            $assets = Asset::onlyTrashed();
+            $assets = Asset::onlyTrashed()->get();
             $locations = Location::all();
         } else
         {
@@ -1182,7 +1183,7 @@ class AssetController extends Controller {
         }
 
         return view('assets.bin', [
-            "assets" => $assets->paginate(25)->fragment('table'),
+            "assets" => $assets,
             'suppliers' => Supplier::all(),
             'statuses' => Status::all(),
             'categories' => Category::all(),

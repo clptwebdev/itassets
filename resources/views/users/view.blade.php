@@ -106,7 +106,7 @@
                                 }
                                 @endphp
                                 @foreach($locations as $location)
-                                <small data-toggle="tooltip" data-html="true" data-placement="left" title="{{ $location->name }}<br>{{ $location->address1}}" class="rounded p-1 m-1 mb-2 text-white d-inline-block pointer" style="background-color: {{$location->icon}}">{{$location->name}}</small>
+                                <small data-toggle="tooltip" data-html="true" data-placement="left" title="{{ $location->name }}<br>{{ $location->address1}}" class="rounded p-1 m-1 mb-2 text-white d-inline-block pointer" style="background-color: {{$location->icon}}">{{$location->name[0]}}</small>
                                 @endforeach
                             </td>
                             <td class="text-right">

@@ -11,6 +11,7 @@ class checkAssetTag implements Rule
 {
     //The Location Id to see if the Asset Tag Exists
     protected $location;
+    protected $asset_tag;
 
     public function __construct($location)
     {

@@ -306,3 +306,6 @@
     <x-models.create :mans="$mans" :depreciation="$depreciation" :fieldsets="$fieldsets" />
 @endsection
 
+@section('js')
+    <script type="text/javascript" src="{{ asset('js/assets.js')}}" ></script>
+@endsection

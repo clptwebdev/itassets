@@ -62,12 +62,15 @@ class ComponentController extends Controller {
         }
         $this->clearFilter();
         $filter = 0;
+        $categories = Category::with('accessories')->select('id', 'name')->get();
+        $statuses = Status::select('id', 'name', 'deployable')->withCount('accessories')->get();
+
 
         return view('ComponentsDir.view', [
             "components" => $components,
             'suppliers' => Supplier::all(),
-            'statuses' => Status::all(),
-            'categories' => Category::all(),
+            'statuses' => $statuses,
+            'categories' => $categories,
             "locations" => $locations,
             "filter" => 0,
         ]);
@@ -249,9 +252,9 @@ class ComponentController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
         $component = Component::create($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes'
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
         ));
-        $component->category()->attach($request->category);
+        $component->category()->attach(explode(',', $request->category));
 
         return redirect(route("components.index"))->with('success_message', $request->name . ' Has been successfully added!');
     }
@@ -393,9 +396,9 @@ class ComponentController extends Controller {
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             ]);
             $component->fill($request->only(
-                'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes'
+                'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
             ))->save();
-            $component->category()->sync($request->category);
+            $component->category()->sync(explode(',', $request->category));
             session()->flash('success_message', $component->name . ' has been updated successfully');
 
             return redirect(route("components.index"));
