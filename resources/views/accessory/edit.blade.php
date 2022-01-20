@@ -134,7 +134,7 @@
                                                 <div class="model_title text-center h4 mb-3" >Supplier Name</div >
                                                 <div class="model_image p-4 d-flex justify-content-center align-items-middle" >
                                                     @if($accessory->supplier->photo()->exists())
-                                                    <img id="profileImage" src="{{ asset($accesory->supplier->photo->path) }}"
+                                                    <img id="profileImage" src="{{ asset($accessory->supplier->photo->path) }}"
                                                             height="150px"
                                                             alt="Select Profile Picture" >
                                                     @else
