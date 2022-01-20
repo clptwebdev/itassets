@@ -155,7 +155,7 @@
     <hr class="sidebar-divider">
     <li class="nav-item">
         <a class="nav-link text-left text-sm-center text-md-left" href="#">
-            <i class="fas fa-fw money-check sidebar-icon"></i>
+            <i class="fas fa-fw fa-money-check sidebar-icon"></i>
             <span class="sidebar-title">Orders</span></a>
     </li>
     <hr class="sidebar-divider">
