@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Location;
+use App\Models\Property;
+use Illuminate\Http\Request;
+
+class PropertyController extends Controller
+{
+
+    public function index()
+    {
+        //Return the View All Properties
+        return view('property.view');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        if(auth()->user()->cant('create', Property::class))
+        {
+            return redirect(route('errors.forbidden', ['area', 'Property', 'create']));
+        }
+
+        if(auth()->user()->role_id == 1)
+        {
+            $locations = Location::all();
+        } else
+        {
+            $locations = auth()->user()->locations;
+        }
+
+        return view('property.create', [
+            "locations" => $locations
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        if(auth()->user()->cant('create', Property::class))
+        {
+            return redirect(route('errors.forbidden', ['area', 'Property', 'create']));
+        }
+
+        $validation = $request->validate([
+            'name' => 'required',
+            'location_id' => 'required',
+            'value' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'depreciation' => 'required|numeric',
+            'type' => 'required|gt:0'
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Property  $property
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Property $property)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Property  $property
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Property $property)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Property  $property
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Property $property)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Property  $property
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Property $property)
+    {
+        //
+    }
+}

@@ -22,7 +22,26 @@
             <i class="fas fa-fw fa-tachometer-alt sidebar-icon"></i>
             <span class="sidebar-title">Dashboard</span></a>
     </li>
-    
+    <li class="nav-item">
+        <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('property.index')}}">
+            <i class="fas fa-fw fa-school sidebar-icon"></i>
+            <span class="sidebar-title">Property</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-left text-sm-center text-md-left" href="#">
+            <i class="fas fa-fw fa-chair sidebar-icon"></i>
+            <span class="sidebar-title">FFE</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-left text-sm-center text-md-left" href="#">
+            <i class="fas fa-fw fa-tractor sidebar-icon"></i>
+            <span class="sidebar-title">Plant and Machinery</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-left text-sm-center text-md-left" href="#">
+            <i class="fas fa-fw fa-bus sidebar-icon"></i>
+            <span class="sidebar-title">Motor Vehicles</span></a>
+    </li>
     <!-- Divider -->
     
     <hr class="sidebar-divider">

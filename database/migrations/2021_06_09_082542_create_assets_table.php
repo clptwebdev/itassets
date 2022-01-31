@@ -23,7 +23,7 @@ class CreateAssetsTable extends Migration
             $table->string("serial_no")->nullable();
             $table->foreignId("status_id");
             $table->dateTime("purchased_date")->nullable();;
-            $table->string("purchased_cost")->nullable();
+            $table->decimal("purchased_cost", 11, 2)->nullable();
             $table->integer("donated")->nullable();
             $table->foreignId("supplier_id")->nullable()->default(0);
             $table->string("order_no")->nullable();

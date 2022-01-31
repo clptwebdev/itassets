@@ -148,6 +148,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get("/manufacturer/clear/filter", [\App\Http\Controllers\ManufacturerController::class, "clearFilter"])->name("manufacturer.clearfilter");
     //Permission Routes
 
+    //Property
+    Route::resource("/property", \App\Http\Controllers\PropertyController::class);
     
     //Request
     Route::post('/request/transfer', 'App\Http\Controllers\RequestsController@transfer')->name('request.transfer');
