@@ -12,7 +12,17 @@ class PropertyController extends Controller
     public function index()
     {
         //Return the View All Properties
-        return view('property.view');
+        if(auth()->user()->role_id == 1)
+        {
+            $locations = Location::all();
+        } else
+        {
+            $locations = auth()->user()->locations;
+        }
+
+        $properties = Property::locationFilter($locations->pluck('id')->toArray())->get();
+
+        return view('property.view', compact('properties', 'locations'));
     }
 
     /**
@@ -60,6 +70,21 @@ class PropertyController extends Controller
             'depreciation' => 'required|numeric',
             'type' => 'required|gt:0'
         ]);
+
+        $property = new Property;
+
+        $property->fill([
+            'name' => $request->name,
+            'location_id' => $request->location_id,
+            'value' => $request->value,
+            'depreciation' => $request->depreciation,
+            'type' => $request->type,
+            'date' => $request->date,
+        ])->save();
+
+        session()->flash('success_message', $request->name . ' has been created successfully');
+
+        return redirect(route('property.index'));
     }
 
     /**

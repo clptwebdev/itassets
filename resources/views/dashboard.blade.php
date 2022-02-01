@@ -118,6 +118,11 @@
             countupEls.forEach(animateCountUp);
         };
 
+        const currencyOptions = {
+            style: 'currency',
+            currency: 'GBP',
+        };
+
         const xhttp = new XMLHttpRequest();
 
         xhttp.onload = function () {
@@ -129,7 +134,7 @@
             const obj = JSON.parse(xhttp.responseText);
             //Asset
             assetsCount.innerHTML = obj.asset.count;
-            assetsCost.innerHTML = obj.asset.cost;
+            assetsCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.asset.cost);
             assetsDep.innerHTML = obj.asset.dep;
             //Accessory
             accessoryCount.innerHTML = obj.accessories.count;

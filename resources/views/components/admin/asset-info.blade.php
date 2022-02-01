@@ -40,7 +40,7 @@
                                 Assets</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 <small>Total: <span id="assets_count" class="countup"></span></small><br>
-                                £<span id="assets_cost" class="countup"></span><br>
+                                <span id="assets_cost" class=""></span><br>
                                 <small class="text-coral">(£<span id="assets_dep" class="countup"></span>)*</small><br>
                                 <span class="text-xs">*calculated depreciation</span>
                             </div>

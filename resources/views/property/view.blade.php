@@ -90,9 +90,47 @@
                         </tr>
                         </tfoot>
                         <tbody>
-          
-                            <td colspan="10" class="text-center">No Assets Returned</td>
-
+                            @foreach($properties as $property)
+                            <tr>
+                                <td class="text-left">{{$property->name}}</td>
+                                <td class="text-left">
+                                    @switch($property->type)
+                                        @case(1)
+                                            {{'Freehold Land'}}
+                                            @break
+                                        @case(2)
+                                            {{'Freehold Building'}}
+                                            @break
+                                        @case(3)
+                                            {{'Leasehold Land'}}
+                                            @break
+                                        @case(4)
+                                            {{'Leasehold Building'}}
+                                            @break
+                                        @default
+                                            {{'Unknown'}}
+                                    @endswitch
+                                </td>
+                                <td class="text-center">
+                                    @if($property->location()->exists())
+                                        @if($property->location->photo()->exists())
+                                            <img src="{{ asset($property->location->photo->path)}}" height="30px"
+                                                 alt="{{$property->location->name}}"
+                                                 title="{{ $property->location->name ?? 'Unnassigned'}}"/>
+                                        @else
+                                            {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($miscellanea->location->icon ?? '#666').'">'
+                                                .strtoupper(substr($property->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                        @endif
+                                    @endif
+                                </td>
+                                <td class="text-center">£{{number_format($property->value, 2, '.', ',')}}</td>
+                                <td class="text-center">{{$property->depreciation}} Years</td>
+                                <td class="text-right">Options</td>
+                            </tr>
+                            @endforeach
+                            <tr>
+                                <td colspan="6" class="text-center">No Assets Returned</td>
+                            </tr>
                         </tbody>
                     </table>{{-- 
                     <x-paginate :model="$assets"/> --}}
