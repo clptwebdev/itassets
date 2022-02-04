@@ -125,12 +125,34 @@
                                 </td>
                                 <td class="text-center">£{{number_format($property->value, 2, '.', ',')}}</td>
                                 <td class="text-center">{{$property->depreciation}} Years</td>
-                                <td class="text-right">Options</td>
+                                <td class="text-right">
+                                    <x-wrappers.table-settings>
+                                        @can('view', $property)
+                                            <x-buttons.dropdown-item :route="route('property.show', $property->id)">
+                                                View
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('update', $property)
+                                                <x-buttons.dropdown-item :route=" route('property.edit', $property->id)">
+                                                    Edit
+                                                </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('delete', $property)
+                                            <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$property->id" :action="route('property.destroy', $property->id)">
+                                                <x-buttons.dropdown-item :data="$property->id" class="deleteBtn" >
+                                                    Delete
+                                                </x-buttons.dropdown-item>
+                                            </x-form.layout>
+                                        @endcan
+                                    </x-wrappers.table-settings>
+                                </td>
                             </tr>
                             @endforeach
+                            @if($properties->count() == 0)
                             <tr>
                                 <td colspan="6" class="text-center">No Assets Returned</td>
                             </tr>
+                            @endif
                         </tbody>
                     </table>{{-- 
                     <x-paginate :model="$assets"/> --}}

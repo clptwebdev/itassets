@@ -15,7 +15,7 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
-
+    @if(auth()->user()->role_id != 0)
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
         <a class="nav-link" href="{{ route('dashboard') }}">
@@ -42,6 +42,7 @@
             <i class="fas fa-fw fa-bus sidebar-icon"></i>
             <span class="sidebar-title">Motor Vehicles</span></a>
     </li>
+    @endif
     <!-- Divider -->
     
     <hr class="sidebar-divider">

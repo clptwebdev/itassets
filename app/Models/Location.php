@@ -51,7 +51,15 @@ class Location extends Model
             ->using(LocationUser::class);
     }
 
-    public function expenditure($year){
+    public function full_address($sep){
+        $output = $this->address_1.$sep;
+        if($this->address_2 != ''){ $output .= $this->address_2.$sep; }
+        $output .= $this->city.$sep.$this->postcode;
+        return $output;
+    }
+
+    public function expenditure($year)
+    {
         $expenditure = 0;
         $assets = $this->assets()->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
         foreach($assets as $asset){
@@ -63,7 +71,8 @@ class Location extends Model
         
     }
 
-    public function donations($year){
+    public function donations($year)
+    {
         $donations = 0;
         $assets = $this->assets()->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
         foreach($assets as $asset){
@@ -75,7 +84,8 @@ class Location extends Model
         
     }
 
-    public function depreciation($y){
+    public function depreciation($y)
+    {
         $depreciation = 0;
         $year = \Carbon\Carbon::parse($y);
         $assets = $this->assets()->select('asset_model', 'donated', 'purchased_cost', 'purchased_date')->get();
@@ -97,7 +107,8 @@ class Location extends Model
         return round($depreciation); 
     }
 
-    public function depreciations(){
+    public function depreciations()
+    {
         $values = [];
         $assets = $this->assets()
                         ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')

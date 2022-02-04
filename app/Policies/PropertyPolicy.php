@@ -9,14 +9,13 @@ class PropertyPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         //
+    }
+
+    public function view(User $user){
+        return true;
     }
 
     public function viewAny(User $user){
@@ -24,6 +23,10 @@ class PropertyPolicy
     }
 
     public function create(User $user){
+        return true;
+    }
+
+    public function update(User $user){
         return true;
     }
 }

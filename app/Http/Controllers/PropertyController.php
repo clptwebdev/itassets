@@ -95,7 +95,7 @@ class PropertyController extends Controller
      */
     public function show(Property $property)
     {
-        //
+        return view('property.show', compact('property'));
     }
 
     /**
@@ -106,7 +106,7 @@ class PropertyController extends Controller
      */
     public function edit(Property $property)
     {
-        //
+        return view('property.edit', compact('property'));
     }
 
     /**

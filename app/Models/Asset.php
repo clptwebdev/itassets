@@ -55,7 +55,8 @@ class Asset extends Model {
         return $this->morphToMany(Category::class, 'cattable');
     }
 
-    public function scopeLocationFilter($query, $locations){
+    public function scopeLocationFilter($query, $locations)
+    {
         return $query->whereIn('location_id', $locations);
     }
     public function scopeAssetModelFilter($query, $assetModel){
