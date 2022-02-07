@@ -150,7 +150,9 @@ Route::group(['middleware' => 'auth'], function() {
 
     //Property
     Route::resource("/property", \App\Http\Controllers\PropertyController::class);
-    
+    Route::post('/property/filter', 'App\Http\Controllers\PropertyController@filter')->name('property.filter');
+    Route::get('/property/filter/clear', 'App\Http\Controllers\PropertyController@clearFilter')->name('property.clear.filter');
+    Route::get('/property/filter', 'App\Http\Controllers\PropertyController@filter')->name('property.filtered');
     //Request
     Route::post('/request/transfer', 'App\Http\Controllers\RequestsController@transfer')->name('request.transfer');
     Route::post('/request/dispose', 'App\Http\Controllers\RequestsController@disposal')->name('request.disposal');

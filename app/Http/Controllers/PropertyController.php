@@ -21,8 +21,9 @@ class PropertyController extends Controller
         }
 
         $properties = Property::locationFilter($locations->pluck('id')->toArray())->get();
+        $filter = 0;
 
-        return view('property.view', compact('properties', 'locations'));
+        return view('property.view', compact('properties', 'locations', 'filter'));
     }
 
     /**
