@@ -76,8 +76,6 @@ class AssetController extends Controller {
         $categories = Category::with('assets')->select('id', 'name')->get();
         $statuses = Status::select('id', 'name', 'deployable')->withCount('assets')->get();
 
-        
-
         return view('assets.view', [
             "assets" => $assets->paginate(intval($limit))->fragment('table'),
             'suppliers' => Supplier::all(),
@@ -494,8 +492,8 @@ class AssetController extends Controller {
         }
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location', 'model', 'status', 'user')->get();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new AssetExport($assets), "/public/csv/assets-ex-{$date}.csv");
-        $url = asset("storage/csv/assets-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new AssetExport($assets), "/public/csv/assets-ex-{$date}.xlsx");
+        $url = asset("storage/csv/assets-ex-{$date}.xlsx");
 
         return redirect(route('assets.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")

@@ -12,9 +12,8 @@ use App\Jobs\SuppliersPdf;
 use App\Jobs\SupplierPdf;
 use App\Models\Report;
 
-class SupplierController extends Controller
-{
-    
+class SupplierController extends Controller {
+
     public function index()
     {
         return view('suppliers.view');
@@ -35,7 +34,8 @@ class SupplierController extends Controller
         ]);
         //
         Supplier::create($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'fax', 'url', 'photo_id', 'notes'))->save();
-        session()->flash('success_message', $request->name.' has been updated successfully');
+        session()->flash('success_message', $request->name . ' has been updated successfully');
+
         return redirect(route('suppliers.index'));
     }
 
@@ -59,7 +59,8 @@ class SupplierController extends Controller
         ]);
         //
         $supplier->fill($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'fax', 'url', 'photo_id', 'notes'))->save();
-        session()->flash('success_message', $supplier->name.' has been updated successfully');
+        session()->flash('success_message', $supplier->name . ' has been updated successfully');
+
         return redirect(route('suppliers.index'));
     }
 
@@ -67,7 +68,8 @@ class SupplierController extends Controller
     {
         $name = $supplier->name;
         $supplier->delete();
-        session()->flash('danger_message', $name.' was deleted from the system');
+        session()->flash('danger_message', $name . ' was deleted from the system');
+
         return redirect(route('supplier.index'));
     }
 
@@ -75,23 +77,26 @@ class SupplierController extends Controller
     {
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new SupplierExport, "/public/csv/suppliers-ex-{$date}.csv");
-        $url = asset("storage/csv/suppliers-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new SupplierExport, "/public/csv/suppliers-ex-{$date}.xlsx");
+        $url = asset("storage/csv/suppliers-ex-{$date}.xlsx");
+
         return redirect(route('suppliers.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
-            ->withInput(); 
+            ->withInput();
     }
 
     public function downloadPDF()
     {
-        if (auth()->user()->cant('viewAny', Supplier::class)) {
+        if(auth()->user()->cant('viewAny', Supplier::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'suppliers', 'View PDF']));
         }
 
         $found = Supplier::all();
         $suppliers = array();
 
-        foreach($found as $f){
+        foreach($found as $f)
+        {
             $array = array();
             $array['name'] = $f->name;
             $array['url'] = $f->url ?? 'N/A';
@@ -102,7 +107,7 @@ class SupplierController extends Controller
             $array['city'] = $f->city ?? 'N/A';
             $array['county'] = $f->county ?? 'N/A';
             $array['postcode'] = $f->postcode ?? 'N/A';
-            $array['asset'] = $f->asset->count(); 
+            $array['asset'] = $f->asset->count();
             $array['accessory'] = $f->accessory->count() ?? 'N/A';
             $array['component'] = $f->component->count() ?? 'N/A';
             $array['consumable'] = $f->consumable->count() ?? 'N/A';
@@ -111,15 +116,15 @@ class SupplierController extends Controller
         }
 
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = 'suppliers-'.$date;
+        $path = 'suppliers-' . $date;
 
         dispatch(new SuppliersPdf($suppliers, $user, $path))->afterResponse();
         //Create Report
-        
+
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
         return redirect(route('suppliers.index'))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
@@ -129,43 +134,51 @@ class SupplierController extends Controller
 
     public function downloadShowPDF(Supplier $supplier)
     {
-        if (auth()->user()->cant('viewAny', Supplier::class)) {
+        if(auth()->user()->cant('viewAny', Supplier::class))
+        {
             return redirect(route('errors.forbidden', ['suppliers', $supplier->id, 'View PDF']));
         }
-        
+
         $user = auth()->user();
-        
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = str_replace(' ', '-', $supplier->name).'-'.$date;
+        $path = str_replace(' ', '-', $supplier->name) . '-' . $date;
 
         dispatch(new supplierPdf($supplier, $user, $path))->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
         return redirect(route('suppliers.show', $supplier->id))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
         $suppliers = Supplier::where('name', 'LIKE', '%' . $request->search . "%")->take(3)->get()->unique('name');
         $output = "<ul id='supplierSelect' class='list-group'>";
-        foreach($suppliers as $supplier){
-            $output .=" <li class='list-group-item d-flex justify-content-between align-items-center pointer' data-id='".$supplier->id."' data-name='".$supplier->name."'>
+        foreach($suppliers as $supplier)
+        {
+            $output .= " <li class='list-group-item d-flex justify-content-between align-items-center pointer' data-id='" . $supplier->id . "' data-name='" . $supplier->name . "'>
                             {$supplier->name}
                             <span class='badge badge-primary badge-pill'>1</span>
                         </li>";
         }
         $output .= "</ul>";
+
         return Response($output);
     }
 
-    public function preview(Request $request){
-        if($supplier = Supplier::find($request->id)){
-            if($supplier->photo()->exists() && $src = asset($supplier->photo->path)){
-                 
-            }else{
+    public function preview(Request $request)
+    {
+        if($supplier = Supplier::find($request->id))
+        {
+            if($supplier->photo()->exists() && $src = asset($supplier->photo->path))
+            {
+
+            } else
+            {
                 $src = asset('images/svg/suppliers.svg');
             }
             $output = " <div class='model_title text-center h4 mb-3'>{$supplier->name}</div>
@@ -173,12 +186,13 @@ class SupplierController extends Controller
                             <img id='profileImage' src='{$src}' height='150px'
                                 alt='Select Profile Picture'>
                         </div>";
-            if($supplier->address_1 != ''){
+            if($supplier->address_1 != '')
+            {
                 $output .= "<div class='model_no py-2 px-4 text-center'>
                             Address: {$supplier->address_1}, {$supplier->city}, {$supplier->postcode}
                         </div>";
             }
-                        
+
             $output .= "<div class='model_no py-2 px-4 text-center'>
                             Website: {$supplier->url}
                         </div>
@@ -188,6 +202,7 @@ class SupplierController extends Controller
                         <div class='model_no py-2 px-4 text-center'>
                             {$supplier->notes}
                         </div>";
+
             return $output;
         }
     }
