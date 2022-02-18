@@ -9,10 +9,10 @@
     </div>
     <div class="card-body">
         <form action="{{ route($route.'.filter')}}" method="POST">
-
+            <?php $count = $relations."_count";?>
             <div id="accordion" class="mb-4">
                 @csrf
-                @if(isset($statuses))
+                @if(isset($statuses) && $statuses != NULL)
                 <div class="option">
                     <div class="option-header pointer collapsed" id="statusHeader" data-toggle="collapse"
                          data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader">
@@ -22,7 +22,7 @@
                     <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader"
                          data-parent="#accordion">
                         <div class="option-body">
-                            <?php $count = $relations."_count";?>
+                            
                             @foreach($statuses as $status)
                                 @if($status->$count != 0 )
                                 <div class="form-check">
@@ -30,7 +30,7 @@
                                            for="{{'status'.$status->id}}">{{ $status->name }}  ({{$status->$count}})</label>
                                     <input class="form-check-input" type="checkbox" name="status[]"
                                            value="{{ $status->id}}" id="{{'status'.$status->id}}"
-                                           @if(session()->has('status') && in_array($status->id, session('status'))) {{ 'checked'}} @endif>
+                                           @if(session()->has($relations.'_status') && in_array($status->id, session($relations.'_status'))) {{ 'checked'}} @endif>
                                 </div>
                                 @endif
                             @endforeach
@@ -39,7 +39,7 @@
                 </div>
                 @endif
 
-                @if(isset($categories))
+                @if(isset($categories) && $categories != NULL)
                 <div class="option">
                     <div class="option-header collapsed pointer" id="categoryHeader" data-toggle="collapse"
                          data-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryHeader">
@@ -50,13 +50,13 @@
                          data-parent="#accordion">
                         <div class="option-body">
                             @foreach($categories as $category)
-                                @if($category->${"relations"}->count() != 0)
+                                @if($category->$count != 0)
                                 <div class="form-check">
                                     <label class="form-check-label mr-4"
                                            for="{{'category'.$category->id}}">{{ $category->name }} ({{$category->${"relations"}->count()}})</label>
                                     <input class="form-check-input" type="checkbox" name="category[]"
                                            value="{{ $category->id}}" id="{{'category'.$category->id}}"
-                                           @if(session()->has('category') && in_array($category->id, session('category'))) {{ 'checked'}} @endif>
+                                           @if(session()->has($relations.'_category') && in_array($category->id, session($relations.'_category'))) {{ 'checked'}} @endif>
                                 </div>
                                 @endif
                             @endforeach
@@ -76,16 +76,14 @@
                          data-parent="#accordion">
                         <div class="option-body">
                             @foreach($locations as $location)
-                                @if(is_countable($status->${"relations"}))
                                 @if($location->$count != 0)
-                            <div class="form-check">
-                                <label class="form-check-label mr-4"
-                                        for="{{'location'.$location->id}}">{{ $location->name }} ({{$location->$count}})</label>
-                                <input class="form-check-input" type="checkbox" name="locations[]"
-                                        value="{{ $location->id}}" id="{{'location'.$location->id}}"
-                                        @if(session()->has('locations') && in_array($location->id, session('locations'))) {{ 'checked'}} @endif>
-                            </div>
-                            @endif
+                                <div class="form-check">
+                                    <label class="form-check-label mr-4"
+                                            for="{{'location'.$location->id}}">{{ $location->name }} ({{$location->$count}})</label>
+                                    <input class="form-check-input" type="checkbox" name="locations[]"
+                                            value="{{ $location->id}}" id="{{'location'.$location->id}}"
+                                            @if(session()->has($relations.'_locations') && in_array($location->id, session($relations.'_locations'))) {{ 'checked'}} @endif>
+                                </div>
                             @endif
                             @endforeach
                         </div>
@@ -97,7 +95,7 @@
                     <div class="option-header collapsed pointer" id="purchasedDateHeader" data-toggle="collapse"
                          data-target="#purchasedDateCollapse" aria-expanded="true"
                          aria-controls="purchasedDateHeader">
-                        <small>Purchased Date</small>
+                        <small>Date</small>
                     </div>
 
                     <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader"
@@ -107,7 +105,7 @@
                                 <label for="start" class="p-0 m-0 mb-1"><small>Start</small></label>
                                 <input class="form-control" type="date" name="start"
                                         @if(session()->has('start'))
-                                        @php $start = \Carbon\Carbon::parse(session('start'))->format('Y-m-d')
+                                        @php $start = \Carbon\Carbon::parse(session($relations.'_start'))->format('Y-m-d')
                                         @endphp
                                         value="{{ $start }}"
                                         @endif
@@ -117,7 +115,7 @@
                                 <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
                                 <input class="form-control" type="date" name="end"
                                         @if(session()->has('end'))
-                                        @php $end = \Carbon\Carbon::parse(session('end'))->format('Y-m-d')
+                                        @php $end = \Carbon\Carbon::parse(session($relations.'_end'))->format('Y-m-d')
                                         @endphp
                                         value="{{ $end }}"
                                         @endif
@@ -131,7 +129,7 @@
                 <div class="option">
                     <div class="option-header collapsed pointer" id="costHeader" data-toggle="collapse"
                          data-target="#costCollapse" aria-expanded="true" aria-controls="costHeader">
-                        <small>Purchased Cost</small>
+                        <small>Cost/Value</small>
                     </div>
 
                     <div id="costCollapse" class="collapse" aria-labelledby="costHeader"
@@ -147,6 +145,7 @@
                     </div>
                 </div>
 
+                @if(Schema::hasColumn("{$table}",'audit_date'))
                 <div class="option">
                     <div class="option-header pointer collapsed" id="auditDateHeader" data-toggle="collapse"
                          data-target="#auditDateCollapse" aria-expanded="true" aria-controls="auditDateHeader">
@@ -157,16 +156,17 @@
                         <div class="option-body">
                             <div class="form-row">
                                 <select name="audit" class="form-control">
-                                    <option value="0" @if(session()->has('audit') && session('audit') == 0) {{ 'selected'}} @endif>All</option>
-                                    <option value="1" @if(session()->has('audit') && session('audit') == 1) {{ 'selected'}} @endif>Overdue Audits</option>
-                                    <option value="2" @if(session()->has('audit') && session('audit') == 2) {{ 'selected'}} @endif>In next 30 days</option>
-                                    <option value="3" @if(session()->has('audit') && session('audit') == 3) {{ 'selected'}} @endif>In next 3 months</option>
-                                    <option value="4" @if(session()->has('audit') && session('audit') == 4) {{ 'selected'}} @endif>In next 6 months</option>
+                                    <option value="0" @if(session()->has($relations.'_audit') && session($relations.'_audit') == 0) {{ 'selected'}} @endif>All</option>
+                                    <option value="1" @if(session()->has($relations.'_audit') && session($relations.'_audit') == 1) {{ 'selected'}} @endif>Overdue Audits</option>
+                                    <option value="2" @if(session()->has($relations.'_audit') && session($relations.'_audit') == 2) {{ 'selected'}} @endif>In next 30 days</option>
+                                    <option value="3" @if(session()->has($relations.'_audit') && session($relations.'_audit') == 3) {{ 'selected'}} @endif>In next 3 months</option>
+                                    <option value="4" @if(session()->has($relations.'_audit') && session($relations.'_audit') == 4) {{ 'selected'}} @endif>In next 6 months</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
+                @endif
 
             </div>
             <button type="submit" class="btn btn-green text-right">Apply Filter</button>

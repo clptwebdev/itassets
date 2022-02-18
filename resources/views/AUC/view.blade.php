@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'View Property')
+@section('title', 'View Assets Under Construction')
 
 @section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
           integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
@@ -13,12 +12,12 @@
 @endsection
 
 @section('content')
-    <x-wrappers.nav title="Property">
-        @can('recycleBin', \App\Models\Property::class)
-            <x-buttons.recycle :route="route('property.bin')" :count="\App\Models\Property::onlyTrashed()->count()"/>
+    <x-wrappers.nav title="Assets Under Construction">
+        @can('recycleBin', \App\Models\AUC::class)
+            <x-buttons.recycle :route="route('auc.bin')" :count="\App\Models\AUC::onlyTrashed()->count()"/>
         @endcan
-        @can('create' , \App\Models\Property::class)
-            <x-buttons.add :route="route('properties.create')">Property</x-buttons.add>
+        @can('create' , \App\Models\AUC::class)
+            <x-buttons.add :route="route('aucs.create')">Asset Under Construction</x-buttons.add>
         @endcan
            {{--
         @can('generatePDF', \App\Models\Asset::class)
@@ -61,20 +60,20 @@
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
-        <p class="mt-5 mb-4">Below are the Properties belonging to the Central Learning Partnership Trust. You require access to see
-            the property assigned to the different locations. If you think you have the incorrect permissions, please contact apollo@clpt.co.uk
+        <p class="mt-5 mb-4">Below are the Asset that are currently under construction within the Central Learning Partnership Trust. You require access to see
+            the assets assigned to the different locations. If you think you have the incorrect permissions, please contact apollo@clpt.co.uk
         </p>
 
         @php
         if(auth()->user()->role_id == 1){
-            $limit = \App\Models\Property::orderByRaw('CAST(value as DECIMAL(11,2)) DESC')->pluck('value')->first();
-            $floor = \App\Models\Property::orderByRaw('CAST(value as DECIMAL(11,2)) ASC')->pluck('value')->first();
+            $limit = \App\Models\AUC::orderByRaw('CAST(value as DECIMAL(11,2)) DESC')->pluck('value')->first();
+            $floor = \App\Models\AUC::orderByRaw('CAST(value as DECIMAL(11,2)) ASC')->pluck('value')->first();
         }else{
             $limit = auth()->user()->location_property()->orderBy('value', 'desc')->pluck('value')->first();
             $floor = auth()->user()->location_property()->orderBy('value', 'asc')->pluck('value')->first();
         }
-        if(session()->has('property_amount')){
-            $amount = str_replace('£', '', session('property_amount'));
+        if(session()->has('auc_amount')){
+            $amount = str_replace('£', '', session('auc_amount'));
             $amount = explode(' - ', $amount);
             $start_value = intval($amount[0]);
             $end_value = intval($amount[1]);
@@ -84,8 +83,8 @@
         }
         @endphp
 
-        <x-filters.navigation model="Property" relations="property" table="properties" />
-        <x-filters.filter model="Property" relations="property" table="properties" :locations="$locations"/>
+        <x-filters.navigation model="AUC" relations="auc" table="a_u_c_s" />
+        <x-filters.filter  model="AUC" relations="auc" table="a_u_c_s" :locations="$locations"/>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -95,7 +94,7 @@
                         <thead>
                         <tr>
                             <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-3 col-md-2"><small>Type</small></th>
+                            <th><small>Type</small></th>
                             <th class="col-1 col-md-auto text-center"><small>Location</small></th>
                             <th class="text-center col-1 col-md-auto"><small>Value</small></th>
                             <th class="text-center col-2 col-md-auto"><small>Date</small></th>
@@ -119,11 +118,11 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                            @foreach($properties as $property)
+                            @foreach($aucs as $auc)
                             <tr>
-                                <td class="text-left">{{$property->name}}</td>
+                                <td class="text-left">{{$auc->name}}</td>
                                 <td class="text-left">
-                                    @switch($property->type)
+                                    {{-- @switch($auc->type)
                                         @case(1)
                                             {{'Freehold Land'}}
                                             @break
@@ -138,41 +137,41 @@
                                             @break
                                         @default
                                             {{'Unknown'}}
-                                    @endswitch
+                                    @endswitch --}}
                                 </td>
                                 <td class="text-center">
-                                    @if($property->location()->exists())
-                                        @if($property->location->photo()->exists())
-                                            <img src="{{ asset($property->location->photo->path)}}" height="30px"
-                                                 alt="{{$property->location->name}}"
-                                                 title="{{ $property->location->name ?? 'Unnassigned'}}"/>
+                                    @if($auc->location()->exists())
+                                        @if($auc->location->photo()->exists())
+                                            <img src="{{ asset($auc->location->photo->path)}}" height="30px"
+                                                 alt="{{$auc->location->name}}"
+                                                 title="{{ $auc->location->name ?? 'Unnassigned'}}"/>
                                         @else
                                             {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($miscellanea->location->icon ?? '#666').'">'
-                                                .strtoupper(substr($property->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                                .strtoupper(substr($auc->location->name ?? 'u', 0, 1)).'</span>' !!}
                                         @endif
                                     @endif
                                 </td>
-                                <td class="text-center">£{{number_format($property->value, 2, '.', ',')}}</td>
-                                <td class="text-center">{{\Carbon\Carbon::parse($property->date)->format('jS M Y')}}</td>
-                                <td class="text-center">£{{number_format($property->depreciation_value(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
-                                <td class="text-center">{{$property->depreciation}} Years</td>
-                                <td class="text-center">{{$property->depreciation}} Years</td>
+                                <td class="text-center">£{{number_format($auc->value, 2, '.', ',')}}</td>
+                                <td class="text-center">{{\Carbon\Carbon::parse($auc->date)->format('jS M Y')}}</td>
+                                <td class="text-center">£{{number_format($auc->depreciation_value(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
+                                <td class="text-center">{{$auc->depreciation}} Years</td>
+                                <td class="text-center">{{$auc->depreciation}} Years</td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
-                                        @can('view', $property)
-                                            <x-buttons.dropdown-item :route="route('properties.show', $property->id)">
+                                        @can('view', $auc)
+                                            <x-buttons.dropdown-item :route="route('aucs.show', $auc->id)">
                                                 View
                                             </x-buttons.dropdown-item>
                                         @endcan
-                                        @can('update', $property)
-                                                <x-buttons.dropdown-item :route=" route('properties.edit', $property->id)">
+                                        @can('update', $auc)
+                                                <x-buttons.dropdown-item :route=" route('aucs.edit', $auc->id)">
                                                     Edit
                                                 </x-buttons.dropdown-item>
                                         @endcan
                                       
-                                        @can('delete', $property)
-                                            <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$property->id" :action="route('properties.destroy', $property->id)">
-                                                <x-buttons.dropdown-item :data="$property->id" class="deleteBtn" >
+                                        @can('delete', $auc)
+                                            <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$auc->id" :action="route('aucs.destroy', $auc->id)">
+                                                <x-buttons.dropdown-item :data="$auc->id" class="deleteBtn" >
                                                     Delete
                                                 </x-buttons.dropdown-item>
                                             </x-form.layout>
@@ -181,14 +180,14 @@
                                 </td>
                             </tr>
                             @endforeach
-                            @if($properties->count() == 0)
+                            @if($aucs->count() == 0)
                             <tr>
-                                <td colspan="6" class="text-center">No Assets Returned</td>
+                                <td colspan="9" class="text-center">No Assets Under Construction Returned</td>
                             </tr>
                             @endif
                         </tbody>
                     </table>
-                    <x-paginate :model="$properties"/>
+                    <x-paginate :model="$aucs"/>
                 </div>
             </div>
         </div>

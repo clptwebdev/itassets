@@ -71,7 +71,8 @@ class AssetController extends Controller {
             $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('assets')->get();
         }
         $this->clearFilter();
-        $limit = session('limit') ?? 25;
+        session(['assets_filter' => false]);
+        $limit = session('assets_limit') ?? 25;
 
         $categories = Category::with('assets')->select('id', 'name')->get();
         $statuses = Status::select('id', 'name', 'deployable')->withCount('assets')->get();
@@ -84,7 +85,6 @@ class AssetController extends Controller {
             'statuses' => $statuses,
             'categories' => $categories,
             "locations" => $locations,
-            "filter" => 0,
         ]);
     }
 
@@ -442,7 +442,7 @@ class AssetController extends Controller {
         $asset->delete();
         session()->flash('danger_message', "#" . $name . ' was sent to the Recycle Bin');
 
-        return redirect("/assets");
+        return redirect(route('assets.index'));
     }
 
     public function restore($id)
@@ -885,133 +885,131 @@ class AssetController extends Controller {
 
             if(! empty($request->search))
             {
-                session(['search' => $request->search]);
+                session(['assets_search' => $request->search]);
             }
 
             if(! empty($request->limit))
             {
-                session(['limit' => $request->limit]);
+                session(['assets_limit' => $request->limit]);
             }
 
             if(! empty($request->orderby))
             {
                 $array = explode(' ', $request->orderby);
 
-                session(['orderby' => $array[0]]);
-                session(['direction' => $array[1]]);
+                session(['assets_orderby' => $array[0]]);
+                session(['assets_direction' => $array[1]]);
 
             }
 
             if(! empty($request->locations))
             {
-                session(['locations' => $request->locations]);
+                session(['assets_locations' => $request->locations]);
             }
 
             if(! empty($request->status))
             {
-                session(['status' => $request->status]);
+                session(['assets_status' => $request->status]);
             }
 
             if(! empty($request->category))
             {
-                session(['category' => $request->category]);
+                session(['assets_category' => $request->category]);
             }
 
             if($request->start != '' && $request->end != '')
             {
-                session(['start' => $request->start]);
-                session(['end' => $request->end]);
+                session(['assets_start' => $request->start]);
+                session(['assets_end' => $request->end]);
             }
 
             if($request->audit != 0)
             {
-                session(['audit' => $request->audit]);
+                session(['assets_audit' => $request->audit]);
             }
 
             if($request->warranty != 0)
             {
-                session(['warranty' => $request->warranty]);
+                session(['assets_warranty' => $request->warranty]);
             }
 
-            session(['amount' => $request->amount]);
+            session(['assets_amount' => $request->amount]);
         }
 
         if(auth()->user()->role_id != 1)
         {
             $locations = auth()->user()->locations->pluck('id');
-            $locs = auth()->user()->locations;
+            $locs = auth()->user()->locations()->withCount('assets')->get();
 
         } else
         {
             $locations = \App\Models\Location::all()->pluck('id');
-            $locs = \App\Models\Location::all();
+            $locs = \App\Models\Location::withCount('assets')->get();
         }
 
-        $filter = 0;
         $assets = Asset::locationFilter($locations);
-        if(session()->has('locations'))
+        if(session()->has('assets_locations'))
         {
-            $assets->locationFilter(session('locations'));
-            $filter++;
+            $assets->locationFilter(session('assets_locations'));
+            session(['assets_filter' => true]);
         }
-        if(session()->has('status'))
+        if(session()->has('assets_status'))
         {
-            $assets->statusFilter(session('status'));
-            $filter++;
+            $assets->statusFilter(session('assets_status'));
+            session(['assets_filter' => true]);
         }
-        if(session()->has('category'))
+        if(session()->has('assets_category'))
         {
-            $assets->categoryFilter(session('category'));
-            $filter++;
+            $assets->categoryFilter(session('assets_category'));
+            session(['assets_filter' => true]);
         }
-        if(session()->has('start') && session()->has('end'))
+        if(session()->has('assets_start') && session()->has('assets_end'))
         {
-            $assets->purchaseFilter(session('start'), session('end'));
-            $filter++;
+            $assets->purchaseFilter(session('assets_start'), session('assets_end'));
+            session(['assets_filter' => true]);
         }
-        if(session()->has('audit') && session('audit') != 0)
+        if(session()->has('assets_audit') && session('assets_audit') != 0)
         {
-            $assets->auditFilter(session('audit'));
-            $filter++;
+            $assets->auditFilter(session('assets_audit'));
+            session(['assets_filter' => true]);
         }
-        if(session()->has('warranty'))
+        if(session()->has('assets_warranty'))
         {
-            $assets->warrantyFilter(session('warranty'));
-            $filter++;
+            $assets->warrantyFilter(session('assets_warranty'));
+            session(['assets_filter' => true]);
         }
-        if(session()->has('amount'))
+        if(session()->has('assets_amount'))
         {
-            $assets->costFilter(session('amount'));
-            $filter++;
+            $assets->costFilter(session('assets_amount'));
+            session(['assets_filter' => true]);
         }
 
-        if(session()->has('search'))
+        if(session()->has('assets_search'))
         {
-            $assets->searchFilter(session('search'));
-            $filter++;
+            $assets->searchFilter(session('assets_search'));
+            session(['assets_filter' => true]);
         }
 
         $assets->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
             ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
             ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
-            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->orderBy(session('assets_orderby') ?? 'purchased_date', session('assets_direction') ?? 'asc')
             ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
-        $limit = session('limit') ?? 25;
+        $limit = session('assets_limit') ?? 25;
 
         return view('assets.view', [
             "assets" => $assets->paginate(intval($limit))->withPath(asset('/asset/filter'))->fragment('table'),
-            'suppliers' => Supplier::all(),
-            'statuses' => Status::all(),
-            'categories' => Category::all(),
+            'suppliers' => Supplier::withCount('assets')->get(),
+            'statuses' => Status::withCount('assets')->get(),
+            'categories' => Category::withCount('assets')->get(),
             "locations" => $locs,
-            "filter" => $filter,
         ]);
     }
 
     public function clearFilter()
     {
-        session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
+        session()->forget(['assets_locations', 'assets_status', 'assets_category', 'assets_start', 'assets_end', 'assets_audit', 'assets_warranty', 'assets_amount', 'assets_search']);
 
         return redirect(route('assets.index'));
     }
@@ -1172,13 +1170,15 @@ class AssetController extends Controller {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'Recycle Bin']));
         }
 
+        $limit = session('assets_limit') ?? 25;
+
         if(auth()->user()->role_id == 1)
         {
-            $assets = Asset::onlyTrashed()->get();
+            $assets = Asset::onlyTrashed()->paginate(intval($limit))->fragment('table');
             $locations = Location::all();
         } else
         {
-            $assets = auth()->user()->location_assets()->onlyTrashed();
+            $assets = auth()->user()->location_assets()->onlyTrashed()->paginate(intval($limit))->fragment('table');
             $locations = auth()->user()->locations;
         }
 

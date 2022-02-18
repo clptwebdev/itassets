@@ -16,7 +16,7 @@ class Supplier extends Model
         return $this->belongsTo(Photo::class);
     }
 
-    public function asset(){
+    public function assets(){
         return $this->hasMany(Asset::class);
 
     }

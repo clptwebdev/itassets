@@ -81,8 +81,14 @@
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
                         different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
-        <x-filters.navigation model="Asset" :filter="$filter"/>
-        <x-filters.filter model="Asset" relations="assets" :filter="$filter" :locations="$locations"
+        {{-- 
+            vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            model = the Model Name
+            relations = Relationship Name e.g $model->relationship or $asset->categories    
+            table = RAW table name to check if the Schema has the column heading
+        --}}
+        <x-filters.navigation model="Asset" relations="assets" table="assets"  />
+        <x-filters.filter model="Asset" relations="assets" table="assets"  :locations="$locations"
                           :statuses="$statuses" :categories="$categories"/>
         
         <div class="card shadow mb-4">

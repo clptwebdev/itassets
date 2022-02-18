@@ -1,93 +1,38 @@
 @extends('layouts.app')
 
-@section('title', 'View Property')
+@section('title', 'Recycle Bin | Property')
 
 @section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
-          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
-          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  
 @endsection
 
 @section('content')
-    <x-wrappers.nav title="Property">
-        @can('recycleBin', \App\Models\Property::class)
-            <x-buttons.recycle :route="route('property.bin')" :count="\App\Models\Property::onlyTrashed()->count()"/>
-        @endcan
-        @can('create' , \App\Models\Property::class)
-            <x-buttons.add :route="route('properties.create')">Property</x-buttons.add>
-        @endcan
-           {{--
-        @can('generatePDF', \App\Models\Asset::class)
-            @if ($assets->count() == 1)
-                <x-buttons.reports :route="route('asset.showPdf', $assets[0]->id)"/>
-            @else
+
+    <x-wrappers.nav title="Property | Recycle Bin">
+        <x-buttons.return :route="route('properties.index')" > Assets</x-buttons.return >
+       {{--  @can('generatePDF', \App\Models\Asset::class)
+            @if($assets->count() >1)
                 <x-form.layout class="d-inline-block" :action="route('assets.pdf')">
                     <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
-                                  :value="json_encode($assets->pluck('id'))"/>
+                                    :value="json_encode($assets->pluck('id'))"/>
                     <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
-            @if($assets->count() >1)
-                <x-form.layout class="d-inline-block" action="/exportassets">
-                    <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
-                                  :value="json_encode($assets->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
-                </x-form.layout>
-            @endif
-            <div class="dropdown show d-inline">
-                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Bulk Options
-                </a>
-                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                    @can('create', \App\Models\Asset::class)
-                        <x-buttons.dropdown-item id="import">
-                            Import
-                        </x-buttons.dropdown-item>
-                    @endcan
-                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">
-                        Dispose
-                    </x-buttons.dropdown-item>
-                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkTransferModal'">
-                        Transfer
-                    </x-buttons.dropdown-item>
-                </div>
-            </div>
-        @endcan --}}
+        @endcan  --}}
+        <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
+               class="btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
+                    class="fas fa-question fa-sm text-dark-50 mr-lg-1" ></i ><span class="d-none d-lg-inline-block">Help</span></a >
+                  
     </x-wrappers.nav>
+
     <x-handlers.alerts/>
     <section>
-        <p class="mt-5 mb-4">Below are the Properties belonging to the Central Learning Partnership Trust. You require access to see
-            the property assigned to the different locations. If you think you have the incorrect permissions, please contact apollo@clpt.co.uk
-        </p>
-
-        @php
-        if(auth()->user()->role_id == 1){
-            $limit = \App\Models\Property::orderByRaw('CAST(value as DECIMAL(11,2)) DESC')->pluck('value')->first();
-            $floor = \App\Models\Property::orderByRaw('CAST(value as DECIMAL(11,2)) ASC')->pluck('value')->first();
-        }else{
-            $limit = auth()->user()->location_property()->orderBy('value', 'desc')->pluck('value')->first();
-            $floor = auth()->user()->location_property()->orderBy('value', 'asc')->pluck('value')->first();
-        }
-        if(session()->has('property_amount')){
-            $amount = str_replace('£', '', session('property_amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
-        }else{
-            $start_value = $floor;
-            $end_value = $limit;
-        }
-        @endphp
-
-        <x-filters.navigation model="Property" relations="property" table="properties" />
-        <x-filters.filter model="Property" relations="property" table="properties" :locations="$locations"/>
-
+        <p class="mb-4">Below are properties that have been added to the Recycle Bin, please be aware that the recycle bin is differnet to the archive. Anything placed within the 
+            recycle bin does not get caculated with the applications statistics including valuations, costs and depreciation. INstead this is the area where the mistakes or items
+        that should be removed from all records</p>
         <!-- DataTales Example -->
+
+
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive" id="table">
@@ -159,19 +104,13 @@
                                 <td class="text-center">{{$property->depreciation}} Years</td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
-                                        @can('view', $property)
-                                            <x-buttons.dropdown-item :route="route('properties.show', $property->id)">
-                                                View
+                                        @can('delete', $property)
+                                            <x-buttons.dropdown-item :route="route('property.restore', $property->id)">
+                                                Restore
                                             </x-buttons.dropdown-item>
                                         @endcan
-                                        @can('update', $property)
-                                                <x-buttons.dropdown-item :route=" route('properties.edit', $property->id)">
-                                                    Edit
-                                                </x-buttons.dropdown-item>
-                                        @endcan
-                                      
                                         @can('delete', $property)
-                                            <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$property->id" :action="route('properties.destroy', $property->id)">
+                                            <x-form.layout method="POST" class="d-block p-0 m-0" :id="'form'.$property->id" :action="route('property.remove', $property->id)">
                                                 <x-buttons.dropdown-item :data="$property->id" class="deleteBtn" >
                                                     Delete
                                                 </x-buttons.dropdown-item>
@@ -183,7 +122,7 @@
                             @endforeach
                             @if($properties->count() == 0)
                             <tr>
-                                <td colspan="6" class="text-center">No Assets Returned</td>
+                                <td colspan="9" class="text-center">The Recycle Bin is empty</td>
                             </tr>
                             @endif
                         </tbody>
@@ -196,38 +135,43 @@
         {{-- <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Assets</h4>
-                <p>Click <a href="{{route("documentation.index").'#collapseThreeAssets'}}">here</a> for the
-                   Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
+                <p>This area can be minimised and will contain a little help on the page that the user is currently
+                    on.</p>
             </div>
         </div> --}}
 
     </section>
 @endsection
+
 @section('modals')
-
-<x-modals.delete/>
-
+    <x-modals.permanentDelete model="property" />
 @endsection
 
 @section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{asset('js/filter.js')}}"></script>
-<script src="{{asset('js/delete.js')}}"></script>
     <script>
-        $(function () {
-            $("#slider-range").slider({
-                range: true,
-                min: {{ floor($floor)}},
-                max: {{ round($limit)}},
-                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
-                slide: function (event, ui) {
-                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
-                }
+
+        const deleteBtn = document.querySelectorAll('.deleteBtn');
+        const deleteModal = new bootstrap.Modal(document.getElementById('permDeleteModal'));
+
+        deleteBtn.forEach((item) => {
+            item.addEventListener('click', function(){
+                let model = document.querySelector('#model-id');
+                let value = this.getAttribute('data-id');
+                model.value = value;
+                deleteModal.show();
             });
-            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
-                " - £" + $("#slider-range").slider("values", 1));
+        })
+       
+
+        const confirmBtn = document.querySelector('#confirmPermDelete');
+
+        confirmBtn.addEventListener('click', function(){
+            let model = document.querySelector('#model-id').value;
+            let formName = `#form${model}`;
+            let form = document.querySelector(formName);
+            form.submit();
+            deleteModal.hide(); 
         });
+
     </script>
 @endsection

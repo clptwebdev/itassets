@@ -2,45 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AUC;
 use App\Models\Location;
-use App\Models\Property;
 use Illuminate\Http\Request;
 
-class PropertyController extends Controller
+class AUCController extends Controller
 {
-
+    //AUC = Assets Under Construction
+   
     ////////////////////////////////////////////
     ////////////// View Functions ////////////
     ////////////////////////////////////////////
 
     public function index()
     {
-        //Check to see if the User has permission to View All the Properties. 
-        if(auth()->user()->cant('viewAll', Property::class))
+        //Check to see if the User has permission to View All the AUC. 
+        if(auth()->user()->cant('viewAll', AUC::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'view']));
+            return redirect(route('errors.forbidden', ['area', 'Assets Under Construction', 'view']));
         }
 
         //Check to see if the user has SUper Admin Role
         if(auth()->user()->role_id == 1)
         {
             //If the User has Super Admin Role/Correct Permissions find all the locations
-            $locations = Location::select('id', 'name')->withCount('property')->get();
+            $locations = Location::select('id', 'name')->withCount('aucs')->get();
         } else
         {
             //Else find the locations that the user has been assigned to
-            $locations = auth()->user()->locations->select('id', 'name')->withCount('property')->get();
+            $locations = auth()->user()->locations->select('id', 'name')->withCount('aucs')->get();
         }
 
         //Find the properties that are assigned to the locations the User has permissions to.
-        $limit = session('property_limit') ?? 25;
-        $properties = Property::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
+        $limit = session('auc_limit') ?? 25;
+        $aucs = AUC::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
 
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
-        session(['property_filter' => false]);
+        session(['auc_filter' => false]);
 
-        return view('property.view', [
-            "properties" => $properties,
+        return view('auc.view', [
+            "aucs" => $aucs,
             "locations" => $locations,
         ]);
     }
@@ -61,11 +62,14 @@ class PropertyController extends Controller
 
     public function create()
     {
-        if(auth()->user()->cant('create', Property::class))
+
+        //Check to see if the User is has permission to create an AUC
+        if(auth()->user()->cant('create', AUC::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Property', 'create']));
+            return redirect(route('errors.forbidden', ['area', 'AUC', 'create']));
         }
 
+        //Get the Locations that the user has permission for
         if(auth()->user()->role_id == 1)
         {
             $locations = Location::all();
@@ -74,7 +78,8 @@ class PropertyController extends Controller
             $locations = auth()->user()->locations;
         }
 
-        return view('property.create', [
+        // Return the Create View to the browser
+        return view('auc.create', [
             "locations" => $locations
         ]);
     }
@@ -84,9 +89,9 @@ class PropertyController extends Controller
         //Store the new property in the database
 
         //Check to see if the user has permission to add nw property on the system
-        if(auth()->user()->cant('create', Property::class))
+        if(auth()->user()->cant('create', AUC::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Property', 'create']));
+            return redirect(route('errors.forbidden', ['area', 'AUC', 'create']));
         }
 
         //Validate the post data
@@ -98,7 +103,7 @@ class PropertyController extends Controller
             'type' => 'required|gt:0'
         ]);
 
-        $property = new Property;
+        $property = new AUC;
 
         $property->fill([
             'name' => $request->name,
@@ -111,7 +116,7 @@ class PropertyController extends Controller
 
         session()->flash('success_message', $request->name . ' has been created successfully');
 
-        return redirect(route('properties.index'));
+        return redirect(route('aucs.index'));
     }
 
 
@@ -119,22 +124,22 @@ class PropertyController extends Controller
     ////////////// Update Functions ////////////
     ////////////////////////////////////////////
 
-    public function edit(Property $property)
+    public function edit(AUC $auc)
     {
         // Check to see whether the user has permission to edit the sleected property
-        if(auth()->user()->cant('edit', Property::class))
+        if(auth()->user()->cant('update', AUC::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Property', 'create']));
+            return redirect(route('errors.forbidden', ['area', 'AUC', 'edit']));
         }
-        return view('property.edit', compact('property'));
+        return view('auc.edit', compact('auc'));
     }
 
-    public function update(Request $request, Property $property)
+    public function update(Request $request, AUC $auc)
     {
         // Check to see whether the user has permission to edit the sleected property
-        if(auth()->user()->cant('update', Property::class))
+        if(auth()->user()->cant('update', AUC::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Property', 'edit']));
+            return redirect(route('errors.forbidden', ['area', 'AUC', 'edit']));
         }
 
         //Validate the post data
@@ -147,13 +152,13 @@ class PropertyController extends Controller
         ]);
 
         //Fill the Model fields from the request
-        $property->fill($request->only('name', 'location_id', 'value', 'depreciation', 'type'))->save();
+        $auc->fill($request->only('name', 'location_id', 'value', 'depreciation', 'type'))->save();
 
         //Return the session message to the index
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
         //return to the view
-        return redirect(route('properties.index'));
+        return redirect(route('aucs.index'));
 
     }
 
@@ -161,47 +166,47 @@ class PropertyController extends Controller
     ////////////// Delete Functions ////////////
     ////////////////////////////////////////////
 
-    public function destroy(Property $property)
+    public function destroy(AUC $auc)
     {
-        //Check to see whether the User has permissions to remove the property or send it to the Recycle Bin
-        if(auth()->user()->cant('delete', $property))
+        //Check to see whether the User has permissions to remove the collection or send it to the Recycle Bin
+        if(auth()->user()->cant('delete', $auc))
         {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
+            return redirect(route('errors.forbidden', ['AUC', $auc->id, 'edit']));
         }
 
-        $name = $property->name;
+        $name = $auc->name;
 
-        $property->delete();
+        $auc->delete();
         session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
-        return redirect(route('properties.index'));
+        return redirect(route('aucs.index'));
     }
 
     public function recycleBin()
     {
-        /* //Check to see if the users have permissions to view the recycle bin
-        if(auth()->user()->cant('delete', Property::class))
+        //Check to see if the users have permissions to view the recycle bin
+        if(auth()->user()->cant('delete', AUC::class))
         {
             return redirect(route('errors.forbidden', ['area', 'Asset', 'Recycle Bin']));
-        } */
+        }
 
-        $limit = session('property_limit') ?? 25;
+        $limit = session('auc_limit') ?? 25;
 
         //Check the User Location Permissions
         if(auth()->user()->role_id == 1)
         {
-            $properties = Property::onlyTrashed()->paginate(intval($limit))->fragment('table');
+            $aucs = AUC::onlyTrashed()->paginate(intval($limit))->fragment('table');
             $locations = Location::all();
         } else
         {
-            $properties = auth()->user()->location_property()->onlyTrashed()->paginate(intval($limit))->fragment('table');
+            $aucs = auth()->user()->location_auc()->onlyTrashed()->paginate(intval($limit))->fragment('table');
             $locations = auth()->user()->locations;
         }
 
        
 
-        return view('property.bin', [
-            "properties" => $properties,
+        return view('auc.bin', [
+            "aucs" => $aucs,
             "locations" => $locations,
         ]);
     }
@@ -209,41 +214,41 @@ class PropertyController extends Controller
     public function restore($id)
     {
         //Find the Property (withTrashed needed)
-        $property = Property::withTrashed()->where('id', $id)->first();
+        $auc = AUC::withTrashed()->where('id', $id)->first();
 
         //Check to see if the user has permission to restore the property
-        if(auth()->user()->cant('delete', $property))
+        if(auth()->user()->cant('delete', $auc))
         {
-            return redirect(route('errors.forbidden', ['property', $property->id, 'restore']));
+            return redirect(route('errors.forbidden', ['property', $auc->id, 'restore']));
         }
 
         //Restores the Property
-        $property->restore();
+        $auc->restore();
 
         //Session message to be sent ot the View page (This is where the model will now appear)
-        session()->flash('success_message', $property->name . ' has been restored.');
+        session()->flash('success_message', $auc->name . ' has been restored.');
         //Redirect ot the model view
-        return redirect(route('properties.index'));
+        return redirect(route('aucs.index'));
     }
 
     public function forceDelete($id)
     {
-        //Find the Property (withTrashed needed) 
-        $property = Property::withTrashed()->where('id', $id)->first();
+        //Find the Collection (withTrashed needed) 
+        $auc = AUC::withTrashed()->where('id', $id)->first();
 
-        //Check to see if the user has permission to restore the property
-        if(auth()->user()->cant('delete', $property))
+        //Check to see if the user has permission to restore the Collection
+        if(auth()->user()->cant('delete', $auc))
         {
-            return redirect(route('errors.forbidden', ['property', $property->id, 'force delete']));
+            return redirect(route('errors.forbidden', ['property', $auc->id, 'force delete']));
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
-        $name = $property->name;
-        //Force Delete removes the model permanently from the system
-        $property->forceDelete();
+        $name = $auc->name;
+        //Force Delete removes the Collection permanently from the system
+        $auc->forceDelete();
         //Session message to be sent ot the Recycle Bin page
         session()->flash('danger_message', $name . ' was deleted permanently');
         //redirect back to the recycle bin
-        return redirect(route('property.bin'));
+        return redirect(route('auc.bin'));
     }
 
     ////////////////////////////////////////
@@ -261,85 +266,85 @@ class PropertyController extends Controller
             if(! empty($request->search))
             {
                 //If they are not empty assign the filter type to the session
-                session(['property_search' => $request->search]);
+                session(['auc_search' => $request->search]);
             }
 
             if(! empty($request->limit))
             {
-                session(['property_limit' => $request->limit]);
+                session(['auc_limit' => $request->limit]);
             }
 
             if(! empty($request->orderby))
             {
                 $array = explode(' ', $request->orderby);
 
-                session(['property_orderby' => $array[0]]);
-                session(['property_direction' => $array[1]]);
+                session(['auc_orderby' => $array[0]]);
+                session(['auc_direction' => $array[1]]);
 
             }
 
             if(! empty($request->locations))
             {
-                session(['property_locations' => $request->locations]);
+                session(['auc_locations' => $request->locations]);
             }
 
             if($request->start != '' && $request->end != '')
             {
-                session(['property_start' => $request->start]);
-                session(['property_end' => $request->end]);
+                session(['auc_start' => $request->start]);
+                session(['auc_end' => $request->end]);
             }
 
-            session(['property_amount' => $request->amount]);
+            session(['auc_amount' => $request->amount]);
         }
 
         //Check the Users Locations Permissions
         if(auth()->user()->role_id != 1)
         {
-            $locations = auth()->user()->locations->select('id', 'name')->withCount('property')->get();
+            $locations = auth()->user()->locations->select('id', 'name')->withCount('aocs')->get();
 
         } else
         {
-            $locations = Location::select('id', 'name')->withCount('property')->get();
+            $locations = Location::select('id', 'name')->withCount('aocs')->get();
         }
 
-        $property = Property::locationFilter($locations->pluck('id'));
+        $auc = AUC::locationFilter($locations->pluck('id'));
 
    
 
-        if(session()->has('property_locations'))
+        if(session()->has('auc_locations'))
         {
-            $property->locationFilter(session('property_locations'));
-            session(['property_filter' => true]);
+            $auc->locationFilter(session('auc_locations'));
+            session(['auc_filter' => true]);
         }
 
 
-        if(session()->has('property_start') && session()->has('property_end'))
+        if(session()->has('auc_start') && session()->has('auc_end'))
         {
-            $property->purchaseFilter(session('property_start'), session('property_end'));
-            session(['property_filter' => true]);
-        }
-        
-        if(session()->has('property_amount'))
-        {
-            $property->costFilter(session('property_amount'));
-            session(['property_filter' => true]);
-        }
-
-        
-        if(session()->has('property_search'))
-        {
-            $property->searchFilter(session('property_search'));
-            session(['property_filter' => true]);
+            $auc->purchaseFilter(session('auc_start'), session('auc_end'));
+            session(['auc_filter' => true]);
         }
         
+        if(session()->has('auc_amount'))
+        {
+            $auc->costFilter(session('auc_amount'));
+            session(['auc_filter' => true]);
+        }
 
-        $property->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
-            ->orderBy(session('property_orderby') ?? 'date', session('property_direction') ?? 'asc')
-            ->select('properties.*', 'locations.name as location_name');
-        $limit = session('property_limit') ?? 25;
+        
+        if(session()->has('auc_search'))
+        {
+            $auc->searchFilter(session('auc_search'));
+            session(['auc_filter' => true]);
+        }
+        
 
-        return view('property.view', [
-            "properties" => $property->paginate(intval($limit))->withPath(asset('/property/filter'))->fragment('table'),
+        $auc->leftJoin('locations', 'auc.location_id', '=', 'locations.id')
+            ->orderBy(session('auc_orderby') ?? 'date', session('auc_direction') ?? 'asc')
+            ->select('a_u_c_s.*', 'locations.name as location_name');
+        $limit = session('auc_limit') ?? 25;
+
+        return view('auc.view', [
+            "aucs" => $auc->paginate(intval($limit))->withPath(asset('/auc/filter'))->fragment('table'),
             "locations" => $locations,
         ]);
     }

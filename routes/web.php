@@ -90,6 +90,14 @@ Route::group(['middleware' => 'auth'], function() {
     Route::Post("assets/export-disposal-errors", [\App\Http\Controllers\AssetController::class, "exportDisposeErrors"])->name("export.dispose.errors");
     Route::post('assets/transfer', 'App\Http\Controllers\AssetController@bulkTransfers')->name('assets.bulk.transfer');
     Route::Post("assets/export-transfer-errors", [\App\Http\Controllers\AssetController::class, "exportTransferErrors"])->name("export.transfer.errors");
+    //Assets Under Construction
+    Route::resource("/aucs", \App\Http\Controllers\AUCController::class);
+    Route::post('/auc/filter', 'App\Http\Controllers\AUCController@filter')->name('auc.filter');
+    Route::get('/auc/filter/clear', 'App\Http\Controllers\AUCController@clearFilter')->name('auc.clear.filter');
+    Route::get('/auc/filter', 'App\Http\Controllers\AUCController@filter')->name('auc.filtered');
+    Route::get('/auc/bin', 'App\Http\Controllers\AUCController@recycleBin')->name('auc.bin');
+    Route::get('/auc/{auc}/restore', 'App\Http\Controllers\AUCController@restore')->name('auc.restore');
+    Route::post('/auc/{auc}/remove', 'App\Http\Controllers\AUCController@forceDelete')->name('auc.remove');
     //Comment Routes
     Route::resource('/comment', 'App\Http\Controllers\CommentController');
     //Component Routes
@@ -149,10 +157,13 @@ Route::group(['middleware' => 'auth'], function() {
     //Permission Routes
 
     //Property
-    Route::resource("/property", \App\Http\Controllers\PropertyController::class);
+    Route::resource("/properties", \App\Http\Controllers\PropertyController::class);
     Route::post('/property/filter', 'App\Http\Controllers\PropertyController@filter')->name('property.filter');
     Route::get('/property/filter/clear', 'App\Http\Controllers\PropertyController@clearFilter')->name('property.clear.filter');
     Route::get('/property/filter', 'App\Http\Controllers\PropertyController@filter')->name('property.filtered');
+    Route::get('/property/bin', 'App\Http\Controllers\PropertyController@recycleBin')->name('property.bin');
+    Route::get('/property/{asset}/restore', 'App\Http\Controllers\PropertyController@restore')->name('property.restore');
+    Route::post('/property/{asset}/remove', 'App\Http\Controllers\PropertyController@forceDelete')->name('property.remove');
     //Request
     Route::post('/request/transfer', 'App\Http\Controllers\RequestsController@transfer')->name('request.transfer');
     Route::post('/request/dispose', 'App\Http\Controllers\RequestsController@disposal')->name('request.disposal');

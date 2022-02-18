@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Create New Asset')
+@section('title', 'Add an Asset Under Construction')
 
 @section('css')
 
 @endsection
 
 @section('content')
-    <x-form.layout :action="route('properties.store')" >
-        <x-wrappers.nav title="Add New Property" >
-            <x-buttons.return :route="route('properties.index')" > Property</x-buttons.return >
+    <x-form.layout :action="route('aucs.store')" >
+        <x-wrappers.nav title="Add Asset Under Construction" >
+            <x-buttons.return :route="route('aucs.index')" > AUC</x-buttons.return >
             <a href="{{ route('documentation.index')."#collapseThreeAssets"}}"
                class="btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
                     class="fas fa-question fa-sm text-dark-50 mr-lg-1" ></i ><span class="d-none d-lg-inline-block">Help</span></a >
@@ -17,7 +17,7 @@
         </x-wrappers.nav >
         <section >
             <p class="mb-4" >
-                Add a new property to the Apollo Asset Manager. 
+                Add an Asset Under Construction to the Apollo Asset Manager. 
             </p >
             <div class="row row-eq-height no-gutters p-0 p-md-4 container m-auto" >
                 <div class="col-12" >

@@ -22,10 +22,17 @@
             <i class="fas fa-fw fa-tachometer-alt sidebar-icon"></i>
             <span class="sidebar-title">Dashboard</span></a>
     </li>
+
+    {{-- The are the Navigation tabs the Finance Users would be using --}}
     <li class="nav-item">
-        <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('property.index')}}">
+        <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('properties.index')}}">
             <i class="fas fa-fw fa-school sidebar-icon"></i>
             <span class="sidebar-title">Property</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('aucs.index')}}">
+            <i class="fas fa-fw fa-hammer sidebar-icon"></i>
+            <span class="sidebar-title">AUC</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link text-left text-sm-center text-md-left" href="#">
@@ -43,6 +50,8 @@
             <span class="sidebar-title">Motor Vehicles</span></a>
     </li>
     @endif
+
+    
     <!-- Divider -->
     
     <hr class="sidebar-divider">

@@ -25,6 +25,10 @@ class Location extends Model
         return $this->hasMany(Asset::class);
     }
 
+    public function aucs(){
+        return $this->hasMany(AUC::class);
+    }
+
     public function miscellanea()
     {
         return $this->hasMany(Miscellanea::class);
@@ -44,6 +48,10 @@ class Location extends Model
 
     public function consumable(){
         return $this->hasMany(Consumable::class);
+    }
+
+    public function property(){
+        return $this->hasMany(Property::class);
     }
 
     public function users(){

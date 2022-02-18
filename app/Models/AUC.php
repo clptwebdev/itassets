@@ -6,13 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Property extends Model
+class AUC extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
     protected $fillable = ['name', 'location_id', 'value', 'depreciation', 'type', 'date'];
-
 
     //Returns the Location attached to the property
     public function location()
@@ -82,5 +81,4 @@ class Property extends Model
     {
         return $query->whereIn('location_id', $locations);
     }
-
 }

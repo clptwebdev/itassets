@@ -119,6 +119,11 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @if(count($assets) == 0)
+                            <tr>
+                                <td colspan="8" class="text-center text-muted">The Recycle Bin is empty!</td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
                     <x-paginate :model="$assets"/>
