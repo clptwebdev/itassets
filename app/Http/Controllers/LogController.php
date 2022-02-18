@@ -29,8 +29,8 @@ class LogController extends Controller {
         }
         $logs = Log::all()->whereIn('id', json_decode($request->logs));
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new LogsExport($logs), "/public/csv/logs-ex-{$date}.csv");
-        $url = asset("storage/csv/logs-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new LogsExport($logs), "/public/csv/logs-ex-{$date}.xlsx");
+        $url = asset("storage/csv/logs-ex-{$date}.xlsx");
 
         return redirect(route('logs.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
@@ -41,6 +41,7 @@ class LogController extends Controller {
     public function clearFilter()
     {
         session()->forget(['log_type', 'log_search']);
+
         return redirect(route('logs.index'));
     }
 
@@ -70,14 +71,17 @@ class LogController extends Controller {
 
         if($results->count() == 0)
         {
-            if(session('log_search') && session('log_type') !== null){
-                session()->flash('danger_message', "<strong>" . session('log_type') ." & ". session('log_search') . "</strong>" . ' could not be found! Please search for something else!');
+            if(session('log_search') && session('log_type') !== null)
+            {
+                session()->flash('danger_message', "<strong>" . session('log_type') . " & " . session('log_search') . "</strong>" . ' could not be found! Please search for something else!');
 
-            }elseif(session('log_search') == null){
-                session()->flash('danger_message', "<strong>" . session('log_type')  . "</strong>" . ' could not be found! Please search for something else!');
+            } else if(session('log_search') == null)
+            {
+                session()->flash('danger_message', "<strong>" . session('log_type') . "</strong>" . ' could not be found! Please search for something else!');
 
-            }elseif(session('log_type') == null){
-                session()->flash('danger_message', "<strong>" . session('log_search')  . "</strong>" . ' could not be found! Please search for something else!');
+            } else if(session('log_type') == null)
+            {
+                session()->flash('danger_message', "<strong>" . session('log_search') . "</strong>" . ' could not be found! Please search for something else!');
 
             }
 

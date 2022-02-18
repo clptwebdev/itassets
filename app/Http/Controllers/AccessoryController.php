@@ -46,7 +46,7 @@ class AccessoryController extends Controller {
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
-                $locations = Location::select('id', 'name')->withCount('accessories')->get();
+            $locations = Location::select('id', 'name')->withCount('accessories')->get();
         } else
         {
             $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'))
@@ -56,7 +56,7 @@ class AccessoryController extends Controller {
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
-                $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('accessories')->get();
+            $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('accessories')->get();
         }
         $this->clearFilter();
         $filter = 0;
@@ -450,8 +450,8 @@ class AccessoryController extends Controller {
         }
         $accessory = Accessory::locationFilter(auth()->user()->locations->pluck('id'))->get();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport($accessory), "/public/csv/accessories-ex-{$date}.csv");
-        $url = asset("storage/csv/accessories-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport($accessory), "/public/csv/accessories-ex-{$date}.xlsx");
+        $url = asset("storage/csv/accessories-ex-{$date}.xlsx");
 
         return redirect(route('accessories.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")

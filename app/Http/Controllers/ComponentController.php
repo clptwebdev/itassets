@@ -65,7 +65,6 @@ class ComponentController extends Controller {
         $categories = Category::with('accessories')->select('id', 'name')->get();
         $statuses = Status::select('id', 'name', 'deployable')->withCount('accessories')->get();
 
-
         return view('ComponentsDir.view', [
             "components" => $components,
             'suppliers' => Supplier::all(),
@@ -429,8 +428,8 @@ class ComponentController extends Controller {
         }
         $components = Component::all();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new ComponentsExport($components), "/public/csv/components-ex-{$date}.csv");
-        $url = asset("storage/csv/components-ex-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new ComponentsExport($components), "/public/csv/components-ex-{$date}.xlsx");
+        $url = asset("storage/csv/components-ex-{$date}.xlsx");
 
         return redirect(route('components.index'))
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")

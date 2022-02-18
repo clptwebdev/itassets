@@ -5,15 +5,20 @@ namespace App\Exports;
 use App\Models\Accessory;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class accessoryExport implements FromArray, WithHeadings
-{
+class accessoryExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents {
+
     private $accessories;
+
     public function __construct($accessories)
     {
         $this->accessories = $accessories;
     }
+
     public function headings(): array
     {
         return [
@@ -39,7 +44,7 @@ class accessoryExport implements FromArray, WithHeadings
             $array = [];
             $array["name"] = $accessory->name;
             $array["status_id"] = $accessory->status->name ?? 'N/A';
-            $array["supplier_id"] = $accessory->supplier->name?? 'N/A';
+            $array["supplier_id"] = $accessory->supplier->name ?? 'N/A';
             $array["manufacturer_id"] = $accessory->manufacturer->name ?? 'N/A';
             $array["location_id"] = $accessory->location->name;
             $array["order_no"] = $accessory->order_no;
@@ -55,4 +60,16 @@ class accessoryExport implements FromArray, WithHeadings
 
         return $object;
     }
+
+    //adds styles
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $cellRange = 'A1:K1'; // All headers
+                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14)->setBold(1);
+            },
+        ];
+    }
+
 }

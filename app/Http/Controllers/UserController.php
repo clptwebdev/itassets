@@ -127,7 +127,7 @@ class UserController extends Controller {
             'email' => ['required', \Illuminate\Validation\Rule::unique('users')->ignore($user->id), 'email:rfc,dns,spoof,filter'],
         ]);
 
-        $user->fill($request->only('name', 'email', 'location_id', 'role_id','telephone'))->save();
+        $user->fill($request->only('name', 'email', 'location_id', 'role_id', 'telephone'))->save();
         $array = explode(',', $request->permission_ids);
         $user->locations()->sync($array);
 
@@ -158,7 +158,7 @@ class UserController extends Controller {
             return redirect(route('errors.forbidden', ['area', 'Users', 'export']));
         }
 
-        return \Maatwebsite\Excel\Facades\Excel::download(new UserExport, 'users.csv');
+        return \Maatwebsite\Excel\Facades\Excel::download(new UserExport, 'users.xlsx');
 
     }
 
@@ -251,7 +251,7 @@ class UserController extends Controller {
             'newPassword' => 'required',
             'confirmNewPassword' => 'required',
         ]);
-        $user = User::where('name',auth()->user()->name)->first();
+        $user = User::where('name', auth()->user()->name)->first();
         $hashCheck = \Illuminate\Support\Facades\Hash::check($request->oldPassword, auth()->user()->password);
         $newCheck = $request->newPassword === $request->confirmNewPassword;
         if($hashCheck && $newCheck === true)
@@ -261,9 +261,10 @@ class UserController extends Controller {
             $user->save();
             session()->flash('success_message', auth()->user()->name . ', you have successfully updated your Password.');
 
-                   return redirect(route("user.details"));
+            return redirect(route("user.details"));
 
-        }else{
+        } else
+        {
             return redirect(route('user.details'))
                 ->with('danger_message', "Your Password Didn't match your current password please try again!");
         }
@@ -271,7 +272,8 @@ class UserController extends Controller {
 
     public function downloadPDF(Request $request)
     {
-        if (auth()->user()->cant('viewAll', User::class)) {
+        if(auth()->user()->cant('viewAll', User::class))
+        {
             return redirect(route('errors.forbidden', ['area', 'User', 'View PDF']));
         }
 
@@ -279,12 +281,12 @@ class UserController extends Controller {
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = 'users-'.$date;
-        UsersPdf::dispatch( $users,$user,$path )->afterResponse();
-
+        $path = 'users-' . $date;
+        UsersPdf::dispatch($users, $user, $path)->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
+
         return redirect(route('users.index'))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
@@ -292,19 +294,21 @@ class UserController extends Controller {
 
     public function downloadShowPDF(User $user)
     {
-        if (auth()->user()->cant('view', $user)) {
+        if(auth()->user()->cant('view', $user))
+        {
             return redirect(route('errors.forbidden', ['asset', $user->id, 'View PDF']));
         }
 
         $admin = auth()->user();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = "{$user->name}-{$date}";
-        UserPdf::dispatch( $user,$admin,$path )->afterResponse();
+        UserPdf::dispatch($user, $admin, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $admin->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $admin->id]);
 
         return redirect(route('users.show', $user->id))
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
+
 }

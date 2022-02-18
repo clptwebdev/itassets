@@ -5,10 +5,13 @@ namespace App\Exports;
 use App\Models\Consumable;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class consumableExport implements FromArray, WithHeadings
-{
+class consumableExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents {
+
     public function headings(): array
     {
         return [
@@ -35,7 +38,7 @@ class consumableExport implements FromArray, WithHeadings
             $array = [];
             $array["name"] = $consumable->name;
             $array["status_id"] = $consumable->status->name ?? 'N/A';
-            $array["supplier_id"] = $consumable->supplier->name?? 'N/A';
+            $array["supplier_id"] = $consumable->supplier->name ?? 'N/A';
             $array["manufacturer_id"] = $consumable->manufacturer->name ?? 'N/A';
             $array["location_id"] = $consumable->location->name;
             $array["order_no"] = $consumable->order_no;
@@ -51,4 +54,16 @@ class consumableExport implements FromArray, WithHeadings
 
         return $object;
     }
+
+    //adds styles
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $cellRange = 'A1:K1'; // All headers
+                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14)->setBold(1);
+            },
+        ];
+    }
+
 }
