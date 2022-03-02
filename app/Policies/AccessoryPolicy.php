@@ -18,45 +18,23 @@ class AccessoryPolicy {
 
     public function viewAll(User $user)
     {
-//        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->view;
-        return in_array($user->role_id, $this->all);
+        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->view;
     }
 
     public function view(User $user, Accessory $accessory)
     {
-//        $locations = $user->locations->pluck('id')->toArray();
-//        if($user->role->permissions->where('model', ' = ', 'Accessory')->first()->view && in_array($accessory->location_id, $locations))
-//        {
-//            return true;
-//        } else
-//        {
-//            return false;
-//        }
-
-        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->all) && in_array($accessory->location_id, $locations)))
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->view && in_array($accessory->location_id, $user->locationsArray());
     }
 
     public function create(User $user)
     {
-        return $user->role_id != 0 && $user->role_id <= 3;
+        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->create;
     }
 
     public function update(User $user, Accessory $accessory)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations)))
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->update && in_array($accessory->location_id, $user->locationsArray());
+       
     }
 
     public function delete(User $user, Accessory $accessory)

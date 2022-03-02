@@ -212,7 +212,7 @@ class AccessoryController extends Controller {
     {
         if(auth()->user()->cant('create', Accessory::class))
         {
-            return redirect(route('errors.forbidden', ['accessory', $accessory->id, 'create']));
+            return redirect(route('errors.forbidden', ['area', 'Accessory', 'create']));
         }
 
         if(auth()->user()->role_id == 1)

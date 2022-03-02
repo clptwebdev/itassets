@@ -91,6 +91,11 @@ class User extends Authenticatable {
         return $this->hasManyDeep(Miscellanea::class, ['location_user', Location::class]);
     }
 
+    public function locationsArray(): array
+    {
+        return auth()->user()->locations->pluck('id')->toArray();
+    }
+
     public function logs()
     {
         return $this->morphMany(Log::class, 'loggable');
