@@ -60,7 +60,7 @@ class User extends Authenticatable {
             ->using(LocationUser::class);
     }
 
-    public function roles()
+    public function role()
     {
         return $this->belongsTo(Role::class);
     }
