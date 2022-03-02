@@ -18,28 +18,28 @@ class AccessoryPolicy {
 
     public function viewAll(User $user)
     {
-//        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->view;
-        return in_array($user->role_id, $this->all);
+        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->view;
+//        return in_array($user->role_id, $this->all);
     }
 
     public function view(User $user, Accessory $accessory)
     {
-//        $locations = $user->locations->pluck('id')->toArray();
-//        if($user->role->permissions->where('model', ' = ', 'Accessory')->first()->view && in_array($accessory->location_id, $locations))
-//        {
-//            return true;
-//        } else
-//        {
-//            return false;
-//        }
-
-        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->all) && in_array($accessory->location_id, $locations)))
+        $locations = $user->locations->pluck('id')->toArray();
+        if($user->role->permissions->where('model', ' = ', 'Accessory')->first()->view && in_array($accessory->location_id, $locations))
         {
             return true;
         } else
         {
             return false;
         }
+
+//        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->all) && in_array($accessory->location_id, $locations)))
+//        {
+//            return true;
+//        } else
+//        {
+//            return false;
+//        }
     }
 
     public function create(User $user)
