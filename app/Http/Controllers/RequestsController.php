@@ -59,11 +59,10 @@ class RequestsController extends Controller {
             'date' => $request->transfer_date,
             'status' => 0,
         ]);
-
-        if(auth()->user()->role_id == 1)
+        $m = "\\App\\Models\\" . ucfirst($requests->model_type);
+        $model = $m::find($requests->model_id);
+        if(auth()->user()->can('request', $model))
         {
-            $m = "\\App\\Models\\" . ucfirst($requests->model_type);
-            $model = $m::find($requests->model_id);
             $model->update(['location_id' => $requests->location_to]);
             if($request->asset_tag)
             {

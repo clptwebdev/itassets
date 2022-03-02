@@ -6,76 +6,52 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 
-class UserPolicy
-{
+class UserPolicy {
+
     use HandlesAuthorization;
 
-    protected $super = [1];
-    protected $admin = [1,2];
-    protected $technician = [1,3];
-    protected $manager = [1,2,3,4];
-    protected $all = [1,2,3,4,5];
+    private $model;
 
-    public function viewAll(User $user){
-        return in_array($user->role_id, $this->manager);
+    public function __construct()
+    {
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'User')->first();
     }
 
-    public function view(User $admin, User $user)
+    public function viewAll(User $user)
     {
-        $permission = 0;
-        foreach($admin->locations->pluck('id')->toArray() as $id => $key){
-            if(in_array($key, $user->locations->pluck('id')->toArray())){
-                $permission++;
-            }
-        }
-        if($permission != 0 && in_array($user->role_id, $this->all)){
-            return true;
-        }else{
-            return false;
-        }
+        return $this->model->view;
     }
 
-    public function update(User $admin, User $user)
+    public function view(User $user, User $accessedUser)
     {
-        $permission = 0;
-        foreach($admin->locations->pluck('id')->toArray() as $id => $key){
-            if(in_array($key, $user->locations->pluck('id')->toArray())){
-                $permission++;
-            }
-        }
+        return $this->model->view || $user->id === $accessedUser->id;
 
-        if($admin->id !== $user->id && (in_array($admin->role_id, $this->super) || ($permission != 0 && in_array($admin->role_id, $this->admin) && ($admin->role_id <= $user->role_id || $user->role_id == 0)))){
-            return true;
-        }else{
-            return false;
-        }
+    }
+
+    public function update(User $user, User $accessedUser)
+    {
+        return $this->model->update || $user->id === $accessedUser->id;
     }
 
     public function delete(User $admin, User $user)
     {
-        $permission = 0;
-        foreach($admin->locations->pluck('id')->toArray() as $id => $key){
-            if(in_array($key, $user->locations->pluck('id')->toArray())){
-                $permission++;
-            }
-        }
-        if($admin->id !== $user->id && (in_array($admin->role_id, $this->super) || ($permission != 0 && in_array($admin->role_id, $this->admin) && ($admin->role_id <= $user->role_id || $user->role_id == 0)))){
-            return true;
-        }else{
-            return false;
-        }
+        return $this->model->archive;
     }
 
     public function restore(User $user, User $model)
     {
-        //
+        return $this->model->archive;
+
     }
 
     public function forceDelete(User $user, User $model)
     {
+        return $this->model->delete;
     }
 
-    public function permissions(User $user){
-        return in_array($user->role_id, $this->admin);
+    public function permissions(User $user)
+    {
+        return $this->model->view;
     }
+
 }

@@ -6,48 +6,55 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\Fieldset;
 use App\Models\User;
 
-class FieldsetPolicy
-{
+class FieldsetPolicy {
+
     use HandlesAuthorization;
 
-    protected $super = [1];
-    protected $admin = [1,2];
-    protected $technician = [1,3];
-    protected $manager = [1,2,3,4];
-    protected $all = [1,2,3,4,5];
+    private $model;
+
+    public function __construct()
+    {
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Fieldset')->first();
+    }
 
     public function viewAny(User $user)
     {
-        return in_array($user->role_id, $this->all);
+        return $this->model->view;
     }
 
     public function view(User $user)
     {
-        return in_array($user->role_id, $this->all);
+        return $this->model->view;
     }
 
     public function create(User $user)
     {
-        return in_array($user->role_id, $this->manager);
+        return $this->model->create;
+
     }
 
-    public function update(User $user, Fieldset $fieldset)
+    public function update(User $user)
     {
-        return in_array($user->role_id, $this->super);
+        return $this->model->update;
+
     }
 
-    public function delete(User $user, Fieldset $fieldset)
+    public function delete(User $user)
     {
-        return in_array($user->role_id, $this->super);
+        return $this->model->archive;
+
     }
 
-    public function restore(User $user, Fieldset $fieldset)
+    public function restore(User $user)
     {
-        return in_array($user->role_id, $this->super);
+        return $this->model->archive;
+
     }
 
-    public function forceDelete(User $user, Fieldset $fieldset)
+    public function forceDelete(User $user)
     {
-        return in_array($user->role_id, $this->super);
+        return $this->model->delete;
+
     }
+
 }

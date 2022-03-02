@@ -45,37 +45,24 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'view']));
-        }
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Assets.');
 
-        if(auth()->user()->role_id == 1)
-        {
-            $assets = Asset::with('supplier', 'location', 'model')
-                ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
-                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
-
-            $locations = Location::select('id', 'name')->withCount('assets')->get();
-        } else
-        {
-            $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))
-                ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
-                ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
-                ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
-            $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('assets')->get();
         }
+        $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))
+            ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
+            ->leftJoin('asset_models', 'assets.asset_model', '=', 'asset_models.id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'asset_models.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
+        $locations = Location::select('id', 'name')->withCount('assets')->get();
+        $categories = Category::with('assets')->select('id', 'name')->get();
+        $statuses = Status::select('id', 'name', 'deployable')->withCount('assets')->get();
+//            $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('assets')->get();
+
         $this->clearFilter();
         session(['assets_filter' => false]);
         $limit = session('assets_limit') ?? 25;
-
-        $categories = Category::with('assets')->select('id', 'name')->get();
-        $statuses = Status::select('id', 'name', 'deployable')->withCount('assets')->get();
 
         return view('assets.view', [
             "assets" => $assets->paginate(intval($limit))->fragment('table'),
@@ -90,16 +77,9 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('create', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Asset', 'create']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Create Assets.');
         }
-
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
-        }
+        $locations = auth()->user()->locations;
 
         return view('assets.create', [
             "locations" => $locations,
@@ -116,7 +96,6 @@ class AssetController extends Controller {
 
     public function search()
     {
-
         return view("assets.show", [
             'asset' => Asset::latest()->AssetFilter(request()->only(['asset_tag']))->firstOrFail(),
             'locations' => Location::all(),
@@ -141,7 +120,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('create', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Asset', 'create']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to create Assets.');
         }
 
         $validate_fieldet = [];
@@ -257,16 +236,10 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('view', $asset))
         {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'view']));
-        }
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Show Assets.');
 
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
         }
+        $locations = auth()->user()->locations;
 
         return view('assets.show', [
             "asset" => $asset,
@@ -279,16 +252,10 @@ class AssetController extends Controller {
 
         if(auth()->user()->cant('update', $asset))
         {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
-        }
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Edit Assets.');
 
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
         }
+        $locations = auth()->user()->locations;
 
         return view('assets.edit', [
             "asset" => $asset,
@@ -303,14 +270,14 @@ class AssetController extends Controller {
             'depreciation' => Depreciation::all(),
         ]);
 
-
     }
 
     public function update(Request $request, Asset $asset)
     {
         if(auth()->user()->cant('update', $asset))
         {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'update']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Update Assets.');
+
         }
 
         $validate_fieldet = [];
@@ -432,7 +399,7 @@ class AssetController extends Controller {
 
         if(auth()->user()->cant('delete', $asset))
         {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Archive Assets.');
         }
 
         $name = $asset->asset_tag;
@@ -448,13 +415,13 @@ class AssetController extends Controller {
         $asset = Asset::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $asset))
         {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'restore']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Restore Assets.');
         }
         $name = $asset->asset_tag;
         $asset->restore();
         session()->flash('success_message', "#" . $name . ' has been restored.');
 
-        return redirect("/assets");
+        return redirect(route('assets.index'));
     }
 
     public function forceDelete($id)
@@ -462,7 +429,7 @@ class AssetController extends Controller {
         $asset = Asset::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $asset))
         {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'force delete']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Delete Assets.');
         }
         $name = $asset->name;
         $asset->forceDelete();
@@ -488,7 +455,8 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'export']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Export Assets.');
+
         }
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location', 'model', 'status', 'user')->get();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
@@ -505,7 +473,8 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('create', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'import']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Import Assets.');
+
         }
 
         $extensions = array("csv");
@@ -602,7 +571,8 @@ class AssetController extends Controller {
         /* Currently - Super Admin permissions requried [SC] */
         if(auth()->user()->cant('disposeAll', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'Bulk Dispose']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Bulk Dispose Assets.');
+
         }
 
         /* Accepted File Extensions */
@@ -697,7 +667,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('transferAll', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'Bulk Transfer']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Bulk transfer Assets.');
         }
 
         /* Accepted File Extensions */
@@ -790,7 +760,11 @@ class AssetController extends Controller {
 
     public function exportDisposeErrors(Request $request)
     {
+        if(auth()->user()->cant('viewAll', Asset::class))
+        {
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Export Assets.');
 
+        }
         //Receives the JSON Object with the errors and passes them to the Export function for Maatwebsite
         $export = $request['assets'];
         $code = (htmlspecialchars_decode($export));
@@ -802,7 +776,11 @@ class AssetController extends Controller {
 
     public function exportTransferErrors(Request $request)
     {
+        if(auth()->user()->cant('viewAll', Asset::class))
+        {
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Export Assets.');
 
+        }
         //Receives the JSON Object with the errors and passes them to the Export function for Maatwebsite
         $export = $request['assets'];
         $code = (htmlspecialchars_decode($export));
@@ -814,6 +792,11 @@ class AssetController extends Controller {
 
     public function importErrors(Request $request)
     {
+        if(auth()->user()->cant('viewAll', Asset::class))
+        {
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Export Assets.');
+
+        }
         $export = $request['asset_tag'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
@@ -934,18 +917,10 @@ class AssetController extends Controller {
             session(['assets_amount' => $request->amount]);
         }
 
-        if(auth()->user()->role_id != 1)
-        {
-            $locations = auth()->user()->locations->pluck('id');
-            $locs = auth()->user()->locations()->withCount('assets')->get();
-
-        } else
-        {
-            $locations = \App\Models\Location::all()->pluck('id');
-            $locs = \App\Models\Location::withCount('assets')->get();
-        }
-
+        $locations = auth()->user()->locations->pluck('id');
+        $locs = auth()->user()->locations()->withCount('assets')->get();
         $assets = Asset::locationFilter($locations);
+
         if(session()->has('assets_locations'))
         {
             $assets->locationFilter(session('assets_locations'));
@@ -1082,7 +1057,8 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Asset', 'View PDF']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Download Assets.');
+
         }
         $assets = array();
         $found = Asset::select('name', 'id', 'asset_tag', 'serial_no', 'purchased_date', 'purchased_cost', 'warranty', 'audit_date', 'location_id', 'asset_model')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location', 'model')->get();
@@ -1145,7 +1121,8 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('view', $asset))
         {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'View PDF']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Download Assets.');
+
         }
 
         $user = auth()->user();
@@ -1165,20 +1142,14 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Asset', 'Recycle Bin']));
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Recycle Assets.');
+
         }
 
         $limit = session('assets_limit') ?? 25;
 
-        if(auth()->user()->role_id == 1)
-        {
-            $assets = Asset::onlyTrashed()->paginate(intval($limit))->fragment('table');
-            $locations = Location::all();
-        } else
-        {
-            $assets = auth()->user()->location_assets()->onlyTrashed()->paginate(intval($limit))->fragment('table');
-            $locations = auth()->user()->locations;
-        }
+        $assets = auth()->user()->location_assets()->onlyTrashed()->paginate(intval($limit))->fragment('table');
+        $locations = auth()->user()->locations;
 
         return view('assets.bin', [
             "assets" => $assets,
@@ -1191,6 +1162,10 @@ class AssetController extends Controller {
 
     public function changeStatus(Asset $asset, Request $request)
     {
+        if(auth()->user()->cant('update', Status::class))
+        {
+            return ErrorController::forbidden(route('accessories.show', $asset->id), 'Unauthorised to Change Statuses Asset.');
+        }
         $asset->status_id = $request->status;
         $asset->save();
         session()->flash('success_message', $asset->model->name . ' has had its status changed successfully');

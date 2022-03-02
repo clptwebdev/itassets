@@ -35,6 +35,9 @@
                         </thead>
                         <tbody>
                         @php unset($models[array_search('Permission' , $models)]); @endphp
+                        {{--                        @php unset($models[array_search('Archive' , $models)]); @endphp--}}
+                        @php unset($models[array_search('Consumable' , $models)]); @endphp
+                        {{--                        @php unset($models[array_search('Requests' , $models)]); @endphp--}}
                         @foreach($models as $model)
 
 

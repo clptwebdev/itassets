@@ -24,34 +24,18 @@ class SettingsController extends Controller {
 
     public function index()
     {
-        if(auth()->user()->role_id == 1)
-        {
-            $users = User::all();
-            $assetModel = AssetModel::all();
-            $locations = \App\Models\Location::with('asset', 'accessory', 'components', 'consumable', 'miscellanea', 'photo')->get();
-            $assets = \App\Models\Asset::with('location', 'model', 'status')->get();
-            $accessories = \App\Models\Accessory::all();
-            $components = \App\Models\Component::all();
-            $miscellaneous = \App\Models\Miscellanea::all();
-            $statuses = \App\Models\Status::all();
-            $categories = \App\Models\Category::with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->get();
-            $models = $this->getModels();
-            $roles = Role::all();
-            Cache::put('name', $categories, 60);
-        } else
-        {
-            $categories = \App\Models\Category::with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->get();
-            $users = User::all();
-            $assetModel = AssetModel::all();
-            $statuses = \App\Models\Status::all();
-            $assets = Asset::locationFilter(auth()->user()->locations->get());
-            $components = Component::locationFilter(auth()->user()->locations->get());
-            $accessories = Accessory::locationFilter(auth()->user()->locations->get());
-            $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->get());
-            $locations = Location::locationFilter(auth()->user()->locations->get());
-            $models = $this->getModels();
-            $roles = Role::all();
-        }
+
+        $categories = \App\Models\Category::with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->get();
+        $users = User::all();
+        $assetModel = AssetModel::all();
+        $statuses = \App\Models\Status::all();
+        $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'));
+        $components = Component::locationFilter(auth()->user()->locations->pluck('id'));
+        $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'));
+        $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'));
+        $locations = Location::all();
+        $models = $this->getModels();
+        $roles = Role::all();
 
         return view('settings.view', [
             "users" => $users,

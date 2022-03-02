@@ -10,112 +10,90 @@ class AccessoryPolicy {
 
     use HandlesAuthorization;
 
-    protected $super = [1];
-    protected $admin = [1, 2];
-    protected $technician = [1, 3];
-    protected $manager = [1, 2, 3, 4];
-    protected $all = [1, 2, 3, 4, 5];
+    private $model;
+
+    public function __construct()
+    {
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Accessory')->first();
+    }
 
     public function viewAll(User $user)
     {
-        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->view;
+        return $this->model->view;
     }
 
     public function view(User $user, Accessory $accessory)
     {
-        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->view && in_array($accessory->location_id, $user->locationsArray());
+        return $this->model->view && in_array($accessory->location_id, $user->locationsArray());
     }
 
     public function create(User $user)
     {
-        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->create;
+        return $this->model->create;
     }
 
     public function update(User $user, Accessory $accessory)
     {
-        return $user->role->permissions->where('model', ' = ', 'Accessory')->first()->update && in_array($accessory->location_id, $user->locationsArray());
-       
+        return $this->model->update && in_array($accessory->location_id, $user->locationsArray());
+
     }
 
     public function delete(User $user, Accessory $accessory)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations)))
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return $this->model->archive && in_array($accessory->location_id, $user->locationsArray());
     }
 
     public function restore(User $user, Accessory $accessory)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->super) || (in_array($user->role_id, $this->manager) && in_array($accessory->location_id, $locations)))
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return $this->model->archive && in_array($accessory->location_id, $user->locationsArray());
     }
 
     public function forceDelete(User $user, Accessory $accessory)
     {
-        if(in_array($user->role_id, $this->super))
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return $this->model->delete && in_array($accessory->location_id, $user->locationsArray());
     }
 
     public function recycleBin(User $user)
     {
-        return in_array($user->role_id, $this->manager);
+        return $this->model->view;
     }
 
     public function import(User $user,)
     {
-        return in_array($user->role_id, $this->manager);
+        return $this->model->create;
     }
 
     public function export(User $user, Accessory $accessory)
     {
-        return in_array($user->role_id, $this->all);
+        return $this->model->view;
+
     }
 
     public function generatePDF(User $user)
     {
-        return in_array($user->role_id, $this->all);
+        return $this->model->view;
     }
 
     public function generateAccessoryPDF(User $user, Accessory $accessory)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->all) && in_array($accessory->location_id, $locations))
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return $this->model->view && in_array($accessory->location_id, $user->locationsArray());
     }
 
     public function transfer(User $user, Accessory $accessory)
     {
-        $locations = $user->locations->pluck('id')->toArray();
 
-        return in_array($user->role_id, $this->technician) && in_array($accessory->location_id, $locations);
+        return $this->model->transfer && in_array($accessory->location_id, $user->locationsArray());
+    }
+
+    public function request()
+    {
+
+        return $this->model->request;
     }
 
     public function dispose(User $user, Accessory $accessory)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-
-        return in_array($user->role_id, $this->technician) && in_array($accessory->location_id, $locations);
+        return $this->model->delete && in_array($accessory->location_id, $user->locationsArray());
     }
 
 }

@@ -7,25 +7,28 @@ use App\Models\Transfer;
 use App\Models\User;
 use App\Models\Asset;
 
-class TransferPolicy
-{
-    protected $super = [1];
-    protected $admin = [1,2];
-    protected $technician = [1,3];
-    protected $manager = [1,2,3,4];
-    protected $all = [1,2,3,4,5];
+class TransferPolicy {
+
+    private $model;
+
+    public function __construct()
+    {
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Transfer')->first();
+    }
 
     public function approve(User $user)
     {
-        return $user->role_id == 1;
+        return $this->model->create;
     }
 
     public function reject(User $user)
     {
-        return $user->role_id == 1;
+        return $this->model->update;
     }
 
-    public function viewAll(User $user){
-        return $user->role_id != 0 && $user->role_id >= 5;
+    public function viewAll(User $user)
+    {
+        return $this->model->view;
     }
+
 }

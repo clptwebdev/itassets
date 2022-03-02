@@ -93,6 +93,7 @@ class User extends Authenticatable {
 
     public function locationsArray(): array
     {
+        // gets all locations' id attached to a user (used in polices)
         return auth()->user()->locations->pluck('id')->toArray();
     }
 

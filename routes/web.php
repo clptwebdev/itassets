@@ -273,7 +273,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::Post('/role/delete/', [\App\Http\Controllers\RoleController::class, "destroy"])->name('role.destroy');
     Route::Get('/role/default', [\App\Http\Controllers\RoleController::class, "default"])->name('role.default');
 });
-//403 redirects
-Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');
+
 
 
