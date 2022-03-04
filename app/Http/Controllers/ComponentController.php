@@ -33,33 +33,21 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Component', 'view']));
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Components.');
+
         }
 
         session(['orderby' => 'purchased_date']);
         session(['direction' => 'desc']);
 
-        if(auth()->user()->role_id == 1)
-        {
-            $components = Component::with('supplier', 'location')
-                ->leftJoin('locations', 'locations.id', '=', 'components.location_id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'components.manufacturer_id')
-                ->leftJoin('suppliers', 'suppliers.id', '=', 'components.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->paginate(intval(session('limit')) ?? 25, ['components.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
-                ->fragment('table');
-            $locations = Location::all();
-        } else
-        {
-            $components = Component::locationFilter(auth()->user()->locations->pluck('id'))
-                ->leftJoin('locations', 'locations.id', '=', 'components.location_id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'components.manufacturer_id')
-                ->leftJoin('suppliers', 'suppliers.id', '=', 'components.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->paginate(intval(session('limit')) ?? 25, ['components.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
-                ->fragment('table');
-            $locations = auth()->user()->locations;
-        }
+        $components = Component::locationFilter(auth()->user()->locations->pluck('id'))
+            ->leftJoin('locations', 'locations.id', '=', 'components.location_id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'components.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'components.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->paginate(intval(session('limit')) ?? 25, ['components.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+            ->fragment('table');
+        $locations = auth()->user()->locations;
         $this->clearFilter();
         $filter = 0;
         $categories = Category::with('accessories')->select('id', 'name')->get();
@@ -211,16 +199,10 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('create', Component::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Components', 'create']));
-        }
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Create Components.');
 
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
         }
+        $locations = auth()->user()->locations;
 
         return view('ComponentsDir.create', [
             "locations" => $locations,
@@ -235,7 +217,8 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('create', Component::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Component', 'Create']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Store Components.');
+
         }
 
         $request->validate([
@@ -266,7 +249,8 @@ class ComponentController extends Controller {
 
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Components', 'export']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Export Components.');
+
         }
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
@@ -327,7 +311,8 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('view', $component))
         {
-            return redirect(route('errors.forbidden', ['component', $component->id, 'view']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Show Components.');
+
         }
 
         return view('ComponentsDir.show', ["data" => $component,]);
@@ -361,7 +346,8 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('update', $component))
         {
-            return redirect(route('errors.forbidden', ['component', $component->id, 'comment']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Comment on Components.');
+
         } else
         {
             $request->validate([
@@ -379,7 +365,8 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('update', $component))
         {
-            return redirect(route('errors.forbidden', ['component', $component->id, 'update']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Update Components.');
+
         } else
         {
             $request->validate([
@@ -408,7 +395,8 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('delete', $component))
         {
-            return redirect(route('errors.forbidden', ['component', $component->id, 'delete']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Delete Components.');
+
         } else
         {
             $name = $component->name;
@@ -424,7 +412,8 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Components', 'export']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Export Components.');
+
         }
         $components = Component::all();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
@@ -440,7 +429,8 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('create', Component::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Components', 'import']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Import Components.');
+
         }
 
         $extensions = array("csv");
@@ -535,7 +525,8 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Components', 'download pdf']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Download Components.');
+
         }
 
         $components = array();
@@ -577,7 +568,8 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('view', $component))
         {
-            return redirect(route('errors.forbidden', ['components', $component->id, 'download pdf']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Download Components.');
+
         }
 
         $user = auth()->user();
@@ -601,17 +593,12 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Components', 'recycle bin']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Recycle Components.');
+
         }
-        if(auth()->user()->role_id == 1)
-        {
-            $components = Component::onlyTrashed()->get();
-            $locations = Location::all();
-        } else
-        {
-            $assets = auth()->user()->location_components()->onlyTrashed();
-            $locations = auth()->user()->locations;
-        }
+
+        $components = auth()->user()->location_components()->onlyTrashed()->get();
+        $locations = auth()->user()->locations;
 
         return view('ComponentsDir.bin', ["components" => $components,]);
     }
@@ -621,7 +608,8 @@ class ComponentController extends Controller {
         $component = Component::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $component))
         {
-            return redirect(route('errors.forbidden', ['component', $component->id, 'restore']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Restore Components.');
+
         }
         $name = $component->name;
         $component->restore();
@@ -635,7 +623,8 @@ class ComponentController extends Controller {
         $component = Component::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $component))
         {
-            return redirect(route('errors.forbidden', ['component', $component->id, 'Force Delete']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Delete Components.');
+
         }
         $name = $component->name;
         $component->forceDelete();

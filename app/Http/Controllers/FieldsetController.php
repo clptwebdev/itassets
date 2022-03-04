@@ -13,7 +13,8 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Fieldset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'fieldset', 'view']));
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View FieldSets.');
+
         }
 
         $fieldsets = Fieldset::all();
@@ -25,7 +26,8 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('create', Fieldset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'fieldset', 'create']));
+            return ErrorController::forbidden(route('fieldsets.index'), 'Unauthorised to Create FieldSets.');
+
         }
 
         $fields = \App\Models\Field::all();
@@ -37,7 +39,8 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('create', Fieldset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'fieldset', 'create']));
+            return ErrorController::forbidden(route('fieldsets.index'), 'Unauthorised to Create FieldSets.');
+
         }
 
         $validated = $request->validate([
@@ -53,6 +56,11 @@ class FieldsetController extends Controller {
 
     public function edit(Fieldset $fieldset)
     {
+        if(auth()->user()->cant('update', Fieldset::class))
+        {
+            return ErrorController::forbidden(route('fieldsets.index'), 'Unauthorised to Update FieldSets.');
+
+        }
         $fields = Field::all();
 
         return view('fieldsets.edit', compact('fieldset', 'fields'));
@@ -62,7 +70,8 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('update', Fieldset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Category', 'update']));
+            return ErrorController::forbidden(route('fieldsets.index'), 'Unauthorised to Update FieldSets.');
+
         }
 
         $validated = $request->validate([
@@ -80,7 +89,8 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('delete', Fieldset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Category', 'delete']));
+            return ErrorController::forbidden(route('fieldsets.index'), 'Unauthorised to Delete FieldSets.');
+
         }
 
         $name = $fieldset->name;

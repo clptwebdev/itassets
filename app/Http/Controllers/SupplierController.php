@@ -16,16 +16,33 @@ class SupplierController extends Controller {
 
     public function index()
     {
+        if(auth()->user()->cant('view', Supplier::class))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Suppliers.');
+
+        }
+
         return view('suppliers.view');
     }
 
     public function create()
     {
+        if(auth()->user()->cant('create', Supplier::class))
+        {
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Create Suppliers.');
+
+        }
+
         return view('suppliers.create');
     }
 
     public function store(Request $request)
     {
+        if(auth()->user()->cant('create', Supplier::class))
+        {
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Create Suppliers.');
+
+        }
         $validated = $request->validate([
             'name' => 'required|max:255',
             'url' => 'sometimes|nullable|unique:suppliers',
@@ -41,16 +58,33 @@ class SupplierController extends Controller {
 
     public function show(Supplier $supplier)
     {
+        if(auth()->user()->cant('view', $supplier))
+        {
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Show Suppliers.');
+
+        }
+
         return view('suppliers.show', ['supplier' => $supplier]);
     }
 
     public function edit(Supplier $supplier)
     {
+        if(auth()->user()->cant('update', $supplier))
+        {
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Edit Suppliers.');
+
+        }
+
         return view('suppliers.edit', compact('supplier'));
     }
 
     public function update(Request $request, Supplier $supplier)
     {
+        if(auth()->user()->cant('update', $supplier))
+        {
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Update Suppliers.');
+
+        }
         $validated = $request->validate([
             'name' => 'required|max:255',
             'email' => ['sometimes', 'nullable', \Illuminate\Validation\Rule::unique('suppliers')->ignore($supplier->id), 'email:rfc,dns,spoof,filter'],
@@ -66,6 +100,11 @@ class SupplierController extends Controller {
 
     public function destroy(Supplier $supplier)
     {
+        if(auth()->user()->cant('forceDelete', $supplier))
+        {
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Delete Suppliers.');
+
+        }
         $name = $supplier->name;
         $supplier->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
@@ -75,6 +114,11 @@ class SupplierController extends Controller {
 
     public function export(Supplier $supplier)
     {
+        if(auth()->user()->cant('viewAny', $supplier))
+        {
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Export Suppliers.');
+
+        }
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new SupplierExport, "/public/csv/suppliers-ex-{$date}.xlsx");
@@ -89,7 +133,8 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Supplier::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'suppliers', 'View PDF']));
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Download Suppliers.');
+
         }
 
         $found = Supplier::all();
@@ -136,7 +181,8 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Supplier::class))
         {
-            return redirect(route('errors.forbidden', ['suppliers', $supplier->id, 'View PDF']));
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Download Suppliers.');
+
         }
 
         $user = auth()->user();

@@ -14,22 +14,14 @@ class TransferController extends Controller {
 
     public function index()
     {
-        if(auth()->user()->cant('viewAll', Asset::class))
+        if(auth()->user()->cant('viewAll', Transfer::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'transfers']));
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Transfers.');
         }
 
-        if(auth()->user()->role_id == 1)
-        {
-            $transfers = Transfer::all();
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
-
-            $location_ids = $locations->pluck('id');
-            $transfers = Transfer::whereIn('location_from', $location_ids)->orWhereIn('location_to', $location_ids)->get();
-        }
+        $locations = auth()->user()->locations;
+        $location_ids = $locations->pluck('id');
+        $transfers = Transfer::whereIn('location_from', $location_ids)->orWhereIn('location_to', $location_ids)->get();
 
         return view('transfers.view', compact('transfers', 'locations'));
     }
@@ -38,20 +30,12 @@ class TransferController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'view']));
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Transfers for Assets.');
         }
+        $locations = auth()->user()->locations;
 
-        if(auth()->user()->role_id == 1)
-        {
-            $transfers = Transfer::whereModelType('asset')->get();
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
-
-            $location_ids = $locations->pluck('id');
-            $transfers = Transfer::whereIn('location_from', $location_ids)->orWhereIn('location_to', $location_ids)->whereModelType('asset')->get();
-        }
+        $location_ids = $locations->pluck('id');
+        $transfers = Transfer::whereIn('location_from', $location_ids)->orWhereIn('location_to', $location_ids)->whereModelType('asset')->get();
 
         $title = "Asset Transfers";
 
@@ -60,22 +44,15 @@ class TransferController extends Controller {
 
     public function accessories()
     {
+
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'accessories']));
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Transfers for Accessories.');
         }
+        $locations = auth()->user()->locations;
 
-        if(auth()->user()->role_id == 1)
-        {
-            $transfers = Transfer::whereModelType('accessory')->get();
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
-
-            $location_ids = $locations->pluck('id');
-            $transfers = Transfer::whereIn('location_from', $location_ids)->orWhereIn('location_to', $location_ids)->whereModelType('accessory')->get();
-        }
+        $location_ids = $locations->pluck('id');
+        $transfers = Transfer::whereIn('location_from', $location_ids)->orWhereIn('location_to', $location_ids)->whereModelType('accessory')->get();
 
         $title = "Accessory Transfers";
 
@@ -92,7 +69,7 @@ class TransferController extends Controller {
             'location_to' => $request->location_id,
             'location_from' => $asset->location_id,
             'user_id' => auth()->user()->id,
-            'status' => '0'
+            'status' => '0',
         ]);
         //Notify by email
 

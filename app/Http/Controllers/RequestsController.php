@@ -17,7 +17,11 @@ class RequestsController extends Controller {
 
     public function index()
     {
+        if(auth()->user()->cant('handle', Requests::class))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised for Requests.');
 
+        }
         //Returns the View for the list of requests
         $locations = Location::all();
         $requests = Requests::orderBy('created_at', 'desc')->paginate(25);
@@ -27,6 +31,7 @@ class RequestsController extends Controller {
 
     public function access()
     {
+       
         $requests = Requests::create([
             'type' => 'access',
             'notes' => 'Requesting Access to the Apollo Asset Management System at CLPT',
@@ -35,7 +40,7 @@ class RequestsController extends Controller {
             'status' => 0,
         ]);
 
-        //Notify by email
+        //Notify by email (change for new system elliot)
         $admins = User::superAdmin()->get();
         foreach($admins as $admin)
         {

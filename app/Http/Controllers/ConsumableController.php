@@ -39,16 +39,11 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Consumable::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Consumables', 'view']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to View Consumables.');
+
         }
 
-        if(auth()->user()->role_id == 1)
-        {
-            $consumables = Consumable::all();
-        } else
-        {
-            $consumables = auth()->user()->location_consumables;
-        }
+        $consumables = auth()->user()->location_consumables;
 
         return view('consumable.view', compact('consumables'));
     }
@@ -57,16 +52,10 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('create', Consumable::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Consumables', 'create']));
-        }
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Create Consumables.');
 
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
         }
+        $locations = auth()->user()->locations;
 
         return view('consumable.create', [
             "locations" => $locations,
@@ -81,7 +70,8 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('create', Consumable::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Consumables', 'create']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Store Consumables.');
+
         }
 
         $request->validate([
@@ -113,7 +103,8 @@ class ConsumableController extends Controller {
 
         if(auth()->user()->cant('viewAll', Consumable::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Consumables', 'export']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Export Consumables.');
+
         }
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
@@ -175,7 +166,8 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('create', $consumable))
         {
-            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'view']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Show Consumables.');
+
         }
 
         return view('consumable.show', ["consumable" => $consumable]);
@@ -185,7 +177,8 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('update', $consumable))
         {
-            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'update']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Update Consumables.');
+
         }
 
         if(auth()->user()->role_id == 1)
@@ -210,7 +203,8 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('update', $consumable))
         {
-            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'update']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Update Consumables.');
+
         }
 
         $request->validate([
@@ -238,7 +232,8 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('delete', $consumable))
         {
-            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'delete']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Delete Consumables.');
+
         }
         $name = $consumable->name;
         $consumable->delete();
@@ -252,7 +247,8 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('export', Consumable::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'consumables', 'export']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Export Consumables.');
+
         }
         $consumables = Consumable::all();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
@@ -270,7 +266,8 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('create', Consumable::class))
         {
-            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'import']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Import Consumables.');
+
         }
 
         $extensions = array("csv");
@@ -367,7 +364,8 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Consumable::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'consumables', 'export pdf']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Download Consumables.');
+
         }
 
         $consumables = array();
@@ -409,7 +407,8 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('export', Consumable::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'consumables', 'export pdf']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Download Consumables.');
+
         }
         $user = auth()->user();
 
@@ -432,16 +431,10 @@ class ConsumableController extends Controller {
     {
         if(auth()->user()->cant('recycleBin', Consumable::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'consumables', 'recycle bin']));
-        }
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Recycle Consumables.');
 
-        if(auth()->user()->role_id == 1)
-        {
-            $consumables = Consumable::onlyTrashed()->get();
-        } else
-        {
-            $consumables = auth()->user()->location_consumables()->onlyTrashed();
         }
+        $consumables = auth()->user()->location_consumables()->onlyTrashed();
 
         return view('consumable.bin', compact('consumables'));
     }
@@ -451,7 +444,8 @@ class ConsumableController extends Controller {
         $consumable = Consumable::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $consumable))
         {
-            return redirect(route('errors.forbidden', ['consumable', $consumable->id, 'restore']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Restore Consumables.');
+
         }
         $consumable->restore();
         session()->flash('success_message', "#" . $consumable->name . ' has been restored.');
@@ -464,7 +458,8 @@ class ConsumableController extends Controller {
         $consumable = Consumable::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $consumable))
         {
-            return redirect(route('errors.forbidden', ['consumable', $consumable->id, 'remove']));
+            return ErrorController::forbidden(route('consumables.index'), 'Unauthorised to Delete Consumables.');
+
         }
         $name = $consumable->name;
         $consumable->forceDelete();
@@ -475,6 +470,10 @@ class ConsumableController extends Controller {
 
     public function changeStatus(Consumable $consumable, Request $request)
     {
+        if(auth()->user()->cant('update', Status::class))
+        {
+            return ErrorController::forbidden(route('accessories.show', $consumable->id), 'Unauthorised to Change Statuses Consumables.');
+        }
         $consumable->status_id = $request->status;
         $consumable->save();
         session()->flash('success_message', $consumable->name . ' has had its status changed successfully');
