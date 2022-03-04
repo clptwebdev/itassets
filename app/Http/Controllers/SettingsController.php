@@ -41,6 +41,7 @@ class SettingsController extends Controller {
         unset($models[array_search('Requests', $models)]);
         unset($models[array_search('Transfer', $models)]);
         $roles = Role::all();
+        dd($models);
 
         return view('settings.view', [
             "users" => $users,
