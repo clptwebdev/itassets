@@ -142,13 +142,7 @@ class LocationController extends Controller {
 
         }
 
-        if(auth()->user()->role_id == 1)
-        {
-            $found = Location::all();
-        } else
-        {
-            $found = auth()->user()->locations;
-        }
+        $found = auth()->user()->locations;
 
         $locations = array();
 

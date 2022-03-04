@@ -322,15 +322,10 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('update', $component))
         {
-            return redirect(route('errors.forbidden', ['component', $component->id, 'edit']));
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Update Components.');
         }
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
-        }
+
+        $locations = auth()->user()->locations;
 
         return view('ComponentsDir.edit', [
             "data" => $component,

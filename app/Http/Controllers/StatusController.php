@@ -44,13 +44,8 @@ class StatusController extends Controller {
             return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Show Statuses.');
 
         }
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = \App\Models\Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
-        }
+
+        $locations = auth()->user()->locations;
 
         return view('status.show', compact('status', 'locations'));
     }

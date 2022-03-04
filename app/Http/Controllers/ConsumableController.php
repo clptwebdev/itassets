@@ -181,13 +181,7 @@ class ConsumableController extends Controller {
 
         }
 
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
-        }
+        $locations = auth()->user()->locations;
 
         return view('consumable.edit', [
             "consumable" => $consumable,

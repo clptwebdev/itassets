@@ -31,7 +31,7 @@ class RequestsController extends Controller {
 
     public function access()
     {
-       
+
         $requests = Requests::create([
             'type' => 'access',
             'notes' => 'Requesting Access to the Apollo Asset Management System at CLPT',
@@ -133,6 +133,7 @@ class RequestsController extends Controller {
             'notes' => $request->notes,
             'date' => $request->disposed_date,
             'user_id' => auth()->user()->id,
+
             'status' => 0,
         ]);
 

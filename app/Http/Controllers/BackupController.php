@@ -12,6 +12,11 @@ class BackupController extends Controller {
 
     public function index()
     {
+        if(auth()->user()->cant('view', Backup::class))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Backups.');
+
+        }
         $files = Storage::files('public/Apollo-Asset-Manager');
 
         $zipFiles = array();
@@ -27,12 +32,21 @@ class BackupController extends Controller {
 
     public function download(Request $request)
     {
+        if(auth()->user()->cant('view', Backup::class))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Download Backups.');
+
+        }
         Storage::download($request->file);
     }
 
     public function createDB()
     {
+        if(auth()->user()->cant('create', Backup::class))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Create Backups.');
 
+        }
         Artisan::call("backup:run --only-db");
 
         return redirect("/databasebackups")->with('success_message', 'A Backup of the database was completed!');
@@ -41,7 +55,11 @@ class BackupController extends Controller {
 
     public function createFull()
     {
+        if(auth()->user()->cant('create', Backup::class))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Create Backups.');
 
+        }
         Artisan::call("backup:run");
 
         return redirect("/databasebackups")->with('success_message', 'A Backup of the Application was completed!');
@@ -49,6 +67,11 @@ class BackupController extends Controller {
 
     public function dbClean()
     {
+        if(auth()->user()->cant('delete', Backup::class))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Clean Backups.');
+
+        }
         $files = Storage::files('public/Apollo---Asset-Manager');
         Storage::delete($files);
 
