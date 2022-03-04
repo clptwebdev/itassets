@@ -11,39 +11,16 @@ class UserObserver {
     public function created(User $user)
     {
         $name = auth()->user()->name ?? 'System';
-        switch($user->role_id)
-        {
-            case 0:
-                $role = 'No Access';
-                break;
-            case 1:
-                $role = 'Super Admin';
-                break;
-            case 2:
-                $role = 'Administrator';
-                break;
-            case 3:
-                $role = 'User Manager';
-                break;
-            case 4:
-                $role = 'User';
-                break;
-        }
+        $role = auth()->user()->role->name;
         $schools = "";
-        if($user->role_id == 1)
+        foreach($user->locations as $location)
         {
-            $schools = "All Locations";
-        } else
-        {
-            foreach($user->locations as $location)
+            if($schools == "")
             {
-                if($schools == "")
-                {
-                    $schools .= $location->name;
-                } else
-                {
-                    $schools .= ", " . $location->name;
-                }
+                $schools .= $location->name;
+            } else
+            {
+                $schools .= ", " . $location->name;
             }
         }
         if($schools == "")
@@ -55,46 +32,22 @@ class UserObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'user',
             'loggable_id' => $user->id,
-            'data' => "{$name} created a new user with '{$role}' permissions. Access has been granted for {$schools}"
+            'data' => "{$name} created a new user with '{$role}' permissions. Access has been granted for {$schools}",
         ]);
     }
 
     public function updated(User $user)
     {
-        $role = $user->roles->name;
-        switch($user->role_id)
-        {
-            case 0:
-                $role = 'No Access';
-                break;
-            case 1:
-                $role = 'Super Admin';
-                break;
-            case 2:
-                $role = 'Administrator';
-                break;
-            case 3:
-                $role = 'User Manager';
-                break;
-            case 4:
-                $role = 'User';
-                break;
-        }
+        $role = auth()->user()->role->name;
         $schools = "";
-        if($user->role_id == 1)
+        foreach($user->locations as $location)
         {
-            $schools = "All Locations";
-        } else
-        {
-            foreach($user->locations as $location)
+            if($schools == "")
             {
-                if($schools == "")
-                {
-                    $schools .= $location->name;
-                } else
-                {
-                    $schools .= ", " . $location->name;
-                }
+                $schools .= $location->name;
+            } else
+            {
+                $schools .= ", " . $location->name;
             }
         }
         if($schools == "")
@@ -106,7 +59,7 @@ class UserObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'user',
             'loggable_id' => $user->id,
-            'data' => auth()->user()->name . " updated user: {$user->name}. The Role of {$user->name} has been set to {$role}. Access Granted for {$schools}"
+            'data' => auth()->user()->name . " updated user: {$user->name}. The Role of {$user->name} has been set to {$role}. Access Granted for {$schools}",
         ]);
     }
 

@@ -35,6 +35,11 @@ class SettingsController extends Controller {
         $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'));
         $locations = Location::all();
         $models = $this->getModels();
+        unset($models[array_search('Permission', $models)]);
+        unset($models[array_search('Archive', $models)]);
+        unset($models[array_search('Report', $models)]);
+        unset($models[array_search('Requests', $models)]);
+        unset($models[array_search('Transfer', $models)]);
         $roles = Role::all();
 
         return view('settings.view', [
@@ -226,8 +231,9 @@ class SettingsController extends Controller {
                 $out[] = substr($filename, 0, -4);
             }
         }
+        $models = str_replace($path . '/', '', $out);
 
-        return str_replace($path . '/', '', $out);
+        return $models;
 
     }
 

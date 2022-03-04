@@ -34,7 +34,8 @@
                 <x-form.layout class="d-inline-block" action="/exportassets">
                     <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
                                   :value="json_encode($assets->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span>
+                    </x-buttons.submit>
                 </x-form.layout>
             @endif
             <div class="dropdown show d-inline">
@@ -60,37 +61,33 @@
     </x-wrappers.nav>
     <x-handlers.alerts/>
     @php
-        if(auth()->user()->role_id == 1){
-            $limit = \App\Models\Asset::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
-            $floor = \App\Models\Asset::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first();
-        }else{
-            $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
-            $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
-        }
-        if(session()->has('amount')){
-            $amount = str_replace('£', '', session('amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
-        }else{
-            $start_value = $floor;
-            $end_value = $limit;
-        }
+        $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+        $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+
+    if(session()->has('amount')){
+        $amount = str_replace('£', '', session('amount'));
+        $amount = explode(' - ', $amount);
+        $start_value = intval($amount[0]);
+        $end_value = intval($amount[1]);
+    }else{
+        $start_value = $floor;
+        $end_value = $limit;
+    }
     @endphp
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
                         different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
-        {{-- 
+        {{--
             vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
             model = the Model Name
-            relations = Relationship Name e.g $model->relationship or $asset->categories    
+            relations = Relationship Name e.g $model->relationship or $asset->categories
             table = RAW table name to check if the Schema has the column heading
         --}}
-        <x-filters.navigation model="Asset" relations="assets" table="assets"  />
-        <x-filters.filter model="Asset" relations="assets" table="assets"  :locations="$locations"
-                          :statuses="$statuses" :categories="$categories"/>
-        
+        <x-filters.navigation model="Asset" relations="assets" table="assets"/>
+        <x-filters.filter model="Asset" relations="assets" table="assets" :locations="$locations" :statuses="$statuses"
+                          :categories="$categories"/>
+
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive" id="table">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\RoleBoot;
 use App\Models\Role;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -34,6 +35,7 @@ class OfficeLoginController extends Controller {
         if($bootRoles == 0)
         {
             // create default roles
+            RoleBoot::dispatch();
         }
         if($authUser = User::whereEmail($user->email)->first())
         {

@@ -19,59 +19,57 @@
         @can('create' , \App\Models\AUC::class)
             <x-buttons.add :route="route('aucs.create')">Asset Under Construction</x-buttons.add>
         @endcan
-           {{--
-        @can('generatePDF', \App\Models\Asset::class)
-            @if ($assets->count() == 1)
-                <x-buttons.reports :route="route('asset.showPdf', $assets[0]->id)"/>
-            @else
-                <x-form.layout class="d-inline-block" :action="route('assets.pdf')">
-                    <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
-                                  :value="json_encode($assets->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
-                </x-form.layout>
-            @endif
-            @if($assets->count() >1)
-                <x-form.layout class="d-inline-block" action="/exportassets">
-                    <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
-                                  :value="json_encode($assets->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
-                </x-form.layout>
-            @endif
-            <div class="dropdown show d-inline">
-                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Bulk Options
-                </a>
-                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                    @can('create', \App\Models\Asset::class)
-                        <x-buttons.dropdown-item id="import">
-                            Import
-                        </x-buttons.dropdown-item>
-                    @endcan
-                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">
-                        Dispose
-                    </x-buttons.dropdown-item>
-                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkTransferModal'">
-                        Transfer
-                    </x-buttons.dropdown-item>
-                </div>
-            </div>
-        @endcan --}}
+        {{--
+     @can('generatePDF', \App\Models\Asset::class)
+         @if ($assets->count() == 1)
+             <x-buttons.reports :route="route('asset.showPdf', $assets[0]->id)"/>
+         @else
+             <x-form.layout class="d-inline-block" :action="route('assets.pdf')">
+                 <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
+                               :value="json_encode($assets->pluck('id'))"/>
+                 <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+             </x-form.layout>
+         @endif
+         @if($assets->count() >1)
+             <x-form.layout class="d-inline-block" action="/exportassets">
+                 <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
+                               :value="json_encode($assets->pluck('id'))"/>
+                 <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
+             </x-form.layout>
+         @endif
+         <div class="dropdown show d-inline">
+             <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 Bulk Options
+             </a>
+             <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
+                 @can('create', \App\Models\Asset::class)
+                     <x-buttons.dropdown-item id="import">
+                         Import
+                     </x-buttons.dropdown-item>
+                 @endcan
+                 <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">
+                     Dispose
+                 </x-buttons.dropdown-item>
+                 <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkTransferModal'">
+                     Transfer
+                 </x-buttons.dropdown-item>
+             </div>
+         </div>
+     @endcan --}}
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
-        <p class="mt-5 mb-4">Below are the Asset that are currently under construction within the Central Learning Partnership Trust. You require access to see
-            the assets assigned to the different locations. If you think you have the incorrect permissions, please contact apollo@clpt.co.uk
-        </p>
+        <p class="mt-5 mb-4">Below are the Asset that are currently under construction within the Central Learning
+                             Partnership Trust. You require access to see
+                             the assets assigned to the different locations. If you think you have the incorrect
+                             permissions, please contact apollo@clpt.co.uk </p>
 
         @php
-        if(auth()->user()->role_id == 1){
-            $limit = \App\Models\AUC::orderByRaw('CAST(value as DECIMAL(11,2)) DESC')->pluck('value')->first();
-            $floor = \App\Models\AUC::orderByRaw('CAST(value as DECIMAL(11,2)) ASC')->pluck('value')->first();
-        }else{
+
             $limit = auth()->user()->location_property()->orderBy('value', 'desc')->pluck('value')->first();
             $floor = auth()->user()->location_property()->orderBy('value', 'asc')->pluck('value')->first();
-        }
+
         if(session()->has('auc_amount')){
             $amount = str_replace('£', '', session('auc_amount'));
             $amount = explode(' - ', $amount);
@@ -83,8 +81,8 @@
         }
         @endphp
 
-        <x-filters.navigation model="AUC" relations="auc" table="a_u_c_s" />
-        <x-filters.filter  model="AUC" relations="auc" table="a_u_c_s" :locations="$locations"/>
+        <x-filters.navigation model="AUC" relations="auc" table="a_u_c_s"/>
+        <x-filters.filter model="AUC" relations="auc" table="a_u_c_s" :locations="$locations"/>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -99,7 +97,8 @@
                             <th class="text-center col-1 col-md-auto"><small>Value</small></th>
                             <th class="text-center col-2 col-md-auto"><small>Date</small></th>
                             <th class="text-center col-1 col-md-auto"><small>Current Value</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small></th>
+                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
+                            </th>
                             <th class="text-center col-1 d-none d-xl-table-cell"><small>Dep Charge</small></th>
                             <th class="text-right col-1"><small>Options</small></th>
                         </tr>
@@ -109,8 +108,8 @@
                             <th><small>Name</small></th>
                             <th><small>Type</small></th>
                             <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Value</small></th>  
-                            <th class="text-center"><small>Date</small></th>  
+                            <th class="text-center"><small>Value</small></th>
+                            <th class="text-center"><small>Date</small></th>
                             <th class="text-center"><small>Current Value</small></th>
                             <th class="text-center"><small>Depreciation (Years)</small></th>
                             <th class="text-center"><small>Dep Charge</small></th>
@@ -118,7 +117,7 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                            @foreach($aucs as $auc)
+                        @foreach($aucs as $auc)
                             <tr>
                                 <td class="text-left">{{$auc->name}}</td>
                                 <td class="text-left">
@@ -153,7 +152,8 @@
                                 </td>
                                 <td class="text-center">£{{number_format($auc->value, 2, '.', ',')}}</td>
                                 <td class="text-center">{{\Carbon\Carbon::parse($auc->date)->format('jS M Y')}}</td>
-                                <td class="text-center">£{{number_format($auc->depreciation_value(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
+                                <td class="text-center">
+                                    £{{number_format($auc->depreciation_value(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
                                 <td class="text-center">{{$auc->depreciation}} Years</td>
                                 <td class="text-center">{{$auc->depreciation}} Years</td>
                                 <td class="text-right">
@@ -164,14 +164,15 @@
                                             </x-buttons.dropdown-item>
                                         @endcan
                                         @can('update', $auc)
-                                                <x-buttons.dropdown-item :route=" route('aucs.edit', $auc->id)">
-                                                    Edit
-                                                </x-buttons.dropdown-item>
+                                            <x-buttons.dropdown-item :route=" route('aucs.edit', $auc->id)">
+                                                Edit
+                                            </x-buttons.dropdown-item>
                                         @endcan
-                                      
+
                                         @can('delete', $auc)
-                                            <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$auc->id" :action="route('aucs.destroy', $auc->id)">
-                                                <x-buttons.dropdown-item :data="$auc->id" class="deleteBtn" >
+                                            <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$auc->id"
+                                                           :action="route('aucs.destroy', $auc->id)">
+                                                <x-buttons.dropdown-item :data="$auc->id" class="deleteBtn">
                                                     Delete
                                                 </x-buttons.dropdown-item>
                                             </x-form.layout>
@@ -179,12 +180,12 @@
                                     </x-wrappers.table-settings>
                                 </td>
                             </tr>
-                            @endforeach
-                            @if($aucs->count() == 0)
+                        @endforeach
+                        @if($aucs->count() == 0)
                             <tr>
                                 <td colspan="9" class="text-center">No Assets Under Construction Returned</td>
                             </tr>
-                            @endif
+                        @endif
                         </tbody>
                     </table>
                     <x-paginate :model="$aucs"/>
@@ -204,16 +205,16 @@
 @endsection
 @section('modals')
 
-<x-modals.delete/>
+    <x-modals.delete/>
 
 @endsection
 
 @section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{asset('js/filter.js')}}"></script>
-<script src="{{asset('js/delete.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{asset('js/filter.js')}}"></script>
+    <script src="{{asset('js/delete.js')}}"></script>
     <script>
         $(function () {
             $("#slider-range").slider({

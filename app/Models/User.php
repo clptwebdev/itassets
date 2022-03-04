@@ -128,7 +128,20 @@ class User extends Authenticatable {
 
     public function scopeSuperAdmin($query)
     {
-        return $query->where('role_id', '=', '1');
+        $role = Role::whereName('super-admin')->first();
+        if($role)
+        {
+            return User::all()->whereRole_Id($role->id);
+        }
+    }
+
+    public static function SuperAdmin()
+    {
+        $role = Role::whereName('super-admin')->first();
+        if($role)
+        {
+            return User::all()->whereRole_Id($role->id);
+        }
     }
 
 }

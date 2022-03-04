@@ -133,16 +133,9 @@ class ComponentController extends Controller {
             session(['amount' => $request->amount]);
         }
 
-        if(auth()->user()->role_id != 1)
-        {
-            $locations = auth()->user()->locations->pluck('id');
-            $locs = auth()->user()->locations;
+        $locations = \App\Models\Location::all()->pluck('id');
+        $locs = \App\Models\Location::all();
 
-        } else
-        {
-            $locations = \App\Models\Location::all()->pluck('id');
-            $locs = \App\Models\Location::all();
-        }
         $filter = 0;
 
         $components = Component::locationFilter($locations);

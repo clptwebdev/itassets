@@ -14,10 +14,6 @@ class TransferController extends Controller {
 
     public function index()
     {
-        if(auth()->user()->cant('viewAll', Transfer::class))
-        {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Transfers.');
-        }
 
         $locations = auth()->user()->locations;
         $location_ids = $locations->pluck('id');
@@ -28,10 +24,7 @@ class TransferController extends Controller {
 
     public function assets()
     {
-        if(auth()->user()->cant('viewAll', Asset::class))
-        {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Transfers for Assets.');
-        }
+
         $locations = auth()->user()->locations;
 
         $location_ids = $locations->pluck('id');
@@ -45,10 +38,6 @@ class TransferController extends Controller {
     public function accessories()
     {
 
-        if(auth()->user()->cant('viewAll', Accessory::class))
-        {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Transfers for Accessories.');
-        }
         $locations = auth()->user()->locations;
 
         $location_ids = $locations->pluck('id');

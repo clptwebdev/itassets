@@ -17,11 +17,7 @@ class RequestsController extends Controller {
 
     public function index()
     {
-        if(auth()->user()->cant('handle', Requests::class))
-        {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised for Requests.');
 
-        }
         //Returns the View for the list of requests
         $locations = Location::all();
         $requests = Requests::orderBy('created_at', 'desc')->paginate(25);
@@ -136,11 +132,10 @@ class RequestsController extends Controller {
 
             'status' => 0,
         ]);
-
-        if(auth()->user()->role_id == 1)
+        $m = "\\App\\Models\\" . ucfirst($requests->model_type);
+        $model = $m::find($requests->model_id);
+        if(auth()->user()->can('request', $model))
         {
-            $m = "\\App\\Models\\" . ucfirst($requests->model_type);
-            $model = $m::find($request->model_id);
 
             if($request->model_type == 'asset' && $model->model()->exists())
             {

@@ -44,22 +44,18 @@
     </x-wrappers.nav>
     <x-handlers.alerts/>
     @php
-        if(auth()->user()->role_id == 1){
-            $limit = \App\Models\Accessory::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
-            $floor = \App\Models\Accessory::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first();
-        }else{
-            $limit = auth()->user()->location_accessories()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
-            $floor = auth()->user()->location_accessories()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
-        }
-        if(session()->has('amount')){
-            $amount = str_replace('£', '', session('amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
-        }else{
-            $start_value = $floor;
-            $end_value = $limit;
-        }
+        $limit = auth()->user()->location_accessories()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+        $floor = auth()->user()->location_accessories()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+
+    if(session()->has('amount')){
+        $amount = str_replace('£', '', session('amount'));
+        $amount = explode(' - ', $amount);
+        $start_value = intval($amount[0]);
+        $end_value = intval($amount[1]);
+    }else{
+        $start_value = $floor;
+        $end_value = $limit;
+    }
     @endphp
 
     <section>
