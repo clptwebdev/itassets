@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Location;
@@ -41,10 +42,11 @@ class UserController extends Controller {
         {
             return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Create Users.');
         }
+        $roles = Role::all();
 
         $locations = auth()->user()->locations;
 
-        return view('users.create', compact('locations'));
+        return view('users.create', compact('locations', 'roles'));
     }
 
     public function store(Request $request)
@@ -52,6 +54,7 @@ class UserController extends Controller {
         $request->validate([
             'name' => 'required',
             'email' => 'required|unique:users|email:rfc,dns,spoof,filter',
+            'role_id' => 'required',
         ]);
 
         $user = new User;
@@ -60,7 +63,8 @@ class UserController extends Controller {
         $user->fill(['name' => $request->name, 'telephone' => $request->telephone, 'email' => $request->email, 'location_id' => $request->location_id, 'role_id' => $request->role_id, 'password' => $password])->save();
         Mail::to($request->email)->send(new \App\Mail\NewUserPassword($user, $unhash));
 
-        $array = explode(',', $request->permission_ids);
+        $array = explode(',', $request->permission_id);
+
         $user->locations()->attach($array);
 
         Mail::to('apollo@clpt.co.uk')->send(new \App\Mail\CreatedUser(auth()->user(), $user));
@@ -88,10 +92,10 @@ class UserController extends Controller {
         {
             return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Edit User.');
         }
-
+        $roles = Role::significance($user);
         $locations = auth()->user()->locations;
 
-        return view('users.edit', compact('user', 'locations'));
+        return view('users.edit', compact('user', 'locations', 'roles'));
 
     }
 

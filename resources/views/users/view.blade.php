@@ -11,7 +11,10 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Users</h1>
         <div class="mt-4 mt-sm-0">
-            <x-buttons.add :route="route('users.create')">User(s)</x-buttons.add>
+            @can('create' , \App\Models\User::class)
+                <x-buttons.add :route="route('users.create')">User(s)</x-buttons.add>
+            @endcan
+
             @can('viewAll', auth()->user())
                 <form class="d-inline-block" action="{{ route('users.pdf')}}" method="POST">
                     @csrf

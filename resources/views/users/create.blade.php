@@ -12,8 +12,10 @@
             <h1 class="h3 mb-0 text-gray-800">Add New User</h1>
 
             <div class="mt-4 mt-md-0">
-                <a href="{{ route('users.index')}}" class="d-inline-block btn btn-sm btn-grey shadow-sm"><i
-                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Users</a>
+                @can('viewAll' ,\App\Models\User::class)
+                    <a href="{{ route('users.index')}}" class="d-inline-block btn btn-sm btn-grey shadow-sm"><i
+                            class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Users</a>
+                @endcan
                 <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
@@ -82,18 +84,11 @@
 
                             <div class="form-group">
                                 <label for="role">Role</label><span class="text-danger">*</span>
-                                {{--                                <select type="text"--}}
-                                {{--                                    class="form-control mb-3 <?php if ($errors->has('role')) {?>border-danger<?php }?>"--}}
-                                {{--                                    name="role_id" id="role_id" onchange="javascript:rolePermissions(this, '{{ implode(',', $locations->pluck('id')->toArray())}}');">--}}
-                                {{--                                    <option @if(old('role_id') == 0){{'selected'}}@endif>Please select a role for the user</option>--}}
-                                {{--                                    @if(auth()->user()->role_id == 1)--}}
-                                {{--                                    <option value="1" @if(old('role_id') == 1){{'selected'}}@endif>Super Administrator</option>--}}
-                                {{--                                    @endif--}}
-                                {{--                                    <option value="2" @if(old('role_id') == 2){{'selected'}}@endif>Administrator</option>--}}
-                                {{--                                    <option value="3" @if(old('role_id') == 3){{'selected'}}@endif>Technician</option>--}}
-                                {{--                                    <option value="4" @if(old('role_id') == 3){{'selected'}}@endif>User Manager</option>--}}
-                                {{--                                    <option value="5" @if(old('role_id') == 4){{'selected'}}@endif>User</option>--}}
-                                {{--                                </select>--}}
+                                <select class='form-control' name="role_id">
+                                    @foreach($roles as $role)
+                                        <option value="{{$role->id}}">{{ $role->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>

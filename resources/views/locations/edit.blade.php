@@ -7,119 +7,142 @@
 @endsection
 
 @section('content')
-<form action="{{ route('location.update', $location->id) }}" method="POST">
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Update Location</h1>
+    <form action="{{ route('location.update', $location->id) }}" method="POST">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Update Location</h1>
 
-    <div>
-        <a href="{{ route('location.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Locations</a>
-        <a href="{{ route('documentation.index')."#collapseFiveLocations"}}"
-           class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
-                class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
-        <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
-                class="far fa-save fa-sm text-white-50"></i> Save</button>
-    </div>
-</div>
+            <div>
+                @can('viewAll' ,\App\Models\Location::class)
 
-<section>
-    <p class="mb-4">Below are different tiles, one for each location stored in the management system. Each tile has different options and locations can created, updated, and deleted.</p>
-    <div class="row row-eq-height">
-        <div class="col-12 col-md-8 col-lg-9 col-xl-10">
-            <div class="card shadow h-100">
-                <div class="card-body">
-
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
-
-                    @csrf
-                    {{ method_field('PATCH') }}
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>" name="name"
-                            id="name" placeholder="" value="{{ old('name') ?? $location->name }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="address2">Street Address</label>
-                        <input type="text" class="form-control mb-3 <?php if ($errors->has('address_1') || $errors->has('address_2')) {?>border-danger<?php }?>" name="address_1"
-                            id="address_1" placeholder="Street Name" value="{{ old('address_1') ?? $location->address_1}}" required>
-                        <input type="text" class="form-control" name="address_2" id="address_2" placeholder="Location" value="{{ old('address_2') ?? $location->address_2 }}">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label for="city">City</label>
-                            <input type="text" class="form-control <?php if ($errors->has('city')) {?>border-danger<?php }?>" id="city"
-                                name="city" value="{{ old('city') ?? $location->city }}" required>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="city">County</label>
-                            <input type="text" class="form-control <?php if ($errors->has('county')) {?>border-danger<?php }?>" id="county"
-                                name="county" value="{{ old('county') ?? $location->county }}" required>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="postcode">Zip</label>
-                            <input type="text" class="form-control <?php if ($errors->has('postcode')) {?>border-danger<?php }?>"
-                                id="postcode" name="postcode" value="{{ old('postcode') ?? $location->postcode }}" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="telephone">Telephone</label>
-                        <input type="text" class="form-control" name="telephone" id="telephone" placeholder="Telelphone" value="{{ old('telephone') ?? $location->telephone }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="telephone">Email Address</label>
-                        <input type="text" class="form-control" name="email" id="email" placeholder="Email" value="{{ old('email') ?? $location->email }}">
-                    </div>
-
-                </div>
+                    <a href="{{ route('location.index') }}"
+                       class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                            class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Locations</a>
+                @endcan
+                <a href="{{ route('documentation.index')."#collapseFiveLocations"}}"
+                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                        class="fas fa-question fa-sm text-dark-50"></i> need Help?</a>
+                <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
+                        class="far fa-save fa-sm text-white-50"></i> Save
+                </button>
             </div>
         </div>
 
-        <div class="col-12 col-md-4 col-lg-3 col-xl-2">
-            <div class="card shadow h-100">
-                <div class="card-body">
-                    <div class="w-100">
-                        <div class="formgroup mb-2 p-2">
-                            <h4 class="h6 mb-3">Location Image</h4>
-                            @if($location->photo()->exists())
-                            <img id="profileImage" src="{{ asset($location->photo->path) ?? asset('images/svg/location-image.svg') }}" width="100%"
-                                alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
-                            @else
-                            <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}" width="100%"
-                                alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+        <section>
+            <p class="mb-4">Below are different tiles, one for each location stored in the management system. Each tile
+                            has different options and locations can created, updated, and deleted.</p>
+            <div class="row row-eq-height">
+                <div class="col-12 col-md-8 col-lg-9 col-xl-10">
+                    <div class="card shadow h-100">
+                        <div class="card-body">
+
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             @endif
-                            <input type="hidden" id="photo_id" name="photo_id" value="{{ $location->photo_id }}">
+
+                            @csrf
+                            {{ method_field('PATCH') }}
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text"
+                                       class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
+                                       name="name" id="name" placeholder=""
+                                       value="{{ old('name') ?? $location->name }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="address2">Street Address</label>
+                                <input type="text"
+                                       class="form-control mb-3 <?php if ($errors->has('address_1') || $errors->has('address_2')) {?>border-danger<?php }?>"
+                                       name="address_1" id="address_1" placeholder="Street Name"
+                                       value="{{ old('address_1') ?? $location->address_1}}" required>
+                                <input type="text" class="form-control" name="address_2" id="address_2"
+                                       placeholder="Location" value="{{ old('address_2') ?? $location->address_2 }}">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="city">City</label>
+                                    <input type="text"
+                                           class="form-control <?php if ($errors->has('city')) {?>border-danger<?php }?>"
+                                           id="city" name="city" value="{{ old('city') ?? $location->city }}" required>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="city">County</label>
+                                    <input type="text"
+                                           class="form-control <?php if ($errors->has('county')) {?>border-danger<?php }?>"
+                                           id="county" name="county" value="{{ old('county') ?? $location->county }}"
+                                           required>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="postcode">Zip</label>
+                                    <input type="text"
+                                           class="form-control <?php if ($errors->has('postcode')) {?>border-danger<?php }?>"
+                                           id="postcode" name="postcode"
+                                           value="{{ old('postcode') ?? $location->postcode }}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telephone">Telephone</label>
+                                <input type="text" class="form-control" name="telephone" id="telephone"
+                                       placeholder="Telelphone" value="{{ old('telephone') ?? $location->telephone }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telephone">Email Address</label>
+                                <input type="text" class="form-control" name="email" id="email" placeholder="Email"
+                                       value="{{ old('email') ?? $location->email }}">
+                            </div>
+
                         </div>
                     </div>
-                    <hr>
-                    <label for="icon">Select School Icon Colour:</label>
-                    <input class="form-control" type="color" id="icon" name="icon" value="{{ old('icon') ?? $location->icon }}">
+                </div>
+
+                <div class="col-12 col-md-4 col-lg-3 col-xl-2">
+                    <div class="card shadow h-100">
+                        <div class="card-body">
+                            <div class="w-100">
+                                <div class="formgroup mb-2 p-2">
+                                    <h4 class="h6 mb-3">Location Image</h4>
+                                    @if($location->photo()->exists())
+                                        <img id="profileImage"
+                                             src="{{ asset($location->photo->path) ?? asset('images/svg/location-image.svg') }}"
+                                             width="100%" alt="Select Profile Picture" data-toggle="modal"
+                                             data-target="#imgModal">
+                                    @else
+                                        <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
+                                             width="100%" alt="Select Profile Picture" data-toggle="modal"
+                                             data-target="#imgModal">
+                                    @endif
+                                    <input type="hidden" id="photo_id" name="photo_id"
+                                           value="{{ $location->photo_id }}">
+                                </div>
+                            </div>
+                            <hr>
+                            <label for="icon">Select School Icon Colour:</label>
+                            <input class="form-control" type="color" id="icon" name="icon"
+                                   value="{{ old('icon') ?? $location->icon }}">
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="card shadow mt-4">
-        <div class="card-header bg-primary-blue text-white">Information</div>
-        <div class="card-body"><p>There are currently {{$locations->count()}} Locations on the System</p></div>
-    </div>
-</section>
-</form>
+            <div class="card shadow mt-4">
+                <div class="card-header bg-primary-blue text-white">Information</div>
+                <div class="card-body"><p>There are currently {{$locations->count()}} Locations on the System</p></div>
+            </div>
+        </section>
+    </form>
 @endsection
 
 @section('modals')
     <!-- Profile Image Modal-->
-    <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel"
-        aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog"
+         aria-labelledby="imgModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary-blue text-white">
@@ -132,15 +155,17 @@
                     <p>Select an image below:.</p>
                     <?php $photos = App\Models\Photo::all();?>
                     <img src="{{ asset('images/svg/location-image.svg') }}" width="80px" alt="Default Picture"
-                        onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">
+                         onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">
                     @foreach($photos as $photo)
-                    <img src="{{ asset($photo->path) }}" width="80px" alt="{{ $photo->name }}"
-                        onclick="selectPhoto('{{ $photo->id }}', '{{ asset($photo->path) }}');">
+                        <img src="{{ asset($photo->path) }}" width="80px" alt="{{ $photo->name }}"
+                             onclick="selectPhoto('{{ $photo->id }}', '{{ asset($photo->path) }}');">
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#uploadModal">Upload
-                        file</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                            data-target="#uploadModal">Upload
+                                                       file
+                    </button>
                 </div>
             </div>
         </div>
@@ -175,14 +200,14 @@
 
 @section('js')
     <script>
-        function selectPhoto(id, src){
+        function selectPhoto(id, src) {
             document.getElementById("profileImage").src = src;
             document.getElementById("photo_id").value = id;
             $('#imgModal').modal('hide');
         }
 
-        $(document).ready(function(){
-           $("form#imageUpload").submit(function(e) {
+        $(document).ready(function () {
+            $("form#imageUpload").submit(function (e) {
                 e.preventDefault();
                 var formData = new FormData(this);
                 var urlto = '/photo/upload';
@@ -199,9 +224,9 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function(data) {
+                    success: function (data) {
                         $('#uploadModal').modal('hide');
-                        document.getElementById("profileImage").src = route+data.path;
+                        document.getElementById("profileImage").src = route + data.path;
                         document.getElementById("photo_id").value = data.id;
                     }
                 });

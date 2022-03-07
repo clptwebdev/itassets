@@ -16,10 +16,13 @@ class CheckAdminRole {
      */
     public function handle(Request $request, Closure $next)
     {
+        return $next($request);
 //        $role = auth()->user()->role_id;
-//        if($role <= 2 && $role !=0){
+//        if($role <= 2 && $role != 0)
+//        {
 //            return $next($request);
-//        }else{
+//        } else
+//        {
 //            return redirect(route('errors.forbidden', ['area', $request->path(), 'view']));
 //        }
     }

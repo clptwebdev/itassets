@@ -24,12 +24,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/', [\App\Http\Controllers\HomeController::class, "index"])->name('home');
 
     //Super Admin or Admin
-    Route::group(['middleware' => 'admin.role'], function() {
-        Route::resource('/users', 'App\Http\Controllers\UserController');
-        Route::get('/user/permissions', 'App\Http\Controllers\UserController@userPermissions')->name('user.permissions');
-        Route::get('/users/{id}/role/{role}', 'App\Http\Controllers\UserController@changePermission')->name('change.permission');
-        Route::get('/users/{id}/locations', 'App\Http\Controllers\UserController@getLocations')->name('user.permission');
-    });
+    Route::resource('/users', 'App\Http\Controllers\UserController');
+    Route::get('/user/permissions', 'App\Http\Controllers\UserController@userPermissions')->name('user.permissions');
+    Route::get('/users/{id}/role/{role}', 'App\Http\Controllers\UserController@changePermission')->name('change.permission');
+    Route::get('/users/{id}/locations', 'App\Http\Controllers\UserController@getLocations')->name('user.permission');
 
     //Dashboard
     Route::get('/statistics', 'App\Http\Controllers\HomeController@statistics')->name('dashboard.statistics');

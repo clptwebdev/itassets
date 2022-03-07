@@ -20,9 +20,9 @@ class AUCPolicy {
         return $this->model->view && in_array($auc->location_id, $user->locationsArray());
     }
 
-    public function viewAll(User $user, AUC $auc)
+    public function viewAll(User $user)
     {
-        return $this->model->view && in_array($auc->location_id, $user->locationsArray());
+        return $this->model->view;
     }
 
     public function create(User $user)

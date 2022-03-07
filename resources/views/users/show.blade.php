@@ -12,15 +12,24 @@
         <h1 class="h3 mb-0 text-gray-800">View User</h1>
         <div>
             <form id="form{{$user->id}}" action="{{ route('users.destroy', $user->id) }}" method="POST">
-                <a href="{{ route('users.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
-                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"
-                   data-id="{{$user->id}}"><i class="fas fa-trash fa-sm text-white-50 "></i> Delete</a>
+                @can('viewAll' , \App\Models\User::class)
+
+                    <a href="{{ route('users.index')}}"
+                       class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                            class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+                @endcan
+                @can('forceDelete' , $user)
+
+                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"
+                       data-id="{{$user->id}}"><i class="fas fa-trash fa-sm text-white-50 "></i> Delete</a>
+                @endcan
                 @csrf
                 @method('DELETE')
-                <a href="{{ route('users.edit', $user->id)}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
+                @can('update' , $user)
+                    <a href="{{ route('users.edit', $user->id)}}"
+                       class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
+                            class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
+                @endcan
                 <a href="{{ route('user.showPdf', $user->id)}}"
                    class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>

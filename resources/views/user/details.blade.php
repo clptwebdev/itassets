@@ -12,8 +12,11 @@
             <h1 class="h3 mb-0 text-gray-800">Edit My Details</h1>
 
             <div class="mt-4 mt-md-0">
-                <a href="{{ route('users.index')}}" class="d-inline-block btn btn-sm btn-secondary shadow-sm"><i
-                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Users</a>
+                @can('viewAll'  ,\App\Models\User::class)
+                    <a href="{{ route('users.index')}}" class="d-inline-block btn btn-sm btn-secondary shadow-sm"><i
+                            class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Users</a>
+                @endcan
+
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
@@ -29,7 +32,7 @@
             <div class="alert alert-success"> {!! session('success_message')!!} </div>
         @endif
         <section>
-            <p class="mb-4">Adding a new Asset to the asset management system. Enter in the following information and
+            <p class="mb-4">Adding a new Asset to the asset management system. Enter the following information and
                             click
                             the 'Save' button. Or click the 'Back' button
                             to return the Assets page. </p>

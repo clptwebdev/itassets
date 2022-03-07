@@ -1,5 +1,4 @@
-@extends('layouts.app')
-@section('title', 'View Manufacturer Import errors')
+@extends('layouts.app')@section('title', 'View Manufacturer Import errors')
 
 @section('title', 'Import Errors')
 
@@ -13,12 +12,15 @@
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import
-            Failures</h1>
+                                          Failures</h1>
 
         <div>
-            <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                    class="fas fa-chevron-left fa-sm text-white-50">
-                </i> Back to Manufacturers</a>
+            @can('viewAny' , \App\Models\Manufacturer::class)
+                <a href="{{route("manufacturers.index")}}"
+                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                        class="fas fa-chevron-left fa-sm text-white-50">
+                    </i> Back to Manufacturers</a>
+            @endcan
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
             <button onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-green shadow-sm">
@@ -47,8 +49,8 @@
 
     <section>
         <p class="mb-4">Below are the different Import Failures of all the different assets stored in the management
-            system. Each has
-            displays the amount of different assets that are assigned the category.</p>
+                        system. Each has
+                        displays the amount of different assets that are assigned the category.</p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -80,19 +82,19 @@
                                 <td>
                                     <span id="name{{$line}}" class="tooltip-danger">
                                     <input type="text"
-                                           class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>
-                                               "
-                                           name="name[]"
-                                           id="name" value="{{ $valueArray[$row]['name'] }}"
-                                           placeholder="This Row is Empty Please Fill!" required data-container='#name{{$line}}' data-placement='top'
+                                           class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>"
+                                           name="name[]" id="name" value="{{ $valueArray[$row]['name'] }}"
+                                           placeholder="This Row is Empty Please Fill!" required
+                                           data-container='#name{{$line}}' data-placement='top'
                                            @if(array_key_exists('name', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
                                     </span>
                                 <td>
                                     <span id="supporturl{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="form-control <?php if (in_array('supporturl', $errors)) {?>border-danger<?php }?>"
-                                           name="supportUrl[]"
-                                           id="supportUrl" value="{{ $valueArray[$row]['supporturl'] }}" data-container='#supporturl{{$line}}' data-placement='top'
+                                           name="supportUrl[]" id="supportUrl"
+                                           value="{{ $valueArray[$row]['supporturl'] }}"
+                                           data-container='#supporturl{{$line}}' data-placement='top'
                                            @if(array_key_exists('supporturl', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supporturl']}'" !!}@endif>
                                     </span>
                                 </td>
@@ -100,9 +102,10 @@
                                     <span id="supportphone{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="form-control <?php if (in_array('supportphone', $errors)) {?>border-danger<?php }?>"
-                                           name="supportPhone[]"
-                                           id="supportPhone" placeholder="This Row is Empty Please Fill!"
-                                           value="{{ $valueArray[$row]['supportphone'] }}" required data-container='#supportphone{{$line}}' data-placement='top'
+                                           name="supportPhone[]" id="supportPhone"
+                                           placeholder="This Row is Empty Please Fill!"
+                                           value="{{ $valueArray[$row]['supportphone'] }}" required
+                                           data-container='#supportphone{{$line}}' data-placement='top'
                                            @if(array_key_exists('supportphone', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supportphone']}'" !!}@endif>
                                     </span>
                                 </td>
@@ -110,9 +113,10 @@
                                     <span id="supportemail{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="form-control <?php if (in_array('supportemail', $errors)) {?>border-danger<?php }?>"
-                                           name="supportEmail[]"
-                                           id="supportEmail" placeholder="This Row is Empty Please Fill!"
-                                           value="{{ $valueArray[$row]['supportemail'] }}" required data-container='#supportemail{{$line}}' data-placement='top'
+                                           name="supportEmail[]" id="supportEmail"
+                                           placeholder="This Row is Empty Please Fill!"
+                                           value="{{ $valueArray[$row]['supportemail'] }}" required
+                                           data-container='#supportemail{{$line}}' data-placement='top'
                                            @if(array_key_exists('supportemail', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supportemail']}'" !!}@endif>
                                     </span>
                                 </td>
@@ -147,7 +151,9 @@
                                 re-import your file!
                             </li>
                             <li>Struggling to Pass this stage are all your data fields in the correct format?</li>
-                            <li>Need More help? Click <a href="{{route("documentation.index").'#collapseSevenImport'}}">here</a> to be redirected to the Documentation on Importing!</li>
+                            <li>Need More help? Click <a href="{{route("documentation.index").'#collapseSevenImport'}}">here</a>
+                                to be redirected to the Documentation on Importing!
+                            </li>
 
                         </ol>
                     </div>

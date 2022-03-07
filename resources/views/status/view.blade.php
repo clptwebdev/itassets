@@ -11,7 +11,9 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Status Fields</h1>
         <div>
-            <x-buttons.add :toggle="'modal'" :target="'#addStatusModal'">Status</x-buttons.add>
+            @can('create' , \App\Models\Status::class)
+                <x-buttons.add :toggle="'modal'" :target="'#addStatusModal'">Status</x-buttons.add>
+            @endcan
 
         </div>
     </div>

@@ -85,6 +85,12 @@ class AccessoryPolicy {
         return $this->model->transfer && in_array($accessory->location_id, $user->locationsArray());
     }
 
+    public function transferAll(User $user)
+    {
+
+        return $this->model->transfer;
+    }
+
     public function request()
     {
 
@@ -94,6 +100,11 @@ class AccessoryPolicy {
     public function dispose(User $user, Accessory $accessory)
     {
         return $this->model->delete && in_array($accessory->location_id, $user->locationsArray());
+    }
+
+    public function disposeAll(User $user)
+    {
+        return $this->model->delete;
     }
 
 }

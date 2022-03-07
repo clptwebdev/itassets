@@ -20,4 +20,9 @@ class Role extends Model {
         return $this->hasMany(Permission::class);
     }
 
+    public static function significance(User $user)
+    {
+        return Role::Where('significance', '<=', $user->role->significance)->get();
+    }
+
 }

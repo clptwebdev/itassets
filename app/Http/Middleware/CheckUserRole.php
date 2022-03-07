@@ -16,17 +16,23 @@ class CheckUserRole {
      */
     public function handle($request, Closure $next, $role)
     {
-//        if($role == 0){
-//            if($request->user()->role_id > 0){
+//        if($role == 0)
+//        {
+//            if($request->user()->role_id > 0)
+//            {
 //                return $next($request);
-//            }else{
+//            } else
+//            {
 //                return redirect('/permissions');
 //            }
-//        }else{
-//            if ($request->user()->role_id == $role) {
+//        } else
+//        {
+//            if($request->user()->role_id == $role)
+//            {
 //                // Redirect...
 //                return $next($request);
-//            }else{
+//            } else
+//            {
 //                return redirect('/permissions');
 //            }
 //        }

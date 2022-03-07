@@ -12,11 +12,15 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Accessories | Recycle Bin</h1>
         <div>
+
             <a href="{{ route('accessories.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-dark-50"></i> Back</a>
-            <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
-               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
-                    class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
+            @can('recycleBin' ,\App\Models\Accessory::class)
+                <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
+                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                        class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
+            @endcan
+
             @can('generatePDF', \App\Models\Accessory::class)
                 @if ($accessories->count() == 1)
                     <a href="{{ route('accessories.showPdf', $accessories[0]->id)}}"
@@ -46,7 +50,7 @@
 
     <section>
         <p class="mb-4">Below are the different Accessories stored in the management system. Each has
-                        different options and locations can created, updated, and deleted.</p>
+                        different options and locations can be created, updated, and deleted.</p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">

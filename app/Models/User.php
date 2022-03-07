@@ -137,7 +137,7 @@ class User extends Authenticatable {
 
     public static function SuperAdmin()
     {
-        $role = Role::whereName('super-admin')->first();
+        $role = Role::whereName('global_admin')->first();
         if($role)
         {
             return User::all()->whereRole_Id($role->id);
