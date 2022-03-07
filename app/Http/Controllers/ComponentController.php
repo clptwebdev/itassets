@@ -48,7 +48,7 @@ class ComponentController extends Controller {
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['components.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
-            $locations = Location::all();
+            $locations = Location::select('id', 'name')->withCount('components')->get();
         } else
         {
             $components = Component::locationFilter(auth()->user()->locations->pluck('id'))
@@ -58,12 +58,13 @@ class ComponentController extends Controller {
                 ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
                 ->paginate(intval(session('limit')) ?? 25, ['components.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
                 ->fragment('table');
-            $locations = auth()->user()->locations;
+                $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('components')->get();
         }
         $this->clearFilter();
+
         $filter = 0;
-        $categories = Category::with('accessories')->select('id', 'name')->get();
-        $statuses = Status::select('id', 'name', 'deployable')->withCount('accessories')->get();
+        $categories = Category::with('components')->select('id', 'name')->get();
+        $statuses = Status::select('id', 'name', 'deployable')->withCount('components')->get();
 
         return view('ComponentsDir.view', [
             "components" => $components,

@@ -64,8 +64,8 @@
             different options and locations can created, updated, and deleted.</p>
         <!-- DataTales Example -->
         @if($miscellaneous->count() != 0)
-        <x-filters.navigation model="Miscellanea" :filter=$filter/>
-        <x-filters.filter model="Miscellanea" relations="components" :filter=$filter :locations=$locations
+        <x-filters.navigation model="Miscellanea" relations="miscellanea" table="miscellaneas" :filter=$filter/>
+        <x-filters.filter model="Miscellanea" relations="miscellanea" table="miscellaneas" :filter=$filter :locations=$locations
                           :statuses=$statuses :categories=$categories/>
         @endif
         <div class="card shadow mb-4">

@@ -35,7 +35,7 @@
             <span class="sidebar-title">AUC</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-left text-sm-center text-md-left" href="#">
+        <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('ffes.index')}}">
             <i class="fas fa-fw fa-chair sidebar-icon"></i>
             <span class="sidebar-title">FFE</span></a>
     </li>

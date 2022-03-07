@@ -28,7 +28,11 @@ class AUC extends Model
         $percentage = floor($age)*$percent;
         $value = $this->value * ((100 - $percentage) / 100);
 
-        return $value;
+        if($value < 0){
+            return 0;
+        }else{
+            return $value;
+        }
     }
 
     //Gets the building type in the table and displays it as a string

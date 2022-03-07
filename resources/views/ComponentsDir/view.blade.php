@@ -60,11 +60,10 @@
     <section>
         <p class="mb-4">Below are the different Components stored in the management system. Each has
             different options and locations can created, updated, and deleted.</p>
-            @if($components->count() != 0)
-        <x-filters.navigation model="Component" :filter="$filter"/>
-        <x-filters.filter model="Component" relations="components" :filter="$filter" :locations="$locations"
-                          :statuses="$statuses" :categories="$categories"/>
-                          @endif
+        @if($components->count() != 0)
+        <x-filters.navigation model="Component" relations="components" table="Component" :filter=$filter />
+        <x-filters.filter model="Component" relations="components" table="Component" :filter=$filter :locations=$locations :statuses=$statuses :categories=$categories/>
+         @endif
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">

@@ -46,14 +46,14 @@ class AUCController extends Controller
         ]);
     }
 
-    public function show(Property $property)
+    public function show(AUC $auc)
     {
-        if(auth()->user()->cant('view', Property::class))
+        if(auth()->user()->cant('view', AUC::class))
         {
             return redirect(route('errors.forbidden', ['area', 'Property', 'create']));
         }
         //This function returns the property and displays the information about it on the View
-        return view('property.show', compact('property'));
+        return view('AUC.show', compact('auc'));
     }
 
     ////////////////////////////////////////////
