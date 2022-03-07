@@ -39,7 +39,6 @@ class ComponentController extends Controller {
 
         session(['orderby' => 'purchased_date']);
         session(['direction' => 'desc']);
-
         $components = Component::locationFilter(auth()->user()->locations->pluck('id'))
             ->leftJoin('locations', 'locations.id', '=', 'components.location_id')
             ->leftJoin('manufacturers', 'manufacturers.id', '=', 'components.manufacturer_id')
@@ -48,10 +47,12 @@ class ComponentController extends Controller {
             ->paginate(intval(session('limit')) ?? 25, ['components.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
             ->fragment('table');
         $locations = auth()->user()->locations;
+
         $this->clearFilter();
+
         $filter = 0;
-        $categories = Category::with('accessories')->select('id', 'name')->get();
-        $statuses = Status::select('id', 'name', 'deployable')->withCount('accessories')->get();
+        $categories = Category::with('components')->select('id', 'name')->get();
+        $statuses = Status::select('id', 'name', 'deployable')->withCount('components')->get();
 
         return view('ComponentsDir.view', [
             "components" => $components,

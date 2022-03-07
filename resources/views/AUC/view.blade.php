@@ -60,7 +60,8 @@
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
-        <p class="mt-5 mb-4">Below are the Asset that are currently under construction within the Central Learning
+
+        <p class="mt-5 mb-4">Below are the Assets that are currently under construction within the Central Learning
                              Partnership Trust. You require access to see
                              the assets assigned to the different locations. If you think you have the incorrect
                              permissions, please contact apollo@clpt.co.uk </p>
@@ -81,10 +82,14 @@
         }
         @endphp
 
-        <x-filters.navigation model="AUC" relations="auc" table="a_u_c_s"/>
-        <x-filters.filter model="AUC" relations="auc" table="a_u_c_s" :locations="$locations"/>
 
-        <!-- DataTales Example -->
+        {{-- If there are no Collections return there is not need to display the filter, unless its the filter thats return 0 results --}}
+        @if(!session()->has('auc_filter') && $aucs->count() !== 0)
+            <x-filters.navigation model="AUC" relations="auc" table="a_u_c_s"/>
+            <x-filters.filter model="AUC" relations="auc" table="a_u_c_s" :locations="$locations"/>
+        @endif
+
+    <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive" id="table">

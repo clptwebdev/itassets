@@ -135,6 +135,14 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/category/pdf', 'App\Http\Controllers\CategoryController@downloadPDF')->name('category.pdf');
     Route::get('/category/{category}/pdf', 'App\Http\Controllers\CategoryController@downloadShowPDF')->name('category.showPdf');
     Route::post('/search/category/', 'App\Http\Controllers\CategoryController@search')->name('category.search');
+    //FFE
+    Route::resource("/ffes", \App\Http\Controllers\FFEController::class);
+    Route::post('/ffe/filter', 'App\Http\Controllers\FFEController@filter')->name('ffe.filter');
+    Route::get('/ffe/filter/clear', 'App\Http\Controllers\FFEController@clearFilter')->name('ffe.clear.filter');
+    Route::get('/ffe/filter', 'App\Http\Controllers\FFEController@filter')->name('ffe.filtered');
+    Route::get('/ffe/bin', 'App\Http\Controllers\FFEController@recycleBin')->name('ffe.bin');
+    Route::get('/ffe/{ffe}/restore', 'App\Http\Controllers\FFEController@restore')->name('ffe.restore');
+    Route::post('/ffe/{ffe}/remove', 'App\Http\Controllers\FFEController@forceDelete')->name('ffe.remove');
     //LocationControllers
     Route::resource('/location', 'App\Http\Controllers\LocationController');
     Route::get('/locations/pdf', 'App\Http\Controllers\LocationController@downloadPDF')->name('location.pdf');

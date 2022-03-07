@@ -29,6 +29,10 @@ class Location extends Model
         return $this->hasMany(AUC::class);
     }
 
+    public function ffe(){
+        return $this->hasMany(FFE::class);
+    }
+
     public function miscellanea()
     {
         return $this->hasMany(Miscellanea::class);

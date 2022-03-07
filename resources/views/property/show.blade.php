@@ -7,13 +7,13 @@
 @endsection
 
 @section('content')
-    <x-wrappers.nav title="Show Misc" >
-        <x-buttons.return :route="route('property.index')" > Properties</x-buttons.return >
+    <x-wrappers.nav title="Property" >
+        <x-buttons.return :route="route('properties.index')" > Properties</x-buttons.return >
         {{-- <x-buttons.reports :route="route('property.showPdf', $property->id)" /> --}}
-        <x-buttons.edit :route="route('property.edit',$property->id)" />
+        <x-buttons.edit :route="route('properties.edit',$property->id)" />
         <x-form.layout method="DELETE" class="d-sm-inline-block"
                        :id="'form'.$property->id"
-                       :action="route('property.destroy', $property->id)" >
+                       :action="route('properties.destroy', $property->id)" >
             <x-buttons.delete formAttributes="data-id='{{$property->id}}'" /> 
         </x-form.layout >
         
@@ -62,7 +62,7 @@
                                 $bf = $property->depreciation_value($startDate);
                                 $cf = $property->depreciation_value($endDate);
                             ?>
-
+                            
                             <p><strong>Current Value ({{$startDate->format('d\/m\/Y')}}):</strong><br>
                                 £{{number_format( (float) $bf, 2, '.', ',' )}}
                             </p>

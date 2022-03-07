@@ -56,116 +56,120 @@
         <p class="mb-4">Below are the different Components stored in the management system. Each has
                         different options and locations can created, updated, and deleted.</p>
         @if($components->count() != 0)
-            <x-filters.navigation model="Component" :filter="$filter"/>
-            <x-filters.filter model="Component" relations="components" :filter="$filter" :locations="$locations"
-                              :statuses="$statuses" :categories="$categories"/>
-    @endif
-    <!-- DataTales Example -->
-        <div class="card shadow mb-4">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="usersTable" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th class="col-4 col-xl-2"><small>Name</small></th>
-                            <th class="text-center"><small>Location</small></th>
-                            <th class="text-center d-none d-sm-table-cell col-5 col-xl-2"><small>Manufacturers</small>
-                            </th>
-                            <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
-                            <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
-                            <th class="d-none d-xl-table-cell col-2"><small>Supplier</small></th>
-                            <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
-                            <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
-                            <th class="text-right col-1"><small>Options</small></th>
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-                            <th><small>Name</small></th>
-                            <th class="text-center"><small>Location</small></th>
-                            <th class="text-center d-none d-sm-table-cell"><small>Manufacturers</small></th>
-                            <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
-                            <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
-                            <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
-                            <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
-                            <th class="text-right"><small>Options</small></th>
-                        </tr>
-                        </tfoot>
-                        <tbody>
-                        @if($components->count() != 0)
-                            @foreach($components as $component)
-
+            <x-filters.navigation model="Component" relations="components" table="Component" :filter=$filter/>
+            <x-filters.filter model="Component" relations="components" table="Component" :filter=$filter
+                              :locations=$locations :statuses=$statuses :categories=$categories/>
+                @endif
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="usersTable" class="table table-striped">
+                                <thead>
                                 <tr>
-                                    <td>{{$component->name}}
-                                        <br>
-                                        <small>{{$component->serial_no}}</small>
-                                    </td>
-                                    <td class="text-center">
-                                        @if(isset($component->location->photo->path))
-                                            <img src="{{ asset($component->location->photo->path)}}" height="30px"
-                                                 alt="{{$component->location->name}}"
-                                                 title="{{ $component->location->name ?? 'Unnassigned'}}"/>
-                                        @else
-                                            {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($component->location->icon ?? '#666').'">'
-                                                .strtoupper(substr($component->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                        @endif
-                                    </td>
-                                    <td class="text-center d-none d-sm-table-cell">{{$component->manufacturer->name ?? "N/A"}}</td>
-                                    <td class="d-none d-xl-table-cell">{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
-                                    <td class="d-none d-xl-table-cell">{{$component->purchased_cost}}</td>
-                                    <td class="d-none d-xl-table-cell">{{$component->supplier->name ?? 'N/A'}}</td>
-                                    <td class="text-center">{{$component->status->name ??'N/A'}}</td>
-                                    @php $warranty_end = \Carbon\Carbon::parse($component->purchased_date)->addMonths($component->warranty);@endphp
-                                    <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                        {{ $component->warranty }} Months
-
-                                        <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
-                                            Remaining</small>
-                                    </td>
-                                    <?php $data = $component;?>
-                                    <td class="text-right">
-                                        <x-wrappers.table-settings>
-                                            @can('view', $data)
-                                                <x-buttons.dropdown-item :route="route('components.show', $data->id)">
-                                                    View
-                                                </x-buttons.dropdown-item>
-                                            @endcan
-                                            @can('update', $data)
-                                                <x-buttons.dropdown-item :route=" route('components.edit', $data->id)">
-                                                    Edit
-                                                </x-buttons.dropdown-item>
-                                            @endcan
-                                            @can('delete', $data)
-                                                <x-form.layout method="DELETE" class="d-block p-0 m-0"
-                                                               :id="'form'.$data->id"
-                                                               :action="route('components.destroy', $data->id)">
-                                                    <x-buttons.dropdown-item :data="$data->id" class="deleteBtn">
-                                                        Delete
-                                                    </x-buttons.dropdown-item>
-                                                </x-form.layout>
-                                            @endcan
-                                        </x-wrappers.table-settings>
-                                    </td>
+                                    <th class="col-4 col-xl-2"><small>Name</small></th>
+                                    <th class="text-center"><small>Location</small></th>
+                                    <th class="text-center d-none d-sm-table-cell col-5 col-xl-2">
+                                        <small>Manufacturers</small>
+                                    </th>
+                                    <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
+                                    <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
+                                    <th class="d-none d-xl-table-cell col-2"><small>Supplier</small></th>
+                                    <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
+                                    <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
+                                    <th class="text-right col-1"><small>Options</small></th>
                                 </tr>
-                            @endforeach
-                        @else
-                            <td colspan="10" class="text-center">No Components Returned</td>
-                        @endif
-                        </tbody>
-                    </table>
-                    <x-paginate :model="$components"/>
-                </div>
-            </div>
-        </div>
-        <div class="card shadow mb-3">
-            <div class="card-body">
-                <h4>Help with Components </h4>
-                <p>Click <a href="{{route("documentation.index").'#collapseNineComponent'}}">here</a> for a the
-                   Documentation on Components on Importing ,Exporting , Adding , Removing!</p>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th><small>Name</small></th>
+                                    <th class="text-center"><small>Location</small></th>
+                                    <th class="text-center d-none d-sm-table-cell"><small>Manufacturers</small></th>
+                                    <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
+                                    <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
+                                    <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
+                                    <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
+                                    <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
+                                    <th class="text-right"><small>Options</small></th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+                                @if($components->count() != 0)
+                                    @foreach($components as $component)
 
-            </div>
-        </div>
+                                        <tr>
+                                            <td>{{$component->name}}
+                                                <br>
+                                                <small>{{$component->serial_no}}</small>
+                                            </td>
+                                            <td class="text-center">
+                                                @if(isset($component->location->photo->path))
+                                                    <img src="{{ asset($component->location->photo->path)}}"
+                                                         height="30px" alt="{{$component->location->name}}"
+                                                         title="{{ $component->location->name ?? 'Unnassigned'}}"/>
+                                                @else
+                                                    {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($component->location->icon ?? '#666').'">'
+                                                        .strtoupper(substr($component->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                                @endif
+                                            </td>
+                                            <td class="text-center d-none d-sm-table-cell">{{$component->manufacturer->name ?? "N/A"}}</td>
+                                            <td class="d-none d-xl-table-cell">{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
+                                            <td class="d-none d-xl-table-cell">{{$component->purchased_cost}}</td>
+                                            <td class="d-none d-xl-table-cell">{{$component->supplier->name ?? 'N/A'}}</td>
+                                            <td class="text-center">{{$component->status->name ??'N/A'}}</td>
+                                            @php $warranty_end = \Carbon\Carbon::parse($component->purchased_date)->addMonths($component->warranty);@endphp
+                                            <td class="text-center  d-none d-xl-table-cell"
+                                                data-sort="{{ $warranty_end }}">
+                                                {{ $component->warranty }} Months
+
+                                                <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
+                                                    Remaining</small>
+                                            </td>
+                                            <?php $data = $component;?>
+                                            <td class="text-right">
+                                                <x-wrappers.table-settings>
+                                                    @can('view', $data)
+                                                        <x-buttons.dropdown-item
+                                                            :route="route('components.show', $data->id)">
+                                                            View
+                                                        </x-buttons.dropdown-item>
+                                                    @endcan
+                                                    @can('update', $data)
+                                                        <x-buttons.dropdown-item
+                                                            :route=" route('components.edit', $data->id)">
+                                                            Edit
+                                                        </x-buttons.dropdown-item>
+                                                    @endcan
+                                                    @can('delete', $data)
+                                                        <x-form.layout method="DELETE" class="d-block p-0 m-0"
+                                                                       :id="'form'.$data->id"
+                                                                       :action="route('components.destroy', $data->id)">
+                                                            <x-buttons.dropdown-item :data="$data->id"
+                                                                                     class="deleteBtn">
+                                                                Delete
+                                                            </x-buttons.dropdown-item>
+                                                        </x-form.layout>
+                                                    @endcan
+                                                </x-wrappers.table-settings>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <td colspan="10" class="text-center">No Components Returned</td>
+                                @endif
+                                </tbody>
+                            </table>
+                            <x-paginate :model="$components"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow mb-3">
+                    <div class="card-body">
+                        <h4>Help with Components </h4>
+                        <p>Click <a href="{{route("documentation.index").'#collapseNineComponent'}}">here</a> for a the
+                           Documentation on Components on Importing ,Exporting , Adding , Removing!</p>
+
+                    </div>
+                </div>
     </section>
 
 @endsection

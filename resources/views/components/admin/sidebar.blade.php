@@ -23,47 +23,32 @@
                 <i class="fas fa-fw fa-tachometer-alt sidebar-icon"></i>
                 <span class="sidebar-title">Dashboard</span></a>
         </li>
-        @can('viewAll', \App\Models\Property::class)
-            {{-- The are the Navigation tabs the Finance Users would be using --}}
-            <li class="nav-item">
-                <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('properties.index')}}">
-                    <i class="fas fa-fw fa-school sidebar-icon"></i>
-                    <span class="sidebar-title">Property</span></a>
-            </li>
-        @endcan
-        @can('viewAll', \App\Models\AUC::class)
-
-            <li class="nav-item">
-                <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('aucs.index')}}">
-                    <i class="fas fa-fw fa-hammer sidebar-icon"></i>
-                    <span class="sidebar-title">AUC</span></a>
-            </li>
-        @endcan
-        {{--        @can('viewAll', \App\Models\FFE::class)--}}
-
+        {{-- The are the Navigation tabs the Finance Users would be using --}}
         <li class="nav-item">
-            <a class="nav-link text-left text-sm-center text-md-left" href="#">
+            <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('properties.index')}}">
+                <i class="fas fa-fw fa-school sidebar-icon"></i>
+                <span class="sidebar-title">Property</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('aucs.index')}}">
+                <i class="fas fa-fw fa-hammer sidebar-icon"></i>
+                <span class="sidebar-title">AUC</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('ffes.index')}}">
                 <i class="fas fa-fw fa-chair sidebar-icon"></i>
                 <span class="sidebar-title">FFE</span></a>
         </li>
-        {{--        @endcan--}}
-
-        {{--                @can('viewAll', \App\Models\Machinery::class)--}}
         <li class="nav-item">
             <a class="nav-link text-left text-sm-center text-md-left" href="#">
                 <i class="fas fa-fw fa-tractor sidebar-icon"></i>
                 <span class="sidebar-title">Plant and Machinery</span></a>
         </li>
-        {{--    @endcan--}}
-        {{--                        @can('viewAll', \App\Models\Vehicle::class)--}}
-
         <li class="nav-item">
             <a class="nav-link text-left text-sm-center text-md-left" href="#">
                 <i class="fas fa-fw fa-bus sidebar-icon"></i>
                 <span class="sidebar-title">Motor Vehicles</span></a>
         </li>
-        {{--    @endcan--}}
-
     @endif
 
 

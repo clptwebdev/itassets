@@ -24,7 +24,9 @@ class AccessoryPolicy {
 
     public function view(User $user, Accessory $accessory)
     {
+
         return $this->model->view && in_array($accessory->location_id, $user->locationsArray());
+
     }
 
     public function create(User $user)
