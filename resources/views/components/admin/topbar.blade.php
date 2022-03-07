@@ -63,7 +63,7 @@
         @endcan
         <div class="topbar-divider d-none d-sm-block"></div>
 
-        @can('handle', App\Models\Requests::class)
+        @can('request', App\Models\Asset::class)
             <li class="nav-item mx-1">
                 <a class="nav-link" href="{{route("requests.index")}}">
                     <i class="fas fa-fw fa-tasks" data-toggle="tooltip" data-placement="bottom" title="Requests"></i>

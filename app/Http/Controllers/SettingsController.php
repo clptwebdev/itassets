@@ -7,6 +7,7 @@ use App\Exports\AssetExport;
 use App\Exports\ComponentsExport;
 use App\Exports\consumableExport;
 use App\Exports\miscellaneousExport;
+use App\Jobs\RoleBoot;
 use App\Models\Accessory;
 use App\Models\Asset;
 use App\Models\AssetModel;
@@ -41,7 +42,6 @@ class SettingsController extends Controller {
         unset($models[array_search('Requests', $models)]);
         unset($models[array_search('Transfer', $models)]);
         $roles = Role::all();
-        dd($models);
 
         return view('settings.view', [
             "users" => $users,
@@ -236,6 +236,14 @@ class SettingsController extends Controller {
 
         return $models;
 
+    }
+
+    public function roleBoot()
+    {
+        RoleBoot::dispatch()->afterResponse();
+
+        return redirect(route('settings.view'))
+            ->with('success_message', "Your Roles have been Synced please allow a few moments for this to take effect");
     }
 
 }

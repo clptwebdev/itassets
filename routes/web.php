@@ -246,6 +246,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::Post("/settings/assets/export", [\App\Http\Controllers\SettingsController::class, "assets"])->name("settings.assets");
     Route::Post("/settings/components/export", [\App\Http\Controllers\SettingsController::class, "components"])->name("settings.components");
     Route::Post("/settings/miscellaneous/export", [\App\Http\Controllers\SettingsController::class, "miscellaneous"])->name("settings.miscellaneous");
+    Route::get("/settings/roles/create", [\App\Http\Controllers\SettingsController::class, "roleBoot"])->name('role.boot');
 
 //Javascript pie charts for dashboard
     Route::get('chart/pie/locations', 'App\Http\Controllers\ChartController@getPieChart');

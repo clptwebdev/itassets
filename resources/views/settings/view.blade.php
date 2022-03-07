@@ -40,7 +40,7 @@
                 <a data-toggle="modal" data-target="#roleSyncModal"
                    class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="fas fa-circle-notch fa-sm pl-1 pr-1"></i> Assign a Role to a user</a>
-                <a href='#' class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                <a href='{{route('role.boot')}}' class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-plus fa-sm pl-1 pr-1"></i>Create default Roles</a>
             </div>
         </div>
