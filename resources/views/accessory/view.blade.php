@@ -69,15 +69,9 @@
                         different options and locations can be created, updated, and deleted.</p>
 
         <!-- DataTales Example -->
-<<<<<<< HEAD
         <x-filters.navigation model="Accessory" relations="accessories" table="accessories" :filter=$filter/>
         <x-filters.filter model="Accessory" relations="accessories" table="accessories" :filter=$filter :locations=$locations
                               :statuses=$statuses :categories="$categories"/>
-=======
-        <x-filters.navigation model="Accessory" :filter='$filter'/>
-        <x-filters.filter model="Accessory" relations="accessories" :filter=$filter :locations=$locations
-                          :statuses=$statuses :categories="$categories"/>
->>>>>>> 96a03725129cf9bc48e10bf9fc063f4008ccbed3
 
         <div class="card shadow mb-4">
             <div class="card-body">
