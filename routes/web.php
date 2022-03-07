@@ -20,9 +20,8 @@ require __DIR__ . '/auth.php';
 
 Route::group(['middleware' => 'auth'], function() {
 
-
-    Route::get('/dashboard',[\App\Http\Controllers\HomeController::class, "index"])->name('dashboard');
-    Route::get('/',[\App\Http\Controllers\HomeController::class, "index"])->name('home');
+    Route::get('/dashboard', [\App\Http\Controllers\HomeController::class, "index"])->name('dashboard');
+    Route::get('/', [\App\Http\Controllers\HomeController::class, "index"])->name('home');
 
     //Super Admin or Admin
     Route::group(['middleware' => 'admin.role'], function() {
@@ -274,6 +273,13 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get("/help/documentation/{section}", function() {
         return view('documentation.Documents');
     })->name('documentation.index.section');
+
+    //roles
+    //roles
+    Route::Post('/role/create', [\App\Http\Controllers\RoleController::class, "store"])->name('role.create');
+    Route::Post('/role/sync', [\App\Http\Controllers\RoleController::class, "roleSync"])->name('role.sync');
+    Route::Post('/role/delete/', [\App\Http\Controllers\RoleController::class, "destroy"])->name('role.destroy');
+    Route::Get('/role/default', [\App\Http\Controllers\RoleController::class, "default"])->name('role.default');
 });
 //403 redirects
 Route::get('/{type}/{id}/{method}/403/', 'App\Http\Controllers\ErrorController@forbidden')->name('errors.forbidden');

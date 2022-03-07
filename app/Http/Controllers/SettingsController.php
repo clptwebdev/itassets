@@ -14,6 +14,7 @@ use App\Models\Component;
 use App\Models\Consumable;
 use App\Models\Location;
 use App\Models\Miscellanea;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -34,6 +35,8 @@ class SettingsController extends Controller {
             $miscellaneous = \App\Models\Miscellanea::all();
             $statuses = \App\Models\Status::all();
             $categories = \App\Models\Category::with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->get();
+            $models = $this->getModels();
+            $roles = Role::all();
             Cache::put('name', $categories, 60);
         } else
         {
@@ -46,6 +49,8 @@ class SettingsController extends Controller {
             $accessories = Accessory::locationFilter(auth()->user()->locations->get());
             $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->get());
             $locations = Location::locationFilter(auth()->user()->locations->get());
+            $models = $this->getModels();
+            $roles = Role::all();
         }
 
         return view('settings.view', [
@@ -58,6 +63,8 @@ class SettingsController extends Controller {
             "categories" => $categories,
             "statuses" => $statuses,
             "assetModel" => $assetModel,
+            "models" => $models,
+            "roles" => $roles,
         ]);
     }
 
@@ -216,6 +223,28 @@ class SettingsController extends Controller {
                 ->with('danger_message', "There are no Assets found with this Filter! Please alter your query and try again.");
 
         }
+    }
+
+    public function getModels()
+    {
+        $path = app_path() . "/Models";
+        $out = [];
+        $results = scandir($path);
+        foreach($results as $result)
+        {
+            if($result === '.' or $result === '..') continue;
+            $filename = $path . '/' . $result;
+            if(is_dir($filename))
+            {
+                $out = array_merge($out, getModels($filename));
+            } else
+            {
+                $out[] = substr($filename, 0, -4);
+            }
+        }
+
+        return str_replace($path . '/', '', $out);
+
     }
 
 }

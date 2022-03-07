@@ -34,7 +34,6 @@ class User extends Authenticatable {
      */
     protected $casts = ['email_verified_at' => 'datetime',];
 
-
     public function photo()
     {
         return $this->belongsTo('App\Models\Photo');
@@ -55,32 +54,45 @@ class User extends Authenticatable {
         return $this->belongsToMany(Asset::class);
     }
 
-    public function locations(){
+    public function locations()
+    {
         return $this->belongsToMany(Location::class)
             ->using(LocationUser::class);
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     //Permissions
-    public function location_assets(){
+    public function location_assets()
+    {
         return $this->hasManyDeep(Asset::class, ['location_user', Location::class]);
     }
 
-    public function location_components(){
+    public function location_components()
+    {
         return $this->hasManyDeep(Component::class, ['location_user', Location::class]);
     }
 
-    public function location_accessories(){
+    public function location_accessories()
+    {
         return $this->hasManyDeep(Accessory::class, ['location_user', Location::class]);
     }
 
-    public function location_consumables(){
+    public function location_consumables()
+    {
         return $this->hasManyDeep(Consumable::class, ['location_user', Location::class]);
     }
-    public function location_miscellaneous(){
+
+    public function location_miscellaneous()
+    {
         return $this->hasManyDeep(Miscellanea::class, ['location_user', Location::class]);
     }
 
-    public function logs(){
+    public function logs()
+    {
         return $this->morphMany(Log::class, 'loggable');
     }
 
@@ -99,14 +111,17 @@ class User extends Authenticatable {
         //Get the index of the last character in our $characters string.
         $characterListLength = mb_strlen($characters, '8bit') - 1;
         //Loop from 1 to the $length that was specified.
-        foreach(range(1, $length) as $i){
+        foreach(range(1, $length) as $i)
+        {
             $password .= $characters[random_int(0, $characterListLength)];
         }
+
         return $password;
 
     }
 
-    public function scopeSuperAdmin($query){
+    public function scopeSuperAdmin($query)
+    {
         return $query->where('role_id', '=', '1');
     }
 
