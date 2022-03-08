@@ -153,6 +153,11 @@ class UserController extends Controller {
 
     public function permissions(Request $request)
     {
+        if(auth()->user()->cant('viewAll', User::class))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Permissions.');
+
+        }
         if($request->ajax())
         {
             $ids = $request->ids;
@@ -166,11 +171,22 @@ class UserController extends Controller {
 
     public function userPermissions()
     {
+        if(auth()->user()->cant('viewAll', User::class))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Permissions.');
+
+        }
+
         return view('users.roles');
     }
 
     public function changePermission($id, $role)
     {
+        if(auth()->user()->cant('update', User::class))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to update Permissions.');
+
+        }
         $user = User::findOrFail($id);
 
         $user->role_id = $role;
@@ -192,7 +208,11 @@ class UserController extends Controller {
 
     public function updateDetails(Request $request)
     {
+        if(auth()->user()->cant('view', auth()->user()))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View User.');
 
+        }
         $validated = $request->validate([
             'name' => 'required|max:255',
             'email' => ['required', \Illuminate\Validation\Rule::unique('users')->ignore(auth()->user()->id), 'email:rfc,dns,spoof,filter'],
