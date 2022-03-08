@@ -13,7 +13,8 @@ class LogController extends Controller {
     {
         if(auth()->user()->cant('viewAll', auth()->user()))
         {
-            return redirect(route('errors.forbidden', ['area', 'Logs', 'view']));
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Logs.');
+
         }
 
         return view('logs.view', [
@@ -25,14 +26,15 @@ class LogController extends Controller {
     {
         if(auth()->user()->cant('viewAll', auth()->user()))
         {
-            return redirect(route('errors.forbidden', ['area', 'Logs', 'export']));
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Export Logs.');
+
         }
         $logs = Log::all()->whereIn('id', json_decode($request->logs));
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new LogsExport($logs), "/public/csv/logs-ex-{$date}.xlsx");
         $url = asset("storage/csv/logs-ex-{$date}.xlsx");
 
-        return redirect(route('logs.index'))
+        return to_route('logs.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
 
@@ -42,7 +44,7 @@ class LogController extends Controller {
     {
         session()->forget(['log_type', 'log_search']);
 
-        return redirect(route('logs.index'));
+        return to_route('logs.index');
     }
 
     public function filter(Request $request)
@@ -106,7 +108,7 @@ class LogController extends Controller {
     public
     function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -130,7 +132,7 @@ class LogController extends Controller {
     public
     function show(Log $log)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -142,7 +144,7 @@ class LogController extends Controller {
     public
     function edit(Log $log)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -155,12 +157,17 @@ class LogController extends Controller {
     public
     function update(Request $request, Log $log)
     {
-        //
+        abort(404);
     }
 
     public
     function destroy()
     {
+        if(auth()->user()->cant('delete', Log::class))
+        {
+            return ErrorController::forbidden(to_route('logs.index'), 'Unauthorised to Delete Logs.');
+
+        }
         Log::truncate();
         session()->flash('danger_message', 'All Logs have been cleared!');
 

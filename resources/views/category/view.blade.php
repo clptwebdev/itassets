@@ -10,17 +10,19 @@
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Categories</h1>
-        <div>
-            <x-buttons.add :toggle="'modal'" :target="'#addCategoryModal'">Category</x-buttons.add>
-        </div>
+        @can('create',\App\Models\Category::class)
+            <div>
+                <x-buttons.add :toggle="'modal'" :target="'#addCategoryModal'">Category</x-buttons.add>
+            </div>
+        @endcan
     </div>
 
     <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Below are the different categories of all the different assets stored in the management system.
-            Each has
-            displays the amount of different assets that are assigned the category.</p>
+                        Each has
+                        displays the amount of different assets that are assigned the category.</p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -70,8 +72,8 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenu{{$category->id}}Link"
-                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                           id="dropdownMenu{{$category->id}}Link" data-toggle="dropdown"
+                                           aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
                                         <div
@@ -79,8 +81,8 @@
                                             aria-labelledby="dropdownMenu{{$category->id}}Link">
                                             <div class="dropdown-header">Category Options:</div>
                                             @can('update', $category)
-                                                <a href="#" class="dropdown-item updateBtn"
-                                                   data-id="{{$category->id}}" data-name="{{ $category->name}}"
+                                                <a href="#" class="dropdown-item updateBtn" data-id="{{$category->id}}"
+                                                   data-name="{{ $category->name}}"
                                                    data-route="{{ route('category.update', $category->id)}}">Edit</a>
                                             @endcan
                                             @can('delete', $category)
@@ -101,7 +103,7 @@
             <div class="card-body">
                 <h4>Help with Category's</h4>
                 <p>Click <a href="{{route("documentation.index").'#collapseSeventeenCategories'}}">here</a> for the
-                    Documentation on Categories on Adding and Removing!</p>
+                   Documentation on Categories on Adding and Removing!</p>
             </div>
         </div>
     </section>
@@ -115,8 +117,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addCategoryModalLabel">Create New Category
-                    </h5>
+                    <h5 class="modal-title" id="addCategoryModalLabel">Create New Category </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -128,7 +129,7 @@
                         <p>Please enter the name of your category.</p>
                         <input class="form-control" name="name" id="name" type="text" placeholder="Category Name">
                         <small class="text-info">**You will be able to assign categories to any assets on the system.
-                            These can act as a filter.</small>
+                                                 These can act as a filter.</small>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
@@ -145,8 +146,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="updateCategoryModalLabel">Change Category Name
-                    </h5>
+                    <h5 class="modal-title" id="updateCategoryModalLabel">Change Category Name </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -159,8 +159,8 @@
                         <p>Please enter the name of your category.</p>
                         <input class="form-control" name="name" id="name" type="text" value="">
                         <small class="text-info">**You will be able to assign categories to any assets on the system.
-                            These
-                            can act as a filter.</small>
+                                                 These
+                                                 can act as a filter.</small>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
@@ -177,8 +177,8 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="removeCategoryModalLabel">Are you sure you want to delete this Category?
-                    </h5>
+                    <h5 class="modal-title" id="removeCategoryModalLabel">Are you sure you want to delete this
+                                                                          Category? </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -187,7 +187,8 @@
                     <input id="supplier-id" type="hidden" value="">
                     <p>Select "Delete" to remove this supplier from the system.</p>
                     <small class="text-danger">**Warning this is permanent. The category will be unassigned from assets,
-                        any assets with just this category will have the category set to null.</small>
+                                               any assets with just this category will have the category set to
+                                               null.</small>
                 </div>
                 <div class="modal-footer">
                     <form id="deleteForm" method="POST">

@@ -40,19 +40,14 @@
                 <a data-toggle="modal" data-target="#roleSyncModal"
                    class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="fas fa-circle-notch fa-sm pl-1 pr-1"></i> Assign a Role to a user</a>
-                <a href='#' class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                <a href='{{route('role.boot')}}' class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-plus fa-sm pl-1 pr-1"></i>Create default Roles</a>
             </div>
         </div>
-
         <table class="table table-setup">
             <thead>
             <tr>
                 <td>Name</td>
-                @php
-                    unset($models[array_search('Permission' , $models)]);
-                    unset($models[array_search('Setting' , $models)]);
-                @endphp
                 @foreach($models as $model)
                     <th class='d-lg-table-cell d-none '>{{ Illuminate\Support\Str::ucfirst($model)}}</th>
                 @endforeach
@@ -86,6 +81,7 @@
     </section>
 @endsection
 @section('modals')
+    {{--    create javascript auto selct button for roles--}}
     <x-modals.role-add :models='$models'/>
     <x-modals.assign-role/>
     <x-modals.delete-role/>
@@ -95,6 +91,7 @@
 
 @endsection
 @section('js')
+    <script src="{{ asset('js/roleToggle.js') }}"></script>
     <script>
         // import
         $('#export').click(function () {

@@ -12,11 +12,15 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Accessories | Recycle Bin</h1>
         <div>
+
             <a href="{{ route('accessories.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-dark-50"></i> Back</a>
-            <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
-               class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
-                    class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
+            @can('recycleBin' ,\App\Models\Accessory::class)
+                <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
+                   class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
+                        class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
+            @endcan
+
             @can('generatePDF', \App\Models\Accessory::class)
                 @if ($accessories->count() == 1)
                     <a href="{{ route('accessories.showPdf', $accessories[0]->id)}}"
@@ -25,6 +29,7 @@
                 @else
                     <form class="d-inline-block" action="{{ route('accessories.pdf')}}" method="POST">
                         @csrf
+
                         <input type="hidden" value="{{ json_encode($accessories->pluck('id'))}}" name="accessories"/>
                         <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                                 class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report
@@ -45,7 +50,7 @@
 
     <section>
         <p class="mb-4">Below are the different Accessories stored in the management system. Each has
-            different options and locations can created, updated, and deleted.</p>
+                        different options and locations can be created, updated, and deleted.</p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -129,8 +134,8 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink"
-                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                           aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
                                         <div
@@ -163,7 +168,7 @@
             <div class="card-body">
                 <h4>Help with Accessories</h4>
                 <p>This area can be minimised and will contain a little help on the page that the accessory is currently
-                    on.</p>
+                   on.</p>
             </div>
         </div>
 
@@ -179,8 +184,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to permantley delete this
-                        Accessory?
-                    </h5>
+                                                                      Accessory? </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -189,7 +193,7 @@
                     <input id="user-id" type="hidden" value="">
                     <p>Select "Delete" to permantley delete this accessory.</p>
                     <small class="text-danger">**Warning this is permanent and the Accessory will be removed from the
-                        system </small>
+                                               system </small>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>

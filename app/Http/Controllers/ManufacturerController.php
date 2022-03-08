@@ -6,7 +6,6 @@ use App\Exports\ManufacturerExport;
 use App\Imports\ManufacturerImport;
 use App\Models\Manufacturer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use phpDocumentor\Reflection\Location;
@@ -19,6 +18,10 @@ class ManufacturerController extends Controller {
 
     public function index()
     {
+        if(auth()->user()->cant('viewAny', Manufacturer::class))
+        {
+            return ErrorController::forbidden(to_route('manufacturers.index'), 'Unauthorised to View Manufacturer.');
+        }
         $manufacturers = Manufacturer::orderBy('name')->paginate(12);
 
         return view('Manufacturers.view', [
@@ -31,7 +34,7 @@ class ManufacturerController extends Controller {
     {
         session()->forget(['log_search']);
 
-        return redirect(route('manufacturers.index'));
+        return to_route('manufacturers.index');
     }
 
     public function filter(Request $request)
@@ -68,9 +71,11 @@ class ManufacturerController extends Controller {
 
     public function show(Manufacturer $manufacturer)
     {
+
         if(auth()->user()->cant('view', $manufacturer))
         {
-            return redirect(route('errors.forbidden', ['Manufacturer', $manufacturer->id, 'view']));
+            return ErrorController::forbidden(to_route('manufacturers.index'), 'Unauthorised to Show Manufacturer.');
+
         }
 
         return view('Manufacturers.show', compact('manufacturer'));
@@ -78,6 +83,12 @@ class ManufacturerController extends Controller {
 
     public function create()
     {
+        if(auth()->user()->cant('create', Manufacturer::class))
+        {
+            return ErrorController::forbidden(to_route('manufacturers.index'), 'Unauthorised to Create Manufacturer.');
+
+        }
+
         return view("Manufacturers.create", [
             "manufacturerAmount" => count(Manufacturer::all()),
         ]);
@@ -86,6 +97,12 @@ class ManufacturerController extends Controller {
 
     public function edit(Manufacturer $manufacturer)
     {
+        if(auth()->user()->cant('update', Manufacturer::class))
+        {
+            return ErrorController::forbidden(to_route('manufacturers.index'), 'Unauthorised to Edit Manufacturer.');
+
+        }
+
         return view('Manufacturers.edit', [
             "manufacturer" => $manufacturer,
         ]);
@@ -111,11 +128,16 @@ class ManufacturerController extends Controller {
 
         session()->flash('success_message', request("name") . ' has been updated successfully');
 
-        return redirect('/manufacturers');
+        return to_route('manufacturers.index');
     }
 
     public function store()
     {
+        if(auth()->user()->cant('create', Manufacturer::class))
+        {
+            return ErrorController::forbidden(to_route('manufacturers.index'), 'Unauthorised to Store Manufacturer.');
+
+        }
         request()->validate([
             "name" => "required|unique:manufacturers,name|max:255",
             "supportPhone" => "max:14",
@@ -131,7 +153,7 @@ class ManufacturerController extends Controller {
             session()->flash('success_message', request("name") . ' has been created successfully'),
         ]);
 
-        return redirect()->action([ManufacturerController::class, 'index']);
+        return to_route('manufacturers.index');
     }
 
     public function ajaxMany(Request $request)
@@ -170,31 +192,43 @@ class ManufacturerController extends Controller {
 
     public function destroy(Manufacturer $manufacturer)
     {
+        if(auth()->user()->cant('create', $manufacturer))
+        {
+            return ErrorController::forbidden(to_route('manufacturers.show', $manufacturer->id), 'Unauthorised to Archive Manufacturers.');
+
+        }
         $name = $manufacturer->name;
         $manufacturer->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
 
-        return redirect(route("manufacturers.index"));
+        return to_route("manufacturers.index");
     }
 
     public function export(Manufacturer $manufacturer)
     {
         if(auth()->user()->cant('viewAny', Manufacturer::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'manufacturers', 'export']));
+            return ErrorController::forbidden(to_route('manufacturers.index'), 'Unauthorised to Export Manufacturer.');
+
         }
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new ManufacturerExport, "/public/csv/manufacturers-ex-{$date}.xlsx");
         $url = asset("storage/csv/manufacturers-ex-{$date}.xlsx");
 
-        return redirect(route('manufacturers.index'))
+        return to_route('manufacturers.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
     }
 
     public function import(Request $request)
     {
+        if(auth()->user()->cant('create', Manufacturer::class))
+        {
+            return ErrorController::forbidden(to_route('manufacturers.index'), 'Unauthorised to Import Manufacturer.');
+
+        }
+
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());
@@ -268,13 +302,13 @@ class ManufacturerController extends Controller {
 
             } else
             {
-                return redirect('/manufacturers')->with('success_message', 'All Manufacturers were added correctly!');
+                return to_route('manufacturers.index')->with('success_message', 'All Manufacturers were added correctly!');
             }
         } else
         {
             session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV"!');
 
-            return redirect('/manufacturers');
+            return to_route('manufacturers.index');
         }
 
     }
@@ -283,7 +317,8 @@ class ManufacturerController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Manufacturer::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Manufacturers', 'View PDF']));
+            return ErrorController::forbidden(to_route('manufacturers.index'), 'Unauthorised to Download Manufacturer.');
+
         }
 
         $found = Manufacturer::all();
@@ -320,7 +355,7 @@ class ManufacturerController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('manufacturer.pdf'))
+        return to_route('manufacturer.pdf')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
@@ -328,9 +363,10 @@ class ManufacturerController extends Controller {
 
     public function downloadShowPDF(Manufacturer $manufacturer)
     {
-        if(auth()->user()->cant('view', Manufacturer::class))
+        if(auth()->user()->cant('view', $manufacturer))
         {
-            return redirect(route('errors.forbidden', ['manufacturers', $manufacturer->id, 'View PDF']));
+            return ErrorController::forbidden(to_route('manufacturers.index'), 'Unauthorised to Download Manufacturer.');
+
         }
 
         $user = auth()->user();
@@ -343,7 +379,7 @@ class ManufacturerController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('manufacturers.show', $manufacturer->id))
+        return to_route('manufacturers.show', $manufacturer->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }

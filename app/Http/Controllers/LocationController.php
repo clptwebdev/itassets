@@ -18,16 +18,10 @@ class LocationController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Location::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Locations', 'view']));
-        }
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Locations.');
 
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
         }
+        $locations = auth()->user()->locations;
 
         return view('locations.view', ['locations' => $locations]);
     }
@@ -36,7 +30,8 @@ class LocationController extends Controller {
     {
         if(auth()->user()->cant('create', Location::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Locations', 'create']));
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Create Locations.');
+
         }
 
         return view('locations.create');
@@ -46,7 +41,8 @@ class LocationController extends Controller {
     {
         if(auth()->user()->cant('create', Location::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Locations', 'create']));
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Create Locations.');
+
         }
 
         $validated = $request->validate([
@@ -62,14 +58,15 @@ class LocationController extends Controller {
         Location::create($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'photo_id', 'icon'))->save();
         session()->flash('success_message', $request->name . ' has been created successfully');
 
-        return redirect(route('location.index'));
+        return to_route('location.index');
     }
 
     public function show(Location $location)
     {
         if(auth()->user()->cant('view', $location))
         {
-            return redirect(route('errors.forbidden', ['locations', $location->id, 'view']));
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Show Locations.');
+
         }
 
         return view('locations.show', compact('location'));
@@ -79,16 +76,10 @@ class LocationController extends Controller {
     {
         if(auth()->user()->cant('update', $location))
         {
-            return redirect(route('errors.forbidden', ['locations', $location->id, 'edit']));
-        }
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Edit Locations.');
 
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
         }
+        $locations = auth()->user()->locations;
 
         return view('locations.edit', compact('location', 'locations'));
     }
@@ -97,7 +88,8 @@ class LocationController extends Controller {
     {
         if(auth()->user()->cant('update', $location))
         {
-            return redirect(route('errors.forbidden', ['locations', $location->id, 'edit']));
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Update Locations.');
+
         }
 
         $validated = $request->validate([
@@ -113,28 +105,30 @@ class LocationController extends Controller {
         $location->fill($request->only('name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'email', 'telephone', 'photo_id', 'icon'))->save();
         session()->flash('success_message', $location->name . ' has been updated successfully');
 
-        return redirect(route('location.index'));
+        return to_route('location.index');
     }
 
     public function destroy(Location $location)
     {
         if(auth()->user()->cant('delete', $location))
         {
-            return redirect(route('errors.forbidden', ['locations', $location->id, 'delete']));
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Delete Locations.');
+
         }
 
         $name = $location->name;
         $location->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
 
-        return redirect(route('location.index'));
+        return to_route('location.index');
     }
 
     public function export(Location $location)
     {
         if(auth()->user()->cant('viewAny', Location::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'locations', 'export']));
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Export Locations.');
+
         }
 
         return \Maatwebsite\Excel\Facades\Excel::download(new LocationsExport, 'Location.xlsx');
@@ -144,16 +138,11 @@ class LocationController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Location::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Location', 'View PDF']));
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Download Locations.');
+
         }
 
-        if(auth()->user()->role_id == 1)
-        {
-            $found = Location::all();
-        } else
-        {
-            $found = auth()->user()->locations;
-        }
+        $found = auth()->user()->locations;
 
         $locations = array();
 
@@ -186,7 +175,7 @@ class LocationController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('location.index'))
+        return to_route('location.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
@@ -195,7 +184,8 @@ class LocationController extends Controller {
     {
         if(auth()->user()->cant('view', $location))
         {
-            return redirect(route('errors.forbidden', ['locations', $location->id, 'View PDF']));
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Download Locations.');
+
         }
 
         $user = auth()->user();
@@ -208,7 +198,7 @@ class LocationController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('location.show', $location->id))
+        return to_route('location.show', $location->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }

@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Photo extends Model
-{
+class Photo extends Model {
+
     use HasFactory;
 
     protected $fillable = ['name', 'path'];
@@ -30,18 +30,22 @@ class Photo extends Model
     {
         return $this->hasOne(AssetModel::class);
     }
+
     public function component()
     {
         return $this->hasOne(Component::class);
     }
+
     public function accessory()
     {
         return $this->hasOne(Accessory::class);
     }
+
     public function consumable()
     {
         return $this->hasOne(Consumable::class);
     }
+
     public function miscellanea()
     {
         return $this->hasOne(Miscellanea::class);
@@ -49,7 +53,7 @@ class Photo extends Model
 
     public function setPathAttribute($value)
     {
-        $this->attributes['path'] = 'storage/'.$value;
+        $this->attributes['path'] = 'storage/' . $value;
     }
 
 }

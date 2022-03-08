@@ -2,16 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AUC extends Model
-{
+class AUC extends Model {
+
     use HasFactory;
     use SoftDeletes;
 
     protected $fillable = ['name', 'location_id', 'value', 'depreciation', 'type', 'date'];
+
+    public function name(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
 
     //Returns the Location attached to the property
     public function location()
@@ -25,12 +34,14 @@ class AUC extends Model
     {
         $age = $date->floatDiffInYears($this->date);
         $percent = 100 / $this->depreciation;
-        $percentage = floor($age)*$percent;
+        $percentage = floor($age) * $percent;
         $value = $this->value * ((100 - $percentage) / 100);
 
-        if($value < 0){
+        if($value < 0)
+        {
             return 0;
-        }else{
+        } else
+        {
             return $value;
         }
     }
@@ -39,7 +50,8 @@ class AUC extends Model
     // (1 = Freehold Land 2 = Freehold Buildings 3 = Leadsehold Land 4 = Leasehold Buildings)
     public function getType()
     {
-        switch($this->type){
+        switch($this->type)
+        {
             case 1:
                 return "Freehold Land";
                 break;
@@ -85,4 +97,5 @@ class AUC extends Model
     {
         return $query->whereIn('location_id', $locations);
     }
+
 }

@@ -27,6 +27,7 @@ class RequestsController extends Controller {
 
     public function access()
     {
+
         $requests = Requests::create([
             'type' => 'access',
             'notes' => 'Requesting Access to the Apollo Asset Management System at CLPT',
@@ -35,7 +36,7 @@ class RequestsController extends Controller {
             'status' => 0,
         ]);
 
-        //Notify by email
+        //Notify by email (change for new system elliot)
         $admins = User::superAdmin()->get();
         foreach($admins as $admin)
         {
@@ -59,11 +60,10 @@ class RequestsController extends Controller {
             'date' => $request->transfer_date,
             'status' => 0,
         ]);
-
-        if(auth()->user()->role_id == 1)
+        $m = "\\App\\Models\\" . ucfirst($requests->model_type);
+        $model = $m::find($requests->model_id);
+        if(auth()->user()->can('request', $model))
         {
-            $m = "\\App\\Models\\" . ucfirst($requests->model_type);
-            $model = $m::find($requests->model_id);
             $model->update(['location_id' => $requests->location_to]);
             if($request->asset_tag)
             {
@@ -129,13 +129,13 @@ class RequestsController extends Controller {
             'notes' => $request->notes,
             'date' => $request->disposed_date,
             'user_id' => auth()->user()->id,
+
             'status' => 0,
         ]);
-
-        if(auth()->user()->role_id == 1)
+        $m = "\\App\\Models\\" . ucfirst($requests->model_type);
+        $model = $m::find($requests->model_id);
+        if(auth()->user()->can('request', $model))
         {
-            $m = "\\App\\Models\\" . ucfirst($requests->model_type);
-            $model = $m::find($request->model_id);
 
             if($request->model_type == 'asset' && $model->model()->exists())
             {

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -33,6 +34,22 @@ class User extends Authenticatable {
      * @var array
      */
     protected $casts = ['email_verified_at' => 'datetime',];
+
+    public function name(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => ucfirst($value),
+        );
+    }
+
+    public function email(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
 
     public function photo()
     {
@@ -91,6 +108,12 @@ class User extends Authenticatable {
         return $this->hasManyDeep(Miscellanea::class, ['location_user', Location::class]);
     }
 
+    public function locationsArray(): array
+    {
+        // gets all locations' id attached to a user (used in polices)
+        return auth()->user()->locations->pluck('id')->toArray();
+    }
+
     public function logs()
     {
         return $this->morphMany(Log::class, 'loggable');
@@ -122,7 +145,20 @@ class User extends Authenticatable {
 
     public function scopeSuperAdmin($query)
     {
-        return $query->where('role_id', '=', '1');
+        $role = Role::whereName('super-admin')->first();
+        if($role)
+        {
+            return User::all()->whereRole_Id($role->id);
+        }
+    }
+
+    public static function SuperAdmin()
+    {
+        $role = Role::whereName('global_admin')->first();
+        if($role)
+        {
+            return User::all()->whereRole_Id($role->id);
+        }
     }
 
 }

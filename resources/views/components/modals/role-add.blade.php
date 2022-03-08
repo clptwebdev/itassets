@@ -34,23 +34,35 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @php unset($models[array_search('Permission' , $models)]); @endphp
+
+                        <tr class='table-bordered '>
+                            <th scope="row" class='text-primary'>Bulk Selections</th>
+                            <td><input type="checkbox" onclick='createTag()' id="createToggle"></td>
+                            <td><input type="checkbox" onclick='readTag()' id="readToggle"></td>
+                            <td><input type="checkbox" onclick='updateTag()' id="updateToggle"></td>
+                            <td><input type="checkbox" onclick='deleteTag()' id="deleteToggle"></td>
+                            <td><input type="checkbox" onclick='archiveTag()' id="archiveToggle"></td>
+                            <td><input type="checkbox" onclick='transferTag()' id="transferToggle"></td>
+                            <td><input type="checkbox" onclick='requestTag()' id="requestToggle"></td>
+                            <td><input type="checkbox" onclick='specTag()' id="spec_reportsToggle"></td>
+                            <td><input type="checkbox" onclick='finTag()' id="fin_reportsToggle"></td>
+                        </tr>
                         @foreach($models as $model)
-
-
                             <tr>
                                 <th scope="row">{{$model}}
                                     <x-form.input :value="$model" name="models[]" :label="false" type="hidden"/>
                                 </th>
-                                <td><input type="checkbox" value='{{$model}}' name="create[]"></td>
-                                <td><input type="checkbox" value='{{$model}}' name="read[]"></td>
-                                <td><input type="checkbox" value='{{$model}}' name="update[]"></td>
-                                <td><input type="checkbox" value='{{$model}}' name="delete[]"></td>
-                                <td><input type="checkbox" value='{{$model}}' name="archive[]"></td>
-                                <td><input type="checkbox" value='{{$model}}' name="transfer[]"></td>
-                                <td><input type="checkbox" value='{{$model}}' name="request[]"></td>
-                                <td><input type="checkbox" value='{{$model}}' name="spec_reports[]"></td>
-                                <td><input type="checkbox" value='{{$model}}' name="fin_reports[]"></td>
+                                <td><input type="checkbox" value='{{$model}}' name="create[]" id='create'></td>
+                                <td><input type="checkbox" value='{{$model}}' name="read[]" id='read'></td>
+                                <td><input type="checkbox" value='{{$model}}' name="update[]" id='update'></td>
+                                <td><input type="checkbox" value='{{$model}}' name="delete[]" id='delete'></td>
+                                <td><input type="checkbox" value='{{$model}}' name="archive[]" id='archive'></td>
+                                <td><input type="checkbox" value='{{$model}}' name="transfer[]" id='transfer'></td>
+                                <td><input type="checkbox" value='{{$model}}' name="request[]" id='request'></td>
+                                <td><input type="checkbox" value='{{$model}}' name="spec_reports[]" id='spec_reports'>
+                                </td>
+                                <td><input type="checkbox" value='{{$model}}' name="fin_reports[]" id='fin_reports'>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

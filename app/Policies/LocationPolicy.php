@@ -6,58 +6,53 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\location;
 use App\Models\User;
 
-class LocationPolicy
-{
+class LocationPolicy {
+
     use HandlesAuthorization;
 
-    protected $super = [1];
-    protected $admin = [1,2];
-    protected $technician = [1,3];
-    protected $manager = [1,2,3,4];
-    protected $all = [1,2,3,4,5];
+    private $model;
+
+    public function __construct()
+    {
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Location')->first();
+    }
 
     public function viewAny(User $user)
     {
-        return in_array($user->role_id, $this->all);
+        return $this->model->view;
     }
 
     public function view(User $user, location $location)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->all) && in_array($location->id, $locations)){
-            return true;
-        }else{
-            return false;
-        }
+        return $this->model->view && in_array($location->location_id, $user->locationsArray());
     }
 
     public function create(User $user)
     {
-        return in_array($user->role_id, $this->super);
+        return $this->model->create;
     }
 
     public function update(User $user, location $location)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->all) && in_array($location->id, $locations)){
-            return true;
-        }else{
-            return false;
-        }
+        return $this->model->update && in_array($location->location_id, $user->locationsArray());
     }
 
     public function delete(User $user, location $location)
     {
-        return in_array($user->role_id, $this->super);
+        return $this->model->archive;
     }
 
     public function restore(User $user, location $location)
     {
-        return in_array($user->role_id, $this->super);
+
+        return $this->model->archive;
+
     }
 
     public function forceDelete(User $user, location $location)
     {
-        return in_array($user->role_id, $this->super);
+        return $this->model->delete;
+
     }
+
 }

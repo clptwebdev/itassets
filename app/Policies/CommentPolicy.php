@@ -6,27 +6,30 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\Comment;
 use App\Models\User;
 
-class CommentPolicy
-{
+class CommentPolicy {
+
     use HandlesAuthorization;
 
-    protected $super = [1];
-    protected $admin = [1,2];
-    protected $technician = [1,3];
-    protected $manager = [1,2,3,4];
-    protected $all = [1,2,3,4,5];
+    private $model;
 
-    public function comment(User $user){
-        return in_array($user->role_id, $this->manager);
+    public function __construct()
+    {
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Comment')->first();
+    }
+
+    public function comment(User $user)
+    {
+        return $this->model->create;
     }
 
     public function update(User $user, Comment $comment)
     {
-        return $user->id == $comment->user_id || $user->id == 1;
+        return $this->model->update;
     }
 
     public function delete(User $user, Comment $comment)
     {
-        return $user->id == $comment->user_id || $user->id == 1;
+        return $this->model->delete;
     }
+
 }

@@ -2,15 +2,32 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
-class Archive extends Model
-{
+class Archive extends Model {
+
     use HasFactory;
 
     protected $fillable = ['model_type', 'name', 'asset_tag', 'asset_model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'archived_cost', 'supplier_id', 'order_no', 'location_id', 'created_user', 'created_on', 'user_id', 'super_id', 'notes', 'date', 'comments'];
+
+    public function name(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
+
+    public function notes(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
 
     public function location()
     {
@@ -37,10 +54,10 @@ class Archive extends Model
         return $this->belongsTo(User::class, 'created_user')->with('photo');
     }
 
-    public static function updateCache(){
+    public static function updateCache()
+    {
         Cache::forget('archive_count');
         Cache::set('archive_count', Archive::all()->count());
     }
-
 
 }

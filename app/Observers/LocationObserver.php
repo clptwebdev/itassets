@@ -4,32 +4,39 @@ namespace App\Observers;
 
 use App\Models\location;
 use App\Models\Log;
+use App\Models\Role;
+use App\Models\User;
 use Carbon\Carbon;
 
-class LocationObserver
-{
+class LocationObserver {
 
     public function created(Location $location)
     {
         $name = auth()->user()->name ?? "Unknown";
         Log::create([
-            'user_id'=>auth()->user()->id ?? 0,
-            'log_date'=> Carbon::now(),
-            'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ?? 0 ,
-            'data'=> $name.' created a new Location - '.$location->name
+            'user_id' => auth()->user()->id ?? 0,
+            'log_date' => Carbon::now(),
+            'loggable_type' => 'location',
+            'loggable_id' => $location->id ?? 0,
+            'data' => $name . ' created a new Location - ' . $location->name,
         ]);
+        $superAdmin = User::SuperAdmin();
+        foreach($superAdmin as $user)
+        {
+            $user->locations()->attach($location->id);
+
+        }
     }
 
     public function updated(Location $location)
     {
         $name = auth()->user()->name ?? "Unknown";
         Log::create([
-            'user_id'=>auth()->user()->id ?? 0,
-            'log_date'=> Carbon::now(),
-            'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ?? 0,
-            'data'=> $name.' updated Location - '.$location->name
+            'user_id' => auth()->user()->id ?? 0,
+            'log_date' => Carbon::now(),
+            'loggable_type' => 'location',
+            'loggable_id' => $location->id ?? 0,
+            'data' => $name . ' updated Location - ' . $location->name,
         ]);
     }
 
@@ -37,11 +44,11 @@ class LocationObserver
     {
         $name = auth()->user()->name ?? "Unknown";
         Log::create([
-            'user_id'=>auth()->user()->id ?? 0,
-            'log_date'=> Carbon::now(),
-            'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ?? 0,
-            'data'=> $name.' deleted Location - '.$location->name
+            'user_id' => auth()->user()->id ?? 0,
+            'log_date' => Carbon::now(),
+            'loggable_type' => 'location',
+            'loggable_id' => $location->id ?? 0,
+            'data' => $name . ' deleted Location - ' . $location->name,
         ]);
     }
 
@@ -49,11 +56,11 @@ class LocationObserver
     {
         $name = auth()->user()->name ?? "Unknown";
         Log::create([
-            'user_id'=>auth()->user()->id ?? 0,
-            'log_date'=> Carbon::now(),
-            'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ?? 0,
-            'data'=> $name.' restored Location - '.$location->name
+            'user_id' => auth()->user()->id ?? 0,
+            'log_date' => Carbon::now(),
+            'loggable_type' => 'location',
+            'loggable_id' => $location->id ?? 0,
+            'data' => $name . ' restored Location - ' . $location->name,
         ]);
     }
 
@@ -61,11 +68,12 @@ class LocationObserver
     {
         $name = auth()->user()->name ?? "Unknown";
         Log::create([
-            'user_id'=>auth()->user()->id,
-            'log_date'=> Carbon::now(),
-            'loggable_type'=> 'location',
-            'loggable_id'=> $location->id ,
-            'data'=> $name.' permanently removed Location - '.$location->name
+            'user_id' => auth()->user()->id,
+            'log_date' => Carbon::now(),
+            'loggable_type' => 'location',
+            'loggable_id' => $location->id,
+            'data' => $name . ' permanently removed Location - ' . $location->name,
         ]);
     }
+
 }

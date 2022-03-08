@@ -6,8 +6,7 @@ use App\Models\Location;
 use App\Models\Property;
 use Illuminate\Http\Request;
 
-class PropertyController extends Controller
-{
+class PropertyController extends Controller {
 
     ////////////////////////////////////////////
     ////////////// View Functions ////////////
@@ -15,22 +14,15 @@ class PropertyController extends Controller
 
     public function index()
     {
-        //Check to see if the User has permission to View All the Properties. 
+        //Check to see if the User has permission to View All the Properties.
         if(auth()->user()->cant('viewAll', Property::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Assets', 'view']));
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Properties.');
+
         }
 
-        //Check to see if the user has SUper Admin Role
-        if(auth()->user()->role_id == 1)
-        {
-            //If the User has Super Admin Role/Correct Permissions find all the locations
-            $locations = Location::select('id', 'name')->withCount('property')->get();
-        } else
-        {
-            //Else find the locations that the user has been assigned to
-            $locations = auth()->user()->locations->select('id', 'name')->withCount('property')->get();
-        }
+        // find the locations that the user has been assigned to
+        $locations = auth()->user()->locations->select('id', 'name')->withCount('property')->get();
 
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
@@ -49,8 +41,10 @@ class PropertyController extends Controller
     {
         if(auth()->user()->cant('view', Property::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Property', 'create']));
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Show Properties.');
+
         }
+
         //This function returns the property and displays the information about it on the View
         return view('property.show', compact('property'));
     }
@@ -63,19 +57,14 @@ class PropertyController extends Controller
     {
         if(auth()->user()->cant('create', Property::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Property', 'create']));
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Create Properties.');
+
         }
 
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
-        }
+        $locations = auth()->user()->locations;
 
         return view('property.create', [
-            "locations" => $locations
+            "locations" => $locations,
         ]);
     }
 
@@ -86,7 +75,8 @@ class PropertyController extends Controller
         //Check to see if the user has permission to add nw property on the system
         if(auth()->user()->cant('create', Property::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Property', 'create']));
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Store Properties.');
+
         }
 
         //Validate the post data
@@ -95,7 +85,7 @@ class PropertyController extends Controller
             'location_id' => 'required',
             'value' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
-            'type' => 'required|gt:0'
+            'type' => 'required|gt:0',
         ]);
 
         $property = new Property;
@@ -111,7 +101,7 @@ class PropertyController extends Controller
 
         session()->flash('success_message', $request->name . ' has been created successfully');
 
-        return redirect(route('properties.index'));
+        return to_route('properties.index');
     }
 
 
@@ -124,17 +114,20 @@ class PropertyController extends Controller
         // Check to see whether the user has permission to edit the sleected property
         if(auth()->user()->cant('edit', Property::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Property', 'create']));
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Edit Properties.');
+
         }
+
         return view('property.edit', compact('property'));
     }
 
     public function update(Request $request, Property $property)
     {
-        // Check to see whether the user has permission to edit the sleected property
+        // Check to see whether the user has permission to edit the selected property
         if(auth()->user()->cant('update', Property::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Property', 'edit']));
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Update Properties.');
+
         }
 
         //Validate the post data
@@ -143,7 +136,7 @@ class PropertyController extends Controller
             'location_id' => 'required',
             'value' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
-            'type' => 'required|gt:0'
+            'type' => 'required|gt:0',
         ]);
 
         //Fill the Model fields from the request
@@ -153,7 +146,7 @@ class PropertyController extends Controller
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
         //return to the view
-        return redirect(route('properties.index'));
+        return to_route('properties.index');
 
     }
 
@@ -166,7 +159,8 @@ class PropertyController extends Controller
         //Check to see whether the User has permissions to remove the property or send it to the Recycle Bin
         if(auth()->user()->cant('delete', $property))
         {
-            return redirect(route('errors.forbidden', ['asset', $asset->id, 'edit']));
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Delete Properties.');
+
         }
 
         $name = $property->name;
@@ -174,31 +168,22 @@ class PropertyController extends Controller
         $property->delete();
         session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
-        return redirect(route('properties.index'));
+        return to_route('properties.index');
     }
 
     public function recycleBin()
     {
-        /* //Check to see if the users have permissions to view the recycle bin
-        if(auth()->user()->cant('delete', Property::class))
+        if(auth()->user()->cant('recycleBin', Property::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Asset', 'Recycle Bin']));
-        } */
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Recycle Properties.');
+
+        }
 
         $limit = session('property_limit') ?? 25;
 
         //Check the User Location Permissions
-        if(auth()->user()->role_id == 1)
-        {
-            $properties = Property::onlyTrashed()->paginate(intval($limit))->fragment('table');
-            $locations = Location::all();
-        } else
-        {
-            $properties = auth()->user()->location_property()->onlyTrashed()->paginate(intval($limit))->fragment('table');
-            $locations = auth()->user()->locations;
-        }
-
-       
+        $properties = auth()->user()->location_property()->onlyTrashed()->paginate(intval($limit))->fragment('table');
+        $locations = auth()->user()->locations;
 
         return view('property.bin', [
             "properties" => $properties,
@@ -214,7 +199,8 @@ class PropertyController extends Controller
         //Check to see if the user has permission to restore the property
         if(auth()->user()->cant('delete', $property))
         {
-            return redirect(route('errors.forbidden', ['property', $property->id, 'restore']));
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Restore Properties.');
+
         }
 
         //Restores the Property
@@ -222,19 +208,21 @@ class PropertyController extends Controller
 
         //Session message to be sent ot the View page (This is where the model will now appear)
         session()->flash('success_message', $property->name . ' has been restored.');
+
         //Redirect ot the model view
-        return redirect(route('properties.index'));
+        return to_route('properties.index');
     }
 
     public function forceDelete($id)
     {
-        //Find the Property (withTrashed needed) 
+        //Find the Property (withTrashed needed)
         $property = Property::withTrashed()->where('id', $id)->first();
 
         //Check to see if the user has permission to restore the property
         if(auth()->user()->cant('delete', $property))
         {
-            return redirect(route('errors.forbidden', ['property', $property->id, 'force delete']));
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Delete Properties.');
+
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
         $name = $property->name;
@@ -242,8 +230,9 @@ class PropertyController extends Controller
         $property->forceDelete();
         //Session message to be sent ot the Recycle Bin page
         session()->flash('danger_message', $name . ' was deleted permanently');
+
         //redirect back to the recycle bin
-        return redirect(route('property.bin'));
+        return to_route('property.bin');
     }
 
     ////////////////////////////////////////
@@ -291,20 +280,10 @@ class PropertyController extends Controller
 
             session(['property_amount' => $request->amount]);
         }
-
         //Check the Users Locations Permissions
-        if(auth()->user()->role_id != 1)
-        {
-            $locations = auth()->user()->locations->select('id', 'name')->withCount('property')->get();
-
-        } else
-        {
-            $locations = Location::select('id', 'name')->withCount('property')->get();
-        }
+        $locations = Location::select('id', 'name')->withCount('property')->get();
 
         $property = Property::locationFilter($locations->pluck('id'));
-
-   
 
         if(session()->has('property_locations'))
         {
@@ -312,26 +291,23 @@ class PropertyController extends Controller
             session(['property_filter' => true]);
         }
 
-
         if(session()->has('property_start') && session()->has('property_end'))
         {
             $property->purchaseFilter(session('property_start'), session('property_end'));
             session(['property_filter' => true]);
         }
-        
+
         if(session()->has('property_amount'))
         {
             $property->costFilter(session('property_amount'));
             session(['property_filter' => true]);
         }
 
-        
         if(session()->has('property_search'))
         {
             $property->searchFilter(session('property_search'));
             session(['property_filter' => true]);
         }
-        
 
         $property->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
             ->orderBy(session('property_orderby') ?? 'date', session('property_direction') ?? 'asc')
@@ -349,6 +325,7 @@ class PropertyController extends Controller
         //Clear the Filters for the properties
         session()->forget(['property_filter', 'property_locations', 'property_start', 'property_end', 'property_amount', 'property_search']);
 
-        return redirect(route('property.index'));
+        return to_route('property.index');
     }
+
 }

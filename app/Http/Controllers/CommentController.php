@@ -13,15 +13,17 @@ use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller {
 
-        public function index()
+    public function index()
     {
         abort(404);
     }
 
     public function update(Request $request, Comment $comment)
     {
-        if (auth()->user()->cant('update', $comment)) {
-            return redirect(route('errors.forbidden', ['comment', $comment->id, 'update']));
+        if(auth()->user()->cant('update', $comment))
+        {
+            return ErrorController::forbidden(back(), 'Unauthorised to Update Comments.');
+
         }
 
         $request->validate([
@@ -32,18 +34,21 @@ class CommentController extends Controller {
         ), ['user_id' => auth()->user()->id]))->save();
 
         session()->flash('success_message', request("title") . ' has been updated successfully');
-        return redirect()->back();
+
+        return back();
     }
 
     public function destroy(Comment $comment)
     {
-        if (auth()->user()->cant('delete', $comment)) {
-            return redirect(route('errors.forbidden', ['comment', $comment->id, 'delete']));
+        if(auth()->user()->cant('delete', $comment))
+        {
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Delete Comments.');
+
         }
 
         $name = $comment->title;
         $comment->delete();
-        session()->flash('danger_message', 'The Comment - '.$name . ' was deleted from the system');
+        session()->flash('danger_message', 'The Comment - ' . $name . ' was deleted from the system');
 
         return back();
     }
