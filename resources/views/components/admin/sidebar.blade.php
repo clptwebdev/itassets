@@ -188,7 +188,7 @@
                     <a class="collapse-item" href="{{ route('consumables.index')}}"> Import Consumables</a>
             </div>
         </li> --}}
-        @can('viewAll' , \App\Models\Miscellanea::class)
+        @can('viewAny' , \App\Models\Miscellanea::class)
             <li class="nav-item">
                 <a class="nav-link collapsed text-left text-sm-center text-md-left"
                    href="{{ route('miscellaneous.index')}}" data-toggle="collapse" data-target="#miscellaneousDD"
@@ -198,12 +198,11 @@
                 </a>
                 <div id="miscellaneousDD" class="collapse" aria-labelledby="consumableTitle"
                      data-parent="#accordionSidebar">
-                    @can('viewAll' , \App\Models\Miscellanea::class)
+                    @can('viewAny' , \App\Models\Miscellanea::class)
 
                         <a class="collapse-item" href="{{ route('miscellaneous.index')}}">View All</a>
                     @endcan
                     @can('create' , \App\Models\Miscellanea::class)
-
                         <a class="collapse-item" href="{{ route('miscellaneous.create')}}"> Add New Miscellaneous</a>
                     @endcan
                     @can('import' , \App\Models\Miscellanea::class)
