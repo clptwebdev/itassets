@@ -2,17 +2,34 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Support\Facades\Cache;
 
-class Consumable extends Model
-{
+class Consumable extends Model {
+
     protected $fillable = [
-        'name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'notes','manufacturer_id', 'photo_id'
+        'name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id', 'status_id', 'order_no', 'warranty', 'location_id', 'notes', 'manufacturer_id', 'photo_id'
     ];
+
+    public function name(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
+
+    public function notes(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
 
     use HasFactory;
     use SoftDeletes;
@@ -21,7 +38,7 @@ class Consumable extends Model
     {
         return $this->belongsTo(Photo::class, 'photo_id');
     }
-    
+
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
@@ -30,53 +47,62 @@ class Consumable extends Model
     public function location()
     {
         return $this->belongsTo(Location::class);
-    } 
-    
+    }
+
     public function status()
     {
         return $this->belongsTo(Status::class);
     }
 
-    public function manufacturer(){
+    public function manufacturer()
+    {
         return $this->belongsTo(Manufacturer::class, 'manufacturer_id');
     }
+
     public function comment()
     {
         return $this->morphToMany(Comment::class, 'commentables');
     }
 
-    public function category(){
+    public function category()
+    {
         return $this->morphToMany(Category::class, 'cattable');
     }
 
-    public function logs(){
+    public function logs()
+    {
         return $this->morphMany(Log::class, 'loggable');
     }
 
-    public function scopeLocationFilter($query, $locations){
+    public function scopeLocationFilter($query, $locations)
+    {
         return $query->whereIn('location_id', $locations);
     }
 
-    public function scopeCategoryFilter($query, $category){
+    public function scopeCategoryFilter($query, $category)
+    {
         $pivot = $this->category()->getTable();
 
-        $query->whereHas('category', function ($q) use ($category, $pivot) {
+        $query->whereHas('category', function($q) use ($category, $pivot) {
             $q->whereIn("{$pivot}.category_id", $category);
         });
     }
-    
-    public function scopeStatusFilter($query, $status){
+
+    public function scopeStatusFilter($query, $status)
+    {
         return $query->whereIn('status_id', $status);
     }
 
-    public static function updateCache(){
+    public static function updateCache()
+    {
 
         //The Variables holding the total of Accessories available to the User
         $consumables_total = 0;
         $consumables_cost_total = 0;
         $consumables_deployed_total = 0;
 
-        foreach(Location::all() as $location){
+        foreach(Location::all() as $location)
+        {
             $id = $location->id;
             //Variables to Hold the Accessories for that Location
             $consumables_loc_total = 0;
@@ -84,23 +110,28 @@ class Consumable extends Model
             $consumables_deployed = 0;
 
             $consumables = Consumable::whereLocationId($id)
-                            ->select('purchased_cost', 'status_id')
-                            ->get() 
-                            ->map(function($item, $key) {
-                                $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
-                                return $item;
-                            });
+                ->select('purchased_cost', 'status_id')
+                ->get()
+                ->map(function($item, $key) {
+                    $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+
+                    return $item;
+                });
 
             $consumables_loc_total = $consumables->count();
-            Cache::rememberForever("consumables-L{$id}-total", function () use($consumables_loc_total){
+            Cache::rememberForever("consumables-L{$id}-total", function() use ($consumables_loc_total) {
                 return $consumables_loc_total;
             });
 
             $consumables_total += $consumables_loc_total;
 
-            foreach($consumables as $consumable){
+            foreach($consumables as $consumable)
+            {
                 $consumables_cost += $consumables->purchased_cost;
-                if($consumable->deployable != 1){ $consumables_deployed++;}
+                if($consumable->deployable != 1)
+                {
+                    $consumables_deployed++;
+                }
             }
 
             Cache::set("consumables-L{$id}-cost", round($consumables_cost));
@@ -109,20 +140,21 @@ class Consumable extends Model
             $consumables_deployed_total += $consumables_deployed;
         }
 
-        Cache::rememberForever('consumables_total', function() use($consumables_total){
+        Cache::rememberForever('consumables_total', function() use ($consumables_total) {
             return round($consumables_total);
         });
 
-        Cache::rememberForever('consumables_cost', function() use($consumables_cost_total){
+        Cache::rememberForever('consumables_cost', function() use ($consumables_cost_total) {
             return round($consumables_cost_total);
         });
 
-        Cache::rememberForever('consumables_deploy', function() use($consumables_deployed_total){
+        Cache::rememberForever('consumables_deploy', function() use ($consumables_deployed_total) {
             return round($consumables_deployed_total);
         });
     }
 
-    public static function updateLocationCache(Location $location){ 
+    public static function updateLocationCache(Location $location)
+    {
         $id = $location->id;
 
         //Variables to Hold the Accessories for that Location
@@ -130,43 +162,50 @@ class Consumable extends Model
         $consumables_deployed = 0;
 
         $consumables = Consumable::whereLocationId($id)
-        ->select('purchased_cost', 'status_id')
-        ->get()
-        ->map(function($item, $key) {
-            $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
-            return $item;
-        });
+            ->select('purchased_cost', 'status_id')
+            ->get()
+            ->map(function($item, $key) {
+                $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+
+                return $item;
+            });
 
         $consumables_loc_total = $consumables->count();
-        Cache::rememberForever("consumables-L{$id}-total", function () use($consumables_loc_total){
+        Cache::rememberForever("consumables-L{$id}-total", function() use ($consumables_loc_total) {
             return $consumables_loc_total;
         });
 
-        foreach($consumables as $consumable){
+        foreach($consumables as $consumable)
+        {
             $consumables_cost += $consumable->purchased_cost;
-            if($consumable->deployable != 1){ $consumables_deployed++;}
+            if($consumable->deployable != 1)
+            {
+                $consumables_deployed++;
+            }
         }
 
         Cache::set("consumables-L{$id}-cost", round($consumables_cost));
         Cache::set("consumables-L{$id}-deploy", round($consumables_deployed));
     }
 
-    public static function getCache($ids){
-         //The Variables holding the total of Accessories available to the User
-         $consumables_total = 0;
-         $consumables_cost_total = 0;
-         $consumables_deployed_total = 0;
- 
+    public static function getCache($ids)
+    {
+        //The Variables holding the total of Accessories available to the User
+        $consumables_total = 0;
+        $consumables_cost_total = 0;
+        $consumables_deployed_total = 0;
 
         $locations = Location::find($ids);
 
-        foreach($locations as $location){
+        foreach($locations as $location)
+        {
             $id = $location->id;
             /* The Cache Values for the Location */
-            if( !Cache::has("consumables-L{$id}-total") && 
-                !Cache::has("consumables-L{$id}-cost") &&
-                !Cache::has("consumables-L{$id}-deploy")
-            ){
+            if(! Cache::has("consumables-L{$id}-total") &&
+                ! Cache::has("consumables-L{$id}-cost") &&
+                ! Cache::has("consumables-L{$id}-deploy")
+            )
+            {
                 Consumable::updateLocationCache($location);
             }
 
@@ -175,17 +214,17 @@ class Consumable extends Model
             $consumables_deployed_total += Cache::get("consumables-L{$id}-deploy");
         }
 
-         /* consumables Calcualtions */
-            
-         Cache::rememberForever('consumables_total', function() use($consumables_total){
+        /* consumables Calcualtions */
+
+        Cache::rememberForever('consumables_total', function() use ($consumables_total) {
             return round($consumables_total);
         });
 
-        Cache::rememberForever('consumables_cost', function() use($consumables_cost_total){
+        Cache::rememberForever('consumables_cost', function() use ($consumables_cost_total) {
             return round($consumables_cost_total);
         });
 
-        Cache::rememberForever('consumables_deploy', function() use($consumables_deployed_total){
+        Cache::rememberForever('consumables_deploy', function() use ($consumables_deployed_total) {
             return round($consumables_deployed_total);
         });
     }
@@ -194,9 +233,12 @@ class Consumable extends Model
     {
         $expenditure = 0;
         $consumables = Consumable::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('purchased_cost', 'location_id')->get();
-        foreach($consumables as $consumable){
+        foreach($consumables as $consumable)
+        {
             $expenditure += $consumable->purchased_cost;
         }
+
         return $expenditure;
     }
+
 }

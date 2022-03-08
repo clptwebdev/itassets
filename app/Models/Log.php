@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +15,14 @@ class Log extends Model {
     use HasFactory;
 
     protected $fillable = ['user_id', 'loggable_type', 'loggable_id', 'data', 'created_at'];
+
+    public function data(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
 
     public function user()
     {
@@ -42,7 +51,7 @@ class Log extends Model {
 
     public function scopeLogTypeFilter($query, $type)
     {
-      return $query->where('loggable_type' ,'=', $type);
+        return $query->where('loggable_type', '=', $type);
 
     }
 

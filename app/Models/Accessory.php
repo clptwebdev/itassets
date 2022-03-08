@@ -3,18 +3,35 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Support\Facades\Cache;
 
-class Accessory extends Model
-{
+class Accessory extends Model {
+
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'model', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'room', 'notes','manufacturer_id', 'photo_id', 'depreciation_id', 'user_id'];
+    protected $fillable = ['name', 'model', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'status_id', 'order_no', 'warranty', 'location_id', 'room', 'notes', 'manufacturer_id', 'photo_id', 'depreciation_id', 'user_id'];
+
+    public function name(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
+
+    public function notes(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
 
     public function photo()
     {
@@ -80,7 +97,7 @@ class Accessory extends Model
     {
         $pivot = $this->category()->getTable();
 
-        $query->whereHas('category', function ($q) use ($category, $pivot) {
+        $query->whereHas('category', function($q) use ($category, $pivot) {
             $q->whereIn("{$pivot}.category_id", $category);
         });
     }
@@ -100,17 +117,18 @@ class Accessory extends Model
     public function scopeSearchFilter($query, $search)
     {
         return $query->where('accessories.name', 'LIKE', "%{$search}%")
-                    ->orWhere('accessories.serial_no', 'LIKE', "%{$search}%");
+            ->orWhere('accessories.serial_no', 'LIKE', "%{$search}%");
     }
 
-    public function scopeExportFilterStatus($query, $status,$category , $location)
+    public function scopeExportFilterStatus($query, $status, $category, $location)
     {
         $pivot = $this->category()->getTable();
-        return  $query->whereHas('category', function ($q) use ($category, $pivot) {
-                    $q->whereIn("{$pivot}.category_id", $category);
-                })
-                ->orWhereIn('status_id', $status)
-                ->orWhereIn('location_id', $location);
+
+        return $query->whereHas('category', function($q) use ($category, $pivot) {
+            $q->whereIn("{$pivot}.category_id", $category);
+        })
+            ->orWhereIn('status_id', $status)
+            ->orWhereIn('location_id', $location);
 
     }
 
@@ -124,16 +142,19 @@ class Accessory extends Model
 
     public function depreciation_value()
     {
-            $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation_years());
-            if($eol->isPast()){
-                return 0;
-            }else{
-                $age = Carbon::now()->floatDiffInYears($this->purchased_date);
-                $percent = 100 / $this->depreciation_years();
-                $percentage = floor($age)*$percent;
-                $dep = $this->purchased_cost * ((100 - $percentage) / 100);
-                return $dep;
-            }
+        $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation_years());
+        if($eol->isPast())
+        {
+            return 0;
+        } else
+        {
+            $age = Carbon::now()->floatDiffInYears($this->purchased_date);
+            $percent = 100 / $this->depreciation_years();
+            $percentage = floor($age) * $percent;
+            $dep = $this->purchased_cost * ((100 - $percentage) / 100);
+
+            return $dep;
+        }
 
     }
 
@@ -150,7 +171,8 @@ class Accessory extends Model
         $accessories_dep_total = 0;
         $accessories_deployed_total = 0;
 
-        foreach(Location::all() as $location){
+        foreach(Location::all() as $location)
+        {
             $id = $location->id;
 
             //Variables to Hold the Accessories for that Location
@@ -160,26 +182,31 @@ class Accessory extends Model
             $accessories_deployed = 0;
 
             $accessories = Accessory::whereLocationId($id)
-            ->with('status', 'depreciation')
-            ->select('purchased_cost', 'purchased_date', 'depreciation_id', 'status_id', 'location_id')
-            ->get()
-            ->map(function($item, $key) {
-                $item['depreciation_value'] = $item->depreciation_value();
-                $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
-                return $item;
-            });
+                ->with('status', 'depreciation')
+                ->select('purchased_cost', 'purchased_date', 'depreciation_id', 'status_id', 'location_id')
+                ->get()
+                ->map(function($item, $key) {
+                    $item['depreciation_value'] = $item->depreciation_value();
+                    $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+
+                    return $item;
+                });
 
             $accessories_loc_total = $accessories->count();
-            Cache::rememberForever("accessories-L{$id}-total", function () use($accessories_loc_total){
+            Cache::rememberForever("accessories-L{$id}-total", function() use ($accessories_loc_total) {
                 return $accessories_loc_total;
             });
-            
+
             $accessories_total += $accessories_loc_total;
 
-            foreach($accessories as $accessory){
+            foreach($accessories as $accessory)
+            {
                 $accessories_cost += $accessory->purchased_cost;
                 $accessories_dep += $accessory->depreciation_value;
-                if($accessory->deployable !== 1){ $accessories_deployed++;}
+                if($accessory->deployable !== 1)
+                {
+                    $accessories_deployed++;
+                }
             }
 
             Cache::set("accessories-L{$id}-cost", round($accessories_cost));
@@ -192,51 +219,56 @@ class Accessory extends Model
 
         //Accessories
 
-        Cache::rememberForever('accessories_total', function() use($accessories_total){
+        Cache::rememberForever('accessories_total', function() use ($accessories_total) {
             return round($accessories_total);
         });
 
-        Cache::rememberForever('accessories_cost', function() use($accessories_cost_total){
+        Cache::rememberForever('accessories_cost', function() use ($accessories_cost_total) {
             return round($accessories_cost_total);
         });
 
-        Cache::rememberForever('accessories_dep', function() use($accessories_dep_total){
+        Cache::rememberForever('accessories_dep', function() use ($accessories_dep_total) {
             return round($accessories_dep_total);
         });
 
-        Cache::rememberForever('accessories_deploy', function() use($accessories_deployed_total){
+        Cache::rememberForever('accessories_deploy', function() use ($accessories_deployed_total) {
             return round($accessories_deployed_total);
         });
     }
 
     public static function updateLocationCache(Location $location)
     {
-        
+
         $accessories_cost = 0;
         $accessories_dep = 0;
         $accessories_deployed = 0;
 
         $id = $location->id;
-        
+
         $accessories = Accessory::whereLocationId($id)
-        ->with('status', 'depreciation')
-        ->select('purchased_cost', 'purchased_date', 'depreciation_id', 'status_id', 'location_id')
-        ->get()
-        ->map(function($item, $key) {
-            $item['depreciation_value'] = $item->depreciation_value();
-            $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
-            return $item;
-        });
+            ->with('status', 'depreciation')
+            ->select('purchased_cost', 'purchased_date', 'depreciation_id', 'status_id', 'location_id')
+            ->get()
+            ->map(function($item, $key) {
+                $item['depreciation_value'] = $item->depreciation_value();
+                $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+
+                return $item;
+            });
 
         $accessories_loc_total = $accessories->count();
-        Cache::rememberForever("accessories-L{$id}-total", function () use($accessories_loc_total){
+        Cache::rememberForever("accessories-L{$id}-total", function() use ($accessories_loc_total) {
             return $accessories_loc_total;
         });
 
-        foreach($accessories as $accessory){
+        foreach($accessories as $accessory)
+        {
             $accessories_cost += $accessory->purchased_cost;
             $accessories_dep += $accessory->depreciation_value;
-            if($accessory->deployable !== 1){ $accessories_deployed++;}
+            if($accessory->deployable !== 1)
+            {
+                $accessories_deployed++;
+            }
         }
 
         Cache::set("accessories-L{$id}-cost", round($accessories_cost));
@@ -251,18 +283,19 @@ class Accessory extends Model
         $accessories_cost_total = 0;
         $accessories_dep_total = 0;
         $accessories_deployed_total = 0;
- 
 
         $locations = Location::find($ids);
 
-        foreach($locations as $location){
+        foreach($locations as $location)
+        {
             $id = $location->id;
             /* The Cache Values for the Location */
-            if( !Cache::has("accessories-L{$id}-total") && 
-                !Cache::has("accessories-L{$id}-cost") &&
-                !Cache::has("accessories-L{$id}-dep") &&
-                !Cache::has("accessories-L{$id}-deploy")
-            ){
+            if(! Cache::has("accessories-L{$id}-total") &&
+                ! Cache::has("accessories-L{$id}-cost") &&
+                ! Cache::has("accessories-L{$id}-dep") &&
+                ! Cache::has("accessories-L{$id}-deploy")
+            )
+            {
                 Accessory::updateLocationCache($location);
             }
 
@@ -274,19 +307,19 @@ class Accessory extends Model
 
         //Accessories
 
-        Cache::rememberForever('accessories_total', function() use($accessories_total){
+        Cache::rememberForever('accessories_total', function() use ($accessories_total) {
             return round($accessories_total);
         });
 
-        Cache::rememberForever('accessories_cost', function() use($accessories_cost_total){
+        Cache::rememberForever('accessories_cost', function() use ($accessories_cost_total) {
             return round($accessories_cost_total);
         });
 
-        Cache::rememberForever('accessories_dep', function() use($accessories_dep_total){
+        Cache::rememberForever('accessories_dep', function() use ($accessories_dep_total) {
             return round($accessories_dep_total);
         });
 
-        Cache::rememberForever('accessories_deploy', function() use($accessories_deployed_total){
+        Cache::rememberForever('accessories_deploy', function() use ($accessories_deployed_total) {
             return round($accessories_deployed_total);
         });
     }
@@ -295,11 +328,14 @@ class Accessory extends Model
     {
         $expenditure = 0;
         $accessories = Accessory::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost', 'location_id')->get();
-        foreach($accessories as $accessory){
-            if($accessory->donated !== 1){
+        foreach($accessories as $accessory)
+        {
+            if($accessory->donated !== 1)
+            {
                 $expenditure += $accessory->purchased_cost;
             }
         }
+
         return $expenditure;
     }
 
@@ -307,13 +343,16 @@ class Accessory extends Model
     {
         $donations = 0;
         $accessories = Accessory::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('donated', 'purchased_cost', 'location_id')->get();
-        foreach($accessories as $accessory){
-            if($accessory->donated === 1){
+        foreach($accessories as $accessory)
+        {
+            if($accessory->donated === 1)
+            {
                 $donations += $accessory->purchased_cost;
             }
         }
+
         return $donations;
-        
+
     }
 
 }
