@@ -182,11 +182,7 @@ class UserController extends Controller {
 
     public function changePermission($id, $role)
     {
-        if(auth()->user()->cant('update', User::class))
-        {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to update Permissions.');
-
-        }
+        
         $user = User::findOrFail($id);
 
         $user->role_id = $role;
