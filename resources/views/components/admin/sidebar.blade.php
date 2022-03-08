@@ -294,22 +294,22 @@
                 <span class="sidebar-title">Settings</span>
             </a>
             <div id="settingPages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                @can('viewAll' , \App\Models\AssetModel::class)
+                @can('viewAny' , \App\Models\AssetModel::class)
                     <a class="collapse-item" href="{{ route('asset-models.index')}}">Asset Models</a>
                 @endcan
-                @can('viewAll' , \App\Models\Depreciation::class)
+                @can('viewAny' , \App\Models\Depreciation::class)
                     <a class="collapse-item" href="{{ route('depreciation.index')}}">Depreciation</a>
                 @endcan
-                @can('viewAll' , \App\Models\Category::class)
+                @can('viewAny' , \App\Models\Category::class)
                     <a class="collapse-item" href="{{ route('category.index')}}">Categories</a>
                 @endcan
-                @can('viewAll' , \App\Models\Fieldset::class)
+                @can('viewAny' , \App\Models\Fieldset::class)
                     <a class="collapse-item" href="{{ route('fieldsets.index')}}">Fieldsets</a>
                 @endcan
-                @can('viewAll' , \App\Models\Field::class)
+                @can('viewAny' , \App\Models\Field::class)
                     <a class="collapse-item" href="{{ route('fields.index')}}">Custom Fields</a>
                 @endcan
-                @can('viewAll' , \App\Models\Status::class)
+                @can('viewAny' , \App\Models\Status::class)
                     <a class="collapse-item" href="{{ route('status.index')}}">Status Fields</a>
                 @endcan
                 <a id="export" class="collapse-item " href="{{route("settings.view")}}"> Settings page </a>
