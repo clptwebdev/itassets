@@ -45,7 +45,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Assets.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Assets.');
 
         }
         $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))
@@ -77,7 +77,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('create', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Create Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Create Assets.');
         }
         $locations = auth()->user()->locations;
 
@@ -113,14 +113,14 @@ class AssetController extends Controller {
         $asset->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
         session()->flash('success_message', $request->title . ' has been created successfully');
 
-        return redirect(route('assets.show', $asset->id));
+        return to_route('assets.show', $asset->id);
     }
 
     public function store(Request $request)
     {
         if(auth()->user()->cant('create', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to create Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to create Assets.');
         }
 
         $validate_fieldet = [];
@@ -228,7 +228,7 @@ class AssetController extends Controller {
         }
         session()->flash('success_message', $request->name . ' has been created successfully');
 
-        return redirect(route('assets.index'));
+        return to_route('assets.index');
 
     }
 
@@ -236,7 +236,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('view', $asset))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Show Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Show Assets.');
 
         }
         $locations = auth()->user()->locations;
@@ -252,7 +252,7 @@ class AssetController extends Controller {
 
         if(auth()->user()->cant('update', $asset))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Edit Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Edit Assets.');
 
         }
         $locations = auth()->user()->locations;
@@ -276,7 +276,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('update', $asset))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Update Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Update Assets.');
 
         }
 
@@ -391,7 +391,7 @@ class AssetController extends Controller {
         }
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
-        return redirect(route('assets.index'));
+        return to_route('assets.index');
     }
 
     public function destroy(Asset $asset)
@@ -399,7 +399,7 @@ class AssetController extends Controller {
 
         if(auth()->user()->cant('delete', $asset))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Archive Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Archive Assets.');
         }
 
         $name = $asset->asset_tag;
@@ -407,7 +407,7 @@ class AssetController extends Controller {
         $asset->delete();
         session()->flash('danger_message', "#" . $name . ' was sent to the Recycle Bin');
 
-        return redirect(route('assets.index'));
+        return to_route('assets.index');
     }
 
     public function restore($id)
@@ -415,13 +415,13 @@ class AssetController extends Controller {
         $asset = Asset::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $asset))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Restore Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Restore Assets.');
         }
         $name = $asset->asset_tag;
         $asset->restore();
         session()->flash('success_message', "#" . $name . ' has been restored.');
 
-        return redirect(route('assets.index'));
+        return to_route('assets.index');
     }
 
     public function forceDelete($id)
@@ -429,13 +429,13 @@ class AssetController extends Controller {
         $asset = Asset::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $asset))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Delete Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Delete Assets.');
         }
         $name = $asset->name;
         $asset->forceDelete();
         session()->flash('danger_message', "#" . $name . ' was deleted permanently');
 
-        return redirect(route('assets.bin'));
+        return to_route('assets.bin');
     }
 
     public function model(AssetModel $model)
@@ -455,7 +455,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Export Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Export Assets.');
 
         }
         $assets = Asset::withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location', 'model', 'status', 'user')->get();
@@ -463,7 +463,7 @@ class AssetController extends Controller {
         \Maatwebsite\Excel\Facades\Excel::store(new AssetExport($assets), "/public/csv/assets-ex-{$date}.xlsx");
         $url = asset("storage/csv/assets-ex-{$date}.xlsx");
 
-        return redirect(route('assets.index'))
+        return to_route('assets.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
 
@@ -473,7 +473,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('create', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Import Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Import Assets.');
 
         }
 
@@ -553,13 +553,13 @@ class AssetController extends Controller {
             } else
             {
 
-                return redirect('/assets')->with('success_message', 'All Assets were added correctly!');
+                return to_route('assets.index')->with('success_message', 'All Assets were added correctly!');
 
             }
 
         } else
         {
-            return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+            return to_route('assets.index')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
         }
 
@@ -571,7 +571,7 @@ class AssetController extends Controller {
         /* Currently - Super Admin permissions requried [SC] */
         if(auth()->user()->cant('disposeAll', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Bulk Dispose Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Bulk Dispose Assets.');
 
         }
 
@@ -652,13 +652,13 @@ class AssetController extends Controller {
             } else
             {
 
-                return redirect('/assets')->with('success_message', 'All Assets were disposed correctly!');
+                return to_route('assets.index')->with('success_message', 'All Assets were disposed correctly!');
 
             }
 
         } else
         {
-            return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+            return to_route('assets.index')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
         }
     }
@@ -667,7 +667,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('transferAll', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Bulk transfer Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Bulk transfer Assets.');
         }
 
         /* Accepted File Extensions */
@@ -747,13 +747,13 @@ class AssetController extends Controller {
             } else
             {
 
-                return redirect('/assets')->with('success_message', 'All Assets were disposed correctly!');
+                return to_route('assets.index')->with('success_message', 'All Assets were disposed correctly!');
 
             }
 
         } else
         {
-            return redirect('/assets')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+            return to_route('assets.index')->with('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
         }
     }
@@ -762,7 +762,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Export Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Export Assets.');
 
         }
         //Receives the JSON Object with the errors and passes them to the Export function for Maatwebsite
@@ -778,7 +778,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Export Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Export Assets.');
 
         }
         //Receives the JSON Object with the errors and passes them to the Export function for Maatwebsite
@@ -794,7 +794,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Export Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Export Assets.');
 
         }
         $export = $request['asset_tag'];
@@ -984,7 +984,7 @@ class AssetController extends Controller {
     {
         session()->forget(['assets_locations', 'assets_status', 'assets_category', 'assets_start', 'assets_end', 'assets_audit', 'assets_warranty', 'assets_amount', 'assets_search']);
 
-        return redirect(route('assets.index'));
+        return to_route('assets.index');
     }
 
     public function status(Status $status)
@@ -1057,7 +1057,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Download Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Download Assets.');
 
         }
         $assets = array();
@@ -1111,7 +1111,7 @@ class AssetController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('assets.index'))
+        return to_route('assets.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
@@ -1121,7 +1121,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('view', $asset))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Download Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Download Assets.');
 
         }
 
@@ -1133,7 +1133,7 @@ class AssetController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('assets.show', $asset->id))
+        return to_route('assets.show', $asset->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
@@ -1142,7 +1142,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Recycle Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Recycle Assets.');
 
         }
 
@@ -1164,13 +1164,13 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('update', Status::class))
         {
-            return ErrorController::forbidden(route('accessories.show', $asset->id), 'Unauthorised to Change Statuses Asset.');
+            return ErrorController::forbidden(to_route('accessories.show', $asset->id), 'Unauthorised to Change Statuses Asset.');
         }
         $asset->status_id = $request->status;
         $asset->save();
         session()->flash('success_message', $asset->model->name . ' has had its status changed successfully');
 
-        return redirect(route('assets.show', $asset->id));
+        return to_route('assets.show', $asset->id);
     }
 
 }

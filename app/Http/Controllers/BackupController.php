@@ -14,7 +14,7 @@ class BackupController extends Controller {
     {
         if(auth()->user()->cant('view', Backup::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Backups.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Backups.');
 
         }
         $files = Storage::files('public/Apollo-Asset-Manager');
@@ -34,7 +34,7 @@ class BackupController extends Controller {
     {
         if(auth()->user()->cant('view', Backup::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Download Backups.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Download Backups.');
 
         }
         Storage::download($request->file);
@@ -44,12 +44,12 @@ class BackupController extends Controller {
     {
         if(auth()->user()->cant('create', Backup::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Create Backups.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Create Backups.');
 
         }
         Artisan::call("backup:run --only-db");
 
-        return redirect("/databasebackups")->with('success_message', 'A Backup of the database was completed!');
+        return to_route("databasebackups.index")->with('success_message', 'A Backup of the database was completed!');
 
     }
 
@@ -57,25 +57,25 @@ class BackupController extends Controller {
     {
         if(auth()->user()->cant('create', Backup::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Create Backups.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Create Backups.');
 
         }
         Artisan::call("backup:run");
 
-        return redirect("/databasebackups")->with('success_message', 'A Backup of the Application was completed!');
+        return to_route("databasebackups.index")->with('success_message', 'A Backup of the Application was completed!');
     }
 
     public function dbClean()
     {
         if(auth()->user()->cant('delete', Backup::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Clean Backups.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Clean Backups.');
 
         }
         $files = Storage::files('public/Apollo---Asset-Manager');
         Storage::delete($files);
 
-        return redirect("/databasebackups")->with('success_message', 'Your database backups have been removed 0 Left!');
+        return to_route("databasebackups.index")->with('success_message', 'Your database backups have been removed 0 Left!');
     }
 
 }

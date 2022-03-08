@@ -18,7 +18,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Archive::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Archives.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Archives.');
 
         }
         $locations = auth()->user()->locations;
@@ -34,7 +34,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to View Assets.');
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to View Assets.');
 
         }
 
@@ -51,7 +51,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Accessories.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Accessories.');
 
         }
 
@@ -68,7 +68,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('view', $archive))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Show Archives.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Show Archives.');
         }
 
         return view('archives.show', compact('archive'));
@@ -78,7 +78,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('delete', $archive))
         {
-            return ErrorController::forbidden(route('archives.index'), 'Unauthorised to Delete Archives.');
+            return ErrorController::forbidden(to_route('archives.index'), 'Unauthorised to Delete Archives.');
 
         }
 
@@ -92,7 +92,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(route('archives.index'), 'Unauthorised to Download Archives.');
+            return ErrorController::forbidden(to_route('archives.index'), 'Unauthorised to Download Archives.');
 
         }
         $assets = array();
@@ -130,7 +130,7 @@ class ArchiveController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('assets.index'))
+        return to_route('assets.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
@@ -140,7 +140,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('view', $asset))
         {
-            return ErrorController::forbidden(route('archives.index'), 'Unauthorised to Download Archives.');
+            return ErrorController::forbidden(to_route('archives.index'), 'Unauthorised to Download Archives.');
 
         }
 
@@ -152,7 +152,7 @@ class ArchiveController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('assets.show', $asset->id))
+        return to_route('assets.show', $asset->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }

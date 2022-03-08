@@ -31,7 +31,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('comment', Comment::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Create Comments for Miscellaneous.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Create Comments for Miscellaneous.');
 
         }
         $request->validate([
@@ -42,14 +42,14 @@ class MiscellaneaController extends Controller {
         $miscellanea = Miscellanea::find($request->miscellanea_id);
         $miscellanea->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
 
-        return redirect(route('miscellaneous.show', $miscellanea->id));
+        return to_route('miscellaneous.show', $miscellanea->id);
     }
 
     public function index()
     {
         if(auth()->user()->cant('viewAny', Miscellanea::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Miscellaneous.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Miscellaneous.');
 
         }
 
@@ -78,7 +78,7 @@ class MiscellaneaController extends Controller {
         ]);
 
 //        if (auth()->user()->cant('viewAny', Miscellanea::class)) {
-//            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
+//            return redirect(to_route('errors.forbidden', ['area', 'miscellaneous', 'view']));
 //        }
 //
 //        return view('miscellanea.view',[
@@ -90,7 +90,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('create', Miscellanea::class))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Create Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Create Miscellaneous.');
 
         }
 
@@ -110,7 +110,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('create', Miscellanea::class))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Store Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Store Miscellaneous.');
 
         }
 
@@ -131,7 +131,7 @@ class MiscellaneaController extends Controller {
         ));
         $miscellanea->category()->attach($request->category);
 
-        return redirect(route("miscellaneous.index"));
+        return to_route("miscellaneous.index");
 
     }
 
@@ -139,7 +139,7 @@ class MiscellaneaController extends Controller {
     {
         session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
 
-        return redirect(route('miscellaneous.index'));
+        return to_route('miscellaneous.index');
     }
 
     public function filter(Request $request)
@@ -264,7 +264,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Miscellanea::class))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Export Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Export Miscellaneous.');
 
         }
         $export = $request['name'];
@@ -326,7 +326,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('create', $miscellaneou))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Show Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Show Miscellaneous.');
 
         }
 
@@ -337,7 +337,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('update', $miscellaneou))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Edit Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Edit Miscellaneous.');
 
         }
 
@@ -358,7 +358,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('update', $miscellaneou))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Update Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Update Miscellaneous.');
 
         }
 
@@ -387,21 +387,21 @@ class MiscellaneaController extends Controller {
         $miscellaneou->category()->sync($request->category);
         session()->flash('success_message', $miscellaneou->name . ' has been updated successfully');
 
-        return redirect(route("miscellaneous.index"));
+        return to_route("miscellaneous.index");
     }
 
     public function destroy(Miscellanea $miscellaneou)
     {
         if(auth()->user()->cant('delete', $miscellaneou))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Delete Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Delete Miscellaneous.');
 
         }
         $name = $miscellaneou->name;
         $miscellaneou->delete();
         session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
-        return redirect(route('miscellaneous.index'));
+        return to_route('miscellaneous.index');
 
     }
 
@@ -409,7 +409,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('export', Miscellanea::class))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Export Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Export Miscellaneous.');
 
         }
         $miscellaneous = Miscellanea::all();
@@ -417,7 +417,7 @@ class MiscellaneaController extends Controller {
         \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport($miscellaneous), "/public/csv/miscellaneous-ex-{$date}.xlsx");
         $url = asset("storage/csv/miscellaneous-ex-{$date}.xlsx");
 
-        return redirect(route('miscellaneous.index'))
+        return to_route('miscellaneous.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
     }
@@ -426,7 +426,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('create', Miscellanea::class))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to import Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to import Miscellaneous.');
 
         }
 
@@ -507,14 +507,14 @@ class MiscellaneaController extends Controller {
             } else
             {
 
-                return redirect('/miscellaneous')->with('success_message', 'All miscellaneous were added correctly!');
+                return to_route('miscellaneous.index')->with('success_message', 'All miscellaneous were added correctly!');
 
             }
         } else
         {
             session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-            return redirect(route('miscellaneous.index'));
+            return to_route('miscellaneous.index');
         }
 
 
@@ -524,7 +524,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Miscellanea::class))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Export Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Export Miscellaneous.');
 
         }
 
@@ -576,7 +576,7 @@ class MiscellaneaController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('miscellaneous.index'))
+        return to_route('miscellaneous.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
@@ -585,7 +585,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('view', $miscellanea))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Download Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Download Miscellaneous.');
 
         }
 
@@ -599,7 +599,7 @@ class MiscellaneaController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('miscellaneous.show', $miscellanea->id))
+        return to_route('miscellaneous.show', $miscellanea->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
@@ -610,7 +610,7 @@ class MiscellaneaController extends Controller {
     {
         if(auth()->user()->cant('recycleBin', Miscellanea::class))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Recycle Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Recycle Miscellaneous.');
 
         }
 
@@ -624,13 +624,13 @@ class MiscellaneaController extends Controller {
         $miscellanea = Miscellanea::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $miscellanea))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Restore Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Restore Miscellaneous.');
 
         }
         $miscellanea->restore();
         session()->flash('success_message', "#" . $miscellanea->name . ' has been restored.');
 
-        return redirect("/miscellaneous");
+        return to_route("miscellaneous.index");
     }
 
     public function forceDelete($id)
@@ -638,27 +638,27 @@ class MiscellaneaController extends Controller {
         $miscellanea = Miscellanea::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $miscellanea))
         {
-            return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Delete Miscellaneous.');
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Delete Miscellaneous.');
 
         }
         $name = $miscellanea->name;
         $miscellanea->forceDelete();
         session()->flash('danger_message', "miscellanea - " . $name . ' was deleted permanently');
 
-        return redirect("/miscellanea/bin");
+        return to_route("miscellaneous.bin");
     }
 
     public function changeStatus(Miscellanea $miscellanea, Request $request)
     {
         if(auth()->user()->cant('update', Status::class))
         {
-            return ErrorController::forbidden(route('accessories.show', $miscellanea->id), 'Unauthorised to Change Statuses Miscellaneous.');
+            return ErrorController::forbidden(to_route('accessories.show', $miscellanea->id), 'Unauthorised to Change Statuses Miscellaneous.');
         }
         $miscellanea->status_id = $request->status;
         $miscellanea->save();
         session()->flash('success_message', $miscellanea->name . ' has had its status changed successfully');
 
-        return redirect(route('miscellaneous.show', $miscellanea->id));
+        return to_route('miscellaneous.show', $miscellanea->id);
     }
 
 }

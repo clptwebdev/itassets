@@ -77,7 +77,7 @@ class SettingsController extends Controller {
 
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Accessory', 'export']));
+            return to_route('errors.forbidden', ['area', 'Accessory', 'export']);
         }
         if(! $accessory->isEmpty())
         {
@@ -85,12 +85,12 @@ class SettingsController extends Controller {
             \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport($accessory), "/public/csv/accessories-ex-{$date}.csv");
             $url = asset("storage/csv/accessories-ex-{$date}.csv");
 
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
                 ->withInput();
         } else
         {
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('danger_message', "There are no Assets found with this Filter! Please alter your query and try again.");
 
         }
@@ -119,7 +119,7 @@ class SettingsController extends Controller {
 
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Asset', 'export']));
+            return to_route('errors.forbidden', ['area', 'Asset', 'export']);
         }
 
         if(! $asset->isEmpty())
@@ -128,12 +128,12 @@ class SettingsController extends Controller {
             \Maatwebsite\Excel\Facades\Excel::store(new AssetExport($asset), "/public/csv/assets-ex-{$date}.csv");
             $url = asset("storage/csv/assets-ex-{$date}.csv");
 
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
                 ->withInput();
         } else
         {
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('danger_message', "There are no Assets found with this Filter! Please alter your query and try again.");
 
         }
@@ -158,7 +158,7 @@ class SettingsController extends Controller {
 
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Component', 'export']));
+            return to_route('errors.forbidden', ['area', 'Component', 'export']);
         }
         if(! $component->isEmpty())
         {
@@ -166,12 +166,12 @@ class SettingsController extends Controller {
             \Maatwebsite\Excel\Facades\Excel::store(new ComponentsExport($component), "/public/csv/components-ex-{$date}.csv");
             $url = asset("storage/csv/components-ex-{$date}.csv");
 
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
                 ->withInput();
         } else
         {
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('danger_message', "There are no Assets found with this Filter! Please alter your query and try again.");
 
         }
@@ -196,7 +196,7 @@ class SettingsController extends Controller {
 
         if(auth()->user()->cant('viewAny', Miscellanea::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export']));
+            return to_route('errors.forbidden', ['area', 'miscellaneous', 'export']);
         }
         if(! $miscellanea->isEmpty())
         {
@@ -204,12 +204,12 @@ class SettingsController extends Controller {
             \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport($miscellanea), "/public/csv/miscellaneous-ex-{$date}.csv");
             $url = asset("storage/csv/miscellaneous-ex-{$date}.csv");
 
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
                 ->withInput();
         } else
         {
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('danger_message', "There are no Assets found with this Filter! Please alter your query and try again.");
 
         }
@@ -242,7 +242,7 @@ class SettingsController extends Controller {
     {
         RoleBoot::dispatch()->afterResponse();
 
-        return redirect(route('settings.view'))
+        return to_route('settings.view')
             ->with('success_message', "Your Roles have been Synced please allow a few moments for this to take effect");
     }
 
