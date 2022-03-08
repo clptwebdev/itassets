@@ -20,7 +20,7 @@ class AssetModelController extends Controller {
     {
         if(auth()->user()->cant('viewAny', AssetModel::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Asset-Models.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Asset-Models.');
 
         }
 
@@ -31,7 +31,7 @@ class AssetModelController extends Controller {
     {
         if(auth()->user()->cant('create', AssetModel::class))
         {
-            return ErrorController::forbidden(route('asset-models.index'), 'Unauthorised to Create Asset-Models.');
+            return ErrorController::forbidden(to_route('asset-models.index'), 'Unauthorised to Create Asset-Models.');
 
         }
         $mans = Manufacturer::all();
@@ -45,7 +45,7 @@ class AssetModelController extends Controller {
     {
         if(auth()->user()->cant('create', AssetModel::class))
         {
-            return ErrorController::forbidden(route('asset-models.index'), 'Unauthorised to Create Asset-Models.');
+            return ErrorController::forbidden(to_route('asset-models.index'), 'Unauthorised to Create Asset-Models.');
 
         }
         $validated = $request->validate([
@@ -56,14 +56,14 @@ class AssetModelController extends Controller {
         AssetModel::create($request->only('name', 'manufacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'));
         session()->flash('success_message', $request->name . ' has been created successfully');
 
-        return redirect(route('asset-models.index'));
+        return to_route('asset-models.index');
     }
 
     public function show(AssetModel $assetModel)
     {
         if(auth()->user()->cant('view', $assetModel))
         {
-            return ErrorController::forbidden(route('asset-models.index'), 'Unauthorised to View Asset-Models.');
+            return ErrorController::forbidden(to_route('asset-models.index'), 'Unauthorised to View Asset-Models.');
 
         }
 
@@ -74,7 +74,7 @@ class AssetModelController extends Controller {
     {
         if(auth()->user()->cant('update', $assetModel))
         {
-            return ErrorController::forbidden(route('asset-models.index'), 'Unauthorised to Edit Asset-Models.');
+            return ErrorController::forbidden(to_route('asset-models.index'), 'Unauthorised to Edit Asset-Models.');
 
         }
         $depreciation = Depreciation::all();
@@ -88,7 +88,7 @@ class AssetModelController extends Controller {
     {
         if(auth()->user()->cant('update', $assetModel))
         {
-            return ErrorController::forbidden(route('asset-models.index'), 'Unauthorised to Update Asset-Models.');
+            return ErrorController::forbidden(to_route('asset-models.index'), 'Unauthorised to Update Asset-Models.');
 
         }
         $validated = $request->validate([
@@ -99,28 +99,28 @@ class AssetModelController extends Controller {
         $assetModel->fill($request->only('name', 'manufacturer_id', 'model_no', 'depreciation_id', 'eol', 'fieldset_id', 'notes', 'photo_id'))->save();
         session()->flash('success_message', $request->name . ' has been updated successfully');
 
-        return redirect(route('asset-models.index'));
+        return to_route('asset-models.index');
     }
 
     public function destroy(AssetModel $assetModel)
     {
         if(auth()->user()->cant('delete', $assetModel))
         {
-            return ErrorController::forbidden(route('asset-models.index'), 'Unauthorised to Delete Asset-Models.');
+            return ErrorController::forbidden(to_route('asset-models.index'), 'Unauthorised to Delete Asset-Models.');
 
         }
         $name = $assetModel->name;
         $assetModel->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
 
-        return redirect(route('asset-models.index'));
+        return to_route('asset-models.index');
     }
 
     public function downloadPDF()
     {
         if(auth()->user()->cant('viewAny', AssetModel::class))
         {
-            return ErrorController::forbidden(route('asset-models.index'), 'Unauthorised to Download Asset-Models.');
+            return ErrorController::forbidden(to_route('asset-models.index'), 'Unauthorised to Download Asset-Models.');
 
         }
         $models = array();
@@ -148,7 +148,7 @@ class AssetModelController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('asset-models.index'))
+        return to_route('asset-models.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
@@ -159,7 +159,7 @@ class AssetModelController extends Controller {
     {
         if(auth()->user()->cant('view', $assetModel))
         {
-            return ErrorController::forbidden(route('asset-models.index'), 'Unauthorised to Download Asset-Models.');
+            return ErrorController::forbidden(to_route('asset-models.index'), 'Unauthorised to Download Asset-Models.');
 
         }
 
@@ -171,7 +171,7 @@ class AssetModelController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('asset-models.show', $assetModel))
+        return to_route('asset-models.show', $assetModel)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }

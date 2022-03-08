@@ -12,7 +12,7 @@ class StatusController extends Controller {
     {
         if(auth()->user()->cant('view', Status::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Statuses.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Statuses.');
 
         }
         $locations = auth()->user()->locations;
@@ -24,7 +24,7 @@ class StatusController extends Controller {
     {
         if(auth()->user()->cant('view', Status::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Statuses.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Statuses.');
 
         }
         $validated = $request->validate([
@@ -34,14 +34,14 @@ class StatusController extends Controller {
         Status::create($request->only('name', 'deployable', 'icon', 'colour'));
         session()->flash('success_message', $request->name . ' has been added to the statuses.');
 
-        return redirect(route('status.index'));
+        return to_route('status.index');
     }
 
     public function show(Status $status)
     {
         if(auth()->user()->cant('view', Status::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Show Statuses.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Show Statuses.');
 
         }
 
@@ -54,7 +54,7 @@ class StatusController extends Controller {
     {
         if(auth()->user()->cant('update', Status::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Update Statuses.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Update Statuses.');
 
 
         }
@@ -65,21 +65,21 @@ class StatusController extends Controller {
         $status->fill($request->only('name', 'deployable', 'icon', 'colour'))->save();
         session()->flash('success_message', $request->name . ' has been updated successfully.');
 
-        return redirect(route('status.index'));
+        return to_route('status.index');
     }
 
     public function destroy(Status $status)
     {
         if(auth()->user()->cant('delete', Status::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Delete Statuses.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Delete Statuses.');
 
         }
         $name = $status->name;
         $status->delete();
         session()->flash('danger_message', $name . ' has been successfully deleted from the system');
 
-        return redirect(route('status.index'));
+        return to_route('status.index');
     }
 
 }

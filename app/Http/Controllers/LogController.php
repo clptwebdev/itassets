@@ -13,7 +13,7 @@ class LogController extends Controller {
     {
         if(auth()->user()->cant('viewAll', auth()->user()))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Logs.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Logs.');
 
         }
 
@@ -26,7 +26,7 @@ class LogController extends Controller {
     {
         if(auth()->user()->cant('viewAll', auth()->user()))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Export Logs.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Export Logs.');
 
         }
         $logs = Log::all()->whereIn('id', json_decode($request->logs));
@@ -34,7 +34,7 @@ class LogController extends Controller {
         \Maatwebsite\Excel\Facades\Excel::store(new LogsExport($logs), "/public/csv/logs-ex-{$date}.xlsx");
         $url = asset("storage/csv/logs-ex-{$date}.xlsx");
 
-        return redirect(route('logs.index'))
+        return to_route('logs.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
 
@@ -44,7 +44,7 @@ class LogController extends Controller {
     {
         session()->forget(['log_type', 'log_search']);
 
-        return redirect(route('logs.index'));
+        return to_route('logs.index');
     }
 
     public function filter(Request $request)
@@ -165,7 +165,7 @@ class LogController extends Controller {
     {
         if(auth()->user()->cant('delete', Log::class))
         {
-            return ErrorController::forbidden(route('logs.index'), 'Unauthorised to Delete Logs.');
+            return ErrorController::forbidden(to_route('logs.index'), 'Unauthorised to Delete Logs.');
 
         }
         Log::truncate();

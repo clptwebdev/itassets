@@ -121,7 +121,7 @@ class RoleController extends Controller {
 
         }
 
-        return redirect(route('settings.view'))->with('success_message', "Your Role '" . $role->name . "' has been created. To assign this please head to the users page!");
+        return to_route('settings.view')->with('success_message', "Your Role '" . $role->name . "' has been created. To assign this please head to the users page!");
 
     }
 
@@ -135,7 +135,7 @@ class RoleController extends Controller {
         ]);
         $user->save();
 
-        return redirect(route('settings.view'))->with('success_message', $user->name . ' Has now been assigned the role ' . $role->name . '!');
+        return to_route('settings.view')->with('success_message', $user->name . ' Has now been assigned the role ' . $role->name . '!');
 
     }
 
@@ -145,14 +145,14 @@ class RoleController extends Controller {
         $role = Role::whereId($request->role)->first();
         $role->delete();
 
-        return redirect(route('settings.view'))->with('danger_message', 'This Role Has now been Deleted !');
+        return to_route('settings.view')->with('danger_message', 'This Role Has now been Deleted !');
     }
 
     public function default()
     {
-//        RoleBoot::dispatch();
+        RoleBoot::dispatch();
 
-        return redirect(route('dashboard'))->with('success_message', 'Default roles Has now been created you can assign them in the settings!');
+        return to_route('dashboard')->with('success_message', 'Default roles Has now been created you can assign them in the settings!');
 
     }
 

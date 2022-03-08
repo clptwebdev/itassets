@@ -22,7 +22,7 @@ class CommentController extends Controller {
     {
         if(auth()->user()->cant('update', $comment))
         {
-            return ErrorController::forbidden(redirect()->back(), 'Unauthorised to Update Comments.');
+            return ErrorController::forbidden(back(), 'Unauthorised to Update Comments.');
 
         }
 
@@ -35,7 +35,7 @@ class CommentController extends Controller {
 
         session()->flash('success_message', request("title") . ' has been updated successfully');
 
-        return redirect()->back();
+        return back();
     }
 
     public function destroy(Comment $comment)

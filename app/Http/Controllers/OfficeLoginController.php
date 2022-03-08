@@ -20,7 +20,7 @@ class OfficeLoginController extends Controller {
      */
     public function redirectToProvider()
     {
-       
+
         return Socialite::driver('azure')->redirect();
     }
 
@@ -70,7 +70,8 @@ class OfficeLoginController extends Controller {
         {
             return redirect(session('url.intended'));
         }
-        return redirect('/dashboard');
+
+        return to_route('dashboard');
     }
 
 }

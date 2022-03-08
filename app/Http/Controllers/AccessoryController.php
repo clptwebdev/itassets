@@ -31,7 +31,7 @@ class AccessoryController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Accessories.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Accessories.');
         }
         session(['orderby' => 'purchased_date']);
         session(['direction' => 'desc']);
@@ -185,14 +185,14 @@ class AccessoryController extends Controller {
     {
         session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
 
-        return redirect(route('accessories.index'));
+        return to_route('accessories.index');
     }
 
     public function create()
     {
         if(auth()->user()->cant('create', Accessory::class))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Create Accessories.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Create Accessories.');
         }
         $locations = auth()->user()->locations;
 
@@ -216,14 +216,14 @@ class AccessoryController extends Controller {
         $accessory = Accessory::find($request->accessory_id);
         $accessory->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
 
-        return redirect(route('accessories.show', $accessory->id));
+        return to_route('accessories.show', $accessory->id);
     }
 
     public function store(Request $request)
     {
         if(auth()->user()->cant('create', Accessory::class))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Create Accessories.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Create Accessories.');
 
         }
 
@@ -248,7 +248,7 @@ class AccessoryController extends Controller {
         ), ['user_id' => auth()->user()->id]));
         $accessory->category()->attach(explode(',', $request->category));
 
-        return redirect(route("accessories.index"))->with('success_message', $request->name . 'has been successfully created!');
+        return to_route("accessories.index")->with('success_message', $request->name . 'has been successfully created!');
     }
 
     public function importErrors(Request $request)
@@ -259,7 +259,7 @@ class AccessoryController extends Controller {
 
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Export Accessories.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Export Accessories.');
 
         }
 
@@ -267,7 +267,7 @@ class AccessoryController extends Controller {
         \Maatwebsite\Excel\Facades\Excel::store(new accessoryErrorsExport($export), "/public/csv/accessories-errors-{$date}.csv");
         $url = asset("storage/csv/accessories-errors-{$date}.csv");
 
-        return redirect(route('accessories.index'))
+        return to_route('accessories.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
     }
@@ -328,7 +328,7 @@ class AccessoryController extends Controller {
     {
         if(auth()->user()->cant('view', $accessory))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Show Accessory.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Show Accessory.');
         }
 
         return view('accessory.show', [
@@ -341,7 +341,7 @@ class AccessoryController extends Controller {
     {
         if(auth()->user()->cant('update', $accessory))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Edit Accessory.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Edit Accessory.');
 
         }
 
@@ -362,7 +362,7 @@ class AccessoryController extends Controller {
     {
         if(auth()->user()->cant('update', $accessory))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Update Accessories.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Update Accessories.');
 
         }
 
@@ -396,14 +396,14 @@ class AccessoryController extends Controller {
             $accessory->category()->sync(explode(',', $request->category));
         }
 
-        return redirect(route("accessories.index"));
+        return to_route("accessories.index");
     }
 
     public function destroy(Accessory $accessory)
     {
         if(auth()->user()->cant('delete', $accessory))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Delete Accessories.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Delete Accessories.');
 
         }
 
@@ -411,14 +411,14 @@ class AccessoryController extends Controller {
         $accessory->delete();
         session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
-        return redirect(route('accessories.index'));
+        return to_route('accessories.index');
     }
 
     public function export(Accessory $accessory)
     {
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Export Accessories.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Export Accessories.');
         }
 
         $accessory = Accessory::locationFilter(auth()->user()->locations->pluck('id'))->get();
@@ -426,7 +426,7 @@ class AccessoryController extends Controller {
         \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport($accessory), "/public/csv/accessories-ex-{$date}.xlsx");
         $url = asset("storage/csv/accessories-ex-{$date}.xlsx");
 
-        return redirect(route('accessories.index'))
+        return to_route('accessories.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
     }
@@ -435,7 +435,7 @@ class AccessoryController extends Controller {
     {
         if(auth()->user()->cant('create', Accessory::class))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Import Accessories.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Import Accessories.');
 
         }
         $extensions = array("csv");
@@ -515,14 +515,14 @@ class AccessoryController extends Controller {
 
             } else
             {
-                return redirect('/accessories')->with('success_message', 'All Accessories were added correctly!');
+                return to_route('accessories.index')->with('success_message', 'All Accessories were added correctly!');
 
             }
         } else
         {
             session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-            return redirect(route('accessories.index'));
+            return to_route('accessories.index');
         }
 
 
@@ -532,7 +532,7 @@ class AccessoryController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Download Accessories.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Download Accessories.');
 
         }
 
@@ -585,7 +585,7 @@ class AccessoryController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('accessories.index'))
+        return to_route('accessories.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
@@ -594,7 +594,7 @@ class AccessoryController extends Controller {
     {
         if(auth()->user()->cant('view', $accessory))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Download Accessories.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Download Accessories.');
 
         }
 
@@ -608,7 +608,7 @@ class AccessoryController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('accessories.show', $accessory->id))
+        return to_route('accessories.show', $accessory->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
@@ -620,7 +620,7 @@ class AccessoryController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to View Archived Accessories.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to View Archived Accessories.');
 
         }
         $accessories = auth()->user()->location_accessories()->onlyTrashed()->get();
@@ -633,12 +633,12 @@ class AccessoryController extends Controller {
         $accessory = Accessory::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $accessory))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Restore Accessory.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Restore Accessory.');
         }
         $accessory->restore();
         session()->flash('success_message', "#" . $accessory->name . ' has been restored.');
 
-        return redirect("/accessories");
+        return to_route("accessories.index");
     }
 
     public function forceDelete($id)
@@ -646,27 +646,27 @@ class AccessoryController extends Controller {
         $accessory = Accessory::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('forceDelete', $accessory))
         {
-            return ErrorController::forbidden(route('accessories.index'), 'Unauthorised to Delete Accessory.');
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Delete Accessory.');
 
         }
         $name = $accessory->name;
         $accessory->forceDelete();
         session()->flash('danger_message', "Accessory - " . $name . ' was deleted permanently');
 
-        return redirect("/accessory/bin");
+        return to_route('accessories.bin');
     }
 
     public function changeStatus(Accessory $accessory, Request $request)
     {
         if(auth()->user()->cant('update', Status::class))
         {
-            return ErrorController::forbidden(route('accessories.show', $accessory->id), 'Unauthorised to Change Statuses Accessory.');
+            return ErrorController::forbidden(to_route('accessories.show', $accessory->id), 'Unauthorised to Change Statuses Accessory.');
         }
         $accessory->status_id = $request->status;
         $accessory->save();
         session()->flash('success_message', $accessory->name . ' has had its status changed successfully');
 
-        return redirect(route('accessories.show', $accessory->id));
+        return to_route('accessories.show', $accessory->id);
     }
 
 }
