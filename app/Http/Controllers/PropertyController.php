@@ -22,7 +22,7 @@ class PropertyController extends Controller {
         }
 
         // find the locations that the user has been assigned to
-        $locations = auth()->user()->locations->select('id', 'name')->withCount('property')->get();
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('property')->get();
 
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;

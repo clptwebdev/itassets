@@ -211,7 +211,7 @@ class RequestsController extends Controller {
         } else
         {
             //Notify by email
-            $admins = User::superAdmin()->get();
+            $admins = User::superAdmin();
             foreach($admins as $admin)
             {
                 Mail::to($admin->email)->send(new \App\Mail\DisposeRequest(auth()->user(), $admin, $requests->model_type, $requests->model_id, \Carbon\Carbon::parse($requests->date)->format('d-m-Y'), $requests->notes));

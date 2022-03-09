@@ -5,7 +5,7 @@
         <div class="modal-content">
             <form action="{{ route('request.disposal')}}" method="POST">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="requestDisposalLabel">Request to Dispose of the {{ucfirst($model)}}?
+                    <h5 class="modal-title" id="requestDisposalLabel">Request to Dispose/Archive of the {{ucfirst($model)}}?
                     </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-coral" type="submit">Request Disposal</button>
+                    <button class="btn btn-coral" type="submit">Request Disposal/Archive</button>
                 </div>
             </form>
         </div>

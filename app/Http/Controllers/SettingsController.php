@@ -37,10 +37,6 @@ class SettingsController extends Controller {
         $locations = Location::all();
         $models = $this->getModels();
         unset($models[array_search('Permission', $models)]);
-        unset($models[array_search('Archive', $models)]);
-        unset($models[array_search('Report', $models)]);
-        unset($models[array_search('Requests', $models)]);
-        unset($models[array_search('Transfer', $models)]);
         $roles = Role::all();
 
         return view('settings.view', [

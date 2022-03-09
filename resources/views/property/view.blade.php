@@ -170,6 +170,13 @@
                                             </x-buttons.dropdown-item>
                                         @endcan
 
+                                        @can('archive', $property)
+                                                <x-buttons.dropdown-item class="disposeBtn"
+                                                                         formRequirements="data-model-id='{{$property->id}}' data-model-name='{{$property->name ?? 'No name' }}'">
+                                                    Archive
+                                                </x-buttons.dropdown-item>
+                                            @endcan
+
                                         @can('delete', $property)
                                             <x-form.layout method="DELETE" class="d-block p-0 m-0"
                                                            :id="'form'.$property->id"
@@ -185,7 +192,7 @@
                         @endforeach
                         @if($properties->count() == 0)
                             <tr>
-                                <td colspan="6" class="text-center">No Assets Returned</td>
+                                <td colspan="9" class="text-center">No Property Returned</td>
                             </tr>
                         @endif
                         </tbody>
@@ -208,7 +215,7 @@
 @section('modals')
 
     <x-modals.delete/>
-
+    <x-modals.dispose model="property"/>
 @endsection
 
 @section('js')
@@ -217,6 +224,7 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{asset('js/filter.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
+    <script src="{{asset('js/dispose.js')}}"></script>
     <script>
         $(function () {
             $("#slider-range").slider({

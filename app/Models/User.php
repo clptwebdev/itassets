@@ -108,6 +108,11 @@ class User extends Authenticatable {
         return $this->hasManyDeep(Miscellanea::class, ['location_user', Location::class]);
     }
 
+    public function location_property()
+    {
+        return $this->hasManyDeep(Property::class, ['location_user', Location::class]);
+    }
+
     public function locationsArray(): array
     {
         // gets all locations' id attached to a user (used in polices)
@@ -148,7 +153,7 @@ class User extends Authenticatable {
         $role = Role::whereName('super-admin')->first();
         if($role)
         {
-            return User::all()->whereRole_Id($role->id);
+            return User::whereRoleId($role->id)->get();
         }
     }
 
@@ -157,7 +162,7 @@ class User extends Authenticatable {
         $role = Role::whereName('global_admin')->first();
         if($role)
         {
-            return User::all()->whereRole_Id($role->id);
+            return User::whereRoleId($role->id)->get();
         }
     }
 

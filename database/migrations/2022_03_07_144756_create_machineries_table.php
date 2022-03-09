@@ -15,6 +15,14 @@ class CreateMachineriesTable extends Migration
     {
         Schema::create('machineries', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('description');
+            $table->decimal("value",11,2)->nullable();
+            $table->integer("depreciation");
+            $table->dateTime("date");
+            $table->foreignId('supplier_id');
+            $table->foreignId('location_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
