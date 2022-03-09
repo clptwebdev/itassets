@@ -51,7 +51,7 @@ class AssetController extends Controller {
             ->leftJoin('suppliers', 'suppliers.id', '=', 'assets.supplier_id')
             ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
             ->select('assets.*', 'asset_models.name as asset_model_name', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
-        $locations = Location::select('id', 'name')->withCount('assets')->get();
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('assets')->get();
         $categories = Category::with('assets')->select('id', 'name')->get();
         $statuses = Status::select('id', 'name', 'deployable')->withCount('assets')->get();
 //            $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('assets')->get();

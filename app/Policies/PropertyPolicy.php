@@ -45,4 +45,8 @@ class PropertyPolicy {
         return $this->model->delete;
     }
 
+    public function archive(User $user){
+        return $this->model->archive;
+    }
+
 }

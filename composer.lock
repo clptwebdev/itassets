@@ -4572,16 +4572,16 @@
         },
         {
             "name": "spatie/laravel-backup",
-            "version": "8.0.9",
+            "version": "8.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-backup.git",
-                "reference": "4926ec6787af85bdbaa44e9f80f624f7dc02ca04"
+                "reference": "1a546127205b9afcb8e0dee6de7f2ff93f927ea4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/4926ec6787af85bdbaa44e9f80f624f7dc02ca04",
-                "reference": "4926ec6787af85bdbaa44e9f80f624f7dc02ca04",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/1a546127205b9afcb8e0dee6de7f2ff93f927ea4",
+                "reference": "1a546127205b9afcb8e0dee6de7f2ff93f927ea4",
                 "shasum": ""
             },
             "require": {
@@ -4608,7 +4608,7 @@
                 "league/flysystem-aws-s3-v3": "^2.0|^3.0",
                 "mockery/mockery": "^1.4",
                 "orchestra/testbench": "^7.0",
-                "phpunit/phpunit": "^9.5.4"
+                "pestphp/pest": "^1.20"
             },
             "suggest": {
                 "laravel/slack-notification-channel": "Required for sending notifications via Slack"
@@ -4651,7 +4651,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-backup/issues",
-                "source": "https://github.com/spatie/laravel-backup/tree/8.0.9"
+                "source": "https://github.com/spatie/laravel-backup/tree/8.1.1"
             },
             "funding": [
                 {
@@ -4663,7 +4663,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2022-03-02T12:07:47+00:00"
+            "time": "2022-03-08T10:23:50+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
@@ -9764,16 +9764,16 @@
         },
         {
             "name": "spatie/ignition",
-            "version": "1.2.1",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/ignition.git",
-                "reference": "090518ff676e17a038dfe77490018363ff66af20"
+                "reference": "ab8d1f938d3ffd20af25ad788a9d019e1123068c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/ignition/zipball/090518ff676e17a038dfe77490018363ff66af20",
-                "reference": "090518ff676e17a038dfe77490018363ff66af20",
+                "url": "https://api.github.com/repos/spatie/ignition/zipball/ab8d1f938d3ffd20af25ad788a9d019e1123068c",
+                "reference": "ab8d1f938d3ffd20af25ad788a9d019e1123068c",
                 "shasum": ""
             },
             "require": {
@@ -9831,7 +9831,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-04T12:52:17+00:00"
+            "time": "2022-03-08T15:12:58+00:00"
         },
         {
             "name": "spatie/laravel-ignition",

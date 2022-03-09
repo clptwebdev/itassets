@@ -15,6 +15,14 @@ class CreateVehiclesTable extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('registration');
+            $table->decimal("value",11,2)->nullable();
+            $table->integer("depreciation");
+            $table->dateTime("date");
+            $table->foreignId('supplier_id');
+            $table->foreignId('location_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
