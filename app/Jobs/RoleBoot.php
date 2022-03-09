@@ -24,26 +24,32 @@ class RoleBoot implements ShouldQueue {
     {
         //created default roles
         $global_admin = Role::updateOrCreate([
+            'id' => 1,
             'name' => 'global_admin',
             'significance' => '5',
         ]);
         $it_manager = Role::updateOrCreate([
+            'id' => 2,
             'name' => 'it_manager',
             'significance' => '4',
         ]);
         $business_manager = Role::updateOrCreate([
+            'id' => 3,
             'name' => 'Business_manager',
             'significance' => '4',
         ]);
         $technician = Role::updateOrCreate([
+            'id' => 4,
             'name' => 'technician',
             'significance' => '3',
         ]);
         $user_manager = Role::updateOrCreate([
+            'id' => 5,
             'name' => 'user_manager',
             'significance' => '2',
         ]);
         $user = Role::updateOrCreate([
+            'id' => 6,
             'name' => 'user',
             'significance' => '1',
         ]);

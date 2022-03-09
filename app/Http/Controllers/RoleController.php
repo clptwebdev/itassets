@@ -150,7 +150,7 @@ class RoleController extends Controller {
 
     public function default()
     {
-        RoleBoot::dispatch();
+        RoleBoot::dispatch()->afterResponse();
 
         return to_route('dashboard')->with('success_message', 'Default roles Has now been created you can assign them in the settings!');
 
