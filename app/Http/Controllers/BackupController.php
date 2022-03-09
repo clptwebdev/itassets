@@ -18,8 +18,7 @@ class BackupController extends Controller {
             return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Backups.');
 
         }
-        dd(Storage::files('public/backups/Apollo-backup'));
-        $files = collect(File::allFiles(Storage::disk('backups')->path('Apollo-Backup')))
+        $files = collect(File::allFiles(Storage::disk('backups')->path('Apollo-backup')))
             ->filter(function($file) {
                 return $file->getExtension() == 'zip';
             })
