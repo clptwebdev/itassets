@@ -46,7 +46,7 @@ return [
         ],
         'backups' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/backups/Apollo-Backup'),
+            'root' => storage_path('app/public/backups/'),
             'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
