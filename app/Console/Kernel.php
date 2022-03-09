@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Http\Controllers\BackupController;
 use App\Models\Report;
 use App\Models\Location;
+use File;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Storage;
@@ -31,25 +32,30 @@ class Kernel extends ConsoleKernel {
     {
         $schedule->command('backup:run  --only-db')
             ->daily()
-            ->onFailure(function() {
-                echo("This has not been successful please try again later!");
-            })
-            ->onSuccess(function() {
-                echo("This Database has backup has been created and stored in storage/app/Apollo---Asset-Manager Within your application");
-
+            ->onFailure(function(\Exception $exception) {
+                info('Backup failed', ['exception' => $exception]);
             });
         //cleans all backups Monthly
         $schedule->call(function() {
-            $files = Storage::files('public/Apollo---Asset-Manager');
-            Storage::delete($files);
-        })
-            ->lastDayOfMonth();
+            $files = collect(File::allFiles(Storage::disk('backups')->path('Apollo-backup')))
+                ->filter(function($file) {
+                    return $file->getExtension() == 'zip';
+                })
+                ->sortByDesc(function($file) {
+                    return $file->getCTime();
+                })
+                ->map(function($file) {
+                    return $file->getBaseName();
+                });
+            $oldest = $files->reverse()->values()->take(20);
+            Storage::delete($oldest);
+        })->lastDayOfMonth();
 
         //deletes all csv's Monthly
         $schedule->call(function() {
             $files = Storage::files('/public/csv');
             Storage::delete($files);
-        })->daily()->runInBackground();
+        })->daily();
 
         //deletes all PDF's Monthly
         $schedule->call(Report::clean())->weekends();
