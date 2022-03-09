@@ -8,7 +8,7 @@ return [
          * The name of this application. You can use this name to monitor
          * the backups.
          */
-        'name' => env('APP_NAME', 'laravel-backup'),
+        'name' => 'Apollo-backup',
 
         'source' => [
 
@@ -110,20 +110,20 @@ return [
             /*
              * The filename prefix used for the backup zip file.
              */
-            'filename_prefix' => '',
+            'filename_prefix' => 'Apollo_',
 
             /*
              * The disk names on which the backups will be stored.
              */
             'disks' => [
-                'localBackup',
+                'backups',
             ],
         ],
 
         /*
          * The directory where the temporary files will be stored.
          */
-        'temporary_directory' => storage_path('app/public/backup-temp'),
+        'temporary_directory' => storage_path('app/public/apollo-backup-temp'),
 
         /*
          * The password to be used for archive encryption.

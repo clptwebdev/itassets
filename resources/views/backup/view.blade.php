@@ -46,7 +46,7 @@
                                 <div class="col mr-2">
                                     <div class="mb-1">
                                         <h6 class="m-0 font-weight-bold mb-3">{{$file_name}}</h6>
-                                        <a href="{{ asset('storage/'.$file_name)}}"
+                                        <a href="{{ asset('/storage/backups/Apollo-backup/'.$file_name)}}"
                                            class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm backup">Download
                                                                                                                   This
                                                                                                                   Zip</a>

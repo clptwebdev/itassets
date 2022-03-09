@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Backup;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Artisan;
@@ -17,36 +18,24 @@ class BackupController extends Controller {
             return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Backups.');
 
         }
-        $files = Storage::files('public/Apollo-Asset-Manager');
 
-        $zipFiles = array();
+        $files = collect(File::allFiles(Storage::disk('backups')->path('Apollo-Backup')))
+            ->filter(function($file) {
+                return $file->getExtension() == 'zip';
+            })
+            ->sortByDesc(function($file) {
+                return $file->getCTime();
+            })
+            ->map(function($file) {
+                return $file->getBaseName();
+            });
 
-        foreach($files as $key => $val)
-        {
-            $val = str_replace("public/", "", $val);
-            array_push($zipFiles, $val);
-        }
-
-        return view('backup.view', ['files' => $zipFiles]);
-    }
-
-    public function download(Request $request)
-    {
-        if(auth()->user()->cant('view', Backup::class))
-        {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Download Backups.');
-
-        }
-        Storage::download($request->file);
+        return view('backup.view', ['files' => $files]);
     }
 
     public function createDB()
     {
-        if(auth()->user()->cant('create', Backup::class))
-        {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Create Backups.');
 
-        }
         Artisan::call("backup:run --only-db");
 
         return to_route("databasebackups.index")->with('success_message', 'A Backup of the database was completed!');
@@ -55,11 +44,7 @@ class BackupController extends Controller {
 
     public function createFull()
     {
-        if(auth()->user()->cant('create', Backup::class))
-        {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Create Backups.');
 
-        }
         Artisan::call("backup:run");
 
         return to_route("databasebackups.index")->with('success_message', 'A Backup of the Application was completed!');
@@ -67,12 +52,8 @@ class BackupController extends Controller {
 
     public function dbClean()
     {
-        if(auth()->user()->cant('delete', Backup::class))
-        {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Clean Backups.');
 
-        }
-        $files = Storage::files('public/Apollo---Asset-Manager');
+        $files = Storage::files('public/backups/Apollo-backup/');
         Storage::delete($files);
 
         return to_route("databasebackups.index")->with('success_message', 'Your database backups have been removed 0 Left!');
