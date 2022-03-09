@@ -32,6 +32,7 @@ class AuthServiceProvider extends ServiceProvider {
         'App\Models\Fieldset' => 'App\Policies\FieldsetPolicy',
         'App\Models\Field' => 'App\Policies\FieldPolicy',
         'App\Models\Log' => 'App\Policies\LogPolicy',
+        'App\Models\Report' => 'App\Policies\ReportPolicy',
     ];
 
     /**
