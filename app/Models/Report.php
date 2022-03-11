@@ -19,8 +19,8 @@ class Report extends Model {
 
     public static function clean()
     {
-        $table = \DB::table('reports')->get();
-        foreach($table as $entry)
+
+        foreach(Report::all() as $entry)
         {
             $entry->delete();
         }
