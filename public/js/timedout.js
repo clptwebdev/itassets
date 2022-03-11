@@ -1,8 +1,8 @@
 const timeoutModal = new bootstrap.Modal(document.getElementById('timeoutModal'));
 const timedoutModal = new bootstrap.Modal(document.getElementById('timedoutModal'));
 window.onload = function () {
-    // let timeout = setInterval(sessionClose, 7100000);
-    // let endSession = setInterval(sessionEnd, 7200000);
+    let timeout = setInterval(sessionClose, 7100000);
+    let endSession = setInterval(sessionEnd, 7200000);
 };
 
 let counter = 0;
