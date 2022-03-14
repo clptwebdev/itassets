@@ -1,16 +1,18 @@
+const xhttp = new XMLHttpRequest();
+const fields = document.querySelector('#additional-fields');
+
 function getFields(value) {
-    $.ajax({
-        url: `/assets/${value}/model`,
-        success: function (data) {
-            document.getElementById("additional-fields").innerHTML = data;
-            document.getElementById("additional-fields").style.display =
-                "block";
-        },
-        error: function () {
-            document.getElementById("additional-fields").innerHTML = "";
-            document.getElementById("additional-fields").style.display = "none";
-        },
-    });
+    xhttp.onload = function () {
+        fields.innerHTML = xhttp.responseText;
+        fields.style.display = "block";
+    }
+    xhttp.onerror = function () {
+        fields.innerHTML = "";
+        fields.style.display = "none";
+    }
+
+    xhttp.open("GET", `/assets/${value}/model`);
+    xhttp.send();
 }
 
 //Search Categories
@@ -21,7 +23,7 @@ const categorySelect = document.querySelector("#categorySelect");
 categorySearch.addEventListener("input", function (e) {
     let value = e.target.value;
     if (value.length > 2) {
-        const xhttp = new XMLHttpRequest();
+
 
         xhttp.onload = function () {
             categoryResults.innerHTML = xhttp.responseText;
@@ -71,10 +73,10 @@ function initItems() {
                     } else {
                         cats.value = id;
                     }
-                    let html = `<div id="cat${id}" class="p-2 col-4">
-                                        <div class="border border-gray shadow bg-white p-2 rounded d-flex justify-content-between align-items-center">
-                                            <span>${name}</span> 
-                                            <i class="fas fa-times ml-4 text-danger pointer" data-name="${id}" onclick="javascript:removeCategory(this);"></i>
+                    let html = `<div id='cat${id}' class='p-2 col-4'>
+                                        <div class='border border-gray shadow bg-white p-2 rounded d-flex justify-content-between align-items-center'>
+                                            <span>${name}</span>
+                                            <i class='fas fa-times ml-4 text-danger pointer' data-name='${id}' onclick='javascript:removeCategory(this);'></i>
                                         </div>
                                     </div>`;
                     elements.insertAdjacentHTML("beforeend", html);

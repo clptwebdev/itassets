@@ -31,10 +31,10 @@ class Kernel extends ConsoleKernel {
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('backup:run  --only-db')
-            ->daily()
-            ->onFailure(function(\Exception $exception) {
-                info('Backup failed', ['exception' => $exception]);
-            });
+            ->daily();
+//        ->onFailure(function(\Exception $exception) {
+//        info('Backup failed', ['exception' => $exception]);
+//    })
         //cleans all backups Monthly
         $schedule->call(function() {
             $files = collect(File::allFiles(Storage::disk('backups')->path('Apollo-backup')))
