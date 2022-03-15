@@ -54,21 +54,21 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         //deletes all PDF's Monthly
-        $schedule->call(Report::clean())->everyMinute();
+//        $schedule->call(Report::clean())->everyMinute();
 
-//        $schedule->call(function() {
-//            $total = Cache::rememberForever('total_assets', function() {
-//                return \App\Models\Asset::count();
-//            });
-//
-//            foreach(Location::all() as $location)
-//            {
-//                $total = Cache::rememberForever("location_{$location->id}_assets_total", function() {
-//                    return \App\Models\Asset::where('location_id', '=', $location->id)->count();
-//                });
-//            }
-//
-//        })->daily();
+        $schedule->call(function() {
+            $total = Cache::rememberForever('total_assets', function() {
+                return \App\Models\Asset::count();
+            });
+
+            foreach(Location::all() as $location)
+            {
+                $total = Cache::rememberForever("location_{$location->id}_assets_total", function() {
+                    return \App\Models\Asset::where('location_id', '=', $location->id)->count();
+                });
+            }
+
+        })->daily();
 
     }
 
