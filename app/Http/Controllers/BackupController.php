@@ -55,7 +55,9 @@ class BackupController extends Controller {
         $files = Storage::files('public/backups/Apollo-backup/');
         Storage::delete($files);
 
-        return to_route("databasebackups.index")->with('success_message', 'Your database backups have been removed 0 Left!');
+        $this->createDB();
+
+        return to_route("databasebackups.index")->with('success_message', 'Your database backups have been removed 1 Left!');
     }
 
 }
