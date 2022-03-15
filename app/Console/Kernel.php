@@ -35,20 +35,20 @@ class Kernel extends ConsoleKernel {
         $schedule->call('\App\Http\Controllers\BackupController@dbClean')->monthly();
 
         //deletes all PDF's Monthly
-        $schedule->call('\App\Http\Controllers\ReportController@clean')->everyMinute();
-
+        $schedule->call('\App\Http\Controllers\ReportController@clean')->weekly();
+        //deletes all Csv's Monthly
+        $schedule->call('\App\Http\Controllers\ReportController@clean')->weekly();
         $schedule->call(function() {
-            $total = Cache::rememberForever('total_assets', function() {
-                return \App\Models\Asset::count();
-            });
-
+            $files = Storage::files('public/csv/');
+            Storage::delete($files);
+        })->everyMinute();
+        $schedule->call(function() {
             foreach(Location::all() as $location)
             {
                 $total = Cache::rememberForever("location_{$location->id}_assets_total", function() {
                     return \App\Models\Asset::where('location_id', '=', $location->id)->count();
                 });
             }
-
         })->daily();
 
     }
