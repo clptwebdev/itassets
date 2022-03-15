@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call('\App\Http\Controllers\BackupController@dbClean')->monthly();
 
         //deletes all PDF's Monthly
-//        $schedule->call('\App\Http\Controllers\ReportController@clean')->everyMinute();
+        $schedule->call('\App\Http\Controllers\ReportController@clean')->everyMinute();
 
         $schedule->call(function() {
             $total = Cache::rememberForever('total_assets', function() {
