@@ -1,7 +1,9 @@
 const deleteModal = new bootstrap.Modal(document.getElementById('removeUserModal'));
 
 document.querySelectorAll(".deleteBtn").forEach(elem => elem.addEventListener("click", () => {
-// document.querySelector('.deleteBtn').addEventListener('click', function () {
+    if (elem.getAttribute('data-count')) {
+        document.querySelector('#asset_count').innerHTML = elem.getAttribute('data-count');
+    }
     document.querySelector('#user-id').value = elem.getAttribute('data-id');
     //showModal
     deleteModal.show();

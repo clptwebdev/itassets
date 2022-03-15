@@ -20,7 +20,8 @@
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
-                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
+                <a data-toggle='modal' data-target='#passwordResetModal'
+                   class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Change Password</a>
             </div>
         </div>
@@ -200,69 +201,17 @@
 @endsection
 
 @section('modals')
-    <!-- Profile Image Modal-->
-    <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog"
-         aria-labelledby="imgModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-primary-blue text-white">
-                    <h5 class="modal-title" id="imgModalLabel">Select Image</h5>
-                    <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Select an image below:.</p>
-                    <?php $photos = App\Models\Photo::all();?>
-                    <img src="{{ asset('images/svg/location-image.svg') }}" width="80px" alt="Default Picture"
-                         onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">
-                    @foreach($photos as $photo)
-                        <img src="{{ asset($photo->path) }}" width="80px" alt="{{ $photo->name }}"
-                             onclick="selectPhoto('{{ $photo->id }}', '{{ asset($photo->path) }}');">
-                    @endforeach
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
-                            data-target="#uploadModal">Upload
-                                                       file
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-modals.photo-upload/>
+    <x-modals.photo-upload-form/>
 
-    <!-- Upload Modal -->
-    <div id="uploadModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
 
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imgUploadLabel">Upload Media</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Form -->
-                    <form id="imageUpload">
-                        Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
-                        Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                        <button type='submit' class='btn btn-success' id='btn_upload'>Upload</button>
-                    </form>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
     <!-- Reset Password-->
-    <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
-         aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="passwordResetModal" tabindex="-1" role="dialog"
+         aria-labelledby="passwordResetModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="importManufacturerModalLabel">Password Reset</h5>
+                    <h5 class="modal-title" id="passwordResetModalLabel">Password Reset</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -306,44 +255,7 @@
 @section('js')
     <script src="{{asset('js/photo.js')}}"></script>
     <script>
-        // function selectPhoto(id, src) {
-        //     document.getElementById("profileImage").src = src;
-        //     document.getElementById("photo_id").value = id;
-        //     $('#imgModal').modal('hide');
-        // }
 
-        {{--$(document).ready(function () {--}}
-        {{--    $("form#imageUpload").submit(function (e) {--}}
-        {{--        e.preventDefault();--}}
-        {{--        var formData = new FormData(this);--}}
-        {{--        var urlto = '/photo/upload';--}}
-        {{--        var route = '{{asset("/")}}';--}}
-        {{--        $.ajaxSetup({--}}
-        {{--            headers: {--}}
-        {{--                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')--}}
-        {{--            }--}}
-        {{--        });--}}
-        {{--        // AJAX request--}}
-        {{--        $.ajax({--}}
-        {{--            url: urlto,--}}
-        {{--            method: 'POST',--}}
-        {{--            data: formData,--}}
-        {{--            processData: false,--}}
-        {{--            contentType: false,--}}
-        {{--            success: function (data) {--}}
-        {{--                $('#uploadModal').modal('hide');--}}
-        {{--                document.getElementById("profileImage").src = route + data.path;--}}
-        {{--                document.getElementById("photo_id").value = data.id;--}}
-        {{--            }--}}
-        {{--        });--}}
-        {{--    });--}}
-        {{--});--}}
-
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
-        });
         //validation for resetting passwords
         var input = document.querySelector('#confirmNewPassword');
         var firstInput = document.querySelector('#newFirstPassword');

@@ -2,8 +2,8 @@ const photoModal = new bootstrap.Modal(document.getElementById('imgModal'));
 const photoUploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
 const photoUpload = document.querySelector('#imageUpload');
 const photo = document.querySelector('#profileImage');
-const xhttp = new XMLHttpRequest();
-const urlto = "photo/upload";
+const photoId = document.querySelector("#photo_id");
+const urlto = "/photo/upload";
 
 photo.addEventListener("click", function (e) {
     e.preventDefault();
@@ -11,85 +11,74 @@ photo.addEventListener("click", function (e) {
 });
 
 function selectPhoto(id, src) {
-    const profileImage = document.querySelector("#profileImage");
-    const photoId = document.querySelector("#photo_id");
 
-    profileImage.src = src;
+
+    photo.src = src;
     photoId.value = id;
     photoModal.toggle();
 }
 
+photoUpload.onsubmit = async (e) => {
 
-/* const imgUploadForm = document.querySelector("form#imageUpload");
-
-imgUploadForm.addEventListener("submit", function (e) {
     e.preventDefault();
-    const formData = new FormData(this);
-    const urlto = "/photo/upload";
+    
+    let response = await fetch('/photo/upload', {
 
-    const xhttp = new XMLHttpRequest();
+        method: 'POST',
 
-    xhttp.onload = function () {
-        const response = xhttp.responseText;
-        if (response !== false) {
-            console.log(response);
-        }
-    };
+        body: new FormData(photoUpload)
 
-    xhttp.open("POST", urlto);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(`data=${formData}`);
-}); */
+    });
 
 
-photoUpload.addEventListener("submit", function (event) {
-    event.preventDefault();
-    const formData = new FormData();
-    const file = document.querySelector("[name='file']").files[0];
-    console.log(file);
-    const name = document.querySelector("[name='name']");
-    console.log(name);
-    formData.append('file', file);
-    formData.append('name', name);
-    console.log(formData);
-    xhttp.onload = function () {
-        photoUploadModal.hide();
-        console.log(xhttp.response);
-        // JSON.parse(xhr.responseText);
-        // document.getElementById("profileImage").src =
-        // document.getElementById("photo_id").value = xhttp.response.id;
-    };
-    xhttp.open("POST", urlto);
-    xhttp.setRequestHeader('Content-type', 'multipart/form-data');
+    let result = await response.json();
 
-    xhttp.send("name=" + name.value);
-});
+    photo.src = result.path;
+
+    photoId.value = result.id;
+
+    photoUploadModal.hide();
+
+    // updatePhotos();
 
 
-// $(document).ready(function () {
-//     $("form#imageUpload").submit(function (e) {
-//         e.preventDefault();
-//         const formData = new FormData(this);
-//         const urlto = "/photo/upload";
-//         $.ajaxSetup({
-//             headers: {
-//                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-//             },
+}
+// function updatePhotos(page = 1){
+//
+//
+//
+//     var xhr = new XMLHttpRequest();
+//
+//
+//
+//     xhr.onload = function(e) {
+//
+//         //Place the JSON Images into the modal
+//
+//         let response = JSON.parse(xhr.responseText);
+//
+//         let output = "";
+//
+//
+//         Object.entries(response.photos).forEach(([key, value]) => {
+//
+//             output += `<img src="${value}" width="80px" alt=""
+//
+//                         class="selectPhoto" data-url="${value}" data-id="${key}">`;
+//
 //         });
-//         // AJAX request
-//         $.ajax({
-//             url: urlto,
-//             method: "POST",
-//             data: formData,
-//             processData: false,
-//             contentType: false,
-//             success: function (data) {
-//                 $("#uploadModal").modal("hide");
-//                 profileImage.src = `/${data.path}`;
-//                 photoId.value = data.id;
-//             },
-//         });
-//     });
-// });
-
+//
+//         console.log(output);
+//
+//         library.innerHTML = output;
+//
+//         photoUploadModal.hide();
+//
+//     }
+//
+//     xhr.open("GET", `/photo/${page}/get`);
+//
+//     xhr.send();
+//
+// }
 

@@ -11,38 +11,50 @@ class PhotoController extends Controller {
 
     public function upload(Request $request)
     {
-//        return $request->name;
-        $validation = Validator::make($request->all(), [
-            'file' => 'required|mimes:jpg,jpeg,png,svg',
+        $request->validate([
+
+            'file' => 'required|mimes:jpg,jpeg,png,svg|max:2048',
+
         ]);
 
-        if($validation->fails())
-        {
-            return 'failed';
-        }
-
         $uploadDir = asset('images');
+
         $response = [
+
             'status' => 0,
+
             'message' => 'Form submission failed, please try again.',
+
             'path' => 'NULL',
+
             'id' => 'NULL',
+
         ];
 
         $name = $request->name;
 
         // File path config
+
         $fileName = $request->file->getClientOriginalName();
+
         if($filePath = $request->file('file')->storeAs('images', $fileName, 'public'))
         {
-            $photo = Photo::create(['name' => $name, 'path' => $filePath]);
+
+            $photo = Photo::create(['name' => $name, 'path' => $filePath, 'user_id' => auth()->user()->id]);
+
             $response['status'] = 1;
+
             $response['message'] = 'Image was uploaded successfully';
-            $response['path'] = $photo->path;
+
+            $response['path'] = asset($photo->path);
+
             $response['id'] = $photo->id;
+
         } else
         {
+
             $response['message'] = 'There was an error with the Upload!';
+
         }
 
         return response()->json($response);
