@@ -48,10 +48,10 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         //deletes all csv's Monthly
-        $schedule->call(function() {
-            $files = Storage::files('/public/csv');
-            Storage::delete($files);
-        })->everyMinute();
+//        $schedule->call(function() {
+//            $files = Storage::files('/public/csv');
+//            Storage::delete($files);
+//        })->everyMinute();
 
         //deletes all PDF's Monthly
 //        $schedule->call(Report::clean())->everyMinute();
