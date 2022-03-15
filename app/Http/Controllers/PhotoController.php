@@ -5,21 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\Photo;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PhotoController extends Controller {
 
     public function upload(Request $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:jpg,jpeg,png,svg|max:2048'
+//        return $request->name;
+        $validation = Validator::make($request->all(), [
+            'file' => 'required|mimes:jpg,jpeg,png,svg',
         ]);
+
+        if($validation->fails())
+        {
+            return 'failed';
+        }
 
         $uploadDir = asset('images');
         $response = [
             'status' => 0,
             'message' => 'Form submission failed, please try again.',
             'path' => 'NULL',
-            'id' => 'NULL'
+            'id' => 'NULL',
         ];
 
         $name = $request->name;

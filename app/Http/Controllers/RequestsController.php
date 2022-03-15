@@ -121,7 +121,10 @@ class RequestsController extends Controller {
 
     public function disposal(Request $request)
     {
-
+        $request->validate([
+            'disposed_date' => 'date',
+        ]);
+        
         $requests = Requests::create([
             'type' => 'disposal',
             'model_type' => $request->model_type,
