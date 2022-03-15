@@ -30,18 +30,12 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call('\App\Http\Controllers\BackupController@createDb')->everyMinute();
+        $schedule->call('\App\Http\Controllers\BackupController@createDb')->daily();
         //cleans all backups Monthly
-        $schedule->call('\App\Http\Controllers\BackupController@dbClean')->everyMinute();
-
-        //deletes all csv's Monthly
-//        $schedule->call(function() {
-//            $files = Storage::files('/public/csv');
-//            Storage::delete($files);
-//        })->everyMinute();
+        $schedule->call('\App\Http\Controllers\BackupController@dbClean')->monthly();
 
         //deletes all PDF's Monthly
-//        $schedule->call(Report::clean())->everyMinute();
+        $schedule->call(Report::clean())->everyMinute();
 
         $schedule->call(function() {
             $total = Cache::rememberForever('total_assets', function() {
