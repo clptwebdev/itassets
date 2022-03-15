@@ -48,7 +48,6 @@ class Kernel extends ConsoleKernel {
                     return \App\Models\Asset::where('location_id', '=', $location->id)->count();
                 });
             }
-
         })->daily();
 
     }
