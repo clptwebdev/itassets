@@ -9,13 +9,14 @@
     const sideIcons = document.querySelectorAll(".sidebar-icon");
     const dropdowns = document.querySelectorAll(".sidebar .nav-item div");
     const closeButton = document.querySelector('#close_sidebar');
+    const scrollButton = document.getElementById('scrollButton');
 
     const subMenu = document.querySelector('#subMenu');
     const subMenuLinks = document.querySelectorAll('#subMenu > a > i');
     const subMenuFormBtns = document.querySelectorAll('#subMenu > form > button > i');
     const subMenuBtns = document.querySelectorAll('#subMenu > button > i');
 
-    if(window.innerWidth < 768){
+    if (window.innerWidth < 768) {
         subMenuLinks.forEach(item => {
             item.classList.remove('fa-sm');
             item.classList.add('fa-lg');
@@ -42,15 +43,15 @@
         sidebar.classList.add("toggled");
     }
 
-    if(window.innerWidth > 768 && window.innerWidth < 992){
-      body.classList.remove("sidebar-toggled");
-      sidebar.classList.remove("toggled");
-      sideTitles.forEach((item) => {
-          item.classList.add("d-none");
-      });
-      sideIcons.forEach((item) => {
-          item.classList.add("fa-2x");
-      });
+    if (window.innerWidth > 768 && window.innerWidth < 992) {
+        body.classList.remove("sidebar-toggled");
+        sidebar.classList.remove("toggled");
+        sideTitles.forEach((item) => {
+            item.classList.add("d-none");
+        });
+        sideIcons.forEach((item) => {
+            item.classList.add("fa-2x");
+        });
 
     }
 
@@ -110,46 +111,32 @@
         }
     });
 
-    closeButton.addEventListener('click', function(){
-      body.classList.toggle("sidebar-toggled");
+    closeButton.addEventListener('click', function () {
+        body.classList.toggle("sidebar-toggled");
         sidebar.classList.toggle("toggled");
     });
 
     // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
-    $("body.fixed-nav .sidebar").on(
-        "mousewheel DOMMouseScroll wheel",
-        function (e) {
-            if ($(window).width() > 768) {
-                var e0 = e.originalEvent,
-                    delta = e0.wheelDelta || -e0.detail;
-                this.scrollTop += (delta < 0 ? 1 : -1) * 30;
-                e.preventDefault();
-            }
-        }
-    );
+    // const sideBar = document.querySelector("body.fixed-nav .sidebar");
+    // sideBar.addEventListener('mousewheel DOMMouseScroll wheel', function (event) {
+    //     if (window.width() > 768) {
+    //         let e0 = event.originalEvent,
+    //             delta = e0.wheelDelta || -e0.detail;
+    //         event.scrollTop += (delta < 0 ? 1 : -1) * 30;
+    //         event.preventDefault();
+    //     }
+    // });
+//jquery
+    // $("body.fixed-nav .sidebar").on(
+    //     "mousewheel DOMMouseScroll wheel",
+    //     function (e) {
+    //         if ($(window).width() > 768) {
+    //             var e0 = e.originalEvent,
+    //                 delta = e0.wheelDelta || -e0.detail;
+    //             this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+    //             e.preventDefault();
+    //         }
+    //     }
+    // );
 
-    // Scroll to top button appear
-    $(document).on("scroll", function () {
-        var scrollDistance = $(this).scrollTop();
-        if (scrollDistance > 100) {
-            $(".scroll-to-top").fadeIn();
-        } else {
-            $(".scroll-to-top").fadeOut();
-        }
-    });
-
-    // Smooth scrolling using jQuery easing
-    $(document).on("click", "a.scroll-to-top", function (e) {
-        var $anchor = $(this);
-        $("html, body")
-            .stop()
-            .animate(
-                {
-                    scrollTop: $($anchor.attr("href")).offset().top,
-                },
-                1000,
-                "easeInOutExpo"
-            );
-        e.preventDefault();
-    });
 })(jQuery); // End of use strict

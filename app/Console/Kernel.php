@@ -30,8 +30,7 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('backup:run  --only-db')
-            ->daily();
+        $schedule->call('\App\Http\Controllers\BackupController@createDB')->everyMinute();
 //        ->onFailure(function(\Exception $exception) {
 //        info('Backup failed', ['exception' => $exception]);
 //    })
