@@ -17,9 +17,9 @@ class CreateMachineriesTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->decimal("value",11,2)->nullable();
+            $table->decimal("purchased_cost",11,2)->nullable();
             $table->integer("depreciation");
-            $table->dateTime("date");
+            $table->dateTime("purchased_date");
             $table->foreignId('supplier_id');
             $table->foreignId('location_id');
             $table->softDeletes();

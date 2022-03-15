@@ -12,7 +12,7 @@ class AUC extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'location_id', 'value', 'depreciation', 'type', 'date'];
+    protected $fillable = ['name', 'location_id', 'purchased_date', 'depreciation', 'type', 'purchased_cost'];
 
     public function name(): Attribute
     {
@@ -32,19 +32,20 @@ class AUC extends Model {
     //Use the Depreciation time to minus the depreication charge
     public function depreciation_value($date)
     {
-        $age = $date->floatDiffInYears($this->date);
-        $percent = 100 / $this->depreciation;
-        $percentage = floor($age) * $percent;
-        $value = $this->value * ((100 - $percentage) / 100);
+            $age = $date->floatDiffInYears($this->purchased_date);
+            $percent = 100 / $this->depreciation;
+            $percentage = floor($age) * $percent;
+            $value = $this->purchased_cost * ((100 - $percentage) / 100);
 
-        if($value < 0)
-        {
-            return 0;
-        } else
-        {
-            return $value;
-        }
+            if($value < 0)
+            {
+                return 0;
+            } else
+            {
+                return $value;
+            }
     }
+
 
     //Gets the building type in the table and displays it as a string
     // (1 = Freehold Land 2 = Freehold Buildings 3 = Leadsehold Land 4 = Leasehold Buildings)
@@ -76,7 +77,7 @@ class AUC extends Model {
     //Filters out the property by the date acquired/purchased. Start = the Start Date End = the End Date
     public function scopePurchaseFilter($query, $start, $end)
     {
-        $query->whereBetween('date', [$start, $end]);
+        $query->whereBetween('purchased_date', [$start, $end]);
     }
 
     //Filters the porperty thats value is between two values set in one string
@@ -88,7 +89,7 @@ class AUC extends Model {
         $amount = str_replace('£', '', $amount);
         //Seperate two values into an array [0] is lowest and [1] is highest
         $amount = explode(' - ', $amount);
-        $query->whereBetween('value', [intval($amount[0]), intval($amount[1])]);
+        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
     }
 
     //Filters the properties that are based in the selected locations

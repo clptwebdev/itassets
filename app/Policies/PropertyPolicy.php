@@ -49,4 +49,8 @@ class PropertyPolicy {
         return $this->model->archive;
     }
 
+    public function import(User $user){
+        return $this->model->create;
+    }
+
 }
