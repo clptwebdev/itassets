@@ -113,6 +113,11 @@ class User extends Authenticatable {
         return $this->hasManyDeep(Property::class, ['location_user', Location::class]);
     }
 
+    public function location_auc()
+    {
+        return $this->hasManyDeep(AUC::class, ['location_user', Location::class]);
+    }
+
     public function locationsArray(): array
     {
         // gets all locations' id attached to a user (used in polices)

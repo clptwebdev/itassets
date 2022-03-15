@@ -41,7 +41,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <div class="form-group" >
-                                                <x-form.input name="name" formAttributes="required" value="{{$property->name}}"/>
+                                                <x-form.input name="name" formAttributes="required" value="{{old('name') ?? $property->name}}"/>
                                             </div >
                                             <div class="form-group position-relative" >
                                                 <label for="findLocation" >Location</label >
@@ -59,15 +59,15 @@
                                             </div >
 
                                             <div class="form-group" >
-                                                <x-form.input name="value" formAttributes="required" value="{{$property->value}}"/>
+                                                <x-form.input name="purchased_cost" formAttributes="required" value="{{ old('purchased_cost') ?? $property->purchased_cost}}"/>
                                             </div >
 
                                             <div class="form-group" >
-                                                <x-form.date name="date" formAttributes="required" value="{{\Carbon\Carbon::parse($property->date)->format('Y-m-d')}}" />
+                                                <x-form.date name="purchased_date" formAttributes="required" value="{{\Carbon\Carbon::parse($property->purchased_date)->format('Y-m-d')}}" />
                                             </div >
 
                                             <div class="form-group" >
-                                                <x-form.input name="depreciation" formAttributes="required" value="{{ $property->depreciation}}" />
+                                                <x-form.input name="depreciation" formAttributes="required" value="{{ old('depreciation') ?? $property->depreciation}}" />
                                             </div >
 
                                             <div class="form-group">

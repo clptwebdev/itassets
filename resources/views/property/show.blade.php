@@ -23,8 +23,6 @@
     
     <div class="container card">
         <div class="card-body">
-            <x-form.errors />
-            <x-handlers.alerts />
 
 
             <ul id="tab-bar" class="nav nav-tabs" >
@@ -34,7 +32,7 @@
                         aria-controls="home" aria-selected="true" >Property Information</a >
                 </li >
             </ul >
-            <div class="tab-content border-left border-right border-bottom border-gray"
+            <div class="tab-content border-left border-right border-bottom border-gray mb-4"
                     id="myTabContent" >
                 
                 <div class="tab-pane fade show p-2 pt-4 active" id="location" role="tabpanel"
@@ -44,8 +42,8 @@
                             <h4 class="font-weight-600 mb-4">{{$property->name}}</h4>
                             <p><strong>Type:</strong> {{$property->getType()}}</p>
                             <p><strong>Depreciation:</strong> {{$property->depreciation}} Years</p>
-                            <p><strong>Date Occupied:</strong><br>{{\Carbon\Carbon::parse($property->date)->format('jS M Y')}}</p>
-                            <p><strong>Value (At Time of Purchase):</strong><br>£{{number_format( (float) $property->value, 2, '.', ',' )}}</p>
+                            <p><strong>Date Occupied:</strong><br>{{\Carbon\Carbon::parse($property->purchased_date)->format('jS M Y')}}</p>
+                            <p><strong>Value (At Time of Purchase):</strong><br>£{{number_format( (float) $property->purchased_cost, 2, '.', ',' )}}</p>
 
                 
                             <?php
@@ -67,16 +65,16 @@
                                 £{{number_format( (float) $bf, 2, '.', ',' )}}
                             </p>
                             <p><strong>Depreciation B/Fwd ({{$startDate->format('d\/m\/Y')}}):</strong><br>
-                                £{{number_format( (float) $property->value - $bf, 2, '.', ',' )}}
+                                £{{number_format( (float) $property->purchased_cost - $bf, 2, '.', ',' )}}
                             </p>
                             <p><strong>Depreciation C/Fwd ({{$endDate->format('d\/m\/Y')}}):</strong><br>
                                 £{{number_format( (float) $bf - $cf, 2, '.', ',' )}}
                             </p>
-                            <?php $prevYear = $startDate->subYear();?>
+                            <?php $prevYear = $endDate->subYear();?>
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
                                 £{{number_format( (float) $property->depreciation_value($prevYear), 2, '.', ',' )}}
                             </p>
-                            <?php $prevYear = $startDate->subYear();?>
+                            <?php $prevYear = $endDate->subYear();?>
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
                                 £{{number_format( (float) $property->depreciation_value($prevYear), 2, '.', ',' )}}
                             </p>
@@ -111,6 +109,10 @@
                 </div >
 
             </div >
+
+            <div class="">
+                <x-comments.comment-layout :asset="$property"/>
+            </div>
         </div>
         
 
@@ -121,10 +123,12 @@
 
 @section('modals')
     
+    <x-modals.add-comment :route="route('property.comment' ,$property->id)" :model="$property" title="property"/>
+    <x-modals.edit-comment :model="$property"/>
+    <x-modals.delete-comment/>
 
-@endsection
+    @endsection
 
 @section('js')
-    
-
+    <script src="{{asset('js/comment.js')}}"></script>
 @endsection

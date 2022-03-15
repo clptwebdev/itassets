@@ -45,7 +45,7 @@
                             <p><strong>Type:</strong> {{$auc->getType()}}</p>
                             <p><strong>Depreciation:</strong> {{$auc->depreciation}} Years</p>
                             <p><strong>Date Occupied:</strong><br>{{\Carbon\Carbon::parse($auc->date)->format('jS M Y')}}</p>
-                            <p><strong>Value (At Time of Purchase):</strong><br>£{{number_format( (float) $auc->value, 2, '.', ',' )}}</p>
+                            <p><strong>Value (At Time of Purchase):</strong><br>£{{number_format( (float) $auc->purchased_cost, 2, '.', ',' )}}</p>
 
                 
                             <?php
@@ -66,19 +66,21 @@
                                 £{{number_format( (float) $bf, 2, '.', ',' )}}
                             </p>
                             <p><strong>Depreciation B/Fwd ({{$startDate->format('d\/m\/Y')}}):</strong><br>
-                                £{{number_format( (float) $auc->value - $bf, 2, '.', ',' )}}
+                                £{{number_format( (float) $auc->purchased_cost - $bf, 2, '.', ',' )}}
                             </p>
                             <p><strong>Depreciation C/Fwd ({{$endDate->format('d\/m\/Y')}}):</strong><br>
                                 £{{number_format( (float) $bf - $cf, 2, '.', ',' )}}
                             </p>
-                            <?php $prevYear = $startDate->subYear();?>
+                            <?php $prevYear = $endDate->subYear();?>
+                            @if($prevYear >= $auc->purchased_date)
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
                                 £{{number_format( (float) $auc->depreciation_value($prevYear), 2, '.', ',' )}}
                             </p>
-                            <?php $prevYear = $startDate->subYear();?>
+                            <?php $prevYear = $endDate->subYear();?>
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
                                 £{{number_format( (float) $auc->depreciation_value($prevYear), 2, '.', ',' )}}
                             </p>
+                            @endif
 
 
                         </div >

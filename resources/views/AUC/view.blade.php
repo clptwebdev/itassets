@@ -68,8 +68,8 @@
 
         @php
 
-            $limit = auth()->user()->location_property()->orderBy('value', 'desc')->pluck('value')->first();
-            $floor = auth()->user()->location_property()->orderBy('value', 'asc')->pluck('value')->first();
+            $limit = auth()->user()->location_auc()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_auc()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
 
         if(session()->has('auc_amount')){
             $amount = str_replace('£', '', session('auc_amount'));
@@ -84,7 +84,7 @@
 
 
         {{-- If there are no Collections return there is not need to display the filter, unless its the filter thats return 0 results --}}
-        @if(!session()->has('auc_filter') && $aucs->count() !== 0)
+        @if($aucs->count() !== 0)
             <x-filters.navigation model="AUC" relations="auc" table="a_u_c_s"/>
             <x-filters.filter model="AUC" relations="auc" table="a_u_c_s" :locations="$locations"/>
         @endif
@@ -126,7 +126,7 @@
                             <tr>
                                 <td class="text-left">{{$auc->name}}</td>
                                 <td class="text-left">
-                                    {{-- @switch($auc->type)
+                                   @switch($auc->type)
                                         @case(1)
                                             {{'Freehold Land'}}
                                             @break
@@ -141,7 +141,7 @@
                                             @break
                                         @default
                                             {{'Unknown'}}
-                                    @endswitch --}}
+                                    @endswitch
                                 </td>
                                 <td class="text-center">
                                     @if($auc->location()->exists())
@@ -155,8 +155,8 @@
                                         @endif
                                     @endif
                                 </td>
-                                <td class="text-center">£{{number_format($auc->value, 2, '.', ',')}}</td>
-                                <td class="text-center">{{\Carbon\Carbon::parse($auc->date)->format('jS M Y')}}</td>
+                                <td class="text-center">£{{number_format($auc->purchased_cost, 2, '.', ',')}}</td>
+                                <td class="text-center">{{\Carbon\Carbon::parse($auc->purchased_date)->format('jS M Y')}}</td>
                                 <td class="text-center">
                                     £{{number_format($auc->depreciation_value(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
                                 <td class="text-center">{{$auc->depreciation}} Years</td>
@@ -173,6 +173,8 @@
                                                 Edit
                                             </x-buttons.dropdown-item>
                                         @endcan
+
+                                        <a href="{{route('auc.move', $auc->id)}}" class="dropdown-item">Move to Property</a>
 
                                         @can('delete', $auc)
                                             <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$auc->id"

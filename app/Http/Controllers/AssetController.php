@@ -1049,6 +1049,47 @@ class AssetController extends Controller {
         ]);
     }
 
+    
+    public function recycleBin()
+    {
+        if(auth()->user()->cant('viewAll', Asset::class))
+        {
+            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Recycle Assets.');
+
+        }
+
+        $limit = session('assets_limit') ?? 25;
+
+        $assets = auth()->user()->location_assets()->onlyTrashed()->paginate(intval($limit))->fragment('table');
+        $locations = auth()->user()->locations;
+
+        return view('assets.bin', [
+            "assets" => $assets,
+            'suppliers' => Supplier::all(),
+            'statuses' => Status::all(),
+            'categories' => Category::all(),
+            "locations" => $locations,
+        ]);
+    }
+
+    public function changeStatus(Asset $asset, Request $request)
+    {
+        if(auth()->user()->cant('update', Status::class))
+        {
+            return ErrorController::forbidden(to_route('accessories.show', $asset->id), 'Unauthorised to Change Statuses Asset.');
+        }
+        $asset->status_id = $request->status;
+        $asset->save();
+        session()->flash('success_message', $asset->model->name . ' has had its status changed successfully');
+
+        return to_route('assets.show', $asset->id);
+    }
+
+    ////////////////////////////////////////////////////////
+    ///////////////PDF Functions////////////////////////////
+    ////////////////////////////////////////////////////////
+
+
     public function downloadPDF(Request $request)
     {
         if(auth()->user()->cant('viewAll', Asset::class))
@@ -1134,39 +1175,5 @@ class AssetController extends Controller {
             ->withInput();
     }
 
-    public function recycleBin()
-    {
-        if(auth()->user()->cant('viewAll', Asset::class))
-        {
-            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Recycle Assets.');
-
-        }
-
-        $limit = session('assets_limit') ?? 25;
-
-        $assets = auth()->user()->location_assets()->onlyTrashed()->paginate(intval($limit))->fragment('table');
-        $locations = auth()->user()->locations;
-
-        return view('assets.bin', [
-            "assets" => $assets,
-            'suppliers' => Supplier::all(),
-            'statuses' => Status::all(),
-            'categories' => Category::all(),
-            "locations" => $locations,
-        ]);
-    }
-
-    public function changeStatus(Asset $asset, Request $request)
-    {
-        if(auth()->user()->cant('update', Status::class))
-        {
-            return ErrorController::forbidden(to_route('accessories.show', $asset->id), 'Unauthorised to Change Statuses Asset.');
-        }
-        $asset->status_id = $request->status;
-        $asset->save();
-        session()->flash('success_message', $asset->model->name . ' has had its status changed successfully');
-
-        return to_route('assets.show', $asset->id);
-    }
 
 }

@@ -125,6 +125,11 @@ class Location extends Model {
         return $this->hasMany(Property::class);
     }
 
+    public function auc()
+    {
+        return $this->hasMany(AUC::class);
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class)

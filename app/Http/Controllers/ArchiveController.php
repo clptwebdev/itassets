@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Archive;
 use App\Models\Asset;
 use App\Models\Accessory;
+use App\Models\Property;
 use App\Models\Location;
 use App\Models\AssetModel;
 
@@ -159,31 +160,84 @@ class ArchiveController extends Controller {
 
     public function restoreArchive(Archive $archive)
     {
-        if($archive->model_type === 'asset')
-        {
-            $model = new Asset;
-            $asset_model = AssetModel::where('name', '=', $archive->asset_model)->first();
-            $model->asset_model = $asset_model->id ?? 0;
-        } else
-        {
-            $model = new Accessory;
-        }
+        $options = json_decode($archive->options);
 
-        $model->name = $archive->name;
-        $model->asset_tag = $archive->asset_tag;
-        $model->serial_no = $archive->serial_no;
-        $model->purchased_date = $archive->purchased_date;
-        $model->purchased_cost = $archive->purchased_cost;
-        $model->donated = 0;
-        $model->status_id = 0;
-        $model->supplier_id = $archive->supplier_id;
-        $model->order_no = $archive->model_no;
-        $model->warranty = $archive->warranty;
-        $model->location_id = $archive->location_id;
-        $model->room = $archive->room;
-        $date = \Carbon\Carbon::parse('01 September');
-        $date->isPast() ? $date->addYear() : $date;
-        $model->audit_date = $date;
+        switch($archive->model_type){
+            case 'asset':
+                $model = new Asset;
+                $asset_model = AssetModel::where('name', '=', $archive->asset_model)->first();
+                $date = \Carbon\Carbon::parse('01 September');
+                $date->isPast() ? $date->addYear() : $date;
+                $model->fill([
+                    'asset_model' => $asset_model->id,
+                    'name' => $archive->name,
+                    'asset_tag' => $archive->asset_tag,
+                    'serial_no' =>$archive->serial_no,
+                    'purchased_date' => $archive->purchased_date,
+                    'purchased_cost' => $archive->purchased_cost,
+                    'donated' => 0,
+                    'status_id' => 0,
+                    'supplier_id' => $archive->supplier_id,
+                    'order_no' => $archive->model_no,
+                    'warranty' => $archive->warranty,
+                    'location_id' => $archive->location_id,
+                    'room' => $archive->room,
+                    'audit_date' => $date,
+                ]);
+                break;
+            case 'accessory':
+                $model = new Accessory;
+
+                //Options
+                
+                $options->depreciation ? $depreciation = $options->depreciation : $depreciation = 0;  
+                $options->type ? $type = $options->type : $type = 1;  
+
+                $model->fill([
+                    'name' => $archive->name,
+                    'asset_tag' => $archive->asset_tag,
+                    'serial_no' =>$archive->serial_no,
+                    'purchased_date' => $archive->purchased_date,
+                    'purchased_cost' => $archive->purchased_cost,
+                    'donated' => 0,
+                    'status_id' => 0,
+                    'supplier_id' => $archive->supplier_id,
+                    'order_no' => $archive->model_no,
+                    'warranty' => $archive->warranty,
+                    'location_id' => $archive->location_id,
+                    'room' => $archive->room,
+                    'audit_date' => $date,
+                ]);
+                break; 
+            case 'property':
+                $model = new Property;
+
+                //Options
+                
+                $options->depreciation_id ? $depreciation_id = $options->depreciation_id : $depreciation = 0;  
+                $options->type ? $type = $options->type : $type = 1;  
+
+                $model->fill([
+                    'name' => $archive->name,
+                    'purchased_date' => $archive->purchased_date,
+                    'purchased_cost' => $archive->purchased_cost,
+                    'depreciation' => $depreciation,
+                    'type' => $type,
+                    'location_id' => $archive->location_id,
+                ]);
+                break;
+            case 'auc':
+                $model = new AUC;
+                $model->fill([
+                    'name' => $archive->name,
+                    'purchased_date' => $archive->purchased_date,
+                    'purchased_cost' => $archive->purchased_cost,
+                    'depreciation' => $depreciation,
+                    'type' => $type,
+                    'location_id' => $archive->location_id,
+                ]);
+                break;
+        }
 
         if($model->save())
         {
@@ -200,7 +254,7 @@ class ArchiveController extends Controller {
             $archive->delete();
         }
 
-        return back()->with('success_message', $message ?? 'The Asset has been successfully restored. You will now be able to view it in Assets');
+        return back()->with('success_message', "The ".ucfirst($archive->model_type)." - ".$archive->model_name." has been successfully restored.");
     }
 
 }
