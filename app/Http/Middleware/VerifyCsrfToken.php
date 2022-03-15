@@ -21,5 +21,6 @@ class VerifyCsrfToken extends Middleware
         'search/locations',
         'location/preview',
         'model/create',
+        '/import/properties/errors',
     ];
 }

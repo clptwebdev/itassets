@@ -15,6 +15,11 @@ use App\Models\Report;
 use App\Jobs\PropertiesPdf;
 use App\Jobs\PropertyPdf;
 
+use Illuminate\Support\Facades\Validator;
+
+use App\Rules\permittedLocation;
+use App\Rules\findLocation;
+
 class PropertyController extends Controller {
 
     ////////////////////////////////////////////
@@ -421,6 +426,37 @@ class PropertyController extends Controller {
         }
 
 
+    }
+
+    public function importErrors(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            "name.*" => "required|max:255",
+            'location_id.*' => 'required|gt:0',
+            'purchased_date.*' => 'date',
+            'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            "depreciation.*" => "nullable",
+            "type.*" => "nullable",
+        ]);
+
+        if($validation->fails()){
+            return $validation->errors();
+        }else{
+            for($i = 0; $i < count($request->name); $i++){
+                $property = new Property;
+                $property->name = $request->name[$i];
+                $property->type = $request->type[$i];
+                $property->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $property->purchased_cost = $request->purchased_cost[$i];
+                $property->location_id = $request->location_id[$i];
+                $property->depreciation = $request->depreciation[$i];
+                $property->save();
+            }
+
+            session()->flash('success_message', 'You have successfully added all Properties!');
+
+            return 'Success';
+        }
     }
 
     ////////////////////////////////////////////////////////

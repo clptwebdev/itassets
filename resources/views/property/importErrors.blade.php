@@ -28,7 +28,7 @@
                 <a href="{{ route('accessories.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm te
                     xt-white-50"></i> Back to Consumables</a>
-                <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
+                <a id="importHelpBtn" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
                 <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
@@ -90,23 +90,23 @@
                                                class="import-control @if(in_array('name', $errors)){{ 'border-bottom border-danger'}}@endif" name="name[]"
                                                value="{{ $valueArray[$row]['name'] }}"
                                                placeholder="This Row is Empty Please Fill!" required data-container='#name{{$line}}' data-placement='top'
-                                               @if(array_key_exists('name', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
+                                               @if(array_key_exists('name', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
                                         </span>
                                     </td>
                                     <td>
                                         <span id="type{{$line}}" class="tooltip-danger">
                                             <input type="text"
-                                               class="import-control @if(in_array('type', $errors)){{ 'border-bottom border-danger'}}@endif" name="model[]"
+                                               class="import-control @if(in_array('type', $errors)){{ 'border-bottom border-danger'}}@endif" name="type[]"
                                                value="{{ $valueArray[$row]['type'] }}"
                                                placeholder="This Row is Empty Please Fill!" required data-container='#type{{$line}}' data-placement='top'
-                                               @if(array_key_exists('type', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['type']}'" !!}@endif>
+                                               @if(array_key_exists('type', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['type']}'" !!}@endif>
                                         </span>
                                     </td>
                                     <td>
                                         <span id="location_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown" class="import-control @if(in_array('location', $errors)){{ 'border-bottom border-danger'}}@endif" name="location[]" required
-                                        data-container='#location{{$line}}' data-placement='top'
-                                        @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['location_id']} - {$valueArray[$row]['location_id']}'" !!}@endif
+                                        <select type="dropdown" class="import-control @if(in_array('location_id', $errors)){{ 'border-bottom border-danger'}}@endif" name="location_id[]" required
+                                        data-container='#location_id{{$line}}'
+                                        @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' data-bs-placement='bottom' title='{$errorValues[$row]['location_id']} - {$valueArray[$row]['location_id']}'" !!}@endif
                                         >
                                             <option value="0" @if($valueArray[$row]['location_id'] == ''){{'selected'}}@endif>Please Select a Location</option>
                                             @foreach($locations as $location)
@@ -128,7 +128,7 @@
                                                class="import-control @if(in_array('purchased_date', $errors)){{ 'border-bottom border-danger'}}@endif" name="purchased_date[]"
                                                id="purchased_date" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $date }}" required data-container='#purchased_date{{$line}}' data-placement='top'
-                                               @if(array_key_exists('purchased_date', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['purchased_date']}'" !!}
+                                               @if(array_key_exists('purchased_date', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['purchased_date']}'" !!}
                                                @endif
                                                >
                                         </span>
@@ -141,7 +141,7 @@
                                                name="purchased_cost[]"
                                                id="purchased_cost" placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['purchased_cost'] }}" required data-container='#purchased_cost{{$line}}' data-placement='top'
-                                               @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['purchased_cost']}'" !!}@endif
+                                               @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['purchased_cost']}'" !!}@endif
                                         >
                                         </span>
                                     </td>
@@ -149,7 +149,7 @@
                                         <span id="depreciation{{$line}}" class="tooltip-danger">
                                         <input type="text" class="import-control @if(in_array('depreciation', $errors)){{ 'border-bottom border-danger'}}@endif" name="depreciation[]" id="order_no" placeholder="This Row is Empty Please Fill!"
                                             value="{{ $valueArray[$row]['depreciation'] }}" required data-container='#depreciation{{$line}}' data-placement='top'
-                                            @if(array_key_exists('depreciation', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['depreciation']}'" !!}@endif
+                                            @if(array_key_exists('depreciation', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['depreciation']}'" !!}@endif
                                         >
                                         </span>
                                     </td>
@@ -206,128 +206,106 @@
 @section('js')
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
+        const importModal = new bootstrap.Modal(document.getElementById('importHelpModal'));
+        const importHelpBtn = document.querySelector('#importHelpBtn');
+
+        importHelpBtn.addEventListener('click', function(){
+            importModal.show();
+        });
+
+        function enableToolTips(){
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        }
+
+        enableToolTips();
         
 
-        $('#import').click(function () {
-            $('#importManufacturerModal').modal('show')
-        })
+        const importControl = document.querySelectorAll('.import-control');
+
+        const errorMessage = document.querySelector('.alert.alert-danger');
+
 
         //validation
         function checkErrors(obj){
 
-            var token = $("[name='_token']").val();
-            var data = new FormData();
+            const token = document.querySelector("[name='_token']").value;
+            const data = new FormData();
             data.append('_token', token);
 
             //Names
-            var inputs = $("input[name='name[]']").get();
+            const inputs = $("input[name='name[]']").get();
             inputs.forEach(element => {
                 data.append('name[]', element.value);
             });
 
-            //Names
-            var mdInputs = $("input[name='name[]']").get();
-            mdInputs.forEach(element => {
-                data.append('model[]', element.value);
+            //Type
+            const tpInputs = $("input[name='type[]']").get();
+            tpInputs.forEach(element => {
+                data.append('type[]', element.value);
             });
 
-            //status
-            var stInputs = $("select[name='status_id[]']").get();
-            stInputs.forEach(element => {
-                data.append('status_id[]', element.value);
-            });
-
-            //Phone
-            var supInputs = $("select[name='supplier_id[]']").get();
-            supInputs.forEach(element => {
-                data.append('supplier_id[]', element.value);
-            });
-
-            //Email
-            var maInputs = $("select[name='manufacturer_id[]']").get();
-                maInputs.forEach(element => {
-                data.append('manufacturer_id[]', element.value);
-            });
-
-            var loInputs = $("select[name='location_id[]']").get();
+            //Location
+            const loInputs = $("select[name='location_id[]']").get();
                 loInputs.forEach(element => {
                 data.append('location_id[]', element.value);
             });
 
-            var roInputs = $("input[name='room[]']").get();
-                roInputs.forEach(element => {
-                data.append('room[]', element.value);
-            });
-
-            var orInputs = $("input[name='order_no[]']").get();
-                orInputs.forEach(element => {
-                data.append('order_no[]', element.value);
-            });
-
-            var seInputs = $("input[name='serial_no[]']").get();
-                seInputs.forEach(element => {
-                data.append('serial_no[]', element.value);
-            });
-
-            var pcInputs = $("input[name='purchased_cost[]']").get();
+            //Purchased Cost
+            const pcInputs = $("input[name='purchased_cost[]']").get();
                 pcInputs.forEach(element => {
                 data.append('purchased_cost[]', element.value);
             });
 
-            var doInputs = $("select[name='donated[]']").get();
-                doInputs.forEach(element => {
-                data.append('donated[]', element.value);
-            });
-
-            var pdInputs = $("input[name='purchased_date[]']").get();
+            //Purchased Date
+            const pdInputs = $("input[name='purchased_date[]']").get();
                 pdInputs.forEach(element => {
                 data.append('purchased_date[]', element.value);
             });
 
-            var dpInputs = $("select[name='depreciation_id[]']").get();
+            //Depreciation
+            const dpInputs = $("input[name='depreciation[]']").get();
                 dpInputs.forEach(element => {
-                data.append('depreciation_id[]', element.value);
+                data.append('depreciation[]', element.value);
             });
 
-            var waInputs = $("input[name='warranty[]']").get();
-                waInputs.forEach(element => {
-                data.append('warranty[]', element.value);
-            });
+            const xhr = new XMLHttpRequest()
 
-            var noInputs = $("input[name='notes[]']").get();
-                noInputs.forEach(element => {
-                data.append('notes[]', element.value);
-            });
+            xhr.onload = function () {
+                if(xhr.responseText === 'Success'){
+                    window.location.href = '/properties';
+                }else{
+                    importControl.forEach((item) => {
+                        item.classList.remove('border-bottom', 'border-danger');
+                    });
+                   
+                    let i = 0;
+                    console.log(xhr.response);
+                    Object.entries(JSON.parse(xhr.responseText)).forEach(entry => {
+                        console.log(entry);
+                        const [key, value] = entry;
+                        res = key.split('.');
+                        const error = value.toString().replace(key, res[0]);
+                        console.log(error);
+                        console.log(res[1]);
+                        let elements = document.querySelectorAll(`[name='${res[0]}[]']`);
+                        console.log(elements[0]);
+                        let num = parseInt(res[1]);
+                        elements[num].classList.add('border-bottom', 'border-danger');
+                        elements[num].setAttribute('data-bs-toggle', 'tooltip');
+                        elements[num].setAttribute('data-title', error);
+                        i++;
+                        enableToolTips();
+                    });
 
-            $.ajax({
-                url: '/accessories/create/ajax',
-                type: 'POST',
-                data: data,
-                processData: false,
-                contentType: false,
-                success: function(response){
-                    if(response === 'Success'){
-                        window.location.href = '/accessories';
-                    }else{
-                        $('.import-control').removeClass('border-danger');
-                        $('.import-control').removeClass('border-bottom');
-                        $('.import-control').tooltip('dispose');
-                        var i = 0;
-                        Object.entries(response).forEach(entry => {
-                            const [key, value] = entry;
-                            res = key.split('.');
-                            const error = value.toString().replace(key, res[0]);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-bottom');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('data-toggle', 'tooltip');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('title', error);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip();
-                            i++;
-                        });
-                        $('.alert.alert-danger').html(`There were ${i} errors in the following rows`);
-                    }
-                },
-            });
+                    errorMessage.innerHTML = `There were ${i} errors in the following rows`;
+                }
+            };
+
+            xhr.open("POST", "/import/properties/errors");
+            xhr.send(data);
         }
 
     </script>

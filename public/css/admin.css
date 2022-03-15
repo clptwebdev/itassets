@@ -11935,7 +11935,8 @@ tr.even:hover .btn,
 
 .import-control {
     cursor: pointer;
-    background-color: none;
+    background-color: transparent;
+    width: 100%;
     padding: 0.75rem;
     border: none;
     display: block;

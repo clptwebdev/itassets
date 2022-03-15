@@ -249,8 +249,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post("/export/properties", "export");
         //Imports
         Route::post("/import/properties", "import");
-        Route::Post("assets/create/ajax", "ajaxMany");
-        Route::Post("assets/export-import-errors", "importErrors")->name("export.import");
+        Route::Post("/import/properties/errors", "importErrors");
         //PDF
         Route::post('/property/pdf', 'downloadPDF')->name('properties.pdf');
         Route::get('/property/{property}/pdf', 'downloadShowPDF')->name('properties.showPdf');
