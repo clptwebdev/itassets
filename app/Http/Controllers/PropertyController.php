@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Location;
 use App\Models\Property;
 use Illuminate\Http\Request;
-//Exports
+//Exportsgit pul
 use App\Exports\PropertyExport;
 //Imports
 use App\Imports\PropertyImport;
