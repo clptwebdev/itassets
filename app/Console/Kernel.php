@@ -32,20 +32,7 @@ class Kernel extends ConsoleKernel {
     {
         $schedule->call('\App\Http\Controllers\BackupController@createDb')->everyMinute();
         //cleans all backups Monthly
-        $schedule->call(function() {
-            $files = collect(File::allFiles(Storage::disk('backups')->path('Apollo-backup')))
-                ->filter(function($file) {
-                    return $file->getExtension() == 'zip';
-                })
-                ->sortByDesc(function($file) {
-                    return $file->getCTime();
-                })
-                ->map(function($file) {
-                    return $file->getBaseName();
-                });
-            $oldest = $files->reverse()->values()->take(20);
-            Storage::delete($oldest);
-        })->everyMinute();
+        $schedule->call('\App\Http\Controllers\BackupController@dbClean')->everyMinute();
 
         //deletes all csv's Monthly
 //        $schedule->call(function() {
