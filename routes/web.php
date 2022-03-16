@@ -125,7 +125,7 @@ Route::group(['middleware' => 'auth'], function() {
         //Exports
         Route::post("/exportassets", "export");
         //Imports
-        Route::Post("/importassets", "import")->name('assets.import');
+        Route::post("/importassets", "import")->name('assets.import');
         Route::Post("assets/create/ajax", "ajaxMany");
         Route::Post("assets/export-import-errors", "importErrors")->name("export.import");
     });
@@ -139,6 +139,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/auc/bin', 'recycleBin')->name('auc.bin');
         Route::get('/auc/{auc}/restore', 'restore')->name('auc.restore');
         Route::post('/auc/{auc}/remove', 'forceDelete')->name('auc.remove');
+        Route::get('/auc/{auc}/move', 'move')->name('auc.move');
     });
     Route::controller(\App\Http\Controllers\ComponentController::class)->group(function() {
         //Component Routes
@@ -230,6 +231,10 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post("/importmanufacturer", "import");
     });
 
+    /////////////////////////////////////////////
+    /////////////// Property Routes /////////////
+    /////////////////////////////////////////////
+
     Route::controller(\App\Http\Controllers\PropertyController::class)->group(function() {
         //Property
         Route::resource("/properties", \App\Http\Controllers\PropertyController::class);
@@ -239,13 +244,30 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/property/bin', 'recycleBin')->name('property.bin');
         Route::get('/property/{asset}/restore', 'restore')->name('property.restore');
         Route::post('/property/{asset}/remove', 'forceDelete')->name('property.remove');
+        Route::post('/property/{asset}/comment', 'newComment')->name('property.comment');
+        //Exports
+        Route::post("/export/properties", "export");
+        //Imports
+        Route::post("/import/properties", "import");
+        Route::Post("/import/properties/errors", "importErrors");
+        //PDF
+        Route::post('/property/pdf', 'downloadPDF')->name('properties.pdf');
+        Route::get('/property/{property}/pdf', 'downloadShowPDF')->name('properties.showPdf');
     });
-    Route::controller(\App\Http\Controllers\TransferController::class)->group(function() {
-        //Transfers
-        Route::get('/transfers', 'index')->name('transfers.index');
-        Route::get('/asset/transfers', 'assets')->name('transfers.assets');
-        Route::get('/accessory/transfers', 'accessories')->name('transfers.accessories');
+
+    /////////////////////////////////////////////
+    /////////////// Report Routes /////////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\ReportController::class)->group(function() {
+        //Reports
+        Route::get('/reports', 'index')->name('reports.index');
     });
+
+    /////////////////////////////////////////////
+    /////////////// Request Routes /////////////
+    /////////////////////////////////////////////
+
     Route::controller(\App\Http\Controllers\RequestsController::class)->group(function() {
         //Request
         Route::post('/request/transfer', 'transfer')->name('request.transfer');
@@ -255,10 +277,11 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/requests', 'index')->name('requests.index');
         Route::get('/requests/access', 'access')->name('requests.access');
     });
-    Route::controller(\App\Http\Controllers\ReportController::class)->group(function() {
-        //Reports
-        Route::get('/reports', 'index')->name('reports.index');
-    });
+
+    /////////////////////////////////////////////
+    /////////////// Supplier Routes /////////////
+    /////////////////////////////////////////////
+
     Route::controller(\App\Http\Controllers\SupplierController::class)->group(function() {
         //Supplier
         Route::resource('/suppliers', 'App\Http\Controllers\SupplierController');
@@ -269,6 +292,17 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/supplier/preview/', 'preview')->name('supplier.preview');
         //Exports
         Route::get("/exportsuppliers", "export");
+    });
+
+    /////////////////////////////////////////////
+    /////////////// Transfer Routes /////////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\TransferController::class)->group(function() {
+        //Transfers
+        Route::get('/transfers', 'index')->name('transfers.index');
+        Route::get('/asset/transfers', 'assets')->name('transfers.assets');
+        Route::get('/accessory/transfers', 'accessories')->name('transfers.accessories');
     });
 
     Route::controller(\App\Http\Controllers\BackupController::class)->group(function() {

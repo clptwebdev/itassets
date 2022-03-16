@@ -20,21 +20,20 @@
         @can('create' , \App\Models\Property::class)
             <x-buttons.add :route="route('properties.create')">Property</x-buttons.add>
         @endcan
-        {{--
      @can('generatePDF', \App\Models\Asset::class)
-         @if ($assets->count() == 1)
-             <x-buttons.reports :route="route('asset.showPdf', $assets[0]->id)"/>
+         @if ($properties->count() == 1)
+             <x-buttons.reports :route="route('properties.showPdf', $properties[0]->id)"/>
          @else
-             <x-form.layout class="d-inline-block" :action="route('assets.pdf')">
-                 <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
-                               :value="json_encode($assets->pluck('id'))"/>
+             <x-form.layout class="d-inline-block" :action="route('properties.pdf')">
+                 <x-form.input type="hidden" name="property" :label="false" formAttributes="required"
+                               :value="json_encode($properties->pluck('id'))"/>
                  <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
              </x-form.layout>
          @endif
-         @if($assets->count() >1)
-             <x-form.layout class="d-inline-block" action="/exportassets">
-                 <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
-                               :value="json_encode($assets->pluck('id'))"/>
+         @if($properties->count() >1)
+             <x-form.layout class="d-inline-block" action="/export/properties">
+                 <x-form.input type="hidden" name="properties" :label="false" formAttributes="required"
+                               :value="json_encode($properties->pluck('id'))"/>
                  <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
              </x-form.layout>
          @endif
@@ -44,7 +43,7 @@
                  Bulk Options
              </a>
              <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                 @can('create', \App\Models\Asset::class)
+                 @can('import', \App\Models\Property::class)
                      <x-buttons.dropdown-item id="import">
                          Import
                      </x-buttons.dropdown-item>
@@ -52,12 +51,9 @@
                  <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">
                      Dispose
                  </x-buttons.dropdown-item>
-                 <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkTransferModal'">
-                     Transfer
-                 </x-buttons.dropdown-item>
              </div>
          </div>
-     @endcan --}}
+     @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
@@ -68,8 +64,8 @@
 
         @php
 
-            $limit = auth()->user()->location_property()->orderBy('value', 'desc')->pluck('value')->first();
-            $floor = auth()->user()->location_property()->orderBy('value', 'asc')->pluck('value')->first();
+            $limit = auth()->user()->location_property()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_property()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
 
         if(session()->has('property_amount')){
             $amount = str_replace('£', '', session('property_amount'));
@@ -151,8 +147,8 @@
                                         @endif
                                     @endif
                                 </td>
-                                <td class="text-center">£{{number_format($property->value, 2, '.', ',')}}</td>
-                                <td class="text-center">{{\Carbon\Carbon::parse($property->date)->format('jS M Y')}}</td>
+                                <td class="text-center">£{{number_format($property->purchased_cost, 2, '.', ',')}}</td>
+                                <td class="text-center">{{\Carbon\Carbon::parse($property->purchased_date)->format('jS M Y')}}</td>
                                 <td class="text-center">
                                     £{{number_format($property->depreciation_value(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
                                 <td class="text-center">{{$property->depreciation}} Years</td>
@@ -216,6 +212,7 @@
 
     <x-modals.delete/>
     <x-modals.dispose model="property"/>
+    <x-modals.import route="/import/properties"/>
 @endsection
 
 @section('js')
@@ -225,6 +222,7 @@
     <script src="{{asset('js/filter.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/dispose.js')}}"></script>
+    <script src="{{asset('js/import.js')}}"></script>
     <script>
         $(function () {
             $("#slider-range").slider({

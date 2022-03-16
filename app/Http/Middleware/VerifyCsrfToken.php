@@ -22,6 +22,7 @@ class VerifyCsrfToken extends Middleware {
         'location/preview',
         'model/create',
         '/photo/upload',
+        '/import/properties/errors',
     ];
 
 }

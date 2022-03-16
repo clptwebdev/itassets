@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Asset;
+use App\Models\Accessory;
+use App\Models\Property;
 use App\Models\Archive;
 use App\Models\Requests;
 use App\Models\Transfer;
@@ -353,8 +355,8 @@ class RequestsController extends Controller {
             Mail::to($user->email)->send(new \App\Mail\ApproveRequest($user, 'Approved', $requests->type, $title, $message));
 
             return back()->with('success_message', "The {$requests->type} Request has been approved and an email has been sent to {$user->name} about the decision");
-        } else if($status == 2)
-        {
+        }else if($status == 2){
+
             $requests->update(['status' => 2, 'super_id' => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
             $m = "\\App\\Models\\" . ucfirst($requests->model_type);
             $model = $m::find($requests->model_id);

@@ -17,9 +17,9 @@ class CreatePropertiesTable extends Migration
             $table->id();
             $table->string('name');
             $table->integer('type');
-            $table->decimal("value",11,2)->nullable();
+            $table->decimal("purchased_date",11,2)->nullable();
             $table->integer("depreciation");
-            $table->dateTime("date");
+            $table->dateTime("purchased_date");
             $table->foreignId('location_id');
             $table->timestamps();
         });

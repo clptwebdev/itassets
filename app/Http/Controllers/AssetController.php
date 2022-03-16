@@ -1049,6 +1049,11 @@ class AssetController extends Controller {
         ]);
     }
 
+
+    ////////////////////////////////////////////////////////
+    ///////////////PDF Functions////////////////////////////
+    ////////////////////////////////////////////////////////
+
     public function downloadPDF(Request $request)
     {
         if(auth()->user()->cant('viewAll', Asset::class))

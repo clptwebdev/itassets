@@ -30,47 +30,25 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call('\App\Http\Controllers\BackupController@createDB')->everyMinute();
-//        ->onFailure(function(\Exception $exception) {
-//        info('Backup failed', ['exception' => $exception]);
-//    })
-        //cleans all backups Monthly
-        $schedule->call(function() {
-            $files = collect(File::allFiles(Storage::disk('backups')->path('Apollo-backup')))
-                ->filter(function($file) {
-                    return $file->getExtension() == 'zip';
-                })
-                ->sortByDesc(function($file) {
-                    return $file->getCTime();
-                })
-                ->map(function($file) {
-                    return $file->getBaseName();
-                });
-            $oldest = $files->reverse()->values()->take(20);
-            Storage::delete($oldest);
-        })->lastDayOfMonth();
 
-        //deletes all csv's Monthly
-        $schedule->call(function() {
-            $files = Storage::files('/public/csv');
-            Storage::delete($files);
-        })->daily();
+        //cleans all backups Monthly
+        $schedule->call('\App\Http\Controllers\BackupController@dbClean')->monthly();
 
         //deletes all PDF's Monthly
-        $schedule->call(Report::clean())->weekends();
-
+        $schedule->call('\App\Http\Controllers\ReportController@clean')->weekly();
+        //deletes all Csv's Monthly
+        $schedule->call('\App\Http\Controllers\ReportController@clean')->weekly();
         $schedule->call(function() {
-            $total = Cache::rememberForever('total_assets', function() {
-                return \App\Models\Asset::count();
-            });
-
+            $files = Storage::files('public/csv/');
+            Storage::delete($files);
+        })->everyMinute();
+        $schedule->call(function() {
             foreach(Location::all() as $location)
             {
                 $total = Cache::rememberForever("location_{$location->id}_assets_total", function() {
                     return \App\Models\Asset::where('location_id', '=', $location->id)->count();
                 });
             }
-
         })->daily();
 
     }

@@ -59,15 +59,13 @@
                                                     </ul>
                                                 </div>
                                             </div>
-
                                             <div class="form-group">
-                                                <x-form.input name="value" formAttributes="required"/>
+                                                <x-form.input name="purchased_cost" formAttributes="required"/>
                                             </div>
 
                                             <div class="form-group">
-                                                <x-form.date name="date" formAttributes="required"/>
+                                                <x-form.date name="purchased_date" formAttributes="required"/>
                                             </div>
-
                                             <div class="form-group">
                                                 <x-form.input name="depreciation" formAttributes="required"/>
                                             </div>

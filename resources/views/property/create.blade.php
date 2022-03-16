@@ -42,7 +42,7 @@
                                     <div class="row" >
                                         <div class="col-12 col-md-6 p-4 mb-3 " >
                                             <div class="form-group" >
-                                                <x-form.input name="name" formAttributes="required" />
+                                                <x-form.input name="name" formAttributes="required" value="{{old('name')}}"/>
                                             </div >
                                             <div class="form-group position-relative" >
                                                 <label for="findLocation" >Location</label >
@@ -60,24 +60,24 @@
                                             </div >
 
                                             <div class="form-group" >
-                                                <x-form.input name="value" formAttributes="required" />
+                                                <x-form.input name="purchased_cost" formAttributes="required" value="{{old('purchased_cost')}}" />
                                             </div >
 
                                             <div class="form-group" >
-                                                <x-form.date name="date" formAttributes="required" />
+                                                <x-form.date name="purchased_date" formAttributes="required" value="{{old('purchased_date')}}" />
                                             </div >
 
                                             <div class="form-group" >
-                                                <x-form.input name="depreciation" formAttributes="required" />
+                                                <x-form.input name="depreciation" formAttributes="required" value="{{old('depreciation')}}" />
                                             </div >
 
                                             <div class="form-group">
                                                 <label for="name">Property Type</label>
                                                 <select id="type" name="type" class="form-control">
-                                                    <option value="1">Freehold Land</option>
-                                                    <option value="2">Freehold Buildings</option>
-                                                    <option value="3">Leasehold Land</option>
-                                                    <option value="4">Leasehold Building</option>
+                                                    <option value="1" @if(old('type') == 1) selected @endif>Freehold Land</option>
+                                                    <option value="2" @if(old('type') == 2) selected @endif>Freehold Buildings</option>
+                                                    <option value="3" @if(old('type') == 3) selected @endif>Leasehold Land</option>
+                                                    <option value="4" @if(old('type') == 4) selected @endif>Leasehold Building</option>
                                                 </select>
                                             </div>
                                         </div >

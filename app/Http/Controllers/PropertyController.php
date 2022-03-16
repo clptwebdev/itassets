@@ -5,6 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Location;
 use App\Models\Property;
 use Illuminate\Http\Request;
+//Exportsgit pul
+use App\Exports\PropertyExport;
+//Imports
+use App\Imports\PropertyImport;
+//Models
+use App\Models\Report;
+//Jobs
+use App\Jobs\PropertiesPdf;
+use App\Jobs\PropertyPdf;
+
+use Illuminate\Support\Facades\Validator;
+
+use App\Rules\permittedLocation;
+use App\Rules\findLocation;
 
 class PropertyController extends Controller {
 
@@ -39,7 +53,7 @@ class PropertyController extends Controller {
 
     public function show(Property $property)
     {
-        if(auth()->user()->cant('view', Property::class))
+        if(auth()->user()->cant('view', $property))
         {
             return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Show Properties.');
 
@@ -83,7 +97,7 @@ class PropertyController extends Controller {
         $validation = $request->validate([
             'name' => 'required',
             'location_id' => 'required',
-            'value' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'type' => 'required|gt:0',
         ]);
@@ -93,10 +107,10 @@ class PropertyController extends Controller {
         $property->fill([
             'name' => $request->name,
             'location_id' => $request->location_id,
-            'value' => $request->value,
+            'purchased_cost' => $request->purchased_cost,
             'depreciation' => $request->depreciation,
             'type' => $request->type,
-            'date' => $request->date,
+            'purchased_date' => $request->purchased_date,
         ])->save();
 
         session()->flash('success_message', $request->name . ' has been created successfully');
@@ -112,7 +126,7 @@ class PropertyController extends Controller {
     public function edit(Property $property)
     {
         // Check to see whether the user has permission to edit the sleected property
-        if(auth()->user()->cant('edit', Property::class))
+        if(auth()->user()->cant('update', $property))
         {
             return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Edit Properties.');
 
@@ -124,7 +138,7 @@ class PropertyController extends Controller {
     public function update(Request $request, Property $property)
     {
         // Check to see whether the user has permission to edit the selected property
-        if(auth()->user()->cant('update', Property::class))
+        if(auth()->user()->cant('update', $property))
         {
             return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Update Properties.');
 
@@ -134,13 +148,13 @@ class PropertyController extends Controller {
         $validation = $request->validate([
             'name' => 'required',
             'location_id' => 'required',
-            'value' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'type' => 'required|gt:0',
         ]);
 
         //Fill the Model fields from the request
-        $property->fill($request->only('name', 'location_id', 'value', 'depreciation', 'type'))->save();
+        $property->fill($request->only('name', 'location_id', 'purchased_cost', 'purchased_date', 'depreciation', 'type'))->save();
 
         //Return the session message to the index
         session()->flash('success_message', $request->name . ' has been updated successfully');
@@ -233,6 +247,238 @@ class PropertyController extends Controller {
 
         //redirect back to the recycle bin
         return to_route('property.bin');
+    }
+
+    ////////////////////////////////////////
+    /////////// Comment Functions ///////////
+    ////////////////////////////////////////
+
+    public function newComment(Request $request)
+    {
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $property = Property::find($request->property_id);
+        $property->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+        session()->flash('success_message', $request->title . ' has been created successfully');
+
+        return to_route('properties.show', $property->id);
+    }
+
+    ////////////////////////////////////////////////////////
+    ///////////////PDF Functions////////////////////////////
+    ////////////////////////////////////////////////////////
+
+
+    public function downloadPDF(Request $request)
+    {
+        if(auth()->user()->cant('viewAll', Property::class))
+        {
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised | Download of Property Information Report.');
+
+        }
+        $properties = array();
+        $found = Property::select('name', 'id', 'depreciation', 'type', 'purchased_date', 'purchased_cost', 'location_id')->withTrashed()->whereIn('id', json_decode($request->property))->with('location')->get();
+        foreach($found as $f)
+        {
+            $array = array();
+            $array['name'] = $f->name ?? 'No Name';
+            $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
+            $array['purchased_cost'] = '£' . $f->purchased_cost;
+            $array['depreciation'] = $f->depreciation;
+            $array['current_value'] = $f->depreciation_value(\Carbon\Carbon::now());
+            $array['type'] = $f->getType();
+            $properties[] = $array;
+        }
+
+        $user = auth()->user();
+
+        $date = \Carbon\Carbon::now()->format('dmyHi');
+        $path = 'properties-report-' . $date;
+
+        PropertiesPdf::dispatch($properties, $user, $path)->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
+
+        return to_route('properties.index')
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
+
+    }
+
+    public function downloadShowPDF(Property $property)
+    {
+        if(auth()->user()->cant('view', $property))
+        {
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised | Download of Property Information.');
+
+        }
+
+        $user = auth()->user();
+
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        $path = "property-{$property->id}-{$date}";
+        PropertyPdf::dispatch($property, $user, $path)->afterResponse();
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
+
+        return to_route('properties.show', $property->id)
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
+    }
+
+    ////////////////////////////////////////////////////////
+    ///////////////Export Functions/////////////////////////
+    ////////////////////////////////////////////////////////
+
+    public function import(Request $request)
+    {
+        if(auth()->user()->cant('create', Property::class))
+        {
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised | Import Properties.');
+
+        }
+        $extensions = array("csv");
+
+        $result = array($request->file('csv')->getClientOriginalExtension());
+
+        if(in_array($result[0], $extensions))
+        {
+            $path = $request->file("csv")->getRealPath();
+            $import = new PropertyImport;
+            $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
+            $row = [];
+            $attributes = [];
+            $errors = [];
+            $values = [];
+            $results = $import->failures();
+            $importErrors = [];
+            foreach($results->all() as $result)
+            {
+                $row[] = $result->row();
+                $attributes[] = $result->attribute();
+                $errors[] = $result->errors();
+                $values[] = $result->values();
+                $importErrors[] = [
+
+                    "row" => $result->row(),
+                    "attributes" => $result->attribute(),
+                    "errors" => $result->errors(),
+                    "value" => $result->values(),
+                ];
+
+            }
+
+            if(! empty($importErrors))
+            {
+                $errorArray = [];
+                $valueArray = [];
+                $errorValues = [];
+
+                foreach($importErrors as $error)
+                {
+                    if(array_key_exists($error['row'], $errorArray))
+                    {
+                        $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
+                    } else
+                    {
+                        $errorArray[$error['row']] = $error['attributes'];
+                    }
+                    $valueArray[$error['row']] = $error['value'];
+
+                    if(array_key_exists($error['row'], $errorValues))
+                    {
+                        $array = $errorValues[$error['row']];
+                    } else
+                    {
+                        $array = [];
+                    }
+
+                    foreach($error['errors'] as $e)
+                    {
+                        $array[$error['attributes']] = $e;
+                    }
+                    $errorValues[$error['row']] = $array;
+
+                }
+
+                return view('property.importErrors', [
+                    "errorArray" => $errorArray,
+                    "valueArray" => $valueArray,
+                    "errorValues" => $errorValues,
+                    "locations" => auth()->user()->locations
+                ]);
+
+            } else
+            {
+                return to_route('properties.index')->with('success_message', 'All Properties were imported correctly!');
+
+            }
+        } else
+        {
+            session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+
+            return to_route('properties.index');
+        }
+
+
+    }
+
+    public function importErrors(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            "name.*" => "required|max:255",
+            'location_id.*' => 'required|gt:0',
+            'purchased_date.*' => 'date',
+            'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            "depreciation.*" => "nullable",
+            "type.*" => "nullable",
+        ]);
+
+        if($validation->fails()){
+            return $validation->errors();
+        }else{
+            for($i = 0; $i < count($request->name); $i++){
+                $property = new Property;
+                $property->name = $request->name[$i];
+                $property->type = $request->type[$i];
+                $property->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $property->purchased_cost = $request->purchased_cost[$i];
+                $property->location_id = $request->location_id[$i];
+                $property->depreciation = $request->depreciation[$i];
+                $property->save();
+            }
+
+            session()->flash('success_message', 'You have successfully added all Properties!');
+
+            return 'Success';
+        }
+    }
+
+    ////////////////////////////////////////////////////////
+    ///////////////Export Functions/////////////////////////
+    ////////////////////////////////////////////////////////
+
+    public function export(Request $request)
+    {
+        if(auth()->user()->cant('viewAll', Property::class))
+        {
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised | Export Property Information.');
+
+        }
+        $properties = Property::withTrashed()->whereIn('id', json_decode($request->properties))->with('location')->get();
+        $date = \Carbon\Carbon::now()->format('dmyHi');
+        \Maatwebsite\Excel\Facades\Excel::store(new PropertyExport($properties), "/public/csv/properties-{$date}.xlsx");
+        $url = asset("storage/csv/properties-{$date}.xlsx");
+
+        return to_route('properties.index')
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
+
     }
 
     ////////////////////////////////////////

@@ -12,7 +12,7 @@ class Property extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'location_id', 'value', 'depreciation', 'type', 'date'];
+    protected $fillable = ['name', 'location_id', 'purchased_cost', 'depreciation', 'type', 'purchased_date'];
 
     public function name(): Attribute
     {
@@ -32,10 +32,10 @@ class Property extends Model {
     //Use the Depreciation time to minus the depreication charge
     public function depreciation_value($date)
     {
-        $age = $date->floatDiffInYears($this->date);
+        $age = $date->floatDiffInYears($this->purchased_date);
         $percent = 100 / $this->depreciation;
         $percentage = floor($age) * $percent;
-        $value = $this->value * ((100 - $percentage) / 100);
+        $value = $this->purchased_cost * ((100 - $percentage) / 100);
 
         if($value < 0)
         {
@@ -76,7 +76,7 @@ class Property extends Model {
     //Filters out the property by the date acquired/purchased. Start = the Start Date End = the End Date
     public function scopePurchaseFilter($query, $start, $end)
     {
-        $query->whereBetween('date', [$start, $end]);
+        $query->whereBetween('purchased_date', [$start, $end]);
     }
 
     //Filters the porperty thats value is between two values set in one string
@@ -88,7 +88,7 @@ class Property extends Model {
         $amount = str_replace('£', '', $amount);
         //Seperate two values into an array [0] is lowest and [1] is highest
         $amount = explode(' - ', $amount);
-        $query->whereBetween('value', [intval($amount[0]), intval($amount[1])]);
+        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
     }
 
     //Filters the properties that are based in the selected locations
@@ -96,6 +96,11 @@ class Property extends Model {
     public function scopeLocationFilter($query, $locations)
     {
         return $query->whereIn('location_id', $locations);
+    }
+
+    public function comment()
+    {
+        return $this->morphToMany(Comment::class, "commentables");
     }
 
 }

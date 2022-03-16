@@ -73,7 +73,7 @@
                                 <td>{{ $supplier->city }}</td>
                                 <td>{{ $supplier->telephone }}</td>
                                 <td>{{ $supplier->email }}</td>
-                                <td class="text-center d-none d-xl-table-cell">{{ $supplier->asset->count() }}                                </td>
+                                <td class="text-center d-none d-xl-table-cell">{{ $supplier->assets->count() }}                                </td>
                                 <td class="text-center d-none d-xl-table-cell">{{$supplier->accessory->count() ?? "N/A"}}</td>
                                 <td class="text-center d-none d-xl-table-cell">{{$supplier->component->count() ?? "N/A"}}</td>
                                 <td class="text-center d-none d-xl-table-cell">{{$supplier->consumable->count() ?? "N/A"}}</td>

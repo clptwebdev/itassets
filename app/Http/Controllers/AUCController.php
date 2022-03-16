@@ -24,8 +24,8 @@ class AUCController extends Controller {
 
         }
 
-        //Else find the locations that the user has been assigned to
-        $locations = auth()->user()->locations->select('id', 'name')->withCount('aucs')->get();
+        //Find the locations that the user has been assigned to
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('auc')->get();
 
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('auc_limit') ?? 25;
@@ -42,7 +42,7 @@ class AUCController extends Controller {
 
     public function show(AUC $auc)
     {
-        if(auth()->user()->cant('view', AUC::class))
+        if(auth()->user()->cant('view', $auc))
         {
             return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Show Assets Under Construction.');
 
@@ -90,7 +90,7 @@ class AUCController extends Controller {
         $validation = $request->validate([
             'name' => 'required',
             'location_id' => 'required',
-            'value' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'type' => 'required|gt:0',
         ]);
@@ -100,10 +100,10 @@ class AUCController extends Controller {
         $property->fill([
             'name' => $request->name,
             'location_id' => $request->location_id,
-            'value' => $request->value,
+            'purchased_cost' => $request->purchased_cost,
             'depreciation' => $request->depreciation,
             'type' => $request->type,
-            'date' => $request->date,
+            'purchased_date' => $request->purchased_date,
         ])->save();
 
         session()->flash('success_message', $request->name . ' has been created successfully');
@@ -141,13 +141,13 @@ class AUCController extends Controller {
         $validation = $request->validate([
             'name' => 'required',
             'location_id' => 'required',
-            'value' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'type' => 'required|gt:0',
         ]);
 
         //Fill the Model fields from the request
-        $auc->fill($request->only('name', 'location_id', 'value', 'depreciation', 'type'))->save();
+        $auc->fill($request->only('name', 'location_id', 'purchased_cost', 'purchased_date', 'depreciation', 'type'))->save();
 
         //Return the session message to the index
         session()->flash('success_message', $request->name . ' has been updated successfully');
@@ -155,6 +155,22 @@ class AUCController extends Controller {
         //return to the view
         return to_route('aucs.index');
 
+    }
+
+    public function move(AUC $auc){
+        //Moving the Asset Under Construction to the Property
+        $property = new Property;
+        $property->fill([
+            'name' => $auc->name,
+            'type' => $auc->type,
+            'purchased_cost' => $auc->purchased_cost,
+            'purchased_date' => $auc->purchased_date,
+            'depreciation' => $auc->depreciation,
+            'location_id' => $auc->location_id
+        ]);
+        $property->save();
+        session()->flash('success_message', 'You have moved the Asset-Under-Construction to Properties');
+        return to_route('property.index');
     }
 
     ////////////////////////////////////////////
