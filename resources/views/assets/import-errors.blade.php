@@ -343,13 +343,9 @@
 @endsection
 
 @section('js')
+    <script type="text/javascript" src="{{ asset('js/import.js')}}"></script>
     <script>
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
 
-        })
 
         //validation
         function checkErrors(obj) {

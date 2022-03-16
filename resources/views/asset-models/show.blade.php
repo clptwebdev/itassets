@@ -7,11 +7,17 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">View Asset Model</h1>
         <div>
-            <a href="{{ route('asset-models.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                    class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
+            <a href="{{ route('asset-models.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm">
+                <i class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @can('delete', $assetModel)
-                <a href="" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"><i
-                        class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
+                <form class="d-inline-block" id="form{{$assetModel->id}}"
+                      action="{{ route('asset-models.destroy', $assetModel->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <a class="d-none d-sm-inline-block btn btn-sm btn-danger deleteBtn" href="#"
+                       data-id="{{$assetModel->id}}"><i class="fas fa-trash-alt fa-sm text-white-50"></i>Delete</a>
+                </form>
+
             @endcan
             @can('update', $assetModel)
                 <a href="{{ route('asset-models.edit', $assetModel->id)}}"
@@ -219,6 +225,6 @@
 @endsection
 
 @section('js')
-    <script src="{{asset('js/delete.js.js')}}"></script>
+    <script src="{{asset('js/delete.js')}}"></script>
 
 @endsection

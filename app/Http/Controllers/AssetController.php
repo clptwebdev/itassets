@@ -1158,7 +1158,7 @@ class AssetController extends Controller {
 
     public function changeStatus(Asset $asset, Request $request)
     {
-        if(auth()->user()->cant('update', Status::class))
+        if(auth()->user()->cant('update', $asset))
         {
             return ErrorController::forbidden(to_route('accessories.show', $asset->id), 'Unauthorised to Change Statuses Asset.');
         }

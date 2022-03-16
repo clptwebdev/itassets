@@ -3,7 +3,7 @@
 <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid {{$asset->location->icon ?? '#666'}};">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold" style="color: {{$asset->location->icon ?? '#666'}};">Location
-            Information</h6>
+                                                                                              Information</h6>
     </div>
     <div class="card-body">
         <div class="row no-gutters">
@@ -11,15 +11,15 @@
                 <div class="mb-1">
                     <p class="mb-4">Information regarding <strong
                             class="font-weight-bold btn btn-sm shadow-sm p-1 text-light"
-                            style="background-color: {{$asset->location->icon ?? '#666'}};">{{ $asset->location->name ?? 'N/A' }}</strong>
-                        , the location that is currently assigned to the asset and any request information.</p>
+                            style="@if($asset->location)background-color: {{$asset->location->icon ?? '#666'}}; @endif">{{ $asset->location->name ?? 'N/A' }}</strong>
+                                    , the location that is currently assigned to the asset and any request information.
+                    </p>
                     <div class="row">
                         <div class="col-12 col-lg-4">
                             @if($asset->location != null)
                                 <img
-                                    src="{{ asset($asset->location->photo->path) ?? asset('images/svg/device-image.svg')}}"
-                                    width="200px"
-                                    alt="{{$asset->location->photo->name}}">
+                                    src="{{ asset($asset->location->photo->path ?? 'images/svg/device-image.svg' ) ?? asset('images/svg/device-image.svg')}}"
+                                    width="200px" alt="{{$asset->location->photo->name ?? 'N/A'}}">
                             @else
                                 <img src="{{asset('images/svg/location-image.svg')}}" width="100px"
                                      alt="{{$asset->name}}">

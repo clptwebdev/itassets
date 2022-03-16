@@ -11,9 +11,6 @@ document.querySelector('#commentModal').addEventListener('click', function () {
     commentModal.show()
 });
 
-document.querySelector('.editComment').addEventListener('click', function (event) {
-    event.preventDefault();
-});
 
 document.querySelectorAll('.editComment').forEach(elem => elem.addEventListener("click", (event) => {
 
