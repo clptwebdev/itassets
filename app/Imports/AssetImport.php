@@ -69,7 +69,8 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 'nullable',
 
             ], 'name' => [
-                'nullable'
+                'nullable',
+                'sometimes'
             ],
             'purchased_cost' => [
                 'required',
@@ -79,7 +80,8 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 'nullable',
             ],
             'serial_no' => [
-                'nullable'
+                'nullable',
+                'sometimes'
             ],
             'purchased_date' => [
                 'date_format:"d/m/Y"',

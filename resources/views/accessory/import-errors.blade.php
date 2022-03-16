@@ -67,6 +67,7 @@
                             <thead>
                             <tr>
                                 <th><small>Name</small></th>
+                                <th><small>Asset Tag</small></th>
                                 <th><small>Model</small></th>
                                 <th><small>Status</small></th>
                                 <th><small>Supplier</small></th>
@@ -76,6 +77,7 @@
                                 <th><small>Order_no</small></th>
                                 <th><small>Serial Num</small></th>
                                 <th><small>Purchased Cost</small></th>
+                                <th><small>Donated</small></th>
                                 <th><small>Purchased Date</small></th>
                                 <th><small>Depreciation</small></th>
                                 <th><small>Warranty</small></th>
@@ -85,6 +87,7 @@
                             <tfoot>
                                 <tr>
                                     <th><small>Name</small></th>
+                                    <th><small>Asset Tag</small></th>
                                     <th><small>Model</small></th>
                                     <th><small>Status</small></th>
                                     <th><small>Supplier</small></th>
@@ -94,6 +97,7 @@
                                     <th><small>Order_no</small></th>
                                     <th><small>Serial Num</small></th>
                                     <th><small>Purchased Cost</small></th>
+                                    <th><small>Donated</small></th>
                                     <th><small>Purchased Date</small></th>
                                     <th><small>Depreciation</small></th>
                                     <th><small>Warranty</small></th>
@@ -113,6 +117,17 @@
                                                value="{{ $valueArray[$row]['name'] }}"
                                                placeholder="This Row is Empty Please Fill!" required data-container='#name{{$line}}' data-placement='top'
                                                @if(array_key_exists('name', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span id="asset_tag{{$line}}" class="tooltip-danger">
+                                            <input type="text" maxlength="11"
+                                                   class="import-control <?php if (in_array('asset_tag', $errors)) {?>border-bottom border-danger<?php }?>"
+                                                   name="asset_tag[]" id="asset_tag"
+                                                   value="{{ $valueArray[$row]['asset_tag'] }}"
+                                                   placeholder="This Row is Empty Please Fill!" required
+                                                   data-container='#asset_tag{{$line}}' data-placement='top'
+                                               @if(array_key_exists('asset_tag', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['asset_tag']}'" !!}@endif>
                                         </span>
                                     </td>
                                     <td>
@@ -205,6 +220,7 @@
                                     </td>
                                     <td>
                                         <span id="purchased_cost{{$line}}" class="tooltip-danger">
+                                            {{ $valueArray[$row]['purchased_cost']}}
                                         <input type="text"
                                                class="import-control @if(in_array('purchased_cost', $errors)){{'border-bottom border-danger'}}@endif"
                                                name="purchased_cost[]"

@@ -25,7 +25,7 @@ use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Validators\Failure;
 
-class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
+class accessoryImport  implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
 
     /**
      * @param array     $row
@@ -44,21 +44,22 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
 
         return [
             'name' => [
-                'required',
-                'string',
+                'sometimes',
+                'nullable',
             ],
             'asset_tag' => [
-                'nullable'
+                'nullable',
+                'sometimes'
             ],
             'purchased_cost' => [
                 'required',
-                'regex:/^\d+(\.\d{1,2})?$/',
             ],
             'order_no' => [
                 'nullable',
             ],
             'serial_no' => [
-                'required',
+                'sometimes',
+                'nullable'
             ],
             'notes' => [],
             'status_id' => [],
@@ -84,10 +85,29 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
     {
 
         $accessory = new Accessory;
+
+        $location = Location::where(["name" => $row["location_id"]])->first();
+        $lid = $location->id ?? 0;
+        $accessory->room = $row["room"];
+        $accessory->location_id = $lid;
+
         $accessory->asset_tag = $row["asset_tag"];
-        $accessory->name = $row["name"];
+
+         //Name of the Device cannot be null
+        //If the device is NULL or empty - generate a name using initials of school and the ASSET Tag
+        if($row["name"] != ''){
+            $name = $row['name'];
+        }else{
+            $row['asset_tag'] != '' ? $tag = $row['asset_tag'] : $tag = '1234'; 
+            $name = strtoupper(substr($asset->location->name ?? 'UN', 0, 1))."-{$tag}";
+        }
+        $accessory->name = $name;
+
         $accessory->model = $row["model"];
-        $accessory->serial_no = $row["serial_no"];
+       
+        //Serial No Cannot be ""
+        //If the imported Serial Number is empty assign it to "0"
+        $row["serial_no"] != '' ? $accessory->serial_no = $row["serial_no"] : $accessory->serial_no = "-" ;
 
         //check for already existing Status upon import if else create
         if($status = Status::where(["name" => $row["status_id"]])->first())
@@ -108,13 +128,14 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
         $accessory->status_id = $status->id ?? 0;
 
         $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
-        $accessory->purchased_cost = $row["purchased_cost"];
+        $accessory->purchased_cost = floatval($row["purchased_cost"]);
         if(strtolower($row["donated"]) == 'yes'){
             $accessory->donated = 1;
         }
 
         //check for already existing Suppliers upon import if else create
-        if($supplier = Supplier::where(["name" => $row["supplier_id"]])->first())
+        $supplier_email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+        if($supplier = Supplier::where(["name" => $row["supplier_id"]])->orWhere(['email' => $supplier_email])->first())
         {
 
         } else
@@ -123,7 +144,7 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
                 $supplier = new Supplier;
 
                 $supplier->name = $row["supplier_id"];
-                $supplier->email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+                $supplier->email = $supplier_email;
                 $supplier->url = 'www.' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
                 $supplier->telephone = "Unknown";
                 $supplier->save();
@@ -170,10 +191,7 @@ class accessoryImport implements ToModel, WithValidation, WithHeadingRow, WithBa
         $id = $depreciation->id ?? 0;
         $accessory->depreciation_id = $id;
 
-        $location = Location::where(["name" => $row["location_id"]])->first();
-        $lid = $location->id ?? 0;
-        $accessory->room = $row["room"];
-        $accessory->location_id = $lid;
+        
         $accessory->photo_id =  0;
 
         $accessory->notes = $row["notes"];
