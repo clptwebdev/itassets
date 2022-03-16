@@ -17,7 +17,7 @@ class CategoryController extends Controller {
         }
         $locations = auth()->user()->locations;
 
-        $categories = Category::all();
+        $categories = Category::paginate(10);
 
         /* $categories = $categories->map(function($item){
             $item-

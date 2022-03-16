@@ -77,10 +77,4 @@
     </div>
 @endsection
 @section('js')
-    <script>
-        $('.backup').click(function () {
-            //showModal
-            $('#backupModal').modal('show')
-        });
-    </script>
 @endsection

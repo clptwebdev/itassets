@@ -29,10 +29,11 @@
                                                the Recycle Bin. </small>
                 @else
                     <p>Remove this item permanently from the system!</p>
-                    <small class="text-danger">**Warning this is permanent and cannot be
-                                               restored
+                    <small class="text-danger">**Warning this is permanent. The {{ucfirst($slot)}} will be unassigned
                                                from
-                                               the Recycle Bin. </small>
+                                               any assets with Relationship's to this {{ucfirst($slot)}}.Relationship's
+                                               will have their field's set to
+                                               null.</small>
                 @endif
             </div>
             <div class="modal-footer">
