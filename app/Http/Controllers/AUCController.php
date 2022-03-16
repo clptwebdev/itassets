@@ -169,8 +169,11 @@ class AUCController extends Controller {
             'location_id' => $auc->location_id
         ]);
         $property->save();
+
+        $auc->forceDelete();
+
         session()->flash('success_message', 'You have moved the Asset-Under-Construction to Properties');
-        return to_route('property.index');
+        return to_route('properties.index');
     }
 
     ////////////////////////////////////////////

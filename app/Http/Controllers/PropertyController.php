@@ -320,7 +320,7 @@ class PropertyController extends Controller {
 
         $user = auth()->user();
 
-        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        $date = \Carbon\Carbon::now()->format('dmyHi');
         $path = "property-{$property->id}-{$date}";
         PropertyPdf::dispatch($property, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";

@@ -156,7 +156,8 @@ class accessoryImport  implements ToModel, WithValidation, WithHeadingRow, WithB
         $accessory->supplier_id = $supplier->id ?? 0;
 
         //check for already existing Manufacturers upon import if else create
-        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->first())
+        $man_email = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
+        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->orWhere(['email' => $supplier_email])->first())
         {
 
         } else
@@ -165,7 +166,7 @@ class accessoryImport  implements ToModel, WithValidation, WithHeadingRow, WithB
                 $manufacturer = new Manufacturer;
 
                 $manufacturer->name = $row["manufacturer_id"];
-                $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
+                $manufacturer->supportEmail = $man_email;
                 $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
                 $manufacturer->supportPhone = "Unknown";
                 $manufacturer->save();
