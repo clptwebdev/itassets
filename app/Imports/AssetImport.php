@@ -69,7 +69,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 'nullable',
 
             ], 'name' => [
-                'required',
+                'nullable'
             ],
             'purchased_cost' => [
                 'required',
@@ -79,7 +79,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                 'nullable',
             ],
             'serial_no' => [
-                'required',
+                'nullable'
             ],
             'purchased_date' => [
                 'date_format:"d/m/Y"',
@@ -106,10 +106,30 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
     {
         $asset = new Asset;
 
+        //check for already existing Locations upon import if else create if blank dont assign it to a location
+        $location = Location::where(["name" => $row["location_id"]])->first();
+        $id = $location->id ?? 0;
+        $asset->location_id = $id;
+        $asset->room = $row['room'];
+
         $asset->asset_tag = $row["asset_tag"];
-        $asset->name = $row["name"];
+
+        //Name of the Device cannot be null
+        //If the device is NULL or empty - generate a name using initials of school and the ASSET Tag
+        if($row["name"] != ''){
+            $name = $row['name'];
+        }else{
+            $row['asset_tag'] != '' ? $tag = $row['asset_tag'] : $tag = '1234'; 
+            $name = strtoupper(substr($asset->location->name ?? 'UN', 0, 1))."-{$tag}";
+        }
+        $asset->name = $name;
+
+
         $asset->user_id = auth()->user()->id;
-        $asset->serial_no = $row["serial_no"];
+
+        //Serial No Cannot be ""
+        //If the imported Serial Number is empty assign it to "0"
+        $row["serial_no"] != '' ? $asset->serial_no = $row["serial_no"] : $asset->serial_no = "-" ;
 
         //check for already existing Status upon import if else create
         if($status = Status::where(["name" => $row["status_id"]])->first())
@@ -184,8 +204,14 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                     }
                 }
             }
-        } else
-        {
+        } elseif($row["asset_model"] != ''){
+            $model = new AssetModel;
+            $model->name = $row["asset_model"];
+            $model->model_no = 'Unknown';
+            $model->fieldset_id = 1;
+            $model->save();
+            $asset->asset_model = $model->id;
+        }else{
             $asset->asset_model = 0;
         }
 

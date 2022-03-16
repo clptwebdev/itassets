@@ -247,7 +247,7 @@
     <x-modals.delete/>
     <x-modals.bulk-file title="disposal" :route="route('assets.bulk.disposal')"/>
     <x-modals.bulk-file title="transfer" :route="route('assets.bulk.transfer')"/>
-    <x-modals.import/>
+    <x-modals.import :route="route('assets.import')"/>
 @endsection
 
 @section('js')

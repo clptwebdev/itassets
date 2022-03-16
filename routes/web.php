@@ -125,7 +125,7 @@ Route::group(['middleware' => 'auth'], function() {
         //Exports
         Route::post("/exportassets", "export");
         //Imports
-        Route::post("/importassets", "import");
+        Route::post("/importassets", "import")->name('assets.import');
         Route::Post("assets/create/ajax", "ajaxMany");
         Route::Post("assets/export-import-errors", "importErrors")->name("export.import");
     });
