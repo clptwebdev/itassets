@@ -34,7 +34,7 @@ class AUCController extends Controller {
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['auc_filter' => false]);
 
-        return view('auc.view', [
+        return view('AUC.view', [
             "aucs" => $aucs,
             "locations" => $locations,
         ]);
