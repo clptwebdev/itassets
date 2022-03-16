@@ -2,9 +2,7 @@
 
 @section('title', 'Component Import Errors')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
+
 
 @section('content')
 
@@ -314,25 +312,8 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="{{asset('js/import.js')}}"></script>
     <script>
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
-
-        })
-
-
-        $(document).ready(function () {
-            $('#categoryTable').DataTable({
-                "columnDefs": [{
-                    "targets": [0, 5],
-                    "orderable": false,
-                }],
-                "order": [[1, "asc"]]
-            });
-        });
 
         //validation
         function checkErrors(obj) {

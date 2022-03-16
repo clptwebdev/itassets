@@ -622,4 +622,17 @@ class ComponentController extends Controller {
         return to_route("components.bin");
     }
 
+    public function changeStatus(Component $component, Request $request)
+    {
+        if(auth()->user()->cant('update', $component))
+        {
+            return ErrorController::forbidden(to_route('components.show', $component->id), 'Unauthorised to Change Statuses Component.');
+        }
+        $component->status_id = $request->status;
+        $component->save();
+        session()->flash('success_message', $component->name . ' has had its status changed successfully');
+
+        return to_route('components.show', $component->id);
+    }
+
 }

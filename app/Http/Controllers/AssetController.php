@@ -1160,7 +1160,7 @@ class AssetController extends Controller {
     {
         if(auth()->user()->cant('update', $asset))
         {
-            return ErrorController::forbidden(to_route('accessories.show', $asset->id), 'Unauthorised to Change Statuses Asset.');
+            return ErrorController::forbidden(to_route('assets.show', $asset->id), 'Unauthorised to Change Statuses Asset.');
         }
         $asset->status_id = $request->status;
         $asset->save();

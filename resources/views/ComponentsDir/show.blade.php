@@ -2,9 +2,6 @@
 
 @section('title', 'View Component')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
 
 @section('content')
 
@@ -18,7 +15,7 @@
         @can('update', $data)
             <x-buttons.edit :route="route('components.edit',$data->id)"/>
         @endcan
-        @can('delete', \App\Models\Component::class)
+        @can('delete', $data)
             <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$data->id"
                            :action="route('components.destroy', $data->id)">
                 <x-buttons.delete formAttributes="data-id='{{$data->id}}'"/>
@@ -72,27 +69,8 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/comment.js')}}"></script>
-    <script>
-        $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#location-id').val();
-            $(form).submit();
-        });
-        $(document).ready(function () {
-            $('#comments').DataTable({
-                "autoWidth": false,
-                "pageLength": 10,
-                "searching": false,
-                "bLengthChange": false,
-                "columnDefs": [{
-                    "targets": [1],
-                    "orderable": false
-                }],
-                "order": [[0, "desc"]],
-            });
-        });
-    </script>
+
 
 @endsection
