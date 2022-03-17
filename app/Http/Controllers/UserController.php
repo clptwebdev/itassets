@@ -111,7 +111,6 @@ class UserController extends Controller {
         $validated = $request->validate([
             'name' => 'required|max:255',
             'telephone' => 'regex:/(01)[0-9]{9}/|nullable',
-            'email' => ['required', \Illuminate\Validation\Rule::unique('users')->ignore($user->id), 'email:rfc,dns,spoof,filter'],
             'role_id' => 'required',
         ]);
 
