@@ -135,7 +135,7 @@ class AssetDispose implements ToModel, WithValidation, WithHeadingRow, WithBatch
             /* If the User is a Super Admin, we can skip the approval */
             /* Moves the Asset to the Archive [SC] */
 
-            if(auth()->user()->can('dispose', Asset::class))
+            if(auth()->user()->can('dispose', $asset))
             {
                 /* Get the Depreciaiton Years from the Asset Model or 0 */
                 /* This is to calculate the Value of the Asset at the time of Disposal [SC] */

@@ -54,7 +54,6 @@ class AssetController extends Controller {
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('assets')->get();
         $categories = Category::with('assets')->select('id', 'name')->get();
         $statuses = Status::select('id', 'name', 'deployable')->withCount('assets')->get();
-//            $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('assets')->get();
 
         $this->clearFilter();
         session(['assets_filter' => false]);

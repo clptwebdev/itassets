@@ -138,10 +138,13 @@ class RequestsController extends Controller {
         $model = $m::find($requests->model_id);
         if(auth()->user()->can('request', $model))
         {
-
             if($request->model_type == 'asset' && $model->model()->exists())
             {
-                $years = $model->model->depreciation->years;
+                if($model->model->depreciation->exists()){
+                    $years = $model->model->depreciation->years;
+                }else{
+                    $years = 0;
+                }
             } else if($model->depreciation_id != 0)
             {
                 $years = $model->depreciation->years;
@@ -213,7 +216,7 @@ class RequestsController extends Controller {
         } else
         {
             //Notify by email
-            $admins = User::superAdmin();
+            $admins = User::itManager();
             foreach($admins as $admin)
             {
                 Mail::to($admin->email)->send(new \App\Mail\DisposeRequest(auth()->user(), $admin, $requests->model_type, $requests->model_id, \Carbon\Carbon::parse($requests->date)->format('d-m-Y'), $requests->notes));
@@ -348,7 +351,7 @@ class RequestsController extends Controller {
             }
             $admin = auth()->user();
             $title = ucfirst($requests->type) . " Request Approved";
-            $message = "Your request to {$requests->type} the {$requests->model_type} was denied by {$admin->name}";
+            $message = "Your request to {$requests->type} the {$requests->model_type} was approved by {$admin->name}";
             Mail::to($user->email)->send(new \App\Mail\ApproveRequest($user, 'Approved', $requests->type, $title, $message));
 
             return back()->with('success_message', "The {$requests->type} Request has been approved and an email has been sent to {$user->name} about the decision");

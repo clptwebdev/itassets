@@ -171,4 +171,13 @@ class User extends Authenticatable {
         }
     }
 
+    public static function itManager()
+    {
+        $role = Role::whereName('it_manager')->first();
+        if($role)
+        {
+            return User::whereRoleId($role->id)->get();
+        }
+    }
+
 }
