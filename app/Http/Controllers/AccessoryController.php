@@ -276,15 +276,10 @@ class AccessoryController extends Controller {
         if($request->ajax())
         {
             $validation = Validator::make($request->all(), [
-                "asset_tag" => ['sometimes', 'nullable', new checkAssetTag('location_id.*')],
+                "asset_tag" => ['sometimes', 'nullable'],
                 'purchased_cost.*' => 'required',
                 'purchased_date.*' => 'date',
-                'location_id.*' =>  [
-                    'string',
-                    'required',
-                    new permittedLocation,
-                    new findLocation,
-                ],            
+                'location_id.*' =>  'required',            
             ]);
 
             if($validation->fails())

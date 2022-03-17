@@ -71,7 +71,7 @@ class accessoryImport  implements ToModel, WithValidation, WithHeadingRow, WithB
                 new permittedLocation,
                 new findLocation,
             ],
-            "asset_tag" => ['sometimes', 'nullable', new checkAssetTag('location_id')],
+            "asset_tag" => ['sometimes', 'nullable', new checkAssetTag(':location_id')],
             'room' => ['nullable'],
             'manufacturer_id' => [],
 
