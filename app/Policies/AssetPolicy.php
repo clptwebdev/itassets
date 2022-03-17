@@ -14,10 +14,12 @@ class AssetPolicy {
     use HandlesAuthorization;
 
     private $model;
+    private $request;
 
     public function __construct()
     {
         $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Asset')->first();
+        $this->request = auth()->user()->role->permissions->where('model', ' = ', 'Requests')->first();
     }
 
     public function viewAll(User $user)
@@ -78,6 +80,10 @@ class AssetPolicy {
     public function transfer(User $user, Asset $asset)
     {
         return $this->model->transfer && in_array($asset->location_id, $user->locationsArray());
+    }
+
+    public function bypass_transfer(User $user){
+        return $this->request->request;
     }
 
     public function dispose(User $user, Asset $asset)

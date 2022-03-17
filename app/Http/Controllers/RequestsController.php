@@ -64,7 +64,7 @@ class RequestsController extends Controller {
         ]);
         $m = "\\App\\Models\\" . ucfirst($requests->model_type);
         $model = $m::find($requests->model_id);
-        if(auth()->user()->can('request', $model))
+        if(auth()->user()->can('bypass_transfer', $model))
         {
             $model->update(['location_id' => $requests->location_to]);
             if($request->asset_tag)
@@ -73,10 +73,18 @@ class RequestsController extends Controller {
             }
             if($requests->model_type == 'asset' && $model->model()->exists())
             {
-                $years = $model->model->depreciation->years;
+                if($model->model->depreciation()->exists()){
+                    $years = $model->model->depreciation->years;
+                }else{
+                    $years = 0;
+                }
             } else if($model->depreciation_id != 0)
             {
-                $years = $model->depreciation->years;
+                if($model->depreciation()->exists()){
+                    $years = $model->depreciation->years;
+                }else{
+                    $years = 0;
+                }
             } else
             {
                 $years = 0;
@@ -136,18 +144,22 @@ class RequestsController extends Controller {
         ]);
         $m = "\\App\\Models\\" . ucfirst($requests->model_type);
         $model = $m::find($requests->model_id);
-        if(auth()->user()->can('request', $model))
+        if(auth()->user()->can('bypass_transfer', $model))
         {
             if($request->model_type == 'asset' && $model->model()->exists())
             {
-                if($model->model->depreciation->exists()){
+                if($model->model->depreciation()->exists()){
                     $years = $model->model->depreciation->years;
                 }else{
                     $years = 0;
                 }
             } else if($model->depreciation_id != 0)
             {
-                $years = $model->depreciation->years;
+                if($model->depreciation()->exists()){
+                    $years = $model->depreciation->years;
+                }else{
+                    $years = 0;
+                }
             } else
             {
                 $years = 0;
@@ -259,10 +271,18 @@ class RequestsController extends Controller {
 
                     if($requests->model_type == 'asset' && $model->model()->exists())
                     {
-                        $years = $model->model->depreciation->years;
+                        if($model->model->depreciation->exists()){
+                            $years = $model->model->depreciation->years;
+                        }else{
+                            $years = 0;
+                        }
                     } else if($model->depreciation_id != 0)
                     {
-                        $years = $model->depreciation->years;
+                        if($model->depreciation()->exists()){
+                            $years = $model->depreciation->years;
+                        }else{
+                            $years = 0;
+                        }
                     } else
                     {
                         $years = 0;
