@@ -24,6 +24,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Validators\Failure;
+use App\Rules\checkAssetTag;
 
 class accessoryImport  implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
 
@@ -47,10 +48,7 @@ class accessoryImport  implements ToModel, WithValidation, WithHeadingRow, WithB
                 'sometimes',
                 'nullable',
             ],
-            'asset_tag' => [
-                'nullable',
-                'sometimes'
-            ],
+            
             'purchased_cost' => [
                 'required',
             ],
@@ -73,6 +71,7 @@ class accessoryImport  implements ToModel, WithValidation, WithHeadingRow, WithB
                 new permittedLocation,
                 new findLocation,
             ],
+            "asset_tag" => ['sometimes', 'nullable', new checkAssetTag('location_id')],
             'room' => ['nullable'],
             'manufacturer_id' => [],
 
@@ -157,7 +156,7 @@ class accessoryImport  implements ToModel, WithValidation, WithHeadingRow, WithB
 
         //check for already existing Manufacturers upon import if else create
         $man_email = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
-        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->orWhere(['email' => $supplier_email])->first())
+        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->orWhere(['supportEmail' => $supplier_email])->first())
         {
 
         } else

@@ -19,7 +19,6 @@
                 </div>
 
                 <div class="modal-footer">
-                   <x-handlers.alerts/>
                     <a href="https://clpt.sharepoint.com/:x:/s/documents/EcF-3FZ4n4NBpiC64ndDTK8BZ4RKoqdtypJPOxL5uIWFxw"
                        target="_blank" class="btn btn-blue">
                         Download Import Template
