@@ -300,6 +300,7 @@ class AccessoryController extends Controller {
                     }
                     $accessory->name = $name;
 
+                    $accessory->asset_tag = $tag;
                     $accessory->model = $request->model[$i];
                     //Serial No Cannot be ""
                     //If the imported Serial Number is empty assign it to "0"

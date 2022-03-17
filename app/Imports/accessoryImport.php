@@ -98,7 +98,7 @@ class accessoryImport  implements ToModel, WithValidation, WithHeadingRow, WithB
             $name = $row['name'];
         }else{
             $row['asset_tag'] != '' ? $tag = $row['asset_tag'] : $tag = '1234'; 
-            $name = strtoupper(substr($asset->location->name ?? 'UN', 0, 1))."-{$tag}";
+            $name = strtoupper(substr($location->name ?? 'UN', 0, 2))."-{$tag}";
         }
         $accessory->name = $name;
 

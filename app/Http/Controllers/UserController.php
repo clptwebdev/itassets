@@ -112,6 +112,7 @@ class UserController extends Controller {
             'name' => 'required|max:255',
             'telephone' => 'regex:/(01)[0-9]{9}/|nullable',
             'email' => ['required', \Illuminate\Validation\Rule::unique('users')->ignore($user->id), 'email:rfc,dns,spoof,filter'],
+            'role_id' => 'required',
         ]);
 
         $user->fill($request->only('name', 'email', 'location_id', 'role_id', 'telephone'))->save();
