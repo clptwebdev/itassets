@@ -131,6 +131,8 @@
                                             class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">miscellanea Options:</div>
+                                            <a href="{{ route('miscellaneous.show', $miscellanea->id) }}"
+                                               class="dropdown-item">View</a>
                                             @can('delete', $miscellanea)
                                                 <a href="{{ route('miscellaneous.restore', $miscellanea->id) }}"
                                                    class="dropdown-item">Restore</a>

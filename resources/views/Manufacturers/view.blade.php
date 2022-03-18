@@ -128,7 +128,7 @@
 @endsection
 
 @section('modals')
-    <x-modals.delete> Component</x-modals.delete>
+    <x-modals.delete> Manufacturer</x-modals.delete>
     <x-modals.import route="/importmanufacturer"/>
 @endsection
 

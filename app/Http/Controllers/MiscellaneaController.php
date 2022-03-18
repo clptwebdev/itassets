@@ -614,7 +614,7 @@ class MiscellaneaController extends Controller {
 
         }
 
-        $miscellaneous = auth()->user()->location_miscellaneous()->onlyTrashed();
+        $miscellaneous = auth()->user()->location_miscellaneous()->onlyTrashed()->paginate();
 
         return view('miscellanea.bin', compact('miscellaneous'));
     }
