@@ -43,8 +43,8 @@ class AccessoryController extends Controller {
             ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
             ->paginate(intval(session('limit')) ?? 25, ['accessories.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
             ->fragment('table');
-            
-            $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('accessories')->get();
+
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('accessories')->get();
 
         $this->clearFilter();
         $filter = 0;
@@ -439,7 +439,6 @@ class AccessoryController extends Controller {
 
         }
         $extensions = array("csv");
-
         $result = array($request->file('csv')->getClientOriginalExtension());
 
         if(in_array($result[0], $extensions))
@@ -452,6 +451,7 @@ class AccessoryController extends Controller {
             $errors = [];
             $values = [];
             $results = $import->failures();
+
             $importErrors = [];
             foreach($results->all() as $result)
             {
