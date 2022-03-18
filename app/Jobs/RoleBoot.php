@@ -55,7 +55,7 @@ class RoleBoot implements ShouldQueue {
         ]);
         $temp = Role::updateOrCreate([
             'id' => 7,
-            'name' => 'Temporary',
+            'name' => 'temporary',
             'significance' => '0',
         ]);
         // global team start
