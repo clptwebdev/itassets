@@ -2,9 +2,6 @@
 
 @section('title', 'View Logs')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
 
 @section('content')
 
@@ -139,17 +136,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                    <div class="d-flex justify-content-between align-content-center">
-                        <div>
-                            @if($logs->hasPages())
-                                {{ $logs->links()}}
-                            @endif
-                        </div>
-                        <div class="text-right">
-                            Showing Assets {{ $logs->firstItem() }} to {{ $logs->lastItem() }} ({{ $logs->total() }}
-                            Total Results)
-                        </div>
-                    </div>
+                    <x-paginate :model="$logs"/>
                 </div>
             </div>
         </div>
@@ -166,24 +153,5 @@
 
 @endsection
 
-@section('modals')
 
-@endsection
 
-@section('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('#logsTable').DataTable({
-                "columnDefs": [{
-                    "targets": [0],
-                    "orderable": false,
-                }],
-                "order": [[4, "asc"]]
-            });
-        });
-    </script>
-@endsection

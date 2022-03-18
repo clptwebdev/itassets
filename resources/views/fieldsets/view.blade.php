@@ -81,8 +81,7 @@
                                             @endcan
                                             @can('delete', $fieldset)
                                                 <a class="dropdown-item deleteBtn" href="#"
-                                                   data-route="{{ route('fieldsets.destroy', $fieldset->id)}}"
-                                                ">Delete</a>
+                                                   data-route="{{ route('fieldsets.destroy', $fieldset->id)}}">Delete</a>
                                             @endcan
                                         </div>
                                     </div>
