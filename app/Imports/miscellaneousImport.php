@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Supplier;
+use Maatwebsite\Excel\Cell;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -14,12 +15,15 @@ use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\DefaultValueBinder;
 use Maatwebsite\Excel\Validators\Failure;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
-class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
+class miscellaneousImport extends DefaultValueBinder implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError, WithCustomValueBinder {
 
     /**
      * @param array     $row
@@ -30,6 +34,15 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
 
     public function onError(\Throwable $error)
     {
+
+    }
+
+    public function bindValue(Cell|\PhpOffice\PhpSpreadsheet\Cell\Cell $cell, $value)
+    {
+
+        $cell->setValueExplicit($value, DataType::TYPE_FORMULA);
+
+        return true;
 
     }
 
@@ -107,7 +120,14 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
         $miscellanea->status_id = $status->id ?? 0;
 
         $miscellanea->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
-        $miscellanea->purchased_cost = $row["purchased_cost"];
+        if($this->isBinary($row["purchased_cost"]))
+        {
+            $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
+            $miscellanea->purchased_cost = floatval($binary);
+        } else
+        {
+            $miscellanea->purchased_cost = floatval($row["purchased_cost"]);
+        }
 
         //check for already existing Suppliers upon import if else create
         if($supplier = Supplier::where(["name" => $row["supplier_id"]])->first())
@@ -177,7 +197,7 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
                 $miscellanea->location_id = 0;
         }
         $miscellanea->location_id = $location->id ?? 0;
-        $miscellanea->photo_id =  0;
+        $miscellanea->photo_id = 0;
         $miscellanea->notes = $row["notes"];
         $miscellanea->save();
     }
@@ -190,6 +210,11 @@ class miscellaneousImport implements ToModel, WithValidation, WithHeadingRow, Wi
     public function uniqueBy()
     {
         return 'name';
+    }
+
+    function isBinary($str)
+    {
+        return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
     }
 
 }

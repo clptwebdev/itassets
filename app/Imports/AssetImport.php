@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 use App\Rules\permittedLocation;
 use App\Rules\findLocation;
 use App\Rules\checkAssetTag;
+use Maatwebsite\Excel\Cell;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -22,15 +23,18 @@ use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\DefaultValueBinder;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Validators\Failure;
 use phpDocumentor\Reflection\Types\False_;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use function PHPUnit\Framework\isEmpty;
 
-class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
+class AssetImport extends DefaultValueBinder implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError, WithCustomValueBinder {
 
     /**
      * @param array     $row
@@ -41,6 +45,15 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
     public function onError(\Throwable $error)
     {
+
+    }
+
+    public function bindValue(Cell|\PhpOffice\PhpSpreadsheet\Cell\Cell $cell, $value)
+    {
+
+        $cell->setValueExplicit($value, DataType::TYPE_FORMULA);
+
+        return true;
 
     }
 
@@ -157,7 +170,14 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
         $asset->status_id = $status->id ?? 0;
 
         $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
-        $asset->purchased_cost = $row["purchased_cost"];
+        if($this->isBinary($row["purchased_cost"]))
+        {
+            $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
+            $asset->purchased_cost = floatval($binary);
+        } else
+        {
+            $asset->purchased_cost = floatval($row["purchased_cost"]);
+        }
         if(strtolower($row["donated"]) == 'yes')
         {
             $asset->donated = 1;
@@ -263,6 +283,11 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
     public function uniqueBy()
     {
         return 'asset_tag';
+    }
+
+    function isBinary($str)
+    {
+        return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
     }
 
 }

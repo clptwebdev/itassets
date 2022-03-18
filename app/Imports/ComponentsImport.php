@@ -8,6 +8,7 @@ use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
+use Maatwebsite\Excel\Cell;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -15,12 +16,15 @@ use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\DefaultValueBinder;
 use Maatwebsite\Excel\Validators\Failure;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
-class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
+class ComponentsImport extends DefaultValueBinder implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError, WithCustomValueBinder {
 
     /**
      * @param array     $row
@@ -31,6 +35,15 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
     public function onError(\Throwable $error)
     {
+
+    }
+
+    public function bindValue(Cell|\PhpOffice\PhpSpreadsheet\Cell\Cell $cell, $value)
+    {
+
+        $cell->setValueExplicit($value, DataType::TYPE_FORMULA);
+
+        return true;
 
     }
 
@@ -61,11 +74,11 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 'date',
             ],
             'supplier_id' => [
-                
+
             ],
             'location_id' => [
                 'string',
-                'required'
+                'required',
             ],
             'manufacturer_id' => [
 
@@ -90,21 +103,29 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         } else
         {
-            if(isset($row["status_id"])){
+            if(isset($row["status_id"]))
+            {
                 $status = new Status;
 
                 $status->name = $row["status_id"];
                 $status->deployable = 1;
 
                 $status->save();
-            }else
-                $component->status_id =0;
+            } else
+                $component->status_id = 0;
         }
 
         $component->status_id = $status->id ?? 0;
 
         $component->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
-        $component->purchased_cost = $row["purchased_cost"];
+        if($this->isBinary($row["purchased_cost"]))
+        {
+            $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
+            $component->purchased_cost = floatval($binary);
+        } else
+        {
+            $component->purchased_cost = floatval($row["purchased_cost"]);
+        }
 
         //check for already existing Suppliers upon import if else create
         if($supplier = Supplier::where(["name" => $row["supplier_id"]])->first())
@@ -112,7 +133,8 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         } else
         {
-            if(isset($row["supplier_id"])){
+            if(isset($row["supplier_id"]))
+            {
                 $supplier = new Supplier;
 
                 $supplier->name = $row["supplier_id"];
@@ -121,7 +143,7 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 $supplier->telephone = "Unknown";
                 $supplier->save();
 
-            }else
+            } else
                 $component->supplier_id = 0;
         }
 
@@ -133,15 +155,16 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         } else
         {
-            if(isset($row["manufacturer_id"])){
-            $manufacturer = new Manufacturer;
+            if(isset($row["manufacturer_id"]))
+            {
+                $manufacturer = new Manufacturer;
 
-            $manufacturer->name = $row["manufacturer_id"];
-            $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
-            $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
-            $manufacturer->supportPhone = "Unknown";
-            $manufacturer->save();
-        }else
+                $manufacturer->name = $row["manufacturer_id"];
+                $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
+                $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
+                $manufacturer->supportPhone = "Unknown";
+                $manufacturer->save();
+            } else
                 $component->supplier_id = 0;
 
         }
@@ -168,11 +191,11 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 $location->county = "West Midlands";
                 $location->icon = "#222222";
                 $location->save();
-            }else
+            } else
                 $component->location_id = 0;
         }
         $component->location_id = $location->id ?? 0;
-        $component->photo_id =  0;
+        $component->photo_id = 0;
         $component->notes = $row["notes"];
         $component->save();
     }
@@ -185,6 +208,11 @@ class ComponentsImport implements ToModel, WithValidation, WithHeadingRow, WithB
     public function uniqueBy()
     {
         return 'name';
+    }
+
+    function isBinary($str)
+    {
+        return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
     }
 
 }
