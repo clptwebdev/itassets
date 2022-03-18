@@ -29,7 +29,7 @@ class ConsumableController extends Controller {
             "comment" => "nullable",
         ]);
 
-        $consumable = Consumable::find($request->consumable_id);
+        $consumable = Consumable::whereId($request->consumables_id)->first();
         $consumable->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
 
         return to_route('consumables.show', $consumable->id);
@@ -42,8 +42,12 @@ class ConsumableController extends Controller {
             return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to View Consumables.');
 
         }
-
-        $consumables = auth()->user()->location_consumables;
+        $consumables = Consumable::LocationFilter(auth()->user()->locations->pluck('id'))->leftJoin('locations', 'locations.id', '=', 'consumables.location_id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'consumables.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'consumables.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->paginate(intval(session('limit')) ?? 25, ['consumables.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+            ->fragment('table');
 
         return view('consumable.view', compact('consumables'));
     }
@@ -428,7 +432,8 @@ class ConsumableController extends Controller {
             return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Recycle Consumables.');
 
         }
-        $consumables = auth()->user()->location_consumables()->onlyTrashed();
+
+        $consumables = auth()->user()->location_consumables()->onlyTrashed()->paginate();
 
         return view('consumable.bin', compact('consumables'));
     }
