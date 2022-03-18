@@ -24,7 +24,8 @@ class LocationPolicy {
 
     public function view(User $user, location $location)
     {
-        return $this->model->view && in_array($location->location_id, $user->locationsArray());
+
+        return $this->model->view && in_array($location->id, $user->locationsArray());
     }
 
     public function create(User $user)
@@ -34,7 +35,7 @@ class LocationPolicy {
 
     public function update(User $user, location $location)
     {
-        return $this->model->update && in_array($location->location_id, $user->locationsArray());
+        return $this->model->update && in_array($location->id, $user->locationsArray());
     }
 
     public function delete(User $user, location $location)

@@ -2,10 +2,6 @@
 
 @section('title', 'View Help Files')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-
-@endsection
 
 @section('content')
 
@@ -17,13 +13,7 @@
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <div id="accordion">
@@ -33,15 +23,13 @@
                             assistance please email <strong>apollo@clpt.co.uk</strong></p>
             {{--      heading one      --}}
             <div id="headingOne" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseOne"
+                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseOneExports"
                         aria-expanded="false" aria-controls="collapseOne">
-                    <a class="slide" href="#collapseOneExports">
-                        Exports
-                    </a>
+                    Exports
                 </button>
 
             </div>
-            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div id="collapseOneExports" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">How do I Export the data i need?</h2>
 
@@ -68,15 +56,13 @@
             {{--      heading one end      --}}
             {{--     heading two       --}}
             <div id="headingTwoo" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseTwoo"
+                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseTwooPasswords"
                         aria-expanded="false" aria-controls="collapseTwoo">
-                    <a class="slide" href="#collapseTwooPasswords">
-                        Passwords
-                    </a>
+                    Passwords
                 </button>
 
             </div>
-            <div id="collapseTwoo" class="collapse" aria-labelledby="headingTwoo" data-parent="#accordion">
+            <div id="collapseTwooPasswords" class="collapse" aria-labelledby="headingTwoo" data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">I've Lost my Password What can i do?</h2>
                     <p class="text-gray-700">If You have Forgot your password you can click <a
@@ -102,12 +88,12 @@
             {{--     heading two end       --}}
             {{--     heading three       --}}
             <div id="headingThree" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseThree"
+                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseThreeAssets"
                         aria-expanded="false" aria-controls="collapseThree">
-                    <a class="slide" href="#collapseThreeAssets">Assets</a>
+                    Assets
                 </button>
             </div>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+            <div id="collapseThreeAssets" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Devices?</h2>
                     <p class="text-gray-700">Assets can be located within the left hand side menu Labeled 'Assets' Can't
@@ -230,15 +216,15 @@
             {{--     heading three end       --}}
             {{--     headingFour       --}}
             <div id="headingFour" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseFour"
+                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseFourStatus"
                         aria-expanded="false" aria-controls="collapseFour">
-                    <a class="slide" href="#collapseFourStatus">
-                        Status
-                    </a>
+
+                    Status
+
                 </button>
 
             </div>
-            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+            <div id="collapseFourStatus" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
                 <div class="card-body">
                     <h4 class="text-info mt-3">What are status'?</h4>
                     <p class="text-gray-700">Creating and assigning assets allow the User to know weather or not a item
@@ -328,15 +314,13 @@
             {{--     headingFive end       --}}
             {{--     headingSix       --}}
             <div id="headingSix" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseSix"
+                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseSixRecycleBin"
                         aria-expanded="false" aria-controls="collapseSix">
-                    <a class="slide" href="#collapseSixRecycleBin">
-                        Recycle Bin
-                    </a>
+                    Recycle Bin
                 </button>
 
             </div>
-            <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
+            <div id="collapseSixRecycleBin" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
                 <div class="card-body">
                     <h4 class="text-info mt-3">What are recycle Bins?</h4>
                     <p class="text-gray-700">Recycle bins allow you to carefully delete certain items in the database
@@ -360,15 +344,13 @@
             {{--     headingSix end       --}}
             {{--     headingSeven       --}}
             <div id="headingSeven" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseSeven"
+                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseSevenImport"
                         aria-expanded="false" aria-controls="collapseSeven">
-                    <a class="slide" href="#collapseSevenImport">
-                        Import
-                    </a>
+                    Import
                 </button>
 
             </div>
-            <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion">
+            <div id="collapseSevenImport" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion">
                 <div class="card-body">
                     <h4 class="text-info mt-3">How to import:</h4>
                     <p class="text-info">A Few quick Notes before we begin ,</p>
@@ -422,14 +404,12 @@
             {{--     headingSeven end       --}}
             {{--     headingEight       --}}
             <div id="headingEight" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseEight"
-                        aria-expanded="false" aria-controls="collapseEight">
-                    <a class="slide" href="#collapseEightAccessory">
-                        Accessory
-                    </a>
+                <button class="btn btn-link collapsed slide" data-toggle="collapse"
+                        data-target="#collapseEightAccessory" aria-expanded="false" aria-controls="collapseEight">
+                    Accessory
                 </button>
             </div>
-            <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordion">
+            <div id="collapseEightAccessory" class="collapse" aria-labelledby="headingEight" data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Devices?</h2>
                     <p class="text-gray-700">Accessories can be located within the left hand side menu Labeled
@@ -555,14 +535,12 @@
             {{--     headingEight end       --}}
             {{--     headingNine       --}}
             <div id="headingNine" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseNine"
+                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseNineComponent"
                         aria-expanded="false" aria-controls="collapseNine">
-                    <a class="slide" href="#collapseNineComponent">
-                        Component
-                    </a>
+                    Component
                 </button>
             </div>
-            <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordion">
+            <div id="collapseNineComponent" class="collapse" aria-labelledby="headingNine" data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Devices?</h2>
                     <p class="text-gray-700">Components can be located within the left hand side menu Labeled
@@ -688,14 +666,12 @@
             {{--     headingNine end       --}}
             {{--     headingTen       --}}
             <div id="headingTen" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseTen"
-                        aria-expanded="false" aria-controls="collapseTen">
-                    <a class="slide" href="#collapseTenMiscellaneous">
-                        Miscellaneous
-                    </a>
+                <button class="btn btn-link collapsed slide" data-toggle="collapse"
+                        data-target="#collapseTenMiscellaneous" aria-expanded="false" aria-controls="collapseTen">
+                    Miscellaneous
                 </button>
             </div>
-            <div id="collapseTen" class="collapse" aria-labelledby="headingTen" data-parent="#accordion">
+            <div id="collapseTenMiscellaneous" class="collapse" aria-labelledby="headingTen" data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Devices?</h2>
                     <p class="text-gray-700">Miscellaneous can be located within the left hand side menu Labeled
@@ -817,14 +793,13 @@
             {{--     headingTen end       --}}
             {{--     headingTwenty       --}}
             <div id="headingTwenty" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseTwenty"
-                        aria-expanded="false" aria-controls="collapseTwenty">
-                    <a class="slide" href="#collapseTwentyConsumables">
-                        Consumables
-                    </a>
+                <button class="btn btn-link collapsed slide" data-toggle="collapse"
+                        data-target="#collapseTwentyConsumables" aria-expanded="false" aria-controls="collapseTwenty">
+                    Consumables
                 </button>
             </div>
-            <div id="collapseTwenty" class="collapse" aria-labelledby="headingTwenty" data-parent="#accordion">
+            <div id="collapseTwentyConsumables" class="collapse" aria-labelledby="headingTwenty"
+                 data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Devices?</h2>
                     <p class="text-gray-700">Consumables can be located within the left hand side menu Labeled
@@ -950,14 +925,12 @@
             {{--     headingTwenty end       --}}
             {{--     headingEleven       --}}
             <div id="headingEleven" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseEleven"
+                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseElevenUsers"
                         aria-expanded="false" aria-controls="collapseEleven">
-                    <a class="slide" href="#collapseElevenUsers">
-                        Users
-                    </a>
+                    Users
                 </button>
             </div>
-            <div id="collapseEleven" class="collapse" aria-labelledby="headingEleven" data-parent="#accordion">
+            <div id="collapseElevenUsers" class="collapse" aria-labelledby="headingEleven" data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i Edit my User Details?</h2>
                     <p class="text-gray-700">User Details can be changed from the <strong
@@ -999,14 +972,13 @@
             {{--     headingEleven end       --}}
             {{--     headingTwelve       --}}
             <div id="headingTwelve" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseTwelve"
-                        aria-expanded="false" aria-controls="collapseTwelve">
-                    <a class="slide" href="#collapseTwelvePermissions">
-                        Permissions
-                    </a>
+                <button class="btn btn-link collapsed slide" data-toggle="collapse"
+                        data-target="#collapseTwelvePermissions" aria-expanded="false" aria-controls="collapseTwelve">
+                    Permissions
                 </button>
             </div>
-            <div id="collapseTwelve" class="collapse" aria-labelledby="headingTwelve" data-parent="#accordion">
+            <div id="collapseTwelvePermissions" class="collapse" aria-labelledby="headingTwelve"
+                 data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">I Can't see all the schools in my organisation what's wrong?</h2>
                     <ul>
@@ -1045,14 +1017,14 @@
             {{--     headingTwelve end       --}}
             {{--     headingThirteen       --}}
             <div id="headingThirteen" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseThirteen"
-                        aria-expanded="false" aria-controls="collapseThirteen">
-                    <a class="slide" href="#collapseThirteenManufacturers">
-                        Manufacturers
-                    </a>
+                <button class="btn btn-link collapsed slide" data-toggle="collapse"
+                        data-target="#collapseThirteenManufacturers" aria-expanded="false"
+                        aria-controls="collapseThirteen">
+                    Manufacturers
                 </button>
             </div>
-            <div id="collapseThirteen" class="collapse" aria-labelledby="headingThirteen" data-parent="#accordion">
+            <div id="collapseThirteenManufacturers" class="collapse" aria-labelledby="headingThirteen"
+                 data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Manufacturers?</h2>
                     <p class="text-gray-700">Manufacturers can be located within the left hand side menu Labeled
@@ -1165,14 +1137,15 @@
             {{--     headingThirteen end       --}}
             {{--     headingFourteen       --}}
             <div id="headingFourteen" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseFourteen"
-                        aria-expanded="false" aria-controls="collapseFourteen">
-                    <a class="slide" href="#collapseFourteenSuppliers">
-                        Suppliers
-                    </a>
+                <button class="btn btn-link collapsed slide" data-toggle="collapse"
+                        data-target="#collapseFourteenSuppliers" aria-expanded="false" aria-controls="collapseFourteen">
+
+                    Suppliers
+
                 </button>
             </div>
-            <div id="collapseFourteen" class="collapse" aria-labelledby="headingFourteen" data-parent="#accordion">
+            <div id="collapseFourteenSuppliers" class="collapse" aria-labelledby="headingFourteen"
+                 data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Suppliers?</h2>
                     <p class="text-gray-700">Suppliers can be located within the left hand side menu Labeled 'Suppliers'
@@ -1250,14 +1223,14 @@
             {{--     headingFourteen end       --}}
             {{--     headingFithteen       --}}
             <div id="headingFithteen" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseFithteen"
-                        aria-expanded="false" aria-controls="collapseFithteen">
-                    <a class="slide" href="#collapseFithteenAssetModels">
-                        Asset Models
-                    </a>
+                <button class="btn btn-link collapsed slide" data-toggle="collapse"
+                        data-target="#collapseFithteenAssetModels" aria-expanded="false"
+                        aria-controls="collapseFithteen">
+                    Asset Models
                 </button>
             </div>
-            <div id="collapseFithteen" class="collapse" aria-labelledby="headingFithteen" data-parent="#accordion">
+            <div id="collapseFithteenAssetModels" class="collapse" aria-labelledby="headingFithteen"
+                 data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Models of devices?</h2>
                     <p class="text-gray-700">Consumables can be located within the left hand side menu Labeled
@@ -1325,14 +1298,14 @@
             {{--     headingFithteen end       --}}
             {{--     headingSixteen       --}}
             <div id="headingSixteen" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseSixteen"
-                        aria-expanded="false" aria-controls="collapseSixteen">
-                    <a class="slide" href="#collapseSixteenDepreciation">
-                        Depreciation
-                    </a>
+                <button class="btn btn-link collapsed slide" data-toggle="collapse"
+                        data-target="#collapseSixteenDepreciation" aria-expanded="false"
+                        aria-controls="collapseSixteen">
+                    Depreciation
                 </button>
             </div>
-            <div id="collapseSixteen" class="collapse" aria-labelledby="headingSixteen" data-parent="#accordion">
+            <div id="collapseSixteenDepreciation" class="collapse" aria-labelledby="headingSixteen"
+                 data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Depreciation Models?</h2>
                     <p class="text-gray-700">Depreciation Models can be located within the left hand side menu Labeled
@@ -1354,14 +1327,14 @@
             {{--     headingSixteen end       --}}
             {{--     headingSeventeen       --}}
             <div id="headingSeventeen" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseSeventeen"
-                        aria-expanded="false" aria-controls="collapseSeventeen">
-                    <a class="slide" href="#collapseSeventeenCategories">
-                        Categories
-                    </a>
+                <button class="btn btn-link collapsed slide" data-toggle="collapse"
+                        data-target="#collapseSeventeenCategories" aria-expanded="false"
+                        aria-controls="collapseSeventeen">
+                    Categories
                 </button>
             </div>
-            <div id="collapseSeventeen" class="collapse" aria-labelledby="headingSeventeen" data-parent="#accordion">
+            <div id="collapseSeventeenCategories" class="collapse" aria-labelledby="headingSeventeen"
+                 data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Categories?</h2>
                     <p class="text-gray-700">Categories can be located within the left hand side menu Labeled
@@ -1383,14 +1356,13 @@
             {{--     headingSeventeen end       --}}
             {{--     headingEighteen       --}}
             <div id="headingEighteen" class="slide">
-                <button class="btn btn-link collapsed slide" data-toggle="collapse" data-target="#collapseEighteen"
-                        aria-expanded="false" aria-controls="collapseEighteen">
-                    <a class="slide" href="#collapseEighteenFieldsets">
-                        Fieldsets
-                    </a>
+                <button class="btn btn-link collapsed slide" data-toggle="collapse"
+                        data-target="#collapseEighteenFieldsets" aria-expanded="false" aria-controls="collapseEighteen">
+                    Fieldsets
                 </button>
             </div>
-            <div id="collapseEighteen" class="collapse" aria-labelledby="headingEighteen" data-parent="#accordion">
+            <div id="collapseEighteenFieldsets" class="collapse" aria-labelledby="headingEighteen"
+                 data-parent="#accordion">
                 <div class="card-body">
                     <h2 class="text-info">Where can i find All of my Sets of internal components?</h2>
                     <p class="text-gray-700">These are known as Fieldset's.These can be located within the left hand
@@ -1448,21 +1420,11 @@
     </section>
 @endsection
 
-@section('modals')
-
-@endsection
-
 @section('js')
-
     <script>
-        $(function () {
-            $("#accordion").accordion();
-        });
-        var hash = window.location.hash;
-        var anchor = $('a[href$="' + hash + '"]');
-        if (anchor.length > 0) {
-            anchor.click();
+        if (location.hash !== null && location.hash !== "") {
+            console.log(document.querySelector(location.hash))
+            document.querySelector(location.hash).classList.add('show');
         }
     </script>
-
 @endsection

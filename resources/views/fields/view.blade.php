@@ -92,6 +92,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$fields"/>
                 </div>
             </div>
         </div>
@@ -101,57 +102,11 @@
 @endsection
 
 @section('modals')
-    <!-- Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeCategoryModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeCategoryModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeCategoryModalLabel">Are you sure you want to delete this
-                                                                          Category? </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="field-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this field from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. This will also remove all the linked field
-                                               values in the assets </small>
-                </div>
-                <div class="modal-footer">
-                    <form id="deleteForm" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-modals.delete :archive="true"/>
+
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script>
-        $('.deleteBtn').click(function () {
-            $('#deleteForm').attr('action', $(this).data('route'));
-            $('#removeCategoryModal').modal('show');
-        });
+    <script src="{{asset('js/delete.js')}}"></script>
 
-        $('#confirmBtn').click(function () {
-            $('#deleteForm').submit();
-        });
-
-        $(document).ready(function () {
-            $('#fieldsetTable').DataTable({
-                "columnDefs": [{
-                    "targets": [5],
-                    "orderable": false,
-                }],
-                "order": [[0, "asc"]]
-            });
-        });
-    </script>
 @endsection

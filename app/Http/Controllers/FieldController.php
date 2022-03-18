@@ -17,7 +17,7 @@ class FieldController extends Controller {
 
         }
 
-        $fields = Field::all();
+        $fields = Field::paginate();
 
         return view('fields.view', compact('fields'));
     }
@@ -49,7 +49,7 @@ class FieldController extends Controller {
 
     public function edit(Field $field)
     {
-        if(auth()->user()->cant('update', Field::class))
+        if(auth()->user()->cant('update', $field))
         {
             return ErrorController::forbidden(to_route('fields.index'), 'Unauthorised to Update Fields.');
 
@@ -60,7 +60,7 @@ class FieldController extends Controller {
 
     public function update(Request $request, Field $field)
     {
-        if(auth()->user()->cant('update', Field::class))
+        if(auth()->user()->cant('update', $field))
         {
             return ErrorController::forbidden(to_route('fields.index'), 'Unauthorised to Update Fields.');
 
@@ -73,7 +73,7 @@ class FieldController extends Controller {
 
     public function destroy(Field $field)
     {
-        if(auth()->user()->cant('delete', Field::class))
+        if(auth()->user()->cant('delete', $field))
         {
             return ErrorController::forbidden(to_route('fields.index'), 'Unauthorised to Delete Fields.');
         }
