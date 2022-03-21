@@ -21,6 +21,7 @@
         <p class="mb-4">Below are different tiles, one for each manufacturers stored in the management system. Each tile
                         has different manufacturers information that can be created, updated, and deleted.Need Help
                         Click <a href="{{route("documentation.index").'#collapseThirteenManufacturers'}}">here?</a></p>
+
         <x-search/>
         <div class="row">
             @foreach($manufacturers as $manufacturer)
@@ -60,7 +61,8 @@
                             <div class="row no-gutters">
                                 <div class="col mr-2">
                                     <div class="mb-1">
-                                        <p><a href="{{ $manufacturer->supportUrl }}">{{ $manufacturer->supportUrl }}</a>
+                                        <p>
+                                            <a href="{{ $manufacturer->supportUrl }}">{{ $manufacturer->supportUrl }}</a>
                                         </p>
                                         <p>Tel: {{ $manufacturer->supportPhone }}</p>
                                         <p>Email: {{ $manufacturer->supportEmail }}</p>
@@ -82,7 +84,8 @@
                                             <th class="text-center"><span
                                                     class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
                                                     data-toggle="tooltip" data-placement="top" title="Accessories"><i
-                                                        class="fas fa-fw fa-keyboard"></i></span></th>
+                                                        class="fas fa-fw fa-keyboard"></i></span>
+                                            </th>
                                             <th class="text-center"><span
                                                     class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
                                                     data-toggle="tooltip" data-placement="top" title="Components"><i
@@ -90,7 +93,8 @@
                                             <th class="text-center"><span
                                                     class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
                                                     data-toggle="tooltip" data-placement="top" title="Consumables"><i
-                                                        class="fas fa-fw fa-tint"></i></span></th>
+                                                        class="fas fa-fw fa-tint"></i></span>
+                                            </th>
                                             <th class="text-center"><span
                                                     class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
                                                     data-toggle="tooltip" data-placement="top" title="MIscellaneous"><i
@@ -135,4 +139,5 @@
 @section('js')
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/import.js')}}"></script>
+
 @endsection
