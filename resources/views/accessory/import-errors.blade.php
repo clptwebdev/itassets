@@ -8,6 +8,7 @@
 @endsection
 
 @section('content')
+
     {{--    <form action="/components/create/import" method="POST">--}}
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
@@ -27,7 +28,7 @@
             </form>
             <a href="{{ route('accessories.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm te
-                    xt-white-50"></i> Back to Consumables</a>
+                    xt-white-50"></i> Back to Accessories</a>
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
             <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
@@ -115,7 +116,7 @@
                                             <input type="text"
                                                    class="import-control @if(in_array('name', $errors)){{ 'border-bottom border-danger'}}@endif"
                                                    name="name[]" value="{{ $valueArray[$row]['name'] }}"
-                                                   placeholder="This Row is Empty Please Fill!" required
+                                                   placeholder="This Row is Empty Please Fill!"
                                                    data-container='#name{{$line}}' data-placement='top'
                                                @if(array_key_exists('name', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
                                         </span>
@@ -126,7 +127,7 @@
                                                    class="import-control <?php if (in_array('asset_tag', $errors)) {?>border-bottom border-danger<?php }?>"
                                                    name="asset_tag[]" id="asset_tag"
                                                    value="{{ $valueArray[$row]['asset_tag'] }}"
-                                                   placeholder="This Row is Empty Please Fill!" required
+                                                   placeholder="This Row is Empty Please Fill!"
                                                    data-container='#asset_tag{{$line}}' data-placement='top'
                                                @if(array_key_exists('asset_tag', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['asset_tag']}'" !!}@endif>
                                         </span>
@@ -136,8 +137,9 @@
                                             <input type="text"
                                                    class="import-control @if(in_array('model', $errors)){{ 'border-bottom border-danger'}}@endif"
                                                    name="model[]" value="{{ $valueArray[$row]['model'] }}"
-                                                   placeholder="This Row is Empty Please Fill!" required
+                                                   placeholder="This Row is Empty Please Fill!"
                                                    data-container='#model{{$line}}' data-placement='top'
+
                                                @if(array_key_exists('model', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['model']}'" !!}@endif>
                                         </span>
                                 </td>
@@ -239,7 +241,7 @@
                                                class="import-control @if(in_array('serial_no', $errors)){{ 'border-bottom border-danger'}}@endif"
                                                name="serial_no[]" id="serial_no"
                                                placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['serial_no'] }}" required
+                                               value="{{ $valueArray[$row]['serial_no'] }}"
                                                data-container='#serial_no{{$line}}' data-placement='top'
                                                @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['serial_no']}'" !!}@endif
                                         >
@@ -407,6 +409,12 @@
             var inputs = $("input[name='name[]']").get();
             inputs.forEach(element => {
                 data.append('name[]', element.value);
+            });
+
+            //Asset Tags
+            let atInputs = document.querySelectorAll("input[name='asset_tag[]']");
+            atInputs.forEach(tag => {
+                data.append('asset_tag[]', tag.value);
             });
 
             //Names

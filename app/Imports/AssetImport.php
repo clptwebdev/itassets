@@ -187,7 +187,8 @@ class AssetImport extends DefaultValueBinder implements ToModel, WithValidation,
         }
 
         //check for already existing Suppliers upon import if else create
-        if($supplier = Supplier::where(["name" => $row["supplier_id"]])->first())
+        $supplier_email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+        if($supplier = Supplier::where(["name" => $row["supplier_id"]])->orWhere(['email' => $supplier_email])->first())
         {
 
         } else

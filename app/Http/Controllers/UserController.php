@@ -110,8 +110,8 @@ class UserController extends Controller {
 
         $validated = $request->validate([
             'name' => 'required|max:255',
-            'telephone' => 'regex:/(01)[0-9]{9}/|nullable',
             'email' => ['required', \Illuminate\Validation\Rule::unique('users')->ignore($user->id), 'email:rfc,dns,spoof,filter'],
+            'role_id' => 'required',
         ]);
 
         $user->fill($request->only('name', 'email', 'location_id', 'role_id', 'telephone'))->save();
@@ -153,16 +153,15 @@ class UserController extends Controller {
 
     public function permissions(Request $request)
     {
-       
-        if($request->ajax())
-        {
-            $ids = $request->ids;
 
-            return view('users.permissions', compact('ids'));
-        } else
+        if(auth()->user()->cant('viewAll', User::class))
         {
-            return 'Not Ajax';
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Permissions.');
+
         }
+        $ids = explode(',', $request->ids);
+
+        return view('users.permissions', compact('ids'));
     }
 
     public function userPermissions()

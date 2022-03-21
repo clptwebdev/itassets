@@ -34,7 +34,7 @@ class AUCController extends Controller {
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['auc_filter' => false]);
 
-        return view('auc.view', [
+        return view('AUC.view', [
             "aucs" => $aucs,
             "locations" => $locations,
         ]);
@@ -169,8 +169,11 @@ class AUCController extends Controller {
             'location_id' => $auc->location_id
         ]);
         $property->save();
+
+        $auc->forceDelete();
+
         session()->flash('success_message', 'You have moved the Asset-Under-Construction to Properties');
-        return to_route('property.index');
+        return to_route('properties.index');
     }
 
     ////////////////////////////////////////////

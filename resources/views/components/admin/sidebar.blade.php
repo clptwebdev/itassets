@@ -61,11 +61,11 @@
                 <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('assets.index')}}"
                    data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-tablet-alt sidebar-icon"></i>
-                    <span class="sidebar-title">Assets</span>
+                    <span class="sidebar-title">Computer Equipment</span>
                 </a>
                 <div id="collapseTwo" class="collapse p-0" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i
-                            class="far fa-circle text-secondary"></i> All Assets
+                            class="far fa-circle text-secondary"></i> All Equipment
                                                                       ({{(auth()->user()->location_assets()->count()) ?? null}}
                                                                       )</a>
                     @php
@@ -102,7 +102,7 @@
                     @endcan
                     @can('create',\App\Models\Asset::class)
                         <a href="{{ route('assets.create')}}" title="Add New Asset" class="collapse-item sub-link"><i
-                                class="fas fa-plus-circle fa-xs"></i> Add New Asset</a>
+                                class="fas fa-plus-circle fa-xs"></i> Add New Equipment</a>
                     @endcan
                     @can('transferAll',\App\Models\Asset::class)
                         <a href="{{ route('transfers.assets')}}" title="Asset Transfers" class="sub-link collapse-item"><i
@@ -122,7 +122,7 @@
                    href="{{ route('components.index')}}" data-toggle="collapse" data-target="#accessoryDD"
                    aria-expanded="true" aria-controls="accessoryDD">
                     <i class="fas fa-fw fa-keyboard sidebar-icon"></i>
-                    <span class="sidebar-title">Accessories</span>
+                    <span class="sidebar-title">Computer Accessories</span>
                 </a>
                 <div id="accessoryDD" class="collapse p-0 text-center text-lg-left" aria-labelledby="accessoryTitle"
                      data-parent="#accordionSidebar">
@@ -156,7 +156,7 @@
                    href="{{ route('components.index')}}" data-toggle="collapse" data-target="#componentsDD"
                    aria-expanded="true" aria-controls="componentsDD">
                     <i class="far fa-fw fa-hdd sidebar-icon"></i>
-                    <span class="sidebar-title">Components</span>
+                    <span class="sidebar-title">Computer Components</span>
                 </a>
                 <div id="componentsDD" class="collapse" aria-labelledby="componentsTitle"
                      data-parent="#accordionSidebar">

@@ -16,8 +16,8 @@
             </tr>
         </thead>
         <tr>
-            <td>Name:</td>
-            <td>{{ $property->name }}</td>
+            <td width="30%">Name:</td>
+            <td width="70%">{{ $property->name }}</td>
         </tr>
         <tr>
             <td>Type</td>

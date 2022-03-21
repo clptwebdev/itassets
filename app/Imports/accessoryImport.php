@@ -27,7 +27,9 @@ use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\DefaultValueBinder;
 use Maatwebsite\Excel\Validators\Failure;
+
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use App\Rules\checkAssetTag;
 
 class accessoryImport extends DefaultValueBinder implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError, WithCustomValueBinder {
 
@@ -60,10 +62,7 @@ class accessoryImport extends DefaultValueBinder implements ToModel, WithValidat
                 'sometimes',
                 'nullable',
             ],
-            'asset_tag' => [
-                'nullable',
-                'sometimes',
-            ],
+
             'purchased_cost' => [
                 'required',
             ],
@@ -86,6 +85,7 @@ class accessoryImport extends DefaultValueBinder implements ToModel, WithValidat
                 new permittedLocation,
                 new findLocation,
             ],
+            "asset_tag" => ['sometimes', 'nullable', new checkAssetTag(':location_id')],
             'room' => ['nullable'],
             'manufacturer_id' => [],
 
@@ -109,10 +109,12 @@ class accessoryImport extends DefaultValueBinder implements ToModel, WithValidat
         if($row["name"] != '')
         {
             $name = $row['name'];
+
         } else
         {
             $row['asset_tag'] != '' ? $tag = $row['asset_tag'] : $tag = '1234';
-            $name = strtoupper(substr($asset->location->name ?? 'UN', 0, 1)) . "-{$tag}";
+            $name = strtoupper(substr($location->name ?? 'UN', 0, 2)) . "-{$tag}";
+
         }
         $accessory->name = $name;
 
@@ -180,7 +182,8 @@ class accessoryImport extends DefaultValueBinder implements ToModel, WithValidat
         $accessory->supplier_id = $supplier->id ?? 0;
 
         //check for already existing Manufacturers upon import if else create
-        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->first())
+        $man_email = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
+        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->orWhere(['supportEmail' => $supplier_email])->first())
         {
 
         } else
@@ -190,7 +193,7 @@ class accessoryImport extends DefaultValueBinder implements ToModel, WithValidat
                 $manufacturer = new Manufacturer;
 
                 $manufacturer->name = $row["manufacturer_id"];
-                $manufacturer->supportEmail = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
+                $manufacturer->supportEmail = $man_email;
                 $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
                 $manufacturer->supportPhone = "Unknown";
                 $manufacturer->save();

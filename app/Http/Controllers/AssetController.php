@@ -37,6 +37,10 @@ use App\Rules\checkAssetTag;
 
 class AssetController extends Controller {
 
+    ///////////////////////////////////////////////
+    ////////////// View Functions /////////////////
+    ///////////////////////////////////////////////
+
     public function index()
     {
         if(auth()->user()->cant('viewAll', Asset::class))
@@ -54,7 +58,6 @@ class AssetController extends Controller {
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('assets')->get();
         $categories = Category::with('assets')->select('id', 'name')->get();
         $statuses = Status::select('id', 'name', 'deployable')->withCount('assets')->get();
-//            $locations = Location::whereIn('location_id', auth()->user()->locations)->select('id', 'name', 'deployable')->withCount('assets')->get();
 
         $this->clearFilter();
         session(['assets_filter' => false]);
@@ -68,6 +71,10 @@ class AssetController extends Controller {
             "locations" => $locations,
         ]);
     }
+
+    ///////////////////////////////////////////////
+    //////////// Create Functions /////////////////
+    ///////////////////////////////////////////////
 
     public function create()
     {
@@ -88,28 +95,6 @@ class AssetController extends Controller {
             'fieldsets' => Fieldset::all(),
             'depreciation' => Depreciation::all(),
         ]);
-    }
-
-    public function search()
-    {
-        return view("assets.show", [
-            'asset' => Asset::latest()->AssetFilter(request()->only(['asset_tag']))->firstOrFail(),
-            'locations' => Location::all(),
-        ]);
-    }
-
-    public function newComment(Request $request)
-    {
-        $request->validate([
-            "title" => "required|max:255",
-            "comment" => "nullable",
-        ]);
-
-        $asset = Asset::find($request->asset_id);
-        $asset->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
-        session()->flash('success_message', $request->title . ' has been created successfully');
-
-        return to_route('assets.show', $asset->id);
     }
 
     public function store(Request $request)
@@ -189,44 +174,92 @@ class AssetController extends Controller {
         if(! empty($validate_fieldet))
         {
             $v = array_merge($validate_fieldet, [
-                'name' => 'required',
-                'asset_tag' => ['sometimes', 'nullable', new checkAssetTag($request['location_id'])],
-                'serial_no' => 'required',
+                'name.*' => 'required',
+                'asset_model' => 'required',
+                'location_id' => 'required',
+                'asset_tag.*' => ['required', new checkAssetTag($request['location_id'])],
+                'serial_no.*' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
                 'warranty' => 'required|numeric',
+                'status_id' => 'required'
             ]);
         } else
         {
             $v = [
-                'name' => 'required',
-                'asset_tag' => ['sometimes', 'nullable', new checkAssetTag($request['location_id'])],
-                'serial_no' => 'required',
+                'name.*' => 'required',
+                'asset_model' => 'required',
+                'location_id' => 'required',
+                'asset_tag.*' => ['required' , new checkAssetTag($request['location_id'])],
+                'serial_no.*' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
                 'warranty' => 'required|numeric',
+                'status_id' => 'required'
             ];
         }
 
         $validated = $request->validate($v);
 
-        $asset = Asset::create(array_merge($request->only(
-            'name', 'asset_tag', 'asset_model', 'serial_no', 'location_id', 'room', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'status_id', 'audit_date'
-        ), ['user_id' => auth()->user()->id]));
+        for($i=0; $i < count($request->name); $i++){
+            $asset = Asset::create([
+                'name' => $request->name[$i],
+                'asset_tag' => $request->asset_tag[$i],
+                'asset_model' => $request->asset_model,
+                'serial_no' => $request->serial_no[$i],
+                'location_id' => $request->location_id,
+                'room' => $request->room[$i] ?? 'Unassigned',
+                'purchased_date' => $request->purchased_date,
+                'purchased_cost' => $request->purchased_cost,
+                'donated'=> $request->donated ?? 0,
+                'supplier_id' => $request->supplier_id,
+                'order_id' => $request->order_no,
+                'warranty' => $request->warranty,
+                'status_id' => $request->status_id,
+                'audit_date' => $request->audit_date,
+                'user_id' => auth()->user()->id
+            ]);
+    
+            if(! empty($array))
+            {
+                $asset->fields()->attach($array);
+            }
+            
+            if(! empty(explode(',', $request->category)))
+            {
+                $asset->category()->attach(explode(',', $request->category));
+            }
+        }
 
-        if(! empty($array))
-        {
-            $asset->fields()->attach($array);
-        }
-        if(! empty(explode(',', $request->category)))
-        {
-            $asset->category()->attach(explode(',', $request->category));
-        }
-        session()->flash('success_message', $request->name . ' has been created successfully');
+        //session()->flash('success_message', $request->name . ' has been created successfully');
 
         return to_route('assets.index');
 
     }
+
+    public function search()
+    {
+        return view("assets.show", [
+            'asset' => Asset::latest()->AssetFilter(request()->only(['asset_tag']))->firstOrFail(),
+            'locations' => Location::all(),
+        ]);
+    }
+
+    public function newComment(Request $request)
+    {
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $asset = Asset::find($request->asset_id);
+        $asset->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+        session()->flash('success_message', $request->title . ' has been created successfully');
+
+        return to_route('assets.show', $asset->id);
+    }
+
+    
 
     public function show(Asset $asset)
     {

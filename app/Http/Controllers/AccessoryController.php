@@ -24,7 +24,6 @@ use App\Jobs\AccessoryPdf;
 use App\Models\Report;
 use PHPUnit\Util\Test;
 use App\Rules\checkAssetTag;
-
 class AccessoryController extends Controller {
 
     public function index()
@@ -277,15 +276,10 @@ class AccessoryController extends Controller {
         if($request->ajax())
         {
             $validation = Validator::make($request->all(), [
-                "name.*" => "required|max:255",
-                "model" => "nullable",
-                'order_no.*' => 'nullable',
-                'serial_no.*' => 'required',
-                'warranty.*' => 'int',
-                'location_id.*' => ['required', 'gt:0'],
-                'room' => 'nullable',
+                "asset_tag" => ['sometimes', 'nullable'],
+                'purchased_cost.*' => 'required',
                 'purchased_date.*' => 'date',
-                'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+                'location_id.*' =>  'required',            
             ]);
 
             if($validation->fails())
@@ -296,9 +290,22 @@ class AccessoryController extends Controller {
                 for($i = 0; $i < count($request->name); $i++)
                 {
                     $accessory = new Accessory;
-                    $accessory->name = $request->name[$i];
+                   
+                    $location = Location::find($request->location_id[$i]);
+                    if($request->name[$i] != ''){
+                        $name = $request->name[$i];
+                    }else{
+                        $request->asset_tag[$i] != '' ? $tag = $request->asset_tag[$i] : $tag = '1234'; 
+                        $name = strtoupper(substr($location->name ?? 'UN', 0, 1))."-{$tag}";
+                    }
+                    $accessory->name = $name;
+
+                    $accessory->asset_tag = $tag;
                     $accessory->model = $request->model[$i];
-                    $accessory->serial_no = $request->serial_no[$i];
+                    //Serial No Cannot be ""
+                    //If the imported Serial Number is empty assign it to "0"
+                    $request->serial_no[$i] != '' ? $accessory->serial_no = $request->serial_no[$i] : $accessory->serial_no = "-" ;
+
                     $accessory->status_id = $request->status_id[$i];
                     $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
                     $accessory->purchased_cost = $request->purchased_cost[$i];

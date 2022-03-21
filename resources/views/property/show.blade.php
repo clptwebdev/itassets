@@ -16,7 +16,9 @@
                        :action="route('properties.destroy', $property->id)" >
             <x-buttons.delete formAttributes="data-id='{{$property->id}}'" /> 
         </x-form.layout >
-        
+        @can('generatePDF', \App\Models\Asset::class)
+            <x-buttons.reports :route="route('properties.showPdf', $property->id)"/>
+        @endcan
     </x-wrappers.nav >
 
     <x-handlers.alerts />
@@ -126,9 +128,11 @@
     <x-modals.add-comment :route="route('property.comment' ,$property->id)" :model="$property" title="property"/>
     <x-modals.edit-comment :model="$property"/>
     <x-modals.delete-comment/>
+    <x-modals.delete/>
 
     @endsection
 
 @section('js')
     <script src="{{asset('js/comment.js')}}"></script>
+    <script src="{{asset('js/delete.js')}}"></script>
 @endsection

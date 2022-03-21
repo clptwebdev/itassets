@@ -7,7 +7,7 @@
     @if(str_contains($formAttributes,'required' ))<span class="text-danger" >*</span >@endif
 @endif
 <select type="text"
-        class="form-control @if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
+        class="form-control @if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border border-danger' !!} @endif"
         id="{{$id}}" name="{{str_replace(' ', '_', strtolower($name))}}" {!!$formAttributes ?? null!!}>
     <option value="0" @if(old(str_replace(' ', '_', strtolower($name))) == 0){{'selected'}}@endif>
         No {{str_replace(array('_','id'), ' ',ucfirst($name))}}</option >
