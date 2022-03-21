@@ -22,7 +22,7 @@ class SupplierController extends Controller {
 
         }
 
-        return view('suppliers.view');
+        return view('suppliers.view', ['suppliers' => Supplier::paginate()]);
     }
 
     public function create()
@@ -58,7 +58,7 @@ class SupplierController extends Controller {
 
     public function show(Supplier $supplier)
     {
-        if(auth()->user()->cant('view', $supplier))
+        if(auth()->user()->cant('view', Supplier::class))
         {
             return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Show Suppliers.');
 
@@ -69,7 +69,7 @@ class SupplierController extends Controller {
 
     public function edit(Supplier $supplier)
     {
-        if(auth()->user()->cant('update', $supplier))
+        if(auth()->user()->cant('update', Supplier::class))
         {
             return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Edit Suppliers.');
 
@@ -80,7 +80,7 @@ class SupplierController extends Controller {
 
     public function update(Request $request, Supplier $supplier)
     {
-        if(auth()->user()->cant('update', $supplier))
+        if(auth()->user()->cant('update', Supplier::class))
         {
             return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Update Suppliers.');
 
@@ -100,7 +100,7 @@ class SupplierController extends Controller {
 
     public function destroy(Supplier $supplier)
     {
-        if(auth()->user()->cant('forceDelete', $supplier))
+        if(auth()->user()->cant('forceDelete', Supplier::class))
         {
             return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Delete Suppliers.');
 
@@ -109,7 +109,7 @@ class SupplierController extends Controller {
         $supplier->delete();
         session()->flash('danger_message', $name . ' was deleted from the system');
 
-        return to_route('supplier.index');
+        return to_route('suppliers.index');
     }
 
     public function export(Supplier $supplier)

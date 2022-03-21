@@ -79,11 +79,9 @@
     let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
-    
-    document.querySelector('.loading').addEventListener("click", function () {
-        //showModal
+    document.querySelectorAll('.loading').forEach(elem => elem.addEventListener("click", (event) => {
         loadingModal.show();
-    });
+    }));
 </script>
 
 @yield('js')

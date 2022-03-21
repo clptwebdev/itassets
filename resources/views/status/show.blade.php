@@ -2,10 +2,6 @@
 
 @section('title', 'View '.$status->name)
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
-
 @section('content')
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -15,9 +11,14 @@
                 <a href="{{ route('status.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @endcan
-            @can('forceDelete' , \App\Models\Status::class)
-                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"><i
-                        class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
+            @can('forceDelete' , $status)
+                <form id="form{{$status->id}}" class='d-inline-block' action="{{route("status.destroy",$status->id)}}"
+                      method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <a class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"
+                       data-id="{{$status->id}}"><i class="fas fa-trash fa-sm text-white-50"></i>Delete</a>
+                </form>
             @endcan
             @can('update' , $status)
                 <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm updateBtn"><i
@@ -31,13 +32,7 @@
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Information regarding {{ $status->name }}, the assets that are currently assigned to the
@@ -559,66 +554,25 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger" type="button" id="confirmBtn">Save</button>
+                        <button type="submit" class="btn btn-green" type="button">Save</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- User Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeLocationModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeLocationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeLocationModalLabel">Are you sure you want to delete this
-                                                                          Location? </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="location-id" type="hidden" value="{{ $status->id }}">
-                    <p>Select "Delete" to remove this location from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assets assigned to this location will
-                                               become
-                                               available.</small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-modals.delete :archive="true"/>
 
 @endsection
 
 @section('js')
 
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('js/delete.js') }}"></script>
     <script>
+        const updateModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
 
-        $('.deleteBtn').click(function () {
-            $('#deleteForm').attr('action', $(this).data('route'));
-            //showModal
-            $('#removeStatusModal').modal('show');
-        });
-
-        $('#confirmBtn').click(function () {
-            $('#deleteForm').submit();
-        });
-
-        $('.updateBtn').click(function () {
-            $('#updateStatusModal').modal('show');
-        });
-
-        $(document).ready(function () {
-            $('table.logs').DataTable({
-                "autoWidth": false,
-                "pageLength": 10,
-            });
-        });
+        document.querySelectorAll('.updateBtn').forEach(elem => elem.addEventListener("click", () => {
+            updateModal.show();
+        }));
     </script>
 @endsection

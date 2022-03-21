@@ -2,10 +2,6 @@
 
 @section('title', 'View Supplier')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
-
 @section('content')
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -17,9 +13,13 @@
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @endcan
             @can('forceDelete' , \App\Models\Supplier::class)
-                <a href="{{ route('suppliers.destroy', $supplier->id) }}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm"><i
-                        class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
+                <form id="form{{$supplier->id}}" class='d-inline-block'
+                      action="{{route("suppliers.destroy",$supplier->id)}}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <a class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"
+                       data-id="{{$supplier->id}}"><i class="fas fa-trash fa-sm text-white-50"></i>Delete</a>
+                </form>
             @endcan
             @can('update' ,  \App\Models\Supplier::class)
                 <a href="{{ route('suppliers.edit', $supplier->id)}}"
@@ -128,7 +128,7 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($supplier->asset as $asset)
+                        @foreach($supplier->assets as $asset)
                             <tr>
                                 <td>{{ $asset->name }}<br>
                                     {{ $asset->model->name ?? 'No Model'}}<br><small
@@ -590,47 +590,11 @@
 
 @section('modals')
 
-    <!-- User Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeLocationModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeLocationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeLocationModalLabel">Are you sure you want to delete this
-                                                                          Location? </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="location-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this location from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All assets assigned to this location will
-                                               become
-                                               available.</small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <x-modals.delete :archive="true"/>
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script>
-        $('.deleteBtn').click(function () {
-            $('#removeModal').modal('show')
-        });
 
-        $(document).ready(function () {
-            $('table.logs').DataTable({
-                "autoWidth": false,
-                "pageLength": 10,
-            });
-        });
-    </script>
+    <script src="{{ asset('js/delete.js') }}"></script>
+
 @endsection

@@ -32,22 +32,22 @@ class SupplierPolicy {
         return $this->model->create;
     }
 
-    public function update(User $user, Supplier $supplier)
+    public function update(User $user)
     {
         return $this->model->update;
     }
 
-    public function delete(User $user, Supplier $supplier)
+    public function delete(User $user)
     {
         return $this->model->archive;
     }
 
-    public function restore(User $user, Supplier $supplier)
+    public function restore(User $user)
     {
         return $this->model->archive;
     }
 
-    public function forceDelete(User $user, Supplier $supplier)
+    public function forceDelete(User $user)
     {
         return $this->model->delete;
 

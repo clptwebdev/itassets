@@ -53,7 +53,7 @@ class OfficeLoginController extends Controller {
                 'name' => $user->name,
                 'email' => $user->email,
                 'password' => $password,
-                'role_id' => $noPerm->id,
+                'role_id' => $noPerm->id ?? 7,
             ])->save();
 
             if($firstUser === 1)
