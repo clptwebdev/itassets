@@ -168,7 +168,7 @@
                                                                     <x-form.textarea :name="$field->name"
                                                                                      formAttributes=" cols=' 30' rows='10' " value="{{old(str_replace(' ', '_', strtolower($field->name)))}}" />
                                                                     @break
-                                                                    
+
                                                                     @case('Select')
 
                                                                     <?php $array = explode("\r\n", $field->value);?>
@@ -183,15 +183,16 @@
                                                                         @endforeach
 
                                                                     </select >
-                                                                    <x-form.select :name="$field->name"
-                                                                                   :models="$array" />
                                                                     @break
                                                                     @case('Checkbox')
                                                                     <?php $array = explode("\r\n", $field->value);?>
                                                                     <?php $values = explode(",", old(str_replace(' ', '_', strtolower($field->name))));?>
-                                                                    <x-form.checkbox :models="$array"
-                                                                                     :name="$field->name"
-                                                                                     :checked="$values" />
+                                                                    <div class="form-check form-check-inline mr-2 p-2 ">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                               value="{{ $model->id }}" name="{!! strtolower($field->name) !!}[]">
+                                                                        <label class="form-check-label "
+                                                                               for="{!! strtolower($field->name) !!}">{{ $field->name }}</label>
+                                                                    </div>
                                                                     @break
                                                                     @default
                                                                     <x-form.input :name="$field->name" value="{{old(str_replace(' ', '_', strtolower($field->name)))}}"/>

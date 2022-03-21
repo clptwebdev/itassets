@@ -158,15 +158,8 @@ class UserController extends Controller {
             return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Permissions.');
 
         }
-        if($request->ajax())
-        {
-            $ids = $request->ids;
-
+            $ids = explode(',',$request->ids);
             return view('users.permissions', compact('ids'));
-        } else
-        {
-            return 'Not Ajax';
-        }
     }
 
     public function userPermissions()

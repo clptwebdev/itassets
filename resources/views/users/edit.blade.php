@@ -166,58 +166,48 @@
 
 @section('js')
     <script>
-        function addPermission() {
-            var permission = document.getElementById('permission_id').value;
-            var permissions = document.getElementById('permission_ids');
-            var array = permissions.value.split(",");
+        const permission = document.querySelector('#permission_id');
+        const permissions = document.querySelector('#permission_ids');
+        const permDisplay =  document.querySelector('#permissions');
 
-            if (!array.includes(String(permission))) {
+        function addPermission() {
+            let array = permissions.value.split(",");
+
+            if (!array.includes(String(permission.value))) {
                 //Create a New DIV element
                 if (permissions.value != "") {
-                    permissions.value += ',' + permission;
+                    permissions.value += ',' + permission.value;
                 } else {
-                    permissions.value = permission;
+                    permissions.value = permission.value;
                 }
             }
             getPermissions();
         }
 
-        function rolePermissions(obj, string, original) {
+        function rolePermissions(obj, string) {
             if (obj.value == 1) {
-                document.getElementById('permission_ids').value = string;
+                permissions.value = string;
                 getPermissions();
             } else {
-                document.getElementById('permission_ids').value = original;
+                permissions.value = '';
                 getPermissions();
             }
         }
 
         function getPermissions() {
-            var permissions = document.getElementById('permission_ids');
-            var inputs = permissions.value.split(",");
+            const xhttp = new XMLHttpRequest()
 
-            var fData = new FormData();
-            inputs.forEach(element => {
-                fData.append('ids[]', element);
-            });
-            var token = $("[name='_token']").val();
-            fData.append('_token', token);
+            xhttp.onload = function () {
+                permDisplay.innerHTML = xhttp.responseText;
+            };
 
-            $.ajax({
-                url: '/permissions/users',
-                type: 'POST',
-                data: fData,
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    document.getElementById("permissions").innerHTML = data;
-                },
-            });
+            xhttp.open("POST", "/permissions/users");
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(`ids=${permissions.value}`);
         }
 
         function removePermission(id) {
-            var permissions = document.getElementById('permission_ids');
-            var inputs = permissions.value.split(",");
+            let inputs = permissions.value.split(",");
             const index = inputs.indexOf(id.toString());
             if (index > -1) {
                 inputs.splice(index, 1);
