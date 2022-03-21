@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'View all Assets')
+@section('title', 'View all Computer Equipment')
 
 @section('css')
     <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
@@ -13,12 +13,12 @@
 @endsection
 
 @section('content')
-    <x-wrappers.nav title="Assets">
+    <x-wrappers.nav title="Computer Equipment">
         @can('recycleBin', \App\Models\Asset::class)
             <x-buttons.recycle :route="route('assets.bin')" :count="\App\Models\Asset::onlyTrashed()->count()"/>
         @endcan
         @can('create' , \App\Models\Asset::class)
-            <x-buttons.add :route="route('assets.create')">Assets(s)</x-buttons.add>
+            <x-buttons.add :route="route('assets.create')">Equipment)</x-buttons.add>
         @endcan
         @can('generatePDF', \App\Models\Asset::class)
             @if ($assets->count() == 1)

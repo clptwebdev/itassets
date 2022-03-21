@@ -207,6 +207,7 @@
         }
 
         function removePermission(id) {
+            event.preventDefault();
             let inputs = permissions.value.split(",");
             const index = inputs.indexOf(id.toString());
             if (index > -1) {
