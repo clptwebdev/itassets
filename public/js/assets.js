@@ -17,6 +17,7 @@ function getFields(value) {
 const categorySearch = document.querySelector("#findCategory");
 const categoryResults = document.querySelector("#categoryResults");
 const categorySelect = document.querySelector("#categorySelect");
+const categoryIDs = document.querySelector('#category');
 
 categorySearch.addEventListener("input", function (e) {
     let value = e.target.value;
@@ -106,6 +107,7 @@ function removeCategory(element) {
 //Search for the Model
 const modelSearch = document.querySelector("#findModel");
 const modelResults = document.querySelector("#modelResults");
+const modelID = document.querySelector("#asset_model");
 
 modelSearch.addEventListener("input", function (e) {
     let value = e.target.value;
@@ -162,9 +164,19 @@ function getInfo(id) {
     xhttp.send(`id=${id}`);
 }
 
+//If there is an id in the field get try and retrieve the model - this helps when incorrect informationhas been entered
+//And you would like to access the - old('NAME) variables
+
+if(modelID.value != ''){
+    getInfo(modelID.value)
+
+}
+
+
 //Search for the Supplier
 const supplierSearch = document.querySelector("#findSupplier");
 const supplierResults = document.querySelector("#supplierResults");
+const supplierID = document.querySelector('#supplier_id');
 
 supplierSearch.addEventListener("input", function (e) {
     let value = e.target.value;
@@ -220,9 +232,18 @@ function getSupplierInfo(id) {
     xhttp.send(`id=${id}`);
 }
 
+//If there is an id in the field get try and retrieve the supplier - this helps when incorrect informationhas been entered
+//And you would like to access the - old('NAME) variables
+
+if(supplierID.value != ''){
+    getSupplierInfo(supplierID.value)
+
+}
+
 //Search for the Location
 const locationSearch = document.querySelector("#findLocation");
 const locationResults = document.querySelector("#locationResults");
+const locationID = document.querySelector('#location_id');
 
 locationSearch.addEventListener("input", function (e) {
     let value = e.target.value;
@@ -276,6 +297,14 @@ function getLocationInfo(id) {
     xhttp.open("POST", "/location/preview/");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(`id=${id}`);
+}
+
+//If there is an id in the field get try and retrieve the supplier - this helps when incorrect informationhas been entered
+//And you would like to access the - old('NAME) variables
+
+if(locationID.value != ''){
+    getLocationInfo(locationID.value)
+
 }
 
 const button = document.querySelector("#submitButton");

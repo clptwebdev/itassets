@@ -17,22 +17,6 @@ class Asset extends Model {
 
     protected $fillable = ['name', 'asset_tag', 'asset_model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'user_id', 'audit_date', 'notes'];
 
-    public function name(): Attribute
-    {
-        return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
-        );
-    }
-
-    public function notes(): Attribute
-    {
-        return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
-        );
-    }
-
     //dates
 
     public function location()
