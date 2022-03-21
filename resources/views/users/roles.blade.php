@@ -106,42 +106,46 @@
 
 @section('js')
     <script>
+        const dropBoxes = document.querySelectorAll(".drop-boxes");
+        const xhttp = new XMLHttpRequest();
+        const permissionModal = new bootstrap.Modal(document.getElementById('userPermissionsModal'));
+
         function allowDrop(ev) {
             ev.preventDefault();
         }
 
         function drag(ev) {
+
             ev.dataTransfer.setData("text", ev.target.id);
             ev.dataTransfer.setData("id", ev.target.dataset.id);
-            $('.drop-boxes').show();
+            dropBoxes.forEach(function (userItem) {
+                userItem.classList.add('d-block');
+            });
         }
 
         function drop(ev) {
             ev.preventDefault();
-            var data = ev.dataTransfer.getData("text");
-            var id = ev.dataTransfer.getData("id");
-            var role = ev.target.dataset.role;
+            let data = ev.dataTransfer.getData("text");
+            let id = ev.dataTransfer.getData("id");
+            let role = ev.target.dataset.role;
             ev.target.parentElement.prepend(document.getElementById(data));
-            $('.drop-boxes').hide();
-            $.ajax({
-                url: `/users/${id}/role/${role}`,
-                type: 'GET',
+            dropBoxes.forEach(function (userItem) {
+                userItem.classList.remove('d-block');
             });
+            xhttp.open("GET", `/users/${id}/role/${role}`);
+            xhttp.send();
         }
 
-        $('.permission').click(function () {
-            var id = $(this).data('id')
-            $('#user_name').html($(this).data('name'));
+        document.querySelectorAll(".permission").forEach(elem => elem.addEventListener("click", () => {
+            let id = elem.getAttribute('data-id');
+            document.getElementById('user_name').innerHTML = elem.getAttribute('data-name');
 
-            $.ajax({
-                url: `/users/${id}/locations`,
-                type: 'GET',
-                success: function (data) {
-                    document.getElementById("permissions").innerHTML = data;
-                },
-            });
-
-            $('#userPermissionsModal').modal('show')
-        });
+            xhttp.onload = function () {
+                document.getElementById("permissions").innerHTML = xhttp.responseText;
+            }
+            xhttp.open("GET", `/users/${id}/locations`);
+            xhttp.send();
+            permissionModal.show();
+        }));
     </script>
 @endsection

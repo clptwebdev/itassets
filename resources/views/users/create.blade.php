@@ -164,6 +164,7 @@
             }
         }
 
+
         function getPermissions() {
             var permissions = document.getElementById('permission_ids');
             var inputs = permissions.value.split(",");
@@ -186,6 +187,7 @@
                 },
             });
         }
+
 
         function removePermission(id) {
             var permissions = document.getElementById('permission_ids');
