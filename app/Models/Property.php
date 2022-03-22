@@ -35,7 +35,7 @@ class Property extends Model {
         //purchased date
         $pd = \Carbon\Carbon::parse($this->purchased_date);
         $startDate = \Carbon\Carbon::parse('09/01/'.$pd->format('Y'));
-        $endDate = \Carbon\Carbon::parse('08/31/'.\Carbon\Carbon::pd()->addYear()->format('Y'));
+        $endDate = \Carbon\Carbon::parse('08/31/'.$pd()->addYear()->format('Y'));
         if(!$startDate->isPast()){
             $startDate->subYear();
             $endDate->subYear();
