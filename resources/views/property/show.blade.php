@@ -72,11 +72,11 @@
                             <p><strong>Depreciation C/Fwd ({{$endDate->format('d\/m\/Y')}}):</strong><br>
                                 £{{number_format( (float) $bf - $cf, 2, '.', ',' )}}
                             </p>
-                            <?php $prevYear = $endDate->subYear();?>
+                            <?php $prevYear = $startDate->subYear();?>
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
                                 £{{number_format( (float) $property->depreciation_value($prevYear), 2, '.', ',' )}}
                             </p>
-                            <?php $prevYear = $endDate->subYear();?>
+                            <?php $prevYear = $startDate->subYear();?>
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
                                 £{{number_format( (float) $property->depreciation_value($prevYear), 2, '.', ',' )}}
                             </p>
