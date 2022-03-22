@@ -69,7 +69,7 @@
                             <p><strong>Depreciation B/Fwd ({{$startDate->format('d\/m\/Y')}}):</strong><br>
                                 £{{number_format( (float) $property->purchased_cost - $bf, 2, '.', ',' )}}
                             </p>
-                            <p><strong>Depreciation C/Fwd ({{$endDate->format('d\/m\/Y')}}):</strong><br>
+                            <p><strong>Depreciation C/Fwd ({{$startDate->format('d\/m\/Y')}}):</strong><br>
                                 £{{number_format( (float) $bf - $cf, 2, '.', ',' )}}
                             </p>
                             <?php $prevYear = $startDate->subYear();?>
