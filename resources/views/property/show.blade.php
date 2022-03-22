@@ -52,7 +52,7 @@
                                 //If Date is > 1 September the Year is this Year else Year = Last Year
                 
                                 $now = \Carbon\Carbon::now();
-                                $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
+                                $startDate = \Carbon\Carbon::parse('08/31/'.$now->format('Y'));
                                 $endDate = \Carbon\Carbon::parse('09/01/'.\Carbon\Carbon::now()->addYear()->format('Y'));
                                 if(!$startDate->isPast()){
                                     $startDate->subYear();
