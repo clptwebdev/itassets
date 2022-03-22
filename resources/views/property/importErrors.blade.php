@@ -236,7 +236,7 @@
             data.append('_token', token);
 
             //Names
-            const inputs = $("input[name='name[]']").get();
+            const inputs = document.querySelector("input[name='name[]']");
             inputs.forEach(element => {
                 data.append('name[]', element.value);
             });

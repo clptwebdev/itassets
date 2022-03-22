@@ -18,28 +18,28 @@
     <hr class="sidebar-divider my-0">
 @if(auth()->user()->role_id != 0)
     <!-- Nav Item - Dashboard -->
-        <li class="nav-item active">
+        <li class="nav-item @if(Request::url() == route('dashboard')) {{ 'active' }} @endif">
             <a class="nav-link" href="{{ route('dashboard') }}">
                 <i class="fas fa-fw fa-tachometer-alt sidebar-icon"></i>
                 <span class="sidebar-title">Dashboard</span></a>
         </li>
         {{-- The are the Navigation tabs the Finance Users would be using --}}
-        <li class="nav-item">
+        <li class="nav-item @if(Request::url() == route('properties.index')) {{ 'active' }} @endif">
             <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('properties.index')}}">
                 <i class="fas fa-fw fa-school sidebar-icon"></i>
                 <span class="sidebar-title">Property</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item @if(Request::url() == route('aucs.index')) {{ 'active' }} @endif">
             <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('aucs.index')}}">
                 <i class="fas fa-fw fa-hammer sidebar-icon"></i>
                 <span class="sidebar-title">AUC</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item @if(Request::url() == route('ffes.index')) {{ 'active' }} @endif">
             <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('ffes.index')}}">
                 <i class="fas fa-fw fa-chair sidebar-icon"></i>
                 <span class="sidebar-title">FFE</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ">
             <a class="nav-link text-left text-sm-center text-md-left" href="#">
                 <i class="fas fa-fw fa-tractor sidebar-icon"></i>
                 <span class="sidebar-title">Plant and Machinery</span></a>
@@ -57,13 +57,13 @@
     <hr class="sidebar-divider">
     @if(auth()->user()->role_id != 0)
         @can('viewAll' , \App\Models\Asset::class)
-            <li class="nav-item">
+            <li class="nav-item @if(Request::url() == route('assets.index')) {{ 'active' }} @endif">
                 <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('assets.index')}}"
                    data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-tablet-alt sidebar-icon"></i>
                     <span class="sidebar-title">Computer Equipment</span>
                 </a>
-                <div id="collapseTwo" class="collapse p-0" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo" class="collapse p-0 @if(Request::url() == route('assets.index')) {{ 'show' }} @endif" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i
                             class="far fa-circle text-secondary"></i> All Equipment
                                                                       ({{(auth()->user()->location_assets()->count()) ?? null}}

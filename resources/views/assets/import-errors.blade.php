@@ -375,7 +375,7 @@
                 data.append('serial_no[]', element.value);
             });
 
-            //Phone
+            //Asset Model
             var astInputs = $("select[name='asset_model[]']").get();
             astInputs.forEach(element => {
                 data.append('asset_model[]', element.value);
