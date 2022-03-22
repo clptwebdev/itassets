@@ -2,10 +2,6 @@
 
 @section('title', 'Miscellaneous Recycle Bin')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
-
 @section('content')
 
 
@@ -21,15 +17,16 @@
             <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
                class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
                     class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
-            @can('viewAny', \App\Models\Miscellanea::class)
-                <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">
-                    @csrf
-                    <input type="hidden" value="{{ json_encode($miscellaneous->pluck('id'))}}" name="miscellaneous"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
-                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report
-                    </button>
-                </form>
-            @endcan
+            {{--            @can('viewAny', \App\Models\Miscellanea::class)--}}
+            {{--                <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">--}}
+            {{--                    @csrf--}}
+            {{--                    <x-form.input type="hidden" name="miscellaneous" :label="false" formAttributes="required"--}}
+            {{--                                  :value="json_encode($miscellaneous->pluck('id'))"/>--}}
+            {{--                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i--}}
+            {{--                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report--}}
+            {{--                    </button>--}}
+            {{--                </form>--}}
+            {{--            @endcan--}}
         </div>
     </div>
 
@@ -135,6 +132,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$miscellaneous"/>
                 </div>
             </div>
         </div>
@@ -153,60 +151,11 @@
 @endsection
 
 @section('modals')
-    <!-- Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to permanently delete this
-                                                                      miscellanea? </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="user-id" type="hidden" value="">
-                    <p>Select "Delete" to permantley delete this miscellanea.</p>
-                    <small class="text-danger">**Warning this is permanent and the miscellanea will be removed from the
-                                               system </small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+    <x-modals.delete> Miscellanea</x-modals.delete>
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script>
-        $('.deleteBtn').click(function () {
-            $('#user-id').val($(this).data('id'))
-            //showModal
-            $('#removeUserModal').modal('show')
-        });
+    <script src="{{asset('js/delete.js')}}"></script>
 
-        $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#user-id').val();
-            $(form).submit();
-        });
-
-        $(document).ready(function () {
-            $('#usersTable').DataTable({
-                "columnDefs": [{
-                    "targets": [8],
-                    "orderable": false,
-                }],
-                "order": [[3, "desc"]]
-            });
-        });
-        // import
-
-    </script>
 
 @endsection

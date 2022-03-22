@@ -1,8 +1,5 @@
 @extends('layouts.app')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
 
 @section('content')
 
@@ -128,6 +125,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$components"/>
                 </div>
             </div>
         </div>
@@ -145,110 +143,12 @@
 @endsection
 
 @section('modals')
-    <!-- Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this
-                                                                      Component? </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="user-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this Component from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. </small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="modal fade bd-example-modal-lg" id="importManufacturerModal" tabindex="-1" role="dialog"
-         aria-labelledby="importManufacturerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form action="/importcomponents" method="POST" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <p>Select "import" to add components to the system.</p>
-                        <input id="importEmpty" class="form-control" type="file" placeholder="Upload here" name="csv"
-                               accept=".csv">
-
-                    </div>
-
-                    <div class="modal-footer">
-                        @if(session('import-error'))
-                            <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
-                        @endif
-                        <a href="https://clpt.sharepoint.com/:x:/s/WebDevelopmentTeam/ERgeo9FOFaRIvmBuTRVcvycBkiTnqHf3aowELiOt8Hoi1Q?e=qKYN6b"
-                           target="_blank" class="btn btn-info">
-                            Download Import Template
-                        </a>
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-
-                        <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
-                            Import
-                        </button>
-                    @csrf
-                </form>
-            </div>
-        </div>
-    </div>
-    </div>
-    <?php session()->flash('import-error', ' Select a file to be uploaded before continuing!');?>
+    <x-modals.delete :archive="false"/>
+    <x-modals.import/>
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script>
-        $('.deleteBtn').click(function () {
-            $('#user-id').val($(this).data('id'))
-            //showModal
-            $('#removeUserModal').modal('show')
-        });
-
-        $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#user-id').val();
-            $(form).submit();
-        });
-
-        $(document).ready(function () {
-            $('#usersTable').DataTable({
-                "columnDefs": [{
-                    "targets": [8],
-                    "orderable": false,
-                }],
-                "order": [[4, "desc"]]
-            });
-        });
-        // import
-
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
-
-        });
-
-        // file input empty
-        $("#confirmBtnImport").click(":submit", function (e) {
-
-            if (!$('#importEmpty').val()) {
-                e.preventDefault();
-            }
-        })
-    </script>
-
+    <script src="{{asset('js/delete.js')}}"></script>
+    <script src="{{asset('js/import.js')}}"></script>
 @endsection

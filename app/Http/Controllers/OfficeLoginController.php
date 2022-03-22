@@ -43,6 +43,9 @@ class OfficeLoginController extends Controller {
 
         } else
         {
+            $developer = Role::whereName('Developer')->first();
+            $firstUser = User::count();
+            $noPerm = Role::whereName('temporary')->first();
             $authUser = new User;
             $unhash = $authUser->random_password(12);
             $password = Hash::make($unhash);
@@ -50,9 +53,9 @@ class OfficeLoginController extends Controller {
                 'name' => $user->name,
                 'email' => $user->email,
                 'password' => $password,
+                'role_id' => $noPerm->id ?? 7,
             ])->save();
-            $developer = Role::whereName('Developer')->first();
-            $firstUser = User::count();
+
             if($firstUser === 1)
             {
                 $authUser->update(['role_id' => $developer->id ?? 1]);

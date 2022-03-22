@@ -32,7 +32,7 @@ class StatusPolicy {
         return $this->model->create;
     }
 
-    public function update(User $user, Status $status)
+    public function update(User $user)
     {
         return $this->model->update;
     }

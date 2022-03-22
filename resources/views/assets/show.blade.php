@@ -3,7 +3,7 @@
 @section('title', "View Asset {$asset->asset_tag}")
 
 @section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
+
 @endsection
 
 
@@ -25,8 +25,7 @@
             <x-buttons.edit :route="route('assets.edit', $asset->id)"/>
         @endcan
         @can('delete', $asset)
-            <x-form.layout method="DELETE" class="d-inline-block"
-                           :id="'form'.$asset->id"
+            <x-form.layout method="DELETE" class="d-inline-block" :id="'form'.$asset->id"
                            :action="route('assets.destroy', $asset->id)">
                 <x-buttons.delete formAttributes="data-id='{{$asset->id}}'"/>
             </x-form.layout>
@@ -74,29 +73,9 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/transfer.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/comment.js')}}"></script>
-    <script>
-        $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#asset-id').val();
-            $(form).submit();
-        });
 
-        $(document).ready(function () {
-            $('#comments').DataTable({
-                "autoWidth": false,
-                "pageLength": 10,
-                "searching": false,
-                "bLengthChange": false,
-                "columnDefs": [{
-                    "targets": [1],
-                    "orderable": false
-                }],
-                "order": [[0, "desc"]],
-            });
-        });
-    </script>
 @endsection

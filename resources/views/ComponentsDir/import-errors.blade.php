@@ -2,13 +2,12 @@
 
 @section('title', 'Component Import Errors')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
+
 
 @section('content')
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
         @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
         <div>
@@ -48,14 +47,7 @@
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
-    @endif
-
+    <x-handlers.alerts/>
     <section>
         <p class="mb-4">Below are the different Import Failures of all the different assets stored in the management
                         system. Each has
@@ -131,18 +123,17 @@
                                         </span>
                                 </td>
                                 <td>
-                                        <span id="supplier_id{{$line}}" class="tooltip-danger">
+                                    <span id="supplier_id{{$line}}" class="tooltip-danger">
                                         <select type="dropdown"
                                                 class="import-control @if(in_array('supplier_id', $errors)){{ 'border-bottom border-danger'}}@endif"
                                                 name="supplier_id[]" required data-container='#supplier_id{{$line}}'
                                                 data-placement='top'
-                                        @if(array_key_exists('supplier_id', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['supplier_id']}'" !!}@endif
-                                        >
+                                        @if(array_key_exists('supplier_id', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['supplier_id']}'" !!}@endif>
                                             <option
-                                                value="0" @if($valueArray[$row]['supplier_id'] == ''){{'selected'}}@endif>No Supplier</option>
+                                                value="0" @if($valueArray[$row]['supplier_id'] === ''){{'selected'}}@endif>No Supplier</option>
                                             @foreach($suppliers as $supplier)
                                                 <option
-                                                    value="{{ $supplier->id }}" @if( $valueArray[$row]['supplier_id'] == $supplier->name){{'selected'}}@endif>{{ $supplier->name }}</option>
+                                                    value="{{ $supplier->id }}" @if(  strtolower($valueArray[$row]['supplier_id']) ==  strtolower($supplier->name)){{'selected'}}@endif>{{ $supplier->name }}</option>
                                             @endforeach
                                         </select>
                                         </span>
@@ -205,14 +196,15 @@
                                         >
                                         </span>
                                 </td>
+
                                 <td>
-                                        <span id="purchased_cost{{$line}}" class="tooltip-danger">
+                                    <span id="purchased_cost{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="import-control @if(in_array('purchased_cost', $errors)){{'border-bottom border-danger'}}@endif"
                                                name="purchased_cost[]" id="purchased_cost"
                                                placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['purchased_cost'] }}" required
-                                               data-container='#purchased_cost{{$line}}' data-placement='top'
+                                               value="{{ preg_replace('/[[:^print:]]/', '', $valueArray[$row]['purchased_cost'])  }}"
+                                               required data-container='#purchased_cost{{$line}}' data-placement='top'
                                                @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-toggle='tooltip'  title='{$errorValues[$row]['purchased_cost']}'" !!}@endif
                                         >
                                         </span>
@@ -314,122 +306,130 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
-
-        })
 
 
-        $(document).ready(function () {
-            $('#categoryTable').DataTable({
-                "columnDefs": [{
-                    "targets": [0, 5],
-                    "orderable": false,
-                }],
-                "order": [[1, "asc"]]
-            });
+        const importModal = new bootstrap.Modal(document.getElementById('importManufacturerModal'));
+        const importHelpBtn = document.querySelector('#import');
+
+        importHelpBtn.addEventListener('click', function () {
+            importModal.show();
         });
+
+        function enableToolTips() {
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        }
+
+        enableToolTips();
+
 
         //validation
         function checkErrors(obj) {
 
-            var token = $("[name='_token']").val();
-            var data = new FormData();
+            const importControl = document.querySelectorAll('.import-control');
+
+            const errorMessage = document.querySelector('.alert.alert-danger');
+
+            const token = document.querySelector("[name='_token']").value;
+            const data = new FormData();
             data.append('_token', token);
 
             //Names
-            var inputs = $("input[name='name[]']").get();
+            const inputs = document.querySelectorAll("input[name='name[]']");
             inputs.forEach(element => {
                 data.append('name[]', element.value);
             });
-
             //status
-            var stInputs = $("select[name='status_id[]']").get();
-            stInputs.forEach(element => {
+            const statusInputs = document.querySelectorAll("select[name='status_id[]']");
+            statusInputs.forEach(element => {
                 data.append('status_id[]', element.value);
             });
-
-            //Phone
-            var supInputs = $("select[name='supplier_id[]']").get();
-            supInputs.forEach(element => {
+            //supplier
+            const supplierInputs = document.querySelectorAll("select[name='supplier_id[]']");
+            supplierInputs.forEach(element => {
                 data.append('supplier_id[]', element.value);
             });
-
-            //Email
-            var maInputs = $("select[name='manufacturer_id[]']").get();
-            maInputs.forEach(element => {
+            //Manufacturer
+            const mfInputs = document.querySelectorAll("select[name='manufacturer_id[]']");
+            mfInputs.forEach(element => {
                 data.append('manufacturer_id[]', element.value);
             });
 
-            var loInputs = $("select[name='location_id[]']").get();
+            //Location
+            const loInputs = document.querySelectorAll("select[name='location_id[]']");
             loInputs.forEach(element => {
                 data.append('location_id[]', element.value);
             });
-
-            var orInputs = $("input[name='order_no[]']").get();
-            orInputs.forEach(element => {
+            //Order Number
+            const orderNoInputs = document.querySelectorAll("input[name='order_no[]']");
+            orderNoInputs.forEach(element => {
                 data.append('order_no[]', element.value);
             });
-
-            var seInputs = $("input[name='serial_no[]']").get();
-            seInputs.forEach(element => {
+            //Serial Number
+            const serialNoInputs = document.querySelectorAll("input[name='serial_no[]']");
+            serialNoInputs.forEach(element => {
                 data.append('serial_no[]', element.value);
             });
 
-            var pcInputs = $("input[name='purchased_cost[]']").get();
+            //Purchased Cost
+            const pcInputs = document.querySelectorAll("input[name='purchased_cost[]']");
             pcInputs.forEach(element => {
                 data.append('purchased_cost[]', element.value);
             });
 
-            var pdInputs = $("input[name='purchased_date[]']").get();
+            //Purchased Date
+            const pdInputs = document.querySelectorAll("input[name='purchased_date[]']");
             pdInputs.forEach(element => {
                 data.append('purchased_date[]', element.value);
             });
-
-            var waInputs = $("input[name='warranty[]']").get();
-            waInputs.forEach(element => {
+            //Warranty
+            const warInputs = document.querySelectorAll("input[name='warranty[]']");
+            warInputs.forEach(element => {
                 data.append('warranty[]', element.value);
             });
-
-            var noInputs = $("input[name='notes[]']").get();
-            noInputs.forEach(element => {
+            //Notes
+            const notesInputs = document.querySelectorAll("input[name='notes[]']");
+            notesInputs.forEach(element => {
                 data.append('notes[]', element.value);
             });
 
-            $.ajax({
-                url: '/components/create/ajax',
-                type: 'POST',
-                data: data,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response === 'Success') {
-                        window.location.href = '/components';
-                    } else {
-                        $('.import-control').removeClass('border-danger');
-                        $('.import-control').tooltip('dispose');
-                        $('input').removeClass('border-danger');
-                        var i = 0;
-                        Object.entries(response).forEach(entry => {
-                            const [key, value] = entry;
-                            res = key.split('.');
-                            const error = value.toString().replace(key, res[0]);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-bottom');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('data-toggle', 'tooltip');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('title', error);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip();
-                            i++;
-                        });
-                        $('.alert.alert-danger').html(`There were ${i} errors in the following rows`);
-                    }
-                },
-            });
-        }
+            const xhr = new XMLHttpRequest()
 
+            xhr.onload = function () {
+                if (xhr.responseText === 'Success') {
+                    window.location.href = '/components';
+                } else {
+                    importControl.forEach((item) => {
+                        item.classList.remove('border-bottom', 'border-danger');
+                    });
+
+                    let i = 0;
+                    Object.entries(JSON.parse(xhr.responseText)).forEach(entry => {
+                        console.log(entry);
+                        const [key, value] = entry;
+                        res = key.split('.');
+                        const error = value.toString().replace(key, res[0]);
+                        console.log(error);
+                        console.log(res[1]);
+                        let elements = document.querySelectorAll(`[name='${res[0]}[]']`);
+                        console.log(elements[0]);
+                        let num = parseInt(res[1]);
+                        elements[num].classList.add('border-bottom', 'border-danger');
+                        elements[num].setAttribute('data-bs-toggle', 'tooltip');
+                        elements[num].setAttribute('data-title', error);
+                        i++;
+                        enableToolTips();
+                    });
+
+                    errorMessage.innerHTML = `There were ${i} errors in the following rows`;
+                }
+            };
+
+            xhr.open("POST", "/components/create/ajax");
+            xhr.send(data);
+        }
     </script>
 @endsection

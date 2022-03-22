@@ -2,10 +2,6 @@
 
 @section('title', 'Asset Statuses')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
-
 @section('content')
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -17,14 +13,8 @@
 
         </div>
     </div>
-
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
-    @endif
+    <x-handlers.alerts/>
+    <x-form.errors/>
 
     <section>
         <p class="mb-4">Below are the different categories of all the different assets statuses stored in the management
@@ -89,7 +79,7 @@
                                 <td class="text-center">
                                     @php
 
-                                        $consumables = auth()->user()->location_consumable()->statusFilter([$status->id]);
+                                        $consumables = auth()->user()->location_consumables()->statusFilter([$status->id]);
 
                                     @endphp
                                     {{ $consumables->count() }}
@@ -118,8 +108,12 @@
                                                data-route="{{ route('status.update', $status->id)}}"
                                                data-deploy="{{$status->deployable}}" data-icon="{{$status->icon}}"
                                                data-colour="{{$status->colour}}">Edit</a>
-                                            <a class="dropdown-item deleteBtn" href="#"
-                                               data-route="{{ route('status.destroy', $status->id)}}">Delete</a>
+                                            <form id="form{{$status->id}}"
+                                                  action="{{route("status.destroy",$status->id)}}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <a class="dropdown-item deleteBtn" data-id="{{$status->id}}">Delete</a>
+                                            </form>
                                         </div>
                                     </div>
 
@@ -193,7 +187,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-green" type="button" id="confirmBtn">Save</button>
+                        <button type="submit" class="btn btn-green" type="button">Save</button>
                     </div>
                 </form>
             </div>
@@ -250,86 +244,39 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-green" type="button" id="confirmBtn">Save</button>
+                        <button type="submit" class="btn btn-green" type="button">Save</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeStatusModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeStatusModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeStatusModalLabel">Are you sure you want to delete this
-                                                                        Status? </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="supplier-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this status from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. The status will be unassigned from assets,
-                                               any
-                                               assets with just this status will have the status set to null.</small>
-                </div>
-                <div class="modal-footer">
-                    <form id="deleteForm" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-modals.delete :archive="true"/>
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('js/delete.js') }}"></script>
     <script>
-        $('.deleteBtn').click(function () {
-            $('#deleteForm').attr('action', $(this).data('route'));
-            //showModal
-            $('#removeStatusModal').modal('show');
-        });
+        const updateModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
 
-        $('#confirmBtn').click(function () {
-            $('#deleteForm').submit();
-        });
-
-        $('.updateBtn').click(function () {
-            var val = $(this).data('id');
-            var deployable = $(this).data('deploy');
+        document.querySelectorAll('.updateBtn').forEach(elem => elem.addEventListener("click", (event) => {
+            let val = elem.getAttribute('data-id');
+            let deployable = elem.getAttribute('data-deploy');
             if (deployable == 1) {
                 document.getElementById("update_deployable_yes").checked = true;
             } else {
                 document.getElementById("update_deployable_no").checked = true;
             }
-            var name = $(this).data('name');
-            var route = $(this).data('route');
-            var colour = $(this).data('colour');
-            var icon = $(this).data('icon');
-            $('#update_name').val(name);
-            $('#update_colour').val(colour);
-            $('#update_icon').val(icon);
-            $('#updateForm').attr('action', route);
-            $('#updateStatusModal').modal('show');
-        });
 
-
-        $(document).ready(function () {
-            $('#categoryTable').DataTable({
-                "columnDefs": [{
-                    "targets": [7],
-                    "orderable": false,
-                }],
-                "order": [[0, "asc"]]
-            });
-        });
+            let name = elem.getAttribute('data-name');
+            let route = elem.getAttribute('data-route');
+            let colour = elem.getAttribute('data-colour');
+            let icon = elem.getAttribute('data-icon');
+            document.querySelector('#update_name').value = name;
+            document.querySelector('#update_colour').value = colour;
+            document.querySelector('#update_icon').value = icon;
+            document.querySelector('#updateForm').action = route;
+            updateModal.show();
+        }));
     </script>
 @endsection

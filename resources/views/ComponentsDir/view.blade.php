@@ -2,15 +2,6 @@
 
 @section('title', 'View Components')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
-          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
-          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-@endsection
 
 @section('content')
     <x-wrappers.nav title="Components">
@@ -56,120 +47,120 @@
         <p class="mb-4">Below are the different Components stored in the management system. Each has
                         different options and locations can created, updated, and deleted.</p>
         @if($components->count() != 0)
-            <x-filters.navigation model="Component" relations="components" table="Component" :filter=$filter/>
-            <x-filters.filter model="Component" relations="components" table="Component" :filter=$filter
-                              :locations=$locations :statuses=$statuses :categories=$categories/>
-                @endif
-                <div class="card shadow mb-4">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="usersTable" class="table table-striped">
-                                <thead>
+            <x-filters.navigation model="Component" relations="components" table="Component"
+                                  :filter="$filter"></x-filters.navigation>
+            <x-filters.filter model="Component" relations="components" table="Component" :filter="$filter"
+                              :locations="$locations" :statuses="$statuses"
+                              :categories="$categories"></x-filters.filter>
+        @endif
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="usersTable" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th class="col-4 col-xl-2"><small>Name</small></th>
+                            <th class="text-center"><small>Location</small></th>
+                            <th class="text-center d-none d-sm-table-cell col-5 col-xl-2">
+                                <small>Manufacturers</small>
+                            </th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
+                            <th class="d-none d-xl-table-cell col-2"><small>Supplier</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
+                            <th class="text-right col-1"><small>Options</small></th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th><small>Name</small></th>
+                            <th class="text-center"><small>Location</small></th>
+                            <th class="text-center d-none d-sm-table-cell"><small>Manufacturers</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
+                            <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
+                            <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
+                            <th class="text-right"><small>Options</small></th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        @if($components->count() != 0)
+                            @foreach($components as $component)
+
                                 <tr>
-                                    <th class="col-4 col-xl-2"><small>Name</small></th>
-                                    <th class="text-center"><small>Location</small></th>
-                                    <th class="text-center d-none d-sm-table-cell col-5 col-xl-2">
-                                        <small>Manufacturers</small>
-                                    </th>
-                                    <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
-                                    <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
-                                    <th class="d-none d-xl-table-cell col-2"><small>Supplier</small></th>
-                                    <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
-                                    <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
-                                    <th class="text-right col-1"><small>Options</small></th>
+                                    <td>{{$component->name}}
+                                        <br>
+                                        <small>{{$component->serial_no}}</small>
+                                    </td>
+                                    <td class="text-center">
+                                        @if(isset($component->location->photo->path))
+                                            <img src="{{ asset($component->location->photo->path)}}" height="30px"
+                                                 alt="{{$component->location->name}}"
+                                                 title="{{ $component->location->name ?? 'Unnassigned'}}"/>
+                                        @else
+                                            {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($component->location->icon ?? '#666').'">'
+                                                .strtoupper(substr($component->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                        @endif
+                                    </td>
+                                    <td class="text-center d-none d-sm-table-cell">{{$component->manufacturer->name ?? "N/A"}}</td>
+                                    <td class="d-none d-xl-table-cell">{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
+                                    <td class="d-none d-xl-table-cell">{{$component->purchased_cost}}</td>
+                                    <td class="d-none d-xl-table-cell">{{$component->supplier->name ?? 'N/A'}}</td>
+                                    <td class="text-center">{{$component->status->name ??'N/A'}}</td>
+                                    @php $warranty_end = \Carbon\Carbon::parse($component->purchased_date)->addMonths($component->warranty);@endphp
+                                    <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
+                                        {{ $component->warranty }} Months
+
+                                        <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
+                                            Remaining</small>
+                                    </td>
+                                    <?php $data = $component;?>
+                                    <td class="text-right">
+                                        <x-wrappers.table-settings>
+                                            @can('view', $data)
+                                                <x-buttons.dropdown-item :route="route('components.show', $data->id)">
+                                                    View
+                                                </x-buttons.dropdown-item>
+                                            @endcan
+                                            @can('update', $data)
+                                                <x-buttons.dropdown-item :route=" route('components.edit', $data->id)">
+                                                    Edit
+                                                </x-buttons.dropdown-item>
+                                            @endcan
+                                            @can('delete', $data)
+                                                <x-form.layout method="DELETE" class="d-block p-0 m-0"
+                                                               :id="'form'.$data->id"
+                                                               :action="route('components.destroy', $data->id)">
+                                                    <x-buttons.dropdown-item :data="$data->id" class="deleteBtn">
+                                                        Delete
+                                                    </x-buttons.dropdown-item>
+                                                </x-form.layout>
+                                            @endcan
+                                        </x-wrappers.table-settings>
+                                    </td>
                                 </tr>
-                                </thead>
-                                <tfoot>
-                                <tr>
-                                    <th><small>Name</small></th>
-                                    <th class="text-center"><small>Location</small></th>
-                                    <th class="text-center d-none d-sm-table-cell"><small>Manufacturers</small></th>
-                                    <th class="d-none d-xl-table-cell"><small>Purchased Date</small></th>
-                                    <th class="d-none d-xl-table-cell"><small>Purchased Cost</small></th>
-                                    <th class="d-none d-xl-table-cell"><small>Supplier</small></th>
-                                    <th class="text-center d-none d-xl-table-cell"><small>Status</small></th>
-                                    <th class="text-center d-none d-xl-table-cell"><small>Warranty</small></th>
-                                    <th class="text-right"><small>Options</small></th>
-                                </tr>
-                                </tfoot>
-                                <tbody>
-                                @if($components->count() != 0)
-                                    @foreach($components as $component)
-
-                                        <tr>
-                                            <td>{{$component->name}}
-                                                <br>
-                                                <small>{{$component->serial_no}}</small>
-                                            </td>
-                                            <td class="text-center">
-                                                @if(isset($component->location->photo->path))
-                                                    <img src="{{ asset($component->location->photo->path)}}"
-                                                         height="30px" alt="{{$component->location->name}}"
-                                                         title="{{ $component->location->name ?? 'Unnassigned'}}"/>
-                                                @else
-                                                    {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($component->location->icon ?? '#666').'">'
-                                                        .strtoupper(substr($component->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                                @endif
-                                            </td>
-                                            <td class="text-center d-none d-sm-table-cell">{{$component->manufacturer->name ?? "N/A"}}</td>
-                                            <td class="d-none d-xl-table-cell">{{\Carbon\Carbon::parse($component->purchased_date)->format("d/m/Y")}}</td>
-                                            <td class="d-none d-xl-table-cell">{{$component->purchased_cost}}</td>
-                                            <td class="d-none d-xl-table-cell">{{$component->supplier->name ?? 'N/A'}}</td>
-                                            <td class="text-center">{{$component->status->name ??'N/A'}}</td>
-                                            @php $warranty_end = \Carbon\Carbon::parse($component->purchased_date)->addMonths($component->warranty);@endphp
-                                            <td class="text-center  d-none d-xl-table-cell"
-                                                data-sort="{{ $warranty_end }}">
-                                                {{ $component->warranty }} Months
-
-                                                <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
-                                                    Remaining</small>
-                                            </td>
-                                            <?php $data = $component;?>
-                                            <td class="text-right">
-                                                <x-wrappers.table-settings>
-                                                    @can('view', $data)
-                                                        <x-buttons.dropdown-item
-                                                            :route="route('components.show', $data->id)">
-                                                            View
-                                                        </x-buttons.dropdown-item>
-                                                    @endcan
-                                                    @can('update', $data)
-                                                        <x-buttons.dropdown-item
-                                                            :route=" route('components.edit', $data->id)">
-                                                            Edit
-                                                        </x-buttons.dropdown-item>
-                                                    @endcan
-                                                    @can('delete', $data)
-                                                        <x-form.layout method="DELETE" class="d-block p-0 m-0"
-                                                                       :id="'form'.$data->id"
-                                                                       :action="route('components.destroy', $data->id)">
-                                                            <x-buttons.dropdown-item :data="$data->id"
-                                                                                     class="deleteBtn">
-                                                                Delete
-                                                            </x-buttons.dropdown-item>
-                                                        </x-form.layout>
-                                                    @endcan
-                                                </x-wrappers.table-settings>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <td colspan="10" class="text-center">No Components Returned</td>
-                                @endif
-                                </tbody>
-                            </table>
-                            <x-paginate :model="$components"/>
-                        </div>
-                    </div>
+                            @endforeach
+                        @else
+                            <td colspan="10" class="text-center">No Components Returned</td>
+                        @endif
+                        </tbody>
+                    </table>
+                    <x-paginate :model="$components"/>
                 </div>
-                <div class="card shadow mb-3">
-                    <div class="card-body">
-                        <h4>Help with Components </h4>
-                        <p>Click <a href="{{route("documentation.index").'#collapseNineComponent'}}">here</a> for a the
-                           Documentation on Components on Importing ,Exporting , Adding , Removing!</p>
+            </div>
+        </div>
+        <div class="card shadow mb-3">
+            <div class="card-body">
+                <h4>Help with Components </h4>
+                <p>Click <a href="{{route("documentation.index").'#collapseNineComponent'}}">here</a> for
+                   the
+                   Documentation on Components on Importing ,Exporting , Adding , Removing!</p>
 
-                    </div>
-                </div>
+            </div>
+        </div>
+
     </section>
 
 @endsection
@@ -180,25 +171,37 @@
 @endsection
 
 @section('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/import.js')}}"></script>
     <script src="{{asset('js/filter.js')}}"></script>
     <script>
-        $(function () {
-            $("#slider-range").slider({
-                range: true,
-                min: {{ floor($floor)}},
-                max: {{ round($limit)}},
-                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
-                slide: function (event, ui) {
-                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
-                }
-            });
-            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
-                " - £" + $("#slider-range").slider("values", 1));
+        let sliderMin = document.querySelector('#customRange1');
+        let sliderMax = document.querySelector('#customRange2');
+        let sliderMinValue = document.querySelector('#minRange');
+        let sliderMaxValue = document.querySelector('#maxRange');
+
+        //setting slider ranges
+        sliderMin.setAttribute('min', {{ floor($start_value)}});
+        sliderMin.setAttribute('max', {{ round($end_value)}});
+        sliderMax.setAttribute('min', {{ floor($start_value)}});
+        sliderMax.setAttribute('max', {{ round($end_value)}});
+        sliderMax.value = {{ round($end_value)}};
+        sliderMin.value = {{ floor($start_value)}};
+
+        sliderMinValue.innerHTML = {{ floor($start_value)}};
+        sliderMaxValue.innerHTML = {{ round($end_value)}};
+
+        sliderMin.addEventListener('input', function () {
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMaxValue.innerHTML = sliderMax.value;
+
+        });
+        sliderMax.addEventListener('input', function () {
+            sliderMaxValue.innerHTML = sliderMax.value;
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMin.setAttribute('max', sliderMax.value);
+
+
         });
     </script>
 @endsection

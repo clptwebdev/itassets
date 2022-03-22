@@ -24,34 +24,39 @@ class RoleBoot implements ShouldQueue {
     {
         //created default roles
         $global_admin = Role::updateOrCreate([
-            'id' => 1,
+            'id' => 1], [
             'name' => 'global_admin',
             'significance' => '5',
         ]);
         $it_manager = Role::updateOrCreate([
-            'id' => 2,
+            'id' => 2], [
             'name' => 'it_manager',
             'significance' => '4',
         ]);
         $business_manager = Role::updateOrCreate([
-            'id' => 3,
+            'id' => 3], [
             'name' => 'Business_manager',
             'significance' => '4',
         ]);
         $technician = Role::updateOrCreate([
-            'id' => 4,
+            'id' => 4], [
             'name' => 'technician',
             'significance' => '3',
         ]);
         $user_manager = Role::updateOrCreate([
-            'id' => 5,
+            'id' => 5], [
             'name' => 'user_manager',
             'significance' => '2',
         ]);
         $user = Role::updateOrCreate([
-            'id' => 6,
+            'id' => 6], [
             'name' => 'user',
             'significance' => '1',
+        ]);
+        $temp = Role::updateOrCreate([
+            'id' => 7], [
+            'name' => 'temporary',
+            'significance' => '0',
         ]);
         // global team start
         Permission::updateOrCreate([
@@ -2439,6 +2444,412 @@ class RoleBoot implements ShouldQueue {
         ]);
 
         // User end
+        // temporary start
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Requests'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Transfer'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Archive'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Report'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'AUC'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'FFE'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Machinery'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Vehicle'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Software'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Accessory'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Asset'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'AssetModel'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Backup'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Category'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Comment'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Component'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Consumable'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Depreciation'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Field'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Fieldset'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Location'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'LocationUser'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Log'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Manufacturer'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Miscellanea'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Photo'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Property'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Role'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Status'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Supplier'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'User'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+
+        // temporary end
     }
 
 }

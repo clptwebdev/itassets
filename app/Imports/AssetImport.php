@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 use App\Rules\permittedLocation;
 use App\Rules\findLocation;
 use App\Rules\checkAssetTag;
+use Maatwebsite\Excel\Cell;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -22,15 +23,18 @@ use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\DefaultValueBinder;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Validators\Failure;
 use phpDocumentor\Reflection\Types\False_;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use function PHPUnit\Framework\isEmpty;
 
-class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
+class AssetImport extends DefaultValueBinder implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError, WithCustomValueBinder {
 
     /**
      * @param array     $row
@@ -44,17 +48,28 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
     }
 
+    public function bindValue(Cell|\PhpOffice\PhpSpreadsheet\Cell\Cell $cell, $value)
+    {
+
+        $cell->setValueExplicit($value, DataType::TYPE_FORMULA);
+
+        return true;
+
+    }
+
     public function withValidator($validator)
     {
         $validator->after(function($validator) {
             foreach($validator->getData() as $key => $data)
             {
-                if($data['asset_tag'] != null) {
+                if($data['asset_tag'] != null)
+                {
                     $location = Location::where('name', "=", $data['location_id'])->first();
-                    if($asset = Asset::where("asset_tag", '=', $data['asset_tag'])->where('location_id', '=', $location->id)->first()){
-                            $validator->errors()->add($key.'.asset_tag', 'This Asset Tag is already assigned in this location.');
+                    if($asset = Asset::where("asset_tag", '=', $data['asset_tag'])->where('location_id', '=', $location->id)->first())
+                    {
+                        $validator->errors()->add($key . '.asset_tag', 'This Asset Tag is already assigned in this location.');
                     }
-                    
+
                 }
             }
         });
@@ -70,7 +85,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
             ], 'name' => [
                 'nullable',
-                'sometimes'
+                'sometimes',
             ],
             'purchased_cost' => [
                 'required',
@@ -81,7 +96,7 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
             ],
             'serial_no' => [
                 'nullable',
-                'sometimes'
+                'sometimes',
             ],
             'purchased_date' => [
                 'date_format:"d/m/Y"',
@@ -118,20 +133,21 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
 
         //Name of the Device cannot be null
         //If the device is NULL or empty - generate a name using initials of school and the ASSET Tag
-        if($row["name"] != ''){
+        if($row["name"] != '')
+        {
             $name = $row['name'];
-        }else{
-            $row['asset_tag'] != '' ? $tag = $row['asset_tag'] : $tag = '1234'; 
-            $name = strtoupper(substr($asset->location->name ?? 'UN', 0, 1))."-{$tag}";
+        } else
+        {
+            $row['asset_tag'] != '' ? $tag = $row['asset_tag'] : $tag = '1234';
+            $name = strtoupper(substr($asset->location->name ?? 'UN', 0, 1)) . "-{$tag}";
         }
         $asset->name = $name;
-
 
         $asset->user_id = auth()->user()->id;
 
         //Serial No Cannot be ""
         //If the imported Serial Number is empty assign it to "0"
-        $row["serial_no"] != '' ? $asset->serial_no = $row["serial_no"] : $asset->serial_no = "-" ;
+        $row["serial_no"] != '' ? $asset->serial_no = $row["serial_no"] : $asset->serial_no = "-";
 
         //check for already existing Status upon import if else create
         if($status = Status::where(["name" => $row["status_id"]])->first())
@@ -154,7 +170,14 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
         $asset->status_id = $status->id ?? 0;
 
         $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
-        $asset->purchased_cost = $row["purchased_cost"];
+        if($this->isBinary($row["purchased_cost"]))
+        {
+            $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
+            $asset->purchased_cost = floatval($binary);
+        } else
+        {
+            $asset->purchased_cost = floatval($row["purchased_cost"]);
+        }
         if(strtolower($row["donated"]) == 'yes')
         {
             $asset->donated = 1;
@@ -207,14 +230,16 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
                     }
                 }
             }
-        } elseif($row["asset_model"] != ''){
+        } else if($row["asset_model"] != '')
+        {
             $model = new AssetModel;
             $model->name = $row["asset_model"];
             $model->model_no = 'Unknown';
             $model->fieldset_id = 1;
             $model->save();
             $asset->asset_model = $model->id;
-        }else{
+        } else
+        {
             $asset->asset_model = 0;
         }
 
@@ -259,6 +284,11 @@ class AssetImport implements ToModel, WithValidation, WithHeadingRow, WithBatchI
     public function uniqueBy()
     {
         return 'asset_tag';
+    }
+
+    function isBinary($str)
+    {
+        return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
     }
 
 }

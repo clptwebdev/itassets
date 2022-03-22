@@ -73,14 +73,15 @@
 <script src="{{ asset('js/sb-admin-2.js') }}"></script>
 <script src="{{ asset('js/timedout.js') }}" defer></script>
 <script>
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
 
-    $('.loading').click(function () {
-        //showModal
-        $('#loadingModal').modal('show')
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
     });
+    document.querySelectorAll('.loading').forEach(elem => elem.addEventListener("click", (event) => {
+        loadingModal.show();
+    }));
 </script>
 
 @yield('js')

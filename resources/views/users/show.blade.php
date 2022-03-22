@@ -2,9 +2,6 @@
 
 @section('title', 'View '.$user->name)
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
 
 @section('content')
 
@@ -201,59 +198,12 @@
 
 @section('modals')
 
-    <!-- User Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this User? </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="user-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this User from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. All user information will be lost</small>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="button" id="confirmBtn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-modals.delete :archive="true"/>
 
 @endsection
 
 @section('js')
-    <script>
-        $('.deleteBtn').click(function (e) {
-            e.preventDefault();
-            $('#user-id').val($(this).data('id'))
-            //showModal
-            $('#removeUserModal').modal('show')
-        });
+    <script src="{{ asset('js/delete.js') }}"></script>
 
-        $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#user-id').val();
-            $(form).submit();
-        });
-    </script>
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('table.logs').DataTable({
-                "autoWidth": false,
-                "pageLength": 10,
-                "columnDefs": [{
-                    "targets": [1, 2],
-                    "orderable": false
-                }],
-                "order": [[3, "desc"]],
-            });
-        });
-    </script>
 
 @endsection

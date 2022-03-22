@@ -3,7 +3,6 @@
 @section('title', 'View '.$location->name)
 
 @section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
     <link rel="stylesheet" media="print" href="{{asset('css/print.css')}}"/>
 @endsection
 
@@ -305,17 +304,10 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
     <script>
         $('.deleteBtn').click(function () {
             $('#removeModal').modal('show')
-        });
-
-        $(document).ready(function () {
-            $('table.logs').DataTable({
-                "autoWidth": false,
-                "pageLength": 10,
-            });
         });
     </script>
     <!-- Charting library -->

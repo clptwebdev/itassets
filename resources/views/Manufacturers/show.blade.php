@@ -2,9 +2,6 @@
 
 @section('title', 'View '.$manufacturer->name)
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
 
 @section('content')
 
@@ -581,16 +578,16 @@
 @section('modals')
 
     <!-- User Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="removeUserModal" tabindex="-1" role="dialog"
+         aria-labelledby="removeUserModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <form action="{{ route('manufacturers.destroy', $manufacturer->id)}}" method="POST">
                     @csrf
                     @method('DELETE')
                     <div class="modal-header">
-                        <h5 class="modal-title" id="removeModalLabel">Are you sure you want to delete this
-                                                                      Manufacturer? </h5>
+                        <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this
+                                                                          Manufacturer? </h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
@@ -613,19 +610,13 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
+        const deleteModal = new bootstrap.Modal(document.getElementById('removeUserModal'));
 
-        $('.deleteBtn').click(function () {
-            $('#removeModal').modal('show')
-        });
-
-        $(document).ready(function () {
-            $('table.logs').DataTable({
-                "autoWidth": false,
-                "pageLength": 10,
-            });
-        });
+        document.querySelectorAll(".deleteBtn").forEach(elem => elem.addEventListener("click", (e) => {
+            e.preventDefault();
+            deleteModal.show();
+        }));
     </script>
 
 @endsection

@@ -1,7 +1,5 @@
 @extends('layouts.app')@section('title', 'View Assets Import errors')
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
+
 @section('content')
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
@@ -38,13 +36,7 @@
         on rows {{ $errorRows}}
 
     </div>
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
-    @endif
+    <x-handlers.alerts/>
     <section>
         <p class="mb-4">Below are the different Import Failures of all the different assets stored in the management
                         system. Each has
@@ -194,7 +186,7 @@
                                            name="purchased_cost[]" id="purchased_cost"
                                            placeholder="This Row is Empty Please Fill!"
                                            value="{{ $valueArray[$row]['purchased_cost'] }}" required
-                                           data-container='#purchased_date{{$line}}' data-placement='top'
+                                           data-container='#purchased_cost{{$line}}' data-placement='top'
                                            @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['purchased_cost']}'" !!}@endif>
                                     </span>
                                 </td>
@@ -344,118 +336,157 @@
 
 @section('js')
     <script>
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
+        const importModal = new bootstrap.Modal(document.getElementById('importManufacturerModal'));
+        const importHelpBtn = document.querySelector('#import');
 
-        })
+        importHelpBtn.addEventListener('click', function () {
+            importModal.show();
+        });
+
+        function enableToolTips() {
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        }
+
+        enableToolTips();
+
 
         //validation
         function checkErrors(obj) {
 
-            var token = $("[name='_token']").val();
-            var data = new FormData();
+            const importControl = document.querySelectorAll('.import-control');
+
+            const errorMessage = document.querySelector('.alert.alert-danger');
+
+            const token = document.querySelector("[name='_token']").value;
+            const data = new FormData();
             data.append('_token', token);
 
             //Names
-            var inputs = $("input[name='asset_tag[]']").get();
+            const inputs = document.querySelectorAll("input[name='name[]']");
             inputs.forEach(element => {
-                data.append('asset_tag[]', element.value);
-            });
-            //Names
-            var nmeinputs = $("input[name='name[]']").get();
-            nmeinputs.forEach(element => {
                 data.append('name[]', element.value);
             });
 
-            //status
-            var snInputs = $("input[name='serial_no[]']").get();
-            snInputs.forEach(element => {
-                data.append('serial_no[]', element.value);
+            //Asset Tag
+            const asset_tagInputs = document.querySelectorAll("input[name='asset_tag[]']");
+            asset_tagInputs.forEach(element => {
+                data.append('asset_tag[]', element.value);
             });
 
-            //Asset Model
-            var astInputs = $("select[name='asset_model[]']").get();
-            astInputs.forEach(element => {
+            //Model
+            const modelInputs = document.querySelectorAll("select[name='asset_model[]']");
+            modelInputs.forEach(element => {
+
                 data.append('asset_model[]', element.value);
             });
-
-            //Email
-            var maInputs = $("select[name='status_id[]']").get();
-            maInputs.forEach(element => {
+            //supplier
+            const supplierInputs = document.querySelectorAll("select[name='supplier_id[]']");
+            supplierInputs.forEach(element => {
+                data.append('supplier_id[]', element.value);
+            });
+            //status
+            const statusInputs = document.querySelectorAll("select[name='status_id[]']");
+            statusInputs.forEach(element => {
                 data.append('status_id[]', element.value);
             });
-
-            var pdInputs = $("input[name='purchased_date[]']").get();
-            pdInputs.forEach(element => {
-                data.append('purchased_date[]', element.value);
+            //Manufacturer
+            const mfInputs = document.querySelectorAll("select[name='manufacturer_id[]']");
+            mfInputs.forEach(element => {
+                data.append('manufacturer_id[]', element.value);
             });
 
-            var pcInputs = $("input[name='purchased_cost[]']").get();
+            //Location
+            const loInputs = document.querySelectorAll("select[name='location_id[]']");
+            loInputs.forEach(element => {
+                data.append('location_id[]', element.value);
+            });
+
+            //Purchased Cost
+            const pcInputs = document.querySelectorAll("input[name='purchased_cost[]']");
             pcInputs.forEach(element => {
                 data.append('purchased_cost[]', element.value);
             });
 
-            var doInputs = $("select[name='donated[]']").get();
-            doInputs.forEach(element => {
-                data.append('donated[]', element.value);
+            //Purchased Date
+            const pdInputs = document.querySelectorAll("input[name='purchased_date[]']");
+            pdInputs.forEach(element => {
+                data.append('purchased_date[]', element.value);
             });
 
-            var supInputs = $("select[name='supplier_id[]']").get();
-            supInputs.forEach(element => {
-                data.append('supplier_id[]', element.value);
+            //Depreciation
+            const dpInputs = document.querySelectorAll("select[name='depreciation_id[]']");
+            dpInputs.forEach(element => {
+                data.append('depreciation_id[]', element.value);
             });
-
-
-            var odInputs = $("input[name='order_no[]']").get();
-            odInputs.forEach(element => {
+            //ROOM
+            const roomInputs = document.querySelectorAll("input[name='room[]']");
+            roomInputs.forEach(element => {
+                data.append('room[]', element.value);
+            });
+            //Order Number
+            const orderNoInputs = document.querySelectorAll("input[name='order_no[]']");
+            orderNoInputs.forEach(element => {
                 data.append('order_no[]', element.value);
             });
 
-            var waInputs = $("input[name='warranty[]']").get();
-            waInputs.forEach(element => {
+            //Serial Number
+            const serialNoInputs = document.querySelectorAll("input[name='serial_no[]']");
+            serialNoInputs.forEach(element => {
+                data.append('serial_no[]', element.value);
+            });
+            //Donated
+            const donInputs = document.querySelectorAll("select[name='donated[]']");
+            donInputs.forEach(element => {
+                data.append('donated[]', element.value);
+            });
+            //Warranty
+            const warInputs = document.querySelectorAll("input[name='warranty[]']");
+            warInputs.forEach(element => {
                 data.append('warranty[]', element.value);
             });
+            //Notes
+            const notesInputs = document.querySelectorAll("input[name='notes[]']");
+            notesInputs.forEach(element => {
+                data.append('notes[]', element.value);
+            });
 
-            var loInputs = $("select[name='location_id[]']").get();
-            loInputs.forEach(element => {
-                data.append('location_id[]', element.value);
-            });
-            var adtInputs = $("input[name='audit_date[]']").get();
-            adtInputs.forEach(element => {
-                data.append('audit_date[]', element.value);
-            });
-            $.ajax({
-                url: '/assets/create/ajax',
-                type: 'POST',
-                data: data,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response === 'Success') {
-                        window.location.href = '/assets';
-                    } else {
-                        $('.import-control').removeClass('border-danger');
-                        $('.import-control').removeClass('border-bottom');
-                        $('.import-control').tooltip('dispose');
-                        var i = 0;
-                        Object.entries(response).forEach(entry => {
-                            const [key, value] = entry;
-                            res = key.split('.');
-                            const error = value.toString().replace(key, res[0]);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-bottom');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('data-toggle', 'tooltip');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('title', error);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip();
-                            i++;
-                        });
-                        $('.alert.alert-danger').html(`There were ${i} errors in the following rows`);
-                    }
-                },
-            });
+            const xhr = new XMLHttpRequest()
+
+            xhr.onload = function () {
+                if (xhr.responseText === 'Success') {
+                    window.location.href = '/assets';
+                } else {
+                    importControl.forEach((item) => {
+                        item.classList.remove('border-bottom', 'border-danger');
+                    });
+
+                    let i = 0;
+                    Object.entries(JSON.parse(xhr.responseText)).forEach(entry => {
+                        console.log(entry);
+                        const [key, value] = entry;
+                        res = key.split('.');
+                        const error = value.toString().replace(key, res[0]);
+                        console.log(error);
+                        console.log(res[1]);
+                        let elements = document.querySelectorAll(`[name='${res[0]}[]']`);
+                        console.log(elements[0]);
+                        let num = parseInt(res[1]);
+                        elements[num].classList.add('border-bottom', 'border-danger');
+                        elements[num].setAttribute('data-bs-toggle', 'tooltip');
+                        elements[num].setAttribute('data-title', error);
+                        i++;
+                        enableToolTips();
+                    });
+
+                    errorMessage.innerHTML = `There were ${i} errors in the following rows`;
+                }
+            };
+
+            xhr.open("POST", "/assets/create/ajax");
+            xhr.send(data);
         }
-
     </script>
 @endsection

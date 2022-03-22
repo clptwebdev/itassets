@@ -224,8 +224,6 @@
                     </div>
                 </div>
             </div>
-            </div>
-
         </section>
     </x-form.layout>
 @endsection

@@ -2,10 +2,6 @@
 
 @section('title', "View Miscellanea")
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
-
 @section('content')
     <x-wrappers.nav title="Show Misc">
         @can('viewAny' , \App\Models\Miscellanea::class)
@@ -64,27 +60,8 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/comment.js')}}"></script>
-    <script>
-        $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#miscellanea-id').val();
-            $(form).submit();
-        });
-        $(document).ready(function () {
-            $('#comments').DataTable({
-                "autoWidth": false,
-                "pageLength": 10,
-                "searching": false,
-                "bLengthChange": false,
-                "columnDefs": [{
-                    "targets": [1],
-                    "orderable": false
-                }],
-                "order": [[0, "desc"]],
-            });
-        });
-    </script>
 
 @endsection

@@ -80,13 +80,12 @@ class ArchiveController extends Controller {
         if(auth()->user()->cant('delete', $archive))
         {
             return ErrorController::forbidden(to_route('archives.index'), 'Unauthorised to Delete Archives.');
-
         }
 
         $archive->delete();
         session()->flash('danger_message', "The Archived Item was removed from the system successfully");
 
-        return back();
+        return to_route('archives.index');
     }
 
     public function downloadPDF(Request $request)

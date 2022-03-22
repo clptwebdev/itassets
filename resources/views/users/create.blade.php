@@ -166,6 +166,7 @@
             }
         }
 
+
         function getPermissions() {
             const xhttp = new XMLHttpRequest()
 
@@ -177,6 +178,7 @@
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send(`ids=${permissions.value}`);
         }
+
 
         function removePermission(id) {
             event.preventDefault();

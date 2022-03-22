@@ -1,55 +1,84 @@
-function selectPhoto(id, src) {
-    const profileImage = document.querySelector("#profileImage");
-    const photoId = document.querySelector("#photo_id");
+const photoModal = new bootstrap.Modal(document.getElementById('imgModal'));
+const photoUploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
+const photoUpload = document.querySelector('#imageUpload');
+const photo = document.querySelector('#profileImage');
+const photoId = document.querySelector("#photo_id");
+const urlto = "/photo/upload";
 
-    profileImage.src = src;
+photo.addEventListener("click", function (e) {
+    e.preventDefault();
+    photoModal.toggle();
+});
+
+function selectPhoto(id, src) {
+
+
+    photo.src = src;
     photoId.value = id;
-    $("#imgModal").modal("hide");
+    photoModal.toggle();
 }
 
-/* const imgUploadForm = document.querySelector("form#imageUpload");
+photoUpload.onsubmit = async (e) => {
 
-imgUploadForm.addEventListener("submit", function (e) {
     e.preventDefault();
-    const formData = new FormData(this);
-    const urlto = "/photo/upload";
+    
+    let response = await fetch('/photo/upload', {
 
-    const xhttp = new XMLHttpRequest();
+        method: 'POST',
 
-    xhttp.onload = function () {
-        const response = xhttp.responseText;
-        if (response !== false) {
-            console.log(response);
-        }
-    };
+        body: new FormData(photoUpload)
 
-    xhttp.open("POST", urlto);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(`data=${formData}`);
-}); */
-
-$(document).ready(function () {
-    $("form#imageUpload").submit(function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const urlto = "/photo/upload";
-        $.ajaxSetup({
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
-        });
-        // AJAX request
-        $.ajax({
-            url: urlto,
-            method: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                $("#uploadModal").modal("hide");
-                profileImage.src = `/${data.path}`;
-                photoId.value = data.id;
-            },
-        });
     });
-});
+
+
+    let result = await response.json();
+
+    photo.src = result.path;
+
+    photoId.value = result.id;
+
+    photoUploadModal.hide();
+
+    // updatePhotos();
+
+
+}
+// function updatePhotos(page = 1){
+//
+//
+//
+//     var xhr = new XMLHttpRequest();
+//
+//
+//
+//     xhr.onload = function(e) {
+//
+//         //Place the JSON Images into the modal
+//
+//         let response = JSON.parse(xhr.responseText);
+//
+//         let output = "";
+//
+//
+//         Object.entries(response.photos).forEach(([key, value]) => {
+//
+//             output += `<img src="${value}" width="80px" alt=""
+//
+//                         class="selectPhoto" data-url="${value}" data-id="${key}">`;
+//
+//         });
+//
+//         console.log(output);
+//
+//         library.innerHTML = output;
+//
+//         photoUploadModal.hide();
+//
+//     }
+//
+//     xhr.open("GET", `/photo/${page}/get`);
+//
+//     xhr.send();
+//
+// }
+

@@ -16,7 +16,7 @@ class DepreciationController extends Controller {
 
         }
 
-        $depreciation = Depreciation::all();
+        $depreciation = Depreciation::paginate();
 
         return view('depreciation.view', compact('depreciation'));
     }

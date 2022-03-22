@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call('\App\Http\Controllers\BackupController@createDb')->daily();
+
         //cleans all backups Monthly
         $schedule->call('\App\Http\Controllers\BackupController@dbClean')->monthly();
 

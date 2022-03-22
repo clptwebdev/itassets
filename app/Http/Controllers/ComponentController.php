@@ -131,7 +131,8 @@ class ComponentController extends Controller {
                 session(['warranty' => $request->warranty]);
             }
 
-            session(['amount' => $request->amount]);
+            session(['assets_min' => $request->minCost]);
+            session(['assets_max' => $request->maxCost]);
         }
 
         $locations = \App\Models\Location::all()->pluck('id');
@@ -160,10 +161,11 @@ class ComponentController extends Controller {
             $components->purchaseFilter(session('start'), session('end'));
             $filter++;
         }
-        if(session()->has('amount'))
+        if(session()->has('assets_min') && session()->has('assets_max'))
         {
-            $components->costFilter(session('amount'));
+            $components->costFilter(session('assets_min'), session('assets_max'));
             $filter++;
+
         }
 
         if(session()->has('search'))
@@ -258,46 +260,42 @@ class ComponentController extends Controller {
 
     public function ajaxMany(Request $request)
     {
-        if($request->ajax())
+
+        $validation = Validator::make($request->all(), [
+            "name.*" => "required|max:255",
+            'serial_no.*' => 'required',
+            'warranty.*' => 'int',
+            'location_id.*' => 'required|gt:0',
+            'purchased_date.*' => 'nullable|date',
+            'purchased_cost.*' => 'required',
+
+        ]);
+        if($validation->fails())
         {
-            $validation = Validator::make($request->all(), [
-                "name.*" => "required|max:255",
-                'order_no.*' => 'required',
-                'serial_no.*' => 'required',
-                'warranty.*' => 'int',
-                'location_id.*' => 'required|gt:0',
-                'purchased_date.*' => 'nullable|date',
-                'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-
-            ]);
-
-            if($validation->fails())
+            return $validation->errors();
+        } else
+        {
+            for($i = 0; $i < count($request->name); $i++)
             {
-                return $validation->errors();
-            } else
-            {
-                for($i = 0; $i < count($request->name); $i++)
-                {
-                    $component = new Component;
-                    $component->name = $request->name[$i];
-                    $component->serial_no = $request->serial_no[$i];
-                    $component->status_id = $request->status_id[$i];
-                    $component->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
-                    $component->purchased_cost = $request->purchased_cost[$i];
-                    $component->supplier_id = $request->supplier_id[$i];
-                    $component->manufacturer_id = $request->manufacturer_id[$i];
-                    $component->order_no = $request->order_no[$i];
-                    $component->warranty = $request->warranty[$i];
-                    $component->location_id = $request->location_id[$i];
-                    $component->notes = $request->notes[$i];
-                    $component->photo_id = 0;
-                    $component->save();
-                }
-
-                session()->flash('success_message', 'You have successfully added all Components!');
-
-                return 'Success';
+                $component = new Component;
+                $component->name = $request->name[$i];
+                $component->serial_no = $request->serial_no[$i];
+                $component->status_id = $request->status_id[$i];
+                $component->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $component->purchased_cost = floatval($request->purchased_cost[$i]);
+                $component->supplier_id = $request->supplier_id[$i];
+                $component->manufacturer_id = $request->manufacturer_id[$i];
+                $component->order_no = $request->order_no[$i];
+                $component->warranty = $request->warranty[$i];
+                $component->location_id = $request->location_id[$i];
+                $component->notes = $request->notes[$i];
+                $component->photo_id = 0;
+                $component->save();
             }
+
+            session()->flash('success_message', 'You have successfully added all Components!');
+
+            return 'Success';
         }
     }
 
@@ -620,6 +618,19 @@ class ComponentController extends Controller {
         session()->flash('danger_message', "Component - " . $name . ' was deleted permanently');
 
         return to_route("components.bin");
+    }
+
+    public function changeStatus(Component $component, Request $request)
+    {
+        if(auth()->user()->cant('update', $component))
+        {
+            return ErrorController::forbidden(to_route('components.show', $component->id), 'Unauthorised to Change Statuses Component.');
+        }
+        $component->status_id = $request->status;
+        $component->save();
+        session()->flash('success_message', $component->name . ' has had its status changed successfully');
+
+        return to_route('components.show', $component->id);
     }
 
 }

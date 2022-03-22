@@ -23,7 +23,7 @@
 
         <section>
             <p class="mb-4">Below is the {{$comment->title}} tile ,this is for the comment stored in the
-                management system.</p>
+                            management system.</p>
             <div class="row row-eq-height">
                 <div class="col-12 col-md-8 col-lg-9 col-xl-10">
                     <div class="card shadow h-100">
@@ -45,16 +45,15 @@
                                 <label for="title">Comment Title</label>
                                 <input type="text"
                                        class="form-control <?php if ($errors->has('title')) {?>border-danger<?php }?>"
-                                       name="title"
-                                       id="title" value="{{$comment->title}}">
+                                       name="title" id="title" value="{{$comment->title}}">
                             </div>
                             <div class="form-group">
                                 <label for="comment">Notes</label>
                                 <input type="text" class="form-control" name="comment_" id="comment"
                                        value="{{$comment->comment}}">
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         </section>
@@ -62,12 +61,4 @@
 
 @endsection
 
-@section('modals')
 
-@endsection
-
-@section('js')
-    <script>
-
-    </script>
-@endsection

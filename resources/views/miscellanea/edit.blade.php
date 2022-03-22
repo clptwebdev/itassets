@@ -273,12 +273,14 @@
                     </div>
                 </div>
             </div>
-            </div>
-
         </section>
     </x-form.layout>
 @endsection
 
 @section('modals')
     <x-modals.image-modal/>
+@endsection
+@section('js')
+    <script type="text/javascript" src="{{ asset('js/accessories.js')}}"></script>
+    <script src="{{asset('js/photo.js')}}"></script>
 @endsection

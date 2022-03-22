@@ -81,8 +81,7 @@
                                             @endcan
                                             @can('delete', $fieldset)
                                                 <a class="dropdown-item deleteBtn" href="#"
-                                                   data-route="{{ route('fieldsets.destroy', $fieldset->id)}}"
-                                                ">Delete</a>
+                                                   data-route="{{ route('fieldsets.destroy', $fieldset->id)}}">Delete</a>
                                             @endcan
                                         </div>
                                     </div>
@@ -91,6 +90,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$fieldsets"/>
                 </div>
             </div>
         </div>
@@ -107,60 +107,11 @@
 @endsection
 
 @section('modals')
-    <!-- Delete Modal-->
-    <div class="modal fade bd-example-modal-lg" id="removeFieldsetModal" tabindex="-1" role="dialog"
-         aria-labelledby="removeFieldsetModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="removeFieldsetModalLabel">Are you sure you want to delete this
-                                                                          Fieldset? </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input id="supplier-id" type="hidden" value="">
-                    <p>Select "Delete" to remove this Fieldset from the system.</p>
-                    <small class="text-danger">**Warning this is permanent. The fieldset will be unassigned from assets
-                                               models, any
-                                               assets with just this fieldset will have their fieldset set to
-                                               null.</small>
-                </div>
-                <div class="modal-footer">
-                    <form id="deleteForm" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-modals.delete :archive="true"/>
+
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script>
-        $('.deleteBtn').click(function () {
-            $('#deleteForm').attr('action', $(this).data('route'));
-            //showModal
-            $('#removeFieldsetModal').modal('show');
-        });
+    <script src="{{asset('js/delete.js')}}"></script>
 
-        $('#confirmBtn').click(function () {
-            $('#deleteForm').submit();
-        });
-
-        $(document).ready(function () {
-            $('#fieldsetTable').DataTable({
-                "columnDefs": [{
-                    "targets": [2, 3],
-                    "orderable": false,
-                }],
-                "order": [[0, "asc"]]
-            });
-        });
-    </script>
 @endsection

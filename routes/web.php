@@ -69,7 +69,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::controller(\App\Http\Controllers\PhotoController::class)->group(function() {
         //photos
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
-        Route::post('photo/upload', 'upload');
+        Route::post('/photo/upload', 'upload');
     });
     Route::controller(\App\Http\Controllers\DepreciationController::class)->group(function() {
         //photos
@@ -304,7 +304,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get("/exportsuppliers", "export");
     });
 
-
     /////////////////////////////////////////////
     /////////////// Transfer Routes /////////////
     /////////////////////////////////////////////
@@ -315,9 +314,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/asset/transfers', 'assets')->name('transfers.assets');
         Route::get('/accessory/transfers', 'accessories')->name('transfers.accessories');
     });
-    
-    
-    
+
     Route::controller(\App\Http\Controllers\BackupController::class)->group(function() {
         //Database Backups Routes (Doesn't include import routes)
         Route::resource('/databasebackups', \App\Http\Controllers\BackupController::class);

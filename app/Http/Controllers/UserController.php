@@ -153,13 +153,15 @@ class UserController extends Controller {
 
     public function permissions(Request $request)
     {
+
         if(auth()->user()->cant('viewAll', User::class))
         {
             return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Permissions.');
 
         }
-            $ids = explode(',',$request->ids);
-            return view('users.permissions', compact('ids'));
+        $ids = explode(',', $request->ids);
+
+        return view('users.permissions', compact('ids'));
     }
 
     public function userPermissions()
@@ -175,7 +177,7 @@ class UserController extends Controller {
 
     public function changePermission($id, $role)
     {
-        
+
         $user = User::findOrFail($id);
 
         $user->role_id = $role;

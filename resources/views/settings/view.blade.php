@@ -93,10 +93,10 @@
 @section('js')
     <script src="{{ asset('js/roleToggle.js') }}"></script>
     <script>
-        // import
-        $('#export').click(function () {
-//showModal
-            $('#exportModal').modal('show')
+        const exportModal = new bootstrap.Modal(document.getElementById('exportModal'));
+        document.querySelector('#export').addEventListener('click', function (event) {
+            event.preventDefault();
+            exportModal.show();
         });
     </script>
 @endsection

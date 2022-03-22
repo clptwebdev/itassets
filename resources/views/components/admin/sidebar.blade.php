@@ -253,7 +253,7 @@
                 </div>
             </li>
         @endcan
-        @can('viewAll' , \App\Models\Location::class)
+        @can('viewAny' , \App\Models\Location::class)
             <li class="nav-item">
                 <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('location.index')}}">
                     <i class="far fa-fw fa-map sidebar-icon"></i>
@@ -261,14 +261,14 @@
             </li>
         @endcan
     <!-- Nav Item - Charts -->
-        @can('viewAll' , \App\Models\Manufacturer::class)
+        @can('viewAny' , \App\Models\Manufacturer::class)
             <li class="nav-item">
                 <a class="nav-link text-left text-sm-center text-md-left" href="{{route("manufacturers.index")}}">
                     <i class="fas fa-fw fa-tools sidebar-icon"></i>
                     <span class="sidebar-title">Manufacturers</span></a>
             </li>
         @endcan
-        @can('viewAll' , \App\Models\Supplier::class)
+        @can('viewAny' , \App\Models\Supplier::class)
         <!-- Nav Item - Tables -->
             <li class="nav-item">
                 <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('suppliers.index') }}">

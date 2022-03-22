@@ -17,7 +17,7 @@ class FieldsetController extends Controller {
 
         }
 
-        $fieldsets = Fieldset::all();
+        $fieldsets = Fieldset::paginate();
 
         return view('fieldsets.view', compact('fieldsets'));
     }

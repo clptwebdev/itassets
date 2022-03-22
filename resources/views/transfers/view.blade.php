@@ -2,9 +2,6 @@
 
 @section('title', 'Asset Transfers')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
 
 @section('content')
 
@@ -60,11 +57,11 @@
         <div class="alert alert-success"> {!! session('success_message')!!} </div>
     @endif
 
-   
+
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
-            different options and locations can created, updated, deleted and filtered</p>
-        
+                        different options and locations can created, updated, deleted and filtered</p>
+
 
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -96,51 +93,59 @@
                         </tfoot>
                         <tbody>
                         @foreach($transfers as $transfer)
-                        @php
-                            $m = "\\App\\Models\\".ucfirst($transfer->model_type);
-                            $model = $m::find($transfer->model_id);
-                        @endphp
-                        <tr>
-                            <td>{{ $model->name ?? $model->model->name  ?? 'Unknown'}}</td>
-                            <td class="text-center text-sm-left">
-                                @if(isset($transfer->from->photo->path))
-                                    <img src="{{ asset($transfer->from->photo->path)}}" height="30px" alt="{{$transfer->from->name}}" title="{{ $transfer->from->name }}"/>
-                                @else
-                                    {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($transfer->from->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
-                                        .strtoupper(substr($transfer->from->name ?? 'u', 0, 1)).'</span>' !!}
-                                @endif
-                                <small>{{$transfer->from->name}}</small>
-                            </td>
-                            <td class="text-center text-sm-left">
-                                @if(isset($transfer->from->photo->path))
-                                    <img src="{{ asset($transfer->to->photo->path)}}" height="30px" alt="{{$transfer->to->name}}" title="{{ $transfer->to->name }}"/>
-                                @else
-                                    {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($transfer->to->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
-                                        .strtoupper(substr($transfer->to->name ?? 'u', 0, 1)).'</span>' !!}
-                                @endif
-                                <small>{{$transfer->to->name}}</small>
-                            </td>
-                            <td class="text-center">£{{ $transfer->value}}<br><small>Original Cost: £{{ $model->purchased_cost ?? ' - Unknown' }}</td>
-                            <td class="text-center">
-                                @if($transfer->requested->photo()->exists())
-                                <img class="img-profile rounded-circle"
-                                    src="{{ asset($transfer->requested->photo->path) ?? asset('images/profile.png') }}" width="50px" title="{{ $transfer->requested->name ?? 'Unknown' }}">
-                                @else
-                                    <img class="img-profile rounded-circle" src="{{ asset('images/profile.png') }}" width="50px" title="{{ $transfer->requested->name ?? 'Unknown' }}">
-                                @endif
-                            </td>
-                            <td class="text-center">{{ \Carbon\Carbon::parse($transfer->created_at)->format("d/m/Y") }}</td>
-                            <td class="text-center">
-                                @if($transfer->approved->photo()->exists())
-                                <img class="img-profile rounded-circle"
-                                    src="{{ asset($transfer->approved->photo->path) ?? asset('images/profile.png') }}" width="50px" title="{{ $transfer->approved->name ?? 'Unknown' }}">
-                                @else
-                                    <img class="img-profile rounded-circle" src="{{ asset('images/profile.png') }}" width="50px" title="{{ $transfer->approved->name ?? 'Unknown' }}">
-                                @endif
-                            </td>
-                            <td class="text-center">{{ \Carbon\Carbon::parse($transfer->updated_at)->format("d/m/Y") }}</td>
+                            @php
+                                $m = "\\App\\Models\\".ucfirst($transfer->model_type);
+                                $model = $m::find($transfer->model_id);
+                            @endphp
+                            <tr>
+                                <td>{{ $model->name ?? $model->model->name  ?? 'Unknown'}}</td>
+                                <td class="text-center text-sm-left">
+                                    @if(isset($transfer->from->photo->path))
+                                        <img src="{{ asset($transfer->from->photo->path)}}" height="30px"
+                                             alt="{{$transfer->from->name}}" title="{{ $transfer->from->name }}"/>
+                                    @else
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($transfer->from->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
+                                            .strtoupper(substr($transfer->from->name ?? 'u', 0, 1)).'</span>' !!}
+                                    @endif
+                                    <small>{{$transfer->from->name}}</small>
+                                </td>
+                                <td class="text-center text-sm-left">
+                                    @if(isset($transfer->from->photo->path))
+                                        <img src="{{ asset($transfer->to->photo->path)}}" height="30px"
+                                             alt="{{$transfer->to->name}}" title="{{ $transfer->to->name }}"/>
+                                    @else
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($transfer->to->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
+                                            .strtoupper(substr($transfer->to->name ?? 'u', 0, 1)).'</span>' !!}
+                                    @endif
+                                    <small>{{$transfer->to->name}}</small>
+                                </td>
+                                <td class="text-center">£{{ $transfer->value}}<br><small>Original Cost:
+                                                                                         £{{ $model->purchased_cost ?? ' - Unknown' }}
+                                </td>
+                                <td class="text-center">
+                                    @if($transfer->requested->photo()->exists())
+                                        <img class="img-profile rounded-circle"
+                                             src="{{ asset($transfer->requested->photo->path) ?? asset('images/profile.png') }}"
+                                             width="50px" title="{{ $transfer->requested->name ?? 'Unknown' }}">
+                                    @else
+                                        <img class="img-profile rounded-circle" src="{{ asset('images/profile.png') }}"
+                                             width="50px" title="{{ $transfer->requested->name ?? 'Unknown' }}">
+                                    @endif
+                                </td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($transfer->created_at)->format("d/m/Y") }}</td>
+                                <td class="text-center">
+                                    @if($transfer->approved->photo()->exists())
+                                        <img class="img-profile rounded-circle"
+                                             src="{{ asset($transfer->approved->photo->path) ?? asset('images/profile.png') }}"
+                                             width="50px" title="{{ $transfer->approved->name ?? 'Unknown' }}">
+                                    @else
+                                        <img class="img-profile rounded-circle" src="{{ asset('images/profile.png') }}"
+                                             width="50px" title="{{ $transfer->approved->name ?? 'Unknown' }}">
+                                    @endif
+                                </td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($transfer->updated_at)->format("d/m/Y") }}</td>
 
-                        </tr>
+                            </tr>
                         @endforeach
                         </tbody>
                     </table>
@@ -151,7 +156,8 @@
         <div class="card shadow mb-3">
             <div class="card-body">
                 <h4>Help with Assets</h4>
-                <p>Click <a href="{{route("documentation.index").'#collapseThreeAssets'}}">here</a> for a the Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
+                <p>Click <a href="{{route("documentation.index").'#collapseThreeAssets'}}">here</a> for a the
+                   Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
             </div>
         </div>
 
@@ -159,24 +165,10 @@
 @endsection
 
 @section('modals')
-  
+
 
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#assetsTable').DataTable({
-                "autoWidth": false,
-                "pageLength": 25,
-                "columnDefs": [{
-                    "targets": [3],
-                    "orderable": false
-                }],
-                "order": [[7, "asc"]],
-            });
-        });
-        
-    </script>
+
 @endsection

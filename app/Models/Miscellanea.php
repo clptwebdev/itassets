@@ -15,7 +15,7 @@ class Miscellanea extends Model {
     use SoftDeletes;
 
     protected $fillable = [
-        'name', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'status_id', 'order_no', 'warranty', 'location_id', 'room', 'notes', 'manufacturer_id', 'photo_id', 'depreciation_id'
+        'name', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'status_id', 'order_no', 'warranty', 'location_id', 'room', 'notes', 'manufacturer_id', 'photo_id', 'depreciation_id',
     ];
 
 //    protected $with =['supplier','location','manufacturer','photo','Status'];
@@ -100,11 +100,9 @@ class Miscellanea extends Model {
         });
     }
 
-    public function scopeCostFilter($query, $amount)
+    public function scopeCostFilter($query, $min, $max)
     {
-        $amount = str_replace('£', '', $amount);
-        $amount = explode(' - ', $amount);
-        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
+        $query->whereBetween('purchased_cost', [$min, $max]);
     }
 
     public function scopePurchaseFilter($query, $start, $end)
