@@ -52,8 +52,8 @@
                                 //If Date is > 1 September the Year is this Year else Year = Last Year
                 
                                 $now = \Carbon\Carbon::now();
-                                $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
-                                $endDate = \Carbon\Carbon::parse('08/31/'.\Carbon\Carbon::now()->addYear()->format('Y'));
+                                $startDate = \Carbon\Carbon::parse('08/31/'.$now->format('Y'));
+                                $endDate = \Carbon\Carbon::parse('09/01/'.\Carbon\Carbon::now()->addYear()->format('Y'));
                                 if(!$startDate->isPast()){
                                     $startDate->subYear();
                                     $endDate->subYear();
@@ -69,7 +69,7 @@
                             <p><strong>Depreciation B/Fwd ({{$startDate->format('d\/m\/Y')}}):</strong><br>
                                 £{{number_format( (float) $property->purchased_cost - $bf, 2, '.', ',' )}}
                             </p>
-                            <p><strong>Depreciation C/Fwd ({{$endDate->format('d\/m\/Y')}}):</strong><br>
+                            <p><strong>Depreciation C/Fwd ({{$endDate->subDay()->format('d\/m\/Y')}}):</strong><br>
                                 £{{number_format( (float) $bf - $cf, 2, '.', ',' )}}
                             </p>
                             <?php $prevYear = $endDate->subYear();?>

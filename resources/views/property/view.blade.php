@@ -144,7 +144,23 @@
                                 <td class="text-center">
                                     £{{number_format($property->depreciation_value(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
                                 <td class="text-center">{{$property->depreciation}} Years</td>
-                                <td class="text-center">{{$property->depreciation}} Years</td>
+                                <td class="text-center">
+                                    <?php
+                                        //If Date is > 1 September the Year is this Year else Year = Last Year
+                        
+                                        $now = \Carbon\Carbon::now();
+                                        $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
+                                        $endDate = \Carbon\Carbon::parse('08/31/'.\Carbon\Carbon::now()->addYear()->format('Y'));
+                                        if(!$startDate->isPast()){
+                                            $startDate->subYear();
+                                            $endDate->subYear();
+                                        }
+
+                                        $bf = $property->depreciation_value($startDate);
+                                        $cf = $property->depreciation_value($endDate);
+                                    ?>
+                                    £{{number_format( (float) $property->purchased_cost - $bf, 2, '.', ',' )}}    
+                                </td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
                                         @can('view', $property)

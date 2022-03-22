@@ -1,7 +1,5 @@
 @extends('layouts.app')@section('title', 'View Assets Import errors')
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
+
 @section('content')
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
@@ -338,8 +336,6 @@
 
 @section('js')
     <script>
-
-
         const importModal = new bootstrap.Modal(document.getElementById('importManufacturerModal'));
         const importHelpBtn = document.querySelector('#import');
 
@@ -379,9 +375,11 @@
             asset_tagInputs.forEach(element => {
                 data.append('asset_tag[]', element.value);
             });
+
             //Model
             const modelInputs = document.querySelectorAll("select[name='asset_model[]']");
             modelInputs.forEach(element => {
+
                 data.append('asset_model[]', element.value);
             });
             //supplier
