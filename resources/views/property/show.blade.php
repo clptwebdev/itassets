@@ -53,7 +53,7 @@
                 
                                 $now = \Carbon\Carbon::now();
                                 $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
-                                $endDate = \Carbon\Carbon::parse('08/31/'.\Carbon\Carbon::now()->addYear()->format('Y'));
+                                $endDate = \Carbon\Carbon::parse('09/01/'.\Carbon\Carbon::now()->addYear()->format('Y'));
                                 if(!$startDate->isPast()){
                                     $startDate->subYear();
                                     $endDate->subYear();
