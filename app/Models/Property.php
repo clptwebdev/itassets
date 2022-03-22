@@ -32,13 +32,7 @@ class Property extends Model {
     //Use the Depreciation time to minus the depreication charge
     public function depreciation_value($date)
     {
-        //purchased date
-        $pd = \Carbon\Carbon::parse($this->purchased_date);
-        $startDate = \Carbon\Carbon::parse('09/01/'.$pd->format('Y'));
-        if(!$startDate->isPast()){
-            $startDate->subYear();
-        }
-        $age = $startDate->floatDiffInYears($this->purchased_date);
+        $age = $date->floatDiffInYears($this->purchased_date);
         $percent = 100 / $this->depreciation;
         $percentage = floor($age) * $percent;
         $value = $this->purchased_cost * ((100 - $percentage) / 100);
