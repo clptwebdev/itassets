@@ -150,7 +150,7 @@
                                 <td class="text-center">£{{number_format($property->purchased_cost, 2, '.', ',')}}</td>
                                 <td class="text-center">{{\Carbon\Carbon::parse($property->purchased_date)->format('jS M Y')}}</td>
                                 <td class="text-center">
-                                    £{{number_format($property->depreciation_value(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
+                                    £{{number_format($property->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
                                 <td class="text-center">{{$property->depreciation}} Years</td>
                                 <td class="text-center">
                                     <?php
