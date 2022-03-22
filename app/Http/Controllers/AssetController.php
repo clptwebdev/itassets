@@ -182,7 +182,7 @@ class AssetController extends Controller {
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
                 'warranty' => 'required|numeric',
-                'status_id' => 'required'
+                'status_id' => 'required',
             ]);
         } else
         {
@@ -190,18 +190,19 @@ class AssetController extends Controller {
                 'name.*' => 'required',
                 'asset_model' => 'required',
                 'location_id' => 'required',
-                'asset_tag.*' => ['required' , new checkAssetTag($request['location_id'])],
+                'asset_tag.*' => ['required', new checkAssetTag($request['location_id'])],
                 'serial_no.*' => 'required',
                 'purchased_date' => 'required|date',
                 'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
                 'warranty' => 'required|numeric',
-                'status_id' => 'required'
+                'status_id' => 'required',
             ];
         }
 
         $validated = $request->validate($v);
 
-        for($i=0; $i < count($request->name); $i++){
+        for($i = 0; $i < count($request->name); $i++)
+        {
             $asset = Asset::create([
                 'name' => $request->name[$i],
                 'asset_tag' => $request->asset_tag[$i],
@@ -211,20 +212,20 @@ class AssetController extends Controller {
                 'room' => $request->room[$i] ?? 'Unassigned',
                 'purchased_date' => $request->purchased_date,
                 'purchased_cost' => $request->purchased_cost,
-                'donated'=> $request->donated ?? 0,
+                'donated' => $request->donated ?? 0,
                 'supplier_id' => $request->supplier_id,
                 'order_id' => $request->order_no,
                 'warranty' => $request->warranty,
                 'status_id' => $request->status_id,
                 'audit_date' => $request->audit_date,
-                'user_id' => auth()->user()->id
+                'user_id' => auth()->user()->id,
             ]);
-    
+
             if(! empty($array))
             {
                 $asset->fields()->attach($array);
             }
-            
+
             if(! empty(explode(',', $request->category)))
             {
                 $asset->category()->attach(explode(',', $request->category));
@@ -258,8 +259,6 @@ class AssetController extends Controller {
 
         return to_route('assets.show', $asset->id);
     }
-
-    
 
     public function show(Asset $asset)
     {
@@ -835,56 +834,65 @@ class AssetController extends Controller {
 
     public function ajaxMany(Request $request)
     {
-        if($request->ajax())
+
+        $validation = Validator::make($request->all(), [
+            'order_no.*' => 'nullable',
+            'warranty.*' => 'int',
+            'purchased_date.*' => 'nullable|date',
+            'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'asset_tag.*' => 'sometimes|nullable',
+            'status_id.*' => 'string|nullable',
+            'audit_date.*' => 'date|nullable',
+            'supplier_id.*' => 'string',
+            'location_id.*' => 'string',
+            'asset_model.*' => 'nullable',
+        ]);
+
+        if($validation->fails())
         {
-            $validation = Validator::make($request->all(), [
-                'order_no.*' => 'nullable',
-                'name.*' => 'required|string',
-                'serial_no.*' => 'required',
-                'warranty.*' => 'int',
-                'purchased_date.*' => 'nullable|date',
-                'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-                'asset_tag.*' => 'sometimes|nullable',
-                'status_id.*' => 'string|nullable',
-                'audit_date.*' => 'date|nullable',
-                'supplier_id.*' => 'string',
-                'location_id.*' => 'string',
-                'asset_model.*' => 'nullable',
-            ]);
+            return $validation->errors();
+        } else
+        {
+            for($i = 0; $i < count($request->asset_tag); $i++)
+            {
+                $asset = new Asset;
 
-            if($validation->fails())
-            {
-                return $validation->errors();
-            } else
-            {
-                for($i = 0; $i < count($request->asset_tag); $i++)
+                $asset->asset_tag = $request->asset_tag[$i];
+                $asset->user_id = auth()->user()->id;
+                //Serial No Cannot be ""
+                //If the imported Serial Number is empty assign it to "0"
+                $request->serial_no[$i] != '' ? $asset->serial_no = $request->serial_no[$i] : $asset->serial_no = "-";
+                $asset->status_id = $request->status_id[$i];
+
+                $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $asset->purchased_cost = $request->purchased_cost[$i];
+                $asset->donated = $request->donated[$i];
+
+                $asset->supplier_id = $request->supplier_id[$i];
+                $asset->order_no = $request->order_no[$i];
+                $asset->warranty = $request->warranty[$i];
+
+                $asset->location_id = $request->location_id[$i];
+                $location = Location::find($request->location_id[$i]);
+                //Name of the Device cannot be null
+                //If the device is NULL or empty - generate a name using initials of school and the ASSET Tag
+                if($request->name[$i] != '')
                 {
-                    $asset = new Asset;
-
-                    $asset->asset_tag = $request->asset_tag[$i];
-                    $asset->name = $request->name[$i];
-                    $asset->user_id = auth()->user()->id;
-                    $asset->serial_no = $request->serial_no[$i];
-                    $asset->status_id = $request->status_id[$i];
-
-                    $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
-                    $asset->purchased_cost = $request->purchased_cost[$i];
-                    $asset->donated = $request->donated[$i];
-
-                    $asset->supplier_id = $request->supplier_id[$i];
-                    $asset->order_no = $request->order_no[$i];
-                    $asset->warranty = $request->warranty[$i];
-
-                    $asset->location_id = $request->location_id[$i];
-                    $asset->room = $request->room;
-                    $asset->asset_model = $request->asset_model[$i];
-
-                    $asset->save();
+                    $name = $request->name[$i];
+                } else
+                {
+                    $request->asset_tag[$i] != '' ? $tag = $request->asset_tag[$i] : $tag = '1234';
+                    $name = strtoupper(substr($location->name ?? 'UN', 0, 1)) . "-{$tag}";
                 }
-                session()->flash('success_message', 'You can successfully added the Assets');
+                $asset->name = $name;
+                $asset->room = $request->room;
+                $asset->asset_model = $request->asset_model[$i];
 
-                return 'Success';
+                $asset->save();
             }
+            session()->flash('success_message', 'You Have successfully added the Assets');
+
+            return 'Success';
         }
     }
 

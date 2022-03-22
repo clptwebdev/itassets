@@ -40,7 +40,6 @@ class ComponentsImport extends DefaultValueBinder implements ToModel, WithValida
 
     public function bindValue(Cell|\PhpOffice\PhpSpreadsheet\Cell\Cell $cell, $value)
     {
-
         $cell->setValueExplicit($value, DataType::TYPE_FORMULA);
 
         return true;
@@ -58,11 +57,6 @@ class ComponentsImport extends DefaultValueBinder implements ToModel, WithValida
             ],
             'purchased_cost' => [
                 'required',
-                'regex:/^\d+(\.\d{1,2})?$/',
-            ],
-            'order_no' => [
-                'required',
-
             ],
             'serial_no' => [
                 'required',
@@ -73,15 +67,11 @@ class ComponentsImport extends DefaultValueBinder implements ToModel, WithValida
             'purchased_date' => [
                 'date',
             ],
-            'supplier_id' => [
-
-            ],
             'location_id' => [
                 'string',
                 'required',
             ],
             'manufacturer_id' => [
-
             ],
 
         ];

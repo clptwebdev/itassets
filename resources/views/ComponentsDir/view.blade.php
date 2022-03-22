@@ -57,9 +57,10 @@
                         different options and locations can created, updated, and deleted.</p>
         @if($components->count() != 0)
             <x-filters.navigation model="Component" relations="components" table="Component"
-                                  :filter=$filter/></x-filters.navigation>
-            <x-filters.filter model="Component" relations="components" table="Component" :filter=$filter
-                              :locations=$locations :statuses=$statuses :categories=$categories></x-filters.filter>
+                                  :filter="$filter"></x-filters.navigation>
+            <x-filters.filter model="Component" relations="components" table="Component" :filter="$filter"
+                              :locations="$locations" :statuses="$statuses"
+                              :categories="$categories"></x-filters.filter>
         @endif
         <div class="card shadow mb-4">
             <div class="card-body">

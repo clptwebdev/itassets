@@ -3,9 +3,6 @@
 @section('title', 'Accessory Import Errors')
 
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
 
 @section('content')
 
@@ -47,13 +44,7 @@
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Below are the different Import Failures of all the different assets stored in the management
@@ -264,14 +255,14 @@
                                 <td>
                                     <span id="donated{{$line}}" class="tooltip-danger">
                                         <select type="dropdown"
-                                                class="import-control <?php if (in_array('status_id', $errors)) {?>border-bottom border-danger<?php }?>"
+                                                class="import-control <?php if (in_array('donated', $errors)) {?>border-bottom border-danger<?php }?>"
                                                 name="donated[]" id="donatedInput{{$line}}" onchange="getFields(this);"
                                                 autocomplete="off" required data-container='#donated{{$line}}'
                                                 data-placement='top'
                                                 @if(array_key_exists('donated', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['donated']}'" !!}@endif>>
                                             <option value="0" @if($valueArray[$row]['donated'] == 0){{'selected'}}@endif>No</option>
                                             <option
-                                                value="1" @if( $valueArray[$row]['status_id'] == 1){{'selected'}}@endif>Yes</option>
+                                                value="1" @if( $valueArray[$row]['donated'] == 1){{'selected'}}@endif>Yes</option>
                                         </select>
                                     </span>
                                 </td>
@@ -389,138 +380,157 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script>
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
 
-        })
+        const importModal = new bootstrap.Modal(document.getElementById('importManufacturerModal'));
+        const importHelpBtn = document.querySelector('#import');
+
+        importHelpBtn.addEventListener('click', function () {
+            importModal.show();
+        });
+
+        function enableToolTips() {
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        }
+
+        enableToolTips();
+
 
         //validation
         function checkErrors(obj) {
 
-            var token = $("[name='_token']").val();
-            var data = new FormData();
+            const importControl = document.querySelectorAll('.import-control');
+
+            const errorMessage = document.querySelector('.alert.alert-danger');
+
+            const token = document.querySelector("[name='_token']").value;
+            const data = new FormData();
             data.append('_token', token);
 
             //Names
-            var inputs = $("input[name='name[]']").get();
+            const inputs = document.querySelectorAll("input[name='name[]']");
             inputs.forEach(element => {
                 data.append('name[]', element.value);
             });
 
-            //Asset Tags
-            let atInputs = document.querySelectorAll("input[name='asset_tag[]']");
-            atInputs.forEach(tag => {
-                data.append('asset_tag[]', tag.value);
+            //Asset Tag
+            const asset_tagInputs = document.querySelectorAll("input[name='asset_tag[]']");
+            asset_tagInputs.forEach(element => {
+                data.append('asset_tag[]', element.value);
             });
-
-            //Names
-            var mdInputs = $("input[name='name[]']").get();
-            mdInputs.forEach(element => {
+            //Model
+            const modelInputs = document.querySelectorAll("input[name='model[]']");
+            modelInputs.forEach(element => {
                 data.append('model[]', element.value);
             });
-
-            //status
-            var stInputs = $("select[name='status_id[]']").get();
-            stInputs.forEach(element => {
-                data.append('status_id[]', element.value);
-            });
-
-            //Phone
-            var supInputs = $("select[name='supplier_id[]']").get();
-            supInputs.forEach(element => {
+            //supplier
+            const supplierInputs = document.querySelectorAll("select[name='supplier_id[]']");
+            supplierInputs.forEach(element => {
                 data.append('supplier_id[]', element.value);
             });
-
-            //Email
-            var maInputs = $("select[name='manufacturer_id[]']").get();
-            maInputs.forEach(element => {
+            //status
+            const statusInputs = document.querySelectorAll("select[name='status_id[]']");
+            statusInputs.forEach(element => {
+                data.append('status_id[]', element.value);
+            });
+            //Manufacturer
+            const mfInputs = document.querySelectorAll("select[name='manufacturer_id[]']");
+            mfInputs.forEach(element => {
                 data.append('manufacturer_id[]', element.value);
             });
 
-            var loInputs = $("select[name='location_id[]']").get();
+            //Location
+            const loInputs = document.querySelectorAll("select[name='location_id[]']");
             loInputs.forEach(element => {
                 data.append('location_id[]', element.value);
             });
 
-            var roInputs = $("input[name='room[]']").get();
-            roInputs.forEach(element => {
-                data.append('room[]', element.value);
-            });
-
-            var orInputs = $("input[name='order_no[]']").get();
-            orInputs.forEach(element => {
-                data.append('order_no[]', element.value);
-            });
-
-            var seInputs = $("input[name='serial_no[]']").get();
-            seInputs.forEach(element => {
-                data.append('serial_no[]', element.value);
-            });
-
-            var pcInputs = $("input[name='purchased_cost[]']").get();
+            //Purchased Cost
+            const pcInputs = document.querySelectorAll("input[name='purchased_cost[]']");
             pcInputs.forEach(element => {
                 data.append('purchased_cost[]', element.value);
             });
 
-            var doInputs = $("select[name='donated[]']").get();
-            doInputs.forEach(element => {
-                data.append('donated[]', element.value);
-            });
-
-            var pdInputs = $("input[name='purchased_date[]']").get();
+            //Purchased Date
+            const pdInputs = document.querySelectorAll("input[name='purchased_date[]']");
             pdInputs.forEach(element => {
                 data.append('purchased_date[]', element.value);
             });
 
-            var dpInputs = $("select[name='depreciation_id[]']").get();
+            //Depreciation
+            const dpInputs = document.querySelectorAll("select[name='depreciation_id[]']");
             dpInputs.forEach(element => {
                 data.append('depreciation_id[]', element.value);
             });
-
-            var waInputs = $("input[name='warranty[]']").get();
-            waInputs.forEach(element => {
-                data.append('warranty[]', element.value);
+            //ROOM
+            const roomInputs = document.querySelectorAll("input[name='room[]']");
+            roomInputs.forEach(element => {
+                data.append('room[]', element.value);
+            });
+            //Order Number
+            const orderNoInputs = document.querySelectorAll("input[name='order_no[]']");
+            orderNoInputs.forEach(element => {
+                data.append('order_no[]', element.value);
             });
 
-            var noInputs = $("input[name='notes[]']").get();
-            noInputs.forEach(element => {
+            //Serial Number
+            const serialNoInputs = document.querySelectorAll("input[name='serial_no[]']");
+            serialNoInputs.forEach(element => {
+                data.append('serial_no[]', element.value);
+            });
+            //Donated
+            const donInputs = document.querySelectorAll("select[name='donated[]']");
+            donInputs.forEach(element => {
+                data.append('donated[]', element.value);
+            });
+            //Warranty
+            const warInputs = document.querySelectorAll("input[name='warranty[]']");
+            warInputs.forEach(element => {
+                data.append('warranty[]', element.value);
+            });
+            //Notes
+            const notesInputs = document.querySelectorAll("input[name='notes[]']");
+            notesInputs.forEach(element => {
                 data.append('notes[]', element.value);
             });
 
-            $.ajax({
-                url: '/accessories/create/ajax',
-                type: 'POST',
-                data: data,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response === 'Success') {
-                        window.location.href = '/accessories';
-                    } else {
-                        $('.import-control').removeClass('border-danger');
-                        $('.import-control').removeClass('border-bottom');
-                        $('.import-control').tooltip('dispose');
-                        var i = 0;
-                        Object.entries(response).forEach(entry => {
-                            const [key, value] = entry;
-                            res = key.split('.');
-                            const error = value.toString().replace(key, res[0]);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-bottom');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('data-toggle', 'tooltip');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('title', error);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip();
-                            i++;
-                        });
-                        $('.alert.alert-danger').html(`There were ${i} errors in the following rows`);
-                    }
-                },
-            });
-        }
+            const xhr = new XMLHttpRequest()
 
+            xhr.onload = function () {
+                if (xhr.responseText === 'Success') {
+                    window.location.href = '/accessories';
+                } else {
+                    importControl.forEach((item) => {
+                        item.classList.remove('border-bottom', 'border-danger');
+                    });
+
+                    let i = 0;
+                    Object.entries(JSON.parse(xhr.responseText)).forEach(entry => {
+                        console.log(entry);
+                        const [key, value] = entry;
+                        res = key.split('.');
+                        const error = value.toString().replace(key, res[0]);
+                        console.log(error);
+                        console.log(res[1]);
+                        let elements = document.querySelectorAll(`[name='${res[0]}[]']`);
+                        console.log(elements[0]);
+                        let num = parseInt(res[1]);
+                        elements[num].classList.add('border-bottom', 'border-danger');
+                        elements[num].setAttribute('data-bs-toggle', 'tooltip');
+                        elements[num].setAttribute('data-title', error);
+                        i++;
+                        enableToolTips();
+                    });
+
+                    errorMessage.innerHTML = `There were ${i} errors in the following rows`;
+                }
+            };
+
+            xhr.open("POST", "/accessories/create/ajax");
+            xhr.send(data);
+        }
     </script>
 @endsection

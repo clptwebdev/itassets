@@ -158,36 +158,33 @@ class ManufacturerController extends Controller {
 
     public function ajaxMany(Request $request)
     {
-        if($request->ajax())
+   
+        $validation = Validator::make($request->all(), [
+            "name.*" => "required|unique:manufacturers,name|max:255",
+            "supportPhone.*" => "max:14",
+            "supportUrl.*" => "required",
+            "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
+        ]);
+
+        if($validation->fails())
         {
-            $validation = Validator::make($request->all(), [
-                "name.*" => "required|unique:manufacturers,name|max:255",
-                "supportPhone.*" => "min:11|max:14",
-                "supportUrl.*" => "required",
-                "supportEmail.*" => 'required|unique:manufacturers,supportEmail|email:rfc,dns,spoof,filter',
-            ]);
-
-            if($validation->fails())
+            return $validation->errors();
+        } else
+        {
+            for($i = 0; $i < count($request->name); $i++)
             {
-                return $validation->errors();
-            } else
-            {
-                for($i = 0; $i < count($request->name); $i++)
-                {
-                    Manufacturer::Create([
-                        "name" => $request->name[$i],
-                        "supportPhone" => $request->supportPhone[$i],
-                        "supportUrl" => $request->supportUrl[$i],
-                        "supportEmail" => $request->supportEmail[$i],
+                Manufacturer::Create([
+                    "name" => $request->name[$i],
+                    "supportPhone" => $request->supportPhone[$i],
+                    "supportUrl" => $request->supportUrl[$i],
+                    "supportEmail" => $request->supportEmail[$i],
 
-                    ]);
-                }
-                session()->flash('success_message', 'You can successfully added the Manufacturers');
-
-                return 'Success';
+                ]);
             }
-        }
+            session()->flash('success_message', 'You can successfully added the Manufacturers');
 
+            return 'Success';
+        }
     }
 
     public function destroy(Manufacturer $manufacturer)

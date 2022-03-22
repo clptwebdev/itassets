@@ -175,72 +175,90 @@
 
     <script type="text/javascript">
 
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
 
-        })
+        const importModal = new bootstrap.Modal(document.getElementById('importManufacturerModal'));
+        const importHelpBtn = document.querySelector('#import');
 
+        importHelpBtn.addEventListener('click', function () {
+            importModal.show();
+        });
+
+        function enableToolTips() {
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        }
+
+        enableToolTips();
+
+
+        //validation
         function checkErrors(obj) {
 
-            var token = $("[name='_token']").val();
-            var data = new FormData();
+            const importControl = document.querySelectorAll('.import-control');
+
+            const errorMessage = document.querySelector('.alert.alert-danger');
+
+            const token = document.querySelector("[name='_token']").value;
+            const data = new FormData();
             data.append('_token', token);
 
             //Names
-            var inputs = $("input[name='name[]']").get();
+            const inputs = document.querySelectorAll("input[name='name[]']");
             inputs.forEach(element => {
                 data.append('name[]', element.value);
             });
-
             //Url
-            var urlInputs = $("input[name='supportUrl[]']").get();
+            const urlInputs = document.querySelectorAll("input[name='supportUrl[]']");
             urlInputs.forEach(element => {
                 data.append('supportUrl[]', element.value);
             });
-
             //Phone
-            var telInputs = $("input[name='supportPhone[]']").get();
-            telInputs.forEach(element => {
+            const phoneInputs = document.querySelectorAll("input[name='supportPhone[]']");
+            phoneInputs.forEach(element => {
                 data.append('supportPhone[]', element.value);
             });
-
             //Email
-            var emInputs = $("input[name='supportEmail[]']").get();
-            emInputs.forEach(element => {
+            const emailInputs = document.querySelectorAll("input[name='supportEmail[]']");
+            emailInputs.forEach(element => {
                 data.append('supportEmail[]', element.value);
             });
 
-            $.ajax({
-                url: '/manufacturers/create/ajax',
-                type: 'POST',
-                data: data,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response === 'Success') {
-                        window.location.href = '/manufacturers';
-                    } else {
-                        $('.form-control').removeClass('border-danger');
-                        $('.form-control').tooltip('dispose');
-                        $('input').removeClass('border-danger');
-                        var i = 0;
-                        Object.entries(response).forEach(entry => {
-                            const [key, value] = entry;
-                            res = key.split('.');
-                            const error = value.toString().replace(key, res[0]);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('data-toggle', 'tooltip');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('title', error);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip();
-                            i++;
-                        });
-                        $('.alert.alert-danger').html(`There were ${i} errors in the following rows`);
-                    }
-                },
-            });
+            const xhr = new XMLHttpRequest()
+
+            xhr.onload = function () {
+                if (xhr.responseText === 'Success') {
+                    window.location.href = '/manufacturers';
+                } else {
+                    importControl.forEach((item) => {
+                        item.classList.remove('border-bottom', 'border-danger');
+                    });
+
+                    let i = 0;
+                    Object.entries(JSON.parse(xhr.responseText)).forEach(entry => {
+                        console.log(entry);
+                        const [key, value] = entry;
+                        res = key.split('.');
+                        const error = value.toString().replace(key, res[0]);
+                        console.log(error);
+                        console.log(res[1]);
+                        let elements = document.querySelectorAll(`[name='${res[0]}[]']`);
+                        console.log(elements[0]);
+                        let num = parseInt(res[1]);
+                        elements[num].classList.add('border-bottom', 'border-danger');
+                        elements[num].setAttribute('data-bs-toggle', 'tooltip');
+                        elements[num].setAttribute('data-title', error);
+                        i++;
+                        enableToolTips();
+                    });
+
+                    errorMessage.innerHTML = `There were ${i} errors in the following rows`;
+                }
+            };
+
+            xhr.open("POST", "/manufacturers/create/ajax");
+            xhr.send(data);
         }
     </script>
 

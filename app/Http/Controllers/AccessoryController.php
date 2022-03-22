@@ -24,6 +24,7 @@ use App\Jobs\AccessoryPdf;
 use App\Models\Report;
 use PHPUnit\Util\Test;
 use App\Rules\checkAssetTag;
+
 class AccessoryController extends Controller {
 
     public function index()
@@ -273,62 +274,61 @@ class AccessoryController extends Controller {
 
     public function ajaxMany(Request $request)
     {
-        if($request->ajax())
+        $validation = Validator::make($request->all(), [
+            "asset_tag" => ['sometimes', 'nullable'],
+            'purchased_cost.*' => 'required',
+            'purchased_date.*' => 'date',
+            'location_id.*' => 'required',
+        ]);
+        if($validation->fails())
         {
-            $validation = Validator::make($request->all(), [
-                "asset_tag" => ['sometimes', 'nullable'],
-                'purchased_cost.*' => 'required',
-                'purchased_date.*' => 'date',
-                'location_id.*' =>  'required',            
-            ]);
+            return $validation->errors();
+        } else
+        {
 
-            if($validation->fails())
+            for($i = 0; $i < count($request->name); $i++)
             {
-                return $validation->errors();
-            } else
-            {
-                for($i = 0; $i < count($request->name); $i++)
+
+                $accessory = new Accessory;
+
+                $location = Location::find($request->location_id[$i]);
+                if($request->name[$i] != '')
                 {
-                    $accessory = new Accessory;
-                   
-                    $location = Location::find($request->location_id[$i]);
-                    if($request->name[$i] != ''){
-                        $name = $request->name[$i];
-                    }else{
-                        $request->asset_tag[$i] != '' ? $tag = $request->asset_tag[$i] : $tag = '1234'; 
-                        $name = strtoupper(substr($location->name ?? 'UN', 0, 1))."-{$tag}";
-                    }
-                    $accessory->name = $name;
-
-                    $accessory->asset_tag = $tag;
-                    $accessory->model = $request->model[$i];
-                    //Serial No Cannot be ""
-                    //If the imported Serial Number is empty assign it to "0"
-                    $request->serial_no[$i] != '' ? $accessory->serial_no = $request->serial_no[$i] : $accessory->serial_no = "-" ;
-
-                    $accessory->status_id = $request->status_id[$i];
-                    $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
-                    $accessory->purchased_cost = $request->purchased_cost[$i];
-                    $accessory->donated = $request->donated[$i];
-                    $accessory->supplier_id = $request->supplier_id[$i];
-                    $accessory->manufacturer_id = $request->manufacturer_id[$i];
-                    $accessory->order_no = $request->order_no[$i];
-                    $accessory->warranty = $request->warranty[$i];
-                    $accessory->location_id = $request->location_id[$i];
-                    $accessory->room = $request->room[$i] ?? 'N/A';
-                    $accessory->notes = $request->notes[$i];
-                    $accessory->photo_id = 0;
-                    $accessory->depreciation_id = $request->depreciation_id[$i];
-                    $accessory->user_id = auth()->user()->id;
-                    $accessory->save();
+                    $name = $request->name[$i];
+                } else
+                {
+                    $request->asset_tag[$i] != '' ? $tag = $request->asset_tag[$i] : $tag = '1234';
+                    $name = strtoupper(substr($location->name ?? 'UN', 0, 1)) . "-{$tag}";
                 }
+                $accessory->name = $name;
 
-                session()->flash('success_message', 'You have successfully added all Accessories!');
+                $accessory->asset_tag = $tag;
+                $accessory->model = $request->model[$i];
+                //Serial No Cannot be ""
+                //If the imported Serial Number is empty assign it to "0"
+                $request->serial_no[$i] != '' ? $accessory->serial_no = $request->serial_no[$i] : $accessory->serial_no = "-";
 
-                return 'Success';
+                $accessory->status_id = $request->status_id[$i];
+                $accessory->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $accessory->purchased_cost = $request->purchased_cost[$i];
+                $accessory->donated = $request->donated[$i];
+                $accessory->supplier_id = $request->supplier_id[$i];
+                $accessory->manufacturer_id = $request->manufacturer_id[$i];
+                $accessory->order_no = $request->order_no[$i];
+                $accessory->warranty = $request->warranty[$i];
+                $accessory->location_id = $request->location_id[$i];
+                $accessory->room = $request->room[$i] ?? 'N/A';
+                $accessory->notes = $request->notes[$i];
+                $accessory->photo_id = 0;
+                $accessory->depreciation_id = $request->depreciation_id[$i];
+                $accessory->user_id = auth()->user()->id;
+                $accessory->save();
             }
-        }
 
+            session()->flash('success_message', 'You have successfully added all Accessories!');
+
+            return 'Success';
+        }
     }
 
     public function show(Accessory $accessory)
