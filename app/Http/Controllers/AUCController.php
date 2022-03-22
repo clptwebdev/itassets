@@ -157,7 +157,8 @@ class AUCController extends Controller {
 
     }
 
-    public function move(AUC $auc){
+    public function move(AUC $auc)
+    {
         //Moving the Asset Under Construction to the Property
         $property = new Property;
         $property->fill([
@@ -166,13 +167,14 @@ class AUCController extends Controller {
             'purchased_cost' => $auc->purchased_cost,
             'purchased_date' => $auc->purchased_date,
             'depreciation' => $auc->depreciation,
-            'location_id' => $auc->location_id
+            'location_id' => $auc->location_id,
         ]);
         $property->save();
 
         $auc->forceDelete();
 
         session()->flash('success_message', 'You have moved the Asset-Under-Construction to Properties');
+
         return to_route('properties.index');
     }
 
@@ -305,8 +307,8 @@ class AUCController extends Controller {
                 session(['auc_start' => $request->start]);
                 session(['auc_end' => $request->end]);
             }
-
-            session(['auc_amount' => $request->amount]);
+            session(['assets_min' => $request->minCost]);
+            session(['assets_max' => $request->maxCost]);
         }
 
         //Check the Users Locations Permissions
@@ -326,10 +328,11 @@ class AUCController extends Controller {
             session(['auc_filter' => true]);
         }
 
-        if(session()->has('auc_amount'))
+        if(session()->has('assets_min') && session()->has('assets_max'))
         {
-            $auc->costFilter(session('auc_amount'));
-            session(['auc_filter' => true]);
+            $auc->costFilter(session('assets_min'), session('assets_max'));
+            session(['assets_filter' => true]);
+
         }
 
         if(session()->has('auc_search'))

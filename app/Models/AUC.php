@@ -32,18 +32,18 @@ class AUC extends Model {
     //Use the Depreciation time to minus the depreication charge
     public function depreciation_value($date)
     {
-            $age = $date->floatDiffInYears($this->purchased_date);
-            $percent = 100 / $this->depreciation;
-            $percentage = floor($age) * $percent;
-            $value = $this->purchased_cost * ((100 - $percentage) / 100);
+        $age = $date->floatDiffInYears($this->purchased_date);
+        $percent = 100 / $this->depreciation;
+        $percentage = floor($age) * $percent;
+        $value = $this->purchased_cost * ((100 - $percentage) / 100);
 
-            if($value < 0)
-            {
-                return 0;
-            } else
-            {
-                return $value;
-            }
+        if($value < 0)
+        {
+            return 0;
+        } else
+        {
+            return $value;
+        }
     }
 
 
@@ -82,14 +82,9 @@ class AUC extends Model {
 
     //Filters the porperty thats value is between two values set in one string
     //These variables are passed from the sldier on the filter
-    public function scopeCostFilter($query, $amount)
+    public function scopeCostFilter($query, $min, $max)
     {
-        //Format sent - £78.00 - £1034
-        //Remove £ signs
-        $amount = str_replace('£', '', $amount);
-        //Seperate two values into an array [0] is lowest and [1] is highest
-        $amount = explode(' - ', $amount);
-        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
+        $query->whereBetween('purchased_cost', [$min, $max]);
     }
 
     //Filters the properties that are based in the selected locations

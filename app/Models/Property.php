@@ -81,14 +81,9 @@ class Property extends Model {
 
     //Filters the porperty thats value is between two values set in one string
     //These variables are passed from the sldier on the filter
-    public function scopeCostFilter($query, $amount)
+    public function scopeCostFilter($query, $min, $max)
     {
-        //Format sent - £78.00 - £1034
-        //Remove £ signs
-        $amount = str_replace('£', '', $amount);
-        //Seperate two values into an array [0] is lowest and [1] is highest
-        $amount = explode(' - ', $amount);
-        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
+        $query->whereBetween('purchased_cost', [$min, $max]);
     }
 
     //Filters the properties that are based in the selected locations

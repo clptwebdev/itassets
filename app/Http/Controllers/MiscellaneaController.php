@@ -202,7 +202,8 @@ class MiscellaneaController extends Controller {
                 session(['warranty' => $request->warranty]);
             }
 
-            session(['amount' => $request->amount]);
+            session(['assets_min' => $request->minCost]);
+            session(['assets_max' => $request->maxCost]);
         }
 
         $locations = \App\Models\Location::all()->pluck('id');
@@ -231,9 +232,9 @@ class MiscellaneaController extends Controller {
             $miscellaneous->purchaseFilter(session('start'), session('end'));
             $filter++;
         }
-        if(session()->has('amount'))
+        if(session()->has('assets_min') && session()->has('assets_max'))
         {
-            $miscellaneous->costFilter(session('amount'));
+            $miscellaneous->costFilter(session('assets_min'), session('assets_max'));
             $filter++;
         }
 

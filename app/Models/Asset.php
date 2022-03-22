@@ -118,11 +118,10 @@ class Asset extends Model {
         }
     }
 
-    public function scopeCostFilter($query, $amount)
+    public function scopeCostFilter($query, $min, $max)
     {
-        $amount = str_replace('£', '', $amount);
-        $amount = explode(' - ', $amount);
-        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
+
+        $query->whereBetween('purchased_cost', [$min, $max]);
     }
 
     public function scopeAssetFilter($query, array $filters)

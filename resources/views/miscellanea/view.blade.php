@@ -2,16 +2,6 @@
 
 @section('title', 'View Miscellaneous')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
-          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
-          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-@endsection
-
 @section('content')
     <x-wrappers.nav title="Miscellaneous">
         @can('viewAny', \App\Models\Miscellanea::class)
@@ -173,25 +163,38 @@
 @endsection
 
 @section('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/import.js')}}"></script>
     <script src="{{asset('js/filter.js')}}"></script>
     <script>
-        $(function () {
-            $("#slider-range").slider({
-                range: true,
-                min: {{ floor($floor)}},
-                max: {{ round($limit)}},
-                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
-                slide: function (event, ui) {
-                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
-                }
-            });
-            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
-                " - £" + $("#slider-range").slider("values", 1));
+        let sliderMin = document.querySelector('#customRange1');
+        let sliderMax = document.querySelector('#customRange2');
+        let sliderMinValue = document.querySelector('#minRange');
+        let sliderMaxValue = document.querySelector('#maxRange');
+
+        //setting slider ranges
+        sliderMin.setAttribute('min', {{ floor($start_value)}});
+        sliderMin.setAttribute('max', {{ round($end_value)}});
+        sliderMax.setAttribute('min', {{ floor($start_value)}});
+        sliderMax.setAttribute('max', {{ round($end_value)}});
+        sliderMax.value = {{ round($end_value)}};
+        sliderMin.value = {{ floor($start_value)}};
+
+        sliderMinValue.innerHTML = {{ floor($start_value)}};
+        sliderMaxValue.innerHTML = {{ round($end_value)}};
+
+        sliderMin.addEventListener('input', function () {
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMaxValue.innerHTML = sliderMax.value;
+
+        });
+        sliderMax.addEventListener('input', function () {
+            sliderMaxValue.innerHTML = sliderMax.value;
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMin.setAttribute('max', sliderMax.value);
+
+
         });
     </script>
 

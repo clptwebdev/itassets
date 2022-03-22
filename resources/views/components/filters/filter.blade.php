@@ -132,24 +132,15 @@
                             <p id='minRange'></p>
                         </div>
 
-                        <input type="range" class="form-control-range custom-range" id="customRange1">
+                        <input type="range" class="form-control-range custom-range" name='minCost' id="customRange1">
                         <label for="customRange2" class="form-label font-weight-bold ">MAX</label>
                         <div class='d-flex'>
                             <span>£</span>
                             <p id='maxRange'></p>
                         </div>
-                        <input type="range" class="form-control-range custom-range" id="customRange2">
+                        <input type="range" class="form-control-range custom-range" name='maxCost' id="customRange2">
                     </div>
-                    <div id="costCollapse" class="collapse" aria-labelledby="costHeader" data-parent="#accordion">
-                        <div class="option-body" style="padding-bottom: 60px;">
-                            <div class="form-control">
-                                <label for="amount">Price range:</label>
-                                <input type="text" id="amount" name="amount" readonly
-                                       style="border:0; color:#b087bc; font-weight:bold; margin-bottom: 20px;">
-                                <div id="slider-range"></div>
-                            </div>
-                        </div>
-                    </div>
+                    {{--  end--}}
                 </div>
 
                 @if(Schema::hasColumn("{$table}",'audit_date'))

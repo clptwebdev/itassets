@@ -951,7 +951,8 @@ class AssetController extends Controller {
                 session(['assets_warranty' => $request->warranty]);
             }
 
-            session(['assets_amount' => $request->amount]);
+            session(['assets_min' => $request->minCost]);
+            session(['assets_max' => $request->maxCost]);
         }
 
         $locations = auth()->user()->locations->pluck('id');
@@ -988,9 +989,9 @@ class AssetController extends Controller {
             $assets->warrantyFilter(session('assets_warranty'));
             session(['assets_filter' => true]);
         }
-        if(session()->has('assets_amount'))
+        if(session()->has('assets_min') && session()->has('assets_max'))
         {
-            $assets->costFilter(session('assets_amount'));
+            $assets->costFilter(session('assets_min'), session('assets_max'));
             session(['assets_filter' => true]);
         }
 

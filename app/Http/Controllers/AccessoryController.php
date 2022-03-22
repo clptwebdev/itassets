@@ -124,7 +124,8 @@ class AccessoryController extends Controller {
                 session(['warranty' => $request->warranty]);
             }
 
-            session(['amount' => $request->amount]);
+            session(['assets_min' => $request->minCost]);
+            session(['assets_max' => $request->maxCost]);
         }
 
         $locations = auth()->user()->locations->pluck('id');
@@ -152,9 +153,9 @@ class AccessoryController extends Controller {
             $accessories->purchaseFilter(session('start'), session('end'));
             $filter++;
         }
-        if(session()->has('amount'))
+        if(session()->has('assets_min') && session()->has('assets_max'))
         {
-            $accessories->costFilter(session('amount'));
+            $accessories->costFilter(session('assets_min'), session('assets_max'));
             $filter++;
         }
 

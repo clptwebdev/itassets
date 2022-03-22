@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Location;
 use App\Models\Property;
 use Illuminate\Http\Request;
+
 //Exportsgit pul
 use App\Exports\PropertyExport;
+
 //Imports
 use App\Imports\PropertyImport;
+
 //Models
 use App\Models\Report;
+
 //Jobs
 use App\Jobs\PropertiesPdf;
 use App\Jobs\PropertyPdf;
@@ -271,7 +275,6 @@ class PropertyController extends Controller {
     ///////////////PDF Functions////////////////////////////
     ////////////////////////////////////////////////////////
 
-
     public function downloadPDF(Request $request)
     {
         if(auth()->user()->cant('viewAll', Property::class))
@@ -410,7 +413,7 @@ class PropertyController extends Controller {
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
-                    "locations" => auth()->user()->locations
+                    "locations" => auth()->user()->locations,
                 ]);
 
             } else
@@ -439,10 +442,13 @@ class PropertyController extends Controller {
             "type.*" => "nullable",
         ]);
 
-        if($validation->fails()){
+        if($validation->fails())
+        {
             return $validation->errors();
-        }else{
-            for($i = 0; $i < count($request->name); $i++){
+        } else
+        {
+            for($i = 0; $i < count($request->name); $i++)
+            {
                 $property = new Property;
                 $property->name = $request->name[$i];
                 $property->type = $request->type[$i];
@@ -524,7 +530,8 @@ class PropertyController extends Controller {
                 session(['property_end' => $request->end]);
             }
 
-            session(['property_amount' => $request->amount]);
+            session(['assets_min' => $request->minCost]);
+            session(['assets_max' => $request->maxCost]);
         }
         //Check the Users Locations Permissions
         $locations = Location::select('id', 'name')->withCount('property')->get();
@@ -543,10 +550,10 @@ class PropertyController extends Controller {
             session(['property_filter' => true]);
         }
 
-        if(session()->has('property_amount'))
+        if(session()->has('assets_min') && session()->has('assets_max'))
         {
-            $property->costFilter(session('property_amount'));
-            session(['property_filter' => true]);
+            $property->costFilter(session('assets_min'), session('assets_max'));
+            session(['assets_filter' => true]);
         }
 
         if(session()->has('property_search'))

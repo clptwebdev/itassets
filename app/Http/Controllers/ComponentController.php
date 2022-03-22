@@ -131,7 +131,8 @@ class ComponentController extends Controller {
                 session(['warranty' => $request->warranty]);
             }
 
-            session(['amount' => $request->amount]);
+            session(['assets_min' => $request->minCost]);
+            session(['assets_max' => $request->maxCost]);
         }
 
         $locations = \App\Models\Location::all()->pluck('id');
@@ -160,10 +161,11 @@ class ComponentController extends Controller {
             $components->purchaseFilter(session('start'), session('end'));
             $filter++;
         }
-        if(session()->has('amount'))
+        if(session()->has('assets_min') && session()->has('assets_max'))
         {
-            $components->costFilter(session('amount'));
+            $components->costFilter(session('assets_min'), session('assets_max'));
             $filter++;
+
         }
 
         if(session()->has('search'))
