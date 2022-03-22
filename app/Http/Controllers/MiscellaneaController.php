@@ -276,50 +276,47 @@ class MiscellaneaController extends Controller {
 
     public function ajaxMany(Request $request)
     {
-        if($request->ajax())
+
+        $validation = Validator::make($request->all(), [
+            "name.*" => "required|max:255",
+            'order_no.*' => 'required',
+            'serial_no.*' => 'required',
+            'warranty.*' => 'int',
+            'location_id.*' => 'required|gt:0',
+            'purchased_date.*' => 'nullable|date',
+            'purchased_cost.*' => 'required',
+        ]);
+
+        if($validation->fails())
         {
-            $validation = Validator::make($request->all(), [
-                "name.*" => "required|max:255",
-                'order_no.*' => 'required',
-                'serial_no.*' => 'required',
-                'warranty.*' => 'int',
-                'location_id.*' => 'required|gt:0',
-                'purchased_date.*' => 'nullable|date',
-                'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            ]);
-
-            if($validation->fails())
+            return $validation->errors();
+        } else
+        {
+            for($i = 0; $i < count($request->name); $i++)
             {
-                return $validation->errors();
-            } else
-            {
-                for($i = 0; $i < count($request->name); $i++)
-                {
-                    $miscellanea = new Miscellanea;
-                    $miscellanea->name = $request->name[$i];
-                    $miscellanea->serial_no = $request->serial_no[$i];
-                    $miscellanea->status_id = $request->status_id[$i];
-                    $miscellanea->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
-                    $miscellanea->purchased_cost = $request->purchased_cost[$i];
-                    $miscellanea->supplier_id = $request->supplier_id[$i];
-                    $miscellanea->manufacturer_id = $request->manufacturer_id[$i];
-                    $miscellanea->order_no = $request->order_no[$i];
-                    $miscellanea->warranty = $request->warranty[$i];
-                    $miscellanea->depreciation_id = $request->depreciation_id[$i];
-                    $miscellanea->location_id = $request->location_id[$i];
-                    $miscellanea->room = $request->room[$i];
-                    $miscellanea->notes = $request->notes[$i];
-                    $miscellanea->photo_id = 0;
+                $miscellanea = new Miscellanea;
+                $miscellanea->name = $request->name[$i];
+                $miscellanea->serial_no = $request->serial_no[$i];
+                $miscellanea->status_id = $request->status_id[$i];
+                $miscellanea->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $miscellanea->purchased_cost = floatval($request->purchased_cost[$i]);
+                $miscellanea->supplier_id = $request->supplier_id[$i];
+                $miscellanea->manufacturer_id = $request->manufacturer_id[$i];
+                $miscellanea->order_no = $request->order_no[$i];
+                $miscellanea->warranty = $request->warranty[$i];
+                $miscellanea->depreciation_id = $request->depreciation_id[$i];
+                $miscellanea->location_id = $request->location_id[$i];
+                $miscellanea->room = $request->room[$i];
+                $miscellanea->notes = $request->notes[$i];
+                $miscellanea->photo_id = 0;
 
-                    $miscellanea->save();
-                }
-
-                session()->flash('success_message', 'You have successfully added all the Miscellaneous items');
-
-                return 'Success';
+                $miscellanea->save();
             }
-        }
 
+            session()->flash('success_message', 'You have successfully added all the Miscellaneous items');
+
+            return 'Success';
+        }
     }
 
     public function show(Miscellanea $miscellaneou)
@@ -500,8 +497,9 @@ class MiscellaneaController extends Controller {
                     "errorValues" => $errorValues,
                     "statuses" => Status::all(),
                     "suppliers" => Supplier::all(),
-                    "locations" => Location::all(),
+                    "locations" => auth()->user()->locations,
                     "manufacturers" => Manufacturer::all(),
+                    "depreciations" => Depreciation::all(),
                 ]);
 
             } else

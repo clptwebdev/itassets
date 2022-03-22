@@ -57,7 +57,6 @@ class miscellaneousImport extends DefaultValueBinder implements ToModel, WithVal
             ],
             'purchased_cost' => [
                 'required',
-                'regex:/^\d+(\.\d{1,2})?$/',
             ],
             'order_no' => [
                 'required',
