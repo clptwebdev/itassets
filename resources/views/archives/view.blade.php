@@ -80,7 +80,7 @@
                                              alt="{{$archive->location->name}}"
                                              title="{{ $archive->location->name }}<br>{{ $asset->room ?? 'Unknown'}}"/>
                                     @else
-                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($archive->location->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($archive->location->icon ?? '#666').'" data-bs-toggle="tooltip" data-bs-placement="top" title="">'
                                             .strtoupper(substr($archive->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                     <small class="d-none d-md-inline-block">{{$archive->location->name}}</small>

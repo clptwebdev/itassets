@@ -59,11 +59,15 @@
         @can('viewAll' , \App\Models\Asset::class)
             <li class="nav-item @if(Request::url() == route('assets.index')) {{ 'active' }} @endif">
                 <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('assets.index')}}"
-                   data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                   data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
+                   aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-tablet-alt sidebar-icon"></i>
-                    <span class="sidebar-title">Computer Equipment</span>
+                    <span class="sidebar-title">Computer Equipment
+                        <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
-                <div id="collapseTwo" class="collapse p-0 @if(Request::url() == route('assets.index')) {{ 'show' }} @endif" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo"
+                     class="collapse p-0 @if(Request::url() == route('assets.index')) {{ 'show' }} @endif"
+                     aria-labelledby="headingTwo" data-bs-parent="#accordionSidebar">
                     <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i
                             class="far fa-circle text-secondary"></i> All Equipment
                                                                       ({{(auth()->user()->location_assets()->count()) ?? null}}
@@ -72,8 +76,8 @@
                         $statuses = App\Models\Status::all();
                     @endphp
                     <a href="#statusMenu" class="sub-link collapse-item collapsed d-none d-sm-block"
-                       data-toggle="collapse" data-parent="#statusMenu"><i class="fas fa-shield-alt fa-xs"></i> By
-                                                                                                                Status</a>
+                       data-bs-toggle="collapse" data-bs-parent="#statusMenu"><i class="fas fa-shield-alt fa-xs"></i> By
+                                                                                                                      Status</a>
                     <div class="collapse p-2" id="statusMenu">
                         @foreach($statuses as $status)
                             <a href="{{ route('assets.status', $status->id)}}" title="Add New Asset"
@@ -83,16 +87,16 @@
                         @endforeach
                     </div>
                     <a href="#locationMenu" class="sub-link collapse-item collapsed d-none d-sm-block"
-                       data-toggle="collapse" data-parent="#locationMenu"><i class="fas fa-school fa-xs"></i> By
-                                                                                                              Location</a>
+                       data-bs-toggle="collapse" data-bs-parent="#locationMenu"><i class="fas fa-school fa-xs"></i> By
+                                                                                                                    Location</a>
                     <div class="collapse p-2" id="locationMenu">
                         @php
                             $locations = auth()->user()->locations;
                         @endphp
                         @foreach($locations as $location)
                             <a href="{{ route('assets.location', $location->id)}}" class="collapse-item"
-                               data-parent="#SubSubMenu1"><i class="far fa-circle"
-                                                             style="color:{{$location->icon}};"></i> {{ $location->name}}
+                               data-bs-parent="#SubSubMenu1"><i class="far fa-circle"
+                                                                style="color:{{$location->icon}};"></i> {{ $location->name}}
                             </a>
                         @endforeach
                     </div>
@@ -119,13 +123,14 @@
         @can('viewAll',\App\Models\Accessory::class)
             <li class="nav-item">
                 <a class="nav-link collapsed text-left text-sm-center text-md-left"
-                   href="{{ route('components.index')}}" data-toggle="collapse" data-target="#accessoryDD"
+                   href="{{ route('components.index')}}" data-bs-toggle="collapse" data-bs-target="#accessoryDD"
                    aria-expanded="true" aria-controls="accessoryDD">
                     <i class="fas fa-fw fa-keyboard sidebar-icon"></i>
-                    <span class="sidebar-title">Computer Accessories</span>
+                    <span class="sidebar-title">Computer Accessories <i
+                            class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="accessoryDD" class="collapse p-0 text-center text-lg-left" aria-labelledby="accessoryTitle"
-                     data-parent="#accordionSidebar">
+                     data-bs-parent="#accordionSidebar">
                     @can('viewAll'  ,\App\Models\Accessory::class)
                         <a class="collapse-item sub-link" href="{{ route('accessories.index')}}"><i
                                 class="far fa-circle text-secondary"></i> View All</a>
@@ -153,13 +158,13 @@
         @can('viewAll' , \App\Models\Component::class)
             <li class="nav-item">
                 <a class="nav-link collapsed text-left text-sm-center text-md-left"
-                   href="{{ route('components.index')}}" data-toggle="collapse" data-target="#componentsDD"
+                   href="{{ route('components.index')}}" data-bs-toggle="collapse" data-bs-target="#componentsDD"
                    aria-expanded="true" aria-controls="componentsDD">
                     <i class="far fa-fw fa-hdd sidebar-icon"></i>
-                    <span class="sidebar-title">Computer Components</span>
+                    <span class="sidebar-title">Computer Components <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="componentsDD" class="collapse" aria-labelledby="componentsTitle"
-                     data-parent="#accordionSidebar">
+                     data-bs-parent="#accordionSidebar">
                     @can('viewAll',\App\Models\Component::class)
 
 
@@ -177,12 +182,12 @@
         @endcan
 
         {{-- <li class="nav-item">
-            <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('consumables.index')}}" data-toggle="collapse" data-target="#consumableDD" aria-expanded="true"
+            <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('consumables.index')}}" data-bs-toggle="collapse" data-bs-target="#consumableDD" aria-expanded="true"
                 aria-controls="consumableDD">
-                <i class="fas fa-fw fa-tint sidebar-icon" data-toggle="tooltip" data-placement="right" title="Consumables"></i>
+                <i class="fas fa-fw fa-tint sidebar-icon" data-bs-toggle="tooltip" data-bs-placement="right" title="Consumables"></i>
                 <span class="sidebar-title">Consumables</span>
             </a>
-            <div id="consumableDD" class="collapse" aria-labelledby="consumableTitle" data-parent="#accordionSidebar">
+            <div id="consumableDD" class="collapse" aria-labelledby="consumableTitle" data-bs-parent="#accordionSidebar">
                     <a class="collapse-item" href="{{ route('consumables.index')}}">View All</a>
                     <a class="collapse-item" href="{{ route('consumables.create')}}"> Add New Consumable</a>
                     <a class="collapse-item" href="{{ route('consumables.index')}}"> Import Consumables</a>
@@ -191,13 +196,14 @@
         @can('viewAny' , \App\Models\Miscellanea::class)
             <li class="nav-item">
                 <a class="nav-link collapsed text-left text-sm-center text-md-left"
-                   href="{{ route('miscellaneous.index')}}" data-toggle="collapse" data-target="#miscellaneousDD"
+                   href="{{ route('miscellaneous.index')}}" data-bs-toggle="collapse" data-bs-target="#miscellaneousDD"
                    aria-expanded="true" aria-controls="miscellaneousDD">
                     <i class="fas fa-fw fa-question sidebar-icon"></i>
-                    <span class="sidebar-title">Miscellaneous</span>
+                    <span class="sidebar-title">Miscellaneous <i
+                            class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="miscellaneousDD" class="collapse" aria-labelledby="consumableTitle"
-                     data-parent="#accordionSidebar">
+                     data-bs-parent="#accordionSidebar">
                     @can('viewAny' , \App\Models\Miscellanea::class)
 
                         <a class="collapse-item" href="{{ route('miscellaneous.index')}}">View All</a>
@@ -238,12 +244,13 @@
 
 
             <li class="nav-item">
-                <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-toggle="collapse"
-                   data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-bs-toggle="collapse"
+                   data-bs-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-users sidebar-icon"></i>
-                    <span class="sidebar-title">Users</span>
+                    <span class="sidebar-title">Users <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
+                     data-bs-parent="#accordionSidebar">
                     @can('viewAll',\App\Models\User::class)
                         <a class="collapse-item" href="{{ route('users.index')}}">View Users</a>
                     @endcan
@@ -288,12 +295,12 @@
         <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-toggle="collapse"
-               data-target="#settingPages" aria-expanded="true" aria-controls="settingPages">
+            <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-bs-toggle="collapse"
+               data-bs-target="#settingPages" aria-expanded="true" aria-controls="settingPages">
                 <i class="fas fa-fw fa-cogs sidebar-icon"></i>
-                <span class="sidebar-title">Settings</span>
+                <span class="sidebar-title">Settings <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
             </a>
-            <div id="settingPages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div id="settingPages" class="collapse" aria-labelledby="headingPages" data-bs-parent="#accordionSidebar">
                 @can('viewAny' , \App\Models\AssetModel::class)
                     <a class="collapse-item" href="{{ route('asset-models.index')}}">Asset Models</a>
                 @endcan

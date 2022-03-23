@@ -40,7 +40,7 @@
         <div class="col-md-12">
             <div id="summary">
                 <p class="collapse" id="collapseSummary">{{$errorRows}}</p>
-                <a class="collapsed" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+                <a class="collapsed" data-bs-toggle="collapse" href="#collapseSummary" aria-expanded="false"
                    aria-controls="collapseSummary"></a>
             </div>
         </div>
@@ -91,7 +91,7 @@
                                                    class="import-control @if(in_array('name', $errors)){{ 'border-bottom border-danger'}}@endif"
                                                    name="name[]" value="{{ $valueArray[$row]['name'] }}"
                                                    placeholder="This Row is Empty Please Fill!" required
-                                                   data-container='#name{{$line}}' data-placement='top'
+                                                   data-bs-container='#name{{$line}}' data-bs-placement='top'
                                                @if(array_key_exists('name', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
                                         </span>
                                 </td>
@@ -101,7 +101,7 @@
                                                    class="import-control @if(in_array('type', $errors)){{ 'border-bottom border-danger'}}@endif"
                                                    name="type[]" value="{{ $valueArray[$row]['type'] }}"
                                                    placeholder="This Row is Empty Please Fill!" required
-                                                   data-container='#type{{$line}}' data-placement='top'
+                                                   data-bs-container='#type{{$line}}' data-bs-placement='top'
                                                @if(array_key_exists('type', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['type']}'" !!}@endif>
                                         </span>
                                 </td>
@@ -109,7 +109,7 @@
                                         <span id="location_id{{$line}}" class="tooltip-danger">
                                         <select type="dropdown"
                                                 class="import-control @if(in_array('location_id', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                                name="location_id[]" required data-container='#location_id{{$line}}'
+                                                name="location_id[]" required data-bs-container='#location_id{{$line}}'
                                         @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' data-bs-placement='bottom' title='{$errorValues[$row]['location_id']} - {$valueArray[$row]['location_id']}'" !!}@endif
                                         >
                                             <option
@@ -136,7 +136,7 @@
                                                class="import-control @if(in_array('purchased_date', $errors)){{ 'border-bottom border-danger'}}@endif"
                                                name="purchased_date[]" id="purchased_date"
                                                placeholder="This Row is Empty Please Fill!" value="{{ $date }}" required
-                                               data-container='#purchased_date{{$line}}' data-placement='top'
+                                               data-bs-container='#purchased_date{{$line}}' data-bs-placement='top'
                                                @if(array_key_exists('purchased_date', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['purchased_date']}'" !!}
                                                    @endif
                                                >
@@ -150,7 +150,7 @@
                                                name="purchased_cost[]" id="purchased_cost"
                                                placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['purchased_cost'] }}" required
-                                               data-container='#purchased_cost{{$line}}' data-placement='top'
+                                               data-bs-container='#purchased_cost{{$line}}' data-bs-placement='top'
                                                @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['purchased_cost']}'" !!}@endif
                                         >
                                         </span>
@@ -162,7 +162,7 @@
                                                name="depreciation[]" id="order_no"
                                                placeholder="This Row is Empty Please Fill!"
                                                value="{{ $valueArray[$row]['depreciation'] }}" required
-                                               data-container='#depreciation{{$line}}' data-placement='top'
+                                               data-bs-container='#depreciation{{$line}}' data-bs-placement='top'
                                             @if(array_key_exists('depreciation', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['depreciation']}'" !!}@endif
                                         >
                                         </span>
@@ -186,7 +186,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="importHelpModalLabel">Importing Data Help</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -211,7 +211,7 @@
                            target="_blank" class="btn btn-blue">
                             Download Import Template
                         </a>
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
                     @csrf
                 </form>
             </div>

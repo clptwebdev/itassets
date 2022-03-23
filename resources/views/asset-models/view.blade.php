@@ -70,7 +70,7 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenu{{$model->id}}Link" data-toggle="dropdown"
+                                           id="dropdownMenu{{$model->id}}Link" data-bs-toggle="dropdown"
                                            aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
@@ -122,7 +122,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to delete this Asset
                                                                       Model? </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -135,7 +135,7 @@
                                                model. </small>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
                     <button class="btn btn-coral" type="button" id="confirmBtn">Delete</button>
                 </div>
             </div>

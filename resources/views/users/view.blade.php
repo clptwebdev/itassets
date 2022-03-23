@@ -83,7 +83,7 @@
                                         $locations = $user->locations;
                                     @endphp
                                     @foreach($locations as $location)
-                                        <small data-toggle="tooltip" data-html="true" data-placement="left"
+                                        <small data-bs-toggle="tooltip" data-html="true" data-bs-placement="left"
                                                title="{{ $location->name }}<br>{{ $location->address1}}"
                                                class="rounded p-1 m-1 mb-2 text-white d-inline-block pointer"
                                                style="background-color: {{$location->icon}}">{{$location->name[0]}}</small>
@@ -92,7 +92,7 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                           id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                                            aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>

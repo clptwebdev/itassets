@@ -74,8 +74,8 @@
                                         <input type="text" maxlength="11"
                                                class="import-control <?php if (in_array('id', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['id'] }}" placeholder="" required
-                                               data-container='#id{{$line}}' data-placement='top'
-                                           @if(array_key_exists('id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['id']}'" !!}@endif>
+                                               data-bs-container='#id{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['id']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -83,8 +83,8 @@
                                         <input type="text" maxlength="11"
                                                class="import-control <?php if (in_array('asset_tag', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['asset_tag'] }}" placeholder="" required
-                                               data-container='#asset_tag{{$line}}' data-placement='top'
-                                           @if(array_key_exists('asset_tag', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['asset_tag']}'" !!}@endif>
+                                               data-bs-container='#asset_tag{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('asset_tag', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['asset_tag']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -92,8 +92,8 @@
                                         <input type="text"
                                                class="import-control <?php if (in_array('serial_no', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['serial_no'] }}" placeholder="" required
-                                               data-container='#serial_no{{$line}}' data-placement='top'
-                                           @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['serial_no']}'" !!}@endif>
+                                               data-bs-container='#serial_no{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['serial_no']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -101,8 +101,8 @@
                                         <input type="text"
                                                class="import-control <?php if (in_array('location_id', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['location_id'] }}" placeholder="" required
-                                               data-container='#location_id{{$line}}' data-placement='top'
-                                           @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['location_id']}'" !!}@endif>
+                                               data-bs-container='#location_id{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['location_id']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -110,8 +110,8 @@
                                         <input type="text"
                                                class="import-control <?php if (in_array('date', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['date'] }}" placeholder="" required
-                                               data-container='#date{{$line}}' data-placement='top'
-                                           @if(array_key_exists('date', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['date']}'" !!}@endif>
+                                               data-bs-container='#date{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('date', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['date']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -119,8 +119,8 @@
                                         <input type="text"
                                                class="import-control <?php if (in_array('reason', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['reason'] }}" placeholder="" required
-                                               data-container='#reason{{$line}}' data-placement='top'
-                                           @if(array_key_exists('reason', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['reason']}'" !!}@endif>
+                                               data-bs-container='#reason{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('reason', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['reason']}'" !!}@endif>
                                     </span>
                                 </td>
                             </tr>

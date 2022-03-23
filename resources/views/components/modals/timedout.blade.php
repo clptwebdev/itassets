@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title text-blue" id="timedoutModalLabel">Your Session has Timed out.</h4>
-                {{--                <button class="btn btn-light" type="button" data-dismiss="modal" aria-label="Close">--}}
+                {{--                <button class="btn btn-light" type="button" data-bs-dismiss="modal" aria-label="Close">--}}
                 {{--                    <span aria-hidden="true">×</span>--}}
                 {{--                </button>--}}
             </div>

@@ -81,8 +81,8 @@
                                         <input type="text" maxlength="11"
                                                class="import-control <?php if (in_array('id', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['id'] }}" placeholder="" required
-                                               data-container='#id{{$line}}' data-placement='top'
-                                           @if(array_key_exists('id', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['id']}'" !!}@endif>
+                                               data-bs-container='#id{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['id']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -90,8 +90,8 @@
                                         <input type="text" maxlength="11"
                                                class="import-control <?php if (in_array('asset_tag', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['asset_tag'] }}" placeholder="" required
-                                               data-container='#asset_tag{{$line}}' data-placement='top'
-                                           @if(array_key_exists('asset_tag', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['asset_tag']}'" !!}@endif>
+                                               data-bs-container='#asset_tag{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('asset_tag', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['asset_tag']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -99,8 +99,8 @@
                                         <input type="text" maxlength="11"
                                                class="import-control <?php if (in_array('new_tag', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['new_tag'] }}" placeholder="" required
-                                               data-container='#new_tag{{$line}}' data-placement='top'
-                                           @if(array_key_exists('new_tag', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['new_tag']}'" !!}@endif>
+                                               data-bs-container='#new_tag{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('new_tag', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['new_tag']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -108,8 +108,8 @@
                                         <input type="text"
                                                class="import-control <?php if (in_array('serial_no', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['serial_no'] }}" placeholder="" required
-                                               data-container='#serial_no{{$line}}' data-placement='top'
-                                           @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['serial_no']}'" !!}@endif>
+                                               data-bs-container='#serial_no{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['serial_no']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -117,8 +117,8 @@
                                         <input type="text"
                                                class="import-control <?php if (in_array('location_from', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['location_from'] }}" placeholder="" required
-                                               data-container='#location_from{{$line}}' data-placement='top'
-                                           @if(array_key_exists('location_from', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['location_from']}'" !!}@endif>
+                                               data-bs-container='#location_from{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('location_from', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['location_from']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -126,8 +126,8 @@
                                         <input type="text"
                                                class="import-control <?php if (in_array('location_to', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['location_to'] }}" placeholder="" required
-                                               data-container='#location_to{{$line}}' data-placement='top'
-                                           @if(array_key_exists('location_to', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['location_to']}'" !!}@endif>
+                                               data-bs-container='#location_to{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('location_to', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['location_to']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -135,8 +135,8 @@
                                         <input type="text"
                                                class="import-control <?php if (in_array('date', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['date'] }}" placeholder="" required
-                                               data-container='#date{{$line}}' data-placement='top'
-                                           @if(array_key_exists('date', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['date']}'" !!}@endif>
+                                               data-bs-container='#date{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('date', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['date']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -144,8 +144,8 @@
                                         <input type="text"
                                                class="import-control <?php if (in_array('notes', $errors)) {?>border-bottom border-danger<?php }?>"
                                                value="{{ $valueArray[$row]['notes'] }}" placeholder="" required
-                                               data-container='#notes{{$line}}' data-placement='top'
-                                           @if(array_key_exists('notes', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['notes']}'" !!}@endif>
+                                               data-bs-container='#notes{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('notes', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['notes']}'" !!}@endif>
                                     </span>
                                 </td>
                             </tr>

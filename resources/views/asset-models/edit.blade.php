@@ -125,8 +125,8 @@
                                     <h4 class="h6 mb-3">Asset Model Image</h4>
                                     <img id="profileImage"
                                          src="{{ asset($assetModel->photo->path ?? 'images/svg/device-image.svg') }}"
-                                         width="100%" alt="Select Profile Picture" data-toggle="modal"
-                                         data-target="#imgModal">
+                                         width="100%" alt="Select Profile Picture" data-bs-toggle="modal"
+                                         data-bs-target="#imgModal">
                                     <input type="hidden" id="photo_id" name="photo_id"
                                            value="{{ $assetModel->photoid}}">
                                 </div>

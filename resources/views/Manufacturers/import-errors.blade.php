@@ -33,7 +33,7 @@
         <div class="col-md-12">
             <div id="summary">
                 <p class="collapse" id="collapseSummary">{{$errorRows}}</p>
-                <a class="collapsed" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+                <a class="collapsed" data-bs-toggle="collapse" href="#collapseSummary" aria-expanded="false"
                    aria-controls="collapseSummary"></a>
             </div>
         </div>
@@ -85,8 +85,8 @@
                                            class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>"
                                            name="name[]" id="name" value="{{ $valueArray[$row]['name'] }}"
                                            placeholder="This Row is Empty Please Fill!" required
-                                           data-container='#name{{$line}}' data-placement='top'
-                                           @if(array_key_exists('name', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
+                                           data-bs-container='#name{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('name', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
                                     </span>
                                 <td>
                                     <span id="supporturl{{$line}}" class="tooltip-danger">
@@ -94,8 +94,8 @@
                                            class="form-control <?php if (in_array('supporturl', $errors)) {?>border-danger<?php }?>"
                                            name="supportUrl[]" id="supportUrl"
                                            value="{{ $valueArray[$row]['supporturl'] }}"
-                                           data-container='#supporturl{{$line}}' data-placement='top'
-                                           @if(array_key_exists('supporturl', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supporturl']}'" !!}@endif>
+                                           data-bs-container='#supporturl{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('supporturl', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['supporturl']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -105,8 +105,8 @@
                                            name="supportPhone[]" id="supportPhone"
                                            placeholder="This Row is Empty Please Fill!"
                                            value="{{ $valueArray[$row]['supportphone'] }}" required
-                                           data-container='#supportphone{{$line}}' data-placement='top'
-                                           @if(array_key_exists('supportphone', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supportphone']}'" !!}@endif>
+                                           data-bs-container='#supportphone{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('supportphone', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['supportphone']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
@@ -116,8 +116,8 @@
                                            name="supportEmail[]" id="supportEmail"
                                            placeholder="This Row is Empty Please Fill!"
                                            value="{{ $valueArray[$row]['supportemail'] }}" required
-                                           data-container='#supportemail{{$line}}' data-placement='top'
-                                           @if(array_key_exists('supportemail', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supportemail']}'" !!}@endif>
+                                           data-bs-container='#supportemail{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('supportemail', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['supportemail']}'" !!}@endif>
                                     </span>
                                 </td>
                             </tr>
@@ -138,7 +138,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data Help</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -163,7 +163,7 @@
                            target="_blank" class="btn btn-info">
                             Download Import Template
                         </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
                     @csrf
                 </form>
             </div>

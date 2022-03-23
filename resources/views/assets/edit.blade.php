@@ -32,19 +32,19 @@
 
                             <ul id="tab-bar" class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
-                                       aria-controls="home" aria-selected="true">Overview</a>
+                                    <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home"
+                                       role="tab" aria-controls="home" aria-selected="true">Overview</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="purchase-tab" data-toggle="tab" href="#purchase" role="tab"
-                                       aria-controls="home" aria-selected="true">Purchase Information</a>
+                                    <a class="nav-link" id="purchase-tab" data-bs-toggle="tab" href="#purchase"
+                                       role="tab" aria-controls="home" aria-selected="true">Purchase Information</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="location-tab" data-toggle="tab" href="#location" role="tab"
-                                       aria-controls="home" aria-selected="true">Location Information</a>
+                                    <a class="nav-link" id="location-tab" data-bs-toggle="tab" href="#location"
+                                       role="tab" aria-controls="home" aria-selected="true">Location Information</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="attributes-tab" data-toggle="tab" href="#attributes"
+                                    <a class="nav-link" id="attributes-tab" data-bs-toggle="tab" href="#attributes"
                                        role="tab" aria-controls="home" aria-selected="true">Attributes</a>
                                 </li>
                             </ul>
@@ -73,8 +73,8 @@
                                                 </div>
                                                 <small class="form-text text-muted">Can't find the Model your
                                                                                     after?
-                                                    <a href="#" data-toggle="modal" data-target="#newModel">Click
-                                                                                                            Here</a>to
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#newModel">Click
+                                                                                                                  Here</a>to
                                                                                     create one.</small>
                                             </div>
                                             <div class="form-group">

@@ -31,7 +31,7 @@
          @endif
          <div class="dropdown show d-inline">
              <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                  Bulk Options
              </a>
              <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
@@ -40,10 +40,10 @@
                          Import
                      </x-buttons.dropdown-item>
                  @endcan
-                 <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">
+                 <x-buttons.dropdown-item form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
                      Dispose
                  </x-buttons.dropdown-item>
-                 <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkTransferModal'">
+                 <x-buttons.dropdown-item form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkTransferModal'">
                      Transfer
                  </x-buttons.dropdown-item>
              </div>

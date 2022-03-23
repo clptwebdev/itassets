@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="removeCommentLabel">Are you sure you want to delete this Comment? </h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -17,7 +17,7 @@
                 <small class="text-danger">**Warning this is permanent. </small>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
                 <button class="btn btn-coral" type="button" id="confirmCommentBtn">Delete</button>
             </div>
         </div>

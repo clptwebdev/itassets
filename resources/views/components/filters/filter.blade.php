@@ -13,13 +13,13 @@
                 @csrf
                 @if(isset($statuses) && $statuses != null)
                     <div class="option">
-                        <div class="option-header pointer collapsed" id="statusHeader" data-toggle="collapse"
-                             data-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader">
+                        <div class="option-header pointer collapsed" id="statusHeader" data-bs-toggle="collapse"
+                             data-bs-target="#statusCollapse" aria-expanded="true" aria-controls="statusHeader">
                             <small>Status Type</small>
                         </div>
 
                         <div id="statusCollapse" class="collapse show" aria-labelledby="statusHeader"
-                             data-parent="#accordion">
+                             data-bs-parent="#accordion">
                             <div class="option-body">
 
                                 @foreach($statuses as $status)
@@ -41,13 +41,13 @@
 
                 @if(isset($categories) && $categories != null)
                     <div class="option">
-                        <div class="option-header collapsed pointer" id="categoryHeader" data-toggle="collapse"
-                             data-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryHeader">
+                        <div class="option-header collapsed pointer" id="categoryHeader" data-bs-toggle="collapse"
+                             data-bs-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryHeader">
                             <small>Category</small>
                         </div>
 
                         <div id="categoryCollapse" class="collapse" aria-labelledby="categoryHeader"
-                             data-parent="#accordion">
+                             data-bs-parent="#accordion">
                             <div class="option-body">
                                 @foreach($categories as $category)
                                     @if($category->$count != 0)
@@ -68,13 +68,13 @@
 
                 @if(isset($locations))
                     <div class="option">
-                        <div class="option-header collapsed pointer" id="locationHeader" data-toggle="collapse"
-                             data-target="#locationCollapse" aria-expanded="true" aria-controls="locationHeader">
+                        <div class="option-header collapsed pointer" id="locationHeader" data-bs-toggle="collapse"
+                             data-bs-target="#locationCollapse" aria-expanded="true" aria-controls="locationHeader">
                             <small>Location</small>
                         </div>
 
                         <div id="locationCollapse" class="collapse" aria-labelledby="locationHeader"
-                             data-parent="#accordion">
+                             data-bs-parent="#accordion">
                             <div class="option-body">
                                 @foreach($locations as $location)
                                     @if($location->$count != 0)
@@ -94,13 +94,14 @@
                 @endif
 
                 <div class="option">
-                    <div class="option-header collapsed pointer" id="purchasedDateHeader" data-toggle="collapse"
-                         data-target="#purchasedDateCollapse" aria-expanded="true" aria-controls="purchasedDateHeader">
+                    <div class="option-header collapsed pointer" id="purchasedDateHeader" data-bs-toggle="collapse"
+                         data-bs-target="#purchasedDateCollapse" aria-expanded="true"
+                         aria-controls="purchasedDateHeader">
                         <small>Date</small>
                     </div>
 
                     <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader"
-                         data-parent="#accordion">
+                         data-bs-parent="#accordion">
                         <div class="option-body">
                             <div class="form-row">
                                 <label for="start" class="p-0 m-0 mb-1"><small>Start</small></label>
@@ -120,8 +121,8 @@
 
 
                 <div class="option">
-                    <div class="option-header collapsed pointer" id="costHeader" data-toggle="collapse"
-                         data-target="#costCollapse" aria-expanded="true" aria-controls="costHeader">
+                    <div class="option-header collapsed pointer" id="costHeader" data-bs-toggle="collapse"
+                         data-bs-target="#costCollapse" aria-expanded="true" aria-controls="costHeader">
                         <small>Cost/Value</small>
                     </div>
                     {{-- new fully javascript slider--}}
@@ -145,12 +146,12 @@
 
                 @if(Schema::hasColumn("{$table}",'audit_date'))
                     <div class="option">
-                        <div class="option-header pointer collapsed" id="auditDateHeader" data-toggle="collapse"
-                             data-target="#auditDateCollapse" aria-expanded="true" aria-controls="auditDateHeader">
+                        <div class="option-header pointer collapsed" id="auditDateHeader" data-bs-toggle="collapse"
+                             data-bs-target="#auditDateCollapse" aria-expanded="true" aria-controls="auditDateHeader">
                             <small>Audit Date</small>
                         </div>
                         <div id="auditDateCollapse" class="collapse" aria-labelledby="auditDateHeader"
-                             data-parent="#accordion">
+                             data-bs-parent="#accordion">
                             <div class="option-body">
                                 <div class="form-row">
                                     <select name="audit" class="form-control">

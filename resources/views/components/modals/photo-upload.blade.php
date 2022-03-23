@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary-blue text-white">
                 <h5 class="modal-title" id="imgModalLabel">Select Image</h5>
-                <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                <button class="close text-white" type="button" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
 
@@ -20,8 +20,14 @@
                 @endforeach
             </div>
             <div class="modal-footer">
+<<<<<<< HEAD
                 <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
                         data-target="#uploadModal">Upload File
+=======
+                <button type="button" class="btn btn-info" data-bs-dismiss="modal" data-bs-toggle="modal"
+                        data-bs-target="#uploadModal">Upload
+                                                      file
+>>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
                 </button>
             </div>
         </div>

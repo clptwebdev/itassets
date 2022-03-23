@@ -20,7 +20,7 @@
                 <button type="submit" class="d-inline-block btn btn-sm btn-success shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>
-                <a data-toggle='modal' data-target='#passwordResetModal'
+                <a data-bs-toggle='modal' data-bs-target='#passwordResetModal'
                    class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Change Password</a>
             </div>
@@ -108,7 +108,7 @@
                     $locations = auth()->user()->locations;
                 @endphp
                 @foreach($locations as $location)
-                    <small data-toggle="tooltip" data-html="true" data-placement="left"
+                    <small data-bs-toggle="tooltip" data-html="true" data-bs-placement="left"
                            title="{{ $location->name }}<br>{{ $location->address1}}"
                            class="rounded p-1 m-1 mb-2 text-white d-inline-block pointer"
                            style="background-color: {{$location->icon}}">{{$location->name}}</small>
@@ -120,7 +120,7 @@
     <div class="col-12 mb-4">
         <div class="card shadow h-100">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
-                 data-toggle="collapse" data-target="#changes" aria-expanded="false" aria-controls="changes">
+                 data-bs-toggle="collapse" data-bs-target="#changes" aria-expanded="false" aria-controls="changes">
                 <h6 class="m-0 font-weight-bold">Account Changes</h6>
             </div>
             <div class="card-body collapse" id="changes">
@@ -161,7 +161,7 @@
     <div class="col-12 mb-4">
         <div class="card shadow h-100">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
-                 data-toggle="collapse" data-target="#activity" aria-expanded="false" aria-controls="activity">
+                 data-bs-toggle="collapse" data-bs-target="#activity" aria-expanded="false" aria-controls="activity">
                 <h6 class="m-0 font-weight-bold"><a id="Recent">Recent Activity</a></h6>
             </div>
             <div class="card-body collapse" id="activity">
@@ -212,7 +212,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="passwordResetModalLabel">Password Reset</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -241,7 +241,7 @@
                         @if(session('import-error'))
                             <div class="alert text-warning ml-0"> {{ session('import-error')}} </div>
                         @endif
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-success" type="button" id="confirmBtnImport">
                             Save
                         </button>

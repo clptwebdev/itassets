@@ -24,33 +24,32 @@
                             </div>
                         </div>
                     </div>
-                    <div class="border-top border-light pt-4">
-                    </div>
+                    <div class="border-top border-light pt-4"></div>
                     <div class="row no-gutters border-top border-light mt-4 pt-4">
                         <div class="col-12">
                             <table width="100%">
                                 <thead>
                                 <tr>
                                     <th class="text-center"><span
-                                                class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                data-toggle="tooltip" data-placement="top" title="Assets"><i
-                                                    class="fas fa-fw fa-tablet-alt"></i></span></th>
+                                            class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Assets"><i
+                                                class="fas fa-fw fa-tablet-alt"></i></span></th>
                                     <th class="text-center"><span
-                                                class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                data-toggle="tooltip" data-placement="top" title="Accessories"><i
-                                                    class="fas fa-fw fa-keyboard"></i></span></th>
+                                            class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Accessories"><i
+                                                class="fas fa-fw fa-keyboard"></i></span></th>
                                     <th class="text-center"><span
-                                                class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                data-toggle="tooltip" data-placement="top" title="Components"><i
-                                                    class="fas fa-fw fa-hdd"></i></span></th>
+                                            class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Components"><i
+                                                class="fas fa-fw fa-hdd"></i></span></th>
                                     <th class="text-center"><span
-                                                class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                data-toggle="tooltip" data-placement="top" title="Consumables"><i
-                                                    class="fas fa-fw fa-tint"></i></span></th>
+                                            class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Consumables"><i
+                                                class="fas fa-fw fa-tint"></i></span></th>
                                     <th class="text-center"><span
-                                                class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                data-toggle="tooltip" data-placement="top" title="MIscellaneous"><i
-                                                    class="fas fa-fw fa-question"></i></span></th>
+                                            class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="MIscellaneous"><i
+                                                class="fas fa-fw fa-question"></i></span></th>
                                 </tr>
                                 </thead>
                                 <tbody>

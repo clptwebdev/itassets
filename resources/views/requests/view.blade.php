@@ -82,12 +82,12 @@
 
                                     @if($request->status == 1)
                                         @php($super = App\Models\User::find($request->super_id))
-                                        <i class="fas fa-check-circle text-green pointer" data-toggle="tooltip"
+                                        <i class="fas fa-check-circle text-green pointer" data-bs-toggle="tooltip"
                                            data-html="true"
                                            title="Approved by {{$super->name}}<br>{{\Carbon\Carbon::parse($request->updated_at)->format('d M y')}}"></i>
                                     @elseif($request->status == 2)
                                         @php($super = App\Models\User::find($request->super_id))
-                                        <i class="fas fa-times-circle text-coral pointer" data-toggle="tooltip"
+                                        <i class="fas fa-times-circle text-coral pointer" data-bs-toggle="tooltip"
                                            data-html="true"
                                            title="Denied by {{$super->name}}<br>{{\Carbon\Carbon::parse($request->updated_at)->format('d M y')}}"></i>
                                     @else
@@ -139,7 +139,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="accessModalLabel">Allow <span id="userName"></span> access to Apollo
                         </h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
@@ -205,7 +205,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
                         <button class="btn btn-green" type="submit">Allow Permissions</button>
                     </div>
                 </form>
