@@ -9,8 +9,8 @@
             <a href="{{ route($route.'.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
             <div class="dropdown d-inline ml-lg-2">
                 <button class="btn btn-green dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="far fa-eye mr-lg-1"></i><span class="d-none d-lg-inline-block">View Filter</span>
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="far fa-eye mr-lg-1"></i><span class="d-none d-lg-inline-block">View Filter</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="dropdownMenuButton">
 
@@ -55,7 +55,8 @@
                     @endif
                     @if(session()->has($relations.'_start') && session()->has($relations.'_end'))
                         <h6 class="dropdown-header text-center">Purchased Date</h6>
-                        <span class="dropdown-item">{{ session($relations.'_start').' to '.session($relations.'_end') ?? 'No Dates'}}</span>
+                        <span
+                            class="dropdown-item">{{ session($relations.'_start').' to '.session($relations.'_end') ?? 'No Dates'}}</span>
                     @endif
 
                     @if(session()->has($relations.'_amount'))
@@ -63,7 +64,7 @@
                         <span class="dropdown-item">{{ session($relations.'_amount')}}</span>
                     @endif
 
-                    
+
                     @if(session()->has($relations.'_audit') && session($relations.'_audit') != 0)
                         <h6 class="dropdown-header text-center">Audit</h6>
                         @php
@@ -92,7 +93,8 @@
                 </div>
             </div>
         @endif
-        <a id="filterBtn" href="#" onclick="javascript:toggleFilter();" class="btn btn-blue shadow-sm ml-lg-2"><i class="fas fa-filter mr-lg-1"></i><span class="d-none d-lg-inline-block">Filter</span></a>
+        <a id="filterBtn" href="#" onclick="javascript:toggleFilter();" class="btn btn-blue shadow-sm ml-lg-2"><i
+                class="fas fa-filter mr-lg-1"></i><span class="d-none d-lg-inline-block">Filter</span></a>
     </div>
     <div id="searchBar" class="d-none d-lg-inline-block col-12 col-lg-4 mb-4 mb-lg-0">
         <div class="w-100">
@@ -125,11 +127,13 @@
                 {{-- Check to see if the Model has a column name --}}
                 @if(Schema::hasColumn("{$table}",'name'))
                     <option value="name asc"
-                            @if(session($relations.'_orderby') == 'name' && (session($relations.'_direction')) == 'asc') selected @endif>Name (A-Z)
+                            @if(session($relations.'_orderby') == 'name' && (session($relations.'_direction')) == 'asc') selected @endif>
+                        Name (A-Z)
                     </option>
-                
+
                     <option value="name desc"
-                            @if(session($relations.'_orderby') == 'name' && (session($relations.'_direction')) == 'desc') selected @endif>Name (Z-A)
+                            @if(session($relations.'_orderby') == 'name' && (session($relations.'_direction')) == 'desc') selected @endif>
+                        Name (Z-A)
                     </option>
                 @endif
                 @if(Schema::hasColumn("{$table}",'location_id'))

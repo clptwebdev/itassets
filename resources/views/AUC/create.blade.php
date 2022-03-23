@@ -30,7 +30,7 @@
                             <ul id="tab-bar" class="nav nav-tabs">
 
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="location-tab" data-toggle="tab" href="#location"
+                                    <a class="nav-link active" id="location-tab" data-bs-toggle="tab" href="#location"
                                        role="tab" aria-controls="home" aria-selected="true">Location Information</a>
                                 </li>
                             </ul>

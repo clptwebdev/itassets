@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title text-blue" id="timeoutModalLabel">Your Session is about to timeout.</h4>
-                <button class="btn btn-light" type="button" data-dismiss="modal" aria-label="Close">
+                <button class="btn btn-light" type="button" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" onclick="resetCounter()">×</span>
                 </button>
             </div>

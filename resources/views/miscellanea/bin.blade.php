@@ -106,7 +106,7 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                           id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                                            aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>

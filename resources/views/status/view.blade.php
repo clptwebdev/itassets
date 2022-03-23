@@ -93,7 +93,7 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenu{{$status->id}}Link" data-toggle="dropdown"
+                                           id="dropdownMenu{{$status->id}}Link" data-bs-toggle="dropdown"
                                            aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
@@ -146,7 +146,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addStatusModalLabel">Create New Status </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -186,7 +186,7 @@
                                                  can act as a filter.</small>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-green" type="button">Save</button>
                     </div>
                 </form>
@@ -201,7 +201,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="updateCategoryModalLabel">Change Status</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -243,7 +243,7 @@
                                                  can act as a filter.</small>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-green" type="button">Save</button>
                     </div>
                 </form>

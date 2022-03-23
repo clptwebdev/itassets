@@ -25,19 +25,19 @@
             <div class="alert alert-success"> {!! session('success_message')!!} </div>
         @endif
         <h3 class="text-primary py-2">Select the button below for custom exports.</h3>
-        <a data-toggle="modal" data-target="#exportModal"
+        <a data-bs-toggle="modal" data-bs-target="#exportModal"
            class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"> Exports Items Here</a>
         <div class='row justify-content-start m-1 py-2'>
             <div class='my-4'>
                 <h4 class='text-blue'>Creating a new Role</h4>
                 <p class='text-muted'>Click the button below to create new role to assign to a User.</p>
-                <a data-toggle="modal" data-target="#roleAddModal"
+                <a data-bs-toggle="modal" data-bs-target="#roleAddModal"
                    class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                         class="fas fa-plus fa-sm pl-1 pr-1"></i> Create a new Role</a>
-                <a data-toggle="modal" data-target="#roleDeleteModal"
+                <a data-bs-toggle="modal" data-bs-target="#roleDeleteModal"
                    class="d-none d-sm-inline-block btn btn-sm btn-red shadow-sm"><i
                         class="fas fa-minus fa-sm pl-1 pr-1"></i> Remove a Role</a>
-                <a data-toggle="modal" data-target="#roleSyncModal"
+                <a data-bs-toggle="modal" data-bs-target="#roleSyncModal"
                    class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="fas fa-circle-notch fa-sm pl-1 pr-1"></i> Assign a Role to a user</a>
                 <a href='{{route('role.boot')}}' class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i

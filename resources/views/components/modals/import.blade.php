@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -22,7 +22,7 @@
                        target="_blank" class="btn btn-blue">
                         Download Import Template
                     </a>
-                    <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
 
                     <button type="submit" class="btn btn-green" type="button" id="confirmBtnImport">
                         Import

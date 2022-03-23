@@ -279,7 +279,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="removeModalLabel">Are you sure you want to delete this
                                                                       Location? </h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
@@ -293,7 +293,7 @@
                                                    available.</small>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
                         <button class="btn btn-coral" type="submit">Delete</button>
                     </div>
                 </form>

@@ -31,7 +31,7 @@
                             <h6 class="m-0 font-weight-bold">{{ $manufacturer->name}}</h6>
                             <div class="dropdown no-arrow">
                                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
@@ -79,26 +79,27 @@
                                         <tr>
                                             <th class="text-center"><span
                                                     class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                    data-toggle="tooltip" data-placement="top" title="Assets"><i
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Assets"><i
                                                         class="fas fa-fw fa-tablet-alt"></i></span></th>
                                             <th class="text-center"><span
                                                     class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                    data-toggle="tooltip" data-placement="top" title="Accessories"><i
-                                                        class="fas fa-fw fa-keyboard"></i></span>
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Accessories"><i class="fas fa-fw fa-keyboard"></i></span>
                                             </th>
                                             <th class="text-center"><span
                                                     class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                    data-toggle="tooltip" data-placement="top" title="Components"><i
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Components"><i
                                                         class="fas fa-fw fa-hdd"></i></span></th>
                                             <th class="text-center"><span
                                                     class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                    data-toggle="tooltip" data-placement="top" title="Consumables"><i
-                                                        class="fas fa-fw fa-tint"></i></span>
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Consumables"><i class="fas fa-fw fa-tint"></i></span>
                                             </th>
                                             <th class="text-center"><span
                                                     class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                    data-toggle="tooltip" data-placement="top" title="MIscellaneous"><i
-                                                        class="fas fa-fw fa-question"></i></span></th>
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="MIscellaneous"><i class="fas fa-fw fa-question"></i></span>
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>

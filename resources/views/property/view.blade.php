@@ -31,7 +31,7 @@
             @endif
             <div class="dropdown show d-inline">
                 <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Bulk Options
                 </a>
                 <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
@@ -40,7 +40,8 @@
                             Import
                         </x-buttons.dropdown-item>
                     @endcan
-                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">
+                    <x-buttons.dropdown-item
+                            form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
                         Dispose
                     </x-buttons.dropdown-item>
                 </div>
@@ -146,20 +147,21 @@
                                 <td class="text-center">{{$property->depreciation}} Years</td>
                                 <td class="text-center">
                                     <?php
-                                        //If Date is > 1 September the Year is this Year else Year = Last Year
-                        
-                                        $now = \Carbon\Carbon::now();
-                                        $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
-                                        $endDate = \Carbon\Carbon::parse('08/31/'.\Carbon\Carbon::now()->addYear()->format('Y'));
-                                        if(!$startDate->isPast()){
-                                            $startDate->subYear();
-                                            $endDate->subYear();
-                                        }
+                                    //If Date is > 1 September the Year is this Year else Year = Last Year
 
-                                        $bf = $property->depreciation_value($startDate);
-                                        $cf = $property->depreciation_value($endDate);
+                                    $now = \Carbon\Carbon::now();
+                                    $startDate = \Carbon\Carbon::parse('09/01/' . $now->format('Y'));
+                                    $endDate = \Carbon\Carbon::parse('08/31/' . \Carbon\Carbon::now()->addYear()->format('Y'));
+                                    if(! $startDate->isPast())
+                                    {
+                                        $startDate->subYear();
+                                        $endDate->subYear();
+                                    }
+
+                                    $bf = $property->depreciation_value($startDate);
+                                    $cf = $property->depreciation_value($endDate);
                                     ?>
-                                    £{{number_format( (float) $property->purchased_cost - $bf, 2, '.', ',' )}}    
+                                    £{{number_format( (float) $property->purchased_cost - $bf, 2, '.', ',' )}}
                                 </td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>

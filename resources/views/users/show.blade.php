@@ -100,7 +100,7 @@
                             $locations = $user->locations;
                         @endphp
                         @foreach($locations as $location)
-                            <small data-toggle="tooltip" data-html="true" data-placement="left"
+                            <small data-bs-toggle="tooltip" data-html="true" data-bs-placement="left"
                                    title="{{ $location->name }}<br>{{ $location->address1}}"
                                    class="rounded p-1 m-1 mb-2 text-white d-inline-block pointer"
                                    style="background-color: {{$location->icon}}">{{$location->name}}</small>
@@ -112,7 +112,8 @@
             <div class="col-12 mb-4">
                 <div class="card shadow h-100">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
-                         data-toggle="collapse" data-target="#changes" aria-expanded="false" aria-controls="changes">
+                         data-bs-toggle="collapse" data-bs-target="#changes" aria-expanded="false"
+                         aria-controls="changes">
                         <h6 class="m-0 font-weight-bold">Account Changes</h6>
                     </div>
                     <div class="card-body collapse" id="changes">
@@ -153,7 +154,8 @@
             <div class="col-12 mb-4">
                 <div class="card shadow h-100">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
-                         data-toggle="collapse" data-target="#activity" aria-expanded="false" aria-controls="activity">
+                         data-bs-toggle="collapse" data-bs-target="#activity" aria-expanded="false"
+                         aria-controls="activity">
                         <h6 class="m-0 font-weight-bold">Recent Activity</h6>
                     </div>
                     <div class="card-body collapse" id="activity">

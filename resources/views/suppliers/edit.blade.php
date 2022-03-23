@@ -108,7 +108,7 @@
                                         }
                                     @endphp
                                     <img id="profileImage" src="{{asset($path)}}" width="100%"
-                                         alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                         alt="Select Profile Picture" data-bs-toggle="modal" data-bs-target="#imgModal">
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>
                             </div>

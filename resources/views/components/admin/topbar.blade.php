@@ -32,7 +32,7 @@
 
         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
         <li class="nav-item dropdown no-arrow d-sm-none">
-            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
+            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-bs-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-search fa-fw"></i>
             </a>
@@ -55,7 +55,7 @@
         @can("create", App\Models\Asset::class)
             <li class="nav-item mx-1">
                 <a class="nav-link" href="{{route("assets.create")}}">
-                    <i class="fas fa-fw fa-tablet-alt" data-toggle="tooltip" data-placement="bottom"
+                    <i class="fas fa-fw fa-tablet-alt" data-bs-toggle="tooltip" data-bs-placement="bottom"
                        title="Add New Asset"></i>
                     <span class="badge badge-success badge-counter">+</span>
                 </a>
@@ -66,7 +66,8 @@
         @can('request', App\Models\Asset::class)
             <li class="nav-item mx-1">
                 <a class="nav-link" href="{{route("requests.index")}}">
-                    <i class="fas fa-fw fa-tasks" data-toggle="tooltip" data-placement="bottom" title="Requests"></i>
+                    <i class="fas fa-fw fa-tasks" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                       title="Requests"></i>
                     <span
                         class="badge badge-danger badge-counter">{{\App\Models\Requests::whereStatus(0)->count()}}</span>
                 </a>
@@ -75,7 +76,7 @@
         @can('viewAny' , App\Models\Log::class)
         <!-- Nav Item - Alerts -->
             <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
+                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-bell fa-fw"></i>
                     <!-- Counter - Alerts -->
@@ -148,7 +149,8 @@
         @endcan
         <li class="nav-item mx-1">
             <a class="nav-link" href="{{route("documentation.index")}}">
-                <i class="fas fa-fw fa-folder" data-toggle="tooltip" data-placement="bottom" title="Documentation"></i>
+                <i class="fas fa-fw fa-folder" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                   title="Documentation"></i>
                 <span class="badge badge-primary badge-counter"><i class="fas fa-eye text-white"></i></span>
             </a>
         </li>
@@ -156,7 +158,7 @@
 
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
                 <div class="text-right">
                     <span
@@ -186,7 +188,7 @@
                     Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Logout
                 </a>

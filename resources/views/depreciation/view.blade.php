@@ -51,8 +51,8 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenu{{$dep->id}}Link" data-toggle="dropdown" aria-haspopup="true"
-                                           aria-expanded="false">
+                                           id="dropdownMenu{{$dep->id}}Link" data-bs-toggle="dropdown"
+                                           aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
                                         <div
@@ -102,7 +102,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addStatusModalLabel">Create New Status </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -125,7 +125,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Save</button>
                     </div>
                 </form>
@@ -140,7 +140,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="updateDepModalLabel">Update Depreciation Model</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -165,7 +165,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-grey" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Save</button>
                     </div>
                 </form>
@@ -180,7 +180,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="showDepModalLabel"></h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>

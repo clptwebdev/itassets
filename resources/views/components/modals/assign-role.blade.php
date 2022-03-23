@@ -6,7 +6,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-blue" id="roleSyncModalLabel">Sync a Role to a User:</h5>
-                <button class="btn-light btn" type="button" data-dismiss="modal" aria-label="Close">
+                <button class="btn-light btn" type="button" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -23,7 +23,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href='#' class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm"
-                       data-dismiss='modal'><i class="fas fa-undo-alt fa-sm pl-1 pr-1"></i> Cancel</a>
+                       data-bs-dismiss='modal'><i class="fas fa-undo-alt fa-sm pl-1 pr-1"></i> Cancel</a>
                     <button type='submit' class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
                             class="fas fa-undo-alt fa-sm pl-1 pr-1"></i> Submit
                     </button>

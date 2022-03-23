@@ -49,12 +49,12 @@
 
         <div class="card shadow m-2" style="border-left: 0.25rem solid 666;">
             <div id="asset_header" class="card-header">
-                <h6 class="m-0 font-weight-bold pointer d-block w-100" data-toggle="collapse"
-                    data-target="#asset_collapse" aria-expanded="true" aria-controls="asset_collapse">Assigned
-                                                                                                      Assets</h6>
+                <h6 class="m-0 font-weight-bold pointer d-block w-100" data-bs-toggle="collapse"
+                    data-bs-target="#asset_collapse" aria-expanded="true" aria-controls="asset_collapse">Assigned
+                                                                                                         Assets</h6>
             </div>
             <div id="asset_collapse" class="collapse show" aria-labelledby="asset_header"
-                 data-parent="#statusAccordian">
+                 data-bs-parent="#statusAccordian">
                 <div class="card-body">
                     <table class="table table-striped logs">
                         <thead>
@@ -137,7 +137,7 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                           id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                                            aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
@@ -173,12 +173,12 @@
 
         <div class="card shadow  m-2" style="border-left: 0.25rem solid 666;">
             <div id="accessories_header" class="card-header">
-                <h6 class="m-0 font-weight-bold pointer d-block w-100" data-toggle="collapse"
-                    data-target="#accessories_collapse" aria-expanded="true" aria-controls="accessories_collapse">
+                <h6 class="m-0 font-weight-bold pointer d-block w-100" data-bs-toggle="collapse"
+                    data-bs-target="#accessories_collapse" aria-expanded="true" aria-controls="accessories_collapse">
                     Accessories</h6>
             </div>
             <div id="accessories_collapse" class="collapse" aria-labelledby="accessories_header"
-                 data-parent="#statusAccordian">
+                 data-bs-parent="#statusAccordian">
                 <div class="card-body">
                     <table class="table table-striped logs">
                         <thead>
@@ -241,7 +241,7 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                           id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                                            aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
@@ -280,12 +280,12 @@
 
         <div class="card shadow m-2" style="border-left: 0.25rem solid 666;">
             <div id="componentHeader" class="card-header">
-                <h6 class="m-0 font-weight-bold pointer d-block w-100" data-toggle="collapse"
-                    data-target="#componentCollapse" aria-expanded="true" aria-controls="componentCollapse">
+                <h6 class="m-0 font-weight-bold pointer d-block w-100" data-bs-toggle="collapse"
+                    data-bs-target="#componentCollapse" aria-expanded="true" aria-controls="componentCollapse">
                     Components</h6>
             </div>
             <div id="componentCollapse" class="collapse" aria-labelledby="componentHeader"
-                 data-parent="#statusAccordian">
+                 data-bs-parent="#statusAccordian">
                 <div class="card-body">
                     <table class="table table-striped logs">
                         <thead>
@@ -347,7 +347,7 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                           id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                                            aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
@@ -384,12 +384,12 @@
 
         <div class="card shadow m-2" style="border-left: 0.25rem solid 666;">
             <div id="consumable_header" class="card-header">
-                <h6 class="m-0 font-weight-bold pointer d-block w-100" data-toggle="collapse"
-                    data-target="#consumable_collapse" aria-expanded="true" aria-controls="consumable_collapse">
+                <h6 class="m-0 font-weight-bold pointer d-block w-100" data-bs-toggle="collapse"
+                    data-bs-target="#consumable_collapse" aria-expanded="true" aria-controls="consumable_collapse">
                     Consumables</h6>
             </div>
             <div id="consumable_collapse" class="collapse " aria-labelledby="consumable_header"
-                 data-parent="#statusAccordian">
+                 data-bs-parent="#statusAccordian">
                 <div class="card-body">
                     <table class="table table-striped logs">
                         <thead>
@@ -450,7 +450,7 @@
                                 <td class="text-right">
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                           id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                                            aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
@@ -499,7 +499,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="updateCategoryModalLabel">Change Status</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -553,7 +553,7 @@
                                                  can act as a filter.</small>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-green" type="button">Save</button>
                     </div>
                 </form>

@@ -104,7 +104,7 @@
                                         <img src="{{ asset($transfer->from->photo->path)}}" height="30px"
                                              alt="{{$transfer->from->name}}" title="{{ $transfer->from->name }}"/>
                                     @else
-                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($transfer->from->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($transfer->from->icon ?? '#666').'" data-bs-toggle="tooltip" data-bs-placement="top" title="">'
                                             .strtoupper(substr($transfer->from->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                     <small>{{$transfer->from->name}}</small>
@@ -114,7 +114,7 @@
                                         <img src="{{ asset($transfer->to->photo->path)}}" height="30px"
                                              alt="{{$transfer->to->name}}" title="{{ $transfer->to->name }}"/>
                                     @else
-                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($transfer->to->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($transfer->to->icon ?? '#666').'" data-bs-toggle="tooltip" data-bs-placement="top" title="">'
                                             .strtoupper(substr($transfer->to->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                     <small>{{$transfer->to->name}}</small>

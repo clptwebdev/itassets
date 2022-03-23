@@ -39,7 +39,7 @@
                                         </div>
                                         <div class="dropdown no-arrow">
                                             <a class="dropdown-toggle" href="#" role="button"
-                                               id="dropdownUser{{$user->id}}Link" data-toggle="dropdown"
+                                               id="dropdownUser{{$user->id}}Link" data-bs-toggle="dropdown"
                                                aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                             </a>
@@ -92,7 +92,7 @@
                     <h5 class="modal-title" id="removeUserModalLabel"><span id="user_name"></span> has access to the
                                                                                                    following locations.
                     </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>

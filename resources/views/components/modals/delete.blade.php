@@ -15,7 +15,7 @@
                                                                       Delete this {{ucfirst($slot)}}? </h5>
                 @endif
 
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -37,7 +37,7 @@
                 @endif
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
                 @if($archive ==false)
                     <button class="btn btn-danger" type="button" id="confirmBtn">Send to Bin</button>
                 @else

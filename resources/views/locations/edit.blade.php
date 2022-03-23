@@ -111,12 +111,12 @@
                                     @if($location->photo()->exists())
                                         <img id="profileImage"
                                              src="{{ asset($location->photo->path) ?? asset('images/svg/location-image.svg') }}"
-                                             width="100%" alt="Select Profile Picture" data-toggle="modal"
-                                             data-target="#imgModal">
+                                             width="100%" alt="Select Profile Picture" data-bs-toggle="modal"
+                                             data-bs-target="#imgModal">
                                     @else
                                         <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
-                                             width="100%" alt="Select Profile Picture" data-toggle="modal"
-                                             data-target="#imgModal">
+                                             width="100%" alt="Select Profile Picture" data-bs-toggle="modal"
+                                             data-bs-target="#imgModal">
                                     @endif
                                     <input type="hidden" id="photo_id" name="photo_id"
                                            value="{{ $location->photo_id }}">

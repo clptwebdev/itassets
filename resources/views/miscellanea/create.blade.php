@@ -31,20 +31,20 @@
 
                         <ul id="tab-bar" class="nav nav-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab"
                                    aria-controls="home" aria-selected="true">Overview</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="purchase-tab" data-toggle="tab" href="#purchase" role="tab"
+                                <a class="nav-link" id="purchase-tab" data-bs-toggle="tab" href="#purchase" role="tab"
                                    aria-controls="home" aria-selected="true">Purchase Information</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="location-tab" data-toggle="tab" href="#location" role="tab"
+                                <a class="nav-link" id="location-tab" data-bs-toggle="tab" href="#location" role="tab"
                                    aria-controls="home" aria-selected="true">Location Information</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="attributes-tab" data-toggle="tab" href="#attributes" role="tab"
-                                   aria-controls="home" aria-selected="true">Attributes</a>
+                                <a class="nav-link" id="attributes-tab" data-bs-toggle="tab" href="#attributes"
+                                   role="tab" aria-controls="home" aria-selected="true">Attributes</a>
                             </li>
                         </ul>
 
@@ -70,8 +70,8 @@
                                             <div class="model_title text-center h4 mb-3">Component Image</div>
                                             <div class="model_image p-4">
                                                 <img id="profileImage" src="{{ asset('images/svg/device-image.svg') }}"
-                                                     width="100%" alt="Select Profile Picture" data-toggle="modal"
-                                                     data-target="#imgModal">
+                                                     width="100%" alt="Select Profile Picture" data-bs-toggle="modal"
+                                                     data-bs-target="#imgModal">
                                                 <input type="hidden" id="photo_id" name="photo_id"
                                                        value="{{ old('photo_id') ?? 0}}">
                                             </div>
