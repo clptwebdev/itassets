@@ -17,12 +17,10 @@
         <section>
             <p class="mb-4">Add Furnture, Fixtures and Equipment to the Apollo Asset Manager. </p>
 
-            <div class="row row-eq-height no-gutters p-0 p-md-4 container m-auto"
-            ">
+            <div class="row row-eq-height no-gutters p-0 p-md-4 container m-auto">
             <div class="col-12">
                 <div class="card shadow h-100">
                     <div class="card-body">
-                        <x-form.errors/>
                         <x-handlers.alerts/>
 
                         <ul id="tab-bar" class="nav nav-tabs">
@@ -63,9 +61,9 @@
                                     </div>
                                     <div class="col-12 col-md-6 p-4 mb-3 ">
                                         <div id="modelInfo" class="bg-light p-4">
-                                            <div class="model_title text-center h4 mb-3">Component Image</div>
+                                            <div class="model_title text-center h4 mb-3">FFE Image</div>
                                             <div class="model_image p-4">
-                                                <img id="profileImage" src="{{ asset('images/svg/device-image.svg') }}"
+                                                <img id="profileImage" src="{{ asset('images/svg/ffe.svg') }}"
                                                      width="100%" alt="Select Profile Picture" data-bs-toggle="modal"
                                                      data-bs-target="#imgModal">
                                                 <input type="hidden" id="photo_id" name="photo_id"
@@ -85,11 +83,15 @@
                                             <x-form.input name="order_no" value="{{old('order_no')}}"/>
                                         </div>
                                         <div class="form-group">
-                                            <x-form.date name="purchased_date" formAttributes="required"/>
+                                            <x-form.date name="purchased_date" formAttributes=""/>
                                         </div>
                                         <div class="form-group">
-                                            <x-form.input name="purchased_cost" formAttributes="required"
+                                            <x-form.input name="purchased_cost" formAttributes=""
                                                           value="{{old('purchased_cost')}}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <x-form.input name="depreciation" formAttributes=""
+                                                          value="{{old('depreciation')}}"/>
                                         </div>
                                         <div class="form-group position-relative">
                                             <label for="findSupplier">Supplier</label>

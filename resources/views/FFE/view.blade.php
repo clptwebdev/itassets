@@ -47,7 +47,7 @@
     <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive" id="table">
+                <div class="" id="table">
                     <table id="usersTable" class="table table-striped">
                         <thead>
                         <tr>
@@ -97,28 +97,13 @@
                                         @endif
                                     @endif
                                 </td>
-                                <td class="text-center d-none d-sm-inline-block">{{$ffe->manufacturer->name ?? "N/A"}}</td>
+                                <td class="text-center ">{{$ffe->manufacturer->name ?? "N/A"}}</td>
                                 <td class="d-none d-xl-table-cell"
                                     data-sort="{{ strtotime($ffe->purchased_date)}}">{{\Carbon\Carbon::parse($ffe->purchased_date)->format("d/m/Y")}}</td>
                                 <td class="text-center d-none d-xl-table-cell">
                                     £{{$ffe->purchased_cost}} @if($ffe->donated == 1) <span
                                         class="text-sm">*Donated</span> @endif
-                                    @if($ffe->depreciation()->exists())
-                                        <br>
-                                        @php
-                                            $eol = Carbon\Carbon::parse($ffe->purchased_date)->addYears($ffe->depreciation->years);
-                                            if($eol->isPast()){
-                                                $dep = 0;
-                                            }else{
-
-                                                $age = Carbon\Carbon::now()->floatDiffInYears($ffe->purchased_date);
-                                                $percent = 100 / $ffe->depreciation->years;
-                                                $percentage = floor($age)*$percent;
-                                                $dep = $ffe->purchased_cost * ((100 - $percentage) / 100);
-                                            }
-                                        @endphp
-                                        <small>(*£{{ number_format($dep, 2)}})</small>
-                                    @endif
+                                        <br><small class="text-coral">(*£{{number_format($ffe->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}})</small>
                                 </td>
                                 <td class="d-none d-xl-table-cell">{{$ffe->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center d-none d-xl-table-cell">{{$ffe->status->name ??'N/A'}}</td>

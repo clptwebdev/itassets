@@ -10,7 +10,6 @@
     <x-wrappers.nav title="Show Asset Under Construction">
         <x-buttons.return :route="route('aucs.index')"> AUC</x-buttons.return>
         {{-- <x-buttons.reports :route="route('property.showPdf', $auc->id)" /> --}}
-<<<<<<< HEAD
         <x-buttons.edit :route="route('aucs.edit',$auc->id)" />
         <x-form.layout method="DELETE" class="d-sm-inline-block"
                        :id="'form'.$auc->id"
@@ -27,23 +26,6 @@
     
     <div class="container card">
         <div class="card-body">
-=======
-        <x-buttons.edit :route="route('aucs.edit',$auc->id)"/>
-        <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$auc->id"
-                       :action="route('aucs.destroy', $auc->id)">
-            <x-buttons.delete formAttributes="data-id='{{$auc->id}}'"/>
-        </x-form.layout>
-
-    </x-wrappers.nav>
-
-    <x-handlers.alerts/>
-
-    <div class="container card">
-        <div class="card-body">
-            <x-form.errors/>
-            <x-handlers.alerts/>
-
->>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
 
             <ul id="tab-bar" class="nav nav-tabs">
 
