@@ -290,7 +290,7 @@ class PropertyController extends Controller {
             $array['name'] = $f->name ?? 'No Name';
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
-            $array['purchased_cost'] = '£' . $f->purchased_cost;
+            $array['purchased_cost'] = $f->purchased_cost;
             $array['depreciation'] = $f->depreciation;
             $array['current_value'] = $f->depreciation_value(\Carbon\Carbon::now());
             $array['type'] = $f->getType();
@@ -299,7 +299,7 @@ class PropertyController extends Controller {
 
         $user = auth()->user();
 
-        $date = \Carbon\Carbon::now()->format('dmyHi');
+        $date = \Carbon\Carbon::now()->format('dmyHis');
         $path = 'properties-report-' . $date;
 
         PropertiesPdf::dispatch($properties, $user, $path)->afterResponse();
@@ -323,7 +323,7 @@ class PropertyController extends Controller {
 
         $user = auth()->user();
 
-        $date = \Carbon\Carbon::now()->format('dmyHi');
+        $date = \Carbon\Carbon::now()->format('dmyHis');
         $path = "property-{$property->id}-{$date}";
         PropertyPdf::dispatch($property, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";

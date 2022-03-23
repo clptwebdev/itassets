@@ -14,7 +14,7 @@
             <th align="center">Location</th>
             <th align="center">Date</th>
             <th align="center">Cost</th>
-            <th align="center">Depreciation</th>
+            <th align="center">Depreciation (Years)</th>
             <th align="center">Current Value</th>
         </tr>
         @foreach($aucs as $id=>$auc)
@@ -23,9 +23,9 @@
             <td>{{ $auc['type'] ?? 'N/A'}}</td>
             <td><span >{{$auc['location'] ?? 'N/A'}}</span></td>
             <td align="center">{{ $auc['purchased_date'] ?? 'N/A'}}</td>
-            <td align="center">{{ $auc['purchased_cost'] ?? 'N/A'}}</td>
+            <td align="center">£{{number_format( (float) $auc['purchased_cost'], 2, '.', ',' ) ?? 'N/A'}}</td>
             <td align="center">{{ $auc['depreciation'] ?? 'N/A'}}</td>
-            <td align="center">£{{ $auc['current_value'] ?? 'N/A'}}</td>
+            <td align="center">£{{number_format( (float) $auc['current_value'], 2, '.', ',' ) ?? 'N/A'}}</td>
         </tr>
         @endforeach
     </table>

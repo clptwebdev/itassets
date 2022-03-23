@@ -17,7 +17,7 @@ class LocationPolicy {
         $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Location')->first();
     }
 
-    public function viewAny(User $user)
+    public function viewAll(User $user)
     {
         return $this->model->view;
     }

@@ -16,7 +16,7 @@
                        :action="route('properties.destroy', $property->id)" >
             <x-buttons.delete formAttributes="data-id='{{$property->id}}'" /> 
         </x-form.layout >
-        @can('generatePDF', \App\Models\Asset::class)
+        @can('generateShowPDF', $property)
             <x-buttons.reports :route="route('properties.showPdf', $property->id)"/>
         @endcan
     </x-wrappers.nav >
@@ -81,6 +81,7 @@
                                 £{{number_format( (float) $property->purchased_cost - $cf, 2, '.', ',' )}}
                             </p>
                             <?php $prevYear = $startDate->subYear();?>
+                            @if($prevYear >= $property->purchased_date)
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
                                 £{{number_format( (float) $property->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
                             </p>
@@ -88,6 +89,7 @@
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
                                 £{{number_format( (float) $property->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
                             </p>
+                            @endif
 
 
                         </div >

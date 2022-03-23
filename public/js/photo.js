@@ -7,15 +7,13 @@ const urlto = "/photo/upload";
 
 photo.addEventListener("click", function (e) {
     e.preventDefault();
-    photoModal.toggle();
+    photoModal.show();
 });
 
 function selectPhoto(id, src) {
-
-
     photo.src = src;
     photoId.value = id;
-    photoModal.toggle();
+    photoModal.hide();
 }
 
 photoUpload.onsubmit = async (e) => {
@@ -39,46 +37,32 @@ photoUpload.onsubmit = async (e) => {
 
     photoUploadModal.hide();
 
-    // updatePhotos();
+    //updatePhotos();
 
 
 }
-// function updatePhotos(page = 1){
-//
-//
-//
-//     var xhr = new XMLHttpRequest();
-//
-//
-//
-//     xhr.onload = function(e) {
-//
-//         //Place the JSON Images into the modal
-//
-//         let response = JSON.parse(xhr.responseText);
-//
-//         let output = "";
-//
-//
-//         Object.entries(response.photos).forEach(([key, value]) => {
-//
-//             output += `<img src="${value}" width="80px" alt=""
-//
-//                         class="selectPhoto" data-url="${value}" data-id="${key}">`;
-//
-//         });
-//
-//         console.log(output);
-//
-//         library.innerHTML = output;
-//
-//         photoUploadModal.hide();
-//
-//     }
-//
-//     xhr.open("GET", `/photo/${page}/get`);
-//
-//     xhr.send();
-//
-// }
 
+/* function updatePhotos(page = 1){
+
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+
+        //Place the JSON Images into the modal
+        let response = JSON.parse(xhr.responseText);
+        let output = "";
+        Object.entries(response.photos).forEach(([key, value]) => {
+
+             output += `<img src="${value}" width="80px" alt=""
+
+                         class="selectPhoto" data-url="${value}" data-id="${key}">`;
+        });
+        console.log(output);
+        library.innerHTML = output;
+        photoUploadModal.hide();
+    };
+
+    xhr.open("GET", `/photo/${page}/get`);
+    xhr.send();
+
+}
+ */

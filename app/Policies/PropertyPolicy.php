@@ -53,4 +53,12 @@ class PropertyPolicy {
         return $this->model->create;
     }
 
+    public function generatePDF(User $user){
+        return $this->model->fin_reports;
+    }
+
+    public function generateShowPDF(User $user, Property $property){
+        return $this->model->fin_reports && in_array($property->location_id, $user->locationsArray());
+    }
+
 }

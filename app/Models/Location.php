@@ -14,18 +14,9 @@ class Location extends Model {
 
     protected $fillable = ['name', 'address_1', 'address_2', 'city', 'county', 'postcode', 'telephone', 'email', 'photo_id', 'icon'];
 
-    public function name(): Attribute
-    {
-        return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
-        );
-    }
-
     public function email(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
             fn($value) => strtolower($value),
         );
     }
@@ -33,40 +24,35 @@ class Location extends Model {
     public function address_1(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
+            fn($value) => ucwords($value),
         );
     }
 
     public function address_2(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
+            fn($value) => ucwords($value),
         );
     }
 
     public function city(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
+            fn($value) => ucwords($value),
         );
     }
 
     public function county(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
+            fn($value) => ucwords($value),
         );
     }
 
     public function postcode(): Attribute
     {
         return new Attribute(
-            fn($value) => ucwords($value),
-            fn($value) => strtolower($value),
+            fn($value) => strtoupper($value),
         );
     }
 

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create New Asset')
+@section('title', 'Create New Property')
 
 @section('css')
 
@@ -23,9 +23,7 @@
                 <div class="col-12" >
                     <div class="card shadow h-100" >
                         <div class="card-body" >
-                            <x-form.errors />
                             <x-handlers.alerts />
-
 
                             <ul id="tab-bar" class="nav nav-tabs" >
 
@@ -42,7 +40,7 @@
                                     <div class="row" >
                                         <div class="col-12 col-md-6 p-4 mb-3 " >
                                             <div class="form-group" >
-                                                <x-form.input name="name" formAttributes="required" value="{{old('name')}}"/>
+                                                <x-form.input name="name" formAttributes="" value="{{old('name')}}"/>
                                             </div >
                                             <div class="form-group position-relative" >
                                                 <label for="findLocation" >Location</label >
@@ -60,15 +58,15 @@
                                             </div >
 
                                             <div class="form-group" >
-                                                <x-form.input name="purchased_cost" formAttributes="required" value="{{old('purchased_cost')}}" />
+                                                <x-form.input name="purchased_cost" formAttributes="" value="{{old('purchased_cost')}}" />
                                             </div >
 
                                             <div class="form-group" >
-                                                <x-form.date name="purchased_date" formAttributes="required" value="{{old('purchased_date')}}" />
+                                                <x-form.date name="purchased_date" formAttributes="" value="{{old('purchased_date')}}" />
                                             </div >
 
                                             <div class="form-group" >
-                                                <x-form.input name="depreciation" formAttributes="required" value="{{old('depreciation')}}" />
+                                                <x-form.input name="depreciation" formAttributes="" value="{{old('depreciation')}}" />
                                             </div >
 
                                             <div class="form-group">

@@ -45,4 +45,12 @@ class AUCPolicy {
         return $this->model->delete;
     }
 
+    public function generatePDF(User $user){
+        return $this->model->fin_reports;
+    }
+
+    public function generateShowPDF(User $user, AUC $auc){
+        return $this->model->fin_reports && in_array($auc->location_id, $user->locationsArray());
+    }
+
 }

@@ -11,7 +11,7 @@
         @can('create' , \App\Models\Property::class)
             <x-buttons.add :route="route('properties.create')">Property</x-buttons.add>
         @endcan
-        @can('generatePDF', \App\Models\Asset::class)
+        @can('generatePDF', \App\Models\Property::class)
             @if ($properties->count() == 1)
                 <x-buttons.reports :route="route('properties.showPdf', $properties[0]->id)"/>
             @else
@@ -40,9 +40,6 @@
                             Import
                         </x-buttons.dropdown-item>
                     @endcan
-                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">
-                        Dispose
-                    </x-buttons.dropdown-item>
                 </div>
             </div>
         @endcan

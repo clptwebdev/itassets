@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 //Jobs
 use App\Jobs\AUCSPdf;
 use App\Jobs\AUCPdf;
+//Models
+use App\Models\Report;
 
 class AUCController extends Controller {
 
@@ -377,23 +379,23 @@ class AUCController extends Controller {
 
         }
         $aucs = array();
-        $found = AUC::select('name', 'id', 'depreciation', 'type', 'purchased_date', 'purchased_cost', 'location_id')->withTrashed()->whereIn('id', json_decode($request->property))->with('location')->get();
+        $found = AUC::select('name', 'id', 'depreciation', 'type', 'purchased_date', 'purchased_cost', 'location_id')->withTrashed()->whereIn('id', json_decode($request->aucs))->with('location')->get();
         foreach($found as $f)
         {
             $array = array();
             $array['name'] = $f->name ?? 'No Name';
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
-            $array['purchased_cost'] = '£' . $f->purchased_cost;
+            $array['purchased_cost'] = $f->purchased_cost;
             $array['depreciation'] = $f->depreciation;
             $array['current_value'] = $f->depreciation_value(\Carbon\Carbon::now());
             $array['type'] = $f->getType();
-            $properties[] = $array;
+            $aucs[] = $array;
         }
 
         $user = auth()->user();
 
-        $date = \Carbon\Carbon::now()->format('dmyHi');
+        $date = \Carbon\Carbon::now()->format('dmyHis');
         $path = 'auc-report-' . $date;
 
         AUCSPdf::dispatch($aucs, $user, $path)->afterResponse();
@@ -409,7 +411,7 @@ class AUCController extends Controller {
 
     public function downloadShowPDF(AUC $auc)
     {
-        if(auth()->user()->cant('view', $auc))
+        if(auth()->user()->cant('generateShowPDF', $auc))
         {
             return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised | Download of Property Information.');
 
@@ -417,9 +419,9 @@ class AUCController extends Controller {
 
         $user = auth()->user();
 
-        $date = \Carbon\Carbon::now()->format('dmyHi');
+        $date = \Carbon\Carbon::now()->format('dmyHis');
         $path = "aucs-{$auc->id}-{$date}";
-        PropertyPdf::dispatch($auc, $user, $path)->afterResponse();
+        AUCPdf::dispatch($auc, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
