@@ -50,7 +50,7 @@ class LocationController extends Controller {
             'address_1' => 'required',
             'city' => 'required',
             'county' => 'required',
-            'postcode' => 'required',
+            'postcode' => 'required|max:8',
             'email' => 'required|unique:locations|email',
             'telephone' => 'required|max:14',
         ]);
@@ -97,7 +97,7 @@ class LocationController extends Controller {
             'address_1' => 'required',
             'city' => 'required',
             'county' => 'required',
-            'postcode' => 'required',
+            'postcode' => 'required|max:8',
             'email' => ['required', \Illuminate\Validation\Rule::unique('locations')->ignore($location->id), 'email'],
             'telephone' => 'required|max:14',
         ]);
