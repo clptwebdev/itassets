@@ -20,6 +20,7 @@ class UserController extends Controller {
 
     public function index()
     {
+
         if(auth()->user()->cant('viewAll', User::class))
         {
             return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Users.');
@@ -310,6 +311,23 @@ class UserController extends Controller {
         return to_route('users.show', $user->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
+    }
+
+    public function invokeExpiredUsers()
+    {
+        //This function checks if the user has signed in the last 3 Months if they haven't set there role to temp
+        foreach(User::all() as $user)
+        {
+            if($user->expiredUser())
+            {
+                $user->role_id = Role::whereName('temporary')->first()->id;
+                $user->save();
+            }
+
+        }
+
+        return to_route('users.index')->with('success_message', 'All Users have been Checked for Inactivity');
+
     }
 
 }

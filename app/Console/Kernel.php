@@ -38,6 +38,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call('\App\Http\Controllers\ReportController@clean')->weekly();
         //deletes all Csv's Monthly
         $schedule->call('\App\Http\Controllers\ReportController@clean')->weekly();
+        $schedule->call('\App\Http\Controllers\UserController@invokeExpiredUsers')->weekly();
         $schedule->call(function() {
             $files = Storage::files('public/csv/');
             Storage::delete($files);
