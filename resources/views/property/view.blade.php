@@ -29,24 +29,17 @@
                     </x-buttons.submit>
                 </x-form.layout>
             @endif
-            <div class="dropdown show d-inline">
-                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
+            <div class="dropdown d-inline-block">
+                <a class="btn btn-sm btn-lilac dropdown-bs-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Bulk Options
                 </a>
-                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-menu dropdown-menu-end text-end" aria-labelledby="dropdownMenuLink">
                     @can('import', \App\Models\Property::class)
                         <x-buttons.dropdown-item id="import">
                             Import
                         </x-buttons.dropdown-item>
                     @endcan
-<<<<<<< HEAD
-=======
-                    <x-buttons.dropdown-item
-                            form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
-                        Dispose
-                    </x-buttons.dropdown-item>
->>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
                 </div>
             </div>
         @endcan
@@ -224,7 +217,6 @@
 @section('modals')
 
     <x-modals.delete/>
-    <x-modals.dispose model="property"/>
     <x-modals.import route="/import/properties"/>
 @endsection
 

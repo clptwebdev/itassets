@@ -13,17 +13,18 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
+
 use Carbon\Carbon;
 
-class PropertyExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents 
+class AUCExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents 
 {
     use Exportable;
 
-    private $properties;
+    private $aucs;
 
-    public function __construct($properties)
+    public function __construct($aucs)
     {
-        $this->properties = $properties;
+        $this->aucs = $aucs;
     }
 
     public function headings(): array
@@ -41,20 +42,21 @@ class PropertyExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
     public function array(): array
     {
         $object = [];
-        foreach($this->properties as $property)
+        foreach($this->aucs as $auc)
         {
             $array = [];
-            $array['name'] = $property->name;
-            $array['type'] = $property->getType();
-            $array['location_id'] = $property->location->name ?? 'Unknown';
-            $array['purchased_date'] = Carbon::parse($property->purchased_date)->format('d\/m\/Y') ?? 'Unknown';
-            $array['purchased_cost'] = '£'.number_format( (float) $property->purchased_cost , 2, '.', ',' ) ?? 'Unknown';
-            $array['depreciation'] = $property->depreciation ?? 'Unknown';
+            $array['name'] = $auc->name;
+            $array['type'] = $auc->getType();
+            $array['location_id'] = $auc->location->name ?? 'Unknown';
+            $array['purchased_date'] = Carbon::parse($auc->purchased_date)->format('d\/m\/Y') ?? 'Unknown';
+            $array['purchased_cost'] = '£'.number_format( (float) $auc->purchased_cost , 2, '.', ',' ) ?? 'Unknown';
+            $array['depreciation'] = $auc->depreciation ?? 'Unknown';
             $object[] = $array;
 
         }
 
         return $object;
+
     }
 
     //adds styles

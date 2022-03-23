@@ -77,58 +77,6 @@
                                         <p>Email: {{ $location->email }}</p>
                                     </div>
                                 </div>
-<<<<<<< HEAD
-=======
-                                <div class="col-auto">
-                                    @if ($location->photo()->exists())
-                                        <img src="{{ $location->photo->path ?? 'null' }}" alt="{{ $location->name}}"
-                                             width="60px">
-                                    @else
-                                        <i class="fas fa-school fa-2x text-gray-300"></i>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="row no-gutters border-top border-info pt-4">
-                                <div class="col-12">
-                                    <table width="100%">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-center"><span
-                                                    class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Assets"><i
-                                                        class="fas fa-fw fa-tablet-alt"></i></span></th>
-                                            <th class="text-center"><span
-                                                    class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Accessories"><i class="fas fa-fw fa-keyboard"></i></span>
-                                            </th>
-                                            <th class="text-center"><span
-                                                    class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Components"><i
-                                                        class="fas fa-fw fa-hdd"></i></span></th>
-                                            <th class="text-center"><span
-                                                    class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Consumables"><i class="fas fa-fw fa-tint"></i></span></th>
-                                            <th class="text-center"><span
-                                                    class="display-5 font-weight-bold btn btn-sm rounded text-white bg-lilac px-2"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="MIscellaneous"><i class="fas fa-fw fa-question"></i></span>
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td class="text-center">{{$location->asset->count() ?? "N/A"}}</td>
-                                            <td class="text-center">{{$location->accessory->count() ?? "N/A"}}</td>
-                                            <td class="text-center">{{$location->components->count() ?? "N/A"}}</td>
-                                            <td class="text-center">{{$location->consumable->count() ?? "N/A"}}</td>
-                                            <td class="text-center">{{$location->miscellanea->count() ?? "N/A"}}</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
->>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
                             </div>
                         </div>
                     </div>

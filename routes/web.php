@@ -148,6 +148,7 @@ Route::group(['middleware' => 'auth'], function() {
         //Imports
         Route::post("/import/aucs", "import");
         Route::Post("/import/aucs/errors", "importErrors");
+        Route::Post("/import/aucs/errors/export", "exportImportErrors")->name("aucs.export.import");
         //PDF
         Route::post('/aucs/pdf', 'downloadPDF')->name('aucs.pdf');
         Route::get('/aucs/{auc}/pdf', 'downloadShowPDF')->name('aucs.showPdf');
@@ -261,6 +262,7 @@ Route::group(['middleware' => 'auth'], function() {
         //Imports
         Route::post("/import/properties", "import");
         Route::Post("/import/properties/errors", "importErrors");
+        Route::Post("/import/aucs/properties/export", "exportImportErrors")->name("properties.export.import");
         //PDF
         Route::post('/property/pdf', 'downloadPDF')->name('properties.pdf');
         Route::get('/property/{property}/pdf', 'downloadShowPDF')->name('properties.showPdf');

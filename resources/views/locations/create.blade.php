@@ -5,7 +5,7 @@
 @section('content')
 <x-form.layout :action="route('location.store')" >
     <x-wrappers.nav title="Add New Location" >
-        <x-buttons.return :route="route('properties.index')" > Property</x-buttons.return >
+        <x-buttons.return :route="route('location.index')" > Locations</x-buttons.return >
         <a href="{{ route('documentation.index')."#collapseThreeAssets"}}"
            class="btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
                 class="fas fa-question fa-sm text-dark-50 mr-lg-1" ></i ><span class="d-none d-lg-inline-block">Help</span></a >
@@ -76,27 +76,25 @@
                                     <div class="col-12 col-md-6 p-4 mb-3 " >
                                         <div id="locationInfo" class="bg-light p-4" >
                                             <div class="model_title text-center h4 mb-3" >Location Image</div >
-                                                <div class="w-100">
-                                                    <div class="formgroup mb-2 p-2">
-                                                        <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
-                                                                width="100%" alt="Select Profile Picture" data-toggle="modal"
-                                                                data-target="#imgModal">
-                                                        <input type="hidden" id="photo_id" name="photo_id"
-                                                        value="">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <hr>
-                                                <label for="icon">Select School Icon Colour:</label>
-                                                <input class="form-control" type="color" id="icon" name="icon"
-                                                    value="{{ old('icon')}}">
-                                                    </div>
-                                                
-                                            </div >
+                                            <div class="w-100">
+                                                <div class="formgroup mb-2 p-2">
+                                                    <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
+                                                            width="100%" alt="Select Profile Picture" data-toggle="modal"
+                                                            data-target="#imgModal">
+                                                    <input type="hidden" id="photo_id" name="photo_id"
+                                                    value="">
+                                                </div>
+                                                <div class="form-group">
+                                                    <hr>
+                                                    <label for="icon">Select School Icon Colour:</label>
+                                                    <input class="form-control" type="color" id="icon" name="icon"
+                                                        value="{{ old('icon')}}">
+                                                </div>
+                                            </div>
                                         </div >
                                     </div >
                                 </div >
                             </div >
-
                         </div >
                     </div >
                 </div >

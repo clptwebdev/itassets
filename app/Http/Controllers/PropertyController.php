@@ -6,8 +6,9 @@ use App\Models\Location;
 use App\Models\Property;
 use Illuminate\Http\Request;
 
-//Exportsgit pul
+//Exports
 use App\Exports\PropertyExport;
+use App\Exports\PropertyErrorsExport;
 
 //Imports
 use App\Imports\PropertyImport;
@@ -335,7 +336,7 @@ class PropertyController extends Controller {
     }
 
     ////////////////////////////////////////////////////////
-    ///////////////Export Functions/////////////////////////
+    ///////////////Import Functions/////////////////////////
     ////////////////////////////////////////////////////////
 
     public function import(Request $request)
@@ -485,6 +486,27 @@ class PropertyController extends Controller {
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
 
+    }
+
+    public function exportImportErrors(Request $request)
+    {
+        $export = $request['name'];
+        $code = (htmlspecialchars_decode($export));
+        $export = json_decode($code);
+
+        if(auth()->user()->cant('viewAll', Property::class))
+        {
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Export Property Errors.');
+
+        }
+
+        $date = \Carbon\Carbon::now()->format('dmyHis');
+        \Maatwebsite\Excel\Facades\Excel::store(new PropertyErrorsExport($export), "/public/csv/property-errors-{$date}.csv");
+        $url = asset("storage/csv/property-errors-{$date}.csv");
+
+        return to_route('properties.index')
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
     }
 
     ////////////////////////////////////////
