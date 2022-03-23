@@ -39,7 +39,9 @@
         <div class="row">
             @foreach($locations as $location)
                 <div class="col-xl-3 col-lg-6 col-md-12 col-12 mb-4">
-                    <div class="card shadow h-100 pb-2" style="border-left: 0.25rem solid {{$location->icon}};">
+                    <div class="card shadow h-100 pb-2" 
+                    style="border-left: 0.25rem solid {{$location->icon}}; background-image: url({{ $location->photo->path ?? 'null' }}); background-size: 100px; background-repeat: no-repeat; 
+                    background-position: right center;">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold"
                                 style="color: {{$location->icon}};">{{ $location->name}}</h6>
@@ -75,6 +77,8 @@
                                         <p>Email: {{ $location->email }}</p>
                                     </div>
                                 </div>
+<<<<<<< HEAD
+=======
                                 <div class="col-auto">
                                     @if ($location->photo()->exists())
                                         <img src="{{ $location->photo->path ?? 'null' }}" alt="{{ $location->name}}"
@@ -124,6 +128,7 @@
                                         </tbody>
                                     </table>
                                 </div>
+>>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
                             </div>
                         </div>
                     </div>

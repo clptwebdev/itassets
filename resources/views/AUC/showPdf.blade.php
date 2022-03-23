@@ -33,7 +33,7 @@
         </tr>
         <tr>
             <td>Cost</td>
-            <td>{{ $auc->purchased_cost}}</td>
+            <td>£{{number_format( (float) $auc->purchased_cost, 2, '.', ',' ) ?? 'N/A'}}</td>
         </tr>
         <tr>
             <td>Depreciation</td>
@@ -53,39 +53,48 @@
                 $endDate->subYear();
                 $nextStartDate->subYear();
             }
-            $bf = $property->depreciation_value_by_date($startDate);
-            $cf = $property->depreciation_value_by_date($nextStartDate);
+            $bf = $auc->depreciation_value_by_date($startDate);
+            $cf = $auc->depreciation_value_by_date($nextStartDate);
         ?>
-        
         <tr>
             <td>Cost B/Fwd (01/09/{{$startDate->format('Y')}}):</td>
-            <td>£{{number_format( (float) $bf, 2, '.', ',' )}}</td>
+            <td>£{{ number_format( (float) $bf, 2, '.', ',' )}}</td>
         </tr>
-        <p><strong>Cost C/Fwd (31/08/{{$endDate->format('Y')}}):</strong><br>
-            £{{number_format( (float) $cf, 2, '.', ',' )}}
-        </p>
-        <p><strong>Depreciation B/Fwd (01/09/{{$startDate->format('Y')}}):</strong><br>
-            £{{number_format( (float) $property->purchased_cost - $bf, 2, '.', ',' )}}
-        </p>
-        <p><strong>Depreciation Charge:</strong><br>
-            £{{number_format( (float) $bf - $cf, 2, '.', ',' )}}
-        </p>
-        <p><strong>Depreciation C/Fwd (31/08/{{$endDate->format('Y')}}):</strong><br>
-            £{{number_format( (float) $property->purchased_cost - $cf, 2, '.', ',' )}}
-        </p>
+        <tr>
+            <td>Cost C/Fwd (31/08/{{$endDate->format('Y')}}):</td>
+            <td>£{{ number_format( (float) $cf, 2, '.', ',' )}}</td>
+        </tr>
+        <tr>
+            <td>Depreciation B/Fwd (01/09/{{$startDate->format('Y')}}):</td>
+            <td>£{{number_format( (float) $auc->purchased_cost - $bf, 2, '.', ',' )}}</td>
+        </tr>
+        <tr>
+            <td>Depreciation Charge:</td>
+            <td>£{{number_format( (float) $bf - $cf, 2, '.', ',' )}}</td>
+        </tr>
+        <tr>
+            <td>Depreciation C/Fwd (31/08/{{$endDate->format('Y')}}):</td>
+            <td>£{{number_format( (float) $auc->purchased_cost - $cf, 2, '.', ',' )}}</td>
+        </tr>
         <?php $prevYear = $startDate->subYear();?>
-        <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
-            £{{number_format( (float) $property->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
-        </p>
+        @if($prevYear >= $auc->purchased_date)
+        <tr>
+            <td>NBV {{$prevYear->format('Y')}}</td>
+            <td>£{{number_format( (float) $auc->depreciation_value_by_date($prevYear), 2, '.', ',' )}}</td>
+        </tr>
+        @endif
         <?php $prevYear = $startDate->subYear();?>
-        <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
-            £{{number_format( (float) $property->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
-</p>             
+        @if($prevYear >= $auc->purchased_date)
+        <tr>
+            <td>NBV {{$prevYear->format('Y')}}</td>
+            <td>£{{number_format( (float) $auc->depreciation_value_by_date($prevYear), 2, '.', ',' )}}</td>
+        </tr>
+        @endif    
     </table>
 
     <hr>
 
-    @if($property->comment()->exists())
+    @if($auc->comment()->exists())
         <p>Comments</p>
         <table class="table ">
             <thead>
@@ -93,7 +102,7 @@
             </thead>                      
             <tbody>
                 
-                @foreach($property->comment as $comment)
+                @foreach($auc->comment as $comment)
                 <tr>
                     <td class="text-left"><strong>{{$comment->title}}</strong><br>{{ $comment->comment }}<br><span class="text-info">{{ $comment->user->name }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $comment->created_at, 'Europe/London');}}</span></td>
                 </tr>

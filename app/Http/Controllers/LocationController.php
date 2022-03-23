@@ -16,7 +16,7 @@ class LocationController extends Controller {
 
     public function index()
     {
-        if(auth()->user()->cant('viewAny', Location::class))
+        if(auth()->user()->cant('viewAll', Location::class))
         {
             return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Locations.');
 

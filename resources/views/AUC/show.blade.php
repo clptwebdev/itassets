@@ -10,6 +10,24 @@
     <x-wrappers.nav title="Show Asset Under Construction">
         <x-buttons.return :route="route('aucs.index')"> AUC</x-buttons.return>
         {{-- <x-buttons.reports :route="route('property.showPdf', $auc->id)" /> --}}
+<<<<<<< HEAD
+        <x-buttons.edit :route="route('aucs.edit',$auc->id)" />
+        <x-form.layout method="DELETE" class="d-sm-inline-block"
+                       :id="'form'.$auc->id"
+                       :action="route('aucs.destroy', $auc->id)" >
+            <x-buttons.delete formAttributes="data-id='{{$auc->id}}'" /> 
+        </x-form.layout >
+        @can('generateShowPDF', $auc)
+            <x-buttons.reports :route="route('aucs.showPdf', $auc->id)"/>
+        @endcan
+        
+    </x-wrappers.nav >
+
+    <x-handlers.alerts />
+    
+    <div class="container card">
+        <div class="card-body">
+=======
         <x-buttons.edit :route="route('aucs.edit',$auc->id)"/>
         <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$auc->id"
                        :action="route('aucs.destroy', $auc->id)">
@@ -25,6 +43,7 @@
             <x-form.errors/>
             <x-handlers.alerts/>
 
+>>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
 
             <ul id="tab-bar" class="nav nav-tabs">
 
@@ -35,6 +54,14 @@
             </ul>
             <div class="tab-content border-left border-right border-bottom border-gray" id="myTabContent">
 
+                <li class="nav-item" >
+                    <a class="nav-link active" id="location-tab" data-toggle="tab" href="#location" role="tab"
+                        aria-controls="home" aria-selected="true" >Asset Under Construction Information</a >
+                </li >
+            </ul >
+            <div class="tab-content border-left border-right border-bottom border-gray"
+                    id="myTabContent" >
+                
                 <div class="tab-pane fade show p-2 pt-4 active" id="location" role="tabpanel"
                      aria-labelledby="location-tab">
                     <div class="row">
@@ -42,46 +69,52 @@
                             <h4 class="font-weight-600 mb-4">{{$auc->name}}</h4>
                             <p><strong>Type:</strong> {{$auc->getType()}}</p>
                             <p><strong>Depreciation:</strong> {{$auc->depreciation}} Years</p>
-                            <p><strong>Date
-                                       Occupied:</strong><br>{{\Carbon\Carbon::parse($auc->date)->format('jS M Y')}}</p>
-                            <p><strong>Value (At Time of
-                                       Purchase):</strong><br>£{{number_format( (float) $auc->purchased_cost, 2, '.', ',' )}}
-                            </p>
-
-
+                            <p><strong>Date Occupied:</strong><br>{{\Carbon\Carbon::parse($auc->purchased_date)->format('jS M Y')}}</p>
+                            <p><strong>Value (At Time of Purchase):</strong><br>£{{number_format( (float) $auc->purchased_cost, 2, '.', ',' )}}</p>
+                            <hr>
                             <?php
-                            //If Date is > 1 September the Year is this Year else Year = Last Year
-
-                            $now = \Carbon\Carbon::now();
-                            $startDate = \Carbon\Carbon::parse('09/01/' . $now->format('Y'));
-                            $endDate = \Carbon\Carbon::parse('08/31/' . \Carbon\Carbon::now()->addYear()->format('Y'));
-                            if(! $startDate->isPast())
-                            {
-                                $startDate->subYear();
-                                $endDate->subYear();
-                            }
-
-                            $bf = $auc->depreciation_value($startDate);
-                            $cf = $auc->depreciation_value($endDate);
+                                //If Date is > 1 September the Year is this Year else Year = Last Year
+                
+                                $now = \Carbon\Carbon::now();
+                                $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
+                                $nextYear = \Carbon\Carbon::now()->addYear()->format('Y');
+                                $nextStartDate = \Carbon\Carbon::parse('09/01/'.\Carbon\Carbon::now()->addYear()->format('Y'));
+                                $endDate = \Carbon\Carbon::parse('08/31/'.$nextYear);
+                                if(!$startDate->isPast()){
+                                    $startDate->subYear();
+                                    $endDate->subYear();
+                                    $nextStartDate->subYear();
+                                }
+                                $bf = $auc->depreciation_value_by_date($startDate);
+                                $cf = $auc->depreciation_value_by_date($nextStartDate);
                             ?>
-                            <p><strong>Current Value ({{$startDate->format('d\/m\/Y')}}):</strong><br>
+                            
+                            <p><strong>Cost B/Fwd (01/09/{{$startDate->format('Y')}}):</strong><br>
                                 £{{number_format( (float) $bf, 2, '.', ',' )}}
                             </p>
-                            <p><strong>Depreciation B/Fwd ({{$startDate->format('d\/m\/Y')}}):</strong><br>
+                            <p><strong>Cost C/Fwd (31/08/{{$endDate->format('Y')}}):</strong><br>
+                                £{{number_format( (float) $cf, 2, '.', ',' )}}
+                            </p>
+                            <p><strong>Depreciation B/Fwd (01/09/{{$startDate->format('Y')}}):</strong><br>
                                 £{{number_format( (float) $auc->purchased_cost - $bf, 2, '.', ',' )}}
                             </p>
-                            <p><strong>Depreciation C/Fwd ({{$endDate->format('d\/m\/Y')}}):</strong><br>
+                            <p><strong>Depreciation Charge:</strong><br>
                                 £{{number_format( (float) $bf - $cf, 2, '.', ',' )}}
                             </p>
-                            <?php $prevYear = $endDate->subYear();?>
+                            <p><strong>Depreciation C/Fwd (31/08/{{$endDate->format('Y')}}):</strong><br>
+                                £{{number_format( (float) $auc->purchased_cost - $cf, 2, '.', ',' )}}
+                            </p>
+                            <?php $prevYear = $startDate->subYear();?>
                             @if($prevYear >= $auc->purchased_date)
-                                <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
-                                    £{{number_format( (float) $auc->depreciation_value($prevYear), 2, '.', ',' )}}
-                                </p>
-                                <?php $prevYear = $endDate->subYear();?>
-                                <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
-                                    £{{number_format( (float) $auc->depreciation_value($prevYear), 2, '.', ',' )}}
-                                </p>
+                            <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
+                                £{{number_format( (float) $auc->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
+                            </p>
+                            @endif
+                            <?php $prevYear = $startDate->subYear();?>
+                            @if($prevYear >= $auc->purchased_date)
+                            <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
+                                £{{number_format( (float) $auc->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
+                            </p>
                             @endif
 
 

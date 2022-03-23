@@ -260,7 +260,7 @@
                 </div>
             </li>
         @endcan
-        @can('viewAny' , \App\Models\Location::class)
+        @can('viewAll' , \App\Models\Location::class)
             <li class="nav-item">
                 <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('location.index')}}">
                     <i class="far fa-fw fa-map sidebar-icon"></i>

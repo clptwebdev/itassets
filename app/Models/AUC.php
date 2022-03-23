@@ -92,6 +92,11 @@ class AUC extends Model {
         }
     }
 
+    public function comment()
+    {
+        return $this->morphToMany(Comment::class, "commentables");
+    }
+
     /////////////////////////////////////////////////
     ///////////////////Filters///////////////////////
     /////////////////////////////////////////////////

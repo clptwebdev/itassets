@@ -23,9 +23,9 @@
             <td>{{ $property['type'] ?? 'N/A'}}</td>
             <td><span >{{$property['location'] ?? 'N/A'}}</span></td>
             <td align="center">{{ $property['purchased_date'] ?? 'N/A'}}</td>
-            <td align="center">{{ $property['purchased_cost'] ?? 'N/A'}}</td>
+            <td align="center">£{{number_format( (float) $property['purchased_cost'], 2, '.', ',' ) ?? 'N/A'}}</td>
             <td align="center">{{ $property['depreciation'] ?? 'N/A'}}</td>
-            <td align="center">£{{ $property['current_value'] ?? 'N/A'}}</td>
+            <td align="center">£{{number_format( (float) $property['current_value'], 2, '.', ',' ) ?? 'N/A'}}</td>
         </tr>
         @endforeach
     </table>

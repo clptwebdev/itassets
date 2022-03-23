@@ -11,12 +11,22 @@
     <x-wrappers.nav title="View Property">
         <x-buttons.return :route="route('properties.index')"> Properties</x-buttons.return>
         {{-- <x-buttons.reports :route="route('property.showPdf', $property->id)" /> --}}
+<<<<<<< HEAD
+        <x-buttons.edit :route="route('properties.edit',$property->id)" />
+        <x-form.layout method="DELETE" class="d-sm-inline-block"
+                       :id="'form'.$property->id"
+                       :action="route('properties.destroy', $property->id)" >
+            <x-buttons.delete formAttributes="data-id='{{$property->id}}'" /> 
+        </x-form.layout >
+        @can('generateShowPDF', $property)
+=======
         <x-buttons.edit :route="route('properties.edit',$property->id)"/>
         <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$property->id"
                        :action="route('properties.destroy', $property->id)">
             <x-buttons.delete formAttributes="data-id='{{$property->id}}'"/>
         </x-form.layout>
         @can('generatePDF', \App\Models\Asset::class)
+>>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
             <x-buttons.reports :route="route('properties.showPdf', $property->id)"/>
         @endcan
     </x-wrappers.nav>
@@ -113,6 +123,7 @@
                                 £{{number_format( (float) $property->purchased_cost - $cf, 2, '.', ',' )}}
                             </p>
                             <?php $prevYear = $startDate->subYear();?>
+                            @if($prevYear >= $property->purchased_date)
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
                                 £{{number_format( (float) $property->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
                             </p>
@@ -120,6 +131,7 @@
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
                                 £{{number_format( (float) $property->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
                             </p>
+                            @endif
 
 
                         </div>

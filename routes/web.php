@@ -150,7 +150,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::Post("/import/aucs/errors", "importErrors");
         //PDF
         Route::post('/aucs/pdf', 'downloadPDF')->name('aucs.pdf');
-        Route::get('/aucs/{property}/pdf', 'downloadShowPDF')->name('aucs.showPdf');
+        Route::get('/aucs/{auc}/pdf', 'downloadShowPDF')->name('aucs.showPdf');
     });
     Route::controller(\App\Http\Controllers\ComponentController::class)->group(function() {
         //Component Routes

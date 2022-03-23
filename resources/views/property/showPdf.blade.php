@@ -33,7 +33,7 @@
         </tr>
         <tr>
             <td>Cost</td>
-            <td>{{ $property->purchased_cost}}</td>
+            <td>£{{number_format( (float) $property->purchased_cost, 2, '.', ',' ) ?? 'N/A'}}</td>
         </tr>
         <tr>
             <td>Depreciation</td>
@@ -45,37 +45,49 @@
 
             $now = \Carbon\Carbon::now();
             $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
-            $endDate = \Carbon\Carbon::parse('08/31/'.\Carbon\Carbon::now()->addYear()->format('Y'));
+            $nextYear = \Carbon\Carbon::now()->addYear()->format('Y');
+            $nextStartDate = \Carbon\Carbon::parse('09/01/'.\Carbon\Carbon::now()->addYear()->format('Y'));
+            $endDate = \Carbon\Carbon::parse('08/31/'.$nextYear);
             if(!$startDate->isPast()){
                 $startDate->subYear();
                 $endDate->subYear();
+                $nextStartDate->subYear();
             }
-
-            $bf = $property->depreciation_value($startDate);
-            $cf = $property->depreciation_value($endDate);
+            $bf = $property->depreciation_value_by_date($startDate);
+            $cf = $property->depreciation_value_by_date($nextStartDate);
         ?>
         <tr>
-            <td>Current Value ({{$startDate->format('d\/m\/Y')}})</td>
+            <td>Cost B/Fwd (01/09/{{$startDate->format('Y')}}):</td>
             <td>£{{ number_format( (float) $bf, 2, '.', ',' )}}</td>
         </tr>
         <tr>
-            <td>Depreciation B/Fwd ({{$startDate->format('d\/m\/Y')}})</td>
+            <td>Cost C/Fwd (31/08/{{$endDate->format('Y')}}):</td>
+            <td>£{{ number_format( (float) $cf, 2, '.', ',' )}}</td>
+        </tr>
+        <tr>
+            <td>Depreciation B/Fwd (01/09/{{$startDate->format('Y')}}):</td>
             <td>£{{number_format( (float) $property->purchased_cost - $bf, 2, '.', ',' )}}</td>
         </tr>
         <tr>
-            <td>Depreciation C/Fwd ({{$endDate->format('d\/m\/Y')}}):</td>
+            <td>Depreciation Charge:</td>
             <td>£{{number_format( (float) $bf - $cf, 2, '.', ',' )}}</td>
         </tr>
-        <?php $prevYear = $endDate->subYear();?>
         <tr>
-            <td>NBV {{$prevYear->format('Y')}}</td>
-            <td>£{{number_format( (float) $property->depreciation_value($prevYear), 2, '.', ',' )}}</td>
+            <td>Depreciation C/Fwd (31/08/{{$endDate->format('Y')}}):</td>
+            <td>£{{number_format( (float) $property->purchased_cost - $cf, 2, '.', ',' )}}</td>
         </tr>
-        <?php $prevYear = $endDate->subYear();?>
+        <?php $prevYear = $startDate->subYear();?>
+        @if($prevYear >= $property->purchased_date)
         <tr>
             <td>NBV {{$prevYear->format('Y')}}</td>
-            <td>£{{number_format( (float) $property->depreciation_value($prevYear), 2, '.', ',' )}}</td>
-        </tr>                 
+            <td>£{{number_format( (float) $property->depreciation_value_by_date($prevYear), 2, '.', ',' )}}</td>
+        </tr>
+        <?php $prevYear = $startDate->subYear();?>
+        <tr>
+            <td>NBV {{$prevYear->format('Y')}}</td>
+            <td>£{{number_format( (float) $property->depreciation_value_by_date($prevYear), 2, '.', ',' )}}</td>
+        </tr> 
+        @endif               
     </table>
 
     <hr>

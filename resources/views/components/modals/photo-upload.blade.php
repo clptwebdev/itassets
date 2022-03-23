@@ -1,13 +1,13 @@
 <!-- Profile Image Modal-->
-<div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="imgModal" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary-blue text-white">
                 <h5 class="modal-title" id="imgModalLabel">Select Image</h5>
                 <button class="close text-white" type="button" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
+
             </div>
             <div class="modal-body">
                 <p>Select an image below:.</p>
@@ -20,9 +20,14 @@
                 @endforeach
             </div>
             <div class="modal-footer">
+<<<<<<< HEAD
+                <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal"
+                        data-target="#uploadModal">Upload File
+=======
                 <button type="button" class="btn btn-info" data-bs-dismiss="modal" data-bs-toggle="modal"
                         data-bs-target="#uploadModal">Upload
                                                       file
+>>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
                 </button>
             </div>
         </div>
