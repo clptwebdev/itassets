@@ -8,6 +8,7 @@ use App\Models\Manufacturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
 use phpDocumentor\Reflection\Location;
 use PDF;
 use App\Jobs\ManufacturersPdf;
@@ -158,7 +159,7 @@ class ManufacturerController extends Controller {
 
     public function ajaxMany(Request $request)
     {
-   
+
         $validation = Validator::make($request->all(), [
             "name.*" => "required|unique:manufacturers,name|max:255",
             "supportPhone.*" => "max:14",
@@ -226,8 +227,20 @@ class ManufacturerController extends Controller {
 
         }
 
-        $extensions = array("csv");
+        //headings incorrect start
+        $column = (new HeadingRowImport)->toArray($request->file("csv"));
+        $columnPopped = array_pop($column);
+        $values = array_flip(array_pop($columnPopped));
+        if(isset($values['name']) && isset($values['supporturl']) && isset($values['supportphone']) && isset($values['supportemail']))
+        {
 
+        } else
+        {
+            return to_route('manufacturers.index')->with('danger_message', "CSV Heading's Incorrect Please amend and try again!");
+        }
+        //headings incorrect end
+
+        $extensions = array("csv");
         $result = array($request->file('csv')->getClientOriginalExtension());
 
         if(in_array($result[0], $extensions))
