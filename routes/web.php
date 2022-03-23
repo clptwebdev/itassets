@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/user/change/password', 'changePassword')->name('change.password.store');
         Route::post('/users/pdf', 'downloadPDF')->name('users.pdf');
         Route::get('/user/{user}/pdf', 'downloadShowPDF')->name('user.showPdf');
+        Route::get('/user/expired', 'invokeExpiredUsers')->name('user.expired');
         //Administrator Permissions Middleware
         Route::post('permissions/users', 'permissions');
         Route::get('/user/permissions', 'userPermissions')->name('user.permissions');

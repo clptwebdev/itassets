@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -150,6 +151,23 @@ class User extends Authenticatable {
         }
 
         return $password;
+
+    }
+
+    public function expiredUser()
+    {
+        //true or false condition if the user has logged in recently
+        $authLogs = Log::whereUserId($this->id)->where('loggable_type', '=', 'auth')->get();
+
+        //Checks the auth logs for this user and see's if there are any for anywhere in the last 3 months if not remove there account.
+        if($authLogs->where('created_at', '>=', Carbon::parse(now()->subMonths(3))->format('Y-m-d'))->first())
+        {
+            return false;
+        } else
+        {
+            return true;
+        }
+
 
     }
 
