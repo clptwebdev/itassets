@@ -15,20 +15,22 @@ use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Validators\Failure;
 
-class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts,SkipsOnFailure,SkipsOnError{
+class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
 
     /**
      * @param array     $row
      * @param Failure[] $failures
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    use  importable ,SkipsFailures ,SkipsErrors;
-        public function onError(\Throwable $error)
-    {
+    use  importable, SkipsFailures, SkipsErrors;
 
+    public function onError(\Throwable $error)
+    {
     }
+
     public function rules(): array
     {
+
         return [
             'name' => [
                 'required',
@@ -51,6 +53,7 @@ class ManufacturerImport implements ToModel, WithValidation, WithHeadingRow, Wit
 
     public function model(array $row)
     {
+
         return new Manufacturer([
             'name' => $row["name"],
             'supportUrl' => $row["supporturl"],

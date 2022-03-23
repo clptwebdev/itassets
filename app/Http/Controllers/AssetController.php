@@ -23,6 +23,7 @@ use App\Exports\AssetExport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\Types\String_;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
@@ -504,7 +505,25 @@ class AssetController extends Controller {
             return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to Import Assets.');
 
         }
+        //headings incorrect start
+        $column = (new HeadingRowImport)->toArray($request->file("csv"));
+        $columnPopped = array_pop($column);
+        $values = array_flip(array_pop($columnPopped));
+        if(
+            //checks for spelling and if there present for any allowed heading in the csv.
+            isset($values['asset_tag']) && isset($values['name']) && isset($values['serial_no']) && isset($values['asset_model'])
+            && isset($values['status_id']) && isset($values['purchased_date']) && isset($values['purchased_cost']) && isset($values['donated'])
+            && isset($values['supplier_id']) && isset($values['order_no']) && isset($values['warranty']) && isset($values['location_id'])
+            && isset($values['room']) && isset($values['audit_date']) && isset($values['categories']) && isset($values['notes'])
 
+        )
+        {
+
+        } else
+        {
+            return to_route('assets.index')->with('danger_message', "CSV Heading's Incorrect Please amend and try again!");
+        }
+        //headings incorrect end
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());

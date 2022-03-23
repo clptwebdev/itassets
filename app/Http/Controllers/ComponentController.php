@@ -19,6 +19,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\HeadingRowImport;
 use Ramsey\Uuid\Type\Integer;
 use function PHPUnit\Framework\isEmpty;
 use PDF;
@@ -419,6 +420,23 @@ class ComponentController extends Controller {
             return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Import Components.');
 
         }
+//headings incorrect start
+        $column = (new HeadingRowImport)->toArray($request->file("csv"));
+        $columnPopped = array_pop($column);
+        $values = array_flip(array_pop($columnPopped));
+        if(
+            //checks for spelling and if there present for any allowed heading in the csv.
+            isset($values['name']) && isset($values['status_id']) && isset($values['supplier_id']) && isset($values['manufacturer_id'])
+            && isset($values['location_id']) && isset($values['order_no']) && isset($values['serial_no']) && isset($values['purchased_cost'])
+            && isset($values['purchased_date']) && isset($values['warranty']) && isset($values['notes'])
+        )
+        {
+
+        } else
+        {
+            return to_route('miscellaneous.index')->with('danger_message', "CSV Heading's Incorrect Please amend and try again!");
+        }
+        //headings incorrect end
 
         $extensions = array("csv");
 
