@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 
 class Property extends Model {
 
@@ -30,7 +32,7 @@ class Property extends Model {
 
     //Works out the depreciation value at the date that is passed through to the function
     //Use the Depreciation time to minus the depreication charge
-    public function depreciation_value($date)
+    public function depreciation_value_by_date($date)
     {
         $age = $date->floatDiffInYears($this->purchased_date);
         $percent = 100 / $this->depreciation;
@@ -44,6 +46,24 @@ class Property extends Model {
         {
             return $value;
         }
+    }
+
+    public function depreciation_value()
+    {
+        $eol = \Carbon\Carbon::parse($this->purchased_date)->addYears($this->depreciation);
+        if($eol->isPast())
+        {
+            return 0;
+        } else
+        {
+            $age = Carbon::now()->floatDiffInYears($this->purchased_date);
+            $percent = 100 / $this->depreciation;
+            $percentage = floor($age) * $percent;
+            $dep = $this->purchased_cost * ((100 - $percentage) / 100);
+
+            return $dep;
+        }
+
     }
 
     //Gets the building type in the table and displays it as a string
@@ -96,6 +116,127 @@ class Property extends Model {
     public function comment()
     {
         return $this->morphToMany(Comment::class, "commentables");
+    }
+
+
+
+
+    //////////////////////////////////////////////
+    ////////////////Cache Functions///////////////
+    //////////////////////////////////////////////
+
+    public static function getCache($ids)
+    {
+        $property_total = 0;
+        $cost_total = 0;
+        $dep_total = 0;
+
+        $locations = Location::find($ids);
+
+        foreach($locations as $location)
+        {
+            $id = $location->id;
+            /* The Cache Values for the Location */
+            if(! Cache::has("property-L{$id}-total") &&
+                ! Cache::has("property-L{$id}-cost") &&
+                ! Cache::has("property-L{$id}-dep")
+            )
+            {
+                Property::updateLocationCache($location);
+            }
+
+            $property_total += Cache::get("property-L{$id}-total");
+            $cost_total += Cache::get("property-L{$id}-cost");
+            $dep_total += Cache::get("property-L{$id}-dep");
+        }
+
+        //Totals of the Assets
+        Cache::rememberForever('property_total', function() use ($property_total) {
+            return round($property_total);
+        });
+
+        Cache::rememberForever('property_cost', function() use ($cost_total) {
+            return round($cost_total);
+        });
+
+        Cache::rememberForever('property_dep', function() use ($dep_total) {
+            return round($dep_total);
+        });
+    }
+
+    public static function updateLocationCache(Location $location)
+    {
+        $loc_cost_total = 0;
+        $loc_dep_total = 0;
+        $id = $location->id;
+
+        $property = Property::whereLocationId($location->id)
+            ->select('purchased_cost', 'purchased_date', 'depreciation')
+            ->get()
+            ->map(function($item, $key) {
+                $item['depreciation_value'] = $item->depreciation_value();
+                return $item;
+            });
+
+        //Get the Total Amount of Assets available for this location and set it in Cache
+        $loc_total = $property->count();
+        Cache::rememberForever("property-L{$id}-total", function() use ($loc_total) {
+            return $loc_total;
+        });
+
+        foreach($property as $prop)
+        {
+            $loc_cost_total += $prop->purchased_cost;
+            $loc_dep_total += $prop->depreciation_value;
+        }
+
+        /* The Cache Values for the Location */
+        Cache::set("property-L{$id}-cost", round($loc_cost_total));
+        Cache::set("property-L{$id}-dep", round($loc_dep_total));
+    }
+
+    public static function updateCache()
+    {
+        //The Variables holding the total of Assets available to the User
+        $property_total = 0;
+        $cost_total = 0;
+        $dep_total = 0;
+
+        foreach(Location::all() as $location)
+        {
+            $loc_cost_total = 0;
+            $loc_dep_total = 0;
+            $id = $location->id;
+
+            $assets = Property::whereLocationId($location->id)
+                ->select('purchased_cost', 'purchased_date', 'depreciation')
+                ->get()
+                ->map(function($item, $key) {
+                    $item['depreciation_value'] = $item->depreciation_value();
+                    return $item;
+                });
+
+            //Get the Total Amount of Assets available for this location and set it in Cache
+            $loc_total = $property->count();
+            Cache::rememberForever("property-L{$id}-total", function() use ($loc_total) {
+                return $loc_total;
+            });
+
+            //Add the total to the Total amount of Assets
+            $property_total += $loc_total;
+
+            foreach($property as $prop)
+            {
+                $loc_cost_total += $prop->purchased_cost;
+                $loc_dep_total += $prop->depreciation_value;
+            }
+
+            /* The Cache Values for the Location */
+            Cache::set("property-L{$id}-cost", round($loc_cost_total));
+            $cost_total += $loc_cost_total;
+            Cache::set("property-L{$id}-dep", round($loc_dep_total));
+            $dep_total += $loc_dep_total;
+        }
     }
 
 }

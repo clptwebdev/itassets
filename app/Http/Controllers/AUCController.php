@@ -7,6 +7,10 @@ use App\Models\Location;
 use App\Models\Property;
 use Illuminate\Http\Request;
 
+//Jobs
+use App\Jobs\AUCSPdf;
+use App\Jobs\AUCPdf;
+
 class AUCController extends Controller {
 
     //AUC = Assets Under Construction
@@ -358,6 +362,70 @@ class AUCController extends Controller {
         session()->forget(['property_filter', 'property_locations', 'property_start', 'property_end', 'property_amount', 'property_search']);
 
         return to_route('property.index');
+    }
+
+     ////////////////////////////////////////////////////////
+    ///////////////PDF Functions////////////////////////////
+    ////////////////////////////////////////////////////////
+
+
+    public function downloadPDF(Request $request)
+    {
+        if(auth()->user()->cant('viewAll', AUC::class))
+        {
+            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised | Download of Assets Under Construction Report.');
+
+        }
+        $aucs = array();
+        $found = AUC::select('name', 'id', 'depreciation', 'type', 'purchased_date', 'purchased_cost', 'location_id')->withTrashed()->whereIn('id', json_decode($request->property))->with('location')->get();
+        foreach($found as $f)
+        {
+            $array = array();
+            $array['name'] = $f->name ?? 'No Name';
+            $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
+            $array['purchased_cost'] = '£' . $f->purchased_cost;
+            $array['depreciation'] = $f->depreciation;
+            $array['current_value'] = $f->depreciation_value(\Carbon\Carbon::now());
+            $array['type'] = $f->getType();
+            $properties[] = $array;
+        }
+
+        $user = auth()->user();
+
+        $date = \Carbon\Carbon::now()->format('dmyHi');
+        $path = 'auc-report-' . $date;
+
+        AUCSPdf::dispatch($aucs, $user, $path)->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
+
+        return to_route('aucs.index')
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
+
+    }
+
+    public function downloadShowPDF(AUC $auc)
+    {
+        if(auth()->user()->cant('view', $auc))
+        {
+            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised | Download of Property Information.');
+
+        }
+
+        $user = auth()->user();
+
+        $date = \Carbon\Carbon::now()->format('dmyHi');
+        $path = "aucs-{$auc->id}-{$date}";
+        PropertyPdf::dispatch($auc, $user, $path)->afterResponse();
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
+
+        return to_route('aucs.show', $auc->id)
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
     }
 
 }

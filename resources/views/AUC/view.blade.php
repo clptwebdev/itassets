@@ -12,21 +12,20 @@
         @can('create' , \App\Models\AUC::class)
             <x-buttons.add :route="route('aucs.create')">Asset Under Construction</x-buttons.add>
         @endcan
-        {{--
-     @can('generatePDF', \App\Models\Asset::class)
-         @if ($assets->count() == 1)
-             <x-buttons.reports :route="route('asset.showPdf', $assets[0]->id)"/>
+     @can('viewAll', \App\Models\AUC::class)
+         @if ($aucs->count() == 1)
+             <x-buttons.reports :route="route('aucs.showPdf', $aucs[0]->id)"/>
          @else
-             <x-form.layout class="d-inline-block" :action="route('assets.pdf')">
-                 <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
-                               :value="json_encode($assets->pluck('id'))"/>
+             <x-form.layout class="d-inline-block" :action="route('aucs.pdf')">
+                 <x-form.input type="hidden" name="aucs" :label="false" formAttributes="required"
+                               :value="json_encode($aucs->pluck('id'))"/>
                  <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
              </x-form.layout>
          @endif
-         @if($assets->count() >1)
-             <x-form.layout class="d-inline-block" action="/exportassets">
-                 <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
-                               :value="json_encode($assets->pluck('id'))"/>
+         @if($aucs->count() > 1)
+             <x-form.layout class="d-inline-block" action="/export/aucs">
+                 <x-form.input type="hidden" name="aucs" :label="false" formAttributes="required"
+                               :value="json_encode($aucs->pluck('id'))"/>
                  <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
              </x-form.layout>
          @endif
@@ -36,7 +35,7 @@
                  Bulk Options
              </a>
              <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                 @can('create', \App\Models\Asset::class)
+                 @can('create', \App\Models\AUC::class)
                      <x-buttons.dropdown-item id="import">
                          Import
                      </x-buttons.dropdown-item>
@@ -49,7 +48,7 @@
                  </x-buttons.dropdown-item>
              </div>
          </div>
-     @endcan --}}
+     @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
@@ -151,9 +150,22 @@
                                 <td class="text-center">£{{number_format($auc->purchased_cost, 2, '.', ',')}}</td>
                                 <td class="text-center">{{\Carbon\Carbon::parse($auc->purchased_date)->format('jS M Y')}}</td>
                                 <td class="text-center">
-                                    £{{number_format($auc->depreciation_value(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
+                                    £{{number_format($auc->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
                                 <td class="text-center">{{$auc->depreciation}} Years</td>
-                                <td class="text-center">{{$auc->depreciation}} Years</td>
+                                <td class="text-center">
+                                    <?php
+                                        //If Date is > 1 September the Year is this Year else Year = Last Year
+                        
+                                        $now = \Carbon\Carbon::now();
+                                        $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
+                                        if(!$startDate->isPast()){
+                                            $startDate->subYear();
+                                        }
+
+                                        $bf = $auc->depreciation_value_by_date($startDate);
+                                    ?>
+                                    £{{number_format( (float) $auc->purchased_cost - $bf, 2, '.', ',' )}}    
+                                </td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
                                         @can('view', $auc)

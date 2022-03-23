@@ -26,8 +26,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::controller(\App\Http\Controllers\HomeController::class)->group(function() {
         //Dashboard
         Route::get('/dashboard', "index")->name('dashboard');
+        Route::get('/business', "business")->name('business');
         Route::get('/', "index")->name('home');
         Route::get('/statistics', 'statistics')->name('dashboard.statistics');
+        Route::get('/business/statistics', 'business_statistics')->name('business.statistics');
         //Caching
         Route::get('/cache/clear', 'clearCache')->name('cache.clear');
     });
@@ -140,6 +142,14 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/auc/{auc}/restore', 'restore')->name('auc.restore');
         Route::post('/auc/{auc}/remove', 'forceDelete')->name('auc.remove');
         Route::get('/auc/{auc}/move', 'move')->name('auc.move');
+        //Exports
+        Route::post("/export/aucs", "export");
+        //Imports
+        Route::post("/import/aucs", "import");
+        Route::Post("/import/aucs/errors", "importErrors");
+        //PDF
+        Route::post('/aucs/pdf', 'downloadPDF')->name('aucs.pdf');
+        Route::get('/aucs/{property}/pdf', 'downloadShowPDF')->name('aucs.showPdf');
     });
     Route::controller(\App\Http\Controllers\ComponentController::class)->group(function() {
         //Component Routes

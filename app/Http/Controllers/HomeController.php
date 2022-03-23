@@ -11,6 +11,8 @@ use App\Models\Miscellanea;
 use App\Models\Requests;
 use App\Models\Archive;
 use App\Models\Transfer;
+use App\Models\Property;
+use App\Models\AUC;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -21,6 +23,14 @@ class HomeController extends Controller {
         //return dd($assets[0]);
         return view('dashboard');
     }
+
+    public function business(){
+        return view('dashboard.business');
+    }
+
+    ////////////////////////////////////////
+    ////// Statistic Functions /////////////
+    ////////////////////////////////////////
 
     public function statistics()
     {
@@ -40,6 +50,18 @@ class HomeController extends Controller {
         $cost = 0;
         $depreciation = 0;
         $deployed = 0;
+
+        //Get the Users location which they have access to
+        $locations = auth()->user()->locations;
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("property-total") &&
+            ! Cache::has("property-cost") &&
+            ! Cache::has("property-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            Property::getCache($locations->pluck('id'));
+        }
 
         //Get the Users location which they have access to
         $locations = auth()->user()->locations;
@@ -149,7 +171,9 @@ class HomeController extends Controller {
             $undeployable = round(((Cache::get('count_everything') - Cache::get('count_undeployed')) / Cache::get('count_everything')) * 100);
         }
 
-        $obj = array('asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')],
+        $obj = array(
+            'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')],
+            'property' => ['count' => Cache::get('property_total'), 'cost' => Cache::get('property_cost'), 'dep' => Cache::get('property_dep')],
             'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
             'components' => ['count' => Cache::get('components_total'), 'cost' => Cache::get('components_cost')],
             'consumables' => ['count' => Cache::get('consumables_total'), 'cost' => Cache::get('consumables_cost')],
@@ -160,6 +184,77 @@ class HomeController extends Controller {
             'everything' => ['count' => Cache::get('count_everything'), 'undeployable' => $undeployable],
             'undeployable' => ['assets' => Cache::get('assets_deploy'), 'accessories' => Cache::get('accessories_deploy'), 'components' => Cache::get('components_deploy'), 'consumables' => Cache::get('consumables_deploy'), 'miscellanea' => Cache::get('miscellaneous_deploy')],
             'audits' => ['due' => Cache::get('audits_due'), 'overdue' => Cache::get('audits_overdue')],
+        );
+
+        return json_encode($obj);
+    }
+
+    public function business_statistics()
+    {
+
+        //If cached user_id is different to the auth()->user()->id then the data needs to be refreshed
+        //This is becuase if two users with different roles may use the same machine and see other items they are not permitted for.
+        if(Cache::has('user_id') && Cache::get('user_id') != auth()->user()->id)
+        {
+            //If the User ID is different Flush all of the Cache
+            Cache::flush();
+            //Set the new cached user id to the current user
+            Cache::set('user_id', auth()->user()->id);
+        }
+
+        //Get the Users location which they have access to
+        $locations = auth()->user()->locations;
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("property-total") &&
+            ! Cache::has("property-cost") &&
+            ! Cache::has("property-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            Property::getCache($locations->pluck('id'));
+        }
+
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("aucs-total") &&
+            ! Cache::has("aucs-cost") &&
+            ! Cache::has("aucs-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            AUC::getCache($locations->pluck('id'));
+        }
+
+        //Get the Users location which they have access to
+        $locations = auth()->user()->locations;
+        if(! Cache::has("assets-total") &&
+            ! Cache::has("assets-cost") &&
+            ! Cache::has("assets-dep") &&
+            ! Cache::has("assets-deploy") &&
+            ! Cache::has("assets-due") &&
+            ! Cache::has("assets-overdue")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            Asset::getCache($locations->pluck('id'));
+        }
+
+        /* This is to calculate the Accessories */
+        if(! Cache::has("accessories-total") &&
+            ! Cache::has("accessories-cost") &&
+            ! Cache::has("accessories-depr") &&
+            ! Cache::has("accessories-deploy")
+        )
+        {
+            Accessory::getCache($locations->pluck('id'));
+        }
+
+       
+
+        $obj = array(
+            'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')],
+            'property' => ['count' => Cache::get('property_total'), 'cost' => Cache::get('property_cost'), 'dep' => Cache::get('property_dep')],
+            'auc' => ['count' => Cache::get('auc_total'), 'cost' => Cache::get('auc_cost'), 'dep' => Cache::get('auc_dep')],
+            'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
         );
 
         return json_encode($obj);

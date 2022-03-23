@@ -224,7 +224,7 @@ class Asset extends Model {
             /* The Cache Values for the Location */
             Cache::set("assets-L{$id}-cost", round($loc_cost_total));
             $cost_total += $loc_cost_total;
-            Cache::set("assets-L{$id}-depr", round($loc_dep_total));
+            Cache::set("assets-L{$id}-dep", round($loc_dep_total));
             $dep_total += $loc_dep_total;
             Cache::set("assets-L{$id}-deploy", round($loc_deploy_assets));
             $deploy_assets += $loc_deploy_assets;
@@ -284,7 +284,7 @@ class Asset extends Model {
 
         /* The Cache Values for the Location */
         Cache::set("assets-L{$id}-cost", round($loc_cost_total));
-        Cache::set("assets-L{$id}-depr", round($loc_dep_total));
+        Cache::set("assets-L{$id}-dep", round($loc_dep_total));
         Cache::set("assets-L{$id}-deploy", round($loc_deploy_assets));
         Cache::set("assets-L{$id}-due", round($loc_audits_due));
         Cache::set("assets-L{$id}-overdue", round($loc_audits_overdue));
@@ -318,7 +318,7 @@ class Asset extends Model {
 
             $assets_total += Cache::get("assets-L{$id}-total");
             $cost_total += Cache::get("assets-L{$id}-cost");
-            $dep_total += Cache::get("assets-L{$id}-depr");
+            $dep_total += Cache::get("assets-L{$id}-dep");
             $deploy_assets += Cache::get("assets-L{$id}-deploy");
             $audits_due += Cache::get("assets-L{$id}-due");
             $audits_overdue += Cache::get("assets-L{$id}-overdue");

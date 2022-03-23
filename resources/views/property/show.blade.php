@@ -7,7 +7,8 @@
 @endsection
 
 @section('content')
-    <x-wrappers.nav title="Property">
+
+    <x-wrappers.nav title="View Property">
         <x-buttons.return :route="route('properties.index')"> Properties</x-buttons.return>
         {{-- <x-buttons.reports :route="route('property.showPdf', $property->id)" /> --}}
         <x-buttons.edit :route="route('properties.edit',$property->id)"/>
@@ -42,6 +43,7 @@
                             <h4 class="font-weight-600 mb-4">{{$property->name}}</h4>
                             <p><strong>Type:</strong> {{$property->getType()}}</p>
                             <p><strong>Depreciation:</strong> {{$property->depreciation}} Years</p>
+                            <<<<<<< HEAD
                             <p><strong>Date
                                        Occupied:</strong><br>{{\Carbon\Carbon::parse($property->purchased_date)->format('jS M Y')}}
                             </p>
@@ -67,21 +69,56 @@
                             ?>
 
                             <p><strong>Current Value ({{$startDate->format('d\/m\/Y')}}):</strong><br>
+                                =======
+                            <p><strong>Date
+                                       Occupied:</strong> {{\Carbon\Carbon::parse($property->purchased_date)->format('jS M Y')}}
+                            </p>
+                            <p><strong>Value (At Time of
+                                       Purchase):</strong><br>£{{number_format( (float) $property->purchased_cost, 2, '.', ',' )}}
+                            </p>
+
+                            <hr>
+                            <?php
+                            //If Date is > 1 September the Year is this Year else Year = Last Year
+
+                            $now = \Carbon\Carbon::now();
+                            $startDate = \Carbon\Carbon::parse('09/01/' . $now->format('Y'));
+                            $nextYear = \Carbon\Carbon::now()->addYear()->format('Y');
+                            $nextStartDate = \Carbon\Carbon::parse('09/01/' . \Carbon\Carbon::now()->addYear()->format('Y'));
+                            $endDate = \Carbon\Carbon::parse('08/31/' . $nextYear);
+                            if(! $startDate->isPast())
+                            {
+                                $startDate->subYear();
+                                $endDate->subYear();
+                                $nextStartDate->subYear();
+                            }
+                            $bf = $property->depreciation_value_by_date($startDate);
+                            $cf = $property->depreciation_value_by_date($nextStartDate);
+                            ?>
+
+                            <p><strong>Cost B/Fwd (01/09/{{$startDate->format('Y')}}):</strong><br>
+                                >>>>>>> 7d6b6817eb24f4ce886d75a018e24258b332877c
                                 £{{number_format( (float) $bf, 2, '.', ',' )}}
                             </p>
-                            <p><strong>Depreciation B/Fwd ({{$startDate->format('d\/m\/Y')}}):</strong><br>
+                            <p><strong>Cost C/Fwd (31/08/{{$endDate->format('Y')}}):</strong><br>
+                                £{{number_format( (float) $cf, 2, '.', ',' )}}
+                            </p>
+                            <p><strong>Depreciation B/Fwd (01/09/{{$startDate->format('Y')}}):</strong><br>
                                 £{{number_format( (float) $property->purchased_cost - $bf, 2, '.', ',' )}}
                             </p>
-                            <p><strong>Depreciation C/Fwd ({{$endDate->subDay()->format('d\/m\/Y')}}):</strong><br>
+                            <p><strong>Depreciation Charge:</strong><br>
                                 £{{number_format( (float) $bf - $cf, 2, '.', ',' )}}
                             </p>
-                            <?php $prevYear = $endDate->subYear();?>
-                            <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
-                                £{{number_format( (float) $property->depreciation_value($prevYear), 2, '.', ',' )}}
+                            <p><strong>Depreciation C/Fwd (31/08/{{$endDate->format('Y')}}):</strong><br>
+                                £{{number_format( (float) $property->purchased_cost - $cf, 2, '.', ',' )}}
                             </p>
-                            <?php $prevYear = $endDate->subYear();?>
+                            <?php $prevYear = $startDate->subYear();?>
                             <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
-                                £{{number_format( (float) $property->depreciation_value($prevYear), 2, '.', ',' )}}
+                                £{{number_format( (float) $property->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
+                            </p>
+                            <?php $prevYear = $startDate->subYear();?>
+                            <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
+                                £{{number_format( (float) $property->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
                             </p>
 
 
