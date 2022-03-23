@@ -2,7 +2,6 @@
 
 @section('title', 'View all Computer Equipment')
 
-
 @section('content')
     <x-wrappers.nav title="Computer Equipment">
         @can('recycleBin', \App\Models\Asset::class)
@@ -250,29 +249,12 @@
 @endsection
 
 @section('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/import.js')}}"></script>
     <script src="{{asset('js/transfer.js')}}"></script>
     <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/filter.js')}}"></script>
     <script>
-        $(function () {
-            $("#slider-range").slider({
-                range: true,
-                min: {{ floor($floor)}},
-                max: {{ round($limit)}},
-                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
-                slide: function (event, ui) {
-                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
-                }
-            });
-            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
-                " - £" + $("#slider-range").slider("values", 1));
-        });
-
         let sliderMin = document.querySelector('#customRange1');
         let sliderMax = document.querySelector('#customRange2');
         let sliderMinValue = document.querySelector('#minRange');
