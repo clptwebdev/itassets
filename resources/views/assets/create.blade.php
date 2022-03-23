@@ -145,7 +145,7 @@
                                         @endif
 
                                     </div>
-                                    <button type="button" class="btn btn-sm btn-green add-asset">Add Antoher Instance
+                                    <button type="button" class="btn btn-sm btn-green add-asset">Add Another Instance
                                     </button>
                                 </div>
                                 <div class="tab-pane fade p-2 pt-4 active show" id="model" role="tabpanel"
@@ -251,7 +251,7 @@
                                                     Model No:
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    Depreication:
+                                                    Deprecation:
                                                 </div>
                                                 <div class="model_no py-2 px-4">
                                                     Additional Fieldsets:
@@ -277,7 +277,7 @@
                                                               value="{{old('purchased_cost')}}"/>
                                                 <div class="form-check mt-2 ml-1">
                                                     <input class="form-check-input" type="checkbox" value="1"
-                                                           @if(old('donated') == 1) checked @endifname="donated"
+                                                           @if(old('donated') == 1) checked @endif name="donated"
                                                            id="donated">
                                                     <label class="form-check-label" for="donated">
                                                         Donated
