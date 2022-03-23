@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Property;
+use App\Models\AUC;
 use App\Models\Location;
 
 use App\Rules\permittedLocation;
@@ -24,7 +24,7 @@ use Maatwebsite\Excel\DefaultValueBinder;
 use Maatwebsite\Excel\Validators\Failure;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
-class PropertyImport extends DefaultValueBinder implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError, WithCustomValueBinder {
+class AUCImport extends DefaultValueBinder implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError, WithCustomValueBinder {
 
     /**
      * @param array     $row
@@ -79,8 +79,8 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
     public function model(array $row)
     {
 
-        $property = new Property;
-        $property->name = $row["name"];
+        $auc = new AUC;
+        $auc->name = $row["name"];
         switch($row['type']){
             case 'Freehold Land':
                 $type = 1;
@@ -97,24 +97,24 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
             default:
                 $type = 1;
         }
-        $property->type = $type;
-        $property->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
+        $auc->type = $type;
+        $auc->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $property->purchased_cost = floatval($binary);
+            $auc->purchased_cost = floatval($binary);
         } else
         {
-            $property->purchased_cost = floatval($row["purchased_cost"]);
+            $auc->purchased_cost = floatval($row["purchased_cost"]);
         }
 
         $location = Location::where(["name" => $row["location_id"]])->first();
         $lid = $location->id ?? 0;
-        $property->location_id = $lid;
+        $auc->location_id = $lid;
 
-        $property->depreciation = $row["depreciation"];
+        $auc->depreciation = $row["depreciation"];
 
-        $property->save();
+        $auc->save();
     }
 
     public function batchSize(): int

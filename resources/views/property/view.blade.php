@@ -29,12 +29,12 @@
                     </x-buttons.submit>
                 </x-form.layout>
             @endif
-            <div class="dropdown show d-inline">
+            <div class="dropdown d-inline-block">
                 <a class="btn btn-sm btn-lilac dropdown-bs-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Bulk Options
                 </a>
-                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-menu dropdown-menu-end text-end" aria-labelledby="dropdownMenuLink">
                     @can('import', \App\Models\Property::class)
                         <x-buttons.dropdown-item id="import">
                             Import
@@ -217,7 +217,6 @@
 @section('modals')
 
     <x-modals.delete/>
-    <x-modals.dispose model="property"/>
     <x-modals.import route="/import/properties"/>
 @endsection
 

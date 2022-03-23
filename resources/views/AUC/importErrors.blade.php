@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Property Import Errors')
+@section('title', 'AUC Import Errors')
 
 
 @section('css')
@@ -15,7 +15,7 @@
         @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
 
         <div>
-            <form action="{{route('properties.export.import')}}" method="POST" class="d-inline">
+            <form action="{{route('aucs.export.import')}}" method="POST" class="d-inline">
                 @csrf
                 <div class="form-group">
                     <input type="hidden" class="form-control " name="name" id="name" placeholder=""
@@ -25,9 +25,9 @@
                         class="far fa-save fa-sm text-dark-50"></i> Download Errors
                 </button>
             </form>
-            <a href="{{ route('properties.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+            <a href="{{ route('aucs.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm te
-                    xt-white-50"></i> Back to Property</a>
+                    xt-white-50"></i> Back to AUCs</a>
             <a id="importHelpBtn" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
             <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
@@ -291,7 +291,7 @@
 
             xhr.onload = function () {
                 if (xhr.responseText === 'Success') {
-                    window.location.href = '/properties';
+                    window.location.href = '/aucs';
                 } else {
                     importControl.forEach((item) => {
                         item.classList.remove('border-bottom', 'border-danger');

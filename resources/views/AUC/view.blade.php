@@ -29,7 +29,7 @@
                  <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
              </x-form.layout>
          @endif
-         <div class="dropdown show d-inline">
+         <div class="dropdown d-inline-block">
              <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                  Bulk Options
@@ -40,12 +40,6 @@
                          Import
                      </x-buttons.dropdown-item>
                  @endcan
-                 <x-buttons.dropdown-item form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
-                     Dispose
-                 </x-buttons.dropdown-item>
-                 <x-buttons.dropdown-item form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkTransferModal'">
-                     Transfer
-                 </x-buttons.dropdown-item>
              </div>
          </div>
      @endcan
@@ -219,12 +213,14 @@
 @section('modals')
 
     <x-modals.delete/>
+    <x-modals.import route="/import/aucs"/>
 
 @endsection
 
 @section('js')
     <script src="{{asset('js/filter.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
+    <script src="{{asset('js/import.js')}}"></script>
     <script>
 
         let sliderMin = document.querySelector('#customRange1');

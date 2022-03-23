@@ -13,6 +13,18 @@ use App\Jobs\AUCPdf;
 //Models
 use App\Models\Report;
 
+//Imports
+use App\Imports\AUCImport;
+
+//Exports
+use App\Exports\AUCExport;
+use App\Exports\AUCErrorsExport;
+
+use Illuminate\Support\Facades\Validator;
+
+use App\Rules\permittedLocation;
+use App\Rules\findLocation;
+
 class AUCController extends Controller {
 
     //AUC = Assets Under Construction
@@ -429,5 +441,180 @@ class AUCController extends Controller {
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
+
+    ////////////////////////////////////////////////////////
+    ///////////////Import Functions/////////////////////////
+    ////////////////////////////////////////////////////////
+
+    public function import(Request $request)
+    {
+        if(auth()->user()->cant('create', AUC::class))
+        {
+            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised | Import Properties.');
+
+        }
+        $extensions = array("csv");
+
+        $result = array($request->file('csv')->getClientOriginalExtension());
+
+        if(in_array($result[0], $extensions))
+        {
+            $path = $request->file("csv")->getRealPath();
+            $import = new AUCImport;
+            $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
+            $row = [];
+            $attributes = [];
+            $errors = [];
+            $values = [];
+            $results = $import->failures();
+            $importErrors = [];
+            foreach($results->all() as $result)
+            {
+                $row[] = $result->row();
+                $attributes[] = $result->attribute();
+                $errors[] = $result->errors();
+                $values[] = $result->values();
+                $importErrors[] = [
+
+                    "row" => $result->row(),
+                    "attributes" => $result->attribute(),
+                    "errors" => $result->errors(),
+                    "value" => $result->values(),
+                ];
+
+            }
+
+            if(! empty($importErrors))
+            {
+                $errorArray = [];
+                $valueArray = [];
+                $errorValues = [];
+
+                foreach($importErrors as $error)
+                {
+                    if(array_key_exists($error['row'], $errorArray))
+                    {
+                        $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
+                    } else
+                    {
+                        $errorArray[$error['row']] = $error['attributes'];
+                    }
+                    $valueArray[$error['row']] = $error['value'];
+
+                    if(array_key_exists($error['row'], $errorValues))
+                    {
+                        $array = $errorValues[$error['row']];
+                    } else
+                    {
+                        $array = [];
+                    }
+
+                    foreach($error['errors'] as $e)
+                    {
+                        $array[$error['attributes']] = $e;
+                    }
+                    $errorValues[$error['row']] = $array;
+
+                }
+
+                return view('auc.importErrors', [
+                    "errorArray" => $errorArray,
+                    "valueArray" => $valueArray,
+                    "errorValues" => $errorValues,
+                    "locations" => auth()->user()->locations,
+                ]);
+
+            } else
+            {
+                return to_route('aucs.index')->with('success_message', 'All Properties were imported correctly!');
+
+            }
+        } else
+        {
+            session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+
+            return to_route('properties.index');
+        }
+
+
+    }
+
+    public function importErrors(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            "name.*" => "required|max:255",
+            'location_id.*' => 'required|gt:0',
+            'purchased_date.*' => 'date',
+            'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            "depreciation.*" => "nullable",
+            "type.*" => "nullable",
+        ]);
+
+        if($validation->fails())
+        {
+            return $validation->errors();
+        } else
+        {
+            for($i = 0; $i < count($request->name); $i++)
+            {
+                $property = new Property;
+                $property->name = $request->name[$i];
+                $property->type = $request->type[$i];
+                $property->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $property->purchased_cost = $request->purchased_cost[$i];
+                $property->location_id = $request->location_id[$i];
+                $property->depreciation = $request->depreciation[$i];
+                $property->save();
+            }
+
+            session()->flash('success_message', 'You have successfully added all Properties!');
+
+            return 'Success';
+        }
+    }
+
+    ////////////////////////////////////////////////////////
+    ///////////////Export Functions/////////////////////////
+    ////////////////////////////////////////////////////////
+
+    public function exportImportErrors(Request $request)
+    {
+        $export = $request['name'];
+        $code = (htmlspecialchars_decode($export));
+        $export = json_decode($code);
+
+        if(auth()->user()->cant('viewAll', AUC::class))
+        {
+            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Export AUC Errors.');
+
+        }
+
+        $date = \Carbon\Carbon::now()->format('dmyHis');
+        \Maatwebsite\Excel\Facades\Excel::store(new AUCErrorsExport($export), "/public/csv/aucs-errors-{$date}.csv");
+        $url = asset("storage/csv/aucs-errors-{$date}.csv");
+
+        return to_route('aucs.index')
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
+    }
+
+    public function export(Request $request)
+    {
+        if(auth()->user()->cant('viewAll', Property::class))
+        {
+            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised | Export AUC Information.');
+
+        }
+        $aucs = AUC::withTrashed()->whereIn('id', json_decode($request->aucs))->with('location')->get();
+        $date = \Carbon\Carbon::now()->format('dmyHi');
+        \Maatwebsite\Excel\Facades\Excel::store(new AUCExport($aucs), "/public/csv/aucs-{$date}.xlsx");
+        $url = asset("storage/csv/aucs-{$date}.xlsx");
+
+        return to_route('aucs.index')
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
+
+    }
+
 
 }

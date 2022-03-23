@@ -11,7 +11,6 @@
     <x-wrappers.nav title="View Property">
         <x-buttons.return :route="route('properties.index')"> Properties</x-buttons.return>
         {{-- <x-buttons.reports :route="route('property.showPdf', $property->id)" /> --}}
-<<<<<<< HEAD
         <x-buttons.edit :route="route('properties.edit',$property->id)" />
         <x-form.layout method="DELETE" class="d-sm-inline-block"
                        :id="'form'.$property->id"
@@ -19,14 +18,6 @@
             <x-buttons.delete formAttributes="data-id='{{$property->id}}'" /> 
         </x-form.layout >
         @can('generateShowPDF', $property)
-=======
-        <x-buttons.edit :route="route('properties.edit',$property->id)"/>
-        <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$property->id"
-                       :action="route('properties.destroy', $property->id)">
-            <x-buttons.delete formAttributes="data-id='{{$property->id}}'"/>
-        </x-form.layout>
-        @can('generatePDF', \App\Models\Asset::class)
->>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
             <x-buttons.reports :route="route('properties.showPdf', $property->id)"/>
         @endcan
     </x-wrappers.nav>
@@ -53,41 +44,9 @@
                             <h4 class="font-weight-600 mb-4">{{$property->name}}</h4>
                             <p><strong>Type:</strong> {{$property->getType()}}</p>
                             <p><strong>Depreciation:</strong> {{$property->depreciation}} Years</p>
-                            <<<<<<< HEAD
-                            <p><strong>Date
-                                       Occupied:</strong><br>{{\Carbon\Carbon::parse($property->purchased_date)->format('jS M Y')}}
-                            </p>
-                            <p><strong>Value (At Time of
-                                       Purchase):</strong><br>£{{number_format( (float) $property->purchased_cost, 2, '.', ',' )}}
-                            </p>
-
-
-                            <?php
-                            //If Date is > 1 September the Year is this Year else Year = Last Year
-
-                            $now = \Carbon\Carbon::now();
-                            $startDate = \Carbon\Carbon::parse('08/31/' . $now->format('Y'));
-                            $endDate = \Carbon\Carbon::parse('09/01/' . \Carbon\Carbon::now()->addYear()->format('Y'));
-                            if(! $startDate->isPast())
-                            {
-                                $startDate->subYear();
-                                $endDate->subYear();
-                            }
-
-                            $bf = $property->depreciation_value($startDate);
-                            $cf = $property->depreciation_value($endDate);
-                            ?>
-
-                            <p><strong>Current Value ({{$startDate->format('d\/m\/Y')}}):</strong><br>
-                                =======
-                            <p><strong>Date
-                                       Occupied:</strong> {{\Carbon\Carbon::parse($property->purchased_date)->format('jS M Y')}}
-                            </p>
-                            <p><strong>Value (At Time of
-                                       Purchase):</strong><br>£{{number_format( (float) $property->purchased_cost, 2, '.', ',' )}}
-                            </p>
-
-                            <hr>
+                            <p><strong>Date Occupied:</strong><br>{{\Carbon\Carbon::parse($property->purchased_date)->format('jS M Y')}}</p>
+                            <p><strong>Value (At Time of Purchase):</strong><br>£{{number_format( (float) $property->purchased_cost, 2, '.', ',' )}}</p>
+                            
                             <?php
                             //If Date is > 1 September the Year is this Year else Year = Last Year
 
@@ -105,9 +64,9 @@
                             $bf = $property->depreciation_value_by_date($startDate);
                             $cf = $property->depreciation_value_by_date($nextStartDate);
                             ?>
-
+                            <p><strong>Current Value ({{$startDate->format('d\/m\/Y')}}):</strong>
+                                <hr>
                             <p><strong>Cost B/Fwd (01/09/{{$startDate->format('Y')}}):</strong><br>
-                                >>>>>>> 7d6b6817eb24f4ce886d75a018e24258b332877c
                                 £{{number_format( (float) $bf, 2, '.', ',' )}}
                             </p>
                             <p><strong>Cost C/Fwd (31/08/{{$endDate->format('Y')}}):</strong><br>
@@ -137,10 +96,16 @@
                         </div>
                         <div class="col-12 col-md-6 p-4 mb-3 ">
                             <div id="locationInfo" class="bg-light p-4">
-                                <div class="model_title text-center h4 mb-3">Location Name</div>
+                                <div class="model_title text-center h4 mb-3">{{$property->location->name}}</div>
                                 <div class="model_image p-4 d-flex justify-content-center align-items-middle">
+                                    @if($property->location->photo()->exists())
+                                    <img id="profileImage"
+                                            src="{{ asset($property->location->photo->path) ?? asset('images/svg/location-image.svg') }}"
+                                            width="100%" alt="Select Profile Picture">
+                                @else
                                     <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
-                                         height="200px" alt="Select Profile Picture">
+                                            width="100%" alt="Select Profile Picture">
+                                @endif
                                 </div>
                                 <div class="model_no py-2 px-4 text-center">
                                     {{$property->location->full_address(', ')}}
