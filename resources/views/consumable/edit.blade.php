@@ -2,9 +2,6 @@
 
 @section('title', 'Edit Consumable')
 
-@section('css')
-
-@endsection
 
 @section('content')
     <form action="{{ route('consumables.update', $consumable->id) }}" method="POST">
@@ -25,11 +22,11 @@
         </div>
 
         <section>
-            <p class="mb-4">Edit a existing Consumable to the asset management system. Enter in the following information
-                and
-                click the 'Save' button. Or click the 'Back' button
-                to return the Consumables page.
-            </p>
+            <p class="mb-4">Edit a existing Consumable to the asset management system. Enter in the following
+                            information
+                            and
+                            click the 'Save' button. Or click the 'Back' button
+                            to return the Consumables page. </p>
             <div class="row row-eq-height">
                 <div class="col-12 col-md-8 col-lg-9">
                     <div class="card shadow h-100">
@@ -52,7 +49,8 @@
                                 <label for="name">Name</label>
                                 <input type="text"
                                        class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name" id="name" placeholder="consumable Name" value="{{$consumable->name}}">
+                                       name="name" id="name" placeholder="consumable Name"
+                                       value="{{$consumable->name}}">
                             </div>
                             <div class="form-group">
                                 <label for="serial_no">Serial_no</label>
@@ -65,19 +63,22 @@
                                     <label for="order_no">Order_no</label>
                                     <input type="text"
                                            class="form-control <?php if ($errors->has('order_no')) {?>border-danger<?php }?>"
-                                           id="order_no" name="order_no"  value="{{$consumable->order_no}}" required>
+                                           id="order_no" name="order_no" value="{{$consumable->order_no}}" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_cost">Purchased Cost</label>
                                     <input type="text"
                                            class="form-control <?php if ($errors->has('purchase_cost')) {?>border-danger<?php }?>"
-                                           id="purchased_cost" name="purchased_cost" value="{{$consumable->purchased_cost}}" required>
+                                           id="purchased_cost" name="purchased_cost"
+                                           value="{{$consumable->purchased_cost}}" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="purchased_date">Purchased Date</label>
                                     <input type="date"
                                            class="form-control <?php if ($errors->has('purchased_date')) {?>border-danger<?php }?>"
-                                           id="purchased_date" name="purchased_date" value="{{ \Carbon\Carbon::parse($consumable->purchased_date)->format('Y-m-d')}}" required>
+                                           id="purchased_date" name="purchased_date"
+                                           value="{{ \Carbon\Carbon::parse($consumable->purchased_date)->format('Y-m-d')}}"
+                                           required>
                                 </div>
 
                             </div>
@@ -89,7 +90,7 @@
                                             class="form-control <?php if ($errors->has('supplier_id')) {?>border-danger<?php }?>"
                                             id="supplier_id" name="supplier_id" required>
                                         <option value="0" @if(old('supplier_id') == 0){{'selected'}}@endif >No
-                                            Supplier
+                                                                                                            Supplier
                                         </option>
                                         @foreach($suppliers as $supplier)
                                             <option
@@ -114,21 +115,25 @@
                             </div>
                             @php( $cat_array = [])
                             @foreach($consumable->category as $cc)
-                            @php( $cat_array[] = $cc->id)
+                                @php( $cat_array[] = $cc->id)
 
                             @endforeach
                             <div id="categories" class="form-control h-auto p-4 mb-3">
                                 <h4 class="h6 mb-4 text-center">Categories</h4>
                                 @foreach($categories as $category)
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" value="{{ $category->id }}" name="category[]" id="category{{$category->id}}" @if(in_array($category->id, $cat_array)){{ 'checked'}}@endif>
-                                    <label class="form-check-label" for="category{{$category->id}}">{{ $category->name }}</label>
-                                </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" value="{{ $category->id }}"
+                                               name="category[]"
+                                               id="category{{$category->id}}" @if(in_array($category->id, $cat_array)){{ 'checked'}}@endif>
+                                        <label class="form-check-label"
+                                               for="category{{$category->id}}">{{ $category->name }}</label>
+                                    </div>
                                 @endforeach
                             </div>
                             <div class="form-group">
                                 <label for="notes">Notes</label>
-                                <textarea name="notes" id="notes" class="form-control" rows="10">{{$consumable->notes}}</textarea>
+                                <textarea name="notes" id="notes" class="form-control"
+                                          rows="10">{{$consumable->notes}}</textarea>
                             </div>
 
                         </div>
@@ -142,12 +147,12 @@
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Consumable Image</h4>
                                     @if($consumable->photo()->exists())
-                                        <img id="profileImage" src="{{ asset($consumable->photo->path) ?? asset('images/svg/consumables-image.svg')}}" width="100%" alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                        <img id="profileImage"
+                                             src="{{ asset($consumable->photo->path) ?? asset('images/svg/consumables-image.svg')}}"
+                                             width="100%" alt="Select Profile Picture">
                                     @else
-                                    <img id="profileImage"
-                                         src="{{ asset('images/svg/consumables-image.svg') }}"
-                                         width="100%"
-                                         alt="Select Profile Picture" data-toggle="modal" data-target="#imgModal">
+                                        <img id="profileImage" src="{{ asset('images/svg/consumables-image.svg') }}"
+                                             width="100%" alt="Select Profile Picture">
                                     @endif
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>
@@ -196,99 +201,12 @@
 @endsection
 
 @section('modals')
-    <!-- Profile Image Modal-->
-    <div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog"
-         aria-labelledby="imgModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-primary-blue text-white">
-                    <h5 class="modal-title" id="imgModalLabel">Select Image</h5>
-                    <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Select an image below:.</p>
-                    <?php $photos = App\Models\Photo::all();?>
-                    <img src="{{ asset('images/svg/location-image.svg') }}" width="80px" alt="Default Picture"
-                         onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">
-                    @foreach($photos as $photo)
-                        <img src="{{ asset($photo->path) }}" width="80px" alt="{{ $photo->name }}"
-                             onclick="selectPhoto('{{ $photo->id }}', '{{ asset($photo->path) }}');">
-                    @endforeach
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-blue" data-dismiss="modal" data-toggle="modal"
-                            data-target="#uploadModal">Upload
-                        file
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Upload Modal -->
-    <div id="uploadModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imgUploadLabel">Upload Media</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Form -->
-                    <form id="imageUpload">
-                        Name: <input type="text" placeholder="Enter File Name" name="name" class="form-control">
-                        Select file : <input type='file' name='file' id='file' class='form-control'><br>
-                        <button type='submit' class='btn btn-green' id='btn_upload'>Upload</button>
-                    </form>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
+    <x-modals.photo-upload/>
+    <x-modals.photo-upload-form/>
 @endsection
 
 @section('js')
-    <script>
-        function selectPhoto(id, src) {
-            document.getElementById("profileImage").src = src;
-            document.getElementById("photo_id").value = id;
-            $('#imgModal').modal('hide');
-        }
+    <script src="{{asset('js/photo.js')}}"></script>
 
-        $(document).ready(function () {
-            $("form#imageUpload").submit(function (e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                var urlto = '/photo/upload';
-                var route = '{{asset("/")}}';
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                // AJAX request
-                $.ajax({
-                    url: urlto,
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        $('#uploadModal').modal('hide');
-                        document.getElementById("profileImage").src = route + data.path;
-                        document.getElementById("photo_id").value = data.id;
-                    }
-                });
-            });
-        });
-    </script>
 @endsection
 

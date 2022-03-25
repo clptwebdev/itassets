@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,7 +21,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">Asset Value</h6>
                         <div class="dropdown no-arrow">
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
@@ -47,7 +47,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
                         <div class="dropdown no-arrow">
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
@@ -68,17 +68,17 @@
                     </div>
                 </div>
         </div>
-    
+
         <div id="pieChart" class="col-12 col-xl-5">
                 <div class="card shadow">
                 <!-- Card Header - Dropdown -->
                 <div
                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Asset Allocation</h6>
-                
+
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
@@ -100,10 +100,10 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Content Row -->
     <div class="row">
-    
+
         <!-- Content Column -->
         <div class="col-xl-6 mb-4">
             <!-- Project Card Example -->
@@ -111,7 +111,7 @@
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Assets</h6>
                 </div>
-                
+
                 <div class="card-body">
                     <h4 class="small font-weight-bold">Asset Status<span class="float-right">85%</span></h4>
                     <div class="progress mb-1">
@@ -125,11 +125,11 @@
                     <div class="mb-4">
                     <small>
                         @foreach(\App\Models\Status::all() as $status)
-                        <i class="fas fa-circle text-success" style></i> {{$status->name}} 
+                        <i class="fas fa-circle text-success" style></i> {{$status->name}}
                         @endforeach
                     </small>
                     </div>
-    
+
                     <h4 class="small font-weight-bold">Audit Status <span class="float-right">45% Complete</span></h4>
                     <div class="progress mb-1">
                         <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0"
@@ -144,7 +144,7 @@
                                 class="fas fa-circle text-success" style></i> Audit Completed</small>
                 </div>
             </div>
-    
+
             <!-- Color System -->
             <div class="row row-eq-height">
                 @foreach($locations as $location)
@@ -170,11 +170,11 @@
                 </div>
                 @endforeach
             </div>
-    
+
         </div>
-    
+
         <div class="col-lg-6 mb-4">
-    
+
             <!-- Illustrations -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -211,7 +211,7 @@
                 </div>
             </div>
         </div>
-    
+
     </div>
 
     <script src="{{ asset('js/app.js') }}"></script>
@@ -242,7 +242,7 @@
                 }
 
                 var chartdata = {
-                    
+
                 };
 
                 var ctx = document.getElementById("myPieChart");
@@ -378,4 +378,4 @@
         } );
     </script>
 </body>
-</html>
+</html> --}}

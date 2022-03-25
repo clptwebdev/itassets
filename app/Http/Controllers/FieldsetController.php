@@ -13,10 +13,11 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Fieldset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'fieldset', 'view']));
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View FieldSets.');
+
         }
 
-        $fieldsets = Fieldset::all();
+        $fieldsets = Fieldset::paginate();
 
         return view('fieldsets.view', compact('fieldsets'));
     }
@@ -25,7 +26,8 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('create', Fieldset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'fieldset', 'create']));
+            return ErrorController::forbidden(to_route('fieldsets.index'), 'Unauthorised to Create FieldSets.');
+
         }
 
         $fields = \App\Models\Field::all();
@@ -37,7 +39,8 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('create', Fieldset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'fieldset', 'create']));
+            return ErrorController::forbidden(to_route('fieldsets.index'), 'Unauthorised to Create FieldSets.');
+
         }
 
         $validated = $request->validate([
@@ -48,11 +51,16 @@ class FieldsetController extends Controller {
         $array = explode(',', $request->fields);
         $fieldset->fields()->attach($array);
 
-        return redirect(route('fieldsets.index'));
+        return to_route('fieldsets.index');
     }
 
     public function edit(Fieldset $fieldset)
     {
+        if(auth()->user()->cant('update', Fieldset::class))
+        {
+            return ErrorController::forbidden(to_route('fieldsets.index'), 'Unauthorised to Update FieldSets.');
+
+        }
         $fields = Field::all();
 
         return view('fieldsets.edit', compact('fieldset', 'fields'));
@@ -62,7 +70,8 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('update', Fieldset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Category', 'update']));
+            return ErrorController::forbidden(to_route('fieldsets.index'), 'Unauthorised to Update FieldSets.');
+
         }
 
         $validated = $request->validate([
@@ -73,14 +82,15 @@ class FieldsetController extends Controller {
         $array = explode(',', $request->fields);
         $fieldset->fields()->sync($array);
 
-        return redirect(route('fieldsets.index'));
+        return to_route('fieldsets.index');
     }
 
     public function destroy(Fieldset $fieldset)
     {
         if(auth()->user()->cant('delete', Fieldset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Category', 'delete']));
+            return ErrorController::forbidden(to_route('fieldsets.index'), 'Unauthorised to Delete FieldSets.');
+
         }
 
         $name = $fieldset->name;
@@ -88,7 +98,7 @@ class FieldsetController extends Controller {
         $fieldset->delete();
         session()->flash('danger_message', 'The ' . $name . ' field was deleted from the system');
 
-        return redirect(route('fieldsets.index'));
+        return to_route('fieldsets.index');
     }
 
 }

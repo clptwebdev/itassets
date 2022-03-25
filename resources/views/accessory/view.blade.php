@@ -2,15 +2,6 @@
 
 @section('title', 'Accessories')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
-          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
-          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-@endsection
 
 @section('content')
     <x-wrappers.nav title="Accessories">
@@ -40,38 +31,61 @@
         @can('import', \App\Models\Accessory::class)
             <x-buttons.import id="import"/>
         @endcan
+        <div class="dropdown ms-2 me-2 d-inline-block">
+            <button class=" btn btn-sm btn-lilac d-inline" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                Bulk Options <i class="fas fa-fw fa-caret-down sidebar-icon"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li>
+                    <p class='text-blue text-center p-2 border-bottom border-secondary'>Bulk Options</p>
+                </li>
+                <li class='my-1'>
+                    @can('create', \App\Models\Accessory::class)
+                        <x-buttons.dropdown-item id="import">
+                            Import
+                        </x-buttons.dropdown-item>
+                    @endcan
+                    <x-buttons.dropdown-item
+                        form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
+                        Dispose
+                    </x-buttons.dropdown-item>
+                    <x-buttons.dropdown-item
+                        form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkTransferModal'">
+                        Transfer
+                    </x-buttons.dropdown-item>
+                </li>
+            </ul>
+
+        </div>
 
     </x-wrappers.nav>
     <x-handlers.alerts/>
     @php
-        if(auth()->user()->role_id == 1){
-            $limit = \App\Models\Accessory::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
-            $floor = \App\Models\Accessory::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first();
-        }else{
-            $limit = auth()->user()->location_accessories()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
-            $floor = auth()->user()->location_accessories()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
-        }
-        if(session()->has('amount')){
-            $amount = str_replace('£', '', session('amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
-        }else{
-            $start_value = $floor;
-            $end_value = $limit;
-        }
+        $limit = auth()->user()->location_accessories()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+        $floor = auth()->user()->location_accessories()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+
+    if(session()->has('amount')){
+        $amount = str_replace('£', '', session('amount'));
+        $amount = explode(' - ', $amount);
+        $start_value = intval($amount[0]);
+        $end_value = intval($amount[1]);
+    }else{
+        $start_value = $floor;
+        $end_value = $limit;
+    }
     @endphp
 
     <section>
 
 
         <p class="mb-4">Below are the different Accessories stored in the management system. Each has
-            different options and locations can created, updated, and deleted.</p>
+                        different options and locations can be created, updated, and deleted.</p>
 
         <!-- DataTales Example -->
-        <x-filters.navigation model="Accessory" :filter=$filter/>
-            <x-filters.filter model="Accessory" relations="accessories" :filter=$filter :locations=$locations
-                              :statuses=$statuses :categories="$categories"/>
+        <x-filters.navigation model="Accessory" relations="accessories" table="accessories" :filter=$filter/>
+            <x-filters.filter model="Accessory" relations="accessories" table="accessories" :filter=$filter
+                              :locations=$locations :statuses=$statuses :categories="$categories"/>
 
             <div class="card shadow mb-4">
                 <div class="card-body">
@@ -92,18 +106,18 @@
                             </tr>
                             </thead>
                             <tfoot>
-                                <tr>
-                                    <th><small>Item</small></th>
-                                    <th><small>Location</small></th>
-                                    <th class="text-center"><small>Tag</small></th>
-                                    <th class="text-center"><small>Manufacturer</small></th>
-                                    <th class=" d-none d-xl-table-cell"><small>Date</small></th>
-                                    <th class="text-center d-none d-xl-table-cell"><small>Cost</small></th>
-                                    <th class="text-center d-none d-xl-table-cell"><small>Supplier</small></th>
-                                    <th class="text-center d-none d-xl-table-cell"><small>Warranty (M)</small></th>
-                                    <th class="text-center d-none d-md-table-cell"><small>Status</small></th>
-                                    <th class="text-right"><small>Options</small></th>
-                                </tr>
+                            <tr>
+                                <th><small>Item</small></th>
+                                <th><small>Location</small></th>
+                                <th class="text-center"><small>Tag</small></th>
+                                <th class="text-center"><small>Manufacturer</small></th>
+                                <th class=" d-none d-xl-table-cell"><small>Date</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Cost</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Supplier</small></th>
+                                <th class="text-center d-none d-xl-table-cell"><small>Warranty (M)</small></th>
+                                <th class="text-center d-none d-md-table-cell"><small>Status</small></th>
+                                <th class="text-right"><small>Options</small></th>
+                            </tr>
                             </tfoot>
                             <tbody>
                             @foreach($accessories as $accessory)
@@ -112,14 +126,14 @@
                                         {{$accessory->name}}
                                         <br>
                                         @if($accessory->serial_no != 0)
-                                        <small>{{$accessory->serial_no ?? 'N/A'}}</small>
+                                            <small>{{$accessory->serial_no ?? 'N/A'}}</small>
                                         @endif
                                     </td>
                                     <td class="text-center">
                                         @if(isset($accessory->location->photo->path))
-                                        <img src="{{ asset($accessory->location->photo->path)}}" height="30px"
-                                             alt="{{$accessory->location->name}}"
-                                             title="{{ $accessory->location->name ?? 'Unnassigned'}}"/>
+                                            <img src="{{ asset($accessory->location->photo->path)}}" height="30px"
+                                                 alt="{{$accessory->location->name}}"
+                                                 title="{{ $accessory->location->name ?? 'Unnassigned'}}"/>
                                         @else
                                             {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($accessory->location->icon ?? '#666').'">'
                                                 .strtoupper(substr($accessory->location->name ?? 'u', 0, 1)).'</span>' !!}
@@ -147,7 +161,8 @@
                                                 Remaining</small>
                                         @endif
                                     </td>
-                                    <td class="text-center d-none d-xl-table-cell" style="color: {{$accessory->status->colour ?? '#666'}};">
+                                    <td class="text-center d-none d-xl-table-cell"
+                                        style="color: {{$accessory->status->colour ?? '#666'}};">
                                         <i class="{{$accessory->status->icon ?? 'fas fa-circle'}}"></i> {{ $accessory->status->name ?? 'No Status' }}
                                     </td>
                                     <td class="text-right">
@@ -199,7 +214,7 @@
                 <div class="card-body">
                     <h4>Help with Accessories</h4>
                     <p>Click <a href="{{route("documentation.index").'#collapseEightAccessory'}}">here</a> for the
-                        Documentation on Accessories on Importing ,Exporting , Adding , Removing!</p>
+                       Documentation on Accessories on Importing ,Exporting , Adding , Removing!</p>
                 </div>
             </div>
 
@@ -208,6 +223,8 @@
 @endsection
 
 @section('modals')
+    <x-modals.bulk-file title="disposal" route=""/>
+    <x-modals.bulk-file title="transfer" route=""/>
     <x-modals.delete/>
     <x-modals.transfer :models="$locations" model="accessory"/>
     <x-modals.dispose model="accessory"/>
@@ -215,27 +232,39 @@
 @endsection
 
 @section('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="{{asset('js/delete.js')}}"></script>
-    <script src="{{asset('js/import.js')}}"></script>
-    <script src="{{asset('js/transfer.js')}}"></script>
-    <script src="{{asset('js/dispose.js')}}"></script>
-    <script src="{{asset('js/filter.js')}}"></script>
+    <script src="{{asset('js/delete.js')}}" defer></script>
+    <script src="{{asset('js/import.js')}}" defer></script>
+    <script src="{{asset('js/transfer.js')}}" defer></script>
+    <script src="{{asset('js/dispose.js')}}" defer></script>
+    <script src="{{asset('js/filter.js')}}" defer></script>
     <script>
-        $(function () {
-            $("#slider-range").slider({
-                range: true,
-                min: {{ floor($floor)}},
-                max: {{ round($limit)}},
-                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
-                slide: function (event, ui) {
-                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
-                }
-            });
-            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
-                " - £" + $("#slider-range").slider("values", 1));
+        let sliderMin = document.querySelector('#customRange1');
+        let sliderMax = document.querySelector('#customRange2');
+        let sliderMinValue = document.querySelector('#minRange');
+        let sliderMaxValue = document.querySelector('#maxRange');
+
+        //setting slider ranges
+        sliderMin.setAttribute('min', {{ floor($start_value)}});
+        sliderMin.setAttribute('max', {{ round($end_value)}});
+        sliderMax.setAttribute('min', {{ floor($start_value)}});
+        sliderMax.setAttribute('max', {{ round($end_value)}});
+        sliderMax.value = {{ round($end_value)}};
+        sliderMin.value = {{ floor($start_value)}};
+
+        sliderMinValue.innerHTML = {{ floor($start_value)}};
+        sliderMaxValue.innerHTML = {{ round($end_value)}};
+
+        sliderMin.addEventListener('input', function () {
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMaxValue.innerHTML = sliderMax.value;
+
+        });
+        sliderMax.addEventListener('input', function () {
+            sliderMaxValue.innerHTML = sliderMax.value;
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMin.setAttribute('max', sliderMax.value);
+
+
         });
     </script>
 @endsection

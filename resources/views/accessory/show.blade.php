@@ -2,10 +2,6 @@
 
 @section('title', 'View '.$accessory->name)
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
-
 @section('content')
     <x-wrappers.nav title="View Accessory">
         <x-buttons.return :route="route('accessories.index')">Accessories</x-buttons.return>
@@ -23,17 +19,17 @@
         <x-buttons.edit :route="route('accessories.edit', $accessory->id)"/>
 
         @can('delete', $accessory)
-            <x-form.layout method="DELETE" class="d-sm-inline-block"
-                           :id="'form'.$accessory->id"
+            <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$accessory->id"
                            :action="route('accessories.destroy', $accessory->id)">
                 <x-buttons.delete formAttributes="data-id='{{$accessory->id}}'"/>
             </x-form.layout>
         @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
+    <x-form.errors/>
     <section class="m-auto">
         <p class="mb-4">Information regarding {{ $accessory->name }} including the location and any comments made by
-            staff. </p>
+                        staff. </p>
 
         <div class="row row-eq-height">
             <x-accessories.accessory-info :accessory="$accessory"/>
@@ -76,26 +72,6 @@
     <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/comment.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
-    <script>
-        $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#location-id').val();
-            $(form).submit();
-        });
 
-        $(document).ready(function () {
-            $('#comments').DataTable({
-                "autoWidth": false,
-                "pageLength": 10,
-                "searching": false,
-                "bLengthChange": false,
-                "columnDefs": [{
-                    "targets": [1],
-                    "orderable": false
-                }],
-                "order": [[0, "desc"]],
-            });
-        });
-
-    </script>
 
 @endsection

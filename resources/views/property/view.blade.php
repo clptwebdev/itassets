@@ -2,15 +2,6 @@
 
 @section('title', 'View Property')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
-          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
-          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-@endsection
 
 @section('content')
     <x-wrappers.nav title="Property">
@@ -18,52 +9,67 @@
             <x-buttons.recycle :route="route('property.bin')" :count="\App\Models\Property::onlyTrashed()->count()"/>
         @endcan
         @can('create' , \App\Models\Property::class)
-            <x-buttons.add :route="route('property.create')">Property</x-buttons.add>
+            <x-buttons.add :route="route('properties.create')">Property</x-buttons.add>
         @endcan
-           {{--
-        @can('generatePDF', \App\Models\Asset::class)
-            @if ($assets->count() == 1)
-                <x-buttons.reports :route="route('asset.showPdf', $assets[0]->id)"/>
+        @can('generatePDF', \App\Models\Property::class)
+            @if ($properties->count() == 1)
+                <x-buttons.reports :route="route('properties.showPdf', $properties[0]->id)"/>
             @else
-                <x-form.layout class="d-inline-block" :action="route('assets.pdf')">
-                    <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
-                                  :value="json_encode($assets->pluck('id'))"/>
+                <x-form.layout class="d-inline-block" :action="route('properties.pdf')">
+                    <x-form.input type="hidden" name="property" :label="false" formAttributes="required"
+                                  :value="json_encode($properties->pluck('id'))"/>
                     <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
-            @if($assets->count() >1)
-                <x-form.layout class="d-inline-block" action="/exportassets">
-                    <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
-                                  :value="json_encode($assets->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
+            @if($properties->count() >1)
+                <x-form.layout class="d-inline-block" action="/export/properties">
+                    <x-form.input type="hidden" name="properties" :label="false" formAttributes="required"
+                                  :value="json_encode($properties->pluck('id'))"/>
+                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span>
+                    </x-buttons.submit>
                 </x-form.layout>
             @endif
-            <div class="dropdown show d-inline">
-                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="dropdown d-inline-block">
+                <a class="btn btn-sm btn-lilac dropdown-bs-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
+                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Bulk Options
                 </a>
-                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                    @can('create', \App\Models\Asset::class)
+                <div class="dropdown-menu dropdown-menu-end text-end" aria-labelledby="dropdownMenuLink">
+                    @can('import', \App\Models\Property::class)
                         <x-buttons.dropdown-item id="import">
                             Import
                         </x-buttons.dropdown-item>
                     @endcan
-                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">
-                        Dispose
-                    </x-buttons.dropdown-item>
-                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkTransferModal'">
-                        Transfer
-                    </x-buttons.dropdown-item>
                 </div>
             </div>
-        @endcan --}}
+        @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
-        <p class="mt-5 mb-4">Below are the Properties belonging to the Central Learning Partnership Trust. You require access to see
-            the property assigned to the different locations. If you think you have the incorrect permissions, please contact apollo@clpt.co.uk
-        </p>
+        <p class="mt-5 mb-4">Below are the Properties belonging to the Central Learning Partnership Trust. You require
+                             access to see
+                             the property assigned to the different locations. If you think you have the incorrect
+                             permissions, please contact apollo@clpt.co.uk </p>
+
+        @php
+
+            $limit = auth()->user()->location_property()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_property()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+
+        if(session()->has('property_amount')){
+            $amount = str_replace('£', '', session('property_amount'));
+            $amount = explode(' - ', $amount);
+            $start_value = intval($amount[0]);
+            $end_value = intval($amount[1]);
+        }else{
+            $start_value = $floor;
+            $end_value = $limit;
+        }
+        @endphp
+
+        <x-filters.navigation model="Property" relations="property" table="properties"/>
+        <x-filters.filter model="Property" relations="property" table="properties" :locations="$locations"/>
+
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -77,7 +83,8 @@
                             <th class="text-center col-1 col-md-auto"><small>Value</small></th>
                             <th class="text-center col-2 col-md-auto"><small>Date</small></th>
                             <th class="text-center col-1 col-md-auto"><small>Current Value</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small></th>
+                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
+                            </th>
                             <th class="text-center col-1 d-none d-xl-table-cell"><small>Dep Charge</small></th>
                             <th class="text-right col-1"><small>Options</small></th>
                         </tr>
@@ -87,8 +94,8 @@
                             <th><small>Name</small></th>
                             <th><small>Type</small></th>
                             <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Value</small></th>  
-                            <th class="text-center"><small>Date</small></th>  
+                            <th class="text-center"><small>Value</small></th>
+                            <th class="text-center"><small>Date</small></th>
                             <th class="text-center"><small>Current Value</small></th>
                             <th class="text-center"><small>Depreciation (Years)</small></th>
                             <th class="text-center"><small>Dep Charge</small></th>
@@ -96,25 +103,25 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                            @foreach($properties as $property)
+                        @foreach($properties as $property)
                             <tr>
                                 <td class="text-left">{{$property->name}}</td>
                                 <td class="text-left">
                                     @switch($property->type)
                                         @case(1)
-                                            {{'Freehold Land'}}
-                                            @break
+                                        {{'Freehold Land'}}
+                                        @break
                                         @case(2)
-                                            {{'Freehold Building'}}
-                                            @break
+                                        {{'Freehold Building'}}
+                                        @break
                                         @case(3)
-                                            {{'Leasehold Land'}}
-                                            @break
+                                        {{'Leasehold Land'}}
+                                        @break
                                         @case(4)
-                                            {{'Leasehold Building'}}
-                                            @break
+                                        {{'Leasehold Building'}}
+                                        @break
                                         @default
-                                            {{'Unknown'}}
+                                        {{'Unknown'}}
                                     @endswitch
                                 </td>
                                 <td class="text-center">
@@ -129,26 +136,54 @@
                                         @endif
                                     @endif
                                 </td>
-                                <td class="text-center">£{{number_format($property->value, 2, '.', ',')}}</td>
-                                <td class="text-center">{{\Carbon\Carbon::parse($property->date)->format('jS M Y')}}</td>
-                                <td class="text-center">£{{number_format($property->depreciation_value(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
+                                <td class="text-center">£{{number_format($property->purchased_cost, 2, '.', ',')}}</td>
+                                <td class="text-center">{{\Carbon\Carbon::parse($property->purchased_date)->format('jS M Y')}}</td>
+                                <td class="text-center">
+                                    £{{number_format($property->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
                                 <td class="text-center">{{$property->depreciation}} Years</td>
-                                <td class="text-center">{{$property->depreciation}} Years</td>
+                                <td class="text-center">
+                                    <?php
+                                    //If Date is > 1 September the Year is this Year else Year = Last Year
+
+                                    $now = \Carbon\Carbon::now();
+                                    $startDate = \Carbon\Carbon::parse('09/01/' . $now->format('Y'));
+                                    $endDate = \Carbon\Carbon::parse('08/31/' . \Carbon\Carbon::now()->addYear()->format('Y'));
+                                    if(! $startDate->isPast())
+                                    {
+                                        $startDate->subYear();
+                                        $endDate->subYear();
+                                    }
+
+                                    $bf = $property->depreciation_value($startDate);
+                                    $cf = $property->depreciation_value($endDate);
+                                    ?>
+                                    £{{number_format( (float) $property->purchased_cost - $bf, 2, '.', ',' )}}
+                                </td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
                                         @can('view', $property)
-                                            <x-buttons.dropdown-item :route="route('property.show', $property->id)">
+                                            <x-buttons.dropdown-item :route="route('properties.show', $property->id)">
                                                 View
                                             </x-buttons.dropdown-item>
                                         @endcan
                                         @can('update', $property)
-                                                <x-buttons.dropdown-item :route=" route('property.edit', $property->id)">
-                                                    Edit
-                                                </x-buttons.dropdown-item>
+                                            <x-buttons.dropdown-item :route=" route('properties.edit', $property->id)">
+                                                Edit
+                                            </x-buttons.dropdown-item>
                                         @endcan
+
+                                        @can('archive', $property)
+                                            <x-buttons.dropdown-item class="disposeBtn"
+                                                                     formRequirements="data-model-id='{{$property->id}}' data-model-name='{{$property->name ?? 'No name' }}'">
+                                                Archive
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+
                                         @can('delete', $property)
-                                            <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$property->id" :action="route('property.destroy', $property->id)">
-                                                <x-buttons.dropdown-item :data="$property->id" class="deleteBtn" >
+                                            <x-form.layout method="DELETE" class="d-block p-0 m-0"
+                                                           :id="'form'.$property->id"
+                                                           :action="route('properties.destroy', $property->id)">
+                                                <x-buttons.dropdown-item :data="$property->id" class="deleteBtn">
                                                     Delete
                                                 </x-buttons.dropdown-item>
                                             </x-form.layout>
@@ -156,15 +191,15 @@
                                     </x-wrappers.table-settings>
                                 </td>
                             </tr>
-                            @endforeach
-                            @if($properties->count() == 0)
+                        @endforeach
+                        @if($properties->count() == 0)
                             <tr>
-                                <td colspan="6" class="text-center">No Assets Returned</td>
+                                <td colspan="9" class="text-center">No Property Returned</td>
                             </tr>
-                            @endif
+                        @endif
                         </tbody>
-                    </table>{{-- 
-                    <x-paginate :model="$assets"/> --}}
+                    </table>
+                    <x-paginate :model="$properties"/>
                 </div>
             </div>
         </div>
@@ -181,9 +216,56 @@
 @endsection
 @section('modals')
 
+    <x-modals.delete/>
+    <x-modals.import route="/import/properties"/>
 @endsection
 
 @section('js')
+    <script src="{{asset('js/filter.js')}}"></script>
+    <script src="{{asset('js/delete.js')}}"></script>
+    <script src="{{asset('js/dispose.js')}}"></script>
+    <script src="{{asset('js/import.js')}}"></script>
+    <script>
+        $(function () {
+            $("#slider-range").slider({
+                range: true,
+                min: {{ floor($floor)}},
+                max: {{ round($limit)}},
+                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
+                slide: function (event, ui) {
+                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
+                }
+            });
+            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
+                " - £" + $("#slider-range").slider("values", 1));
+        });
+        let sliderMin = document.querySelector('#customRange1');
+        let sliderMax = document.querySelector('#customRange2');
+        let sliderMinValue = document.querySelector('#minRange');
+        let sliderMaxValue = document.querySelector('#maxRange');
+
+        //setting slider ranges
+        sliderMin.setAttribute('min', {{ floor($start_value)}});
+        sliderMin.setAttribute('max', {{ round($end_value)}});
+        sliderMax.setAttribute('min', {{ floor($start_value)}});
+        sliderMax.setAttribute('max', {{ round($end_value)}});
+        sliderMax.value = {{ round($end_value)}};
+        sliderMin.value = {{ floor($start_value)}};
+
+        sliderMinValue.innerHTML = {{ floor($start_value)}};
+        sliderMaxValue.innerHTML = {{ round($end_value)}};
+
+        sliderMin.addEventListener('input', function () {
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMaxValue.innerHTML = sliderMax.value;
+
+        });
+        sliderMax.addEventListener('input', function () {
+            sliderMaxValue.innerHTML = sliderMax.value;
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMin.setAttribute('max', sliderMax.value);
 
 
+        });
+    </script>
 @endsection

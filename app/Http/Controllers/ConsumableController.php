@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
-
 use App\Exports\consumableErrorsExport;
 use App\Exports\consumableExport;
 use App\Imports\consumableImport;
@@ -22,8 +20,7 @@ use App\Jobs\ConsumablesPdf;
 use App\Jobs\ConsumablePdf;
 use App\Models\Report;
 
-class ConsumableController extends Controller
-{
+class ConsumableController extends Controller {
 
     public function newComment(Request $request)
     {
@@ -32,36 +29,37 @@ class ConsumableController extends Controller
             "comment" => "nullable",
         ]);
 
-        $consumable = Consumable::find($request->consumable_id);
-        $consumable->comment()->create(['title'=>$request->title, 'comment'=>$request->comment, 'user_id'=>auth()->user()->id]);
-        return redirect(route('consumables.show', $consumable->id));
+        $consumable = Consumable::whereId($request->consumables_id)->first();
+        $consumable->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+
+        return to_route('consumables.show', $consumable->id);
     }
 
     public function index()
     {
-        if (auth()->user()->cant('viewAll', Consumable::class)) {
-            return redirect(route('errors.forbidden', ['area', 'Consumables', 'view']));
-        }
+        if(auth()->user()->cant('viewAll', Consumable::class))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to View Consumables.');
 
-        if(auth()->user()->role_id == 1){
-            $consumables = Consumable::all();
-        }else{
-            $consumables = auth()->user()->location_consumables;
         }
+        $consumables = Consumable::LocationFilter(auth()->user()->locations->pluck('id'))->leftJoin('locations', 'locations.id', '=', 'consumables.location_id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'consumables.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'consumables.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->paginate(intval(session('limit')) ?? 25, ['consumables.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+            ->fragment('table');
+
         return view('consumable.view', compact('consumables'));
     }
 
     public function create()
     {
-        if (auth()->user()->cant('create', Consumable::class)) {
-            return redirect(route('errors.forbidden', ['area', 'Consumables', 'create']));
-        }
+        if(auth()->user()->cant('create', Consumable::class))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Create Consumables.');
 
-        if(auth()->user()->role_id == 1){
-            $locations = Location::all();
-        }else{
-            $locations = auth()->user()->locations;
         }
+        $locations = auth()->user()->locations;
 
         return view('consumable.create', [
             "locations" => $locations,
@@ -74,8 +72,10 @@ class ConsumableController extends Controller
 
     public function store(Request $request)
     {
-        if (auth()->user()->cant('create', Consumable::class)) {
-            return redirect(route('errors.forbidden', ['area', 'Consumables', 'create']));
+        if(auth()->user()->cant('create', Consumable::class))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Store Consumables.');
+
         }
 
         $request->validate([
@@ -94,7 +94,8 @@ class ConsumableController extends Controller
             'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
         ));
         $consumable->category()->attach($request->category);
-        return redirect(route("consumables.index"));
+
+        return to_route("consumables.index");
 
     }
 
@@ -104,79 +105,85 @@ class ConsumableController extends Controller
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
 
-        if (auth()->user()->cant('viewAll', Consumable::class)) {
-            return redirect(route('errors.forbidden', ['area', 'Consumables', 'export']));
+        if(auth()->user()->cant('viewAll', Consumable::class))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Export Consumables.');
+
         }
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new consumableErrorsExport($export), "/public/csv/consumables-errors-{$date}.csv");
         $url = asset("storage/csv/consumables-errors-{$date}.csv");
-        return redirect(route('consumables.index'))
+
+        return to_route('consumables.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
     }
 
     public function ajaxMany(Request $request)
     {
-        if($request->ajax()){
-            $validation = Validator::make($request->all(), [
-                "name.*" => "required|max:255",
-                'order_no.*' => 'required',
-                'serial_no.*' => 'required',
-                'warranty.*' => 'int',
-                'location_id.*' => 'required|gt:0',
-                'purchased_date.*' => 'nullable|date',
-                'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            ]);
 
-            if($validation->fails()){
-                return $validation->errors();
-            }else{
-                for($i = 0; $i < count($request->name); $i++)
-                {
-                    $consumable = new Consumable;
-                    $consumable->name = $request->name[$i];
-                    $consumable->serial_no = $request->serial_no[$i];
-                    $consumable->status_id = $request->status_id[$i];
-                    $consumable->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
-                    $consumable->purchased_cost = $request->purchased_cost[$i];
-                    $consumable->supplier_id = $request->supplier_id[$i];
-                    $consumable->manufacturer_id = $request->manufacturer_id[$i];
-                    $consumable->order_no = $request->order_no[$i];
-                    $consumable->warranty = $request->warranty[$i];
-                    $consumable->location_id = $request->location_id[$i];
-                    $consumable->notes = $request->notes[$i];
-                    $consumable->photo_id =  0;
+        $validation = Validator::make($request->all(), [
+            "name.*" => "required|max:255",
+            'order_no.*' => 'required',
+            'serial_no.*' => 'required',
+            'warranty.*' => 'int',
+            'location_id.*' => 'required|gt:0',
+            'purchased_date.*' => 'nullable|date',
+            'purchased_cost.*' => 'required',
+        ]);
 
-                    $consumable->save();
-                }
+        if($validation->fails())
+        {
+            return $validation->errors();
+        } else
+        {
+            for($i = 0; $i < count($request->name); $i++)
+            {
+                $consumable = new Consumable;
+                $consumable->name = $request->name[$i];
+                $consumable->serial_no = $request->serial_no[$i];
+                $consumable->status_id = $request->status_id[$i];
+                $consumable->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $consumable->purchased_cost = floatval($request->purchased_cost[$i]);
+                $consumable->supplier_id = $request->supplier_id[$i];
+                $consumable->manufacturer_id = $request->manufacturer_id[$i];
+                $consumable->order_no = $request->order_no[$i];
+                $consumable->warranty = $request->warranty[$i];
+                $consumable->location_id = $request->location_id[$i];
+                $consumable->notes = $request->notes[$i];
+                $consumable->photo_id = 0;
 
-                session()->flash('success_message', 'You have successfully added all Consumables!');
-                return 'Success';
+                $consumable->save();
             }
-        }
 
+            session()->flash('success_message', 'You have successfully added all Consumables!');
+
+            return 'Success';
+        }
     }
 
     public function show(Consumable $consumable)
     {
-        if (auth()->user()->cant('create', $consumable)) {
-            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'view']));
+        if(auth()->user()->cant('create', $consumable))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Show Consumables.');
+
         }
+
         return view('consumable.show', ["consumable" => $consumable]);
     }
 
     public function edit(Consumable $consumable)
     {
-        if (auth()->user()->cant('update', $consumable)) {
-            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'update']));
+        if(auth()->user()->cant('update', $consumable))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Update Consumables.');
+
         }
 
-        if(auth()->user()->role_id == 1){
-            $locations = Location::all();
-        }else{
-            $locations = auth()->user()->locations;
-        }
+        $locations = auth()->user()->locations;
+
         return view('consumable.edit', [
             "consumable" => $consumable,
             "locations" => $locations,
@@ -189,8 +196,10 @@ class ConsumableController extends Controller
 
     public function update(Request $request, Consumable $consumable)
     {
-        if (auth()->user()->cant('update', $consumable)) {
-            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'update']));
+        if(auth()->user()->cant('update', $consumable))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Update Consumables.');
+
         }
 
         $request->validate([
@@ -209,34 +218,39 @@ class ConsumableController extends Controller
             'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
         ))->save();
         $consumable->category()->sync($request->category);
-        session()->flash('success_message', $consumable->name. ' has been updated successfully');
+        session()->flash('success_message', $consumable->name . ' has been updated successfully');
 
-        return redirect(route("consumables.index"));
+        return to_route("consumables.index");
     }
 
     public function destroy(Consumable $consumable)
     {
-        if (auth()->user()->cant('delete', $consumable)) {
-            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'delete']));
+        if(auth()->user()->cant('delete', $consumable))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Delete Consumables.');
+
         }
         $name = $consumable->name;
         $consumable->delete();
         session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
-        return redirect(route('consumables.index'));
+        return to_route('consumables.index');
 
     }
 
     public function export(Consumable $consumable)
     {
-        if (auth()->user()->cant('export', Consumable::class)) {
-            return redirect(route('errors.forbidden', ['area', 'consumables', 'export']));
+        if(auth()->user()->cant('export', Consumable::class))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Export Consumables.');
+
         }
         $consumables = Consumable::all();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new consumableExport($consumables), "/public/csv/consumables-ex-{$date}.csv");
-        $url = asset("storage/csv/consumables-ex-{$date}.csv");
-        return redirect(route('consumables.index'))
+        \Maatwebsite\Excel\Facades\Excel::store(new consumableExport($consumables), "/public/csv/consumables-ex-{$date}.xlsx");
+        $url = asset("storage/csv/consumables-ex-{$date}.xlsx");
+
+        return to_route('consumables.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
 
@@ -245,16 +259,18 @@ class ConsumableController extends Controller
 
     public function import(Request $request)
     {
-        if (auth()->user()->cant('create', Consumable::class)) {
-            return redirect(route('errors.forbidden', ['consumables', $consumable->id, 'import']));
+        if(auth()->user()->cant('create', Consumable::class))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Import Consumables.');
+
         }
 
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());
 
-
-        if(in_array($result[0],$extensions)){
+        if(in_array($result[0], $extensions))
+        {
             $path = $request->file("csv")->getRealPath();
             $import = new consumableImport;
             $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
@@ -300,53 +316,57 @@ class ConsumableController extends Controller
                     if(array_key_exists($error['row'], $errorValues))
                     {
                         $array = $errorValues[$error['row']];
-                    }else{
+                    } else
+                    {
                         $array = [];
                     }
 
-                    foreach($error['errors'] as $e){
+                    foreach($error['errors'] as $e)
+                    {
                         $array[$error['attributes']] = $e;
                     }
                     $errorValues[$error['row']] = $array;
 
                 }
 
-
                 return view('consumable.import-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
-                    "statuses"=>Status::all(),
-                    "suppliers"=>Supplier::all(),
-                    "locations"=>Location::all(),
-                    "manufacturers"=>Manufacturer::all(),
+                    "statuses" => Status::all(),
+                    "suppliers" => Supplier::all(),
+                    "locations" => Location::all(),
+                    "manufacturers" => Manufacturer::all(),
                 ]);
 
             } else
             {
 
-                return redirect('/consumables')->with('success_message', 'All Consumables were added correctly!');
+                return to_route('consumables.index')->with('success_message', 'All Consumables were added correctly!');
 
             }
-        }else{
+        } else
+        {
             session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-            return redirect(route('consumables.index'));
+            return to_route('consumables.index');
         }
-
 
 
     }
 
     public function downloadPDF(Request $request)
     {
-        if (auth()->user()->cant('viewAll', Consumable::class)) {
-            return redirect(route('errors.forbidden', ['area', 'consumables', 'export pdf']));
+        if(auth()->user()->cant('viewAll', Consumable::class))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Download Consumables.');
+
         }
 
         $consumables = array();
         $found = Consumable::withTrashed()->whereIn('id', json_decode($request->consumables))->get();
-        foreach($found as $f){
+        foreach($found as $f)
+        {
             $array = array();
             $array['name'] = $f->name;
             $array['serial_no'] = $f->serial_no ?? 'N/A';
@@ -354,7 +374,7 @@ class ConsumableController extends Controller
             $array['icon'] = $f->location->icon ?? '#666';
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
-            $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $array['purchased_cost'] = '£' . $f->purchased_cost;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty ?? '0';
             $array['status'] = $f->status->name ?? 'N/A';
@@ -365,35 +385,37 @@ class ConsumableController extends Controller
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = 'consumables-'.$date;
+        $path = 'consumables-' . $date;
 
         dispatch(new ConsumablesPdf($consumables, $user, $path))->afterResponse();
         //Create Report
 
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('consumables.index'))
+        return to_route('consumables.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 
     public function downloadShowPDF(Consumable $consumable)
     {
-        if (auth()->user()->cant('export', Consumable::class)) {
-            return redirect(route('errors.forbidden', ['area', 'consumables', 'export pdf']));
+        if(auth()->user()->cant('export', Consumable::class))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Download Consumables.');
+
         }
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = 'consumable-'.$consumable->id.'-'.$date;
+        $path = 'consumable-' . $consumable->id . '-' . $date;
 
         dispatch(new ConsumablePdf($consumable, $user, $path))->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('consumables.show', $consumable->id))
+        return to_route('consumables.show', $consumable->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
@@ -402,46 +424,57 @@ class ConsumableController extends Controller
 
     public function recycleBin()
     {
-        if (auth()->user()->cant('recycleBin', Consumable::class)) {
-            return redirect(route('errors.forbidden', ['area', 'consumables', 'recycle bin']));
+        if(auth()->user()->cant('recycleBin', Consumable::class))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Recycle Consumables.');
+
         }
 
-        if(auth()->user()->role_id == 1){
-            $consumables = Consumable::onlyTrashed()->get();
-        }else{
-            $consumables = auth()->user()->location_consumables()->onlyTrashed();
-        }
+        $consumables = auth()->user()->location_consumables()->onlyTrashed()->paginate();
+
         return view('consumable.bin', compact('consumables'));
     }
 
     public function restore($id)
     {
         $consumable = Consumable::withTrashed()->where('id', $id)->first();
-        if (auth()->user()->cant('delete', $consumable)) {
-            return redirect(route('errors.forbidden', ['consumable', $consumable->id, 'restore']));
+        if(auth()->user()->cant('delete', $consumable))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Restore Consumables.');
+
         }
         $consumable->restore();
-        session()->flash('success_message', "#". $consumable->name . ' has been restored.');
-        return redirect("/consumables");
+        session()->flash('success_message', "#" . $consumable->name . ' has been restored.');
+
+        return to_route("components.index");
     }
 
     public function forceDelete($id)
     {
         $consumable = Consumable::withTrashed()->where('id', $id)->first();
-        if (auth()->user()->cant('delete', $consumable)) {
-            return redirect(route('errors.forbidden', ['consumable', $consumable->id, 'remove']));
+        if(auth()->user()->cant('delete', $consumable))
+        {
+            return ErrorController::forbidden(to_route('consumables.index'), 'Unauthorised to Delete Consumables.');
+
         }
-        $name=$consumable->name;
+        $name = $consumable->name;
         $consumable->forceDelete();
-        session()->flash('danger_message', "Consumable - ". $name . ' was deleted permanently');
-        return redirect("/consumable/bin");
+        session()->flash('danger_message', "Consumable - " . $name . ' was deleted permanently');
+
+        return to_route("consumables.bin");
     }
 
     public function changeStatus(Consumable $consumable, Request $request)
     {
+        if(auth()->user()->cant('update', Status::class))
+        {
+            return ErrorController::forbidden(to_route('accessories.show', $consumable->id), 'Unauthorised to Change Statuses Consumables.');
+        }
         $consumable->status_id = $request->status;
         $consumable->save();
         session()->flash('success_message', $consumable->name . ' has had its status changed successfully');
-        return redirect(route('consumables.show', $consumable->id));
+
+        return to_route('consumables.show', $consumable->id);
     }
+
 }

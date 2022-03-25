@@ -1,12 +1,11 @@
 <!-- Image Modal-->
-<div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog"
-     aria-labelledby="imgModalLabel"
+<div class="modal fade bd-example-modal-lg" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary-blue text-white">
                 <h5 class="modal-title" id="imgModalLabel">Select Image</h5>
-                <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                <button class="close text-white" type="button" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -21,9 +20,9 @@
                 @endforeach
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-blue" data-dismiss="modal" data-toggle="modal"
-                        data-target="#uploadModal">Upload
-                    file
+                <button type="button" class="btn btn-blue" data-bs-dismiss="modal" data-bs-toggle="modal"
+                        data-bs-target="#uploadModal">Upload
+                                                      file
                 </button>
             </div>
         </div>
@@ -38,7 +37,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="imgUploadLabel">Upload Media</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>

@@ -6,8 +6,8 @@
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Asset Value</h6>
                 <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
                 </div>
@@ -24,8 +24,8 @@
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Asset Audits</h6>
                 <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
                 </div>
@@ -66,7 +66,8 @@
                     }
                 @endphp
                 @if($deployable!=0)
-                    <h4 class="small font-weight-bold">Asset Status<span class="float-right">{{round(($deployable / $total) * 100) ?? 0}}%</span></h4>
+                    <h4 class="small font-weight-bold">Asset Status<span class="float-right">{{round(($deployable / $total) * 100) ?? 0}}%</span>
+                    </h4>
                 @endif
                 <div class="progress mb-1">
                     @foreach($statuses as $status)
@@ -79,14 +80,14 @@
                         @endphp
                         <div class="progress-bar" role="progressbar"
                              style="background-color: {{$status->colour}}; width: {{ round($percent)}}%"
-                             aria-valuenow="{{ $status->assets->count() }}" aria-valuemin="0"
-                             aria-valuemax="100" title="{{$status->name}} - {{ $status->assets->count() }}"></div>
+                             aria-valuenow="{{ $status->assets->count() }}" aria-valuemin="0" aria-valuemax="100"
+                             title="{{$status->name}} - {{ $status->assets->count() }}"></div>
                     @endforeach
 
                     @if(!$percent === 0)
                         <div class="progress-bar bg-gray-200" role="progressbar" style="width: auto"
-                             aria-valuenow="{{ round(100 - $percent) }}" aria-valuemin="0"
-                             aria-valuemax="100" title="Unset"></div>
+                             aria-valuenow="{{ round(100 - $percent) }}" aria-valuemin="0" aria-valuemax="100"
+                             title="Unset"></div>
                     @endif
                 </div>
                 <div class="mb-4">
@@ -113,7 +114,8 @@
                 @endforeach
                 @php($completed  = $assets->count() - ($audits_due + $audits_over))
                 @if($completed != 0)
-                    <h4 class="small font-weight-bold">Audit Status <span class="float-right">{{ round(($completed / $assets->count()) * 100)}}% Complete</span></h4>
+                    <h4 class="small font-weight-bold">Audit Status <span class="float-right">{{ round(($completed / $assets->count()) * 100)}}% Complete</span>
+                    </h4>
                 @endif
 
                 @if($audits_due !=0)

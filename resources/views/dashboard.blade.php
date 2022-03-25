@@ -2,10 +2,6 @@
 
 @section('title', 'Dashboard')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
-
 @section('content')
     <!-- session messages -->
     <x-handlers.alerts/>
@@ -13,7 +9,7 @@
     <!-- Page Heading -->
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-        <a href="{{ route('cache.clear')}}"" class="btn btn-grey"><i class="fas fa-sync-alt"></i></a>
+        <a href="{{ route('cache.clear')}}" class="btn btn-grey"><i class="fas fa-sync-alt"></i></a>
     </div>
 
     @if(auth()->user()->role_id != 0)
@@ -30,14 +26,14 @@
             {{-- Expenditure --}}
             <div class="col-12 col-md-6 mb-3 ">
                 <div class="card shadow h-100 p-4 ">
-                    <div id="chart"  class="chart"></div>
+                    <div id="chart" class="chart"></div>
                 </div>
             </div>
             {{-- Depreication Information --}}
 
             <div class="col-12 col-md-6 mb-3 ">
                 <div class="card shadow h-100 p-4">
-                    <div id="dep_chart"  class="chart"></div>
+                    <div id="dep_chart" class="chart"></div>
                 </div>
             </div>
         </div>
@@ -225,7 +221,7 @@
                 .legend(device)
                 .displayAxes(device)
         })
-        
+
         const dep_chart = new Chartisan({
             el: '#chart',
             url: `@chart('total_expenditure')`,

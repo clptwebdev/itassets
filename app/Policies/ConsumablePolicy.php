@@ -6,114 +6,98 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\Consumable;
 use App\Models\User;
 
-class ConsumablePolicy
-{
+class ConsumablePolicy {
+
     use HandlesAuthorization;
 
-    protected $super = [1];
-    protected $admin = [1,2];
-    protected $technician = [1,3];
-    protected $manager = [1,2,3,4];
-    protected $all = [1,2,3,4,5];
+    private $model;
 
-    
+    public function __construct()
+    {
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Consumable')->first();
+    }
+
     public function viewAll(User $user)
     {
-        return in_array($user->role_id, $this->all);
+        return $this->model->view;
     }
 
     public function view(User $user, Consumable $consumable)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->all) && in_array($consumable->location_id, $locations)){
-            return true;
-        }else{
-            return false;
-        }
+        return $this->model->view && in_array($consumable->location_id, $user->locationsArray());
     }
 
     public function create(User $user)
     {
-        return $user->role_id != 0 && $user->role_id <= 3;
+        return $this->model->create;
+
     }
 
     public function update(User $user, Consumable $consumable)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->manager) && in_array($consumable->location_id, $locations)){
-            return true;
-        }else{
-            return false;
-        }
+        return $this->model->update && in_array($consumable->location_id, $user->locationsArray());
+
     }
 
     public function delete(User $user, Consumable $consumable)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->manager) && in_array($consumable->location_id, $locations)){
-            return true;
-        }else{
-            return false;
-        }
+        return $this->model->archive && in_array($consumable->location_id, $user->locationsArray());
+
     }
 
     public function restore(User $user, Consumable $consumable)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->manager) && in_array($consumable->location_id, $locations)){
-            return true;
-        }else{
-            return false;
-        }
+        return $this->model->archive && in_array($consumable->location_id, $user->locationsArray());
+
     }
 
     public function forceDelete(User $user, Consumable $consumable)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->super) && in_array($consumable->location_id, $locations)){
-            return true;
-        }else{
-            return false;
-        }
+        return $this->model->delete && in_array($consumable->location_id, $user->locationsArray());
+
     }
 
     public function recycleBin(User $user)
     {
-        return in_array($user->role_id, $this->manager);
+        return $this->model->archive;
+
     }
 
     public function import(User $user,)
     {
-        return in_array($user->role_id, $this->manager);
+        return $this->model->create;
     }
 
-    public function export(User $user, Consumable $consumable)
+    public function export(User $user)
     {
-        return in_array($user->role_id, $this->all);
+        return $this->model->view;
     }
 
     public function generatePDF(User $user)
     {
-        return in_array($user->role_id, $this->all);
+        return $this->model->view;
+
     }
 
     public function generateConsumablePDF(User $user, Consumable $consumable)
     {
-        $locations = $user->locations->pluck('id')->toArray();
-        if(in_array($user->role_id, $this->all) && in_array($consumable->location_id, $locations)){
-            return true;
-        }else{
-            return false;
-        }
+        return $this->model->view && in_array($consumable->location_id, $user->locationsArray());
     }
 
-    public function transfer(User $user, Consumable $consumable){
-        $locations = $user->locations->pluck('id')->toArray();
-        return in_array($user->role_id, $this->technician) && in_array($consumable->location_id, $locations);
+    public function transfer(User $user, Consumable $consumable)
+    {
+        return $this->model->transfer && in_array($consumable->location_id, $user->locationsArray());
     }
 
-    public function dispose(User $user, Consumable $consumable){
-        $locations = $user->locations->pluck('id')->toArray();
-        return in_array($user->role_id, $this->technician) && in_array($consumable->location_id, $locations);
+    public function request()
+    {
+        return $this->model->request;
     }
+
+    public function dispose(User $user, Consumable $consumable)
+    {
+        return $this->model->delete && in_array($consumable->location_id, $user->locationsArray());
+
+    }
+
 }

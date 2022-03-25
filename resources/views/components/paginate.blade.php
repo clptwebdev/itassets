@@ -6,6 +6,6 @@
         @endif
     </div>
     <div class="text-left text-md-right d-block d-md-inline-block">
-        Showing Assets {{ $model->firstItem() }} to {{ $model->lastItem() }} ({{ $model->total() }} Total Results)
+        Showing Results: {{ $model->firstItem() }} to {{ $model->lastItem() }} ({{ $model->total() }} Total Results)
     </div>
 </div>

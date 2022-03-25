@@ -2,18 +2,35 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Support\Facades\Cache;
 
-class Component extends Model
-{
+class Component extends Model {
+
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id','status_id', 'order_no', 'warranty', 'location_id', 'notes','manufacturer_id', 'photo_id'];
+    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id', 'status_id', 'order_no', 'warranty', 'location_id', 'notes', 'manufacturer_id', 'photo_id'];
+
+    public function name(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
+
+    public function notes(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
 
     public function photo()
     {
@@ -40,60 +57,70 @@ class Component extends Model
         return $this->belongsTo(Status::class);
     }
 
-    public function manufacturer(){
+    public function manufacturer()
+    {
         return $this->belongsTo(Manufacturer::class, 'manufacturer_id');
     }
 
-    public function category(){
+    public function category()
+    {
         return $this->morphToMany(Category::class, 'cattable');
     }
 
-    public function logs(){
+    public function logs()
+    {
         return $this->morphMany(Log::class, 'loggable');
     }
 
-    public function scopeLocationFilter($query, $locations){
+    public function scopeLocationFilter($query, $locations)
+    {
         return $query->whereIn('location_id', $locations);
     }
+
     public function depreciation()
     {
         return $this->belongsTo(Depreciation::class);
     }
 
-    public function scopeStatusFilter($query, $status){
+    public function scopeStatusFilter($query, $status)
+    {
         return $query->whereIn('status_id', $status);
     }
 
-    public function scopeCategoryFilter($query, $category){
+    public function scopeCategoryFilter($query, $category)
+    {
         $pivot = $this->category()->getTable();
 
-        $query->whereHas('category', function ($q) use ($category, $pivot) {
+        $query->whereHas('category', function($q) use ($category, $pivot) {
             $q->whereIn("{$pivot}.category_id", $category);
         });
     }
 
-    public function scopeCostFilter($query, $amount){
-        $amount = str_replace('£', '', $amount);
-        $amount = explode(' - ', $amount);
-        $query->whereBetween('purchased_cost', [intval($amount[0]), intval($amount[1])]);
+    public function scopeCostFilter($query, $min, $max)
+    {
+        $query->whereBetween('purchased_cost', [$min, $max]);
     }
 
-    public function scopePurchaseFilter($query, $start, $end){
+    public function scopePurchaseFilter($query, $start, $end)
+    {
         $query->whereBetween('purchased_date', [$start, $end]);
     }
 
-    public function scopeSearchFilter($query, $search){
+    public function scopeSearchFilter($query, $search)
+    {
         return $query->where('components.name', 'LIKE', "%{$search}%")
             ->orWhere('components.serial_no', 'LIKE', "%{$search}%");
     }
 
-    public static function updateCache(){
+    public static function updateCache()
+    {
         //The Variables holding the total of Accessories available to the User
         $components_total = 0;
         $components_cost_total = 0;
         $components_deployed_total = 0;
 
-        foreach(Location::all() as $location){
+        foreach(Location::all() as $location)
+        {
             $id = $location->id;
 
             //Variables to Hold the Accessories for that Location
@@ -101,45 +128,51 @@ class Component extends Model
             $components_deployed = 0;
 
             $components = Component::whereLocationId($id)
-            ->select('purchased_cost', 'status_id')
-            ->get()
-            ->map(function($item, $key) {
-                $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
-                return $item;
-            });
+                ->select('purchased_cost', 'status_id')
+                ->get()
+                ->map(function($item, $key) {
+                    $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+
+                    return $item;
+                });
 
             $components_loc_total = $components->count();
-            Cache::rememberForever("components-L{$id}-total", function () use($components_loc_total){
+            Cache::rememberForever("components-L{$id}-total", function() use ($components_loc_total) {
                 return $components_loc_total;
             });
 
             $components_total += $components_loc_total;
 
-            foreach($components as $component){
+            foreach($components as $component)
+            {
                 $components_cost += $component->purchased_cost;
-                if($component->deployable != 1){ $components_deployed++;}
+                if($component->deployable != 1)
+                {
+                    $components_deployed++;
+                }
             }
 
             Cache::set("components-L{$id}-cost", round($components_cost));
             Cache::set("components-L{$id}-deploy", round($components_deployed));
         }
 
-         /* Components Calcualtions */
-            
-        Cache::rememberForever('components_total', function() use($components_total){
+        /* Components Calcualtions */
+
+        Cache::rememberForever('components_total', function() use ($components_total) {
             return round($components_total);
         });
 
-        Cache::rememberForever('components_cost', function() use($components_cost_total){
+        Cache::rememberForever('components_cost', function() use ($components_cost_total) {
             return round($components_cost_total);
         });
 
-        Cache::rememberForever('components_deploy', function() use($components_deployed_total){
+        Cache::rememberForever('components_deploy', function() use ($components_deployed_total) {
             return round($components_deployed_total);
         });
     }
 
-    public static function updateLocationCache(Location $location){ 
+    public static function updateLocationCache(Location $location)
+    {
         $id = $location->id;
 
         //Variables to Hold the Accessories for that Location
@@ -147,43 +180,50 @@ class Component extends Model
         $components_deployed = 0;
 
         $components = Component::whereLocationId($id)
-        ->select('purchased_cost', 'status_id')
-        ->get()
-        ->map(function($item, $key) {
-            $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
-            return $item;
-        });
+            ->select('purchased_cost', 'status_id')
+            ->get()
+            ->map(function($item, $key) {
+                $item->status()->exists() ? $item['deployable'] = $item->status->deployable : $item['deployable'] = 0;
+
+                return $item;
+            });
 
         $components_loc_total = $components->count();
-        Cache::rememberForever("components-L{$id}-total", function () use($components_loc_total){
+        Cache::rememberForever("components-L{$id}-total", function() use ($components_loc_total) {
             return $components_loc_total;
         });
 
-        foreach($components as $component){
+        foreach($components as $component)
+        {
             $components_cost += $component->purchased_cost;
-            if($component->deployable != 1){ $components_deployed++;}
+            if($component->deployable != 1)
+            {
+                $components_deployed++;
+            }
         }
 
         Cache::set("components-L{$id}-cost", round($components_cost));
         Cache::set("components-L{$id}-deploy", round($components_deployed));
     }
 
-    public static function getCache($ids){
-         //The Variables holding the total of Accessories available to the User
-         $components_total = 0;
-         $components_cost_total = 0;
-         $components_deployed_total = 0;
- 
+    public static function getCache($ids)
+    {
+        //The Variables holding the total of Accessories available to the User
+        $components_total = 0;
+        $components_cost_total = 0;
+        $components_deployed_total = 0;
 
         $locations = Location::find($ids);
 
-        foreach($locations as $location){
+        foreach($locations as $location)
+        {
             $id = $location->id;
             /* The Cache Values for the Location */
-            if( !Cache::has("components-L{$id}-total") && 
-                !Cache::has("components-L{$id}-cost") &&
-                !Cache::has("components-L{$id}-deploy")
-            ){
+            if(! Cache::has("components-L{$id}-total") &&
+                ! Cache::has("components-L{$id}-cost") &&
+                ! Cache::has("components-L{$id}-deploy")
+            )
+            {
                 Component::updateLocationCache($location);
             }
 
@@ -192,30 +232,31 @@ class Component extends Model
             $components_deployed_total += Cache::get("components-L{$id}-deploy");
         }
 
-         /* Components Calcualtions */
-            
-         Cache::rememberForever('components_total', function() use($components_total){
+        /* Components Calcualtions */
+
+        Cache::rememberForever('components_total', function() use ($components_total) {
             return round($components_total);
         });
 
-        Cache::rememberForever('components_cost', function() use($components_cost_total){
+        Cache::rememberForever('components_cost', function() use ($components_cost_total) {
             return round($components_cost_total);
         });
 
-        Cache::rememberForever('components_deploy', function() use($components_deployed_total){
+        Cache::rememberForever('components_deploy', function() use ($components_deployed_total) {
             return round($components_deployed_total);
         });
     }
 
-    public static function expenditure($year, $locations){
+    public static function expenditure($year, $locations)
+    {
         $expenditure = 0;
         $components = Component::whereIn('location_id', $locations)->whereYear('purchased_date', $year)->select('purchased_cost', 'location_id')->get();
-        foreach($components as $component){
+        foreach($components as $component)
+        {
             $expenditure += $component->purchased_cost;
         }
+
         return $expenditure;
     }
-
-    
 
 }

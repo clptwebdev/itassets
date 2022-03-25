@@ -7,6 +7,7 @@ use App\Exports\AssetExport;
 use App\Exports\ComponentsExport;
 use App\Exports\consumableExport;
 use App\Exports\miscellaneousExport;
+use App\Jobs\RoleBoot;
 use App\Models\Accessory;
 use App\Models\Asset;
 use App\Models\AssetModel;
@@ -14,6 +15,7 @@ use App\Models\Component;
 use App\Models\Consumable;
 use App\Models\Location;
 use App\Models\Miscellanea;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -23,30 +25,19 @@ class SettingsController extends Controller {
 
     public function index()
     {
-        if(auth()->user()->role_id == 1)
-        {
-            $users = User::all();
-            $assetModel = AssetModel::all();
-            $locations = \App\Models\Location::with('asset', 'accessory', 'components', 'consumable', 'miscellanea', 'photo')->get();
-            $assets = \App\Models\Asset::with('location', 'model', 'status')->get();
-            $accessories = \App\Models\Accessory::all();
-            $components = \App\Models\Component::all();
-            $miscellaneous = \App\Models\Miscellanea::all();
-            $statuses = \App\Models\Status::all();
-            $categories = \App\Models\Category::with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->get();
-            Cache::put('name', $categories, 60);
-        } else
-        {
-            $categories = \App\Models\Category::with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->get();
-            $users = User::all();
-            $assetModel = AssetModel::all();
-            $statuses = \App\Models\Status::all();
-            $assets = Asset::locationFilter(auth()->user()->locations->get());
-            $components = Component::locationFilter(auth()->user()->locations->get());
-            $accessories = Accessory::locationFilter(auth()->user()->locations->get());
-            $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->get());
-            $locations = Location::locationFilter(auth()->user()->locations->get());
-        }
+
+        $categories = \App\Models\Category::with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->get();
+        $users = User::all();
+        $assetModel = AssetModel::all();
+        $statuses = \App\Models\Status::all();
+        $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'));
+        $components = Component::locationFilter(auth()->user()->locations->pluck('id'));
+        $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'));
+        $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'));
+        $locations = Location::all();
+        $models = $this->getModels();
+        unset($models[array_search('Permission', $models)]);
+        $roles = Role::all();
 
         return view('settings.view', [
             "users" => $users,
@@ -58,6 +49,8 @@ class SettingsController extends Controller {
             "categories" => $categories,
             "statuses" => $statuses,
             "assetModel" => $assetModel,
+            "models" => $models,
+            "roles" => $roles,
         ]);
     }
 
@@ -80,7 +73,7 @@ class SettingsController extends Controller {
 
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Accessory', 'export']));
+            return to_route('errors.forbidden', ['area', 'Accessory', 'export']);
         }
         if(! $accessory->isEmpty())
         {
@@ -88,12 +81,12 @@ class SettingsController extends Controller {
             \Maatwebsite\Excel\Facades\Excel::store(new accessoryExport($accessory), "/public/csv/accessories-ex-{$date}.csv");
             $url = asset("storage/csv/accessories-ex-{$date}.csv");
 
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
                 ->withInput();
         } else
         {
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('danger_message', "There are no Assets found with this Filter! Please alter your query and try again.");
 
         }
@@ -122,7 +115,7 @@ class SettingsController extends Controller {
 
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Asset', 'export']));
+            return to_route('errors.forbidden', ['area', 'Asset', 'export']);
         }
 
         if(! $asset->isEmpty())
@@ -131,12 +124,12 @@ class SettingsController extends Controller {
             \Maatwebsite\Excel\Facades\Excel::store(new AssetExport($asset), "/public/csv/assets-ex-{$date}.csv");
             $url = asset("storage/csv/assets-ex-{$date}.csv");
 
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
                 ->withInput();
         } else
         {
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('danger_message', "There are no Assets found with this Filter! Please alter your query and try again.");
 
         }
@@ -161,7 +154,7 @@ class SettingsController extends Controller {
 
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'Component', 'export']));
+            return to_route('errors.forbidden', ['area', 'Component', 'export']);
         }
         if(! $component->isEmpty())
         {
@@ -169,12 +162,12 @@ class SettingsController extends Controller {
             \Maatwebsite\Excel\Facades\Excel::store(new ComponentsExport($component), "/public/csv/components-ex-{$date}.csv");
             $url = asset("storage/csv/components-ex-{$date}.csv");
 
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
                 ->withInput();
         } else
         {
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('danger_message', "There are no Assets found with this Filter! Please alter your query and try again.");
 
         }
@@ -199,7 +192,7 @@ class SettingsController extends Controller {
 
         if(auth()->user()->cant('viewAny', Miscellanea::class))
         {
-            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export']));
+            return to_route('errors.forbidden', ['area', 'miscellaneous', 'export']);
         }
         if(! $miscellanea->isEmpty())
         {
@@ -207,15 +200,46 @@ class SettingsController extends Controller {
             \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport($miscellanea), "/public/csv/miscellaneous-ex-{$date}.csv");
             $url = asset("storage/csv/miscellaneous-ex-{$date}.csv");
 
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
                 ->withInput();
         } else
         {
-            return redirect(route('settings.view'))
+            return to_route('settings.view')
                 ->with('danger_message', "There are no Assets found with this Filter! Please alter your query and try again.");
 
         }
+    }
+
+    public function getModels()
+    {
+        $path = app_path() . "/Models";
+        $out = [];
+        $results = scandir($path);
+        foreach($results as $result)
+        {
+            if($result === '.' or $result === '..') continue;
+            $filename = $path . '/' . $result;
+            if(is_dir($filename))
+            {
+                $out = array_merge($out, getModels($filename));
+            } else
+            {
+                $out[] = substr($filename, 0, -4);
+            }
+        }
+        $models = str_replace($path . '/', '', $out);
+
+        return $models;
+
+    }
+
+    public function roleBoot()
+    {
+        RoleBoot::dispatch()->afterResponse();
+
+        return to_route('settings.view')
+            ->with('success_message', "Your Roles have been Synced please allow a few moments for this to take effect");
     }
 
 }

@@ -1,27 +1,30 @@
+const xhttp = new XMLHttpRequest();
+const fields = document.querySelector('#additional-fields');
+
 function getFields(value) {
-    $.ajax({
-        url: `/assets/${value}/model`,
-        success: function (data) {
-            document.getElementById("additional-fields").innerHTML = data;
-            document.getElementById("additional-fields").style.display =
-                "block";
-        },
-        error: function () {
-            document.getElementById("additional-fields").innerHTML = "";
-            document.getElementById("additional-fields").style.display = "none";
-        },
-    });
+    xhttp.onload = function () {
+        fields.innerHTML = xhttp.responseText;
+        fields.style.display = "block";
+    }
+    xhttp.onerror = function () {
+        fields.innerHTML = "";
+        fields.style.display = "none";
+    }
+
+    xhttp.open("GET", `/assets/${value}/model`);
+    xhttp.send();
 }
 
 //Search Categories
 const categorySearch = document.querySelector("#findCategory");
 const categoryResults = document.querySelector("#categoryResults");
 const categorySelect = document.querySelector("#categorySelect");
+const categoryIDs = document.querySelector('#category');
 
 categorySearch.addEventListener("input", function (e) {
     let value = e.target.value;
     if (value.length > 2) {
-        const xhttp = new XMLHttpRequest();
+
 
         xhttp.onload = function () {
             categoryResults.innerHTML = xhttp.responseText;
@@ -71,10 +74,10 @@ function initItems() {
                     } else {
                         cats.value = id;
                     }
-                    let html = `<div id="cat${id}" class="p-2 col-4">
-                                        <div class="border border-gray shadow bg-white p-2 rounded d-flex justify-content-between align-items-center">
-                                            <span>${name}</span> 
-                                            <i class="fas fa-times ml-4 text-danger pointer" data-name="${id}" onclick="javascript:removeCategory(this);"></i>
+                    let html = `<div id='cat${id}' class='p-2 col-4'>
+                                        <div class='border border-gray shadow bg-white p-2 rounded d-flex justify-content-between align-items-center'>
+                                            <span>${name}</span>
+                                            <i class='fas fa-times ml-4 text-danger pointer' data-name='${id}' onclick='javascript:removeCategory(this);'></i>
                                         </div>
                                     </div>`;
                     elements.insertAdjacentHTML("beforeend", html);
@@ -106,6 +109,7 @@ function removeCategory(element) {
 //Search for the Model
 const modelSearch = document.querySelector("#findModel");
 const modelResults = document.querySelector("#modelResults");
+const modelID = document.querySelector("#asset_model");
 
 modelSearch.addEventListener("input", function (e) {
     let value = e.target.value;
@@ -162,9 +166,19 @@ function getInfo(id) {
     xhttp.send(`id=${id}`);
 }
 
+//If there is an id in the field get try and retrieve the model - this helps when incorrect informationhas been entered
+//And you would like to access the - old('NAME) variables
+
+if(modelID.value != ''){
+    getInfo(modelID.value)
+
+}
+
+
 //Search for the Supplier
 const supplierSearch = document.querySelector("#findSupplier");
 const supplierResults = document.querySelector("#supplierResults");
+const supplierID = document.querySelector('#supplier_id');
 
 supplierSearch.addEventListener("input", function (e) {
     let value = e.target.value;
@@ -220,9 +234,18 @@ function getSupplierInfo(id) {
     xhttp.send(`id=${id}`);
 }
 
+//If there is an id in the field get try and retrieve the supplier - this helps when incorrect informationhas been entered
+//And you would like to access the - old('NAME) variables
+
+if(supplierID.value != ''){
+    getSupplierInfo(supplierID.value)
+
+}
+
 //Search for the Location
 const locationSearch = document.querySelector("#findLocation");
 const locationResults = document.querySelector("#locationResults");
+const locationID = document.querySelector('#location_id');
 
 locationSearch.addEventListener("input", function (e) {
     let value = e.target.value;
@@ -276,6 +299,14 @@ function getLocationInfo(id) {
     xhttp.open("POST", "/location/preview/");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(`id=${id}`);
+}
+
+//If there is an id in the field get try and retrieve the supplier - this helps when incorrect informationhas been entered
+//And you would like to access the - old('NAME) variables
+
+if(locationID.value != ''){
+    getLocationInfo(locationID.value)
+
 }
 
 const button = document.querySelector("#submitButton");

@@ -5,9 +5,12 @@ namespace App\Exports;
 use App\Models\log;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class LogsExport implements FromArray, WithHeadings {
+class LogsExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents {
 
     public function headings(): array
     {
@@ -38,6 +41,17 @@ class LogsExport implements FromArray, WithHeadings {
         }
 
         return $object;
+    }
+
+    //adds styles
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $cellRange = 'A1:E1'; // All headers
+                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14)->setBold(1);
+            },
+        ];
     }
 
 }

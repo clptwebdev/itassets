@@ -1,5 +1,4 @@
-@extends('layouts.app')
-@section('title', 'View Manufacturer Import errors')
+@extends('layouts.app')@section('title', 'View Manufacturer Import errors')
 
 @section('title', 'Import Errors')
 
@@ -13,12 +12,15 @@
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import
-            Failures</h1>
+                                          Failures</h1>
 
         <div>
-            <a href="{{route("manufacturers.index")}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                    class="fas fa-chevron-left fa-sm text-white-50">
-                </i> Back to Manufacturers</a>
+            @can('viewAny' , \App\Models\Manufacturer::class)
+                <a href="{{route("manufacturers.index")}}"
+                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                        class="fas fa-chevron-left fa-sm text-white-50">
+                    </i> Back to Manufacturers</a>
+            @endcan
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
             <button onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-green shadow-sm">
@@ -31,7 +33,7 @@
         <div class="col-md-12">
             <div id="summary">
                 <p class="collapse" id="collapseSummary">{{$errorRows}}</p>
-                <a class="collapsed" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+                <a class="collapsed" data-bs-toggle="collapse" href="#collapseSummary" aria-expanded="false"
                    aria-controls="collapseSummary"></a>
             </div>
         </div>
@@ -47,8 +49,8 @@
 
     <section>
         <p class="mb-4">Below are the different Import Failures of all the different assets stored in the management
-            system. Each has
-            displays the amount of different assets that are assigned the category.</p>
+                        system. Each has
+                        displays the amount of different assets that are assigned the category.</p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -80,40 +82,42 @@
                                 <td>
                                     <span id="name{{$line}}" class="tooltip-danger">
                                     <input type="text"
-                                           class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>
-                                               "
-                                           name="name[]"
-                                           id="name" value="{{ $valueArray[$row]['name'] }}"
-                                           placeholder="This Row is Empty Please Fill!" required data-container='#name{{$line}}' data-placement='top'
-                                           @if(array_key_exists('name', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
+                                           class="form-control <?php if (in_array('name', $errors)) {?>border-danger<?php }?>"
+                                           name="name[]" id="name" value="{{ $valueArray[$row]['name'] }}"
+                                           placeholder="This Row is Empty Please Fill!" required
+                                           data-bs-container='#name{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('name', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
                                     </span>
                                 <td>
                                     <span id="supporturl{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="form-control <?php if (in_array('supporturl', $errors)) {?>border-danger<?php }?>"
-                                           name="supportUrl[]"
-                                           id="supportUrl" value="{{ $valueArray[$row]['supporturl'] }}" data-container='#supporturl{{$line}}' data-placement='top'
-                                           @if(array_key_exists('supporturl', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supporturl']}'" !!}@endif>
+                                           name="supportUrl[]" id="supportUrl"
+                                           value="{{ $valueArray[$row]['supporturl'] }}"
+                                           data-bs-container='#supporturl{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('supporturl', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['supporturl']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
                                     <span id="supportphone{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="form-control <?php if (in_array('supportphone', $errors)) {?>border-danger<?php }?>"
-                                           name="supportPhone[]"
-                                           id="supportPhone" placeholder="This Row is Empty Please Fill!"
-                                           value="{{ $valueArray[$row]['supportphone'] }}" required data-container='#supportphone{{$line}}' data-placement='top'
-                                           @if(array_key_exists('supportphone', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supportphone']}'" !!}@endif>
+                                           name="supportPhone[]" id="supportPhone"
+                                           placeholder="This Row is Empty Please Fill!"
+                                           value="{{ $valueArray[$row]['supportphone'] }}" required
+                                           data-bs-container='#supportphone{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('supportphone', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['supportphone']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>
                                     <span id="supportemail{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="form-control <?php if (in_array('supportemail', $errors)) {?>border-danger<?php }?>"
-                                           name="supportEmail[]"
-                                           id="supportEmail" placeholder="This Row is Empty Please Fill!"
-                                           value="{{ $valueArray[$row]['supportemail'] }}" required data-container='#supportemail{{$line}}' data-placement='top'
-                                           @if(array_key_exists('supportemail', $errorValues[$row])) {!! "data-toggle='tooltip' title='{$errorValues[$row]['supportemail']}'" !!}@endif>
+                                           name="supportEmail[]" id="supportEmail"
+                                           placeholder="This Row is Empty Please Fill!"
+                                           value="{{ $valueArray[$row]['supportemail'] }}" required
+                                           data-bs-container='#supportemail{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('supportemail', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['supportemail']}'" !!}@endif>
                                     </span>
                                 </td>
                             </tr>
@@ -134,7 +138,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="importManufacturerModalLabel">Importing Data Help</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -147,7 +151,9 @@
                                 re-import your file!
                             </li>
                             <li>Struggling to Pass this stage are all your data fields in the correct format?</li>
-                            <li>Need More help? Click <a href="{{route("documentation.index").'#collapseSevenImport'}}">here</a> to be redirected to the Documentation on Importing!</li>
+                            <li>Need More help? Click <a href="{{route("documentation.index").'#collapseSevenImport'}}">here</a>
+                                to be redirected to the Documentation on Importing!
+                            </li>
 
                         </ol>
                     </div>
@@ -157,7 +163,7 @@
                            target="_blank" class="btn btn-info">
                             Download Import Template
                         </a>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
                     @csrf
                 </form>
             </div>
@@ -169,72 +175,90 @@
 
     <script type="text/javascript">
 
-        $('#import').click(function () {
-            $('#manufacturer-id-test').val($(this).data('id'))
-            //showModal
-            $('#importManufacturerModal').modal('show')
 
-        })
+        const importModal = new bootstrap.Modal(document.getElementById('importManufacturerModal'));
+        const importHelpBtn = document.querySelector('#import');
 
+        importHelpBtn.addEventListener('click', function () {
+            importModal.show();
+        });
+
+        function enableToolTips() {
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        }
+
+        enableToolTips();
+
+
+        //validation
         function checkErrors(obj) {
 
-            var token = $("[name='_token']").val();
-            var data = new FormData();
+            const importControl = document.querySelectorAll('.import-control');
+
+            const errorMessage = document.querySelector('.alert.alert-danger');
+
+            const token = document.querySelector("[name='_token']").value;
+            const data = new FormData();
             data.append('_token', token);
 
             //Names
-            var inputs = $("input[name='name[]']").get();
+            const inputs = document.querySelectorAll("input[name='name[]']");
             inputs.forEach(element => {
                 data.append('name[]', element.value);
             });
-
             //Url
-            var urlInputs = $("input[name='supportUrl[]']").get();
+            const urlInputs = document.querySelectorAll("input[name='supportUrl[]']");
             urlInputs.forEach(element => {
                 data.append('supportUrl[]', element.value);
             });
-
             //Phone
-            var telInputs = $("input[name='supportPhone[]']").get();
-            telInputs.forEach(element => {
+            const phoneInputs = document.querySelectorAll("input[name='supportPhone[]']");
+            phoneInputs.forEach(element => {
                 data.append('supportPhone[]', element.value);
             });
-
             //Email
-            var emInputs = $("input[name='supportEmail[]']").get();
-            emInputs.forEach(element => {
+            const emailInputs = document.querySelectorAll("input[name='supportEmail[]']");
+            emailInputs.forEach(element => {
                 data.append('supportEmail[]', element.value);
             });
 
-            $.ajax({
-                url: '/manufacturers/create/ajax',
-                type: 'POST',
-                data: data,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response === 'Success') {
-                        window.location.href = '/manufacturers';
-                    } else {
-                        $('.form-control').removeClass('border-danger');
-                        $('.form-control').tooltip('dispose');
-                        $('input').removeClass('border-danger');
-                        var i = 0;
-                        Object.entries(response).forEach(entry => {
-                            const [key, value] = entry;
-                            res = key.split('.');
-                            const error = value.toString().replace(key, res[0]);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).addClass('border-danger');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('data-toggle', 'tooltip');
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).attr('title', error);
-                            $(`[name='${res[0]}[]']:eq(${res[1]})`).tooltip();
-                            i++;
-                        });
-                        $('.alert.alert-danger').html(`There were ${i} errors in the following rows`);
-                    }
-                },
-            });
+            const xhr = new XMLHttpRequest()
+
+            xhr.onload = function () {
+                if (xhr.responseText === 'Success') {
+                    window.location.href = '/manufacturers';
+                } else {
+                    importControl.forEach((item) => {
+                        item.classList.remove('border-bottom', 'border-danger');
+                    });
+
+                    let i = 0;
+                    Object.entries(JSON.parse(xhr.responseText)).forEach(entry => {
+                        console.log(entry);
+                        const [key, value] = entry;
+                        res = key.split('.');
+                        const error = value.toString().replace(key, res[0]);
+                        console.log(error);
+                        console.log(res[1]);
+                        let elements = document.querySelectorAll(`[name='${res[0]}[]']`);
+                        console.log(elements[0]);
+                        let num = parseInt(res[1]);
+                        elements[num].classList.add('border-bottom', 'border-danger');
+                        elements[num].setAttribute('data-bs-toggle', 'tooltip');
+                        elements[num].setAttribute('data-title', error);
+                        i++;
+                        enableToolTips();
+                    });
+
+                    errorMessage.innerHTML = `There were ${i} errors in the following rows`;
+                }
+            };
+
+            xhr.open("POST", "/manufacturers/create/ajax");
+            xhr.send(data);
         }
     </script>
 

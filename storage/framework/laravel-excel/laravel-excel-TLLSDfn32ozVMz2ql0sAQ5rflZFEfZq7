@@ -1,0 +1,34 @@
+name,status_id,supplier_id,manufacturer_id,location_id,order_no,serial_no,purchased_cost,purchased_date,warranty,notes
+,Deployed,,,Broadmeadow Special School,,E71829F6J513692,£230.00,07/10/2016,12,
+,Deployed,,,Broadmeadow Special School,,64F9370,£803.00,01/08/2017,12,Card printer
+,Deployed,,,Broadmeadow Special School,,AEWW00500,208,01/08/2017,12,Visitor Printer
+,Deployed, Elementary Technology ,,Broadmeadow Special School,,K012JW32U0278,"£2,295.00",01/02/2018,60, Elementary Technology 
+,Deployed, Elementary Technology ,,Broadmeadow Special School,,K012JW32U0283,"£2,295.00",01/02/2018,60, Elementary Technology 
+,Deployed, Elementary Technology ,,Broadmeadow Special School,,F100JW35F0221,"£2,295.00",01/05/2018,60, Elementary Technology 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D07981,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D07CCA,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D0773E,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D076C1,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D07802,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D07654,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D07C02,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A208CA0AF,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D0836C,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D08025,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D07BD5,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,788A20D07837,£108.00,01/02/2018,12, Paid for by CLPT 
+,Deployed,Elementary Technology,,Broadmeadow Special School,,F101KW02F0061,"£2,050.00",01/04/2019,60, Elementary Technology 
+,Deployed,Elementary Technology,,Broadmeadow Special School,,,"£1,546.00",04/01/2020,60, Elementary Technology 
+,Deployed,PWD,,Broadmeadow Special School,,4.02E+12,"£1,445.00",01/08/2021,60, PWD 
+,Deployed,PWD,,Broadmeadow Special School,,4.02E+13,"£1,445.00",01/08/2021,60, PWD 
+,Deployed,PWD,,Broadmeadow Special School,,4.02E+13,"£1,445.00",01/08/2021,60, PWD 
+,Deployed,PWD,,Broadmeadow Special School,,BDHX0Z1MB74604,"£1,299.00",01/11/2021,60, PWD 
+,Deployed,PWD,,Broadmeadow Special School,,BDHX0Z1MB74467,"£1,299.00",01/11/2021,60, PWD 
+,Deployed,,,Broadmeadow Special School,,SG319IR06W,,,12,
+,Deployed,,,Broadmeadow Special School,,,,,12,
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,AS2121161519,£585.80,12/10/2021,12, UPS Battery 
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,68:d7:9a:d3:18:8a,£104.42,01/07/2021,12,
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,68:d7:9a:d3:18:c8,£104.42,01/07/2021,12,
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,68:d7:9a:d3:11:5d,£104.42,01/07/2021,12,
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,68:d7:9a:d3:18:c7,£104.42,01/07/2021,12,
+,Deployed,BroadbandBuyer,,Broadmeadow Special School,,68:d7:9a:d3:18:81,£104.42,01/07/2021,12,

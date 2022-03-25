@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Asset;
+use App\Models\Accessory;
+use App\Models\Property;
 use App\Models\Archive;
 use App\Models\Requests;
 use App\Models\Transfer;
@@ -27,6 +29,7 @@ class RequestsController extends Controller {
 
     public function access()
     {
+
         $requests = Requests::create([
             'type' => 'access',
             'notes' => 'Requesting Access to the Apollo Asset Management System at CLPT',
@@ -35,7 +38,7 @@ class RequestsController extends Controller {
             'status' => 0,
         ]);
 
-        //Notify by email
+        //Notify by email (change for new system elliot)
         $admins = User::superAdmin()->get();
         foreach($admins as $admin)
         {
@@ -59,11 +62,10 @@ class RequestsController extends Controller {
             'date' => $request->transfer_date,
             'status' => 0,
         ]);
-
-        if(auth()->user()->role_id == 1)
+        $m = "\\App\\Models\\" . ucfirst($requests->model_type);
+        $model = $m::find($requests->model_id);
+        if(auth()->user()->can('bypass_transfer', $model))
         {
-            $m = "\\App\\Models\\" . ucfirst($requests->model_type);
-            $model = $m::find($requests->model_id);
             $model->update(['location_id' => $requests->location_to]);
             if($request->asset_tag)
             {
@@ -71,10 +73,18 @@ class RequestsController extends Controller {
             }
             if($requests->model_type == 'asset' && $model->model()->exists())
             {
-                $years = $model->model->depreciation->years;
+                if($model->model->depreciation()->exists()){
+                    $years = $model->model->depreciation->years;
+                }else{
+                    $years = 0;
+                }
             } else if($model->depreciation_id != 0)
             {
-                $years = $model->depreciation->years;
+                if($model->depreciation()->exists()){
+                    $years = $model->depreciation->years;
+                }else{
+                    $years = 0;
+                }
             } else
             {
                 $years = 0;
@@ -121,7 +131,10 @@ class RequestsController extends Controller {
 
     public function disposal(Request $request)
     {
-
+        $request->validate([
+            'disposed_date' => 'date',
+        ]);
+        
         $requests = Requests::create([
             'type' => 'disposal',
             'model_type' => $request->model_type,
@@ -129,20 +142,27 @@ class RequestsController extends Controller {
             'notes' => $request->notes,
             'date' => $request->disposed_date,
             'user_id' => auth()->user()->id,
+
             'status' => 0,
         ]);
-
-        if(auth()->user()->role_id == 1)
+        $m = "\\App\\Models\\" . ucfirst($requests->model_type);
+        $model = $m::find($requests->model_id);
+        if(auth()->user()->can('bypass_transfer', $model))
         {
-            $m = "\\App\\Models\\" . ucfirst($requests->model_type);
-            $model = $m::find($request->model_id);
-
             if($request->model_type == 'asset' && $model->model()->exists())
             {
-                $years = $model->model->depreciation->years;
+                if($model->model->depreciation()->exists()){
+                    $years = $model->model->depreciation->years;
+                }else{
+                    $years = 0;
+                }
             } else if($model->depreciation_id != 0)
             {
-                $years = $model->depreciation->years;
+                if($model->depreciation()->exists()){
+                    $years = $model->depreciation->years;
+                }else{
+                    $years = 0;
+                }
             } else
             {
                 $years = 0;
@@ -211,7 +231,7 @@ class RequestsController extends Controller {
         } else
         {
             //Notify by email
-            $admins = User::superAdmin()->get();
+            $admins = User::itManager();
             foreach($admins as $admin)
             {
                 Mail::to($admin->email)->send(new \App\Mail\DisposeRequest(auth()->user(), $admin, $requests->model_type, $requests->model_id, \Carbon\Carbon::parse($requests->date)->format('d-m-Y'), $requests->notes));
@@ -254,10 +274,18 @@ class RequestsController extends Controller {
 
                     if($requests->model_type == 'asset' && $model->model()->exists())
                     {
-                        $years = $model->model->depreciation->years;
+                        if($model->model->depreciation->exists()){
+                            $years = $model->model->depreciation->years;
+                        }else{
+                            $years = 0;
+                        }
                     } else if($model->depreciation_id != 0)
                     {
-                        $years = $model->depreciation->years;
+                        if($model->depreciation()->exists()){
+                            $years = $model->depreciation->years;
+                        }else{
+                            $years = 0;
+                        }
                     } else
                     {
                         $years = 0;
@@ -346,12 +374,12 @@ class RequestsController extends Controller {
             }
             $admin = auth()->user();
             $title = ucfirst($requests->type) . " Request Approved";
-            $message = "Your request to {$requests->type} the {$requests->model_type} was denied by {$admin->name}";
+            $message = "Your request to {$requests->type} the {$requests->model_type} was approved by {$admin->name}";
             Mail::to($user->email)->send(new \App\Mail\ApproveRequest($user, 'Approved', $requests->type, $title, $message));
 
             return back()->with('success_message', "The {$requests->type} Request has been approved and an email has been sent to {$user->name} about the decision");
-        } else if($status == 2)
-        {
+        }else if($status == 2){
+
             $requests->update(['status' => 2, 'super_id' => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
             $m = "\\App\\Models\\" . ucfirst($requests->model_type);
             $model = $m::find($requests->model_id);

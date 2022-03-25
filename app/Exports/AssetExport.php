@@ -9,13 +9,17 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class AssetExport implements FromArray, WithHeadings {
+class AssetExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents {
 
     use Exportable;
 
     private $assets;
+
     public function __construct($assets)
     {
         $this->assets = $assets;
@@ -37,17 +41,18 @@ class AssetExport implements FromArray, WithHeadings {
             , "warranty"
             , "location_id"
             , "user_id"
-            , "audit_date"
+            , "audit_date",
         ];
     }
 
     public function array(): array
     {
-        $object =  [];
-        foreach($this->assets as $asset){
-            $array =  [];
-            $array['asset_tag'] = $asset->asset_tag ;
-            $array['name'] = $asset->name ;
+        $object = [];
+        foreach($this->assets as $asset)
+        {
+            $array = [];
+            $array['asset_tag'] = $asset->asset_tag;
+            $array['name'] = $asset->name;
             $array['serial_no'] = $asset->serial_no ?? 'Unknown';
             $array['asset_model'] = $asset->model->name ?? 'Unknown';
             $array['status_id'] = $asset->status->name ?? 'Unknown';
@@ -68,6 +73,15 @@ class AssetExport implements FromArray, WithHeadings {
 
     }
 
-
+    //adds styles
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $cellRange = 'A1:N1'; // All headers
+                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14)->setBold(1);
+            },
+        ];
+    }
 
 }

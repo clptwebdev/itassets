@@ -21,65 +21,70 @@
 
 <body id="page-top">
 
-    <!-- Page Wrapper -->
-    <div id="wrapper">
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-        <x-admin.sidebar />
+    <x-admin.sidebar/>
 
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
 
-            <!-- Main Content -->
-            <div id="content">
-                <x-admin.topbar></x-admin.topbar>
+        <!-- Main Content -->
+        <div id="content">
+            <x-admin.topbar></x-admin.topbar>
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    @yield('content')
-                </div>
-                <!-- /.container-fluid -->
-
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                @yield('content')
             </div>
-            <!-- End of Main Content -->
-
-            <x-admin.footer />
+            <!-- /.container-fluid -->
 
         </div>
-        <!-- End of Content Wrapper -->
+        <!-- End of Main Content -->
+
+        <x-admin.footer/>
 
     </div>
-    <!-- End of Page Wrapper -->
+    <!-- End of Content Wrapper -->
 
-    <x-admin.scroll-btn />
+</div>
+<!-- End of Page Wrapper -->
 
-    <x-admin.logout-modal />
-    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"aria-hidden="true" id="loadingModal">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <button class="btn btn-primary" type="button" disabled style="background-color: #b087bc; color:#111;">
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    Loading...
-                </button>
-            </div>
+<x-admin.scroll-btn/>
+
+<x-admin.logout-modal/>
+<x-modals.timeout/>
+<x-modals.timedout/>
+
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="loadingModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <button class="btn btn-primary" type="button" disabled style="background-color: #b087bc; color:#111;">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+            </button>
         </div>
     </div>
-    @yield('modals')
+</div>
+@yield('modals')
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/sb-admin-2.js') }}"></script>
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
+<!-- Bootstrap core JavaScript-->
+<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/sb-admin-2.js') }}"></script>
+<script src="{{ asset('js/timedout.js') }}" defer></script>
+<script>
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
 
-        $('.loading').click(function () {
-            //showModal
-            $('#loadingModal').modal('show')
-        });
-    </script>
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+    document.querySelectorAll('.loading').forEach(elem => elem.addEventListener("click", (event) => {
+        loadingModal.show();
+    }));
+</script>
 
-    @yield('js')
+@yield('js')
 
 </body>
 

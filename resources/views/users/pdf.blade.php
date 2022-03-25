@@ -25,9 +25,10 @@
                 <td class="text-center">{{ $admin->id }}</small></td>
                 <td class="text-center">
                     @if($photo = \App\Models\Photo::find($admin->photo_id))
-                        <img src="{{asset($photo->path)}}"  width="50px" /> 
+                        <img src="{{asset($photo->path)}}" width="50px"/>
                     @else
-                        <img src="{{ asset('images/profile.png')}}" alt="{{ $admin->name.' Profile Image'}}" width="50px"/>
+                        <img src="{{ asset('images/profile.png')}}" alt="{{ $admin->name.' Profile Image'}}"
+                             width="50px"/>
                     @endif
                 </td>
                 <td>
@@ -37,53 +38,29 @@
                 <td class="text-left">{{ $admin->email ?? 'N/A' }}</td>
                 <td class="text-center">
                     @php
-                    switch($admin->role_id){
-                        case 0:
-                            echo '<small class="text-danger">No Access</small>';
-                            break;
-                        case 1:
-                            echo '<small class="text-info">Super Admin</small>';
-                            break;
-                        case 2:
-                            echo '<small class="text-warning">Administrator</small>';
-                            break;
-                        case 3:
-                            echo '<small class="text-success">Technician</small>';
-                            break;
-                        case 4:
-                            echo '<small class="text-success">User Manager</small>';
-                            break;
-                        case 5:
-                            echo '<small class="text-secondary">User</small>';
-                            break;
-                    }
-
+                        {{$admin->role->name ?? 'No Role Found'; }}
                     @endphp
                 </td>
                 <td class="text-center align-top">
                     @php
-                        if($admin->role_id == 1){
-                            $locations = App\Models\Location::all();
-                        }else{
-                            $locations = $user->locations;
-                        }
-                        @endphp
-                        @foreach($locations as $location)
+                        $locations = $user->locations;
+                    @endphp
+                    @foreach($locations as $location)
                         <small style="color: {{$location->icon}}">{{$location->name}}</small>
-                        @endforeach
+                    @endforeach
                 </td>
             </tr>
         @endforeach
         </tbody>
         <tfoot>
-            <tr>
-                <th width="5%;">ID</th>
-                <th width="15%;">Photo</th>
-                <th width="15%;">Name</th>
-                <th width="15%;">Email</th>
-                <th width="10%;">Role</th>
-                <th width="40%;">Permissions</th>
-            </tr>
+        <tr>
+            <th width="5%;">ID</th>
+            <th width="15%;">Photo</th>
+            <th width="15%;">Name</th>
+            <th width="15%;">Email</th>
+            <th width="10%;">Role</th>
+            <th width="40%;">Permissions</th>
+        </tr>
         </tfoot>
     </table>
 @endsection

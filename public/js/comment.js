@@ -1,25 +1,35 @@
-$('#commentModal').click(function () {
+const commentModal = new bootstrap.Modal(document.getElementById('commentModalOpen'));
+const commentEditModal = new bootstrap.Modal(document.getElementById('commentModalEdit'));
+const commentDeleteModal = new bootstrap.Modal(document.getElementById('removeComment'));
+const commentForm = document.getElementById('updateForm');
+let commentTitle = document.querySelector('#updateTitle');
+let commentFormDelete = document.querySelector('.deleteCommentForm');
+let commentBody = document.querySelector('#updateComment');
+let commentId = document.querySelector('#comment-id');
+document.querySelector('#commentModal').addEventListener('click', function () {
     //showModal
-    $('#commentModalOpen').modal('show')
+    commentModal.show()
 });
 
 
-$('.editComment').click(function (event) {
+document.querySelectorAll('.editComment').forEach(elem => elem.addEventListener("click", (event) => {
+
     event.preventDefault();
-    $('#updateTitle').val($(this).data('title'));
-    $('#updateComment').val($(this).data('comment'));
-    var route = $(this).data('route');
-    $('#updateForm').attr('action', route);
-    $('#commentModalEdit').modal('show');
-});
+    commentTitle.value = elem.getAttribute('data-title');
+    commentBody.value = elem.getAttribute('data-comment');
+    commentForm.action = elem.getAttribute('data-route');
+    commentEditModal.show();
+}));
 
-$('.deleteComment').click(function () {
-    $('#comment-id').val($(this).data('id'));
+document.querySelectorAll('.deleteComment').forEach(elem => elem.addEventListener("click", (event) => {
+    event.preventDefault();
+    commentId.value = elem.getAttribute('data-id');
+    commentFormDelete.action = elem.getAttribute('data-route')
     //showModal
-    $('#removeComment').modal('show');
+    commentDeleteModal.show();
+}));
+document.querySelector('#confirmCommentBtn').addEventListener('click', function () {
+    //post form
+    commentFormDelete.submit();
 });
 
-$('#confirmCommentBtn').click(function () {
-    var form = '#' + 'comment' + $('#comment-id').val();
-    $(form).submit();
-});

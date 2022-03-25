@@ -8,6 +8,7 @@ use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
+use Maatwebsite\Excel\Cell;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -15,12 +16,15 @@ use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\DefaultValueBinder;
 use Maatwebsite\Excel\Validators\Failure;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
-class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError {
+class consumableImport extends DefaultValueBinder implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithUpserts, SkipsOnFailure, SkipsOnError, WithCustomValueBinder {
 
     /**
      * @param array     $row
@@ -31,6 +35,15 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
     public function onError(\Throwable $error)
     {
+
+    }
+
+    public function bindValue(Cell|\PhpOffice\PhpSpreadsheet\Cell\Cell $cell, $value)
+    {
+
+        $cell->setValueExplicit($value, DataType::TYPE_FORMULA);
+
+        return true;
 
     }
 
@@ -65,11 +78,11 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
             ],
             'supplier_id' => [
                 'string',
-                'required'
+                'required',
             ],
             'location_id' => [
                 'string',
-                'required'
+                'required',
             ],
             'manufacturer_id' => [
 
@@ -94,20 +107,28 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         } else
         {
-            if(isset($row["status_id"])){
+            if(isset($row["status_id"]))
+            {
                 $status = new Status;
 
                 $status->name = $row["status_id"];
                 $status->deployable = 1;
 
                 $status->save();
-            }else
-                $consumable->status_id =0;
+            } else
+                $consumable->status_id = 0;
         }
         $consumable->status_id = $status->id ?? 0;
 
         $consumable->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
-        $consumable->purchased_cost = $row["purchased_cost"];
+        if($this->isBinary($row["purchased_cost"]))
+        {
+            $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
+            $consumable->purchased_cost = floatval($binary);
+        } else
+        {
+            $consumable->purchased_cost = floatval($row["purchased_cost"]);
+        }
 
         //check for already existing Suppliers upon import if else create
         if($supplier = Supplier::where(["name" => $row["supplier_id"]])->first())
@@ -115,7 +136,8 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         } else
         {
-            if(isset($row["supplier_id"])){
+            if(isset($row["supplier_id"]))
+            {
                 $supplier = new Supplier;
 
                 $supplier->name = $row["supplier_id"];
@@ -124,7 +146,7 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 $supplier->telephone = "Unknown";
                 $supplier->save();
 
-            }else
+            } else
                 $consumable->supplier_id = 0;
         }
 
@@ -136,7 +158,8 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
 
         } else
         {
-            if(isset($row["manufacturer_id"])){
+            if(isset($row["manufacturer_id"]))
+            {
                 $manufacturer = new Manufacturer;
 
                 $manufacturer->name = $row["manufacturer_id"];
@@ -144,7 +167,7 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
                 $manufacturer->supportPhone = "Unknown";
                 $manufacturer->save();
-            }else
+            } else
                 $consumable->supplier_id = 0;
 
         }
@@ -171,11 +194,11 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
                 $location->county = "West Midlands";
                 $location->icon = "#222222";
                 $location->save();
-            }else
+            } else
                 $consumable->location_id = 0;
         }
         $consumable->location_id = $location->id ?? 0;
-        $consumable->photo_id =  0;
+        $consumable->photo_id = 0;
         $consumable->notes = $row["notes"];
         $consumable->save();
     }
@@ -188,6 +211,11 @@ class consumableImport implements ToModel, WithValidation, WithHeadingRow, WithB
     public function uniqueBy()
     {
         return 'name';
+    }
+
+    function isBinary($str)
+    {
+        return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
     }
 
 }

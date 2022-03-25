@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -34,6 +36,21 @@ class User extends Authenticatable {
      */
     protected $casts = ['email_verified_at' => 'datetime',];
 
+    public function name(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => ucfirst($value),
+        );
+    }
+
+    public function email(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
 
     public function photo()
     {
@@ -55,32 +72,61 @@ class User extends Authenticatable {
         return $this->belongsToMany(Asset::class);
     }
 
-    public function locations(){
+    public function locations()
+    {
         return $this->belongsToMany(Location::class)
             ->using(LocationUser::class);
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     //Permissions
-    public function location_assets(){
+    public function location_assets()
+    {
         return $this->hasManyDeep(Asset::class, ['location_user', Location::class]);
     }
 
-    public function location_components(){
+    public function location_components()
+    {
         return $this->hasManyDeep(Component::class, ['location_user', Location::class]);
     }
 
-    public function location_accessories(){
+    public function location_accessories()
+    {
         return $this->hasManyDeep(Accessory::class, ['location_user', Location::class]);
     }
 
-    public function location_consumables(){
+    public function location_consumables()
+    {
         return $this->hasManyDeep(Consumable::class, ['location_user', Location::class]);
     }
-    public function location_miscellaneous(){
+
+    public function location_miscellaneous()
+    {
         return $this->hasManyDeep(Miscellanea::class, ['location_user', Location::class]);
     }
 
-    public function logs(){
+    public function location_property()
+    {
+        return $this->hasManyDeep(Property::class, ['location_user', Location::class]);
+    }
+
+    public function location_auc()
+    {
+        return $this->hasManyDeep(AUC::class, ['location_user', Location::class]);
+    }
+
+    public function locationsArray(): array
+    {
+        // gets all locations' id attached to a user (used in polices)
+        return auth()->user()->locations->pluck('id')->toArray();
+    }
+
+    public function logs()
+    {
         return $this->morphMany(Log::class, 'loggable');
     }
 
@@ -99,15 +145,57 @@ class User extends Authenticatable {
         //Get the index of the last character in our $characters string.
         $characterListLength = mb_strlen($characters, '8bit') - 1;
         //Loop from 1 to the $length that was specified.
-        foreach(range(1, $length) as $i){
+        foreach(range(1, $length) as $i)
+        {
             $password .= $characters[random_int(0, $characterListLength)];
         }
+
         return $password;
 
     }
 
-    public function scopeSuperAdmin($query){
-        return $query->where('role_id', '=', '1');
+    public function expiredUser()
+    {
+        //true or false condition if the user has logged in recently
+        $authLogs = Log::whereUserId($this->id)->where('loggable_type', '=', 'auth')->get();
+
+        //Checks the auth logs for this user and see's if there are any for anywhere in the last 3 months if not remove there account.
+        if($authLogs->where('created_at', '>=', Carbon::parse(now()->subMonths(3))->format('Y-m-d'))->first())
+        {
+            return false;
+        } else
+        {
+            return true;
+        }
+
+
+    }
+
+    public function scopeSuperAdmin($query)
+    {
+        $role = Role::whereName('super-admin')->first();
+        if($role)
+        {
+            return User::whereRoleId($role->id)->get();
+        }
+    }
+
+    public static function SuperAdmin()
+    {
+        $role = Role::whereName('global_admin')->first();
+        if($role)
+        {
+            return User::whereRoleId($role->id)->get();
+        }
+    }
+
+    public static function itManager()
+    {
+        $role = Role::whereName('it_manager')->first();
+        if($role)
+        {
+            return User::whereRoleId($role->id)->get();
+        }
     }
 
 }

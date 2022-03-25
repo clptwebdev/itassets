@@ -10,6 +10,7 @@ use App\Exports\miscellaneousExport;
 use App\Imports\miscellaneaImport;
 use App\Imports\miscellaneousImport;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Miscellanea;
 use App\Models\Location;
 use App\Models\Manufacturer;
@@ -18,57 +19,53 @@ use App\Models\Status;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\HeadingRowImport;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\MiscellaneousPdf;
 use App\Jobs\MiscellaneaPdf;
 use App\Models\Report;
 
-class MiscellaneaController extends Controller
-{
+class MiscellaneaController extends Controller {
 
     public function newComment(Request $request)
     {
+        if(auth()->user()->cant('comment', Comment::class))
+        {
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Create Comments for Miscellaneous.');
+
+        }
         $request->validate([
             "title" => "required|max:255",
             "comment" => "nullable",
         ]);
 
         $miscellanea = Miscellanea::find($request->miscellanea_id);
-        $miscellanea->comment()->create(['title'=>$request->title, 'comment'=>$request->comment, 'user_id'=>auth()->user()->id]);
-        return redirect(route('miscellaneous.show', $miscellanea->id));
+        $miscellanea->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+
+        return to_route('miscellaneous.show', $miscellanea->id);
     }
 
     public function index()
     {
-        if (auth()->user()->cant('viewAny', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
+        if(auth()->user()->cant('viewAny', Miscellanea::class))
+        {
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Miscellaneous.');
+
         }
 
         session(['orderby' => 'purchased_date']);
         session(['direction' => 'desc']);
 
-        if(auth()->user()->role_id == 1)
-        {
-            $miscellaneous = Miscellanea::with('supplier', 'location')
-                ->leftJoin('locations', 'locations.id', '=', 'miscellaneas.location_id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'miscellaneas.manufacturer_id')
-                ->leftJoin('suppliers', 'suppliers.id', '=', 'miscellaneas.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->paginate(intval(session('limit')) ?? 25, ['miscellaneas.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
-                ->fragment('table');
-            $locations = Location::all();
-        } else
-        {
-            $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'))
-                ->leftJoin('locations', 'locations.id', '=', 'miscellaneas.location_id')
-                ->leftJoin('manufacturers', 'manufacturers.id', '=', 'miscellaneas.manufacturer_id')
-                ->leftJoin('suppliers', 'suppliers.id', '=', 'miscellaneas.supplier_id')
-                ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
-                ->paginate(intval(session('limit')) ?? 25, ['miscellaneas.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
-                ->fragment('table');
-            $locations = auth()->user()->locations;
-        }
+        $miscellaneous = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'))
+            ->leftJoin('locations', 'locations.id', '=', 'miscellaneas.location_id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'miscellaneas.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'miscellaneas.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->paginate(intval(session('limit')) ?? 25, ['miscellaneas.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name'])
+            ->fragment('table');
+        $locations = auth()->user()->locations;
+
         $this->clearFilter();
         $filter = 0;
 
@@ -82,7 +79,7 @@ class MiscellaneaController extends Controller
         ]);
 
 //        if (auth()->user()->cant('viewAny', Miscellanea::class)) {
-//            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'view']));
+//            return redirect(to_route('errors.forbidden', ['area', 'miscellaneous', 'view']));
 //        }
 //
 //        return view('miscellanea.view',[
@@ -92,15 +89,13 @@ class MiscellaneaController extends Controller
 
     public function create()
     {
-        if (auth()->user()->cant('create', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'create']));
+        if(auth()->user()->cant('create', Miscellanea::class))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Create Miscellaneous.');
+
         }
 
-        if(auth()->user()->role_id == 1){
-            $locations = Location::all();
-        }else{
-            $locations = auth()->user()->locations;
-        }
+        $locations = auth()->user()->locations;
 
         return view('miscellanea.create', [
             "locations" => $locations,
@@ -114,8 +109,10 @@ class MiscellaneaController extends Controller
 
     public function store(Request $request)
     {
-        if (auth()->user()->cant('create', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'create']));
+        if(auth()->user()->cant('create', Miscellanea::class))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Store Miscellaneous.');
+
         }
 
         $request->validate([
@@ -134,14 +131,16 @@ class MiscellaneaController extends Controller
             'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ));
         $miscellanea->category()->attach($request->category);
-        return redirect(route("miscellaneous.index"));
+
+        return to_route("miscellaneous.index");
 
     }
+
     public function clearFilter()
     {
         session()->forget(['locations', 'status', 'category', 'start', 'end', 'audit', 'warranty', 'amount', 'search']);
 
-        return redirect(route('miscellaneous.index'));
+        return to_route('miscellaneous.index');
     }
 
     public function filter(Request $request)
@@ -204,19 +203,13 @@ class MiscellaneaController extends Controller
                 session(['warranty' => $request->warranty]);
             }
 
-            session(['amount' => $request->amount]);
+            session(['assets_min' => $request->minCost]);
+            session(['assets_max' => $request->maxCost]);
         }
 
-        if(auth()->user()->role_id != 1)
-        {
-            $locations = auth()->user()->locations->pluck('id');
-            $locs = auth()->user()->locations;
+        $locations = \App\Models\Location::all()->pluck('id');
+        $locs = \App\Models\Location::all();
 
-        } else
-        {
-            $locations = \App\Models\Location::all()->pluck('id');
-            $locs = \App\Models\Location::all();
-        }
         $filter = 0;
 
         $miscellaneous = Miscellanea::locationFilter($locations);
@@ -240,9 +233,9 @@ class MiscellaneaController extends Controller
             $miscellaneous->purchaseFilter(session('start'), session('end'));
             $filter++;
         }
-        if(session()->has('amount'))
+        if(session()->has('assets_min') && session()->has('assets_max'))
         {
-            $miscellaneous->costFilter(session('amount'));
+            $miscellaneous->costFilter(session('assets_min'), session('assets_max'));
             $filter++;
         }
 
@@ -271,76 +264,84 @@ class MiscellaneaController extends Controller
 
     public function importErrors(Request $request)
     {
+        if(auth()->user()->cant('viewAny', Miscellanea::class))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Export Miscellaneous.');
 
+        }
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
+
         return \Maatwebsite\Excel\Facades\Excel::download(new miscellaneousErrorsExport($export), 'miscellaneousImportErrors.csv');
     }
 
     public function ajaxMany(Request $request)
     {
-        if($request->ajax()){
-            $validation = Validator::make($request->all(), [
-                "name.*" => "required|max:255",
-                'order_no.*' => 'required',
-                'serial_no.*' => 'required',
-                'warranty.*' => 'int',
-                'location_id.*' => 'required|gt:0',
-                'purchased_date.*' => 'nullable|date',
-                'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            ]);
 
-            if($validation->fails()){
-                return $validation->errors();
-            }else{
-                for($i = 0; $i < count($request->name); $i++)
-                {
-                    $miscellanea = new Miscellanea;
-                    $miscellanea->name = $request->name[$i];
-                    $miscellanea->serial_no = $request->serial_no[$i];
-                    $miscellanea->status_id = $request->status_id[$i];
-                    $miscellanea->purchased_date = \Carbon\Carbon::parse(str_replace('/','-',$request->purchased_date[$i]))->format("Y-m-d");
-                    $miscellanea->purchased_cost = $request->purchased_cost[$i];
-                    $miscellanea->supplier_id = $request->supplier_id[$i];
-                    $miscellanea->manufacturer_id = $request->manufacturer_id[$i];
-                    $miscellanea->order_no = $request->order_no[$i];
-                    $miscellanea->warranty = $request->warranty[$i];
-                    $miscellanea->depreciation_id = $request->depreciation_id[$i];
-                    $miscellanea->location_id = $request->location_id[$i];
-                    $miscellanea->room = $request->room[$i];
-                    $miscellanea->notes = $request->notes[$i];
-                    $miscellanea->photo_id =  0;
+        $validation = Validator::make($request->all(), [
+            "name.*" => "required|max:255",
+            'order_no.*' => 'required',
+            'serial_no.*' => 'required',
+            'warranty.*' => 'int',
+            'location_id.*' => 'required|gt:0',
+            'purchased_date.*' => 'nullable|date',
+            'purchased_cost.*' => 'required',
+        ]);
 
-                    $miscellanea->save();
-                }
+        if($validation->fails())
+        {
+            return $validation->errors();
+        } else
+        {
+            for($i = 0; $i < count($request->name); $i++)
+            {
+                $miscellanea = new Miscellanea;
+                $miscellanea->name = $request->name[$i];
+                $miscellanea->serial_no = $request->serial_no[$i];
+                $miscellanea->status_id = $request->status_id[$i];
+                $miscellanea->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $miscellanea->purchased_cost = floatval($request->purchased_cost[$i]);
+                $miscellanea->supplier_id = $request->supplier_id[$i];
+                $miscellanea->manufacturer_id = $request->manufacturer_id[$i];
+                $miscellanea->order_no = $request->order_no[$i];
+                $miscellanea->warranty = $request->warranty[$i];
+                $miscellanea->depreciation_id = $request->depreciation_id[$i];
+                $miscellanea->location_id = $request->location_id[$i];
+                $miscellanea->room = $request->room[$i];
+                $miscellanea->notes = $request->notes[$i];
+                $miscellanea->photo_id = 0;
 
-                session()->flash('success_message', 'You have successfully added all the Miscellaneous items');
-                return 'Success';
+                $miscellanea->save();
             }
-        }
 
+            session()->flash('success_message', 'You have successfully added all the Miscellaneous items');
+
+            return 'Success';
+        }
     }
 
     public function show(Miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('create', $miscellaneou)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'view']));
+        if(auth()->user()->cant('create', $miscellaneou))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Show Miscellaneous.');
+
         }
+
         return view('miscellanea.show', ["miscellaneou" => $miscellaneou]);
     }
 
     public function edit(Miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('update', $miscellaneou)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'update']));
+        if(auth()->user()->cant('update', $miscellaneou))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Edit Miscellaneous.');
+
         }
 
-        if(auth()->user()->role_id == 1){
-            $locations = Location::all();
-        }else{
-            $locations = auth()->user()->locations;
-        }
+        $locations = auth()->user()->locations;
+
         return view('miscellanea.edit', [
             "miscellanea" => $miscellaneou,
             "locations" => $locations,
@@ -354,8 +355,10 @@ class MiscellaneaController extends Controller
 
     public function update(Request $request, Miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('update', $miscellaneou)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'update']));
+        if(auth()->user()->cant('update', $miscellaneou))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Update Miscellaneous.');
+
         }
 
         $request->validate([
@@ -370,55 +373,87 @@ class MiscellaneaController extends Controller
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
 
-        if(isset($request->donated) && $request->donated == 1){ $donated = 1;}else{ $donated = 0;}
+        if(isset($request->donated) && $request->donated == 1)
+        {
+            $donated = 1;
+        } else
+        {
+            $donated = 0;
+        }
         $miscellaneou->fill(array_merge($request->only(
             'name', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ), ['donated' => $donated]))->save();
         $miscellaneou->category()->sync($request->category);
-        session()->flash('success_message', $miscellaneou->name. ' has been updated successfully');
+        session()->flash('success_message', $miscellaneou->name . ' has been updated successfully');
 
-        return redirect(route("miscellaneous.index"));
+        return to_route("miscellaneous.index");
     }
 
     public function destroy(Miscellanea $miscellaneou)
     {
-        if (auth()->user()->cant('delete', $miscellaneou)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellaneou->id, 'delete']));
+        if(auth()->user()->cant('delete', $miscellaneou))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Delete Miscellaneous.');
+
         }
         $name = $miscellaneou->name;
         $miscellaneou->delete();
         session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
-        return redirect(route('miscellaneous.index'));
+        return to_route('miscellaneous.index');
 
     }
 
     public function export(Miscellanea $miscellanea)
     {
-        if (auth()->user()->cant('export', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export']));
+        if(auth()->user()->cant('export', Miscellanea::class))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Export Miscellaneous.');
+
         }
         $miscellaneous = Miscellanea::all();
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport($miscellaneous), "/public/csv/miscellaneous-ex-{$date}.csv");
-        $url = asset("storage/csv/miscellaneous-ex-{$date}.csv");
-        return redirect(route('miscellaneous.index'))
+        \Maatwebsite\Excel\Facades\Excel::store(new miscellaneousExport($miscellaneous), "/public/csv/miscellaneous-ex-{$date}.xlsx");
+        $url = asset("storage/csv/miscellaneous-ex-{$date}.xlsx");
+
+        return to_route('miscellaneous.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
     }
 
     public function import(Request $request)
     {
-        if (auth()->user()->cant('create', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'import']));
+        if(auth()->user()->cant('create', Miscellanea::class))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to import Miscellaneous.');
+
         }
 
+        //headings incorrect start
+        $column = (new HeadingRowImport)->toArray($request->file("csv"));
+        $columnPopped = array_pop($column);
+        $values = array_flip(array_pop($columnPopped));
+        if(
+            //checks for spelling and if there present for any allowed heading in the csv.
+            isset($values['name']) && isset($values['status_id']) && isset($values['supplier_id']) && isset($values['manufacturer_id'])
+            && isset($values['location_id']) && isset($values['order_no']) && isset($values['serial_no']) && isset($values['purchased_cost'])
+            && isset($values['purchased_date']) && isset($values['warranty']) && isset($values['notes']) && isset($values['room'])
+            && isset($values['donated']) && isset($values['depreciation_id'])
+        )
+        {
+
+        } else
+        {
+            return to_route('miscellaneous.index')->with('danger_message', "CSV Heading's Incorrect Please amend and try again!");
+        }
+        //headings incorrect end
+        
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());
 
-
-        if(in_array($result[0],$extensions)){
+        if(in_array($result[0], $extensions))
+        {
             $path = $request->file("csv")->getRealPath();
             $import = new miscellaneousImport;
             $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
@@ -464,54 +499,59 @@ class MiscellaneaController extends Controller
                     if(array_key_exists($error['row'], $errorValues))
                     {
                         $array = $errorValues[$error['row']];
-                    }else{
+                    } else
+                    {
                         $array = [];
                     }
 
-                    foreach($error['errors'] as $e){
+                    foreach($error['errors'] as $e)
+                    {
                         $array[$error['attributes']] = $e;
                     }
                     $errorValues[$error['row']] = $array;
 
                 }
 
-
                 return view('miscellanea.import-errors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
-                    "statuses"=>Status::all(),
-                    "suppliers"=>Supplier::all(),
-                    "locations"=>Location::all(),
-                    "manufacturers"=>Manufacturer::all(),
+                    "statuses" => Status::all(),
+                    "suppliers" => Supplier::all(),
+                    "locations" => auth()->user()->locations,
+                    "manufacturers" => Manufacturer::all(),
+                    "depreciations" => Depreciation::all(),
                 ]);
 
             } else
             {
 
-                return redirect('/miscellaneous')->with('success_message', 'All miscellaneous were added correctly!');
+                return to_route('miscellaneous.index')->with('success_message', 'All miscellaneous were added correctly!');
 
             }
-        }else{
+        } else
+        {
             session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-            return redirect(route('miscellaneous.index'));
+            return to_route('miscellaneous.index');
         }
-
 
 
     }
 
     public function downloadPDF(Request $request)
     {
-        if (auth()->user()->cant('viewAny', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'export pdf']));
+        if(auth()->user()->cant('viewAny', Miscellanea::class))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Export Miscellaneous.');
+
         }
 
         $miscellaneous = array();
 
         $found = Miscellanea::withTrashed()->whereIn('id', json_decode($request->miscellaneous))->get();
-        foreach($found as $f){
+        foreach($found as $f)
+        {
             $array = array();
             $array['name'] = $f->name;
             $array['serial_no'] = $f->serial_no ?? 'N/A';
@@ -520,16 +560,19 @@ class MiscellaneaController extends Controller
             $array['icon'] = $f->location->icon ?? '#666';
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
-            $array['purchased_cost'] = '£'.$f->purchased_cost;
+            $array['purchased_cost'] = '£' . $f->purchased_cost;
             $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation->years);
-            if($f->depreciation->exists()){
-                if($eol->isPast()){
+            if($f->depreciation->exists())
+            {
+                if($eol->isPast())
+                {
                     $dep = 0;
-                }else{
+                } else
+                {
 
                     $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
                     $percent = 100 / $f->depreciation->years;
-                    $percentage = floor($age)*$percent;
+                    $percentage = floor($age) * $percent;
                     $dep = $f->purchased_cost * ((100 - $percentage) / 100);
                 }
             }
@@ -544,36 +587,38 @@ class MiscellaneaController extends Controller
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = 'miscellaneous-'.$date;
+        $path = 'miscellaneous-' . $date;
 
         dispatch(new MiscellaneousPdf($miscellaneous, $user, $path))->afterResponse();
         //Create Report
 
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('miscellaneous.index'))
+        return to_route('miscellaneous.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
 
     public function downloadShowPDF(Miscellanea $miscellanea)
     {
-        if (auth()->user()->cant('view', $miscellanea)) {
-            return redirect(route('errors.forbidden', ['miscellaneous', $miscellanea->id, 'export pdf']));
+        if(auth()->user()->cant('view', $miscellanea))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Download Miscellaneous.');
+
         }
 
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = 'miscellanea-'.$miscellanea->id.'-'.$date;
+        $path = 'miscellanea-' . $miscellanea->id . '-' . $date;
 
         dispatch(new MiscellaneaPdf($miscellanea, $user, $path))->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report'=> $url, 'user_id'=> $user->id]);
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return redirect(route('miscellaneous.show', $miscellanea->id))
+        return to_route('miscellaneous.show', $miscellanea->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
@@ -582,46 +627,57 @@ class MiscellaneaController extends Controller
 
     public function recycleBin()
     {
-        if (auth()->user()->cant('recycleBin', Miscellanea::class)) {
-            return redirect(route('errors.forbidden', ['area', 'miscellaneous', 'recycle bin']));
+        if(auth()->user()->cant('recycleBin', Miscellanea::class))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Recycle Miscellaneous.');
+
         }
 
-        if(auth()->user()->role_id == 1){
-            $miscellaneous = Miscellanea::onlyTrashed()->get();
-        }else{
-            $miscellaneous = auth()->user()->location_miscellaneous()->onlyTrashed();
-        }
+        $miscellaneous = auth()->user()->location_miscellaneous()->onlyTrashed()->paginate();
+
         return view('miscellanea.bin', compact('miscellaneous'));
     }
 
     public function restore($id)
     {
         $miscellanea = Miscellanea::withTrashed()->where('id', $id)->first();
-        if (auth()->user()->cant('delete', $miscellanea)) {
-            return redirect(route('errors.forbidden', ['miscellanea', $miscellanea->id, 'restore']));
+        if(auth()->user()->cant('delete', $miscellanea))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Restore Miscellaneous.');
+
         }
         $miscellanea->restore();
-        session()->flash('success_message', "#". $miscellanea->name . ' has been restored.');
-        return redirect("/miscellaneous");
+        session()->flash('success_message', "#" . $miscellanea->name . ' has been restored.');
+
+        return to_route("miscellaneous.index");
     }
 
     public function forceDelete($id)
     {
         $miscellanea = Miscellanea::withTrashed()->where('id', $id)->first();
-        if (auth()->user()->cant('delete', $miscellanea)) {
-            return redirect(route('errors.forbidden', ['miscellanea', $miscellanea->id, 'remove']));
+        if(auth()->user()->cant('delete', $miscellanea))
+        {
+            return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Delete Miscellaneous.');
+
         }
-        $name=$miscellanea->name;
+        $name = $miscellanea->name;
         $miscellanea->forceDelete();
-        session()->flash('danger_message', "miscellanea - ". $name . ' was deleted permanently');
-        return redirect("/miscellanea/bin");
+        session()->flash('danger_message', "miscellanea - " . $name . ' was deleted permanently');
+
+        return to_route("miscellaneous.bin");
     }
 
     public function changeStatus(Miscellanea $miscellanea, Request $request)
     {
+        if(auth()->user()->cant('update', Status::class))
+        {
+            return ErrorController::forbidden(to_route('accessories.show', $miscellanea->id), 'Unauthorised to Change Statuses Miscellaneous.');
+        }
         $miscellanea->status_id = $request->status;
         $miscellanea->save();
         session()->flash('success_message', $miscellanea->name . ' has had its status changed successfully');
-        return redirect(route('miscellaneous.show', $miscellanea->id));
+
+        return to_route('miscellaneous.show', $miscellanea->id);
     }
+
 }

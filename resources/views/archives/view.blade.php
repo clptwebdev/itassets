@@ -33,7 +33,7 @@
     <x-handlers.alerts/>
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
-            different options and locations can created, updated, deleted and filtered</p>
+                        different options and locations can created, updated, deleted and filtered</p>
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
@@ -80,7 +80,7 @@
                                              alt="{{$archive->location->name}}"
                                              title="{{ $archive->location->name }}<br>{{ $asset->room ?? 'Unknown'}}"/>
                                     @else
-                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($archive->location->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($archive->location->icon ?? '#666').'" data-bs-toggle="tooltip" data-bs-placement="top" title="">'
                                             .strtoupper(substr($archive->location->name ?? 'u', 0, 1)).'</span>' !!}
                                     @endif
                                     <small class="d-none d-md-inline-block">{{$archive->location->name}}</small>
@@ -89,14 +89,15 @@
                                 <td class="d-none d-md-table-cell" data-sort="{{ strtotime($archive->date)}}">
                                     {{ \Carbon\Carbon::parse($archive->purchased_date)->format('d/m/Y')}}<br>
                                     <small class="text-danger">Disposed
-                                        on:{{ \Carbon\Carbon::parse($archive->date)->format('d/m/Y')}}</small>
+                                                               on:{{ \Carbon\Carbon::parse($archive->date)->format('d/m/Y')}}</small>
                                 </td>
                                 <td class="text-center  d-none d-xl-table-cell">
                                     £{{ $archive->purchased_cost }}<br><small>Value at Disposal -
-                                        £{{ $archive->archived_cost}}</small>
+                                                                              £{{ $archive->archived_cost}}</small>
                                 </td>
                                 <td class="text-center d-none d-xl-table-cell">{{$archive->supplier->name ?? "N/A"}}<br><small>Order
-                                        No: {{ $archive->order_no ?? 'N/A'}}</small></td>
+                                                                                                                               No: {{ $archive->order_no ?? 'N/A'}}</small>
+                                </td>
                                 <td class="text-center">
                                     @if($archive->requested()->exists() && $archive->requested->photo()->exists())
                                         <img class="img-profile rounded-circle"
@@ -121,13 +122,11 @@
                                 </td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
-                                        <a href="{{ route('archives.restore', $archive->id) }}"
-                                           class="dropdown-item">Restore</a>
+                                        <a href="{{ route('archives.restore', $archive->id) }}" class="dropdown-item">Restore</a>
                                         <x-buttons.dropdown-item :route="route('archives.show', $archive->id)">
                                             View
                                         </x-buttons.dropdown-item>
-                                        <x-form.layout method="DELETE" class="d-block p-0 m-0"
-                                                       :id="'form'.$archive->id"
+                                        <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$archive->id"
                                                        :action="route('archives.destroy', $archive->id)">
                                             <x-buttons.dropdown-item class="deleteBtn" :data="$archive->id">
                                                 Delete
@@ -147,7 +146,7 @@
             <div class="card-body">
                 <h4>Help with Assets</h4>
                 <p>Click <a href="{{route("documentation.index").'#collapseThreeAssets'}}">here</a> for a the
-                    Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
+                   Documentation on Assets on Importing ,Exporting , Adding , Removing!</p>
             </div>
         </div>
 
@@ -156,36 +155,11 @@
 <?php session()->flash('import-error', 'Select a file to be uploaded before continuing!');?>
 
 @section('modals')
-    <x-modals.delete archive="true"/>
+    <x-modals.delete :archive="true"/>
 @endsection
 
 @section('js')
 
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="{{asset('js/delete.js')}}"></script>
-    <script>
-        $('.deleteBtn').click(function () {
-            $('#archive-id').val($(this).data('id'))
-            //showModal
-            $('#removeArchiveModal').modal('show')
-        });
-
-        $('#confirmBtn').click(function () {
-            var form = '#' + 'form' + $('#archive-id').val();
-            $(form).submit();
-        });
-
-
-        $(document).ready(function () {
-            $('#assetsTable').DataTable({
-                "autoWidth": false,
-                "pageLength": 25,
-                "columnDefs": [{
-                    "targets": [7, 8],
-                    "orderable": false
-                }],
-                "order": [[4, "desc"]],
-            });
-        });
-    </script>
 @endsection

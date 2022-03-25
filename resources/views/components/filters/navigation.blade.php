@@ -5,18 +5,19 @@
     <div id="filterDiv" class="col-12 mb-4 text-right">
         <a id="sortButton" href="#" class="btn btn-blue d-lg-none"><i class="fas fa-lg fa-sort"></i></a>
         <a id="searchButton" href="#" class="btn btn-blue d-lg-none"><i class="fas fa-lg fa-search"></i></a>
-        @if(isset($filter) && $filter != 0)
+        @if(session()->has($relations."_filter") && session($relations.'_filter') != false)
             <a href="{{ route($route.'.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
             <div class="dropdown d-inline ml-lg-2">
                 <button class="btn btn-green dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="far fa-eye mr-lg-1"></i><span class="d-none d-lg-inline-block">View Filter</span>
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="far fa-eye mr-lg-1"></i><span class="d-none d-lg-inline-block">View Filter</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="dropdownMenuButton">
 
-                    @if(session()->has('status'))
+                    {{-- Check to see if the model has the relationship and if the session is set --}}
+                    @if(session()->has($relations.'_status'))
                         <h6 class="dropdown-header text-center">Status</h6>
-                        @foreach(session('status') as $id => $key)
+                        @foreach(session($relations.'_status') as $id => $key)
                             @php
                                 $status = \App\Models\Status::find($key);
                             @endphp
@@ -26,9 +27,10 @@
                             @endphp
                         @endforeach
                     @endif
-                    @if(session()->has('locations'))
+
+                    @if(session()->has($relations.'_locations'))
                         <h6 class="dropdown-header text-center">Locations</h6>
-                        @foreach(session('locations') as $id => $key)
+                        @foreach(session($relations.'_locations') as $id => $key)
                             @php
                                 $location = \App\Models\Location::find($key);
                             @endphp
@@ -38,9 +40,10 @@
                             @endphp
                         @endforeach
                     @endif
-                    @if(session()->has('category'))
+
+                    @if(session()->has($relations.'_category'))
                         <h6 class="dropdown-header text-center">Categories</h6>
-                        @foreach(session('category') as $id => $key)
+                        @foreach(session($relations.'_category') as $id => $key)
                             @php
                                 $category = \App\Models\category::find($key);
                             @endphp
@@ -50,18 +53,22 @@
                             @endphp
                         @endforeach
                     @endif
-                    @if(session()->has('start') && session()->has('end'))
+                    @if(session()->has($relations.'_start') && session()->has($relations.'_end'))
                         <h6 class="dropdown-header text-center">Purchased Date</h6>
-                        <span class="dropdown-item">{{ session('start').' to '.session('end') ?? 'No Dates'}}</span>
+                        <span
+                            class="dropdown-item">{{ session($relations.'_start').' to '.session($relations.'_end') ?? 'No Dates'}}</span>
                     @endif
-                    @if(session()->has('amount'))
-                        <h6 class="dropdown-header text-center">Purchased Cost</h6>
-                        <span class="dropdown-item">{{ session('amount')}}</span>
+
+                    @if(session()->has($relations.'_amount'))
+                        <h6 class="dropdown-header text-center">Purchased Cost/Value</h6>
+                        <span class="dropdown-item">{{ session($relations.'_amount')}}</span>
                     @endif
-                    @if(session()->has('audit') && session('audit') != 0)
+
+
+                    @if(session()->has($relations.'_audit') && session($relations.'_audit') != 0)
                         <h6 class="dropdown-header text-center">Audit</h6>
                         @php
-                            switch(session('audit')){
+                            switch(session($relations.'_audit')){
                                 case 1:
                                     echo '<span class="dropdown-item">Overdue Audits</span>';
                                     break;
@@ -79,14 +86,15 @@
                             }
                         @endphp
                     @endif
-                    @if(session()->has('search'))
+                    @if(session()->has($relations.'_search'))
                         <h6 class="dropdown-header text-center">Search</h6>
-                        <span class="dropdown-item">"{{ session('search')}}"</span>
+                        <span class="dropdown-item">"{{ session($route.'_search')}}"</span>
                     @endif
                 </div>
             </div>
         @endif
-        <a id="filterBtn" href="#" onclick="javascript:toggleFilter();" class="btn btn-blue shadow-sm ml-lg-2"><i class="fas fa-filter mr-lg-1"></i><span class="d-none d-lg-inline-block">Filter</span></a>
+        <a id="filterBtn" href="#" onclick="javascript:toggleFilter();" class="btn btn-blue shadow-sm ml-lg-2"><i
+                class="fas fa-filter mr-lg-1"></i><span class="d-none d-lg-inline-block">Filter</span></a>
     </div>
     <div id="searchBar" class="d-none d-lg-inline-block col-12 col-lg-4 mb-4 mb-lg-0">
         <div class="w-100">
@@ -110,65 +118,81 @@
             @csrf
             <label class="my-1 mr-2"><i class="fas fa-list-ol"></i></label>
             <select class="form-control mr-2" name="limit">
-                <option value="25" @if(session('limit') == 25) selected @endif>25</option>
-                <option value="50" @if(session('limit') == 50) selected @endif>50</option>
-                <option value="100" @if(session('limit') == 100) selected @endif>100</option>
+                <option value="25" @if(session($relations.'_limit') == 25) selected @endif>25</option>
+                <option value="50" @if(session($relations.'_limit') == 50) selected @endif>50</option>
+                <option value="100" @if(session($relations.'_limit') == 100) selected @endif>100</option>
             </select>
             <label class="my-1 mr-2"><i class="fas fa-sort"></i></label>
             <select class="form-control mr-2" name="orderby">
-                <option value="name asc"
-                        @if(session('orderby') == 'name' && (session('direction')) == 'asc') selected @endif>Name (A-Z)
-                </option>
-                <option value="name desc"
-                        @if(session('orderby') == 'name' && (session('direction')) == 'desc') selected @endif>Name (Z-A)
-                </option>
-                <option value="location_name asc"
-                        @if(session('orderby') == 'location_name' && (session('direction')) == 'asc') selected @endif>
-                    Location (A-Z)
-                </option>
-                <option value="location_name desc"
-                        @if(session('orderby') == 'location_name' && (session('direction')) == 'desc') selected @endif>
-                    Location (Z-A))
-                </option>
-                <option value="manufacturer_name asc"
-                        @if(session('orderby') == 'manufacturer_name' && (session('direction')) == 'asc') selected @endif>
-                    Manufacturer (A-Z)
-                </option>
-                <option value="manufacturer_name desc"
-                        @if(session('orderby') == 'manufacturer_name' && (session('direction')) == 'desc') selected @endif>
-                    Manufacturer (Z-A)
-                </option>
-                <option value="purchased_date asc"
-                        @if(session('orderby') == 'purchased_date' && (session('direction')) == 'asc') selected
-                        @elseif(!session()->has('orderby')) selected @endif>Date (Earliest to Latest)
-                </option>
-                <option value="purchased_date desc"
-                        @if(session('orderby') == 'purchased_date' && (session('direction')) == 'desc') selected
-                        @elseif(!session()->has('orderby')) selected @endif>Date (Latest to Earliest)
-                </option>
-                <option value="purchased_cost asc"
-                        @if(session('orderby') == 'purchased_cost' && (session('direction')) == 'asc') selected @endif>
-                    Cost (Low to High)
-                </option>
-                <option value="purchased_cost desc"
-                        @if(session('orderby') == 'purchased_cost' && (session('direction')) == 'desc') selected @endif>
-                    Cost (High to Low)
-                </option>
-                <option value="supplier_name asc"
-                        @if(session('orderby') == 'supplier_name' && (session('direction')) == 'asc') selected @endif>
-                    Supplier (A-Z)
-                </option>
-                <option value="supplier_name desc"
-                        @if(session('orderby') == 'supplier_name' && (session('direction')) == 'desc') selected @endif>
-                    Supplier (Z-A)
-                </option>
-                @if($model === 'Asset')
+                {{-- Check to see if the Model has a column name --}}
+                @if(Schema::hasColumn("{$table}",'name'))
+                    <option value="name asc"
+                            @if(session($relations.'_orderby') == 'name' && (session($relations.'_direction')) == 'asc') selected @endif>
+                        Name (A-Z)
+                    </option>
+
+                    <option value="name desc"
+                            @if(session($relations.'_orderby') == 'name' && (session($relations.'_direction')) == 'desc') selected @endif>
+                        Name (Z-A)
+                    </option>
+                @endif
+                @if(Schema::hasColumn("{$table}",'location_id'))
+                    <option value="location_name asc"
+                            @if(session($relations.'_orderby') == 'location_name' && (session($relations.'_direction')) == 'asc') selected @endif>
+                        Location (A-Z)
+                    </option>
+                    <option value="location_name desc"
+                            @if(session($relations.'_orderby') == 'location_name' && (session($relations.'_direction')) == 'desc') selected @endif>
+                        Location (Z-A))
+                    </option>
+                @endif
+                @if(Schema::hasColumn("{$table}",'manufacturer_id'))
+                    <option value="manufacturer_name asc"
+                            @if(session($relations.'_orderby') == 'manufacturer_name' && (session($relations.'_direction')) == 'asc') selected @endif>
+                        Manufacturer (A-Z)
+                    </option>
+                    <option value="manufacturer_name desc"
+                            @if(session($relations.'_orderby') == 'manufacturer_name' && (session($relations.'_direction')) == 'desc') selected @endif>
+                        Manufacturer (Z-A)
+                    </option>
+                @endif
+                @if(Schema::hasColumn("{$table}",'purchased_date'))
+                    <option value="purchased_date asc"
+                            @if(session($relations.'_orderby') == 'purchased_date' && (session($relations.'_direction')) == 'asc') selected
+                            @elseif(!session()->has('orderby')) selected @endif>Date (Earliest to Latest)
+                    </option>
+                    <option value="purchased_date desc"
+                            @if(session($relations.'_orderby') == 'purchased_date' && (session($relations.'_direction')) == 'desc') selected
+                            @elseif(!session()->has('orderby')) selected @endif>Date (Latest to Earliest)
+                    </option>
+                @endif
+                @if(Schema::hasColumn("{$table}",'purchased_cost'))
+                    <option value="purchased_cost asc"
+                            @if(session($relations.'_orderby') == 'purchased_cost' && (session($relations.'_direction')) == 'asc') selected @endif>
+                        Cost (Low to High)
+                    </option>
+                    <option value="purchased_cost desc"
+                            @if(session($relations.'_orderby') == 'purchased_cost' && (session($relations.'_direction')) == 'desc') selected @endif>
+                        Cost (High to Low)
+                    </option>
+                @endif
+                @if(Schema::hasColumn("{$table}",'supplier_id'))
+                    <option value="supplier_name asc"
+                            @if(session($relations.'_orderby') == 'supplier_name' && (session($relations.'_direction')) == 'asc') selected @endif>
+                        Supplier (A-Z)
+                    </option>
+                    <option value="supplier_name desc"
+                            @if(session($relations.'_orderby') == 'supplier_name' && (session($relations.'_direction')) == 'desc') selected @endif>
+                        Supplier (Z-A)
+                    </option>
+                @endif
+                @if(Schema::hasColumn("{$table}",'audit_date'))
                     <option value="audit_date asc"
-                            @if(session('orderby') == 'audit_date' && (session('direction')) == 'asc') selected @endif>
+                            @if(session($relations.'_orderby') == 'audit_date' && (session($relations.'_direction')) == 'asc') selected @endif>
                         Audit Date (Earliest to Latest)
                     </option>
                     <option value="audit_date desc"
-                            @if(session('orderby') == 'audit_date' && (session('direction')) == 'desc') selected @endif>
+                            @if(session($relations.'_orderby') == 'audit_date' && (session($relations.'_direction')) == 'desc') selected @endif>
                         Audit Date (Latest to Earliest)
                     </option>
                 @endif

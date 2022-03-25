@@ -1,24 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'View all Assets')
-
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
-          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
-          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-@endsection
+@section('title', 'View all Computer Equipment')
 
 @section('content')
-    <x-wrappers.nav title="Assets">
+    <x-wrappers.nav title="Computer Equipment">
         @can('recycleBin', \App\Models\Asset::class)
             <x-buttons.recycle :route="route('assets.bin')" :count="\App\Models\Asset::onlyTrashed()->count()"/>
         @endcan
         @can('create' , \App\Models\Asset::class)
-            <x-buttons.add :route="route('assets.create')">Assets(s)</x-buttons.add>
+            <x-buttons.add :route="route('assets.create')">Equipment)</x-buttons.add>
         @endcan
         @can('generatePDF', \App\Models\Asset::class)
             @if ($assets->count() == 1)
@@ -34,57 +24,68 @@
                 <x-form.layout class="d-inline-block" action="/exportassets">
                     <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
                                   :value="json_encode($assets->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span>
+                    </x-buttons.submit>
                 </x-form.layout>
             @endif
-            <div class="dropdown show d-inline">
-                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Bulk Options
-                </a>
-                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                    @can('create', \App\Models\Asset::class)
-                        <x-buttons.dropdown-item id="import">
-                            Import
+            <div class="dropdown ms-2 me-2 d-inline-block">
+                <button class=" btn btn-sm btn-lilac d-inline" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    Bulk Options <i class="fas fa-fw fa-caret-down sidebar-icon"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li>
+                        <p class='text-blue text-center p-2 border-bottom border-secondary'>Bulk Options</p>
+                    </li>
+                    <li class='my-1'>
+                        @can('create', \App\Models\Asset::class)
+                            <x-buttons.dropdown-item id="import">
+                                Import
+                            </x-buttons.dropdown-item>
+                        @endcan
+                        <x-buttons.dropdown-item
+                            form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
+                            Dispose
                         </x-buttons.dropdown-item>
-                    @endcan
-                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkDisposalModal'">
-                        Dispose
-                    </x-buttons.dropdown-item>
-                    <x-buttons.dropdown-item form-requirements=" data-toggle='modal' data-target='#bulkTransferModal'">
-                        Transfer
-                    </x-buttons.dropdown-item>
-                </div>
+                        <x-buttons.dropdown-item
+                            form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkTransferModal'">
+                            Transfer
+                        </x-buttons.dropdown-item>
+                    </li>
+                </ul>
+
             </div>
         @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
     @php
-        if(auth()->user()->role_id == 1){
-            $limit = \App\Models\Asset::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) DESC')->pluck('purchased_cost')->first();
-            $floor = \App\Models\Asset::orderByRaw('CAST(purchased_cost as DECIMAL(8,2)) ASC')->pluck('purchased_cost')->first();
-        }else{
-            $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
-            $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
-        }
-        if(session()->has('amount')){
-            $amount = str_replace('£', '', session('amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
-        }else{
-            $start_value = $floor;
-            $end_value = $limit;
-        }
+        $limit = auth()->user()->location_assets()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+        $floor = auth()->user()->location_assets()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+
+    if(session()->has('amount')){
+        $amount = str_replace('£', '', session('amount'));
+        $amount = explode(' - ', $amount);
+        $start_value = intval($amount[0]);
+        $end_value = intval($amount[1]);
+    }else{
+        $start_value = $floor;
+        $end_value = $limit;
+    }
     @endphp
     <section>
         <p class="mb-4">Below are all the Assets stored in the management system. Each has
                         different options and locations can created, updated, deleted and filtered</p>
         <!-- DataTales Example -->
-        <x-filters.navigation model="Asset" :filter="$filter"/>
-        <x-filters.filter model="Asset" relations="assets" :filter="$filter" :locations="$locations"
-                          :statuses="$statuses" :categories="$categories"/>
-        
+        {{--
+            vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            model = the Model Name
+            relations = Relationship Name e.g $model->relationship or $asset->categories
+            table = RAW table name to check if the Schema has the column heading
+        --}}
+        <x-filters.navigation model="Asset" relations="assets" table="assets"/>
+        <x-filters.filter model="Asset" relations="assets" table="assets" :locations="$locations" :statuses="$statuses"
+                          :categories="$categories"/>
+
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive" id="table">
@@ -134,7 +135,7 @@
                                                  alt="{{$asset->location->name}}"
                                                  title="{{ $asset->location->name }}<br>{{ $asset->room ?? 'Unknown'}}"/>
                                         @else
-                                            {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'" data-toggle="tooltip" data-placement="top" title="">'
+                                            {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($asset->location->icon ?? '#666').'" data-bs-toggle="tooltip" data-bs-placement="top" title="">'
                                                 .strtoupper(substr($asset->location->name ?? 'u', 0, 1)).'</span>' !!}
                                         @endif
                                     </td>
@@ -244,32 +245,43 @@
     <x-modals.delete/>
     <x-modals.bulk-file title="disposal" :route="route('assets.bulk.disposal')"/>
     <x-modals.bulk-file title="transfer" :route="route('assets.bulk.transfer')"/>
-    <x-modals.import/>
+    <x-modals.import :route="route('assets.import')"/>
 @endsection
 
 @section('js')
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-            integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/import.js')}}"></script>
     <script src="{{asset('js/transfer.js')}}"></script>
     <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/filter.js')}}"></script>
     <script>
-        $(function () {
-            $("#slider-range").slider({
-                range: true,
-                min: {{ floor($floor)}},
-                max: {{ round($limit)}},
-                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
-                slide: function (event, ui) {
-                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
-                }
-            });
-            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
-                " - £" + $("#slider-range").slider("values", 1));
+        let sliderMin = document.querySelector('#customRange1');
+        let sliderMax = document.querySelector('#customRange2');
+        let sliderMinValue = document.querySelector('#minRange');
+        let sliderMaxValue = document.querySelector('#maxRange');
+
+        //setting slider ranges
+        sliderMin.setAttribute('min', {{ floor($start_value)}});
+        sliderMin.setAttribute('max', {{ round($end_value)}});
+        sliderMax.setAttribute('min', {{ floor($start_value)}});
+        sliderMax.setAttribute('max', {{ round($end_value)}});
+        sliderMax.value = {{ round($end_value)}};
+        sliderMin.value = {{ floor($start_value)}};
+
+        sliderMinValue.innerHTML = {{ floor($start_value)}};
+        sliderMaxValue.innerHTML = {{ round($end_value)}};
+
+        sliderMin.addEventListener('input', function () {
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMaxValue.innerHTML = sliderMax.value;
+
+        });
+        sliderMax.addEventListener('input', function () {
+            sliderMaxValue.innerHTML = sliderMax.value;
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMin.setAttribute('max', sliderMax.value);
+
+
         });
     </script>
 @endsection
