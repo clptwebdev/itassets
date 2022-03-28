@@ -72,7 +72,7 @@ class FFEController extends Controller {
         $suppliers = Supplier::all();
         $statuses = Status::all();
         // Return the Create View to the browser
-        return view('ffe.create', [
+        return view('FFE.create', [
             "locations" => $locations,
             "manufacturers" => $manufacturers,
             "suppliers" => $suppliers,
