@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\AUC;
+use App\Models\FFE;
+use App\Models\Machinery;
+use App\Models\Property;
+use App\Models\Software;
+use App\Models\Vehicle;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -19,8 +25,8 @@ use App\Models\Location;
 use App\Models\Miscellanea;
 use App\Models\Backup;
 
-class EventServiceProvider extends ServiceProvider
-{
+class EventServiceProvider extends ServiceProvider {
+
     /**
      * The event listener mappings for the application.
      *
@@ -37,7 +43,7 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Auth\Events\Login' => [
             'App\Listeners\LogSuccessfulLogin',
         ],
-         'Illuminate\Auth\Events\Logout' => [
+        'Illuminate\Auth\Events\Logout' => [
             'App\Listeners\LogSuccessfulLogout',
         ],
     ];
@@ -60,5 +66,12 @@ class EventServiceProvider extends ServiceProvider
         Location::observe(\App\Observers\LocationObserver::class);
         Miscellanea::observe(\App\Observers\MiscellaneaObserver::class);
         Backup::observe(\App\Observers\BackupObserver::class);
+        AUC::observe(\App\Observers\AUCObserver::class);
+        FFE::observe(\App\Observers\FFEObserver::class);
+        Property::observe(\App\Observers\PropertyObserver::class);
+        Machinery::observe(\App\Observers\MachineryObserver::class);
+        Vehicle::observe(\App\Observers\VehicleObserver::class);
+        Software::observe(\App\Observers\SoftwareObserver::class);
     }
+
 }

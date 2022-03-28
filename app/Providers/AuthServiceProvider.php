@@ -33,6 +33,12 @@ class AuthServiceProvider extends ServiceProvider {
         'App\Models\Field' => 'App\Policies\FieldPolicy',
         'App\Models\Log' => 'App\Policies\LogPolicy',
         'App\Models\Report' => 'App\Policies\ReportPolicy',
+        'App\Models\FFE' => 'App\Policies\FEEPolicy',
+        'App\Models\Property' => 'App\Policies\PropertyPolicy',
+        'App\Models\Machinery' => 'App\Policies\MachineryPolicy',
+        'App\Models\AUC' => 'App\Policies\AUCPolicy',
+        'App\Models\Vehicle' => 'App\Policies\VehiclePolicy',
+        'App\Models\Software' => 'App\Policies\SoftwarePolicy',
     ];
 
     /**
