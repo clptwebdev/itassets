@@ -15,7 +15,7 @@ class Accessory extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'model', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'status_id', 'order_no', 'warranty', 'location_id', 'room', 'notes', 'manufacturer_id', 'photo_id', 'depreciation_id', 'user_id'];
+    protected $fillable = ['name', 'asset_tag', 'model', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'status_id', 'order_no', 'warranty', 'location_id', 'room', 'notes', 'manufacturer_id', 'photo_id', 'depreciation_id', 'user_id'];
 
     public function photo()
     {

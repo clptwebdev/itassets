@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Location;
 use App\Models\FFE;
+use App\Models\Manufacturer;
+use App\Models\Supplier;
+use App\Models\Status;
 
 class FFEController extends Controller {
 
@@ -46,6 +49,11 @@ class FFEController extends Controller {
         ]);
     }
 
+    public function show(FFE $ffe)
+    {
+        return view('FFE.show', compact('ffe'));
+    }
+
     ////////////////////////////////////////////
     ////////////// Create Functions ////////////
     ////////////////////////////////////////////
@@ -68,45 +76,47 @@ class FFEController extends Controller {
             $locations = auth()->user()->locations;
         }
 
+        $manufacturers = Manufacturer::all();
+        $suppliers = Supplier::all();
+        $statuses = Status::all();
         // Return the Create View to the browser
         return view('ffe.create', [
-            "locations" => $locations
+            "locations" => $locations,
+            "manufacturers" => $manufacturers,
+            "suppliers" => $suppliers,
+            "statuses" => $statuses,
         ]);
     }
 
     public function store(Request $request)
     {
-        //Store the new property in the database
-
-        //Check to see if the user has permission to add nw property on the system
-        if(auth()->user()->cant('create', AUC::class))
+        if(auth()->user()->cant('create', FFE::class))
         {
-            return to_route('errors.forbidden', ['area', 'AUC', 'create']);
+            return ErrorController::forbidden(to_route('ffes.index'), 'Unauthorised to Create Furniture, Fixtures and Equipment.');
+
         }
 
-        //Validate the post data
-        $validation = $request->validate([
-            'name' => 'required',
-            'location_id' => 'required',
-            'value' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'depreciation' => 'required|numeric',
-            'type' => 'required|gt:0'
+        $request->validate([
+            "name" => "required|max:255",
+            "supplier_id" => "nullable",
+            "location_id" => "required",
+            "room" => "nullable",
+            "notes" => "nullable",
+            "status_id" => "nullable",
+            'order_no' => 'nullable',
+            'serial_no' => 'required',
+            'warranty' => 'int|nullable',
+            'purchased_date' => 'nullable|date',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
 
-        $property = new AUC;
 
-        $property->fill([
-            'name' => $request->name,
-            'location_id' => $request->location_id,
-            'value' => $request->value,
-            'depreciation' => $request->depreciation,
-            'type' => $request->type,
-            'date' => $request->date,
-        ])->save();
+        $ffe = FFE::create(array_merge($request->only(
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation'
+        ), ['user_id' => auth()->user()->id]));
+        $ffe->category()->attach(explode(',', $request->category));
 
-        session()->flash('success_message', $request->name . ' has been created successfully');
-
-        return to_route('aucs.index');
+        return to_route("ffes.index")->with('success_message', $request->name . 'has been successfully created!');
     }
 
     /**
@@ -115,10 +125,7 @@ class FFEController extends Controller {
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+    
 
     /**
      * Show the form for editing the specified resource.

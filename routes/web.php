@@ -228,7 +228,17 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/ffe/bin', 'recycleBin')->name('ffe.bin');
         Route::get('/ffe/{ffe}/restore', 'restore')->name('ffe.restore');
         Route::post('/ffe/{ffe}/remove', 'forceDelete')->name('ffe.remove');
+        //Exports
+        Route::post("/export/aucs", "export");
+        //Imports
+        Route::post("/import/ffes", "import");
+        Route::Post("/import/ffes/errors", "importErrors");
+        Route::Post("/import/ffes/errors/export", "exportImportErrors")->name("ffes.export.import");
+        //PDF
+        Route::post('/ffes/pdf', 'downloadPDF')->name('ffes.pdf');
+        Route::get('/ffes/{auc}/pdf', 'downloadShowPDF')->name('ffes.showPdf');
     });
+
     Route::controller(\App\Http\Controllers\ManufacturerController::class)->group(function() {
         //Manufacturer Routes
         Route::resource('/manufacturers', \App\Http\Controllers\ManufacturerController::class);

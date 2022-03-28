@@ -12,25 +12,62 @@ class FFE extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'location_id', 'purchased_cost', 'depreciation', 'type', 'purchased_date'];
+    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'status_id', 'order_no', 
+    'warranty', 'location_id', 'room', 'notes', 'manufacturer_id', 'photo_id', 'depreciation', 'user_id'];
 
-    public function name(): Attribute
+    public function photo()
     {
-        return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
-        );
+        return $this->belongsTo(Photo::class, 'photo_id');
     }
 
-    //Returns the Location attached to the property
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function comment()
+    {
+        return $this->morphToMany(Comment::class, "commentables");
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
     public function location()
     {
-        return $this->belongsTo(Location::class)->with('photo');
+        return $this->belongsTo(Location::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function depreciation()
+    {
+        return $this->belongsTo(Depreciation::class);
+    }
+
+    public function manufacturer()
+    {
+        return $this->belongsTo(Manufacturer::class, 'manufacturer_id');
+    }
+
+    public function category()
+    {
+        return $this->morphToMany(Category::class, 'cattable');
+    }
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'loggable');
     }
 
     //Works out the depreciation value at the date that is passed through to the function
     //Use the Depreciation time to minus the depreication charge
-    public function depreciation_value($date)
+    public function depreciation_value_by_date($date)
     {
         $age = $date->floatDiffInYears($this->purchased_date);
         $percent = 100 / $this->depreciation;
@@ -46,29 +83,24 @@ class FFE extends Model {
         }
     }
 
-    //Gets the building type in the table and displays it as a string
-    // (1 = Freehold Land 2 = Freehold Buildings 3 = Leadsehold Land 4 = Leasehold Buildings)
-    public function getType()
+    public function depreciation_value()
     {
-        switch($this->type)
+        $eol = \Carbon\Carbon::parse($this->purchased_date)->addYears($this->depreciation);
+        if($eol->isPast())
         {
-            case 1:
-                return "Freehold Land";
-                break;
-            case 2:
-                return "Freehold Buildings";
-                break;
-            case 3:
-                return "Leasehold Land";
-                break;
-            case 4:
-                return "Leasehold Buildings";
-                break;
-            default:
-                return "Unknown";
-        }
-    }
+            return 0;
+        } else
+        {
+            $age = Carbon::now()->floatDiffInYears($this->purchased_date);
+            $percent = 100 / $this->depreciation;
+            $percentage = floor($age) * $percent;
+            $dep = $this->purchased_cost * ((100 - $percentage) / 100);
 
+            return $dep;
+        }
+
+    }
+    
     /////////////////////////////////////////////////
     ///////////////////Filters///////////////////////
     /////////////////////////////////////////////////

@@ -28,6 +28,10 @@ use App\Rules\checkAssetTag;
 
 class AccessoryController extends Controller {
 
+    ////////////////////////////////////////////
+    /////////////// Read Functions /////////////
+    ////////////////////////////////////////////
+
     public function index()
     {
         if(auth()->user()->cant('viewAll', Accessory::class))
@@ -62,6 +66,10 @@ class AccessoryController extends Controller {
             "filter" => 0,
         ]);
     }
+
+    ////////////////////////////////////////////
+    ///////////// Filter Functions /////////////
+    ////////////////////////////////////////////
 
     public function filter(Request $request)
     {
@@ -190,6 +198,10 @@ class AccessoryController extends Controller {
         return to_route('accessories.index');
     }
 
+    ////////////////////////////////////////////
+    ///////////// Create Functions /////////////
+    ////////////////////////////////////////////
+
     public function create()
     {
         if(auth()->user()->cant('create', Accessory::class))
@@ -206,19 +218,6 @@ class AccessoryController extends Controller {
             'categories' => Category::all(),
             'depreciations' => Depreciation::all(),
         ]);
-    }
-
-    public function newComment(Request $request)
-    {
-        $request->validate([
-            "title" => "required|max:255",
-            "comment" => "nullable",
-        ]);
-
-        $accessory = Accessory::find($request->accessory_id);
-        $accessory->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
-
-        return to_route('accessories.show', $accessory->id);
     }
 
     public function store(Request $request)
@@ -252,6 +251,21 @@ class AccessoryController extends Controller {
 
         return to_route("accessories.index")->with('success_message', $request->name . 'has been successfully created!');
     }
+
+    public function newComment(Request $request)
+    {
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $accessory = Accessory::find($request->accessory_id);
+        $accessory->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+
+        return to_route('accessories.show', $accessory->id);
+    }
+
+    
 
     public function importErrors(Request $request)
     {
