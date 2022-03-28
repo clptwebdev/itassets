@@ -35,7 +35,7 @@ class FFEController extends Controller {
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['fefe_filter' => false]);
 
-        return view('ffe.view', [
+        return view('FFE.view', [
             "ffes" => $ffes,
             "locations" => $locations,
         ]);
