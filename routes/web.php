@@ -346,9 +346,10 @@ Route::group(['middleware' => 'auth'], function() {
         //Exports
         Route::get("/exportmiscellaneous", "export");
         //Imports
+        Route::Post("miscellanea/export-import-errors", "importErrors")->name("miscellanea-export.import");
         Route::post("/importmiscellaneous", "import");
         Route::Post("miscellaneous/create/ajax", "ajaxMany");
-        Route::Post("miscellaneous/export-import-errors", "importErrors")->name("miscellaneaexport.import");
+
     });
     Route::controller(\App\Http\Controllers\LogController::class)->group(function() {
         //Logs

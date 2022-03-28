@@ -269,6 +269,7 @@ class MiscellaneaController extends Controller {
             return ErrorController::forbidden(to_route('miscellaneous.index'), 'Unauthorised to Export Miscellaneous.');
 
         }
+
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
@@ -447,7 +448,7 @@ class MiscellaneaController extends Controller {
             return to_route('miscellaneous.index')->with('danger_message', "CSV Heading's Incorrect Please amend and try again!");
         }
         //headings incorrect end
-        
+
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());
@@ -561,22 +562,6 @@ class MiscellaneaController extends Controller {
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£' . $f->purchased_cost;
-            $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation->years);
-            if($f->depreciation->exists())
-            {
-                if($eol->isPast())
-                {
-                    $dep = 0;
-                } else
-                {
-
-                    $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
-                    $percent = 100 / $f->depreciation->years;
-                    $percentage = floor($age) * $percent;
-                    $dep = $f->purchased_cost * ((100 - $percentage) / 100);
-                }
-            }
-            $array['depreciation'] = $dep;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty ?? '0';
             $array['status'] = $f->status->name ?? 'N/A';

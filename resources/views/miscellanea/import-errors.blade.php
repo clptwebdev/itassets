@@ -2,29 +2,30 @@
 
 @section('title', 'Miscellanea Import Errors')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
 
 @section('content')
-    {{--    <form action="/components/create/import" method="POST">--}}
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
         @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
         <div>
-            <form action="{{route('miscellaneaexport.import')}}" method="POST" class="d-inline">
+          
+            <form action="{{route('miscellanea-export.import')}}" method="POST" class="d-inline">
                 @csrf
                 <div class="form-group">
+
                     <input type="hidden" class="form-control " name="name" id="name" placeholder=""
                            value="{{htmlspecialchars(json_encode($valueArray))}}">
                 </div>
-                <button type="submit" class="d-inline-block btn btn-sm btn-yellow shadow-sm"><i
-                        class="far fa-save fa-sm text-white-50"></i> Download Errors
-                </button>
+                @if(collect($errorArray)->count() > 1)
+                    <button type='submit' class="d-inline-block btn btn-sm btn-yellow shadow-sm"><i
+                            class="far fa-save fa-sm text-white-50"></i> Download Errors
+                    </button>
+                @endif
             </form>
             @can('viewAny' , \App\Models\Miscellanea::class)
-                <a href="/miscellaneous" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i class="fas fa-arrow-alt-circle-left fa-sm te
+                <a href="{{route('miscellaneous.index')}}"
+                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i class="fas fa-arrow-alt-circle-left fa-sm te
                     xt-white-50"></i> Back to miscellaneous</a>
             @endcan
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i

@@ -10,7 +10,7 @@
                     <input type="hidden" class="import-control " name="asset_tag" id="asset_tag" placeholder=""
                            value="{{htmlspecialchars(json_encode($valueArray))}}">
                 </div>
-                @can('export' , \App\Models\Asset::class)
+                @can('viewAll' , \App\Models\Asset::class)
                     <button type="submit" class="d-inline-block btn btn-sm btn-yellow shadow-sm"><i
                             class="far fa-save fa-sm text-white-50"></i> Save All Errors as Excel
                     </button>

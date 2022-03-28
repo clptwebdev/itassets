@@ -198,4 +198,13 @@ class User extends Authenticatable {
         }
     }
 
+    public static function globalAdmins()
+    {
+        $role = Role::whereName('global_admin')->first();
+        if($role)
+        {
+            return User::whereRoleId($role->id)->get();
+        }
+    }
+
 }
