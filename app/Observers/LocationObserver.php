@@ -20,8 +20,9 @@ class LocationObserver {
             'loggable_id' => $location->id ?? 0,
             'data' => $name . ' created a new Location - ' . $location->name,
         ]);
-        $superAdmin = User::SuperAdmin();
-        foreach($superAdmin as $user)
+        $role = Role::whereName('global_admin')->first();
+        $globals = User::whereRoleId($role->id)->get();
+        foreach($globals as $user)
         {
             $user->locations()->attach($location->id);
 

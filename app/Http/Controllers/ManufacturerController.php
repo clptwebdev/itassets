@@ -6,6 +6,7 @@ use App\Exports\ManufacturerExport;
 use App\Imports\ManufacturerImport;
 use App\Models\Manufacturer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\HeadingRowImport;
@@ -98,7 +99,7 @@ class ManufacturerController extends Controller {
 
     public function edit(Manufacturer $manufacturer)
     {
-        if(auth()->user()->cant('update', Manufacturer::class))
+        if(auth()->user()->cant('update', $manufacturer))
         {
             return ErrorController::forbidden(to_route('manufacturers.index'), 'Unauthorised to Edit Manufacturer.');
 
@@ -115,7 +116,8 @@ class ManufacturerController extends Controller {
 
         $request->validate([
             "name" => "required|max:255",
-            "supportPhone" => "required|max:14",
+            "supportUrl" => "nullable",
+            "supportPhone" => "nullable|numeric",
             'supportEmail' => [\Illuminate\Validation\Rule::unique('manufacturers')->ignore($manufacturer->id)],
             "PhotoId" => "nullable",
         ]);
@@ -129,7 +131,7 @@ class ManufacturerController extends Controller {
 
         session()->flash('success_message', request("name") . ' has been updated successfully');
 
-        return to_route('manufacturers.index');
+        return to_route('manufacturers.show', $manufacturer->id);
     }
 
     public function store()
@@ -151,8 +153,8 @@ class ManufacturerController extends Controller {
             "supportUrl" => request("supportUrl"),
             "supportEmail" => request("supportEmail"),
             "photoId" => request("photoId"),
-            session()->flash('success_message', request("name") . ' has been created successfully'),
         ]);
+        session()->flash('success_message', request("name") . ' has been created successfully');
 
         return to_route('manufacturers.index');
     }

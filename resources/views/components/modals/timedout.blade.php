@@ -1,5 +1,5 @@
 <!-- timeout-log Modal-->
-<div class="modal fade bd-example-modal-lg " id="timedoutModal" tabindex="-1" role="dialog"
+<div class="modal fade bd-example-modal-lg " id="timedoutModal" data-bs-backdrop="static" tabindex="-1" role="dialog"
      aria-labelledby="timedoutModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg " role="document">
         <div class="modal-content">

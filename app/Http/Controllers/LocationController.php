@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Exports\LocationsExport;
 use App\Models\Location;
 use App\Http\Controllers\Controller;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +18,7 @@ class LocationController extends Controller {
 
     public function index()
     {
+
         if(auth()->user()->cant('viewAll', Location::class))
         {
             return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Locations.');

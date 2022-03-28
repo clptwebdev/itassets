@@ -4,8 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateManufacturersTable extends Migration
-{
+class CreateManufacturersTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -13,10 +13,10 @@ class CreateManufacturersTable extends Migration
      */
     public function up()
     {
-        Schema::create('manufacturers', function (Blueprint $table) {
+        Schema::create('manufacturers', function(Blueprint $table) {
             $table->string("name")->unique();
             $table->string("supportUrl")->nullable();
-            $table->string("supportPhone");
+            $table->string("supportPhone")->nullable();
             $table->string("supportEmail");
             $table->string("photoId")->nullable();
             $table->id();
@@ -33,4 +33,5 @@ class CreateManufacturersTable extends Migration
     {
         Schema::dropIfExists('manufacturers');
     }
+
 }

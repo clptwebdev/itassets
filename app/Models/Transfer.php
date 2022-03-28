@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
-class Transfer extends Model
-{
+class Transfer extends Model {
 
     use HasFactory;
 
@@ -33,10 +33,18 @@ class Transfer extends Model
         return $this->belongsTo(User::class, 'super_id')->with('photo');
     }
 
-    public static function updateCache(){
+    public function notes(): Attribute
+    {
+        return new Attribute(
+            fn($value) => ucfirst($value),
+            fn($value) => strtolower($value),
+        );
+    }
+
+    public static function updateCache()
+    {
         Cache::forget('transfer_count');
         Cache::set('transfers_count', Transfer::all()->count());
     }
-
 
 }

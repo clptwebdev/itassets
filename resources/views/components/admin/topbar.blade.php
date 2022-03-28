@@ -73,7 +73,8 @@
                 </a>
             </li>
         @endcan
-        @can('viewAny' , App\Models\Log::class)
+        @can('view
+Any' , App\Models\Log::class)
         <!-- Nav Item - Alerts -->
             <li class="nav-item dropdown no-arrow mx-1">
                 <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown"

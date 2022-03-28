@@ -11,7 +11,7 @@ class UserObserver {
     public function created(User $user)
     {
         $name = auth()->user()->name ?? 'System';
-        $role = auth()->user()->role->name;
+        $role = auth()->user()->role->name ?? 'N/A';
         $schools = "";
         foreach($user->locations as $location)
         {
