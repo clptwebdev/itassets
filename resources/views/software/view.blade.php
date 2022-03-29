@@ -109,7 +109,7 @@
                                 <td class="text-center">{{$software->location->name}}</td>
                                 <td class="text-center">
                                     £{{number_format($software->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
-                                    <small>{{$software->depreciation}} Years</small></td>
+                                    <br><small>{{$software->depreciation}} Years</small></td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
                                         @can('view', $software, \App\Models\Software::class)

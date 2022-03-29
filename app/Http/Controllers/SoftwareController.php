@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\SoftwareImport;
 use App\Jobs\PropertiesPdf;
 use App\Jobs\softwarePdf;
 use App\Jobs\SoftwaresPdf;
@@ -13,6 +14,7 @@ use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\HeadingRowImport;
 use PDF;
 
 class SoftwareController extends Controller {
@@ -323,6 +325,21 @@ class SoftwareController extends Controller {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Import Software.');
 
         }
+        //headings incorrect start
+        $column = (new HeadingRowImport)->toArray($request->file("csv"));
+        $columnPopped = array_pop($column);
+        $values = array_flip(array_pop($columnPopped));
+        if(
+            //checks for spelling and if there present for any allowed heading in the csv.
+            isset($values['name']) && isset($values['supplier_id']) && isset($values['location_id'])
+            && isset($values['depreciation']) && isset($values['purchased_date']) && isset($values['purchased_cost'])
+        )
+        {
+        } else
+        {
+            return to_route('assets.index')->with('danger_message', "CSV Heading's Incorrect Please amend and try again!");
+        }
+        //headings incorrect end
         $extensions = array("csv");
 
         $result = array($request->file('csv')->getClientOriginalExtension());
@@ -330,8 +347,8 @@ class SoftwareController extends Controller {
         if(in_array($result[0], $extensions))
         {
             $path = $request->file("csv")->getRealPath();
-//            $import = new softwareImport;
-//            $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
+            $import = new SoftwareImport;
+            $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
             $row = [];
             $attributes = [];
             $errors = [];
@@ -392,6 +409,7 @@ class SoftwareController extends Controller {
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
                     "locations" => auth()->user()->locations,
+                    "suppliers" => Supplier::all(),
                 ]);
 
             } else
@@ -418,7 +436,6 @@ class SoftwareController extends Controller {
             'purchased_date.*' => 'date',
             'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             "depreciation.*" => "nullable",
-            "type.*" => "nullable",
         ]);
 
         if($validation->fails())

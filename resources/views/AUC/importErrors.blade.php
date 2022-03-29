@@ -3,9 +3,6 @@
 @section('title', 'AUC Import Errors')
 
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
 
 @section('content')
     {{--    <form action="/components/create/import" method="POST">--}}
@@ -25,8 +22,7 @@
                         class="far fa-save fa-sm text-dark-50"></i> Download Errors
                 </button>
             </form>
-            <a href="{{ route('aucs.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                    class="fas fa-chevron-left fa-sm te
+            <a href="{{ route('aucs.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i class="fas fa-chevron-left fa-sm te
                     xt-white-50"></i> Back to AUCs</a>
             <a id="importHelpBtn" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
