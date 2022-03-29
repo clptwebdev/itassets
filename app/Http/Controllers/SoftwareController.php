@@ -25,7 +25,7 @@ class SoftwareController extends Controller {
     {
         //Check to see if the User has permission to View All the Software.
 
-        if(auth()->user()->cant('viewAll', AUC::class))
+        if(auth()->user()->cant('viewAll', Software::class))
         {
             return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised | View Software.');
 
@@ -99,7 +99,7 @@ class SoftwareController extends Controller {
     public function show(Software $software)
     {
         //Check to see if the User is has permission to create
-        if(auth()->user()->cant('view', $software, Software::class))
+        if(auth()->user()->cant('view', $software))
         {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
 
@@ -114,7 +114,7 @@ class SoftwareController extends Controller {
     public function edit(Software $software)
     {
         //Check to see if the User is has permission to create
-        if(auth()->user()->cant('update', Software::class))
+        if(auth()->user()->cant('update', $software))
         {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
 
