@@ -1137,7 +1137,8 @@ class AssetController extends Controller {
                     $dep = $f->purchased_cost * ((100 - $percentage) / 100);
                 }
             }
-            $array['depreciation'] = $dep;
+
+            $array['depreciation'] = $dep ?? 0;
             $array['donated'] = $f->donated;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty ?? 'N/A';
