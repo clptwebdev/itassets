@@ -212,7 +212,9 @@
                                                     @endif
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    Additional Fieldsets: {{ $asset->model->fieldset->name}}
+                                                    @if($asset->model)
+                                                        Additional Fieldsets: {{ $asset->model->fieldset->name}}
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
