@@ -10,8 +10,6 @@ class SoftwarePolicy {
 
     use HandlesAuthorization;
 
-    private $model;
-
     public function __construct()
     {
         $this->model = auth()->user()->role->permissions->where('model', '=', 'Software')->first();
@@ -30,7 +28,6 @@ class SoftwarePolicy {
 
     public function create(User $user)
     {
-
         return $this->model->create;
     }
 

@@ -51,7 +51,6 @@ class SoftwareController extends Controller {
         if(auth()->user()->cant('create', Software::class))
         {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Create Software.');
-
         }
 
         //Get the Locations that the user has permission for
