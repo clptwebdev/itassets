@@ -10,7 +10,7 @@ class SoftwarePolicy {
 
     use HandlesAuthorization;
 
-    public $model;
+    private $model;
 
     public function __construct()
     {
