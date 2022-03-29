@@ -10,12 +10,7 @@ class SoftwarePolicy {
 
     use HandlesAuthorization;
 
-    public function viewAll(User $user)
-    {
-        return true;
-    }
-
-   /*  private $model;
+    private $model;
 
     public function __construct()
     {
@@ -60,6 +55,6 @@ class SoftwarePolicy {
     public function generateShowPDF(User $user, Software $software)
     {
         return $this->model->fin_reports && in_array($software->location_id, $user->locationsArray());
-    } */
+    }
 
 }
