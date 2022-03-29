@@ -31,7 +31,11 @@ class SoftwareController extends Controller {
         }
 
         // find the locations that the user has been assigned to
+<<<<<<< HEAD
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('software')->get();
+=======
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name', 'location_id');
+>>>>>>> 58c058fedd5841e55af1ed3a31da0d45caf9cfeb
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
         $softwares = Software::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
