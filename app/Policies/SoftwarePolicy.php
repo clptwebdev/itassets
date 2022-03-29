@@ -19,43 +19,57 @@ class SoftwarePolicy {
 
     public function viewAll(User $user)
     {
+        return true;
+
         return $this->model->view;
     }
 
     public function view(User $user, Software $software)
     {
+        return true;
 
         return $this->model->view && in_array($software->location_id, $user->locationsArray());
     }
 
     public function create(User $user)
     {
+        return true;
 
         return $this->model->create;
     }
 
     public function update(User $user)
     {
+        return true;
+
         return $this->model->update;
     }
 
     public function recycleBin(User $user)
     {
+        return true;
+
         return $this->model->archive;
     }
 
     public function delete(User $user)
     {
+        return true;
+
         return $this->model->delete;
     }
 
     public function generatePDF(User $user)
     {
+        return true;
+
         return $this->model->fin_reports;
     }
 
     public function generateShowPDF(User $user, Software $software)
     {
+        return true;
+
         return $this->model->fin_reports && in_array($software->location_id, $user->locationsArray());
     }
 
