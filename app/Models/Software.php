@@ -15,14 +15,6 @@ class Software extends Model {
 
     protected $guarded = [];
 
-    public function name(): Attribute
-    {
-        return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
-        );
-    }
-
     //Returns the Location attached to the property
     public function location()
     {
