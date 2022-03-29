@@ -23,7 +23,7 @@ class SoftwareController extends Controller {
     {
         //Check to see if the User has permission to View All the Software.
 
-        if(auth()->user()->cant('viewAll', AUC::class))
+        if(auth()->user()->cant('viewAll', Software::class))
         {
             return ErrorController::forbidden('/dashboard', 'Unauthorised | View Software.');
         }

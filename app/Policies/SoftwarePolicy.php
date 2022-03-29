@@ -10,21 +10,19 @@ class SoftwarePolicy {
 
     use HandlesAuthorization;
 
-    private $model;
-
     public function __construct()
     {
-        $this->model = auth()->user()->role->permissions->where('model', '=', 'Software')->first();
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'AUC')->first();
+    }
+
+    public function view(User $user, AUC $auc)
+    {
+        return $this->model->view && in_array($auc->location_id, $user->locationsArray());
     }
 
     public function viewAll(User $user)
     {
-        return true;
-    }
-
-    public function view(User $user, Software $software)
-    {
-        return $this->model->view && in_array($software->location_id, $user->locationsArray());
+        return $this->model->view;
     }
 
     public function create(User $user)
@@ -32,9 +30,9 @@ class SoftwarePolicy {
         return $this->model->create;
     }
 
-    public function update(User $user, Software $software)
+    public function update(User $user)
     {
-        return $this->model->view && in_array($software->location_id, $user->locationsArray());
+        return $this->model->update;
     }
 
     public function recycleBin(User $user)
@@ -47,14 +45,12 @@ class SoftwarePolicy {
         return $this->model->delete;
     }
 
-    public function generatePDF(User $user)
-    {
+    public function generatePDF(User $user){
         return $this->model->fin_reports;
     }
 
-    public function generateShowPDF(User $user, Software $software)
-    {
-        return $this->model->fin_reports && in_array($software->location_id, $user->locationsArray());
+    public function generateShowPDF(User $user, AUC $auc){
+        return $this->model->fin_reports && in_array($auc->location_id, $user->locationsArray());
     }
 
 }
