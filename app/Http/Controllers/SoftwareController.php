@@ -8,16 +8,15 @@ use App\Imports\SoftwareImport;
 use App\Jobs\PropertiesPdf;
 use App\Jobs\softwarePdf;
 use App\Jobs\SoftwaresPdf;
+use App\Models\Asset;
 use App\Models\AUC;
 use App\Models\Location;
 use App\Models\software;
 use App\Models\Report;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\HeadingRowImport;
-use PDF;
 
 class SoftwareController extends Controller {
 
@@ -25,9 +24,9 @@ class SoftwareController extends Controller {
     {
         //Check to see if the User has permission to View All the Software.
 
-        if(auth()->user()->cant('viewAll', AUC::class))
+        if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised | View Software.');
+            return ErrorController::forbidden(to_route('/dashboard'), 'Unauthorised | View Software.');
 
         }
         // find the locations that the user has been assigned to
