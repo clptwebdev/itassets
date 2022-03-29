@@ -27,7 +27,8 @@ class SoftwareController extends Controller {
 
         if(auth()->user()->cant('viewAll', Software::class))
         {
-            return ErrorController::forbidden('Unauthorised | View Software.');
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised | View Software.');
+
         }
         // find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('software')->get();
