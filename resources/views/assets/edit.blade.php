@@ -202,7 +202,7 @@
                                                     Model No: {{ $asset->model->model_no ?? 'N/A'}}
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    @if($asset->model->depreciation)
+                                                    @if($asset->model)
                                                         @php($months = $asset->model->depreciation->years * 12)
                                                         Deprecation: {{ $asset->model->depreciation->name}}
                                                         ({{$months}}
