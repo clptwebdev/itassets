@@ -59,14 +59,8 @@ class FFEController extends Controller {
             return to_route('errors.forbidden', ['area', 'FFE', 'create']);
         }
 
-        //Get the Locations that the user has permission for
-        if(auth()->user()->role_id == 1)
-        {
-            $locations = Location::all();
-        } else
-        {
-            $locations = auth()->user()->locations;
-        }
+        //Find the locations that the user has been assigned to
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('ffe')->get();
 
         $manufacturers = Manufacturer::all();
         $suppliers = Supplier::all();
@@ -104,7 +98,7 @@ class FFEController extends Controller {
 
 
         $ffe = FFE::create(array_merge($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation'
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ), ['user_id' => auth()->user()->id]));
         $ffe->category()->attach(explode(',', $request->category));
 
@@ -125,9 +119,28 @@ class FFEController extends Controller {
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(FFE $ffe)
     {
-        //
+        //Check to see if the User is has permission to create an AUC
+        if(auth()->user()->cant('update', $ffe))
+        {
+            return to_route('errors.forbidden', ['area', 'FFE', 'create']);
+        }
+
+        //Find the locations that the user has been assigned to
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('ffe')->get();
+
+        $manufacturers = Manufacturer::all();
+        $suppliers = Supplier::all();
+        $statuses = Status::all();
+        // Return the Create View to the browser
+        return view('FFE.create', [
+            "ffe" => $ffe,
+            "locations" => $locations,
+            "manufacturers" => $manufacturers,
+            "suppliers" => $suppliers,
+            "statuses" => $statuses,
+        ]);
     }
 
     /**

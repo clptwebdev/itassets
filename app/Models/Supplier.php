@@ -16,7 +16,6 @@ class Supplier extends Model {
     public function email(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
             fn($value) => strtolower($value),
         );
     }
@@ -24,40 +23,35 @@ class Supplier extends Model {
     public function address_1(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
+            fn($value) => ucwords($value),
         );
     }
 
     public function address_2(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
+            fn($value) => ucwords($value),
         );
     }
 
     public function city(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
+            fn($value) => ucwords($value),
         );
     }
 
     public function county(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
+            fn($value) => ucwords($value),
         );
     }
 
     public function postcode(): Attribute
     {
         return new Attribute(
-            fn($value) => ucwords($value),
-            fn($value) => strtolower($value),
+            fn($value) => strtoupper($value),
         );
     }
 
@@ -93,6 +87,18 @@ class Supplier extends Model {
     {
         return $this->hasMany(Consumable::class);
 
+    }
+
+    public function full_address($sep)
+    {
+        $output = $this->address_1 . $sep;
+        if($this->address_2 != '')
+        {
+            $output .= $this->address_2 . $sep;
+        }
+        $output .= $this->city . $sep . $this->postcode;
+
+        return $output;
     }
 
 }
