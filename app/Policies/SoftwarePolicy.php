@@ -24,6 +24,8 @@ class SoftwarePolicy {
 
     public function view(User $user, Software $software)
     {
+        return dd($this->model->view);
+
         return $this->model->view && in_array($software->location_id, $user->locationsArray());
     }
 

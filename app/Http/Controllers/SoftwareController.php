@@ -24,14 +24,15 @@ class SoftwareController extends Controller {
     public function index()
     {
         //Check to see if the User has permission to View All the Software.
-//        if(auth()->user()->cant('viewAll', Software::class))
-//        {
-//            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Software.');
-//
-//        }
+        if(auth()->user()->cant('viewAll', Software::class))
+        {
+            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Software.');
+        }
 
         // find the locations that the user has been assigned to
-        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name', 'location_id');
+
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('software')->get();
+
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
         $softwares = Software::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
