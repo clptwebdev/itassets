@@ -73,8 +73,8 @@
                                                 </div>
                                                 <small class="form-text text-muted">Can't find the Model your
                                                                                     after?
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#newModel">Click
-                                                                                                                  Here</a>to
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#newModel"> Click
+                                                                                                                   Here</a>to
                                                                                     create one.</small>
                                             </div>
                                             <div class="form-group">
