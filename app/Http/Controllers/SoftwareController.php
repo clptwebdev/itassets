@@ -9,7 +9,7 @@ use App\Jobs\PropertiesPdf;
 use App\Jobs\softwarePdf;
 use App\Jobs\SoftwaresPdf;
 use App\Models\Asset;
-use App\Models\AUC;
+use App\Models\Software;
 use App\Models\Location;
 use App\Models\software;
 use App\Models\Report;
@@ -24,7 +24,7 @@ class SoftwareController extends Controller {
     {
         //Check to see if the User has permission to View All the Software.
 
-        if(auth()->user()->cant('viewAll', AUC::class))
+        if(auth()->user()->cant('viewAll', Software::class))
         {
             return ErrorController::forbidden('/dashboard', 'Unauthorised | View Software.');
         }
