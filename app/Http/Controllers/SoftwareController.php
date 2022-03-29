@@ -27,7 +27,7 @@ class SoftwareController extends Controller {
 
         if(auth()->user()->cant('viewAll', Software::class))
         {
-            return dd(auth()->user()->role->name);
+            return dd(auth()->user()->role->permissions->where('model', ' = ', 'Software')->first());
 
 //            return ErrorController::forbidden('Unauthorised | View Software.');
         }
