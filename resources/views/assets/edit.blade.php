@@ -202,10 +202,14 @@
                                                     Model No: {{ $asset->model->model_no}}
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    @php($months = $asset->model->depreciation->years * 12)
-                                                    Depreication: {{ $asset->model->depreciation->name}}
-                                                    ({{$months}}
-                                                    months)
+                                                    @if($asset->model->depreciation)
+                                                        @php($months = $asset->model->depreciation->years * 12)
+                                                        Deprecation: {{ $asset->model->depreciation->name}}
+                                                        ({{$months}}
+                                                        months)
+                                                    @else
+                                                        Deprecation:Null
+                                                    @endif
                                                 </div>
                                                 <div class="model_no py-2 px-4">
                                                     Additional Fieldsets: {{ $asset->model->fieldset->name}}
