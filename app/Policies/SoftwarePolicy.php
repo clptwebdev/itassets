@@ -14,17 +14,16 @@ class SoftwarePolicy {
 
     public function __construct()
     {
-        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Software')->first();
+        $this->model = auth()->user()->role->permissions->where('model', '=', 'Software')->first();
     }
 
     public function viewAll(User $user)
     {
-        return $this->model->view;
+        return true;
     }
 
     public function view(User $user, Software $software)
     {
-
         return $this->model->view && in_array($software->location_id, $user->locationsArray());
     }
 
