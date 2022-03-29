@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SoftwareErrorsExport;
+use App\Exports\SoftwareExport;
 use App\Imports\SoftwareImport;
 use App\Jobs\PropertiesPdf;
 use App\Jobs\softwarePdf;
@@ -475,7 +476,7 @@ class SoftwareController extends Controller {
         }
         $softwares = Software::withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
         $date = \Carbon\Carbon::now()->format('dmyHi');
-//        \Maatwebsite\Excel\Facades\Excel::store(new softwareExport($softwares), "/public/csv/properties-{$date}.xlsx");
+        \Maatwebsite\Excel\Facades\Excel::store(new softwareExport($softwares), "/public/csv/softwares-{$date}.xlsx");
         $url = asset("storage/csv/softwares-{$date}.xlsx");
 
         return to_route('softwares.index')
@@ -486,6 +487,7 @@ class SoftwareController extends Controller {
 
     public function exportImportErrors(Request $request)
     {
+        dd($request->name);
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);

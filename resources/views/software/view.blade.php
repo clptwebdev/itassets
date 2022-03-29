@@ -22,8 +22,8 @@
                 </x-form.layout>
             @endif
             @if($softwares->count() >1)
-                <x-form.layout class="d-inline-block" action="/export/Software">
-                    <x-form.input type="hidden" name="Software" :label="false" formAttributes="required"
+                <x-form.layout class="d-inline-block" action="/export/software">
+                    <x-form.input type="hidden" name="software" :label="false" formAttributes="required"
                                   :value="json_encode($softwares->pluck('id'))"/>
                     <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span>
                     </x-buttons.submit>
