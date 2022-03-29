@@ -10,11 +10,6 @@ class SoftwarePolicy {
 
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
     protected $model;
 
     public function __construct()
@@ -22,18 +17,20 @@ class SoftwarePolicy {
         $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Software')->first();
     }
 
-    public function view(User $user, Software $software)
-    {
-        return $this->model->view && in_array($software->location_id, $user->locationsArray());
-    }
-
     public function viewAll(User $user)
     {
         return $this->model->view;
     }
 
+    public function view(User $user, Software $software)
+    {
+
+        return $this->model->view && in_array($software->location_id, $user->locationsArray());
+    }
+
     public function create(User $user)
     {
+
         return $this->model->create;
     }
 

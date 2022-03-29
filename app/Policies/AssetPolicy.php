@@ -31,6 +31,7 @@ class AssetPolicy {
     public function view(User $user, Asset $asset)
     {
         return $this->model->view && in_array($asset->location_id, $user->locationsArray());
+
     }
 
     public function create(User $user)
@@ -82,7 +83,8 @@ class AssetPolicy {
         return $this->model->transfer && in_array($asset->location_id, $user->locationsArray());
     }
 
-    public function bypass_transfer(User $user){
+    public function bypass_transfer(User $user)
+    {
         return $this->request->request;
     }
 

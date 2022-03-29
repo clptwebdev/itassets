@@ -24,12 +24,13 @@ class SoftwareController extends Controller {
     public function index()
     {
         //Check to see if the User has permission to View All the Software.
-       /*  if(auth()->user()->cant('viewAll', Software::class))
+
+        if(auth()->user()->cant('viewAll', Software::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised | View Software.');
+            return dd(auth()->user()->role->permissions->where('model', ' = ', 'Software')->first());
 
-        } */
-
+//            return ErrorController::forbidden('Unauthorised | View Software.');
+        }
         // find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('software')->get();
         //Find the properties that are assigned to the locations the User has permissions to.
