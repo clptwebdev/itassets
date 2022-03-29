@@ -196,7 +196,7 @@
                                                          alt="Select Profile Picture">
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    Manufacturer: {{ $asset->model->manufacturer->name}}
+                                                    Manufacturer: {{ $asset->model->manufacturer->name ?? 'No Manufacturer found'}}
                                                 </div>
                                                 <div class="model_no py-2 px-4">
                                                     Model No: {{ $asset->model->model_no}}
