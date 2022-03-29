@@ -67,7 +67,6 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="{{asset('js/transfer.js')}}"></script>
     <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/comment.js')}}"></script>

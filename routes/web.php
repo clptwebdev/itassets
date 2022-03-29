@@ -279,6 +279,30 @@ Route::group(['middleware' => 'auth'], function() {
     });
 
     /////////////////////////////////////////////
+    /////////////// Software Routes /////////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\SoftwareController::class)->group(function() {
+        //Property
+        Route::resource("/softwares", \App\Http\Controllers\SoftwareController::class);
+        Route::post('/software/filter', 'filter')->name('software.filter');
+        Route::get('/software/filter/clear', 'clearFilter')->name('software.clear.filter');
+        Route::get('/software/filter', 'filter')->name('software.filtered');
+        Route::get('/software/bin', 'recycleBin')->name('software.bin');
+        Route::get('/software/{asset}/restore', 'restore')->name('software.restore');
+        Route::post('/software/{asset}/remove', 'forceDelete')->name('software.remove');
+        Route::post('/software/{asset}/comment', 'newComment')->name('software.comment');
+        //Exports
+        Route::post("/export/software", "export");
+        //Imports
+        Route::post("/import/software", "import");
+        Route::Post("/import/software/errors", "importErrors");
+        Route::Post("/import/software/export", "exportImportErrors")->name("software.export.import");
+        //PDF
+        Route::post('/software/pdf', 'downloadPDF')->name('software.pdf');
+        Route::get('/software/{software}/pdf', 'downloadShowPDF')->name('software.showPdf');
+    });
+    /////////////////////////////////////////////
     /////////////// Report Routes /////////////
     /////////////////////////////////////////////
 

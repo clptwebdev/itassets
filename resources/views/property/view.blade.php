@@ -30,8 +30,8 @@
                 </x-form.layout>
             @endif
             <div class="dropdown d-inline-block">
-                <a class="btn btn-sm btn-lilac dropdown-bs-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="btn btn-sm btn-lilac dropdown-bs-toggle p-2 p-md-1" href="#" role="button"
+                   id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Bulk Options
                 </a>
                 <div class="dropdown-menu dropdown-menu-end text-end" aria-labelledby="dropdownMenuLink">
@@ -226,19 +226,6 @@
     <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/import.js')}}"></script>
     <script>
-        $(function () {
-            $("#slider-range").slider({
-                range: true,
-                min: {{ floor($floor)}},
-                max: {{ round($limit)}},
-                values: [{{ floor($start_value)}}, {{ round($end_value)}}],
-                slide: function (event, ui) {
-                    $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
-                }
-            });
-            $("#amount").val("£" + $("#slider-range").slider("values", 0) +
-                " - £" + $("#slider-range").slider("values", 1));
-        });
         let sliderMin = document.querySelector('#customRange1');
         let sliderMax = document.querySelector('#customRange2');
         let sliderMinValue = document.querySelector('#minRange');

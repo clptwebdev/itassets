@@ -29,6 +29,11 @@
                 <i class="fas fa-fw fa-school sidebar-icon"></i>
                 <span class="sidebar-title">Property</span></a>
         </li>
+        <li class="nav-item @if(Request::url() == route('softwares.index')) {{ 'active' }} @endif">
+            <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('softwares.index')}}">
+                <i class="fas fa-fw fa-folder-open sidebar-icon"></i>
+                <span class="sidebar-title">Software</span></a>
+        </li>
         <li class="nav-item @if(Request::url() == route('aucs.index')) {{ 'active' }} @endif">
             <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('aucs.index')}}">
                 <i class="fas fa-fw fa-hammer sidebar-icon"></i>

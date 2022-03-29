@@ -4,8 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSoftwareTable extends Migration
-{
+class CreateSoftwareTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -13,10 +13,10 @@ class CreateSoftwareTable extends Migration
      */
     public function up()
     {
-        Schema::create('software', function (Blueprint $table) {
+        Schema::create('software', function(Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal("purchased_cost",11,2)->nullable();
+            $table->decimal("purchased_cost", 11, 2)->nullable();
             $table->integer("depreciation");
             $table->dateTime("purchased_date");
             $table->foreignId('supplier_id');
@@ -35,4 +35,5 @@ class CreateSoftwareTable extends Migration
     {
         Schema::dropIfExists('software');
     }
+
 }

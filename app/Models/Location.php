@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\SoftwareController;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -109,6 +110,11 @@ class Location extends Model {
     public function property()
     {
         return $this->hasMany(Property::class);
+    }
+
+    public function software()
+    {
+        return $this->hasMany(Software::class);
     }
 
     public function auc()
