@@ -88,7 +88,7 @@ class AUCController extends Controller {
         $locations = auth()->user()->locations;
 
         // Return the Create View to the browser
-        return view('auc.create', [
+        return view('AUC.create', [
             "locations" => $locations,
         ]);
     }
@@ -143,7 +143,7 @@ class AUCController extends Controller {
 
         }
 
-        return view('auc.edit', compact('auc'));
+        return view('AUC.edit', compact('auc'));
     }
 
     public function update(Request $request, AUC $auc)
@@ -233,7 +233,7 @@ class AUCController extends Controller {
         $aucs = auth()->user()->location_auc()->onlyTrashed()->paginate(intval($limit))->fragment('table');
         $locations = auth()->user()->locations;
 
-        return view('auc.bin', [
+        return view('AUC.bin', [
             "aucs" => $aucs,
             "locations" => $locations,
         ]);
