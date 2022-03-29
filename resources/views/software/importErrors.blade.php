@@ -11,7 +11,7 @@
         @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
 
         <div>
-            <form action="{{route('aucs.export.import')}}" method="POST" class="d-inline">
+            <form action="{{route('software.export.import')}}" method="POST" class="d-inline">
                 @csrf
                 <div class="form-group">
                     <input type="hidden" class="form-control " name="name" id="name" placeholder=""

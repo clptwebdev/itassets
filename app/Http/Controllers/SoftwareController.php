@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SoftwareErrorsExport;
 use App\Imports\SoftwareImport;
 use App\Jobs\PropertiesPdf;
 use App\Jobs\softwarePdf;
@@ -488,15 +489,12 @@ class SoftwareController extends Controller {
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
-
         if(auth()->user()->cant('viewAll', Software::class))
         {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Export Software Errors.');
-
         }
-
         $date = \Carbon\Carbon::now()->format('dmyHis');
-//        \Maatwebsite\Excel\Facades\Excel::store(new softwareErrorsExport($export), "/public/csv/software-errors-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new softwareErrorsExport($export), "/public/csv/software-errors-{$date}.csv");
         $url = asset("storage/csv/software-errors-{$date}.csv");
 
         return to_route('softwares.index')
