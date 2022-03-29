@@ -11,7 +11,7 @@ class MachineryPolicy {
 
     use HandlesAuthorization;
 
-    protected $model;
+    private $model;
 
     /**
      * Create a new policy instance.
