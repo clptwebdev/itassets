@@ -487,7 +487,6 @@ class SoftwareController extends Controller {
 
     public function exportImportErrors(Request $request)
     {
-        dd($request->name);
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
