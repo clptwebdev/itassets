@@ -25,16 +25,8 @@ class FFEController extends Controller {
             return to_route('errors.forbidden', ['area', 'FFE', 'view']);
         }
 
-        //Check to see if the user has SUper Admin Role
-        if(auth()->user()->role_id == 1)
-        {
-            //If the User has Super Admin Role/Correct Permissions find all the locations
-            $locations = Location::select('id', 'name')->withCount('ffe')->get();
-        } else
-        {
-            //Else find the locations that the user has been assigned to
-            $locations = auth()->user()->locations->select('id', 'name')->withCount('ffe')->get();
-        }
+        //Find the locations that the user has been assigned to
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('ffe')->get();
 
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('ffe_limit') ?? 25;
@@ -43,7 +35,7 @@ class FFEController extends Controller {
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['fefe_filter' => false]);
 
-        return view('ffe.view', [
+        return view('FFE.view', [
             "ffes" => $ffes,
             "locations" => $locations,
         ]);
@@ -80,7 +72,7 @@ class FFEController extends Controller {
         $suppliers = Supplier::all();
         $statuses = Status::all();
         // Return the Create View to the browser
-        return view('ffe.create', [
+        return view('FFE.create', [
             "locations" => $locations,
             "manufacturers" => $manufacturers,
             "suppliers" => $suppliers,
