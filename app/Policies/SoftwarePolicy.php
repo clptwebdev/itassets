@@ -14,7 +14,7 @@ class SoftwarePolicy {
 
     public function __construct()
     {
-        $this->model = auth()->user()->role->permissions->where('model', '=', 'Software')->first();
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Software')->first();
     }
 
     public function viewAll(User $user)
