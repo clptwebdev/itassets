@@ -199,7 +199,7 @@
                                                     Manufacturer: {{ $asset->model->manufacturer->name ?? 'No Manufacturer found'}}
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    Model No: {{ $asset->model->model_no}}
+                                                    Model No: {{ $asset->model->model_no ?? 'N/A'}}
                                                 </div>
                                                 <div class="model_no py-2 px-4">
                                                     @if($asset->model->depreciation)
