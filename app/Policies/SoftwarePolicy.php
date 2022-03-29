@@ -30,13 +30,12 @@ class SoftwarePolicy {
 
     public function create(User $user)
     {
-
         return $this->model->create;
     }
 
-    public function update(User $user)
+    public function update(User $user, Software $software)
     {
-        return $this->model->update;
+        return $this->model->view && in_array($software->location_id, $user->locationsArray());
     }
 
     public function recycleBin(User $user)

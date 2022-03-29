@@ -50,7 +50,6 @@ class SoftwareController extends Controller {
         if(auth()->user()->cant('create', Software::class))
         {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Create Software.');
-
         }
 
         //Get the Locations that the user has permission for
@@ -98,7 +97,7 @@ class SoftwareController extends Controller {
     public function show(Software $software)
     {
         //Check to see if the User is has permission to create
-        if(auth()->user()->cant('view', $software, Software::class))
+        if(auth()->user()->cant('view', $software))
         {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
 
@@ -113,7 +112,7 @@ class SoftwareController extends Controller {
     public function edit(Software $software)
     {
         //Check to see if the User is has permission to create
-        if(auth()->user()->cant('update', Software::class))
+        if(auth()->user()->cant('update', $software))
         {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
 
