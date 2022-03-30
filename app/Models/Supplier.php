@@ -83,6 +83,18 @@ class Supplier extends Model {
 
     }
 
+    public function software()
+    {
+        return $this->hasMany(Software::class);
+
+    }
+
+    public function broadband()
+    {
+        return $this->hasMany(Broadband::class);
+
+    }
+
     public function consumable()
     {
         return $this->hasMany(Consumable::class);

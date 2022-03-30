@@ -2,42 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BroadbandErrorsExport;
+use App\Exports\BroadbandExport;
 use App\Exports\SoftwareErrorsExport;
 use App\Exports\SoftwareExport;
+use App\Imports\BroadbandImport;
 use App\Imports\SoftwareImport;
-use App\Jobs\PropertiesPdf;
-use App\Jobs\softwarePdf;
+use App\Jobs\BroadbandPdf;
+use App\Jobs\BroadbandsPdf;
+use App\Jobs\SoftwarePdf;
 use App\Jobs\SoftwaresPdf;
-use App\Models\Asset;
-use App\Models\Software;
+use App\Models\Broadband;
 use App\Models\Location;
 use App\Models\Report;
+use App\Models\Software;
 use App\Models\Supplier;
+use http\Encoding\Stream\Debrotli;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\HeadingRowImport;
+use PDF;
 
-class SoftwareController extends Controller {
+class BroadbandController extends Controller {
 
     public function index()
     {
         //Check to see if the User has permission to View All the Software.
-
-        if(auth()->user()->cant('viewAll', Software::class))
+        if(auth()->user()->cant('viewAll', Broadband::class))
         {
-            return ErrorController::forbidden('/dashboard', 'Unauthorised | View Software.');
+            return ErrorController::forbidden('/dashboard', 'Unauthorised to View Broadband.');
+
         }
+
         // find the locations that the user has been assigned to
-        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('software')->get();
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
-        $softwares = Software::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
+        $broadbands = Broadband::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
 
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['property_filter' => false]);
 
-        return view('software.view', [
-            "softwares" => $softwares,
+        return view('broadband.view', [
+            "broadbands" => $broadbands,
             "locations" => $locations,
         ]);
     }
@@ -45,16 +53,17 @@ class SoftwareController extends Controller {
     public function create()
     {
         //Check to see if the User is has permission to create
-        if(auth()->user()->cant('create', Software::class))
+        if(auth()->user()->cant('create', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Create Software.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Create Broadband.');
+
         }
 
         //Get the Locations that the user has permission for
         $locations = auth()->user()->locations;
 
         // Return the Create View to the browser
-        return view('software.create', [
+        return view('broadband.create', [
             "locations" => $locations,
             "suppliers" => Supplier::all(),
         ]);
@@ -64,55 +73,56 @@ class SoftwareController extends Controller {
     {
         //Check to see if the user has permission to add new software on the system
 
-        if(auth()->user()->cant('create', Software::class))
+        if(auth()->user()->cant('create', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Store Software.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Store Broadband.');
 
         }
 
         //Validate the post data
         $validation = $request->validate([
-            'name' => 'required',
             'location_id' => 'required',
             'supplier_id' => 'required',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
+            'renewal_date' => 'required|date',
+            'package' => 'required',
         ]);
 
-        Software::create([
+        Broadband::create([
             'name' => $request->name,
             'supplier_id' => $request->supplier_id,
             'location_id' => $request->location_id,
             'purchased_cost' => $request->purchased_cost,
             'purchased_date' => $request->purchased_date,
-            'depreciation' => $request->depreciation,
+            'renewal_date' => $request->renewal_date,
+            'package' => $request->package,
         ]);
 
-        return to_route('softwares.index')->with('success_message', $request->name . ' Has been Added!');
+        return to_route('broadbands.index')->with('success_message', $request->name . ' Has been Added!');
     }
 
-    public function show(Software $software)
+    public function show(Broadband $broadband)
     {
         //Check to see if the User is has permission to create
-        if(auth()->user()->cant('view', $software))
+        if(auth()->user()->cant('view', $broadband))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to update Broadband.');
 
         }
 
         // Return the Create View to the browser
-        return view('software.show', [
-            "software" => $software,
+        return view('broadband.show', [
+            "broadband" => $broadband,
         ]);
     }
 
-    public function edit(Software $software)
+    public function edit(Broadband $broadband)
     {
         //Check to see if the User is has permission to create
-        if(auth()->user()->cant('update', $software))
+        if(auth()->user()->cant('update', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to update Broadband.');
 
         }
 
@@ -120,118 +130,119 @@ class SoftwareController extends Controller {
         $locations = auth()->user()->locations;
 
         // Return the Create View to the browser
-        return view('software.edit', [
+        return view('broadband.edit', [
             "locations" => $locations,
             "suppliers" => Supplier::all(),
-            "software" => $software,
+            "broadband" => $broadband,
         ]);
     }
 
-    public function update(Request $request, Software $software)
+    public function update(Request $request, Broadband $broadband)
     {
         //Check to see if the user has permission to update software on the system
-        if(auth()->user()->cant('update', Software::class))
+        if(auth()->user()->cant('update', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Update Software.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Update Broadband.');
 
         }
 
         //Validate the post data
-        $validation = $request->validate([
-            'name' => 'required',
+        $request->validate([
             'location_id' => 'required',
             'supplier_id' => 'required',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
+            'renewal_date' => 'required|date',
+            'package' => 'required',
         ]);
 
-        $software->update([
+        $broadband->update([
             'name' => $request->name,
             'supplier_id' => $request->supplier_id,
             'location_id' => $request->location_id,
             'purchased_cost' => $request->purchased_cost,
             'purchased_date' => $request->purchased_date,
-            'depreciation' => $request->depreciation,
+            'renewal_date' => $request->renewal_date,
+            'package' => $request->package,
         ]);
 
-        return to_route('softwares.index')->with('success_message', $request->name . ' Has been Updated!');
+        return to_route('broadbands.index')->with('success_message', $request->name . ' Has been Updated!');
     }
 
     public function recycleBin()
     {
         //Check to see if the user has permission to delete software on the system
-        if(auth()->user()->cant('delete', Software::class))
+        if(auth()->user()->cant('delete', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Delete Software.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Delete Broadband.');
 
         }
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
 
         // Return the Create View to the browser
-        return view('software.bin', [
+        return view('broadband.bin', [
             "locations" => $locations,
-            "softwares" => Software::onlyTrashed()->paginate(),
+            "broadbands" => Broadband::onlyTrashed()->paginate(),
         ]);
 
     }
 
-    public function destroy(Software $software)
+    public function destroy(Broadband $broadband)
     {
         //Check to see if the user has permission to delete software on the system
-        if(auth()->user()->cant('recycleBin', Software::class))
+        if(auth()->user()->cant('recycleBin', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Archive Software.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Archive Broadband.');
 
         }
-        $software->delete();
+        $broadband->delete();
 
-        return to_route('softwares.index')->with('success_message', $software->name . ' Has been sent to the recycle bin!');
+        return to_route('broadbands.index')->with('success_message', $broadband->name . ' Has been sent to the recycle bin!');
 
     }
 
     public function restore($id)
     {
         //Find the software (withTrashed needed)
-        $software = Software::withTrashed()->where('id', $id)->first();
+        $broadband = Broadband::withTrashed()->where('id', $id)->first();
 
         //Check to see if the user has permission to restore the software
-        if(auth()->user()->cant('delete', Software::class))
+        if(auth()->user()->cant('delete', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Restore Software.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Restore Broadband.');
 
         }
 
         //Restores the software
-        $software->restore();
+        $broadband->restore();
 
         //Session message to be sent ot the View page (This is where the model will now appear)
-        session()->flash('success_message', $software->name . ' has been restored.');
+        session()->flash('success_message', $broadband->name . ' has been restored.');
 
         //Redirect ot the model view
-        return to_route('softwares.index');
+        return to_route('broadbands.index');
     }
 
     public function forceDelete($id)
     {
         //Find the software (withTrashed needed)
-        $software = Software::withTrashed()->where('id', $id)->first();
+        $broadband = Broadband::withTrashed()->where('id', $id)->first();
 
         //Check to see if the user has permission to restore the software
-        if(auth()->user()->cant('delete', Software::class))
+        if(auth()->user()->cant('delete', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Delete Software.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Delete Broadband.');
 
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
-        $name = $software->name;
+        $name = $broadband->name;
         //Force Delete removes the model permanently from the system
-        $software->forceDelete();
+        $broadband->forceDelete();
         //Session message to be sent ot the Recycle Bin page
         session()->flash('danger_message', $name . ' was deleted permanently');
 
         //redirect back to the recycle bin
-        return to_route('software.bin');
+        return to_route('broadband.bin');
     }
 
     ////////////////////////////////////////
@@ -245,11 +256,11 @@ class SoftwareController extends Controller {
             "comment" => "nullable",
         ]);
 
-        $software = Software::find($request->software_id);
-        $software->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+        $broadband = Broadband::find($request->broadband_id);
+        $broadband->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
         session()->flash('success_message', $request->title . ' has been created successfully');
 
-        return to_route('softwares.show', $software->id);
+        return to_route('broadbands.show', $broadband->id);
     }
 
     ////////////////////////////////////////////////////////
@@ -258,13 +269,13 @@ class SoftwareController extends Controller {
 
     public function downloadPDF(Request $request)
     {
-        if(auth()->user()->cant('viewAll', Software::class))
+        if(auth()->user()->cant('viewAll', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Download of Software Information Report.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised | Download of Broadband Information Report.');
 
         }
-        $softwares = array();
-        $found = Software::select('name', 'id', 'depreciation', 'supplier_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at')->withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
+        $broadbands = array();
+        $found = Broadband::select('name', 'id', 'renewal_date', 'package', 'supplier_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at')->withTrashed()->whereIn('id', json_decode($request->broadband))->with('location')->get();
         foreach($found as $f)
         {
             $array = array();
@@ -272,42 +283,43 @@ class SoftwareController extends Controller {
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = $f->purchased_cost;
-            $array['depreciation'] = $f->depreciation;
+            $array['renewal_date'] = \Carbon\Carbon::parse($f->renewal_date)->format('d/m/Y') ?? 'N/A';
+            $array['package'] = $f->package ?? 'N/A';
             $array['supplier'] = $f->supplier->name ?? 'No Supplier';
-            $softwares[] = $array;
+            $broadbands[] = $array;
         }
 
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('dmyHis');
-        $path = 'software-report-' . $date;
-        SoftwaresPdf::dispatch($softwares, $user, $path)->afterResponse();
+        $path = 'Broadband-report-' . $date;
+        BroadbandsPdf::dispatch($broadbands, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return to_route('softwares.index')
+        return to_route('broadbands.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
     }
 
-    public function downloadShowPDF(Software $software)
+    public function downloadShowPDF(Broadband $broadband)
     {
-        if(auth()->user()->cant('view', $software))
+        if(auth()->user()->cant('view', $broadband))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Download of Software Information.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised | Download of Broadband Information.');
 
         }
 
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('dmyHis');
-        $path = "software-{$software->id}-{$date}";
-        SoftwarePdf::dispatch($software, $user, $path)->afterResponse();
+        $path = "Broadband-{$broadband->id}-{$date}";
+        BroadbandPdf::dispatch($broadband, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return to_route('softwares.show', $software->id)
+        return to_route('broadbands.show', $broadband->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
@@ -318,9 +330,9 @@ class SoftwareController extends Controller {
 
     public function import(Request $request)
     {
-        if(auth()->user()->cant('create', Software::class))
+        if(auth()->user()->cant('create', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Import Software.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised | Import Broadband.');
 
         }
         //headings incorrect start
@@ -330,12 +342,13 @@ class SoftwareController extends Controller {
         if(
             //checks for spelling and if there present for any allowed heading in the csv.
             isset($values['name']) && isset($values['supplier_id']) && isset($values['location_id'])
-            && isset($values['depreciation']) && isset($values['purchased_date']) && isset($values['purchased_cost'])
+            && isset($values['renewal_date']) && isset($values['purchased_date']) && isset($values['purchased_cost'])
+            && isset($values['package'])
         )
         {
         } else
         {
-            return to_route('assets.index')->with('danger_message', "CSV Heading's Incorrect Please amend and try again!");
+            return to_route('broadbands.index')->with('danger_message', "CSV Heading's Incorrect Please amend and try again!");
         }
         //headings incorrect end
         $extensions = array("csv");
@@ -345,7 +358,7 @@ class SoftwareController extends Controller {
         if(in_array($result[0], $extensions))
         {
             $path = $request->file("csv")->getRealPath();
-            $import = new SoftwareImport;
+            $import = new BroadbandImport;
             $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
             $row = [];
             $attributes = [];
@@ -402,7 +415,7 @@ class SoftwareController extends Controller {
 
                 }
 
-                return view('software.importErrors', [
+                return view('broadband.importErrros', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
@@ -412,14 +425,14 @@ class SoftwareController extends Controller {
 
             } else
             {
-                return to_route('softwares.index')->with('success_message', 'All Softwares were imported correctly!');
+                return to_route('broadbands.index')->with('success_message', 'All Broadband`s were imported correctly!');
 
             }
         } else
         {
             session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
 
-            return to_route('softwares.index');
+            return to_route('broadbands.index');
         }
 
 
@@ -428,12 +441,13 @@ class SoftwareController extends Controller {
     public function importErrors(Request $request)
     {
         $validation = Validator::make($request->all(), [
-            "name.*" => "required|max:255",
+            "name.*" => "max:255",
             'location_id.*' => 'required|gt:0',
             'supplier_id.*' => 'required|gt:0',
-            'purchased_date.*' => 'date',
-            'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            "depreciation.*" => "nullable",
+            'purchased_date.*' => 'required|date',
+            'purchased_cost.*' => 'required',
+            "renewal_date.*" => "required",
+            "package.*" => "required",
         ]);
 
         if($validation->fails())
@@ -443,17 +457,18 @@ class SoftwareController extends Controller {
         {
             for($i = 0; $i < count($request->name); $i++)
             {
-                $software = new Software;
-                $software->name = $request->name[$i];
-                $software->supplier_id = $request->supplier_id[$i];
-                $software->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
-                $software->purchased_cost = $request->purchased_cost[$i];
-                $software->location_id = $request->location_id[$i];
-                $software->depreciation = $request->depreciation[$i];
-                $software->save();
+                $broadband = new Broadband();
+                $broadband->name = $request->name[$i];
+                $broadband->supplier_id = $request->supplier_id[$i];
+                $broadband->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $broadband->purchased_cost = $request->purchased_cost[$i];
+                $broadband->location_id = $request->location_id[$i];
+                $broadband->renewal_date = $request->renewal_date[$i];
+                $broadband->package = $request->package[$i];
+                $broadband->save();
             }
 
-            session()->flash('success_message', 'You have successfully added all Software Items!');
+            session()->flash('success_message', 'You have successfully added all Broadband Items!');
 
             return 'Success';
         }
@@ -465,17 +480,17 @@ class SoftwareController extends Controller {
 
     public function export(Request $request)
     {
-        if(auth()->user()->cant('viewAll', software::class))
+        if(auth()->user()->cant('viewAll', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Export Software Information.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised | Export Broadband Information.');
 
         }
-        $softwares = Software::withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
+        $broadbands = Broadband::withTrashed()->whereIn('id', json_decode($request->broadband))->with('location')->get();
         $date = \Carbon\Carbon::now()->format('dmyHi');
-        \Maatwebsite\Excel\Facades\Excel::store(new softwareExport($softwares), "/public/csv/softwares-{$date}.xlsx");
-        $url = asset("storage/csv/softwares-{$date}.xlsx");
+        \Maatwebsite\Excel\Facades\Excel::store(new BroadbandExport($broadbands), "/public/csv/broadband-{$date}.xlsx");
+        $url = asset("storage/csv/broadband-{$date}.xlsx");
 
-        return to_route('softwares.index')
+        return to_route('broadbands.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
 
@@ -486,111 +501,17 @@ class SoftwareController extends Controller {
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);
-        if(auth()->user()->cant('viewAll', Software::class))
+        if(auth()->user()->cant('viewAll', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Export Software Errors.');
+            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Export Broadband Errors.');
         }
         $date = \Carbon\Carbon::now()->format('dmyHis');
-        \Maatwebsite\Excel\Facades\Excel::store(new softwareErrorsExport($export), "/public/csv/software-errors-{$date}.csv");
-        $url = asset("storage/csv/software-errors-{$date}.csv");
+        \Maatwebsite\Excel\Facades\Excel::store(new BroadbandErrorsExport($export), "/public/csv/broadband-errors-{$date}.csv");
+        $url = asset("storage/csv/broadband-errors-{$date}.csv");
 
-        return to_route('softwares.index')
+        return to_route('broadbands.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
-    }
-
-    ////////////////////////////////////////
-    /////////// Filter Functions ///////////
-    ////////////////////////////////////////
-
-    public function filter(Request $request)
-    {
-        //Check to see if the Request is the POST or GET Method
-        if($request->isMethod('post'))
-        {
-            //If the request is a POST method then the filter needs to be set or redefined
-
-            //Check to see if the filter fields are empty
-            if(! empty($request->search))
-            {
-                //If they are not empty assign the filter type to the session
-                session(['software_search' => $request->search]);
-            }
-
-            if(! empty($request->limit))
-            {
-                session(['software_limit' => $request->limit]);
-            }
-
-            if(! empty($request->orderby))
-            {
-                $array = explode(' ', $request->orderby);
-
-                session(['software_orderby' => $array[0]]);
-                session(['software_direction' => $array[1]]);
-
-            }
-
-            if(! empty($request->locations))
-            {
-                session(['software_locations' => $request->locations]);
-            }
-
-            if($request->start != '' && $request->end != '')
-            {
-                session(['software_start' => $request->start]);
-                session(['software_end' => $request->end]);
-            }
-
-            session(['assets_min' => $request->minCost]);
-            session(['assets_max' => $request->maxCost]);
-        }
-        //Check the Users Locations Permissions
-        $locations = Location::select('id', 'name')->withCount('software')->get();
-
-        $software = software::locationFilter($locations->pluck('id'));
-
-        if(session()->has('software_locations'))
-        {
-            $software->locationFilter(session('software_locations'));
-            session(['software_filter' => true]);
-        }
-
-        if(session()->has('software_start') && session()->has('software_end'))
-        {
-            $software->purchaseFilter(session('software_start'), session('software_end'));
-            session(['software_filter' => true]);
-        }
-
-        if(session()->has('assets_min') && session()->has('assets_max'))
-        {
-            $software->costFilter(session('assets_min'), session('assets_max'));
-            session(['assets_filter' => true]);
-        }
-
-        if(session()->has('software_search'))
-        {
-            $software->searchFilter(session('software_search'));
-            session(['software_filter' => true]);
-        }
-
-        $software->leftJoin('locations', 'software.location_id', '=', 'locations.id')
-            ->orderBy(session('software_orderby') ?? 'date', session('software_direction') ?? 'asc')
-            ->select('software.*', 'locations.name as location_name');
-        $limit = session('software_limit') ?? 25;
-
-        return view('software.view', [
-            "softwares" => $software->paginate(intval($limit))->withPath(asset('/software/filter'))->fragment('table'),
-            "locations" => $locations,
-        ]);
-    }
-
-    public function clearFilter()
-    {
-        //Clear the Filters for the properties
-        session()->forget(['software_filter', 'software_locations', 'software_start', 'software_end', 'software_amount', 'software_search']);
-
-        return to_route('softwares.index');
     }
 
 }

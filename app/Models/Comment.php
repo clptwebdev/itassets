@@ -43,6 +43,11 @@ class Comment extends Model {
         return $this->morphedByMany(Accessory::class, 'commentables');
     }
 
+    public function broadband()
+    {
+        return $this->morphedByMany(Broadband::class, 'commentables');
+    }
+
     public function consumable()
     {
         return $this->morphedByMany(Consumable::class, 'commentables');
