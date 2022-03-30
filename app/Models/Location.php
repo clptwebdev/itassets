@@ -117,6 +117,11 @@ class Location extends Model {
         return $this->hasMany(Software::class);
     }
 
+    public function broadband()
+    {
+        return $this->hasMany(Broadband::class);
+    }
+
     public function auc()
     {
         return $this->hasMany(AUC::class);

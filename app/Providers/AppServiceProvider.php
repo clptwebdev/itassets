@@ -56,6 +56,8 @@ class AppServiceProvider extends ServiceProvider {
             'role' => 'App\Models\Role',
             'status' => 'App\Models\Status',
             'transfer' => 'App\Models\Transfer',
+            'broadband' => 'App\Models\Transfer',
+            'license' => 'App\Models\License',
         ]);
 
         $charts->register([

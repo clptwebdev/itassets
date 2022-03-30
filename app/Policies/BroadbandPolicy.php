@@ -2,22 +2,23 @@
 
 namespace App\Policies;
 
+use App\Models\Broadband;
 use App\Models\Software;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SoftwarePolicy {
+class BroadbandPolicy {
 
     use HandlesAuthorization;
 
     public function __construct()
     {
-        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Software')->first();
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Broadband')->first();
     }
 
-    public function view(User $user, Software $software)
+    public function view(User $user, Broadband $broadband)
     {
-        return $this->model->view && in_array($software->location_id, $user->locationsArray());
+        return $this->model->view && in_array($broadband->location_id, $user->locationsArray());
     }
 
     public function viewAll(User $user)
@@ -50,9 +51,9 @@ class SoftwarePolicy {
         return $this->model->fin_reports;
     }
 
-    public function generateShowPDF(User $user, Software $software)
+    public function generateShowPDF(User $user, Broadband $broadband)
     {
-        return $this->model->fin_reports && in_array($software->location_id, $user->locationsArray());
+        return $this->model->fin_reports && in_array($broadband->location_id, $user->locationsArray());
     }
 
 }

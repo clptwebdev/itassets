@@ -39,6 +39,8 @@ class AuthServiceProvider extends ServiceProvider {
         'App\Models\AUC' => 'App\Policies\AUCPolicy',
         'App\Models\Vehicle' => 'App\Policies\VehiclePolicy',
         'App\Models\Software' => 'App\Policies\SoftwarePolicy',
+        'App\Models\Broadband' => 'App\Policies\BroadbandPolicy',
+        'App\Models\License' => 'App\Policies\LicensePolicy',
     ];
 
     /**

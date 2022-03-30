@@ -283,7 +283,6 @@ Route::group(['middleware' => 'auth'], function() {
     /////////////////////////////////////////////
 
     Route::controller(\App\Http\Controllers\SoftwareController::class)->group(function() {
-        //Property
         Route::resource("/softwares", \App\Http\Controllers\SoftwareController::class);
         Route::post('/software/filter', 'filter')->name('software.filter');
         Route::get('/software/filter/clear', 'clearFilter')->name('software.clear.filter');
@@ -301,6 +300,29 @@ Route::group(['middleware' => 'auth'], function() {
         //PDF
         Route::post('/software/pdf', 'downloadPDF')->name('software.pdf');
         Route::get('/software/{software}/pdf', 'downloadShowPDF')->name('software.showPdf');
+    });
+    /////////////////////////////////////////////
+    /////////////// Broadband Routes ///////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\BroadbandController::class)->group(function() {
+        Route::resource("/broadbands", \App\Http\Controllers\BroadbandController::class);
+        Route::post('/broadband/filter', 'filter')->name('broadband.filter');
+        Route::get('/broadband/filter/clear', 'clearFilter')->name('broadband.clear.filter');
+        Route::get('/broadband/filter', 'filter')->name('broadband.filtered');
+        Route::get('/broadband/bin', 'recycleBin')->name('broadband.bin');
+        Route::get('/broadband/{asset}/restore', 'restore')->name('broadband.restore');
+        Route::post('/broadband/{asset}/remove', 'forceDelete')->name('broadband.remove');
+        Route::post('/broadband/{asset}/comment', 'newComment')->name('broadband.comment');
+        //Exports
+        Route::post("/export/broadband", "export");
+        //Imports
+        Route::post("/import/broadband", "import");
+        Route::Post("/import/broadband/errors", "importErrors");
+        Route::Post("/import/broadband/export", "exportImportErrors")->name("broadband.export.import");
+        //PDF
+        Route::post('/broadband/pdf', 'downloadPDF')->name('broadband.pdf');
+        Route::get('/broadband/{broadband}/pdf', 'downloadShowPDF')->name('broadband.showPdf');
     });
     /////////////////////////////////////////////
     /////////////// Report Routes /////////////
