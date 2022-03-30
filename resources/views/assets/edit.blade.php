@@ -73,8 +73,8 @@
                                                 </div>
                                                 <small class="form-text text-muted">Can't find the Model your
                                                                                     after?
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#newModel">Click
-                                                                                                                  Here</a>to
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#newModel"> Click
+                                                                                                                   Here</a>to
                                                                                     create one.</small>
                                             </div>
                                             <div class="form-group">
@@ -196,19 +196,25 @@
                                                          alt="Select Profile Picture">
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    Manufacturer: {{ $asset->model->manufacturer->name}}
+                                                    Manufacturer: {{ $asset->model->manufacturer->name ?? 'No Manufacturer found'}}
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    Model No: {{ $asset->model->model_no}}
+                                                    Model No: {{ $asset->model->model_no ?? 'N/A'}}
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    @php($months = $asset->model->depreciation->years * 12)
-                                                    Depreication: {{ $asset->model->depreciation->name}}
-                                                    ({{$months}}
-                                                    months)
+                                                    @if($asset->model)
+                                                        @php($months = $asset->model->depreciation->years * 12)
+                                                        Deprecation: {{ $asset->model->depreciation->name}}
+                                                        ({{$months}}
+                                                        months)
+                                                    @else
+                                                        Deprecation:Null
+                                                    @endif
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    Additional Fieldsets: {{ $asset->model->fieldset->name}}
+                                                    @if($asset->model)
+                                                        Additional Fieldsets: {{ $asset->model->fieldset->name}}
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>

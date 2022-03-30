@@ -269,6 +269,7 @@ class AccessoryController extends Controller {
 
     public function importErrors(Request $request)
     {
+        
         $export = $request['name'];
         $code = (htmlspecialchars_decode($export));
         $export = json_decode($code);

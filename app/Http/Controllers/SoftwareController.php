@@ -8,30 +8,27 @@ use App\Imports\SoftwareImport;
 use App\Jobs\PropertiesPdf;
 use App\Jobs\softwarePdf;
 use App\Jobs\SoftwaresPdf;
-use App\Models\AUC;
+use App\Models\Asset;
+use App\Models\Software;
 use App\Models\Location;
-use App\Models\software;
 use App\Models\Report;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\HeadingRowImport;
-use PDF;
 
 class SoftwareController extends Controller {
 
     public function index()
     {
         //Check to see if the User has permission to View All the Software.
+
         if(auth()->user()->cant('viewAll', Software::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Software.');
-
+            return ErrorController::forbidden('/dashboard', 'Unauthorised | View Software.');
         }
-
         // find the locations that the user has been assigned to
-        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('software')->get();
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
         $softwares = Software::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
@@ -51,7 +48,6 @@ class SoftwareController extends Controller {
         if(auth()->user()->cant('create', Software::class))
         {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Create Software.');
-
         }
 
         //Get the Locations that the user has permission for
@@ -99,7 +95,7 @@ class SoftwareController extends Controller {
     public function show(Software $software)
     {
         //Check to see if the User is has permission to create
-        if(auth()->user()->cant('view', $software, Software::class))
+        if(auth()->user()->cant('view', $software))
         {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
 
@@ -114,7 +110,7 @@ class SoftwareController extends Controller {
     public function edit(Software $software)
     {
         //Check to see if the User is has permission to create
-        if(auth()->user()->cant('update', Software::class))
+        if(auth()->user()->cant('update', $software))
         {
             return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
 

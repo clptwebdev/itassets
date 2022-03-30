@@ -58,6 +58,7 @@ class AppServiceProvider extends ServiceProvider {
             'transfer' => 'App\Models\Transfer',
             'broadband' => 'App\Models\Transfer',
             'license' => 'App\Models\License',
+            'software' => 'App\Models\Software',
         ]);
 
         $charts->register([
