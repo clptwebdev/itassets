@@ -33,7 +33,7 @@ class FFEController extends Controller {
         $ffes = FFE::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
 
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
-        session(['fefe_filter' => false]);
+        session(['ffe_filter' => false]);
 
         return view('FFE.view', [
             "ffes" => $ffes,
@@ -44,6 +44,18 @@ class FFEController extends Controller {
     public function show(FFE $ffe)
     {
         return view('FFE.show', compact('ffe'));
+    }
+
+    public function recycleBin()
+    {
+        if(auth()->user()->cant('viewAll', FFE::class))
+        {
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | View FFE Recycle Bin.');
+
+        }
+        $ffes = auth()->user()->location_ffes()->onlyTrashed()->get();
+
+        return view('FFE.bin', compact('ffes'));
     }
 
     ////////////////////////////////////////////
@@ -100,31 +112,24 @@ class FFEController extends Controller {
         $ffe = FFE::create(array_merge($request->only(
             'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ), ['user_id' => auth()->user()->id]));
-        $ffe->category()->attach(explode(',', $request->category));
+
+        if($request->category != '' && !empty(explode(',', $request->category))){
+            $ffe->category()->attach(explode(',', $request->category));
+        }
 
         return to_route("ffes.index")->with('success_message', $request->name . 'has been successfully created!');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    
+    ////////////////////////////////////////////
+    ////////////// Update Functions ////////////
+    ////////////////////////////////////////////
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(FFE $ffe)
     {
         //Check to see if the User is has permission to create an AUC
         if(auth()->user()->cant('update', $ffe))
         {
-            return to_route('errors.forbidden', ['area', 'FFE', 'create']);
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Update FFE.');
         }
 
         //Find the locations that the user has been assigned to
@@ -134,7 +139,7 @@ class FFEController extends Controller {
         $suppliers = Supplier::all();
         $statuses = Status::all();
         // Return the Create View to the browser
-        return view('FFE.create', [
+        return view('FFE.edit', [
             "ffe" => $ffe,
             "locations" => $locations,
             "manufacturers" => $manufacturers,
@@ -143,27 +148,92 @@ class FFEController extends Controller {
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, FFE $ffe)
     {
-        //
+        if(auth()->user()->cant('update', $ffe))
+        {
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Update FFE.');
+        }
+
+        $request->validate([
+            "name" => "required|max:255",
+            "supplier_id" => "nullable",
+            "location_id" => "required",
+            "room" => "nullable",
+            "notes" => "nullable",
+            "status_id" => "nullable",
+            'order_no' => 'nullable',
+            'serial_no' => 'required',
+            'warranty' => 'int|nullable',
+            'purchased_date' => 'nullable|date',
+            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+        ]);
+
+        if(isset($request->donated) && $request->donated == 1)
+        {
+            $donated = 1;
+        } else
+        {
+            $donated = 0;
+        }
+
+        $ffe->fill(array_merge($request->only(
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+        ), ['donated' => $donated]))->save();
+        session()->flash('success_message', $ffe->name . ' has been Updated successfully');
+        if($request->category != '' && !empty(explode(',', $request->category)))
+        {
+            $ffe->category()->sync(explode(',', $request->category));
+        }
+
+        return to_route("ffes.index");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    ////////////////////////////////////////////
+    ////////////// Delete Functions ////////////
+    ////////////////////////////////////////////
+
+    public function destroy(FFE $ffe)
     {
-        //
+        if(auth()->user()->cant('delete', $ffe))
+        {
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Delete FFE.');
+
+        }
+
+        $name = $ffe->name;
+        $ffe->delete();
+        session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
+
+        return to_route('ffes.index');
+    }
+
+    public function restore($id)
+    {
+        $accessory = Accessory::withTrashed()->where('id', $id)->first();
+        if(auth()->user()->cant('delete', $accessory))
+        {
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Restore Accessory.');
+        }
+        $accessory->restore();
+        session()->flash('success_message', "#" . $accessory->name . ' has been restored.');
+
+        return to_route("accessories.index");
+    }
+
+    public function forceDelete($id)
+    {
+        $accessory = Accessory::withTrashed()->where('id', $id)->first();
+        if(auth()->user()->cant('forceDelete', $accessory))
+        {
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Delete Accessory.');
+
+        }
+        $name = $accessory->name;
+        $accessory->forceDelete();
+        session()->flash('danger_message', "Accessory - " . $name . ' was deleted permanently');
+
+        return to_route('accessories.bin');
     }
 
 }

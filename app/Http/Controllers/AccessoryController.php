@@ -67,6 +67,19 @@ class AccessoryController extends Controller {
         ]);
     }
 
+    public function show(Accessory $accessory)
+    {
+        if(auth()->user()->cant('view', $accessory))
+        {
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Show Accessory.');
+        }
+
+        return view('accessory.show', [
+            "accessory" => $accessory,
+            'locations' => Location::all(),
+        ]);
+    }
+
     ////////////////////////////////////////////
     ///////////// Filter Functions /////////////
     ////////////////////////////////////////////
@@ -348,18 +361,9 @@ class AccessoryController extends Controller {
         }
     }
 
-    public function show(Accessory $accessory)
-    {
-        if(auth()->user()->cant('view', $accessory))
-        {
-            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Show Accessory.');
-        }
-
-        return view('accessory.show', [
-            "accessory" => $accessory,
-            'locations' => Location::all(),
-        ]);
-    }
+   ////////////////////////////////////////////
+    ///////////// Update Functions /////////////
+    ////////////////////////////////////////////
 
     public function edit(Accessory $accessory)
     {
@@ -423,6 +427,10 @@ class AccessoryController extends Controller {
         return to_route("accessories.index");
     }
 
+    ////////////////////////////////////////////
+    ///////////// Delete Functions /////////////
+    ////////////////////////////////////////////
+
     public function destroy(Accessory $accessory)
     {
         if(auth()->user()->cant('delete', $accessory))
@@ -436,6 +444,46 @@ class AccessoryController extends Controller {
         session()->flash('danger_message', $name . ' was sent to the Recycle Bin');
 
         return to_route('accessories.index');
+    }
+
+    public function recycleBin()
+    {
+        if(auth()->user()->cant('viewAll', Accessory::class))
+        {
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to View Archived Accessories.');
+
+        }
+        $accessories = auth()->user()->location_accessories()->onlyTrashed()->get();
+
+        return view('accessory.bin', compact('accessories'));
+    }
+
+    public function restore($id)
+    {
+        $accessory = Accessory::withTrashed()->where('id', $id)->first();
+        if(auth()->user()->cant('delete', $accessory))
+        {
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Restore Accessory.');
+        }
+        $accessory->restore();
+        session()->flash('success_message', "#" . $accessory->name . ' has been restored.');
+
+        return to_route("accessories.index");
+    }
+
+    public function forceDelete($id)
+    {
+        $accessory = Accessory::withTrashed()->where('id', $id)->first();
+        if(auth()->user()->cant('forceDelete', $accessory))
+        {
+            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Delete Accessory.');
+
+        }
+        $name = $accessory->name;
+        $accessory->forceDelete();
+        session()->flash('danger_message', "Accessory - " . $name . ' was deleted permanently');
+
+        return to_route('accessories.bin');
     }
 
     public function export(Accessory $accessory)
@@ -659,45 +707,7 @@ class AccessoryController extends Controller {
 
     //Restore and Force Delete Function Need to be Created
 
-    public function recycleBin()
-    {
-        if(auth()->user()->cant('viewAll', Accessory::class))
-        {
-            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to View Archived Accessories.');
-
-        }
-        $accessories = auth()->user()->location_accessories()->onlyTrashed()->get();
-
-        return view('accessory.bin', compact('accessories'));
-    }
-
-    public function restore($id)
-    {
-        $accessory = Accessory::withTrashed()->where('id', $id)->first();
-        if(auth()->user()->cant('delete', $accessory))
-        {
-            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Restore Accessory.');
-        }
-        $accessory->restore();
-        session()->flash('success_message', "#" . $accessory->name . ' has been restored.');
-
-        return to_route("accessories.index");
-    }
-
-    public function forceDelete($id)
-    {
-        $accessory = Accessory::withTrashed()->where('id', $id)->first();
-        if(auth()->user()->cant('forceDelete', $accessory))
-        {
-            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Delete Accessory.');
-
-        }
-        $name = $accessory->name;
-        $accessory->forceDelete();
-        session()->flash('danger_message', "Accessory - " . $name . ' was deleted permanently');
-
-        return to_route('accessories.bin');
-    }
+   
 
     public function changeStatus(Accessory $accessory, Request $request)
     {
