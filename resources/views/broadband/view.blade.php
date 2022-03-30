@@ -84,7 +84,7 @@
                         <tbody>
                         @foreach($broadbands as $broadband)
                             <tr>
-                                <td class="text-left">{{$broadband->name}}</td>
+                                <td class="text-left">{{$broadband->name ?? 'No Name'}}</td>
                                 <td class="text-center">£{{number_format($broadband->purchased_cost, 2, '.', ',')}}</td>
                                 <td class="text-center">{{ \Illuminate\Support\Carbon::parse($broadband->purchased_date)->format('d-M-Y')}}</td>
                                 <td class="text-center">{{$broadband->supplier->name}}</td>

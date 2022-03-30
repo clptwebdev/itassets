@@ -48,7 +48,6 @@ class BroadbandImport extends DefaultValueBinder implements ToModel, WithValidat
 
         return [
             'name' => [
-                'required',
                 'string',
             ],
             'purchased_cost' => [

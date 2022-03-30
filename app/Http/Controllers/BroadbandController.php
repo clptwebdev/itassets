@@ -19,8 +19,10 @@ use App\Models\Software;
 use App\Models\Supplier;
 use http\Encoding\Stream\Debrotli;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\HeadingRowImport;
+use PDF;
 
 class BroadbandController extends Controller {
 
@@ -272,8 +274,8 @@ class BroadbandController extends Controller {
             return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised | Download of Broadband Information Report.');
 
         }
-        $broadband = array();
-        $found = Broadband::select('name', 'id', 'renewal_date', 'supplier_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at')->withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
+        $broadbands = array();
+        $found = Broadband::select('name', 'id', 'renewal_date', 'package', 'supplier_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at')->withTrashed()->whereIn('id', json_decode($request->broadband))->with('location')->get();
         foreach($found as $f)
         {
             $array = array();
@@ -282,15 +284,16 @@ class BroadbandController extends Controller {
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = $f->purchased_cost;
             $array['renewal_date'] = \Carbon\Carbon::parse($f->renewal_date)->format('d/m/Y') ?? 'N/A';
+            $array['package'] = $f->package ?? 'N/A';
             $array['supplier'] = $f->supplier->name ?? 'No Supplier';
-            $broadband[] = $array;
+            $broadbands[] = $array;
         }
 
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('dmyHis');
         $path = 'Broadband-report-' . $date;
-        BroadbandsPdf::dispatch($broadband, $user, $path)->afterResponse();
+        BroadbandsPdf::dispatch($broadbands, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
@@ -438,11 +441,11 @@ class BroadbandController extends Controller {
     public function importErrors(Request $request)
     {
         $validation = Validator::make($request->all(), [
-            "name.*" => "required|max:255",
+            "name.*" => "max:255",
             'location_id.*' => 'required|gt:0',
             'supplier_id.*' => 'required|gt:0',
-            'purchased_date.*' => 'date',
-            'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'purchased_date.*' => 'required|date',
+            'purchased_cost.*' => 'required',
             "renewal_date.*" => "required",
             "package.*" => "required",
         ]);
@@ -454,15 +457,15 @@ class BroadbandController extends Controller {
         {
             for($i = 0; $i < count($request->name); $i++)
             {
-                $software = new Software;
-                $software->name = $request->name[$i];
-                $software->supplier_id = $request->supplier_id[$i];
-                $software->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
-                $software->purchased_cost = $request->purchased_cost[$i];
-                $software->location_id = $request->location_id[$i];
-                $software->renewal_date = $request->renewal_date[$i];
-                $software->package = $request->package[$i];
-                $software->save();
+                $broadband = new Broadband();
+                $broadband->name = $request->name[$i];
+                $broadband->supplier_id = $request->supplier_id[$i];
+                $broadband->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $broadband->purchased_cost = $request->purchased_cost[$i];
+                $broadband->location_id = $request->location_id[$i];
+                $broadband->renewal_date = $request->renewal_date[$i];
+                $broadband->package = $request->package[$i];
+                $broadband->save();
             }
 
             session()->flash('success_message', 'You have successfully added all Broadband Items!');

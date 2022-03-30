@@ -16,7 +16,7 @@ class BroadbandsPdf implements ShouldQueue {
 
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $softwares;
+    protected $broadbands;
     protected $user;
     protected $path;
 
@@ -34,7 +34,7 @@ class BroadbandsPdf implements ShouldQueue {
      */
     public function handle()
     {
-        $broadbands = $this->softwares;
+        $broadbands = $this->broadbands;
         $user = $this->user;
         $path = $this->path;
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('broadband.pdf', compact('broadbands', 'user'));

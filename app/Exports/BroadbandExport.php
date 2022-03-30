@@ -39,11 +39,11 @@ class BroadbandExport implements FromArray, WithHeadings, ShouldAutoSize, WithEv
         {
             $array = [];
             $array["name"] = $broadband->name;
-            $array["supplier_id"] = $broadband->supplier_id;
-            $array["location_id"] = $broadband->location_id ?? null;
+            $array["supplier_id"] = $broadband->supplier->name;
+            $array["location_id"] = $broadband->location->name ?? null;
             $array["purchased_cost"] = $broadband->purchased_cost;
-            $array["purchased_date"] = $broadband->purchased_date;
-            $array["renewal_date"] = $broadband->renewal_date;
+            $array["purchased_date"] = \Illuminate\Support\Carbon::parse($broadband->purchased_date)->format('d-M-Y');
+            $array["renewal_date"] = \Illuminate\Support\Carbon::parse($broadband->renewal_date)->format('d-M-Y');
             $array["package"] = $broadband->package;
             $object[] = $array;
 
@@ -58,7 +58,7 @@ class BroadbandExport implements FromArray, WithHeadings, ShouldAutoSize, WithEv
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:F1'; // All headers
+                $cellRange = 'A1:G1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14)->setBold(1);
             },
         ];

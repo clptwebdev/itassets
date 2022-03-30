@@ -33,7 +33,7 @@
                          aria-labelledby="location-tab">
                         <div class="row">
                             <div class="col-12 col-md-6 p-4 mb-3 ">
-                                <h4 class="font-weight-600 mb-4">{{$broadband->name}}</h4>
+                                <h4 class="font-weight-600 mb-4">{{$broadband->name ?? 'No Name'}}</h4>
                                 <p><strong>Renewal
                                            Date:</strong><br> {{\Illuminate\Support\Carbon::parse($broadband->renewal_date)->format('d-M-Y')}}
                                     <br><small
