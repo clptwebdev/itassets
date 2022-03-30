@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -40,6 +41,18 @@ class Broadband extends Model {
     public function scopeLocationFilter($query, $locations)
     {
         return $query->whereIn('location_id', $locations);
+    }
+
+    //checks renewal date
+    public function isExpired()
+    {
+        if(Carbon::parse($this->renewal_date)->isPast())
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 
 }

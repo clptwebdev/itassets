@@ -25,6 +25,7 @@ class BroadbandErrorsExport implements FromArray, WithHeadings, ShouldAutoSize {
             "purchased_cost"
             , "purchased_date"
             , "renewal_date",
+            "package",
         ];
     }
 
@@ -43,6 +44,7 @@ class BroadbandErrorsExport implements FromArray, WithHeadings, ShouldAutoSize {
                 $array['purchased_cost'] = $exportError->purchased_cost;
                 $array['purchased_date'] = $exportError->purchased_date;
                 $array['renewal_date'] = $exportError->renewal_date;
+                $array['package'] = $exportError->package;
 
                 $object[] = $array;
 

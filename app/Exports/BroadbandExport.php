@@ -27,6 +27,7 @@ class BroadbandExport implements FromArray, WithHeadings, ShouldAutoSize, WithEv
             "purchased_cost",
             "purchased_date",
             "renewal_date",
+            "package",
         ];
     }
 
@@ -43,6 +44,7 @@ class BroadbandExport implements FromArray, WithHeadings, ShouldAutoSize, WithEv
             $array["purchased_cost"] = $broadband->purchased_cost;
             $array["purchased_date"] = $broadband->purchased_date;
             $array["renewal_date"] = $broadband->renewal_date;
+            $array["package"] = $broadband->package;
             $object[] = $array;
 
 

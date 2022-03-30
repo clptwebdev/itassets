@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', "View Asset Under Construction")
+@section('title', "View Software")
 
 @section('css')
 

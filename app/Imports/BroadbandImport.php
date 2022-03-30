@@ -68,6 +68,7 @@ class BroadbandImport extends DefaultValueBinder implements ToModel, WithValidat
                 new findLocation,
             ],
             'renewal_date' => ['required'],
+            'package' => ['required'],
 
         ];
 
@@ -97,6 +98,7 @@ class BroadbandImport extends DefaultValueBinder implements ToModel, WithValidat
         $sid = $supplier->id ?? 0;
         $broadband->supplier_id = $sid;
         $broadband->renewal_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["renewal_date"]))->format("Y-m-d");
+        $broadband->package = $row['package'];
         $broadband->save();
     }
 

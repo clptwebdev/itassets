@@ -84,6 +84,7 @@ class BroadbandController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'purchased_date' => 'required|date',
             'renewal_date' => 'required|date',
+            'package' => 'required',
         ]);
 
         Broadband::create([
@@ -93,6 +94,7 @@ class BroadbandController extends Controller {
             'purchased_cost' => $request->purchased_cost,
             'purchased_date' => $request->purchased_date,
             'renewal_date' => $request->renewal_date,
+            'package' => $request->package,
         ]);
 
         return to_route('broadbands.index')->with('success_message', $request->name . ' Has been Added!');
@@ -126,10 +128,10 @@ class BroadbandController extends Controller {
         $locations = auth()->user()->locations;
 
         // Return the Create View to the browser
-        return view('software.edit', [
+        return view('broadband.edit', [
             "locations" => $locations,
             "suppliers" => Supplier::all(),
-            "broadbands" => $broadband,
+            "broadband" => $broadband,
         ]);
     }
 
@@ -149,6 +151,7 @@ class BroadbandController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'purchased_date' => 'required|date',
             'renewal_date' => 'required|date',
+            'package' => 'required',
         ]);
 
         $broadband->update([
@@ -158,6 +161,7 @@ class BroadbandController extends Controller {
             'purchased_cost' => $request->purchased_cost,
             'purchased_date' => $request->purchased_date,
             'renewal_date' => $request->renewal_date,
+            'package' => $request->package,
         ]);
 
         return to_route('broadbands.index')->with('success_message', $request->name . ' Has been Updated!');
@@ -269,7 +273,7 @@ class BroadbandController extends Controller {
 
         }
         $broadband = array();
-        $found = Software::select('name', 'id', 'renewal_date', 'supplier_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at')->withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
+        $found = Broadband::select('name', 'id', 'renewal_date', 'supplier_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at')->withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
         foreach($found as $f)
         {
             $array = array();
@@ -285,7 +289,7 @@ class BroadbandController extends Controller {
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('dmyHis');
-        $path = 'properties-report-' . $date;
+        $path = 'Broadband-report-' . $date;
         BroadbandsPdf::dispatch($broadband, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
@@ -307,7 +311,7 @@ class BroadbandController extends Controller {
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('dmyHis');
-        $path = "software-{$broadband->id}-{$date}";
+        $path = "Broadband-{$broadband->id}-{$date}";
         BroadbandPdf::dispatch($broadband, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
@@ -336,6 +340,7 @@ class BroadbandController extends Controller {
             //checks for spelling and if there present for any allowed heading in the csv.
             isset($values['name']) && isset($values['supplier_id']) && isset($values['location_id'])
             && isset($values['renewal_date']) && isset($values['purchased_date']) && isset($values['purchased_cost'])
+            && isset($values['package'])
         )
         {
         } else
@@ -439,6 +444,7 @@ class BroadbandController extends Controller {
             'purchased_date.*' => 'date',
             'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             "renewal_date.*" => "required",
+            "package.*" => "required",
         ]);
 
         if($validation->fails())
@@ -455,6 +461,7 @@ class BroadbandController extends Controller {
                 $software->purchased_cost = $request->purchased_cost[$i];
                 $software->location_id = $request->location_id[$i];
                 $software->renewal_date = $request->renewal_date[$i];
+                $software->package = $request->package[$i];
                 $software->save();
             }
 
@@ -503,5 +510,5 @@ class BroadbandController extends Controller {
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
     }
-    
+
 }

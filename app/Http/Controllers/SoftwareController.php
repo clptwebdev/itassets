@@ -284,7 +284,7 @@ class SoftwareController extends Controller {
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('dmyHis');
-        $path = 'properties-report-' . $date;
+        $path = 'software-report-' . $date;
         SoftwaresPdf::dispatch($softwares, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);

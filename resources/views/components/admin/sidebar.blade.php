@@ -232,7 +232,8 @@
                 <span class="sidebar-title">Licenses</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-left text-sm-center text-md-left" href="#">
+            <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('broadbands.index')) {{ 'show' }} @endif"
+               href="{{route('broadbands.index')}}">
                 <i class="fas fa-fw fa-wifi sidebar-icon"></i>
                 <span class="sidebar-title">Broadband</span></a>
         </li>
