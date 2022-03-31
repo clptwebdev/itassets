@@ -15,11 +15,14 @@ use App\Jobs\SoftwaresPdf;
 use App\Models\Broadband;
 use App\Models\Location;
 use App\Models\Report;
+use App\Models\Role;
 use App\Models\Software;
 use App\Models\Supplier;
+use App\Models\User;
 use Carbon\Carbon;
 use http\Encoding\Stream\Debrotli;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\HeadingRowImport;
@@ -513,6 +516,44 @@ class BroadbandController extends Controller {
         return to_route('broadbands.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
+    }
+
+    public function expired()
+    {
+        $dateNow = Carbon::parse(now());
+        $broadbandsValid = Broadband::where('renewal_date', '>', $dateNow)->get();
+        $it_manger_role = Role::whereName('it_manager')->first();
+        if($it_manger_role)
+        {
+            $it_managers = User::whereRoleId($it_manger_role->id)->get();
+        }
+        foreach($broadbandsValid as $broadband)
+        {
+            $renewalDate = Carbon::parse($broadband->renewal_date);
+            if($renewalDate > Carbon::parse(now()) && $renewalDate < Carbon::parse(now())->addDay())
+            {
+                //send you have 1 day warning
+                foreach($it_managers as $user)
+                {
+
+                    Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry('1', $broadband));
+                }
+            }
+
+        }
+
+        $broadbandExpiresToday = Broadband::where('renewal_date', '=', Carbon::today())->get();
+        foreach($broadbandExpiresToday as $broadband)
+        {
+            //send expires today email
+            foreach($it_managers as $user)
+            {
+
+                Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry('0', $broadband));
+            }
+        }
+
+
     }
 
 }
