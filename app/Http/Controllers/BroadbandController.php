@@ -17,6 +17,7 @@ use App\Models\Location;
 use App\Models\Report;
 use App\Models\Software;
 use App\Models\Supplier;
+use Carbon\Carbon;
 use http\Encoding\Stream\Debrotli;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -39,7 +40,7 @@ class BroadbandController extends Controller {
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
-        $broadbands = Broadband::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
+        $broadbands = Broadband::locationFilter($locations->pluck('id')->toArray())->latest('renewal_date', '>=', Carbon::parse(now()))->paginate(intval($limit))->fragment('table');
 
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['property_filter' => false]);
