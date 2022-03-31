@@ -90,8 +90,8 @@
                                                           value="{{old('purchased_cost')}}"/>
                                         </div>
                                         <div class="form-group">
-                                            <x-form.input name="depreciation" formAttributes=""
-                                                          value="{{old('depreciation')}}"/>
+                                            <x-form.input name="depreciation_id" formAttributes=""
+                                                          value="{{old('depreciation_id')}}"/>
                                         </div>
                                         <div class="form-group position-relative">
                                             <label for="findSupplier">Supplier</label>
@@ -197,7 +197,7 @@
                                                        class="form-control mb-3" readonly value="{{old('category')}}">
                                                 <input class="form-control" type="text" name="find_category"
                                                        id="findCategory" value="" placeholder="Search for Categories"
-                                                       autocomplete="off" value="{{old('find_category')}}">
+                                                       autocomplete="off" value="">
                                                 <div id="categoryResults"
                                                      class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                      style="visibility: hidden; z-index: 2;">

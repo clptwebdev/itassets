@@ -8,7 +8,7 @@
 
 @section('content')
     <x-form.layout :action="route('ffes.update', $ffe->id)">
-        <x-wrappers.nav title="Add Furniture, Fixtures and Equipment">
+        <x-wrappers.nav title="Update Furniture, Fixtures and Equipment">
             <x-buttons.return :route="route('ffes.index')">FFE</x-buttons.return>
             <x-buttons.help :route="route('documentation.index').'#collapseTenMiscellaneous'"></x-buttons.help>
             <x-buttons.submit>Save</x-buttons.submit>
@@ -47,12 +47,14 @@
                                  aria-labelledby="home-tab">
                                 <div class="row">
                                     <div class="col-12 col-md-6 p-4 mb-3">
+                                        @csrf
+                                        @method('PATCH')
                                         <div class="form-group">
                                             <x-form.input name="name" formAttributes="required"
                                                           value="{{old('name') ?? $ffe->name}}"/>
                                         </div>
                                         <div class="form-group">
-                                            <x-form.select name="manufacturer_id" :models="$manufacturers" selected="{{$ffe->manufacturer_id}}/>
+                                            <x-form.select name="manufacturer_id" :models="$manufacturers" selected="{{$ffe->manufacturer_id}}"/>
                                         </div>
                                         <div class="form-group">
                                             <x-form.input name="serial_no" formAttributes="required"
@@ -99,7 +101,7 @@
                                         </div>
                                         <div class="form-group">
                                             <x-form.input name="depreciation" formAttributes=""
-                                                          value="{{old('depreciation') ?? $ffe->depreciation}}"/>
+                                                          value="{{old('depreciation') ?? $ffe->depreciation_id}}"/>
                                         </div>
                                         <div class="form-group position-relative">
                                             <label for="findSupplier">Supplier</label>
@@ -135,7 +137,7 @@
                                                 @endif
                                             </div>
                                             <div class="model_no py-2 px-4 text-center">
-                                                @if($accessory->supplier()->exists())
+                                                @if($ffe->supplier()->exists())
                                                     {{$ffe->supplier->full_address()}}
                                                 @else
                                                     Address
@@ -164,7 +166,7 @@
                                             <input type="hidden" id="location_id" name="location_id"
                                                    class="form-control mb-3" readonly value="{{old('location_id') ?? $ffe->location_id}}">
                                             <input class="form-control" type="text" name="find_location"
-                                                   id="findLocation" value="" autocomplete="off"
+                                                   id="findLocation" autocomplete="off"
                                                    placeholder="Search for Location" value="{{old('find_location') ?? $ffe->location->name ?? ''}}">
                                             <div id="locationResults"
                                                  class="w-100 h-auto mb-5 d-block search-modal position-absolute"
@@ -179,23 +181,32 @@
                                     <div class="col-12 col-md-6 p-4 mb-3 ">
                                         <div id="locationInfo" class="bg-light p-4">
                                             <div class="model_title text-center h4 mb-3">{{ $ffe->location->name }}</div>
-                                            <div
-                                                class="model_image p-4 d-flex justify-content-center align-items-middle">
+                                            <div class="model_image p-4 d-flex justify-content-center align-items-middle">
+                                                @if($ffe->location()->exists() && $ffe->location->photo()->exists())
                                                 <img id="profileImage"
-                                                     src="{{ asset('images/svg/location-image.svg') }}" height="200px"
+                                                     src="{{ asset($ffe->location->photo->path) }}" height="200px"
                                                      alt="Select Profile Picture">
+                                                @else
+                                                <img id="profileImage"
+                                                    src="{{ asset('images/svg/location-image.svg') }}" height="200px"
+                                                    alt="Select Profile Picture">
+                                                @endif
                                             </div>
                                             <div class="model_no py-2 px-4 text-center">
-                                                Address
+                                                @if($ffe->location()->exists())
+                                                    {{$ffe->location->full_address(', ')}}
+                                                @else
+                                                    Address
+                                                @endif
                                             </div>
                                             <div class="model_no py-2 px-4 text-center">
-                                                Website
+                                                {{$ffe->location->url ?? 'Website'}}
                                             </div>
                                             <div class="model_no py-2 px-4 text-center">
-                                                Email
+                                                {{$ffe->location->email ?? 'Email'}}
                                             </div>
                                             <div class="model_no py-2 px-4 text-center">
-                                                Notes
+                                                {{$ffe->location->notes ?? 'Notes'}}
                                             </div>
                                         </div>
                                     </div>
@@ -211,7 +222,7 @@
                                             <div class="position-relative">
                                                 @csrf
                                                 <input type="hidden" id="category_id" name="category"
-                                                       class="form-control mb-3" readonly value="{{old('category')}}">
+                                                       class="form-control mb-3" readonly value="{{ implode(",",$ffe->category->pluck('id')->toArray())}}">
                                                 <input class="form-control" type="text" name="find_category"
                                                        id="findCategory" value="" placeholder="Search for Categories"
                                                        autocomplete="off" value="{{old('find_category')}}">
@@ -223,16 +234,26 @@
                                                     </ul>
                                                 </div>
                                                 <div id="selectedCategories" class="row mt-3 mb-2 p-2">
-
+                                                    @foreach($ffe->category as $category)
+                                                        <div id="cat{{$category->id}}" class="p-2 col-4">
+                                                            <div
+                                                                class="border border-gray shadow bg-white p-2 rounded d-flex justify-content-between align-items-center">
+                                                                <span>{{$category->name}}</span>
+                                                                <i class="fas fa-times ml-4 text-danger pointer"
+                                                                   data-name="{{$category->id}}"
+                                                                   onclick="javascript:removeCategory(this);"></i>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-row mb-3">
-                                            <x-form.select name="status_id" :models="$statuses"/>
+                                            <x-form.select name="status_id" :models="$statuses" selected="{{$ffe->status_id}}"/>
                                         </div>
                                         <div class="form-row">
                                             <x-form.textarea name="notes" formAttributes="rows='10'"
-                                                             value="{{old('notes')}}"/>
+                                                             value="{{old('notes') ?? $ffe->notes}}"/>
                                         </div>
                                     </div>
                                 </div>

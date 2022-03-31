@@ -219,9 +219,7 @@
                                             </div>
                                             <div class="model_no py-2 px-4 text-center">
                                                 @if($accessory->location()->exists())
-                                                    {{ $accessory->location->address_1}}
-                                                    , {{ $accessory->location->city}}
-                                                    . {{ $accessory->location->postcode}},
+                                                    {{ $accessory->location()->full_address()}}
                                                 @else
                                                     Address
                                                 @endif

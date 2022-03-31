@@ -70,7 +70,7 @@ class FFE extends Model {
     public function depreciation_value_by_date($date)
     {
         $age = $date->floatDiffInYears($this->purchased_date);
-        $percent = 100 / $this->depreciation;
+        $percent = 100 / $this->depreciation_id;
         $percentage = floor($age) * $percent;
         $value = $this->purchased_cost * ((100 - $percentage) / 100);
 
@@ -92,7 +92,7 @@ class FFE extends Model {
         } else
         {
             $age = Carbon::now()->floatDiffInYears($this->purchased_date);
-            $percent = 100 / $this->depreciation;
+            $percent = 100 / $this->depreciation_id;
             $percentage = floor($age) * $percent;
             $dep = $this->purchased_cost * ((100 - $percentage) / 100);
 
