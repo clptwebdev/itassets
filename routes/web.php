@@ -339,7 +339,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/license/{asset}/comment', 'newComment')->name('license.comment');
         //Exports
         Route::post("/export/license", "export");
-        Route::get("/ll", "expired");
         //Imports
         Route::post("/import/license", "import");
         Route::Post("/import/license/errors", "importErrors");
