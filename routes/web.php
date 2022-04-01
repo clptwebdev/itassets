@@ -302,7 +302,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/software/{software}/pdf', 'downloadShowPDF')->name('software.showPdf');
     });
     /////////////////////////////////////////////
-    /////////////// Broadband Routes ///////////
+    /////////////// Broadband Routes ////////////
     /////////////////////////////////////////////
 
     Route::controller(\App\Http\Controllers\BroadbandController::class)->group(function() {
@@ -339,6 +339,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/license/{asset}/comment', 'newComment')->name('license.comment');
         //Exports
         Route::post("/export/license", "export");
+        Route::get("/ll", "expired");
         //Imports
         Route::post("/import/license", "import");
         Route::Post("/import/license/errors", "importErrors");

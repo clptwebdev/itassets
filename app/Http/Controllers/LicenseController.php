@@ -11,6 +11,7 @@ use App\Models\License;
 use App\Models\Location;
 use App\Models\Report;
 use App\Models\Role;
+use App\Models\Setting;
 use App\Models\Supplier;
 use App\Models\User;
 use Carbon\Carbon;
@@ -507,40 +508,62 @@ class LicenseController extends Controller {
 
     public function expired()
     {
-        $dateNow = Carbon::parse(now());
-        $licensesValid = License::where('renewal_date', '>', $dateNow)->get();
-        $it_manger_role = Role::whereName('it_manager')->first();
-        if($it_manger_role)
+        $dateNow = Carbon::today();
+        $it_managers = User::itManager();
+        $days = Setting::whereName('broadband_expiry')->first();
+        foreach(Location::all() as $location)
         {
-            $it_managers = User::whereRoleId($it_manger_role->id)->get();
-        }
-        foreach($licensesValid as $license)
-        {
-            $renewalDate = Carbon::parse($license->renewal_date);
-            if($renewalDate > Carbon::parse(now()) && $renewalDate < Carbon::parse(now())->addDay())
+            //gets the first license for this location with the furthest renewal date
+            if($location->license)
             {
-                //send you have 1 day warning
-                foreach($it_managers as $user)
+                $license = $location->license->sortByDesc(function() {
+                    return 'expiry';
+                })->where('expiry', '>=', $dateNow)->first();
+            }
+            if($license ?? null)
+            {
+                $expiry = Carbon::parse($license->expiry);
+                //30 days
+                if($expiry == Carbon::today()->addDays($days->value ?? 30))
                 {
+                    //send you have 30 day warning
+                    foreach($it_managers as $user)
+                    {
 
-                    Mail::to($user->email)->send(new \App\Mail\LicenseExpiry('1', $license));
+                        Mail::to($user->email)->send(new \App\Mail\LicenseExpiry($days->value ?? 30, $license));
+                    }
+                }
+                //14 days
+                if($expiry == Carbon::today()->addDays(14))
+                {
+                    //send you have 1 day warning
+                    foreach($it_managers as $user)
+                    {
+
+                        Mail::to($user->email)->send(new \App\Mail\LicenseExpiry('14', $license));
+                    }
+                }
+                //7 days
+                if($expiry == Carbon::today()->addDays(7))
+                {
+                    //send you have 7 day warning
+                    foreach($it_managers as $user)
+                    {
+
+                        Mail::to($user->email)->send(new \App\Mail\LicenseExpiry('7', $license));
+                    }
+                }
+                //On day days
+                if($expiry == Carbon::today())
+                {
+                    //send you have 0 days Left
+                    foreach($it_managers as $user)
+                    {
+                        Mail::to($user->email)->send(new \App\Mail\LicenseExpiry('0', $license));
+                    }
                 }
             }
-
         }
-
-        $licenseExpiresToday = License::where('renewal_date', '=', Carbon::today())->get();
-        foreach($licenseExpiresToday as $license)
-        {
-            //send expires today email
-            foreach($it_managers as $user)
-            {
-
-                Mail::to($user->email)->send(new \App\Mail\LicenseExpiry('0', $license));
-            }
-        }
-
-
     }
 
 }
