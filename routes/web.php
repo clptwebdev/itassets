@@ -316,7 +316,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/broadband/{asset}/comment', 'newComment')->name('broadband.comment');
         //Exports
         Route::post("/export/broadband", "export");
-        Route::get("/bb", "expired");
         //Imports
         Route::post("/import/broadband", "import");
         Route::Post("/import/broadband/errors", "importErrors");
