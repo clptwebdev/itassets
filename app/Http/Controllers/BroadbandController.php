@@ -16,6 +16,7 @@ use App\Models\Broadband;
 use App\Models\Location;
 use App\Models\Report;
 use App\Models\Role;
+use App\Models\Setting;
 use App\Models\Software;
 use App\Models\Supplier;
 use App\Models\User;
@@ -520,40 +521,59 @@ class BroadbandController extends Controller {
 
     public function expired()
     {
-        $dateNow = Carbon::parse(now());
-        $broadbandsValid = Broadband::where('renewal_date', '>', $dateNow)->get();
-        $it_manger_role = Role::whereName('it_manager')->first();
-        if($it_manger_role)
+        $dateNow = Carbon::today();
+        $it_managers = User::itManager();
+        $days = Setting::whereName('broadband_expiry')->first();
+        foreach(Location::all() as $location)
         {
-            $it_managers = User::whereRoleId($it_manger_role->id)->get();
-        }
-        foreach($broadbandsValid as $broadband)
-        {
-            $renewalDate = Carbon::parse($broadband->renewal_date);
-            if($renewalDate > Carbon::parse(now()) && $renewalDate < Carbon::parse(now())->addDay())
+            //gets the first broadband for this location with the furthest renewal date
+            $broadband = $location->broadband->sortByDesc(function() {
+                return 'renewal_date';
+            })->where('renewal_date', '>=', $dateNow)->first();
+            if($broadband)
             {
-                //send you have 1 day warning
-                foreach($it_managers as $user)
+                $renewalDate = Carbon::parse($broadband->renewal_date);
+                //30 days
+                if($renewalDate == Carbon::today()->addDays($days->value ?? 30))
                 {
+                    //send you have 30 day warning
+                    foreach($it_managers as $user)
+                    {
 
-                    Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry('1', $broadband));
+                        Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry($days->value ?? 30, $broadband));
+                    }
+                }
+                //14 days
+                if($renewalDate == Carbon::today()->addDays(14))
+                {
+                    //send you have 1 day warning
+                    foreach($it_managers as $user)
+                    {
+
+                        Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry('14', $broadband));
+                    }
+                }
+                //7 days
+                if($renewalDate == Carbon::today()->addDays(7))
+                {
+                    //send you have 1 day warning
+                    foreach($it_managers as $user)
+                    {
+
+                        Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry('7', $broadband));
+                    }
+                }
+                //On day days
+                if($renewalDate == Carbon::today())
+                {
+                    //send you have 0 days Left
+                    foreach($it_managers as $user)
+                    {
+                        Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry('0', $broadband));
+                    }
                 }
             }
-
         }
-
-        $broadbandExpiresToday = Broadband::where('renewal_date', '=', Carbon::today())->get();
-        foreach($broadbandExpiresToday as $broadband)
-        {
-            //send expires today email
-            foreach($it_managers as $user)
-            {
-
-                Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry('0', $broadband));
-            }
-        }
-
-
     }
 
 }
