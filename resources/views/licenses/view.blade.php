@@ -88,19 +88,19 @@
                                 <td class="text-center">£{{number_format($license->purchased_cost, 2, '.', ',')}}</td>
                                 <td class="text-center"><span>{{ \Illuminate\Support\Carbon::parse($license->expiry)->format('d-M-Y')}}
                                     </span><br>@if($license->isExpired())<small
-                                        class='text-danger'>{{\Illuminate\Support\Carbon::parse($license->expiry)->diffForHumans()}}</small>
+                                        class='text-success'>{{\Illuminate\Support\Carbon::parse($license->expiry)->diffForHumans()}}</small>
                                     @else
                                         <small
-                                            class='text-success'>{{\Illuminate\Support\Carbon::parse($license->expiry)->diffForHumans()}}</small>
+                                            class='text-danger'>{{\Illuminate\Support\Carbon::parse($license->expiry)->diffForHumans()}}</small>
                                     @endif
                                 </td>
                                 <td class="text-center"
                                     href='mailto:{{$license->contact}}'>{{$license->contact ?? 'No Contact Email'}}</td>
                                 <td class="text-center">
                                     @if($license->isExpired())
-                                        <p class='text-danger'>Expired</p>
+                                        <p class='text-success'>Expired</p>
                                     @else
-                                        <p class='text-success'>Valid</p>
+                                        <p class='text-danger'>Valid</p>
                                     @endif
                                 </td>
                                 <td class="text-right">
