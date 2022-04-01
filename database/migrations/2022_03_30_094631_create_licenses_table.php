@@ -4,8 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -13,8 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('licenses', function (Blueprint $table) {
+        Schema::create('licenses', function(Blueprint $table) {
             $table->id();
+            $table->text('name');
+            $table->foreignId('supplier_id');
+            $table->foreignId('location_id');
+            $table->text('contact')->nullable();
+            $table->dateTime('expiry')->nullable();
+            $table->decimal("purchased_cost", 11, 2)->nullable()->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -28,4 +35,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('licenses');
     }
+
 };
