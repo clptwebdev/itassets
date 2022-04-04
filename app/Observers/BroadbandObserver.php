@@ -8,6 +8,11 @@ use Carbon\Carbon;
 
 class BroadbandObserver {
 
+    public function __construct()
+    {
+        $this->user = auth()->user()->name ?? 'An Unauthorized User';
+    }
+
     public function created(Broadband $broadband)
     {
 
@@ -18,7 +23,7 @@ class BroadbandObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Broadband',
             'loggable_id' => $broadband->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised User has added a new Broadband: ' . $broadband->name . '. ' . $location,
+            'data' => $this->user . ' has added a new Broadband: ' . $broadband->name . '. ' . $location,
         ]);
     }
 
@@ -30,7 +35,7 @@ class BroadbandObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Broadband',
             'loggable_id' => $broadband->id ?? 0,
-            'data' => auth()->user()->name . ' has added a updated Broadband: ' . $broadband->name . '. ' . $location,
+            'data' => $this->user . ' has added a updated Broadband: ' . $broadband->name . '. ' . $location,
         ]);
     }
 
@@ -41,7 +46,7 @@ class BroadbandObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Broadband',
             'loggable_id' => $broadband->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has placed the Broadband: ' . $broadband->name . ' into the recycling bin',
+            'data' => $this->user . ' has placed the Broadband: ' . $broadband->name . ' into the recycling bin',
         ]);
     }
 
@@ -51,7 +56,7 @@ class BroadbandObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'Broadband',
             'loggable_id' => $broadband->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has restored the Broadband: ' . $broadband->name,
+            'data' => $this->user . ' has restored the Broadband: ' . $broadband->name,
         ]);
     }
 
@@ -61,7 +66,7 @@ class BroadbandObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'Broadband',
             'loggable_id' => $broadband->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has permanently removed the Broadband: ' . $broadband->name,
+            'data' => $this->user . ' has permanently removed the Broadband: ' . $broadband->name,
         ]);
     }
 
