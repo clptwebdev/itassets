@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exports\vehicleErrorsExport;
-use App\Exports\VehicleExport;
-use App\Imports\VehicleImport;
-use App\Jobs\VehiclePdf;
-use App\Jobs\VehiclesPdf;
+use App\Exports\vehicleExport;
+use App\Imports\vehicleImport;
+use App\Jobs\vehiclePdf;
+use App\Jobs\vehiclesPdf;
 use App\Models\Location;
 use App\Models\Report;
 use App\Models\Vehicle;

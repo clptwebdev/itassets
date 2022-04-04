@@ -25,6 +25,7 @@ use App\Exports\FFEExport;
 
 //Jobs
 use App\Jobs\FFESPdf;
+use App\Jobs\FFEPdf;
 
 class FFEController extends Controller {
 
@@ -457,7 +458,7 @@ class FFEController extends Controller {
             return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Download of FFE Report.');
 
         }
-        $aucs = array();
+        $ffes = array();
         $found = FFE::withTrashed()->whereIn('id', json_decode($request->ffes))->with('location')->get();
         foreach($found as $f)
         {
@@ -470,7 +471,7 @@ class FFEController extends Controller {
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£' . $f->purchased_cost;
-            $array['donated'] = '£' . $f->donated;
+            $array['donated'] = $f->donated;
             if($f->depreciation_id != 0){
                 $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation_id);
                 $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
@@ -504,24 +505,42 @@ class FFEController extends Controller {
 
     }
 
-    public function downloadShowPDF(AUC $auc)
+    public function downloadShowPDF(FFE $ffe)
     {
-        if(auth()->user()->cant('generateShowPDF', $auc))
+        if(auth()->user()->cant('generateShowPDF', $ffe))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised | Download of Property Information.');
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Download of Property Information.');
 
         }
 
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('dmyHis');
-        $path = "aucs-{$auc->id}-{$date}";
-        AUCPdf::dispatch($auc, $user, $path)->afterResponse();
+        $path = "ffe-{$ffe->id}-{$date}";
+        FFEPdf::dispatch($ffe, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return to_route('aucs.show', $auc->id)
+        return to_route('ffes.show', $ffe->id)
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
+    }
+
+    ////////////////////////////////////////
+    /////////// Comment Functions ///////////
+    ////////////////////////////////////////
+
+    public function newComment(Request $request)
+    {
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $ffe = FFE::find($request->ffe_id);
+        $ffe->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+        session()->flash('success_message', $request->title . ' has been created successfully');
+
+        return to_route('ffes.show', $ffe->id);
     }
 }

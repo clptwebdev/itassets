@@ -236,7 +236,9 @@ Route::group(['middleware' => 'auth'], function() {
         Route::Post("/import/ffes/errors/export", "exportImportErrors")->name("ffes.export.import");
         //PDF
         Route::post('/ffes/pdf', 'downloadPDF')->name('ffes.pdf');
-        Route::get('/ffes/{auc}/pdf', 'downloadShowPDF')->name('ffes.showPdf');
+        Route::get('/ffes/{ffe}/pdf', 'downloadShowPDF')->name('ffes.showPdf');
+        //Comments
+        Route::post('/ffes/{ffe}/comment', 'newComment')->name('ffes.comment');
     });
 
     Route::controller(\App\Http\Controllers\ManufacturerController::class)->group(function() {
