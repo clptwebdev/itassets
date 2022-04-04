@@ -18,7 +18,7 @@ class VehiclePolicy {
 
     public function __construct()
     {
-        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Vehicle')->first();
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Asset')->first();
     }
 
     public function view(User $user, Vehicle $vehicle)
