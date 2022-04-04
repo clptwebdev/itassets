@@ -20,11 +20,11 @@ class VehicleController extends Controller {
     public function index()
     {
         //Check to see if the User has permission to View All the vehicle.
+        return dd(auth()->user()->role->permissions->where('model', ' = ', 'Vehicle')->first());
 
         if(auth()->user()->cant('viewAll', Vehicle::class))
         {
-
-            return ErrorController::forbidden('/dashboard', 'Unauthorised | View vehicle.');
+            return ErrorController::forbidden('/dashboard', 'Unauthorised | View Vehicles.');
         }
         // find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('vehicle')->get();
