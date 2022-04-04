@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Accessory Import Errors')
+@section('title', 'FFE Import Errors')
 
 
 
@@ -13,7 +13,7 @@
         @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
 
         <div>
-            <form action="{{route('componentexport.import')}}" method="POST" class="d-inline">
+            <form action="{{route('ffes.export.import')}}" method="POST" class="d-inline">
                 @csrf
                 <div class="form-group">
                     <input type="hidden" class="form-control " name="name" id="name" placeholder=""
@@ -23,9 +23,9 @@
                         class="far fa-save fa-sm text-dark-50"></i> Download Errors
                 </button>
             </form>
-            <a href="{{ route('accessories.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+            <a href="{{ route('ffes.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm te
-                    xt-white-50"></i> Back to Accessories</a>
+                    xt-white-50"></i> Back to FFE</a>
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
             <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <div class="m-3 alert alert-danger">You have several errors Within your Import in rows
+    <div class="m-3 alert alert-danger">You have several errors within your import rows
         <div class="col-md-12">
             <div id="summary">
                 <p class="collapse" id="collapseSummary">{{$errorRows}}</p>
@@ -59,40 +59,36 @@
                         <thead>
                         <tr>
                             <th><small>Name</small></th>
-                            <th><small>Asset Tag</small></th>
-                            <th><small>Model</small></th>
-                            <th><small>Status</small></th>
-                            <th><small>Supplier</small></th>
-                            <th><small>Manufacturers</small></th>
-                            <th><small>Location</small></th>
-                            <th><small>Room</small></th>
-                            <th><small>Order_no</small></th>
                             <th><small>Serial Num</small></th>
+                            <th><small>Status</small></th>
                             <th><small>Purchased Cost</small></th>
                             <th><small>Donated</small></th>
                             <th><small>Purchased Date</small></th>
-                            <th><small>Depreciation</small></th>
+                            <th><small>Supplier</small></th>
+                            <th><small>Manufacturers</small></th>
+                            <th><small>Order_no</small></th>
                             <th><small>Warranty</small></th>
+                            <th><small>Depreciation</small></th>
+                            <th><small>Location</small></th>
+                            <th><small>Room</small></th>
                             <th><small>Notes</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
                             <th><small>Name</small></th>
-                            <th><small>Asset Tag</small></th>
-                            <th><small>Model</small></th>
-                            <th><small>Status</small></th>
-                            <th><small>Supplier</small></th>
-                            <th><small>Manufacturers</small></th>
-                            <th><small>Location</small></th>
-                            <th><small>Room</small></th>
-                            <th><small>Order_no</small></th>
                             <th><small>Serial Num</small></th>
+                            <th><small>Status</small></th>
                             <th><small>Purchased Cost</small></th>
                             <th><small>Donated</small></th>
                             <th><small>Purchased Date</small></th>
-                            <th><small>Depreciation</small></th>
+                            <th><small>Supplier</small></th>
+                            <th><small>Manufacturers</small></th>
+                            <th><small>Order_no</small></th>
                             <th><small>Warranty</small></th>
+                            <th><small>Depreciation</small></th>
+                            <th><small>Location</small></th>
+                            <th><small>Room</small></th>
                             <th><small>Notes</small></th>
                         </tr>
                         </tfoot>
@@ -113,26 +109,16 @@
                                         </span>
                                 </td>
                                 <td>
-                                        <span id="asset_tag{{$line}}" class="tooltip-danger">
-                                            <input type="text" maxlength="11"
-                                                   class="import-control <?php if (in_array('asset_tag', $errors)) {?>border-bottom border-danger<?php }?>"
-                                                   name="asset_tag[]" id="asset_tag"
-                                                   value="{{ $valueArray[$row]['asset_tag'] }}"
-                                                   placeholder="This Row is Empty Please Fill!"
-                                                   data-bs-container='#asset_tag{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('asset_tag', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['asset_tag']}'" !!}@endif>
-                                        </span>
-                                </td>
-                                <td>
-                                        <span id="model{{$line}}" class="tooltip-danger">
-                                            <input type="text"
-                                                   class="import-control @if(in_array('model', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                                   name="model[]" value="{{ $valueArray[$row]['model'] }}"
-                                                   placeholder="This Row is Empty Please Fill!"
-                                                   data-bs-container='#model{{$line}}' data-bs-placement='top'
-
-                                               @if(array_key_exists('model', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['model']}'" !!}@endif>
-                                        </span>
+                                    <span id="serial_no{{$line}}" class="tooltip-danger">
+                                    <input type="text"
+                                           class="import-control @if(in_array('serial_no', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                           name="serial_no[]" id="serial_no"
+                                           placeholder="This Row is Empty Please Fill!"
+                                           value="{{ $valueArray[$row]['serial_no'] }}"
+                                           data-bs-container='#serial_no{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['serial_no']}'" !!}@endif
+                                    >
+                                    </span>
                                 </td>
                                 <td>
                                         <span id="status_id{{$line}}" class="tooltip-danger">
@@ -151,6 +137,54 @@
                                         </select>
 
                                         </span>
+                                </td>
+                                <td>
+                                    <span id="purchased_cost{{$line}}" class="tooltip-danger">
+                                    <input type="text"
+                                           class="import-control @if(in_array('purchased_cost', $errors)){{'border-bottom border-danger'}}@endif"
+                                           name="purchased_cost[]" id="purchased_cost"
+                                           placeholder="This Row is Empty Please Fill!"
+                                           value="{{ $valueArray[$row]['purchased_cost'] }}" required
+                                           data-bs-container='#purchased_cost{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['purchased_cost']}'" !!}@endif
+                                    >
+                                    </span>
+                                </td>
+                                <td>
+                                    <span id="donated{{$line}}" class="tooltip-danger">
+                                        <select type="dropdown"
+                                                class="import-control <?php if (in_array('donated', $errors)) {?>border-bottom border-danger<?php }?>"
+                                                name="donated[]" id="donatedInput{{$line}}" onchange="getFields(this);"
+                                                autocomplete="off" required data-bs-container='#donated{{$line}}'
+                                                data-bs-placement='top'
+                                                @if(array_key_exists('donated', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['donated']}'" !!}@endif>>
+                                            <option value="0" @if($valueArray[$row]['donated'] == 0){{'selected'}}@endif>No</option>
+                                            <option
+                                                value="1" @if( $valueArray[$row]['donated'] == 1){{'selected'}}@endif>Yes</option>
+                                        </select>
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php
+                                    try
+                                    {
+                                        $date = \Carbon\Carbon::parse(str_replace('/', '-', $valueArray[$row]['purchased_date']))->format('Y-m-d');
+                                    } catch(\Exception $e)
+                                    {
+                                        $date = 'dd/mm/yyyy';
+                                    }
+                                    ?>
+                                    <span id="purchased_date{{$line}}" class="tooltip-danger">
+                                        <input type="date"
+                                            class="import-control @if(in_array('purchased_date', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                            name="purchased_date[]" id="purchased_date"
+                                            placeholder="This Row is Empty Please Fill!" value="{{ $date }}" required
+                                            data-bs-container='#purchased_date{{$line}}' data-bs-placement='top'
+                                            @if(array_key_exists('purchased_date', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['purchased_date']}'" !!}
+                                                @endif
+                                            >
+                                        </span>
+
                                 </td>
                                 <td>
                                         <span id="supplier_id{{$line}}" class="tooltip-danger">
@@ -187,34 +221,6 @@
                                         </span>
                                 </td>
                                 <td>
-                                        <span id="location_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown"
-                                                class="import-control @if(in_array('location_id', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                                name="location_id[]" required data-bs-container='#location_id{{$line}}'
-                                                data-bs-placement='top'
-                                        @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['location_id']} - {$valueArray[$row]['location_id']}'" !!}@endif
-                                        >
-                                            <option
-                                                value="0" @if($valueArray[$row]['location_id'] == ''){{'selected'}}@endif>Please Select a Location</option>
-                                            @foreach($locations as $location)
-                                                <option
-                                                    value="{{ $location->id  }}" @if( $valueArray[$row]['location_id'] == $location->name){{'selected'}}@endif>{{ $location->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        </span>
-                                </td>
-                                <td>
-                                        <span id="room{{$line}}" class="tooltip-danger">
-                                        <input type="text"
-                                               class="import-control @if(in_array('room', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                               name="room[]" placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['room'] }}" required
-                                               data-bs-container='#room{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('room', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['room']}'" !!}@endif
-                                        >
-                                        </span>
-                                </td>
-                                <td>
                                         <span id="order_no{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="import-control @if(in_array('order_no', $errors)){{ 'border-bottom border-danger'}}@endif"
@@ -227,92 +233,52 @@
                                         </span>
                                 </td>
                                 <td>
-                                        <span id="serial_no{{$line}}" class="tooltip-danger">
-                                        <input type="text"
-                                               class="import-control @if(in_array('serial_no', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                               name="serial_no[]" id="serial_no"
-                                               placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['serial_no'] }}"
-                                               data-bs-container='#serial_no{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['serial_no']}'" !!}@endif
-                                        >
-                                        </span>
-                                </td>
-                                <td>
-                                        <span id="purchased_cost{{$line}}" class="tooltip-danger">
-                                        <input type="text"
-                                               class="import-control @if(in_array('purchased_cost', $errors)){{'border-bottom border-danger'}}@endif"
-                                               name="purchased_cost[]" id="purchased_cost"
-                                               placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['purchased_cost'] }}" required
-                                               data-bs-container='#purchased_cost{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['purchased_cost']}'" !!}@endif
-                                        >
-                                        </span>
-                                </td>
-
-                                <td>
-                                    <span id="donated{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown"
-                                                class="import-control <?php if (in_array('donated', $errors)) {?>border-bottom border-danger<?php }?>"
-                                                name="donated[]" id="donatedInput{{$line}}" onchange="getFields(this);"
-                                                autocomplete="off" required data-bs-container='#donated{{$line}}'
-                                                data-bs-placement='top'
-                                                @if(array_key_exists('donated', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['donated']}'" !!}@endif>>
-                                            <option value="0" @if($valueArray[$row]['donated'] == 0){{'selected'}}@endif>No</option>
-                                            <option
-                                                value="1" @if( $valueArray[$row]['donated'] == 1){{'selected'}}@endif>Yes</option>
-                                        </select>
+                                    <span id="warranty{{$line}}" class="tooltip-danger">
+                                    <input type="text"
+                                           class="import-control @if(in_array('warranty', $errors)){{'border-bottom border-danger'}}@endif"
+                                           name="warranty[]" id="warranty"
+                                           placeholder="This Row is Empty Please Fill!"
+                                           value="{{ $valueArray[$row]['warranty'] }}" required
+                                           data-bs-container='#warranty{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('warranty', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['warranty']}'" !!}@endif
+                                    >
                                     </span>
                                 </td>
                                 <td>
-                                    <?php
-                                    try
-                                    {
-                                        $date = \Carbon\Carbon::parse(str_replace('/', '-', $valueArray[$row]['purchased_date']))->format('Y-m-d');
-                                    } catch(\Exception $e)
-                                    {
-                                        $date = 'dd/mm/yyyy';
-                                    }
-                                    ?>
-                                    <span id="purchased_date{{$line}}" class="tooltip-danger">
-                                        <input type="date"
-                                               class="import-control @if(in_array('purchased_date', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                               name="purchased_date[]" id="purchased_date"
-                                               placeholder="This Row is Empty Please Fill!" value="{{ $date }}" required
-                                               data-bs-container='#purchased_date{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('purchased_date', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['purchased_date']}'" !!}
-                                                   @endif
-                                               >
-                                        </span>
-
-                                </td>
-                                <td>
-                                        <span id="depreciation_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown"
-                                                class="import-control @if(in_array('depreciation_id', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                                name="depreciation_id[]" required
-                                                data-bs-container='#depreciation_id{{$line}}' data-bs-placement='top'
-                                        @if(array_key_exists('depreciation_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['depreciation_id']}'" !!}@endif
-                                        >
-                                            <option
-                                                value="0" @if($valueArray[$row]['depreciation_id'] == ''){{'selected'}}@endif>No Depreciation</option>
-                                            @foreach($depreciations as $depreciation)
-                                                <option
-                                                    value="{{ $depreciation->id  }}" @if( $valueArray[$row]['depreciation_id'] == $depreciation->name){{'selected'}}@endif>{{ $depreciation->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        </span>
-                                </td>
-                                <td>
-                                        <span id="warranty{{$line}}" class="tooltip-danger">
+                                    <span id="depreciation_id{{$line}}" class="tooltip-danger">
                                         <input type="text"
-                                               class="import-control @if(in_array('warranty', $errors)){{'border-bottom border-danger'}}@endif"
-                                               name="warranty[]" id="warranty"
+                                               class="import-control @if(in_array('depreciation_id', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                               name="depreciation_id[]" value="{{ $valueArray[$row]['depreciation_id'] }}"
                                                placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['warranty'] }}" required
-                                               data-bs-container='#warranty{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('warranty', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['warranty']}'" !!}@endif
+                                               data-bs-container='#depreciation_id{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('depreciation_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['depreciation_id']}'" !!}@endif>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span id="location_id{{$line}}" class="tooltip-danger">
+                                    <select type="dropdown"
+                                            class="import-control @if(in_array('location_id', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                            name="location_id[]" required data-bs-container='#location_id{{$line}}'
+                                            data-bs-placement='top'
+                                    @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['location_id']} - {$valueArray[$row]['location_id']}'" !!}@endif
+                                    >
+                                        <option
+                                            value="0" @if($valueArray[$row]['location_id'] == ''){{'selected'}}@endif>Please Select a Location</option>
+                                        @foreach($locations as $location)
+                                            <option
+                                                value="{{ $location->id  }}" @if( $valueArray[$row]['location_id'] == $location->name){{'selected'}}@endif>{{ $location->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    </span>
+                                </td>
+                                <td>
+                                        <span id="room{{$line}}" class="tooltip-danger">
+                                        <input type="text"
+                                            class="import-control @if(in_array('room', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                            name="room[]" placeholder="This Row is Empty Please Fill!"
+                                            value="{{ $valueArray[$row]['room'] }}" required
+                                            data-bs-container='#room{{$line}}' data-bs-placement='top'
+                                            @if(array_key_exists('room', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['room']}'" !!}@endif
                                         >
                                         </span>
                                 </td>
@@ -415,16 +381,6 @@
                 data.append('name[]', element.value);
             });
 
-            //Asset Tag
-            const asset_tagInputs = document.querySelectorAll("input[name='asset_tag[]']");
-            asset_tagInputs.forEach(element => {
-                data.append('asset_tag[]', element.value);
-            });
-            //Model
-            const modelInputs = document.querySelectorAll("input[name='model[]']");
-            modelInputs.forEach(element => {
-                data.append('model[]', element.value);
-            });
             //supplier
             const supplierInputs = document.querySelectorAll("select[name='supplier_id[]']");
             supplierInputs.forEach(element => {
@@ -460,7 +416,7 @@
             });
 
             //Depreciation
-            const dpInputs = document.querySelectorAll("select[name='depreciation_id[]']");
+            const dpInputs = document.querySelectorAll("input[name='depreciation_id[]']");
             dpInputs.forEach(element => {
                 data.append('depreciation_id[]', element.value);
             });
@@ -496,11 +452,14 @@
                 data.append('notes[]', element.value);
             });
 
+            console.log(data);
+
             const xhr = new XMLHttpRequest()
 
             xhr.onload = function () {
+                console.log(xhr.responseText);
                 if (xhr.responseText === 'Success') {
-                    window.location.href = '/accessories';
+                    window.location.href = '/ffes';
                 } else {
                     importControl.forEach((item) => {
                         item.classList.remove('border-bottom', 'border-danger');
@@ -528,7 +487,7 @@
                 }
             };
 
-            xhr.open("POST", "/accessories/create/ajax");
+            xhr.open("POST", "/import/ffes/errors");
             xhr.send(data);
         }
     </script>

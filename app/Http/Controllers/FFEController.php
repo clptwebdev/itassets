@@ -8,6 +8,19 @@ use App\Models\FFE;
 use App\Models\Manufacturer;
 use App\Models\Supplier;
 use App\Models\Status;
+use App\Models\Category;
+
+use Illuminate\Support\Facades\Validator;
+
+use App\Rules\permittedLocation;
+use App\Rules\findLocation;
+
+//Imports
+use App\Imports\FFEImport;
+
+//Exprots
+use App\Exports\FFEErrorsExport;
+use App\Exports\FFEExport;
 
 class FFEController extends Controller {
 
@@ -236,4 +249,195 @@ class FFEController extends Controller {
         return to_route('accessories.bin');
     }
 
+    ///////////////////////////////////////////
+    ///////////// Import Functions ////////////
+    ///////////////////////////////////////////
+
+    public function import(Request $request)
+    {
+        if(auth()->user()->cant('create', FFE::class))
+        {
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Import FFE.');
+
+        }
+        $extensions = array("csv");
+
+        $result = array($request->file('csv')->getClientOriginalExtension());
+
+        if(in_array($result[0], $extensions))
+        {
+            $path = $request->file("csv")->getRealPath();
+            $import = new FFEImport;
+            $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
+            $row = [];
+            $attributes = [];
+            $errors = [];
+            $values = [];
+            $results = $import->failures();
+            $importErrors = [];
+            foreach($results->all() as $result)
+            {
+                $row[] = $result->row();
+                $attributes[] = $result->attribute();
+                $errors[] = $result->errors();
+                $values[] = $result->values();
+                $importErrors[] = [
+
+                    "row" => $result->row(),
+                    "attributes" => $result->attribute(),
+                    "errors" => $result->errors(),
+                    "value" => $result->values(),
+                ];
+
+            }
+
+            if(! empty($importErrors))
+            {
+                $errorArray = [];
+                $valueArray = [];
+                $errorValues = [];
+
+                foreach($importErrors as $error)
+                {
+                    if(array_key_exists($error['row'], $errorArray))
+                    {
+                        $errorArray[$error['row']] = $errorArray[$error['row']] . ',' . $error['attributes'];
+                    } else
+                    {
+                        $errorArray[$error['row']] = $error['attributes'];
+                    }
+                    $valueArray[$error['row']] = $error['value'];
+
+                    if(array_key_exists($error['row'], $errorValues))
+                    {
+                        $array = $errorValues[$error['row']];
+                    } else
+                    {
+                        $array = [];
+                    }
+
+                    foreach($error['errors'] as $e)
+                    {
+                        $array[$error['attributes']] = $e;
+                    }
+                    $errorValues[$error['row']] = $array;
+
+                }
+
+                return view('FFE.importErrors', [
+                    "errorArray" => $errorArray,
+                    "valueArray" => $valueArray,
+                    "errorValues" => $errorValues,
+                    "locations" => auth()->user()->locations,
+                    "statuses" => Status::all(),
+                    "suppliers" => Supplier::all(),
+                    "locations" => auth()->user()->locations,
+                    "manufacturers" => Manufacturer::all()
+                ]);
+
+            } else
+            {
+                return to_route('ffes.index')->with('success_message', 'All FFE were imported correctly!');
+
+            }
+        } else
+        {
+            session()->flash('danger_message', 'Sorry! This File type is not allowed Please try a ".CSV!"');
+
+            return to_route('ffes.index');
+        }
+
+
+    }
+
+    public function importErrors(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            "name.*" => "required|max:255",
+            'location_id.*' => 'required|gt:0',
+            'purchased_date.*' => 'date',
+            'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            "depreciation.*" => "nullable",
+            "type.*" => "nullable",
+        ]);
+
+        if($validation->fails())
+        {
+            return $validation->errors();
+        } else
+        {
+            for($i = 0; $i < count($request->name); $i++)
+            {
+                $ffe = new FFE;
+
+                $location = Location::find($request->location_id[$i]);
+                $ffe->name = $request->name[$i];
+                //Serial No Cannot be ""
+                //If the imported Serial Number is empty assign it to "0"
+                $request->serial_no[$i] != '' ? $ffe->serial_no = $request->serial_no[$i] : $ffe->serial_no = "-";
+                $ffe->status_id = $request->status_id[$i];
+                $ffe->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
+                $ffe->purchased_cost = $request->purchased_cost[$i];
+                $ffe->donated = $request->donated[$i];
+                $ffe->supplier_id = $request->supplier_id[$i];
+                $ffe->manufacturer_id = $request->manufacturer_id[$i];
+                $ffe->order_no = $request->order_no[$i];
+                $ffe->warranty = $request->warranty[$i];
+                $ffe->location_id = $request->location_id[$i];
+                $ffe->room = $request->room[$i] ?? 'N/A';
+                $ffe->notes = $request->notes[$i];
+                $ffe->photo_id = 0;
+                $ffe->depreciation_id = $request->depreciation_id[$i];
+                $ffe->user_id = auth()->user()->id;
+                $ffe->save();
+            }
+
+            session()->flash('success_message', 'You have successfully added all Furniture, Fixtures and Equipment!');
+
+            return 'Success';
+        }
+    }
+
+    public function exportImportErrors(Request $request)
+    {
+        $export = $request['name'];
+        $code = (htmlspecialchars_decode($export));
+        $export = json_decode($code);
+
+        if(auth()->user()->cant('viewAll', FFE::class))
+        {
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised to Export FFE Errors.');
+
+        }
+
+        $date = \Carbon\Carbon::now()->format('dmyHis');
+        \Maatwebsite\Excel\Facades\Excel::store(new FFEErrorsExport($export), "/public/csv/ffe-errors-{$date}.csv");
+        $url = asset("storage/csv/ffe-errors-{$date}.csv");
+
+        return to_route('ffes.index')
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
+    }
+
+    ///////////////////////////////////////////
+    ///////////// Export Functions ////////////
+    ///////////////////////////////////////////
+
+    public function export(Request $request)
+    {
+        if(auth()->user()->cant('viewAll', FFE::class))
+        {
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Export FFE Information.');
+
+        }
+        $aucs = FFE::withTrashed()->whereIn('id', json_decode($request->ffes))->with('location')->get();
+        $date = \Carbon\Carbon::now()->format('dmyHi');
+        \Maatwebsite\Excel\Facades\Excel::store(new FFEExport($aucs), "/public/csv/ffes-{$date}.xlsx");
+        $url = asset("storage/csv/ffes-{$date}.xlsx");
+
+        return to_route('ffes.index')
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
+
+    }
 }

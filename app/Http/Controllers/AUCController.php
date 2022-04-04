@@ -517,7 +517,7 @@ class AUCController extends Controller {
 
                 }
 
-                return view('auc.importErrors', [
+                return view('AUC.importErrors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,

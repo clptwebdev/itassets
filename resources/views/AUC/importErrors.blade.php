@@ -316,7 +316,7 @@
                 }
             };
 
-            xhr.open("POST", "/import/properties/errors");
+            xhr.open("POST", "/import/aucs/errors");
             xhr.send(data);
         }
 

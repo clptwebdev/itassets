@@ -161,9 +161,6 @@ class AssetImport extends DefaultValueBinder implements ToModel, WithValidation,
                 $status->name = $row["status_id"];
                 $status->deployable = 1;
                 $status->save();
-            } else
-            {
-                $asset->status_id = 0;
             }
         }
 

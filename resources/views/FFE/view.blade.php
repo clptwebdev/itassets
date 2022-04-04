@@ -11,6 +11,37 @@
         @can('create' , \App\Models\FFE::class)
             <x-buttons.add :route="route('ffes.create')">FFE</x-buttons.add>
         @endcan
+        @can('viewAll', \App\Models\FFE::class)
+            @if ($ffes->count() == 1)
+                <x-buttons.reports :route="route('ffes.showPdf', $aucs[0]->id)"/>
+            @else
+                <x-form.layout class="d-inline-block" :action="route('ffes.pdf')">
+                    <x-form.input type="hidden" name="ffes" :label="false" formAttributes="required"
+                                :value="json_encode($ffes->pluck('id'))"/>
+                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                </x-form.layout>
+            @endif
+            @if($ffes->count() > 1)
+                <x-form.layout class="d-inline-block" action="/export/aucs">
+                    <x-form.input type="hidden" name="ffes" :label="false" formAttributes="required"
+                                :value="json_encode($ffes->pluck('id'))"/>
+                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
+                </x-form.layout>
+            @endif
+            <div class="dropdown d-inline-block">
+                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Bulk Options
+                </a>
+                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
+                    @can('create', \App\Models\FFE::class)
+                        <x-buttons.dropdown-item id="import">
+                            Import
+                        </x-buttons.dropdown-item>
+                    @endcan
+                </div>
+            </div>
+        @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
@@ -39,7 +70,7 @@
         @endphp
 
         {{-- If there are no Collections return there is not need to display the filter, unless its the filter thats return 0 results --}}
-        @if(!session()->has('ffe_filter') && $ffes->count() !== 0)
+        @if($ffes->count() !== 0)
             <x-filters.navigation model="FFE" relations="ffe" table="f_f_e_s"/>
             <x-filters.filter model="FFE" relations="ffe" table="f_f_e_s" :locations="$locations"/>
         @endif
@@ -166,6 +197,7 @@
 @section('modals')
 
     <x-modals.delete/>
+    <x-modals.import route="/import/ffes"/>
 
 @endsection
 
@@ -173,6 +205,7 @@
 
     <script src="{{asset('js/filter.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
+    <script src="{{asset('js/import.js')}}"></script>
     <script>
 
         let sliderMin = document.querySelector('#customRange1');
