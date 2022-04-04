@@ -47,7 +47,7 @@ class License extends Model {
     //checks renewal date
     public function isExpired()
     {
-        if(Carbon::parse($this->renewal_date)->isPast())
+        if(Carbon::parse($this->expiry)->isPast())
         {
             return true;
         } else
