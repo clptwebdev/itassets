@@ -98,9 +98,9 @@
                                     href='mailto:{{$license->contact}}'>{{$license->contact ?? 'No Contact Email'}}</td>
                                 <td class="text-center">
                                     @if($license->isExpired())
-                                        <p class='text-danger'>Valid</p>
-                                    @else
                                         <p class='text-success'>Expired</p>
+                                    @else
+                                        <p class='text-danger'>Valid</p>
                                     @endif
                                 </td>
                                 <td class="text-right">
