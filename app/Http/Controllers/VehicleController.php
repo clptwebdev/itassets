@@ -23,6 +23,8 @@ class VehicleController extends Controller {
 
         if(auth()->user()->cant('viewAll', Vehicle::class))
         {
+            dd(auth()->user()->role->permissions->where('model', ' = ', 'Vehicle')->first());
+
             return ErrorController::forbidden('/dashboard', 'Unauthorised | View vehicle.');
         }
         // find the locations that the user has been assigned to
