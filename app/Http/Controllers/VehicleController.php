@@ -43,10 +43,10 @@ class VehicleController extends Controller {
     public function create()
     {
         //Check to see if the User is has permission to create
-//        if(auth()->user()->cant('create', Vehicle::class))
-//        {
-//            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Create vehicle.');
-//        }
+        if(auth()->user()->cant('create', Vehicle::class))
+        {
+            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Create vehicle.');
+        }
 
         //Get the Locations that the user has permission for
         $locations = auth()->user()->locations;
