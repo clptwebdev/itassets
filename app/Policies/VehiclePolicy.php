@@ -28,6 +28,7 @@ class VehiclePolicy {
 
     public function viewAll(User $user)
     {
+
         return $this->model->view;
     }
 
