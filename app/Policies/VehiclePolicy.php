@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Machinery;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +17,6 @@ class VehiclePolicy {
 
     public function view(User $user, Vehicle $vehicle)
     {
-        dd($this->model->view);
 
         return $this->model->view && in_array($vehicle->location_id, $user->locationsArray());
     }
