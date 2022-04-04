@@ -23,8 +23,7 @@ class VehicleController extends Controller {
 
         if(auth()->user()->cant('viewAll', Vehicle::class))
         {
-
-            return ErrorController::forbidden('/dashboard', 'Unauthorised | View vehicle.');
+            return ErrorController::forbidden('/dashboard', 'Unauthorised | View Vehicles.');
         }
         // find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('vehicle')->get();
