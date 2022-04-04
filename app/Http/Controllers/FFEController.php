@@ -9,6 +9,7 @@ use App\Models\Manufacturer;
 use App\Models\Supplier;
 use App\Models\Status;
 use App\Models\Category;
+use App\Models\Report;
 
 use Illuminate\Support\Facades\Validator;
 

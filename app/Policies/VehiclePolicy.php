@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Machinery;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Auth\Access\HandlesAuthorization;
