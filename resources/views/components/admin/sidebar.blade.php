@@ -45,7 +45,7 @@
                 <span class="sidebar-title">Plant and Machinery</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-left text-sm-center text-md-left" href="#">
+            <a class="nav-link text-left text-sm-center text-md-left" href="{{route('vehicles.index')}}">
                 <i class="fas fa-fw fa-bus sidebar-icon"></i>
                 <span class="sidebar-title">Motor Vehicles</span></a>
         </li>

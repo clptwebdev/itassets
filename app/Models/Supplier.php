@@ -89,6 +89,12 @@ class Supplier extends Model {
 
     }
 
+    public function vehicle()
+    {
+        return $this->hasMany(Vehicle::class);
+
+    }
+
     public function broadband()
     {
         return $this->hasMany(Broadband::class);

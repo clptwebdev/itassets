@@ -117,6 +117,11 @@ class Location extends Model {
         return $this->hasMany(Software::class);
     }
 
+    public function vehicle()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
+
     public function broadband()
     {
         return $this->hasMany(Broadband::class);
