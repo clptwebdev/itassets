@@ -241,6 +241,10 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/ffes/{ffe}/comment', 'newComment')->name('ffes.comment');
     });
 
+    /////////////////////////////////////////////
+    /////////// Manufacturer Routes /////////////
+    /////////////////////////////////////////////
+
     Route::controller(\App\Http\Controllers\ManufacturerController::class)->group(function() {
         //Manufacturer Routes
         Route::resource('/manufacturers', \App\Http\Controllers\ManufacturerController::class);
