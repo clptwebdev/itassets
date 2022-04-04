@@ -16,7 +16,6 @@ class VehiclePolicy {
      *
      * @return void
      */
-    private $model;
 
     public function __construct()
     {
