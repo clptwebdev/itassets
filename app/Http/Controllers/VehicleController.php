@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exports\vehicleErrorsExport;
-use App\Exports\vehicleExport;
-use App\Imports\vehicleImport;
-use App\Jobs\vehiclePdf;
-use App\Jobs\vehiclesPdf;
+use App\Exports\VehicleExport;
+use App\Imports\VehicleImport;
+use App\Jobs\VehiclePdf;
+use App\Jobs\VehiclesPdf;
 use App\Models\Location;
 use App\Models\Report;
-use App\Models\vehicle;
+use App\Models\Vehicle;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
