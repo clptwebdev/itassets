@@ -8,6 +8,11 @@ use Carbon\Carbon;
 
 class LicenseObserver {
 
+    public function __construct()
+    {
+        $this->user = auth()->user()->name ?? 'An Unauthorized User';
+    }
+
     public function created(License $license)
     {
 
@@ -18,7 +23,7 @@ class LicenseObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'License',
             'loggable_id' => $license->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised User has added a new License: ' . $license->name . '. ' . $location,
+            'data' => $this->user . ' has added a new License: ' . $license->name . '. ' . $location,
         ]);
     }
 
@@ -30,7 +35,7 @@ class LicenseObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'License',
             'loggable_id' => $license->id ?? 0,
-            'data' => auth()->user()->name . ' has added a updated License: ' . $license->name . '. ' . $location,
+            'data' => $this->user . ' has added a updated License: ' . $license->name . '. ' . $location,
         ]);
     }
 
@@ -41,7 +46,7 @@ class LicenseObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'License',
             'loggable_id' => $license->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has placed the License: ' . $license->name . ' into the recycling bin',
+            'data' => $this->user . ' has placed the License: ' . $license->name . ' into the recycling bin',
         ]);
     }
 
@@ -51,7 +56,7 @@ class LicenseObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'License',
             'loggable_id' => $license->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has restored the License: ' . $license->name,
+            'data' => $this->user . ' has restored the License: ' . $license->name,
         ]);
     }
 
@@ -61,7 +66,7 @@ class LicenseObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'License',
             'loggable_id' => $license->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has permanently removed the License: ' . $license->name,
+            'data' => $this->user . ' has permanently removed the License: ' . $license->name,
         ]);
     }
 

@@ -8,6 +8,11 @@ use Carbon\Carbon;
 
 class SoftwareObserver {
 
+    public function __construct()
+    {
+        $this->user = auth()->user()->name ?? 'An Unauthorized User';
+    }
+
     public function created(Software $software)
     {
 
@@ -18,7 +23,7 @@ class SoftwareObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Software',
             'loggable_id' => $software->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised User has added a new Software: ' . $software->name . '. ' . $location,
+            'data' => $this->user . ' has added a new Software: ' . $software->name . '. ' . $location,
         ]);
     }
 
@@ -30,7 +35,7 @@ class SoftwareObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Software',
             'loggable_id' => $software->id ?? 0,
-            'data' => auth()->user()->name . ' has added a updated Software: ' . $software->name . '. ' . $location,
+            'data' => $this->user . ' has added a updated Software: ' . $software->name . '. ' . $location,
         ]);
     }
 
@@ -41,7 +46,7 @@ class SoftwareObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Software',
             'loggable_id' => $software->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has placed the Software: ' . $software->name . ' into the recycling bin',
+            'data' => $this->user . ' has placed the Software: ' . $software->name . ' into the recycling bin',
         ]);
     }
 
@@ -51,7 +56,7 @@ class SoftwareObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'Software',
             'loggable_id' => $software->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has restored the Software: ' . $software->name,
+            'data' => $this->user . ' has restored the Software: ' . $software->name,
         ]);
     }
 
@@ -61,7 +66,7 @@ class SoftwareObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'Software',
             'loggable_id' => $software->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has permanently removed the Software: ' . $software->name,
+            'data' => $this->user . ' has permanently removed the Software: ' . $software->name,
         ]);
     }
 
