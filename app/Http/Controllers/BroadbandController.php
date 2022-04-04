@@ -15,10 +15,15 @@ use App\Jobs\SoftwaresPdf;
 use App\Models\Broadband;
 use App\Models\Location;
 use App\Models\Report;
+use App\Models\Role;
+use App\Models\Setting;
 use App\Models\Software;
 use App\Models\Supplier;
+use App\Models\User;
+use Carbon\Carbon;
 use http\Encoding\Stream\Debrotli;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\HeadingRowImport;
@@ -39,7 +44,7 @@ class BroadbandController extends Controller {
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
-        $broadbands = Broadband::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
+        $broadbands = Broadband::locationFilter($locations->pluck('id')->toArray())->latest('renewal_date', '>=', Carbon::parse(now()))->paginate(intval($limit))->fragment('table');
 
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['property_filter' => false]);
@@ -512,6 +517,63 @@ class BroadbandController extends Controller {
         return to_route('broadbands.index')
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
+    }
+
+    public function expired()
+    {
+        $dateNow = Carbon::today();
+        $it_managers = User::itManager();
+        $days = Setting::whereName('broadband_expiry')->first();
+        foreach(Location::all() as $location)
+        {
+            //gets the first broadband for this location with the furthest renewal date
+            $broadband = $location->broadband->sortByDesc(function() {
+                return 'renewal_date';
+            })->where('renewal_date', '>=', $dateNow)->first();
+            if($broadband)
+            {
+                $renewalDate = Carbon::parse($broadband->renewal_date);
+                //30 days
+                if($renewalDate == Carbon::today()->addDays($days->value ?? 30))
+                {
+                    //send you have 30 day warning
+                    foreach($it_managers as $user)
+                    {
+
+                        Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry($days->value ?? 30, $broadband));
+                    }
+                }
+                //14 days
+                if($renewalDate == Carbon::today()->addDays(14))
+                {
+                    //send you have 1 day warning
+                    foreach($it_managers as $user)
+                    {
+
+                        Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry('14', $broadband));
+                    }
+                }
+                //7 days
+                if($renewalDate == Carbon::today()->addDays(7))
+                {
+                    //send you have 1 day warning
+                    foreach($it_managers as $user)
+                    {
+
+                        Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry('7', $broadband));
+                    }
+                }
+                //On day days
+                if($renewalDate == Carbon::today())
+                {
+                    //send you have 0 days Left
+                    foreach($it_managers as $user)
+                    {
+                        Mail::to($user->email)->send(new \App\Mail\BroadbandExpiry('0', $broadband));
+                    }
+                }
+            }
+        }
     }
 
 }

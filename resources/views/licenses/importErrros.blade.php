@@ -1,16 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Software Import Errors')
+@section('title', 'License Import Errors')
 
 
 
 @section('content')
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
-        @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
+        @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}@endphp
+
         <div>
-            <form action="{{route('broadband.export.import')}}" method="POST" class="d-inline">
+            <form action="{{route('license.export.import')}}" method="POST" class="d-inline">
                 @csrf
                 <div class="form-group">
                     <input type="hidden" class="form-control " name="name" id="name" placeholder=""
@@ -20,7 +21,7 @@
                         class="far fa-save fa-sm text-dark-50"></i> Download Errors
                 </button>
             </form>
-            <a href="{{ route('softwares.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+            <a href="{{ route('licenses.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm te
                     xt-white-50"></i> Back to Software</a>
             <a id="importHelpBtn" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
@@ -60,10 +61,9 @@
                             <th><small>Name</small></th>
                             <th><small>Supplier</small></th>
                             <th><small>Location</small></th>
-                            <th><small>Date</small></th>
                             <th><small>Cost</small></th>
-                            <th><small>Package</small></th>
-                            <th><small>Renewal Date</small></th>
+                            <th><small>contact</small></th>
+                            <th><small>Expiry</small></th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -71,11 +71,9 @@
                             <th><small>Name</small></th>
                             <th><small>Supplier</small></th>
                             <th><small>Location</small></th>
-                            <th><small>Date</small></th>
                             <th><small>Cost</small></th>
-                            <th><small>Package</small></th>
-                            <th><small>Renewal Date</small></th>
-
+                            <th><small>contact</small></th>
+                            <th><small>Expiry</small></th>
                         </tr>
                         </tfoot>
 
@@ -127,30 +125,6 @@
                                         </span>
                                 </td>
                                 <td>
-                                    <?php
-                                    try
-                                    {
-                                        $date = \Carbon\Carbon::parse(str_replace('/', '-', $valueArray[$row]['purchased_date']))->format('Y-m-d');
-                                        $renewal_date = \Carbon\Carbon::parse(str_replace('/', '-', $valueArray[$row]['renewal_date']))->format('Y-m-d');
-                                    } catch(\Exception $e)
-                                    {
-                                        $date = 'dd/mm/yyyy';
-                                        $renewal_date = 'dd/mm/yyyy';
-                                    }
-                                    ?>
-                                    <span id="purchased_date{{$line}}" class="tooltip-danger">
-                                        <input type="date"
-                                               class="import-control @if(in_array('purchased_date', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                               name="purchased_date[]" id="purchased_date"
-                                               placeholder="This Row is Empty Please Fill!" value="{{ $date }}" required
-                                               data-bs-container='#purchased_date{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('purchased_date', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['purchased_date']}'" !!}
-                                                   @endif
-                                               >
-                                        </span>
-
-                                </td>
-                                <td>
                                         <span id="purchased_cost{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="import-control @if(in_array('purchased_cost', $errors)){{'border-bottom border-danger'}}@endif"
@@ -164,27 +138,34 @@
                                         </span>
                                 </td>
                                 <td>
-                                        <span id="package{{$line}}" class="tooltip-danger">
+                                        <span id="contact{{$line}}" class="tooltip-danger">
                                         <input type="text"
-                                               class="import-control @if(in_array('package', $errors)){{'border-bottom border-danger'}}@endif"
-                                               name="package[]" id="package"
+                                               class="import-control @if(in_array('contact', $errors)){{'border-bottom border-danger'}}@endif"
+                                               name="contact[]" id="contact"
                                                placeholder="This Row is Empty Please Fill!"
-                                               value="{{ preg_replace('/[[:^print:]]/', '', $valueArray[$row]['package'])  }}"
-                                               required data-bs-container='#package{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('package', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['package']}'" !!}@endif
+                                               value="{{ preg_replace('/[[:^print:]]/', '', $valueArray[$row]['contact'])  }}"
+                                               required data-bs-container='#conact{{$line}}' data-bs-placement='top'
+                                               @if(array_key_exists('contact', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['contact']}'" !!}@endif
                                         >
                                         </span>
                                 </td>
+                                <?php
+                                try
+                                {
+                                    $expiry = \Carbon\Carbon::parse(str_replace('/', '-', $valueArray[$row]['expiry']))->format('Y-m-d');
+                                } catch(\Exception $e)
+                                {
+                                    $expiry = 'dd/mm/yyyy';
+                                }
+                                ?>
                                 <td>
-                                        <span id="renewal_date{{$line}}" class="tooltip-danger">
+                                        <span id="expiry{{$line}}" class="tooltip-danger">
                                         <input type="date"
-                                               class="import-control @if(in_array('renewal_date', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                               name="renewal_date[]" id="order_no"
-                                               placeholder="This Row is Empty Please Fill!" value="{{$renewal_date}}"
-                                               required data-bs-container='#renewal_date{{$line}}'
-                                               data-bs-placement='top'
-                                            @if(array_key_exists('renewal_date', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['renewal_date']}'" !!}@endif
-                                        >
+                                               class="import-control @if(in_array('expiry', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                               name="expiry[]" id="order_no"
+                                               placeholder="This Row is Empty Please Fill!" value="{{$expiry}}" required
+                                               data-bs-container='#expiry{{$line}}' data-bs-placement='top'
+                                            @if(array_key_exists('expiry', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['expiry']}'" !!}@endif>
                                         </span>
                                 </td>
 
@@ -288,21 +269,16 @@
                 data.append('purchased_cost[]', element.value);
             });
 
-            //Purchased Date
-            const pdInputs = document.querySelectorAll("input[name='purchased_date[]']");
-            pdInputs.forEach(element => {
-                data.append('purchased_date[]', element.value);
-            });
 
-            //renewal_date
-            const dpInputs = document.querySelectorAll("input[name='renewal_date[]']");
-            dpInputs.forEach(element => {
-                data.append('renewal_date[]', element.value);
+            //expiry
+            const xpInputs = document.querySelectorAll("input[name='expiry[]']");
+            xpInputs.forEach(element => {
+                data.append('expiry[]', element.value);
             });
             //package
-            const pkInputs = document.querySelectorAll("input[name='package[]']");
-            pkInputs.forEach(element => {
-                data.append('package[]', element.value);
+            const ctInputs = document.querySelectorAll("input[name='contact[]']");
+            ctInputs.forEach(element => {
+                data.append('contact[]', element.value);
             });
             //Supplier
             const supInputs = document.querySelectorAll("select[name='supplier_id[]']");
@@ -314,7 +290,7 @@
 
             xhr.onload = function () {
                 if (xhr.responseText === 'Success') {
-                    window.location.href = '/broadbands';
+                    window.location.href = '/licenses';
                 } else {
                     importControl.forEach((item) => {
                         item.classList.remove('border-bottom', 'border-danger');
@@ -343,7 +319,7 @@
                 }
             };
 
-            xhr.open("POST", "/import/broadband/errors");
+            xhr.open("POST", "/import/license/errors");
             xhr.send(data);
         }
 

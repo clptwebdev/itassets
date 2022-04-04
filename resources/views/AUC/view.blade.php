@@ -12,37 +12,38 @@
         @can('create' , \App\Models\AUC::class)
             <x-buttons.add :route="route('aucs.create')">Asset Under Construction</x-buttons.add>
         @endcan
-     @can('viewAll', \App\Models\AUC::class)
-         @if ($aucs->count() == 1)
-             <x-buttons.reports :route="route('aucs.showPdf', $aucs[0]->id)"/>
-         @else
-             <x-form.layout class="d-inline-block" :action="route('aucs.pdf')">
-                 <x-form.input type="hidden" name="aucs" :label="false" formAttributes="required"
-                               :value="json_encode($aucs->pluck('id'))"/>
-                 <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
-             </x-form.layout>
-         @endif
-         @if($aucs->count() > 1)
-             <x-form.layout class="d-inline-block" action="/export/aucs">
-                 <x-form.input type="hidden" name="aucs" :label="false" formAttributes="required"
-                               :value="json_encode($aucs->pluck('id'))"/>
-                 <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
-             </x-form.layout>
-         @endif
-         <div class="dropdown d-inline-block">
-             <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                 Bulk Options
-             </a>
-             <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                 @can('create', \App\Models\AUC::class)
-                     <x-buttons.dropdown-item id="import">
-                         Import
-                     </x-buttons.dropdown-item>
-                 @endcan
-             </div>
-         </div>
-     @endcan
+        @can('viewAll', \App\Models\AUC::class)
+            @if ($aucs->count() == 1)
+                <x-buttons.reports :route="route('aucs.showPdf', $aucs[0]->id)"/>
+            @else
+                <x-form.layout class="d-inline-block" :action="route('aucs.pdf')">
+                    <x-form.input type="hidden" name="aucs" :label="false" formAttributes="required"
+                                  :value="json_encode($aucs->pluck('id'))"/>
+                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                </x-form.layout>
+            @endif
+            @if($aucs->count() > 1)
+                <x-form.layout class="d-inline-block" action="/export/aucs">
+                    <x-form.input type="hidden" name="aucs" :label="false" formAttributes="required"
+                                  :value="json_encode($aucs->pluck('id'))"/>
+                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span>
+                    </x-buttons.submit>
+                </x-form.layout>
+            @endif
+            <div class="dropdown d-inline-block">
+                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
+                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Bulk Options
+                </a>
+                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
+                    @can('create', \App\Models\AUC::class)
+                        <x-buttons.dropdown-item id="import">
+                            Import
+                        </x-buttons.dropdown-item>
+                    @endcan
+                </div>
+            </div>
+        @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
@@ -148,17 +149,18 @@
                                 <td class="text-center">{{$auc->depreciation}} Years</td>
                                 <td class="text-center">
                                     <?php
-                                        //If Date is > 1 September the Year is this Year else Year = Last Year
-                        
-                                        $now = \Carbon\Carbon::now();
-                                        $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
-                                        if(!$startDate->isPast()){
-                                            $startDate->subYear();
-                                        }
+                                    //If Date is > 1 September the Year is this Year else Year = Last Year
 
-                                        $bf = $auc->depreciation_value_by_date($startDate);
+                                    $now = \Carbon\Carbon::now();
+                                    $startDate = \Carbon\Carbon::parse('09/01/' . $now->format('Y'));
+                                    if(! $startDate->isPast())
+                                    {
+                                        $startDate->subYear();
+                                    }
+
+                                    $bf = $auc->depreciation_value_by_date($startDate);
                                     ?>
-                                    £{{number_format( (float) $auc->purchased_cost - $bf, 2, '.', ',' )}}    
+                                    £{{number_format( (float) $auc->purchased_cost - $bf, 2, '.', ',' )}}
                                 </td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>

@@ -17,7 +17,7 @@ class Broadband extends Model {
     public function name(): Attribute
     {
         return new Attribute(
-            fn($value) => ucfirst($value),
+            fn($value) => ucwords($value),
             fn($value) => strtolower($value),
         );
     }

@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Models\Broadband;
 use App\Models\Software;
 use App\Models\User;
+use App\Models\Vehicle;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,17 +14,22 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use PDF;
 
-class BroadbandPdf implements ShouldQueue {
+class VehiclePdf implements ShouldQueue {
 
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $broadband;
+    protected $vehicle;
     protected $user;
     public $path;
 
-    public function __construct(Broadband $broadband, User $user, $path)
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct(Vehicle $vehicle, User $user, $path)
     {
-        $this->broadband = $broadband;
+        $this->vehicle = $vehicle;
         $this->user = $user;
         $this->path = $path;
     }
@@ -36,10 +41,10 @@ class BroadbandPdf implements ShouldQueue {
      */
     public function handle()
     {
-        $broadband = $this->broadband;
+        $vehicle = $this->vehicle;
         $user = $this->user;
         $path = $this->path;
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('broadband.showPdf', compact('broadband', 'user'));
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('vehicle.showPdf', compact('vehicle', 'user'));
         $pdf->setPaper('a4', 'portrait');
         Storage::put("public/reports/" . $path . ".pdf", $pdf->output());
         $this->path = "";

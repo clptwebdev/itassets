@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Software Import Errors')
+@section('title', 'Vehicle Import Errors')
 
 
 
@@ -9,8 +9,9 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4"><?php  ?>
         <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
         @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
+
         <div>
-            <form action="{{route('broadband.export.import')}}" method="POST" class="d-inline">
+            <form action="{{route('software.export.import')}}" method="POST" class="d-inline">
                 @csrf
                 <div class="form-group">
                     <input type="hidden" class="form-control " name="name" id="name" placeholder=""
@@ -46,8 +47,7 @@
     <section>
         <p class="mb-4">There were some errors in your csv file that you have tried to upload to the system. Any rows
                         that had valid information will have already been
-                        uploaded. If there's a lot of returned errors you can choose to download them all in excel
-                        format
+                        uploaded. If there a lot of returned errors you can choose to download them all in excel format
                         allowing you to retry with only the failed rows. </p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -62,8 +62,8 @@
                             <th><small>Location</small></th>
                             <th><small>Date</small></th>
                             <th><small>Cost</small></th>
-                            <th><small>Package</small></th>
-                            <th><small>Renewal Date</small></th>
+                            <th><small>Registration</small></th>
+                            <th><small>Depreciation</small></th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -73,9 +73,8 @@
                             <th><small>Location</small></th>
                             <th><small>Date</small></th>
                             <th><small>Cost</small></th>
-                            <th><small>Package</small></th>
-                            <th><small>Renewal Date</small></th>
-
+                            <th><small>Registration</small></th>
+                            <th><small>Depreciation</small></th>
                         </tr>
                         </tfoot>
 
@@ -89,7 +88,7 @@
                                             <input type="text"
                                                    class="import-control @if(in_array('name', $errors)){{ 'border-bottom border-danger'}}@endif"
                                                    name="name[]" value="{{ $valueArray[$row]['name'] }}"
-                                                   placeholder="This Row is Empty Please Fill!"
+                                                   placeholder="This Row is Empty Please Fill!" required
                                                    data-bs-container='#name{{$line}}' data-bs-placement='top'
                                                @if(array_key_exists('name', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
                                         </span>
@@ -131,11 +130,9 @@
                                     try
                                     {
                                         $date = \Carbon\Carbon::parse(str_replace('/', '-', $valueArray[$row]['purchased_date']))->format('Y-m-d');
-                                        $renewal_date = \Carbon\Carbon::parse(str_replace('/', '-', $valueArray[$row]['renewal_date']))->format('Y-m-d');
                                     } catch(\Exception $e)
                                     {
                                         $date = 'dd/mm/yyyy';
-                                        $renewal_date = 'dd/mm/yyyy';
                                     }
                                     ?>
                                     <span id="purchased_date{{$line}}" class="tooltip-danger">
@@ -164,26 +161,24 @@
                                         </span>
                                 </td>
                                 <td>
-                                        <span id="package{{$line}}" class="tooltip-danger">
-                                        <input type="text"
-                                               class="import-control @if(in_array('package', $errors)){{'border-bottom border-danger'}}@endif"
-                                               name="package[]" id="package"
-                                               placeholder="This Row is Empty Please Fill!"
-                                               value="{{ preg_replace('/[[:^print:]]/', '', $valueArray[$row]['package'])  }}"
-                                               required data-bs-container='#package{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('package', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['package']}'" !!}@endif
-                                        >
+                                    <span id="registration{{$line}}" class="tooltip-danger">
+                                            <input type="text"
+                                                   class="import-control @if(in_array('registration', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                                   name="registration[]" value="{{ $valueArray[$row]['registration'] }}"
+                                                   placeholder="This Row is Empty Please Fill!" required
+                                                   data-bs-container='#registration{{$line}}' data-bs-placement='top'
+                                               @if(array_key_exists('registration', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['registration']}'" !!}@endif>
                                         </span>
                                 </td>
                                 <td>
-                                        <span id="renewal_date{{$line}}" class="tooltip-danger">
-                                        <input type="date"
-                                               class="import-control @if(in_array('renewal_date', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                               name="renewal_date[]" id="order_no"
-                                               placeholder="This Row is Empty Please Fill!" value="{{$renewal_date}}"
-                                               required data-bs-container='#renewal_date{{$line}}'
-                                               data-bs-placement='top'
-                                            @if(array_key_exists('renewal_date', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['renewal_date']}'" !!}@endif
+                                        <span id="depreciation{{$line}}" class="tooltip-danger">
+                                        <input type="text"
+                                               class="import-control @if(in_array('depreciation', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                               name="depreciation[]" id="order_no"
+                                               placeholder="This Row is Empty Please Fill!"
+                                               value="{{ $valueArray[$row]['depreciation'] }}" required
+                                               data-bs-container='#depreciation{{$line}}' data-bs-placement='top'
+                                            @if(array_key_exists('depreciation', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['depreciation']}'" !!}@endif
                                         >
                                         </span>
                                 </td>
@@ -275,6 +270,11 @@
             nmeInputs.forEach(element => {
                 data.append('name[]', element.value);
             });
+            //registration
+            const rgInputs = document.querySelectorAll("input[name='registration[]']");
+            rgInputs.forEach(element => {
+                data.append('registration[]', element.value);
+            });
 
             //Location
             const loInputs = document.querySelectorAll("select[name='location_id[]']");
@@ -294,15 +294,10 @@
                 data.append('purchased_date[]', element.value);
             });
 
-            //renewal_date
-            const dpInputs = document.querySelectorAll("input[name='renewal_date[]']");
+            //Depreciation
+            const dpInputs = document.querySelectorAll("input[name='depreciation[]']");
             dpInputs.forEach(element => {
-                data.append('renewal_date[]', element.value);
-            });
-            //package
-            const pkInputs = document.querySelectorAll("input[name='package[]']");
-            pkInputs.forEach(element => {
-                data.append('package[]', element.value);
+                data.append('depreciation[]', element.value);
             });
             //Supplier
             const supInputs = document.querySelectorAll("select[name='supplier_id[]']");
@@ -314,7 +309,7 @@
 
             xhr.onload = function () {
                 if (xhr.responseText === 'Success') {
-                    window.location.href = '/broadbands';
+                    window.location.href = '/vehicles';
                 } else {
                     importControl.forEach((item) => {
                         item.classList.remove('border-bottom', 'border-danger');
@@ -343,7 +338,7 @@
                 }
             };
 
-            xhr.open("POST", "/import/broadband/errors");
+            xhr.open("POST", "/import/vehicle/errors");
             xhr.send(data);
         }
 

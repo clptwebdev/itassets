@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <td>Location</td>
-                <td>{{ $auc->location->name ?? 'Unknown' }}</td>
+                <td>{{ $software->location->name ?? 'Unknown' }}</td>
             </tr>
             <tr>
                 <td>Date Created</td>

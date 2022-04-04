@@ -302,7 +302,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/software/{software}/pdf', 'downloadShowPDF')->name('software.showPdf');
     });
     /////////////////////////////////////////////
-    /////////////// Broadband Routes ///////////
+    /////////////// Broadband Routes ////////////
     /////////////////////////////////////////////
 
     Route::controller(\App\Http\Controllers\BroadbandController::class)->group(function() {
@@ -323,6 +323,52 @@ Route::group(['middleware' => 'auth'], function() {
         //PDF
         Route::post('/broadband/pdf', 'downloadPDF')->name('broadband.pdf');
         Route::get('/broadband/{broadband}/pdf', 'downloadShowPDF')->name('broadband.showPdf');
+    });
+    /////////////////////////////////////////////
+    /////////////// Licenses Routes ///////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\LicenseController::class)->group(function() {
+        Route::resource("/licenses", \App\Http\Controllers\LicenseController::class);
+        Route::post('/license/filter', 'filter')->name('license.filter');
+        Route::get('/license/filter/clear', 'clearFilter')->name('license.clear.filter');
+        Route::get('/license/filter', 'filter')->name('license.filtered');
+        Route::get('/license/bin', 'recycleBin')->name('license.bin');
+        Route::get('/license/{asset}/restore', 'restore')->name('license.restore');
+        Route::post('/license/{asset}/remove', 'forceDelete')->name('license.remove');
+        Route::post('/license/{asset}/comment', 'newComment')->name('license.comment');
+        //Exports
+        Route::post("/export/license", "export");
+        //Imports
+        Route::post("/import/license", "import");
+        Route::Post("/import/license/errors", "importErrors");
+        Route::Post("/import/license/export", "exportImportErrors")->name("license.export.import");
+        //PDF
+        Route::post('/license/pdf', 'downloadPDF')->name('license.pdf');
+        Route::get('/license/{license}/pdf', 'downloadShowPDF')->name('license.showPdf');
+    });
+    /////////////////////////////////////////////
+    /////////////// Vehicle Routes ///////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\VehicleController::class)->group(function() {
+        Route::resource("/vehicles", \App\Http\Controllers\VehicleController::class);
+        Route::post('/vehicle/filter', 'filter')->name('vehicle.filter');
+        Route::get('/vehicle/filter/clear', 'clearFilter')->name('vehicle.clear.filter');
+        Route::get('/vehicle/filter', 'filter')->name('vehicle.filtered');
+        Route::get('/vehicle/bin', 'recycleBin')->name('vehicle.bin');
+        Route::get('/vehicle/{vehicle}/restore', 'restore')->name('vehicle.restore');
+        Route::post('/vehicle/{vehicle}/remove', 'forceDelete')->name('vehicle.remove');
+        Route::post('/vehicle/{vehicle}/comment', 'newComment')->name('vehicle.comment');
+        //Exports
+        Route::post("/export/vehicle", "export");
+        //Imports
+        Route::post("/import/vehicle", "import");
+        Route::Post("/import/vehicle/errors", "importErrors");
+        Route::Post("/import/vehicle/export", "exportImportErrors")->name("vehicle.export.import");
+        //PDF
+        Route::post('/vehicle/pdf', 'downloadPDF')->name('vehicle.pdf');
+        Route::get('/vehicle/{vehicle}/pdf', 'downloadShowPDF')->name('vehicle.showPdf');
     });
     /////////////////////////////////////////////
     /////////////// Report Routes /////////////
