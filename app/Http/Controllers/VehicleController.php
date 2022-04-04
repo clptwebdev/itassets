@@ -20,7 +20,6 @@ class VehicleController extends Controller {
     public function index()
     {
         //Check to see if the User has permission to View All the vehicle.
-        return dd(auth()->user()->role->permissions->where('model', ' = ', 'Vehicle')->first());
 
         if(auth()->user()->cant('viewAll', Vehicle::class))
         {

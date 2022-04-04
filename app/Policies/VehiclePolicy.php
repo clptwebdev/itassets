@@ -10,11 +10,7 @@ class VehiclePolicy {
 
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
+    protected $model;
 
     public function __construct()
     {
