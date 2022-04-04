@@ -22,7 +22,7 @@ class VehicleController extends Controller {
         //Check to see if the User has permission to View All the vehicle.
 
         // find the locations that the user has been assigned to
-        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('vehicle')->get();
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('vehicles')->get();
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
         $vehicles = Vehicle::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
