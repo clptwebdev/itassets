@@ -10,6 +10,12 @@ class VehiclePolicy {
 
     use HandlesAuthorization;
 
+    /**
+     * Create a new policy instance.
+     *
+     * @return void
+     */
+
     public function __construct()
     {
         $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Vehicle')->first();
@@ -17,13 +23,11 @@ class VehiclePolicy {
 
     public function view(User $user, Vehicle $vehicle)
     {
-
         return $this->model->view && in_array($vehicle->location_id, $user->locationsArray());
     }
 
     public function viewAll(User $user)
     {
-        return dd($this->model->view);
 
         return $this->model->view;
     }

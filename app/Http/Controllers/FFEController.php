@@ -9,6 +9,7 @@ use App\Models\Manufacturer;
 use App\Models\Supplier;
 use App\Models\Status;
 use App\Models\Category;
+use App\Models\Report;
 
 use Illuminate\Support\Facades\Validator;
 
@@ -21,6 +22,9 @@ use App\Imports\FFEImport;
 //Exprots
 use App\Exports\FFEErrorsExport;
 use App\Exports\FFEExport;
+
+//Jobs
+use App\Jobs\FFESPdf;
 
 class FFEController extends Controller {
 
@@ -439,5 +443,85 @@ class FFEController extends Controller {
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
 
+    }
+
+     ////////////////////////////////////////////////////////
+    ///////////////PDF Functions////////////////////////////
+    ////////////////////////////////////////////////////////
+
+
+    public function downloadPDF(Request $request)
+    {
+        if(auth()->user()->cant('viewAll', FFE::class))
+        {
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Download of FFE Report.');
+
+        }
+        $aucs = array();
+        $found = FFE::withTrashed()->whereIn('id', json_decode($request->ffes))->with('location')->get();
+        foreach($found as $f)
+        {
+            $array = array();
+            $array['name'] = $f->name;
+            $array['serial_no'] = $f->serial_no ?? 'N/A';
+            $array['location'] = $f->location->name ?? 'Unallocated';
+            $array['room'] = $f->room ?? 'N/A';
+            $array['icon'] = $f->location->icon ?? '#666';
+            $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
+            $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
+            $array['purchased_cost'] = '£' . $f->purchased_cost;
+            $array['donated'] = '£' . $f->donated;
+            if($f->depreciation_id != 0){
+                $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation_id);
+                $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
+                $percent = 100 / $f->depreciation->years;
+                $percentage = floor($age) * $percent;
+                $dep = $f->purchased_cost * ((100 - $percentage) / 100);
+            }else{
+                $dep = $f->purchased_cost;
+            } 
+            $array['depreciation'] = $dep;
+            $array['supplier'] = $f->supplier->name ?? 'N/A';
+            $array['warranty'] = $f->warranty;
+            $array['status'] = $f->status->name ?? 'Unknown';
+            $array['color'] = $f->status->colour ?? '#666';
+            $ffes[] = $array;
+        }
+
+        $user = auth()->user();
+
+        $date = \Carbon\Carbon::now()->format('dmyHis');
+        $path = 'ffes-report-' . $date;
+
+        FFESPdf::dispatch($ffes, $user, $path)->afterResponse();
+
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
+
+        return to_route('ffes.index')
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
+
+    }
+
+    public function downloadShowPDF(AUC $auc)
+    {
+        if(auth()->user()->cant('generateShowPDF', $auc))
+        {
+            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised | Download of Property Information.');
+
+        }
+
+        $user = auth()->user();
+
+        $date = \Carbon\Carbon::now()->format('dmyHis');
+        $path = "aucs-{$auc->id}-{$date}";
+        AUCPdf::dispatch($auc, $user, $path)->afterResponse();
+        $url = "storage/reports/{$path}.pdf";
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
+
+        return to_route('aucs.show', $auc->id)
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
     }
 }
