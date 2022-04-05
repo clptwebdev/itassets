@@ -119,7 +119,7 @@ class User extends Authenticatable {
         return $this->hasManyDeep(AUC::class, ['location_user', Location::class]);
     }
 
-    public function location_ffes()
+    public function location_ffe()
     {
         return $this->hasManyDeep(FFE::class, ['location_user', Location::class]);
     }

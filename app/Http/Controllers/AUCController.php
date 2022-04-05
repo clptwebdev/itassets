@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\permittedLocation;
 use App\Rules\findLocation;
 
+use \Carbon\Carbon;
+
 class AUCController extends Controller {
 
     //AUC = Assets Under Construction
@@ -40,6 +42,10 @@ class AUCController extends Controller {
         {
             return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Assets Under Construction.');
 
+        }
+
+        if(session()->has('auc_filter') && session('auc_filter') === true){
+            return to_route('auc.filtered');
         }
 
         //Find the locations that the user has been assigned to
@@ -111,6 +117,7 @@ class AUCController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'type' => 'required|gt:0',
+            'user_id' => auth()->user()->id,
         ]);
 
         $property = new AUC;
@@ -188,6 +195,11 @@ class AUCController extends Controller {
             'location_id' => $auc->location_id,
         ]);
         $property->save();
+
+        foreach($auc->comment as $comment){
+            $property->comment()->create(['title' => $comment->title, 'comment' => $comment->comment, 'user_id' => $comment->user_id]);
+            $comment->delete();
+        }
 
         $auc->forceDelete();
 
@@ -325,12 +337,13 @@ class AUCController extends Controller {
                 session(['auc_start' => $request->start]);
                 session(['auc_end' => $request->end]);
             }
-            session(['assets_min' => $request->minCost]);
-            session(['assets_max' => $request->maxCost]);
+
+            session(['auc_min' => $request->minCost]);
+            session(['auc_max' => $request->maxCost]);
         }
 
-        //Check the Users Locations Permissions
-        $locations = Location::select('id', 'name')->withCount('aocs')->get();
+        //Find the locations that the user has been assigned to
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('auc')->get();
 
         $auc = AUC::locationFilter($locations->pluck('id'));
 
@@ -342,14 +355,14 @@ class AUCController extends Controller {
 
         if(session()->has('auc_start') && session()->has('auc_end'))
         {
-            $auc->purchaseFilter(session('auc_start'), session('auc_end'));
+            $auc->purchaseFilter(Carbon::parse(session('auc_start')), Carbon::parse(session('auc_end')));
             session(['auc_filter' => true]);
         }
 
-        if(session()->has('assets_min') && session()->has('assets_max'))
+        if(session()->has('auc_min') && session()->has('auc_max'))
         {
-            $auc->costFilter(session('assets_min'), session('assets_max'));
-            session(['assets_filter' => true]);
+            $auc->costFilter(session('auc_min'), session('auc_max'));
+            session(['auc_filter' => true]);
 
         }
 
@@ -359,8 +372,8 @@ class AUCController extends Controller {
             session(['auc_filter' => true]);
         }
 
-        $auc->leftJoin('locations', 'auc.location_id', '=', 'locations.id')
-            ->orderBy(session('auc_orderby') ?? 'date', session('auc_direction') ?? 'asc')
+        $auc->leftJoin('locations', 'a_u_c_s.location_id', '=', 'locations.id')
+            ->orderBy(session('auc_orderby') ?? 'purchased_date', session('auc_direction') ?? 'asc')
             ->select('a_u_c_s.*', 'locations.name as location_name');
         $limit = session('auc_limit') ?? 25;
 
@@ -373,9 +386,9 @@ class AUCController extends Controller {
     public function clearFilter()
     {
         //Clear the Filters for the properties
-        session()->forget(['property_filter', 'property_locations', 'property_start', 'property_end', 'property_amount', 'property_search']);
+        session()->forget(['auc_filter', 'auc_locations', 'auc_start', 'auc_end', 'auc_min', 'auc_max', 'auc_search']);
 
-        return to_route('property.index');
+        return to_route('aucs.index');
     }
 
      ////////////////////////////////////////////////////////
@@ -614,6 +627,24 @@ class AUCController extends Controller {
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
 
+    }
+
+    ////////////////////////////////////////
+    /////////// Comment Functions ///////////
+    ////////////////////////////////////////
+
+    public function newComment(Request $request)
+    {
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $auc = AUC::find($request->auc_id);
+        $auc->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+        session()->flash('success_message', $request->title . ' has been created successfully');
+
+        return to_route('aucs.show', $auc->id);
     }
 
 

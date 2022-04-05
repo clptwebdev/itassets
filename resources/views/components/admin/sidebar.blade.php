@@ -24,17 +24,17 @@
                 <span class="sidebar-title">Dashboard</span></a>
         </li>
         {{-- The are the Navigation tabs the Finance Users would be using --}}
-        <li class="nav-item @if(Request::url() == route('properties.index')) {{ 'active' }} @endif">
+        <li class="nav-item @if(Request::url() == route('properties.index') || Str::contains(Request::url(), ['properties', 'property'])) {{ 'active' }} @endif">
             <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('properties.index')}}">
                 <i class="fas fa-fw fa-school sidebar-icon"></i>
                 <span class="sidebar-title">Property</span></a>
         </li>
-        <li class="nav-item @if(Request::url() == route('aucs.index')) {{ 'active' }} @endif">
+        <li class="nav-item @if(Request::url() == route('aucs.index') || Str::contains(Request::url(), ['aucs', 'auc'])) {{ 'active' }} @endif">
             <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('aucs.index')}}">
                 <i class="fas fa-fw fa-hammer sidebar-icon"></i>
                 <span class="sidebar-title">AUC</span></a>
         </li>
-        <li class="nav-item @if(Request::url() == route('ffes.index')) {{ 'active' }} @endif">
+        <li class="nav-item @if(Request::url() == route('ffes.index') || Str::contains(Request::url(), ['ffes', 'ffe'])) {{ 'active' }} @endif">
             <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('ffes.index')}}">
                 <i class="fas fa-fw fa-chair sidebar-icon"></i>
                 <span class="sidebar-title">FFE</span></a>

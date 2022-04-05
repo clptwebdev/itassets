@@ -43,6 +43,11 @@ class FFEController extends Controller {
             return to_route('errors.forbidden', ['area', 'FFE', 'view']);
         }
 
+        //If there are filters currently set move to filtered function
+        if(session()->has('ffe_filter') && session('ffe_filter') === true){
+            return to_route('ffe.filtered');
+        }
+
         //Find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('ffe')->get();
 
@@ -52,10 +57,14 @@ class FFEController extends Controller {
 
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['ffe_filter' => false]);
+        $categories = Category::withCount('ffe')->get();
+        $statuses = Status::select('id', 'name', 'deployable')->withCount('ffe')->get();
 
         return view('FFE.view', [
             "ffes" => $ffes,
             "locations" => $locations,
+            "categories" => $categories,
+            "statuses" => $statuses,
         ]);
     }
 
@@ -542,5 +551,126 @@ class FFEController extends Controller {
         session()->flash('success_message', $request->title . ' has been created successfully');
 
         return to_route('ffes.show', $ffe->id);
+    }
+
+    ////////////////////////////////////////
+    /////////// Filter Functions ///////////
+    ////////////////////////////////////////
+
+    public function filter(Request $request)
+    {
+        //Check to see if the Request is the POST or GET Method
+        if($request->isMethod('post'))
+        {
+            //If the request is a POST method then the filter needs to be set or redefined
+
+            if(! empty($request->search))
+            {
+                session(['ffe_search' => $request->search]);
+            } else
+            {
+                $this->clearFilter();
+            }
+
+            if(! empty($request->limit))
+            {
+                session(['ffe_limit' => $request->limit]);
+            }
+
+            if(! empty($request->orderby))
+            {
+                $array = explode(' ', $request->orderby);
+                session(['ffe_orderby' => $array[0]]);
+                session(['ffe_direction' => $array[1]]);
+            }
+
+            if(! empty($request->locations))
+            {
+                session(['ffe_locations' => $request->locations]);
+            }
+
+            if(! empty($request->status))
+            {
+                session(['ffe_status' => $request->status]);
+            }
+
+            if(! empty($request->category))
+            {
+                session(['ffe_category' => $request->category]);
+            }
+
+            if($request->start != '' && $request->end != '')
+            {
+                session(['ffe_start' => $request->start]);
+                session(['ffe_end' => $request->end]);
+            }
+
+            if($request->warranty != 0)
+            {
+                session(['ffe_warranty' => $request->warranty]);
+            }
+
+            session(['ffe_min' => $request->minCost]);
+            session(['ffe_max' => $request->maxCost]);
+        }
+
+        //Find the locations that the user has been assigned to
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('ffe')->get();
+
+        $ffe = FFE::locationFilter($locations->pluck('id'));
+
+        if(session()->has('ffe_locations'))
+        {
+            $ffe->locationFilter(session('ffe_locations'));
+            session(['ffe_filter' => true]);
+        }
+        if(session()->has('ffe_status'))
+        {
+            $ffe->statusFilter(session('ffe_status'));
+            session(['ffe_filter' => true]);
+        }
+        if(session()->has('ffe_category'))
+        {
+            $ffe->categoryFilter(session('ffe_category'));
+            session(['ffe_filter' => true]);
+        }
+        if(session()->has('ffe_start') && session()->has('ffe_end'))
+        {
+            $ffe->purchaseFilter(session('ffe_start'), session('ffe_end'));
+            session(['ffe_filter' => true]);
+        }
+        if(session()->has('ffe_min') && session()->has('ffe_max'))
+        {
+            $ffe->costFilter(session('ffe_min'), session('ffe_max'));
+            session(['ffe_filter' => true]);
+        }
+
+        if(session()->has('ffe_search'))
+        {
+            $ffe->searchFilter(session('ffe_search'));
+            session(['ffe_filter' => true]);
+        }
+
+        $ffe->join('locations', 'f_f_e_s.location_id', '=', 'locations.id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'f_f_e_s.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'f_f_e_s.supplier_id')
+            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->select('f_f_e_s.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
+        $limit = session('limit') ?? 25;
+
+        return view('FFE.view', [
+            "ffes" => $ffe->paginate(intval($limit))->withPath('/accessory/filter')->fragment('table'),
+            'statuses' => Status::withCount('ffe')->get(),
+            'categories' => Category::withCount('ffe')->get(),
+            "locations" => $locations,
+        ]);
+    }
+
+    public function clearFilter()
+    {
+        //Clear the Filters for the properties
+        session()->forget(['ffe_locations', 'ffe_status', 'ffe_category', 'ffe_start', 'ffe_end', 'ffe_audit', 'ffe_warranty', 'ffe_min', 'ffe_max', 'ffe_search']);
+
+        return to_route('ffes.index');
     }
 }

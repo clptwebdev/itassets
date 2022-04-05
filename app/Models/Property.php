@@ -14,7 +14,7 @@ class Property extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'location_id', 'purchased_cost', 'depreciation', 'type', 'purchased_date'];
+    protected $fillable = ['name', 'location_id', 'purchased_cost', 'depreciation', 'type', 'purchased_date', 'user_id'];
 
     public function name(): Attribute
     {
@@ -89,6 +89,11 @@ class Property extends Model {
         }
     }
 
+    public function comment()
+    {
+        return $this->morphToMany(Comment::class, "commentables");
+    }
+
     /////////////////////////////////////////////////
     ///////////////////Filters///////////////////////
     /////////////////////////////////////////////////
@@ -113,13 +118,10 @@ class Property extends Model {
         return $query->whereIn('location_id', $locations);
     }
 
-    public function comment()
+    public function scopeSearchFilter($query, $search)
     {
-        return $this->morphToMany(Comment::class, "commentables");
+        return $query->where('properties.name', 'LIKE', "%{$search}%");
     }
-
-
-
 
     //////////////////////////////////////////////
     ////////////////Cache Functions///////////////

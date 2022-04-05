@@ -2,7 +2,7 @@
 
 @section('title', 'Assets Under Construction Report')
 
-@section('page', 'Properties')
+@section('page', 'AUC Report')
 
 @section('user', $user->name)
 

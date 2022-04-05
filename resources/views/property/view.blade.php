@@ -56,11 +56,9 @@
             $limit = auth()->user()->location_property()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
             $floor = auth()->user()->location_property()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
 
-        if(session()->has('property_amount')){
-            $amount = str_replace('£', '', session('property_amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
+        if(session()->has('property_min') && session()->has('property_max')){
+            $start_value = session('property_min');
+            $end_value = session('property_max');
         }else{
             $start_value = $floor;
             $end_value = $limit;

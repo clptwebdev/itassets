@@ -13,7 +13,7 @@
         @endcan
         @can('viewAll', \App\Models\FFE::class)
             @if ($ffes->count() == 1)
-                <x-buttons.reports :route="route('ffes.showPdf', $aucs[0]->id)"/>
+                <x-buttons.reports :route="route('ffes.showPdf', $ffes[0]->id)"/>
             @else
                 <x-form.layout class="d-inline-block" :action="route('ffes.pdf')">
                     <x-form.input type="hidden" name="ffes" :label="false" formAttributes="required"
@@ -51,28 +51,24 @@
                              permissions, please contact apollo@clpt.co.uk </p>
 
         @php
-            if(auth()->user()->role_id == 1){
-                $limit = \App\Models\FFE::orderByRaw('CAST(purchased_cost as DECIMAL(11,2)) DESC')->pluck('purchased_cost')->first();
-                $floor = \App\Models\FFE::orderByRaw('CAST(purchased_cost as DECIMAL(11,2)) ASC')->pluck('purchased_cost')->first();
-            }else{
-                $limit = auth()->user()->location_property()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
-                $floor = auth()->user()->location_property()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
-            }
-            if(session()->has('auc_amount')){
-                $amount = str_replace('£', '', session('ffe_amount'));
-                $amount = explode(' - ', $amount);
-                $start_value = intval($amount[0]);
-                $end_value = intval($amount[1]);
-            }else{
-                $start_value = $floor;
-                $end_value = $limit;
-            }
+        
+        $limit = auth()->user()->location_ffe()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+        $floor = auth()->user()->location_ffe()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+
+        if(session()->has('ffe_min') && session()->has('ffe_max')){
+            $start_value = session('ffe_min');
+            $end_value = session('ffe_max');
+        }else{
+            $start_value = $floor;
+            $end_value = $limit;
+        }
         @endphp
 
         {{-- If there are no Collections return there is not need to display the filter, unless its the filter thats return 0 results --}}
-        @if($ffes->count() !== 0)
+        @if($ffes->count() !== 0 || session('ffe_filter') === true)
             <x-filters.navigation model="FFE" relations="ffe" table="f_f_e_s"/>
-            <x-filters.filter model="FFE" relations="ffe" table="f_f_e_s" :locations="$locations"/>
+            <x-filters.filter model="FFE" relations="ffe" table="f_f_e_s" :locations="$locations" :statuses="$statuses"
+            :categories="$categories" />
         @endif
 
     <!-- DataTales Example -->

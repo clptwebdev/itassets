@@ -105,24 +105,39 @@ class FFE extends Model {
     ///////////////////Filters///////////////////////
     /////////////////////////////////////////////////
 
-    //Filters out the property by the date acquired/purchased. Start = the Start Date End = the End Date
-    public function scopePurchaseFilter($query, $start, $end)
+    public function scopeStatusFilter($query, $status)
     {
-        $query->whereBetween('purchased_date', [$start, $end]);
+        return $query->whereIn('status_id', $status);
     }
 
-    //Filters the porperty thats value is between two values set in one string
-    //These variables are passed from the sldier on the filter
+    public function scopeLocationFilter($query, $locations)
+    {
+        return $query->whereIn('location_id', $locations);
+    }
+
+    public function scopeCategoryFilter($query, $category)
+    {
+        $pivot = $this->category()->getTable();
+
+        $query->whereHas('category', function($q) use ($category, $pivot) {
+            $q->whereIn("{$pivot}.category_id", $category);
+        });
+    }
+
     public function scopeCostFilter($query, $min, $max)
     {
         $query->whereBetween('purchased_cost', [$min, $max]);
     }
 
-    //Filters the properties that are based in the selected locations
-    //$locations is an array of the location ids
-    public function scopeLocationFilter($query, $locations)
+    public function scopePurchaseFilter($query, $start, $end)
     {
-        return $query->whereIn('location_id', $locations);
+        $query->whereBetween('purchased_date', [$start, $end]);
+    }
+
+    public function scopeSearchFilter($query, $search)
+    {
+        return $query->where('f_f_e_s.name', 'LIKE', "%{$search}%")
+            ->orWhere('f_f_e_s.serial_no', 'LIKE', "%{$search}%");
     }
 
 }

@@ -6,13 +6,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 @if($archive == false)
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send
-                                                                      this {{ucfirst($slot)}}
-                                                                      to
-                                                                      the Recycle Bin? </h5>
+                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to send this {{ucfirst($slot)}} to the Recycle Bin? </h5>
                 @else
-                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to Permanently
-                                                                      Delete this {{ucfirst($slot)}}? </h5>
+                    <h5 class="modal-title" id="removeUserModalLabel">Are you sure you want to permanently delete this {{ucfirst($slot)}}? </h5>
                 @endif
 
                 <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
@@ -23,17 +19,10 @@
                 <input id="user-id" type="hidden" value="">
                 @if($archive ==false)
                     <p>Select "Send to Bin" to send this {{ucfirst($slot)}} to the Recycle Bin.</p>
-                    <small class="text-danger">**Warning this is not permanent and the {{ucfirst($slot)}} can be
-                                               restored
-                                               from
-                                               the Recycle Bin. </small>
+                    <small class="text-danger">**Warning this is not permanent and the {{ucfirst($slot)}} can be restored from the Recycle Bin. </small>
                 @else
                     <p>Remove this item permanently from the system!</p>
-                    <small class="text-danger">**Warning this is permanent. The {{ucfirst($slot)}} will be unassigned
-                                               from
-                                               any assets with Relationship's to this {{ucfirst($slot)}}.Relationship's
-                                               will have their field's set to
-                                               null.</small>
+                    <small class="text-danger">**Warning this is permanent. The {{ucfirst($slot)}} and it's relationships with other models will removed from the system.</small>
                 @endif
             </div>
             <div class="modal-footer">

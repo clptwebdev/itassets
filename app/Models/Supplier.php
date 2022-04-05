@@ -107,6 +107,12 @@ class Supplier extends Model {
 
     }
 
+    public function ffe()
+    {
+        return $this->hasMany(FFE::class);
+
+    }
+
     public function full_address($sep = ', ')
     {
         $output = $this->address_1 . $sep;
