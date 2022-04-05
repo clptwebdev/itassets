@@ -91,7 +91,7 @@ class MachineryController extends Controller {
         return to_route('machineries.index')->with('success_message', $request->name . ' Has been Added!');
     }
 
-    public function show(machinery $machinery)
+    public function show(Machinery $machinery)
     {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('view', $machinery))
@@ -126,7 +126,7 @@ class MachineryController extends Controller {
         ]);
     }
 
-    public function update(Request $request, machinery $machinery)
+    public function update(Request $request, Machinery $machinery)
     {
         //Check to see if the user has permission to update machinery on the system
         if(auth()->user()->cant('update', Machinery::class))
@@ -177,7 +177,7 @@ class MachineryController extends Controller {
 
     }
 
-    public function destroy(machinery $machinery)
+    public function destroy(Machinery $machinery)
     {
         //Check to see if the user has permission to delete machinery on the system
         if(auth()->user()->cant('recycleBin', Machinery::class))
@@ -270,7 +270,7 @@ class MachineryController extends Controller {
         {
             $array = array();
             $array['name'] = $f->name ?? 'No Name';
-            $array['description'] = $f->registration ?? 'No description';
+            $array['description'] = $f->description ?? 'No description';
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = $f->purchased_cost;
@@ -293,7 +293,7 @@ class MachineryController extends Controller {
 
     }
 
-    public function downloadShowPDF(machinery $machinery)
+    public function downloadShowPDF(Machinery $machinery)
     {
         if(auth()->user()->cant('view', $machinery))
         {

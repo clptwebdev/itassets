@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Add Software')
+@section('title', 'Add Machinery')
 
 @section('css')
 
 @endsection
 
 @section('content')
-   
-    <x-form.layout :action="route('vehicles.store')">
-        <x-wrappers.nav title="Add Vehicle">
-            <x-buttons.return :route="route('vehicles.index')">Vehicle</x-buttons.return>
+
+    <x-form.layout :action="route('machineries.store')">
+        <x-wrappers.nav title="Add Machinery">
+            <x-buttons.return :route="route('machineries.index')">Machinery</x-buttons.return>
             <x-buttons.submit>Save</x-buttons.submit>
         </x-wrappers.nav>
         <section>
             <p class="mb-4">
-                Add Vehicles to the Apollo Asset Manager. </p>
+                Add machineries to the Apollo Asset Manager. </p>
             <div class="row row-eq-height no-gutters p-0 p-md-4 container m-auto">
                 <div class="col-12">
                     <div class="card shadow h-100">
@@ -25,7 +25,7 @@
                             <ul id="tab-bar" class="nav nav-tabs">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="location-tab" data-bs-toggle="tab" href="#location"
-                                       role="tab" aria-controls="home" aria-selected="true">Vehicle Information</a>
+                                       role="tab" aria-controls="home" aria-selected="true">Machinery Information</a>
                                 </li>
                             </ul>
                             <div class="tab-content border-left border-right border-bottom border-gray"
@@ -61,7 +61,7 @@
                                                 <x-form.input name="purchased_cost" formAttributes="required"/>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="registration" formAttributes="required"/>
+                                                <x-form.textarea name="description" formAttributes="required rows='5'"/>
                                             </div>
 
                                             <div class="form-group">

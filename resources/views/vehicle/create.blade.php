@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Add Software')
+@section('title', 'Add Vehicle')
 
 @section('css')
 

@@ -58,13 +58,13 @@
                                     <small>{{$vehicle->depreciation}} Years</small></td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
-                                        @can('viewAll', \App\Models\Software::class)
+                                        @can('viewAll', \App\Models\Vehicle::class)
                                             <x-buttons.dropdown-item :route="route('vehicle.restore', $vehicle->id)">
                                                 Restore
                                             </x-buttons.dropdown-item>
                                         @endcan
 
-                                        @can('delete', \App\Models\Software::class)
+                                        @can('delete', \App\Models\Vehicle::class)
                                             <x-form.layout method="POST" class="d-block p-0 m-0"
                                                            :id="'form'.$vehicle->id"
                                                            :action="route('vehicle.remove', $vehicle->id)">

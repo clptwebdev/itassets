@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Vehicle Import Errors')
+@section('title', 'Machinery Import Errors')
 
 
 
@@ -62,7 +62,7 @@
                             <th><small>Location</small></th>
                             <th><small>Date</small></th>
                             <th><small>Cost</small></th>
-                            <th><small>Registration</small></th>
+                            <th><small>Description</small></th>
                             <th><small>Depreciation</small></th>
                         </tr>
                         </thead>
@@ -73,7 +73,7 @@
                             <th><small>Location</small></th>
                             <th><small>Date</small></th>
                             <th><small>Cost</small></th>
-                            <th><small>Registration</small></th>
+                            <th><small>Description</small></th>
                             <th><small>Depreciation</small></th>
                         </tr>
                         </tfoot>
@@ -161,13 +161,15 @@
                                         </span>
                                 </td>
                                 <td>
-                                    <span id="registration{{$line}}" class="tooltip-danger">
+                                    <span id="description{{$line}}" class="tooltip-danger">
                                             <input type="text"
-                                                   class="import-control @if(in_array('registration', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                                   name="registration[]" value="{{ $valueArray[$row]['registration'] }}"
-                                                   placeholder="This Row is Empty Please Fill!" required
-                                                   data-bs-container='#registration{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('registration', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['registration']}'" !!}@endif>
+                                                   class="import-control @if(in_array('description', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                                   name="description[]" placeholder="This Row is Empty Please Fill!"
+                                                   required data-bs-container='#description{{$line}}'
+                                                   data-bs-placement='top'
+                                                   value='{{ $valueArray[$row]['description'] }}'
+                                               @if(array_key_exists('description', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['description']}'" !!}@endif>
+
                                         </span>
                                 </td>
                                 <td>
@@ -271,9 +273,9 @@
                 data.append('name[]', element.value);
             });
             //registration
-            const rgInputs = document.querySelectorAll("input[name='registration[]']");
-            rgInputs.forEach(element => {
-                data.append('registration[]', element.value);
+            const dcInputs = document.querySelectorAll("input[name='description[]']");
+            dcInputs.forEach(element => {
+                data.append('description[]', element.value);
             });
 
             //Location
@@ -309,7 +311,7 @@
 
             xhr.onload = function () {
                 if (xhr.responseText === 'Success') {
-                    window.location.href = '/vehicles';
+                    window.location.href = '/machineries';
                 } else {
                     importControl.forEach((item) => {
                         item.classList.remove('border-bottom', 'border-danger');
@@ -338,7 +340,7 @@
                 }
             };
 
-            xhr.open("POST", "/import/vehicle/errors");
+            xhr.open("POST", "/import/machinery/errors");
             xhr.send(data);
         }
 

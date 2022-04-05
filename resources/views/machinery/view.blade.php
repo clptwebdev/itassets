@@ -1,30 +1,30 @@
 @extends('layouts.app')
 
-@section('title', 'View Vehicles')
+@section('title', 'View machineries')
 
 
 @section('content')
-    <x-wrappers.nav title="Vehicles">
-        @can('recycleBin', \App\Models\Vehicle::class)
-            <x-buttons.recycle :route="route('vehicle.bin')" :count="\App\Models\Vehicle::onlyTrashed()->count()"/>
+    <x-wrappers.nav title="machineries">
+        @can('recycleBin', \App\Models\Machinery::class)
+            <x-buttons.recycle :route="route('machinery.bin')" :count="\App\Models\Machinery::onlyTrashed()->count()"/>
         @endcan
-        @can('create' , \App\Models\Vehicle::class)
-            <x-buttons.add :route="route('vehicles.create')">Software</x-buttons.add>
+        @can('create' , \App\Models\Machinery::class)
+            <x-buttons.add :route="route('machineries.create')">Machinery</x-buttons.add>
         @endcan
-        @can('generatePDF', \App\Models\Vehicle::class)
-            @if ($vehicles->count() == 1)
-                <x-buttons.reports :route="route('vehicle.showPdf', $vehicles[0]->id)"/>
+        @can('generatePDF', \App\Models\Machinery::class)
+            @if ($machineries->count() == 1)
+                <x-buttons.reports :route="route('machinery.showPdf', $machineries[0]->id)"/>
             @else
-                <x-form.layout class="d-inline-block" :action="route('vehicle.pdf')">
-                    <x-form.input type="hidden" name="vehicle" :label="false" formAttributes="required"
-                                  :value="json_encode($vehicles->pluck('id'))"/>
+                <x-form.layout class="d-inline-block" :action="route('machinery.pdf')">
+                    <x-form.input type="hidden" name="machinery" :label="false" formAttributes="required"
+                                  :value="json_encode($machineries->pluck('id'))"/>
                     <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
-            @if($vehicles->count() >1)
-                <x-form.layout class="d-inline-block" action="/export/vehicle">
-                    <x-form.input type="hidden" name="vehicle" :label="false" formAttributes="required"
-                                  :value="json_encode($vehicles->pluck('id'))"/>
+            @if($machineries->count() >1)
+                <x-form.layout class="d-inline-block" action="/export/machinery">
+                    <x-form.input type="hidden" name="machinery" :label="false" formAttributes="required"
+                                  :value="json_encode($machineries->pluck('id'))"/>
                     <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span>
                     </x-buttons.submit>
                 </x-form.layout>
@@ -35,7 +35,7 @@
                     Bulk Options
                 </a>
                 <div class="dropdown-menu dropdown-menu-end text-end" aria-labelledby="dropdownMenuLink">
-                    @can('create', \App\Models\Vehicle::class)
+                    @can('create', \App\Models\Machinery::class)
                         <x-buttons.dropdown-item id="import">
                             Import
                         </x-buttons.dropdown-item>
@@ -46,9 +46,9 @@
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
-        <p class="mt-5 mb-4">Below is Vehicles belonging to the Central Learning Partnership Trust. You require
+        <p class="mt-5 mb-4">Below is machinery belonging to the Central Learning Partnership Trust. You require
                              access to see
-                             the Vehicles assigned to the different locations. If you think you have the incorrect
+                             the machinery assigned to the different locations. If you think you have the incorrect
                              permissions, please contact apollo@clpt.co.uk </p>
 
         @php
@@ -67,8 +67,8 @@
         }
         @endphp
 
-        <x-filters.navigation model="Vehicle" relations="vehicle" table="vehicles"/>
-        <x-filters.filter model="Vehicle" relations="vehicle" table="vehicles" :locations="$locations"/>
+        <x-filters.navigation model="Machinery" relations="Machinery" table="machineries"/>
+        <x-filters.filter model="Machinery" relations="machinery" table="machineries" :locations="$locations"/>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -102,34 +102,35 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($vehicles as $vehicle)
+                        @foreach($machineries as $machinery)
                             <tr>
-                                <td class="text-left">{{$vehicle->name}}</td>
-                                <td class="text-left">{{$vehicle->registration ?? 'N/A'}}</td>
-                                <td class="text-center">£{{number_format($vehicle->purchased_cost, 2, '.', ',')}}</td>
-                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($vehicle->purchased_date)->format('d-M-Y')}}</td>
-                                <td class="text-center">{{$vehicle->supplier->name}}</td>
-                                <td class="text-center">{{$vehicle->location->name}}</td>
+                                <td class="text-left">{{$machinery->name}}</td>
+                                <td class="text-left">{{$machinery->description ?? 'N/A'}}</td>
+                                <td class="text-center">£{{number_format($machinery->purchased_cost, 2, '.', ',')}}</td>
+                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($machinery->purchased_date)->format('d-M-Y')}}</td>
+                                <td class="text-center">{{$machinery->supplier->name}}</td>
+                                <td class="text-center">{{$machinery->location->name}}</td>
                                 <td class="text-center">
-                                    £{{number_format($vehicle->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
-                                    <br><small>{{$vehicle->depreciation}} Years</small></td>
+                                    £{{number_format($machinery->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
+                                    <br><small>{{$machinery->depreciation}} Years</small></td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
-                                        @can('view', $vehicle)
-                                            <x-buttons.dropdown-item :route="route('vehicles.show', $vehicle->id)">
+                                        @can('view', $machinery)
+                                            <x-buttons.dropdown-item :route="route('machineries.show', $machinery->id)">
                                                 View
                                             </x-buttons.dropdown-item>
                                         @endcan
-                                        @can('update', $vehicle)
-                                            <x-buttons.dropdown-item :route=" route('vehicles.edit', $vehicle->id)">
+                                        @can('update', $machinery)
+                                            <x-buttons.dropdown-item
+                                                :route=" route('machineries.edit', $machinery->id)">
                                                 Edit
                                             </x-buttons.dropdown-item>
                                         @endcan
-                                        @can('delete', $vehicle)
+                                        @can('delete', $machinery)
                                             <x-form.layout method="DELETE" class="d-block p-0 m-0"
-                                                           :id="'form'.$vehicle->id"
-                                                           :action="route('vehicles.destroy', $vehicle->id)">
-                                                <x-buttons.dropdown-item :data="$vehicle->id" class="deleteBtn">
+                                                           :id="'form'.$machinery->id"
+                                                           :action="route('machineries.destroy', $machinery->id)">
+                                                <x-buttons.dropdown-item :data="$machinery->id" class="deleteBtn">
                                                     Delete
                                                 </x-buttons.dropdown-item>
                                             </x-form.layout>
@@ -138,23 +139,24 @@
                                 </td>
                             </tr>
                         @endforeach
-                        @if($vehicles->count() == 0)
+                        @if($machineries->count() == 0)
                             <tr>
-                                <td colspan="9" class="text-center">No Vehicles Returned</td>
+                                <td colspan="9" class="text-center">No Machineries Returned</td>
                             </tr>
                         @endif
                         </tbody>
                     </table>
-                    <x-paginate :model="$vehicles"/>
+                    <x-paginate :model="$machineries"/>
                 </div>
             </div>
         </div>
     </section>
 @endsection
+
 @section('modals')
 
     <x-modals.delete/>
-    <x-modals.import route="/import/vehicle"/>
+    <x-modals.import route="/import/machinery"/>
 @endsection
 
 @section('js')

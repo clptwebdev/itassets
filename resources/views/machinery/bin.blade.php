@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'View Vehicle')
+@section('title', 'View Machinery')
 
 
 @section('content')
-    <x-wrappers.nav title="Vehicle Recycle Bin">
-        <x-buttons.return :route="route('vehicles.index')">Vehicle</x-buttons.return>
+    <x-wrappers.nav title="Machinery Recycle Bin">
+        <x-buttons.return :route="route('machineries.index')">Machinery</x-buttons.return>
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
-        <p class="mt-5 mb-4">Below is Vehicles belonging to the Central Learning Partnership Trust. You require
+        <p class="mt-5 mb-4">Below are machineries belonging to the Central Learning Partnership Trust. You require
                              access to see
-                             the Vehicles assigned to the different locations. If you think you have the incorrect
+                             the machineries assigned to the different locations. If you think you have the incorrect
                              permissions, please contact apollo@clpt.co.uk </p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -21,7 +21,7 @@
                         <thead>
                         <tr>
                             <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-4 col-md-2"><small>Registration</small></th>
+                            <th class="col-4 col-md-2"><small>Description</small></th>
                             <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
                             <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
                             <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
@@ -34,7 +34,7 @@
                         <tfoot>
                         <tr>
                             <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-4 col-md-2"><small>Registration</small></th>
+                            <th class="col-4 col-md-2"><small>Description</small></th>
                             <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
                             <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
                             <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
@@ -45,30 +45,31 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($vehicles as $vehicle)
+                        @foreach($machineries as $machinery)
                             <tr>
-                                <td class="text-left">{{$vehicle->name}}</td>
-                                <td class="text-left">{{$vehicle->registration ?? 'N/A'}}</td>
-                                <td class="text-center">£{{number_format($vehicle->purchased_cost, 2, '.', ',')}}</td>
-                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($vehicle->purchased_date)->format('d-M-Y')}}</td>
-                                <td class="text-center">{{$vehicle->supplier->name}}</td>
-                                <td class="text-center">{{$vehicle->location->name}}</td>
+                                <td class="text-left">{{$machinery->name}}</td>
+                                <td class="text-left">{{$machinery->dexcription ?? 'N/A'}}</td>
+                                <td class="text-center">£{{number_format($machinery->purchased_cost, 2, '.', ',')}}</td>
+                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($machinery->purchased_date)->format('d-M-Y')}}</td>
+                                <td class="text-center">{{$machinery->supplier->name}}</td>
+                                <td class="text-center">{{$machinery->location->name}}</td>
                                 <td class="text-center">
-                                    £{{number_format($vehicle->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
-                                    <small>{{$vehicle->depreciation}} Years</small></td>
+                                    £{{number_format($machinery->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
+                                    <small>{{$machinery->depreciation}} Years</small></td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
-                                        @can('viewAll', \App\Models\Software::class)
-                                            <x-buttons.dropdown-item :route="route('vehicle.restore', $vehicle->id)">
+                                        @can('viewAll', \App\Models\Machinery::class)
+                                            <x-buttons.dropdown-item
+                                                :route="route('machinery.restore', $machinery->id)">
                                                 Restore
                                             </x-buttons.dropdown-item>
                                         @endcan
 
-                                        @can('delete', \App\Models\Software::class)
+                                        @can('delete', \App\Models\Machinery::class)
                                             <x-form.layout method="POST" class="d-block p-0 m-0"
-                                                           :id="'form'.$vehicle->id"
-                                                           :action="route('vehicle.remove', $vehicle->id)">
-                                                <x-buttons.dropdown-item :data="$vehicle->id" class="deleteBtn">
+                                                           :id="'form'.$machinery->id"
+                                                           :action="route('machinery.remove', $machinery->id)">
+                                                <x-buttons.dropdown-item :data="$machinery->id" class="deleteBtn">
                                                     Delete
                                                 </x-buttons.dropdown-item>
                                             </x-form.layout>
@@ -77,14 +78,14 @@
                                 </td>
                             </tr>
                         @endforeach
-                        @if($vehicles->count() == 0)
+                        @if($machineries->count() == 0)
                             <tr>
-                                <td colspan="9" class="text-center">No Vehicle Returned</td>
+                                <td colspan="9" class="text-center">No Machinery Returned</td>
                             </tr>
                         @endif
                         </tbody>
                     </table>
-                    <x-paginate :model="$vehicles"/>
+                    <x-paginate :model="$machineries"/>
                 </div>
             </div>
         </div>

@@ -100,7 +100,7 @@ class MachineryImport extends DefaultValueBinder implements ToModel, WithValidat
         $machinery->supplier_id = $sid;
 
         $machinery->depreciation = $row["depreciation"];
-        $machinery->registration = $row["description"];
+        $machinery->description = $row["description"];
 
         $machinery->save();
     }
