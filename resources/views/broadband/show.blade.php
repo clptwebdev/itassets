@@ -52,7 +52,7 @@
                                 <p><strong>Package</strong><br>{{$broadband->package}}
                                 </p>
                                 <p><strong>
-                                        Supplier</strong><br>{{$broadband->supplier->name}}
+                                        Supplier</strong><br>{{$broadband->supplier->name ?? 'N/A'}}
                                 </p>
                                 <p class='font-weight-bold'>Broadband Status:</p>
                                 @if($broadband->isExpired())

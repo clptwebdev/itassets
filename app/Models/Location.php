@@ -143,6 +143,12 @@ class Location extends Model {
             ->using(LocationUser::class);
     }
 
+    public function singleBroadband()
+    {
+        return $this->hasOne(Broadband::class)->latest('renewal_date');
+
+    }
+
     public function full_address($sep = ', ')
     {
         $output = $this->address_1 . $sep;

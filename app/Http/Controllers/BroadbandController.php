@@ -21,8 +21,9 @@ use App\Models\Software;
 use App\Models\Supplier;
 use App\Models\User;
 use Carbon\Carbon;
-use http\Encoding\Stream\Debrotli;
+use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -44,14 +45,17 @@ class BroadbandController extends Controller {
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
-        $broadbands = Broadband::locationFilter($locations->pluck('id')->toArray())->latest('renewal_date', '>=', Carbon::parse(now()))->paginate(intval($limit))->fragment('table');
-
+        $broadbands = Broadband::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['property_filter' => false]);
+        $currentCost = Broadband::locationFilter($locations->pluck('id')->toArray())->sum('purchased_cost');
+        $previousCost = Broadband::locationFilter($locations->pluck('id')->toArray())->whereYear('purchased_date', Carbon::now()->subYear()->format('Y'))->sum('purchased_cost');
 
         return view('broadband.view', [
+            'previous_cost' => $previousCost,
+            'current_cost' => $currentCost,
             "broadbands" => $broadbands,
-            "locations" => $locations,
+            "locations" => $locations->get(),
         ]);
     }
 
