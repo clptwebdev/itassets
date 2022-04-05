@@ -51,4 +51,9 @@ class Status extends Model {
         return $this->hasMany(Consumable::class);
     }
 
+    public function ffe()
+    {
+        return $this->hasMany(FFE::class);
+    }
+
 }

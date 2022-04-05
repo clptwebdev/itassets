@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\permittedLocation;
 use App\Rules\findLocation;
 
+use \Carbon\Carbon;
+
 class PropertyController extends Controller {
 
     ////////////////////////////////////////////
@@ -38,6 +40,11 @@ class PropertyController extends Controller {
         {
             return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Properties.');
 
+        }
+
+        //If there are filters currently set move to filtered function
+        if(session()->has('property_filter') && session('property_filter') === true){
+            return to_route('property.filtered');
         }
 
         // find the locations that the user has been assigned to
@@ -116,6 +123,7 @@ class PropertyController extends Controller {
             'depreciation' => $request->depreciation,
             'type' => $request->type,
             'purchased_date' => $request->purchased_date,
+            'user_id' => auth()->user()->id
         ])->save();
 
         session()->flash('success_message', $request->name . ' has been created successfully');
@@ -552,11 +560,11 @@ class PropertyController extends Controller {
                 session(['property_end' => $request->end]);
             }
 
-            session(['assets_min' => $request->minCost]);
-            session(['assets_max' => $request->maxCost]);
+            session(['property_min' => $request->minCost]);
+            session(['property_max' => $request->maxCost]);
         }
-        //Check the Users Locations Permissions
-        $locations = Location::select('id', 'name')->withCount('property')->get();
+        // find the locations that the user has been assigned to
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('property')->get();
 
         $property = Property::locationFilter($locations->pluck('id'));
 
@@ -568,14 +576,14 @@ class PropertyController extends Controller {
 
         if(session()->has('property_start') && session()->has('property_end'))
         {
-            $property->purchaseFilter(session('property_start'), session('property_end'));
+            $property->purchaseFilter(Carbon::parse(session('property_start')), Carbon::parse(session('property_end')));
             session(['property_filter' => true]);
         }
 
-        if(session()->has('assets_min') && session()->has('assets_max'))
+        if(session()->has('property_min') && session()->has('property_max'))
         {
-            $property->costFilter(session('assets_min'), session('assets_max'));
-            session(['assets_filter' => true]);
+            $property->costFilter(session('property_min'), session('property_max'));
+            session(['property_filter' => true]);
         }
 
         if(session()->has('property_search'))
@@ -585,7 +593,7 @@ class PropertyController extends Controller {
         }
 
         $property->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
-            ->orderBy(session('property_orderby') ?? 'date', session('property_direction') ?? 'asc')
+            ->orderBy(session('property_orderby') ?? 'purchased_date', session('property_direction') ?? 'asc')
             ->select('properties.*', 'locations.name as location_name');
         $limit = session('property_limit') ?? 25;
 
@@ -598,9 +606,9 @@ class PropertyController extends Controller {
     public function clearFilter()
     {
         //Clear the Filters for the properties
-        session()->forget(['property_filter', 'property_locations', 'property_start', 'property_end', 'property_amount', 'property_search']);
+        session()->forget(['property_filter', 'property_locations', 'property_start', 'property_end', 'property_min', 'property_max', 'property_search']);
 
-        return to_route('property.index');
+        return to_route('properties.index');
     }
 
 }

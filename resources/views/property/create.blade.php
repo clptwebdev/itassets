@@ -11,7 +11,6 @@
         <x-wrappers.nav title="Add New Property">
             <x-buttons.return :route="route('properties.index')"> Property</x-buttons.return>
             <a href="{{ route('documentation.index')."#collapseThreeAssets"}}"
-<<<<<<< HEAD
                class="btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
                     class="fas fa-question fa-sm text-dark-50 mr-lg-1" ></i ><span class="d-none d-lg-inline-block">Help</span></a >
             <x-buttons.submit >Save</x-buttons.submit >
@@ -33,36 +32,10 @@
                                        aria-controls="home" aria-selected="true" >Location Information</a >
                                 </li >
                             </ul >
-=======
-               class="btn btn-sm  bg-yellow shadow-sm p-2 p-md-1"><i
-                    class="fas fa-question fa-sm text-dark-50 mr-lg-1"></i><span
-                    class="d-none d-lg-inline-block">Help</span></a>
-            <x-buttons.submit>Save</x-buttons.submit>
-        </x-wrappers.nav>
-        <section>
-            <p class="mb-4">
-                Add a new property to the Apollo Asset Manager. </p>
-            <div class="row row-eq-height no-gutters p-0 p-md-4 container m-auto">
-                <div class="col-12">
-                    <div class="card shadow h-100">
-                        <div class="card-body">
-                            <x-form.errors/>
-                            <x-handlers.alerts/>
-
-
-                            <ul id="tab-bar" class="nav nav-tabs">
-
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="location-tab" data-bs-toggle="tab" href="#location"
-                                       role="tab" aria-controls="home" aria-selected="true">Location Information</a>
-                                </li>
-                            </ul>
->>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
                             <div class="tab-content border-left border-right border-bottom border-gray"
                                  id="myTabContent">
 
                                 <div class="tab-pane fade show p-2 pt-4 active" id="location" role="tabpanel"
-<<<<<<< HEAD
                                      aria-labelledby="location-tab" >
                                     <div class="row" >
                                         <div class="col-12 col-md-6 p-4 mb-3 " >
@@ -71,17 +44,6 @@
                                             </div >
                                             <div class="form-group position-relative" >
                                                 <label for="findLocation" >Location</label >
-=======
-                                     aria-labelledby="location-tab">
-                                    <div class="row">
-                                        <div class="col-12 col-md-6 p-4 mb-3 ">
-                                            <div class="form-group">
-                                                <x-form.input name="name" formAttributes="required"
-                                                              value="{{old('name')}}"/>
-                                            </div>
-                                            <div class="form-group position-relative">
-                                                <label for="findLocation">Location</label>
->>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
                                                 <input type="hidden" id="location_id" name="location_id"
                                                        class="form-control mb-3" readonly value="1">
                                                 <input class="form-control" type="text" name="find_location"
@@ -96,7 +58,6 @@
                                                 </div>
                                             </div>
 
-<<<<<<< HEAD
                                             <div class="form-group" >
                                                 <x-form.input name="purchased_cost" formAttributes="" value="{{old('purchased_cost')}}" />
                                             </div >
@@ -108,22 +69,6 @@
                                             <div class="form-group" >
                                                 <x-form.input name="depreciation" formAttributes="" value="{{old('depreciation')}}" />
                                             </div >
-=======
-                                            <div class="form-group">
-                                                <x-form.input name="purchased_cost" formAttributes="required"
-                                                              value="{{old('purchased_cost')}}"/>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <x-form.date name="purchased_date" formAttributes="required"
-                                                             value="{{old('purchased_date')}}"/>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <x-form.input name="depreciation" formAttributes="required"
-                                                              value="{{old('depreciation')}}"/>
-                                            </div>
->>>>>>> 3de8dae4f1508171fcf6e372d8f1925eb499bf10
 
                                             <div class="form-group">
                                                 <label for="name">Property Type</label>

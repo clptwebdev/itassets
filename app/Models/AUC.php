@@ -16,7 +16,7 @@ class AUC extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'location_id', 'purchased_date', 'depreciation', 'type', 'purchased_cost'];
+    protected $fillable = ['name', 'location_id', 'purchased_date', 'depreciation', 'type', 'purchased_cost', 'user_id'];
 
     public function name(): Attribute
     {
@@ -119,6 +119,11 @@ class AUC extends Model {
     public function scopeLocationFilter($query, $locations)
     {
         return $query->whereIn('location_id', $locations);
+    }
+
+    public function scopeSearchFilter($query, $search)
+    {
+        return $query->where('a_u_c_s.name', 'LIKE', "%{$search}%");
     }
 
     //////////////////////////////////////////////

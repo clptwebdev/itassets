@@ -55,7 +55,6 @@
         @endif
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive">
                     <table id="usersTable" class="table table-striped">
                         <thead>
                         <tr>
@@ -148,7 +147,6 @@
                         </tbody>
                     </table>
                     <x-paginate :model="$components"/>
-                </div>
             </div>
         </div>
         <div class="card shadow mb-3">

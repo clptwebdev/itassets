@@ -58,11 +58,9 @@
             $limit = auth()->user()->location_auc()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
             $floor = auth()->user()->location_auc()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
 
-        if(session()->has('auc_amount')){
-            $amount = str_replace('£', '', session('auc_amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
+        if(session()->has('auc_min') && session()->has('auc_max')){
+            $start_value = session('auc_min');
+            $end_value = session('auc_max');
         }else{
             $start_value = $floor;
             $end_value = $limit;
@@ -71,7 +69,7 @@
 
 
         {{-- If there are no Collections return there is not need to display the filter, unless its the filter thats return 0 results --}}
-        @if($aucs->count() !== 0)
+        @if($aucs->count() !== 0 || session('auc_filter') === true)
             <x-filters.navigation model="AUC" relations="auc" table="a_u_c_s"/>
             <x-filters.filter model="AUC" relations="auc" table="a_u_c_s" :locations="$locations"/>
         @endif

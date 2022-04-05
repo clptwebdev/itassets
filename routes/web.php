@@ -152,6 +152,8 @@ Route::group(['middleware' => 'auth'], function() {
         //PDF
         Route::post('/aucs/pdf', 'downloadPDF')->name('aucs.pdf');
         Route::get('/aucs/{auc}/pdf', 'downloadShowPDF')->name('aucs.showPdf');
+        //Comments
+        Route::post('/aucs/{auc}/comment', 'newComment')->name('aucs.comment');
     });
     Route::controller(\App\Http\Controllers\ComponentController::class)->group(function() {
         //Component Routes
@@ -229,7 +231,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/ffe/{ffe}/restore', 'restore')->name('ffe.restore');
         Route::post('/ffe/{ffe}/remove', 'forceDelete')->name('ffe.remove');
         //Exports
-        Route::post("/export/aucs", "export");
+        Route::post("/export/ffes", "export");
         //Imports
         Route::post("/import/ffes", "import");
         Route::Post("/import/ffes/errors", "importErrors");

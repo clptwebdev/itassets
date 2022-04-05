@@ -9,6 +9,7 @@
 @section('content')
     <x-wrappers.nav title="Show Asset Under Construction">
         <x-buttons.return :route="route('aucs.index')"> AUC</x-buttons.return>
+        <a href="{{route('auc.move', $auc->id)}}" class="btn btn-sm btn-blue"> Move to Property</a>
         {{-- <x-buttons.reports :route="route('property.showPdf', $auc->id)" /> --}}
         <x-buttons.edit :route="route('aucs.edit',$auc->id)" />
         <x-form.layout method="DELETE" class="d-sm-inline-block"
@@ -31,17 +32,10 @@
 
                 <li class="nav-item">
                     <a class="nav-link active" id="location-tab" data-bs-toggle="tab" href="#location" role="tab"
-                       aria-controls="home" aria-selected="true">Property Information</a>
+                       aria-controls="home" aria-selected="true">Asset Under Construction Information</a>
                 </li>
-            </ul>
-            <div class="tab-content border-left border-right border-bottom border-gray" id="myTabContent">
-
-                <li class="nav-item" >
-                    <a class="nav-link active" id="location-tab" data-toggle="tab" href="#location" role="tab"
-                        aria-controls="home" aria-selected="true" >Asset Under Construction Information</a >
-                </li >
             </ul >
-            <div class="tab-content border-left border-right border-bottom border-gray"
+            <div class="tab-content border-left border-right border-bottom border-gray mb-4"
                     id="myTabContent" >
                 
                 <div class="tab-pane fade show p-2 pt-4 active" id="location" role="tabpanel"
@@ -126,6 +120,10 @@
                 </div>
 
             </div>
+
+            <div class="">
+                <x-comments.comment-layout :asset="$auc"/>
+            </div>
         </div>
 
 
@@ -135,11 +133,13 @@
 @endsection
 
 @section('modals')
-
-
+    <x-modals.add-comment :route="route('aucs.comment' ,$auc->id)" :model="$auc" title="auc"/>
+    <x-modals.edit-comment :model="$auc"/>
+    <x-modals.delete-comment/>
+    <x-modals.delete/>
 @endsection
 
 @section('js')
-
-
+    <script src="{{asset('js/comment.js')}}"></script>
+    <script src="{{asset('js/delete.js')}}"></script>
 @endsection

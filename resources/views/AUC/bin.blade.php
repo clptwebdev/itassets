@@ -28,7 +28,6 @@
 
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive" id="table">
                     <table id="assetsTable" class="table table-striped">
                         <thead>
                         <tr>
@@ -104,14 +103,15 @@
                                                 Restore
                                             </x-buttons.dropdown-item>
                                         @endcan
-                                        @can('delete', $auc)
-                                            <x-form.layout method="POST" class="d-block p-0 m-0" :id="'form'.$auc->id"
-                                                           :action="route('auc.remove', $auc->id)">
-                                                <x-buttons.dropdown-item :data="$auc->id" class="deleteBtn">
-                                                    Delete
-                                                </x-buttons.dropdown-item>
-                                            </x-form.layout>
-                                        @endcan
+                                        <form class="d-block" id="form{{$auc->id}}"
+                                            action="{{ route('auc.remove', $auc->id) }}"
+                                            method="POST">
+                                          @csrf
+                                          @can('delete', $auc)
+                                              <a class="deleteBtn dropdown-item" href="#"
+                                                 data-id="{{$auc->id}}">Delete</a>
+                                          @endcan
+                                      </form>
                                     </x-wrappers.table-settings>
                                 </td>
                             </tr>
@@ -124,16 +124,15 @@
                         </tbody>
                     </table>
                     <x-paginate :model="$aucs"/>
-                </div>
             </div>
         </div>
     </section>
 @endsection
 
 @section('modals')
-    <x-modals.permanentDelete model="Assets Under Construction"/>
+<x-modals.delete :archive="true"> Assets Under Construction</x-modals.delete>
 @endsection
 
 @section('js')
-    <script src="{{asset('js/permanent-delete.js')}}"></script>
+<script src="{{asset('js/delete.js')}}" defer></script>
 @endsection

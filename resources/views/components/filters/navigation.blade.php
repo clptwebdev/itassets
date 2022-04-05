@@ -59,9 +59,9 @@
                             class="dropdown-item">{{ session($relations.'_start').' to '.session($relations.'_end') ?? 'No Dates'}}</span>
                     @endif
 
-                    @if(session()->has($relations.'_amount'))
+                    @if(session()->has($relations.'_min') && session()->has($relations.'_max'))
                         <h6 class="dropdown-header text-center">Purchased Cost/Value</h6>
-                        <span class="dropdown-item">{{ session($relations.'_amount')}}</span>
+                        <span class="dropdown-item">£{{ number_format(session($relations.'_min'), 2, '.', ',')}} - £{{ number_format(session($relations.'_max'), 2, '.', ',')}}</span>
                     @endif
 
 

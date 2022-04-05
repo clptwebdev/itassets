@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'Recycle Bin | Components')
 
 @section('content')
 
@@ -39,7 +40,6 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive">
                     <table id="usersTable" class="table table-striped">
                         <thead>
                         <tr>
@@ -125,8 +125,6 @@
                         @endforeach
                         </tbody>
                     </table>
-                    <x-paginate :model="$components"/>
-                </div>
             </div>
         </div>
 
@@ -144,7 +142,7 @@
 
 @section('modals')
 
-    <x-modals.delete :archive="false"/>
+    <x-modals.delete :archive="true"/>
     <x-modals.import/>
 @endsection
 
