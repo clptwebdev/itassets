@@ -348,7 +348,7 @@ class MachineryController extends Controller {
         if(in_array($result[0], $extensions))
         {
             $path = $request->file("csv")->getRealPath();
-            $import = new machineryImport;
+            $import = new MachineryImport;
             $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
             $row = [];
             $attributes = [];
