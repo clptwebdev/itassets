@@ -30,11 +30,11 @@
                     <small>{{$ffe['serial_no']}}</small>
                 </td>
                 <td class="text-center"><span style="color: {{ $ffe['icon'] ?? '#666'}}">{{$ffe['location'] ?? 'Unassigned'}}</span>
-                    @if($ffe->room != "")<br><small>{{ $ffe->room ?? 'N/A'}}</small>@endif</td>
+                    @if($ffe['room'] != "")<br><small>{{ $ffe['room'] ?? 'N/A'}}</small>@endif</td>
                 <td class="text-center">{{$ffe['manufacturer'] ?? "N/A"}}</td>
                 <td>{{$ffe['purchased_date']}}</td>
                 <td class="text-center">
-                    £{{$ffe['purchased_cost']}} @if($ffe['donated'] == 1)<span class="text-success text-sm">Donated</span>@endif
+                    {{$ffe['purchased_cost']}} @if($ffe['donated'] == 1)<span class="text-success text-sm">Donated</span>@endif<br>
                     <small>(*£{{ number_format($ffe['depreciation'], 2)}})</small>
                 </td>
                 <td>{{$ffe['supplier'] ?? 'N/A'}}</td>

@@ -67,8 +67,10 @@
         }
         @endphp
 
-        <x-filters.navigation model="Software" relations="software" table="Software"/>
-        <x-filters.filter model="Software" relations="software" table="Software" :locations="$locations"/>
+        
+
+        <x-filters.navigation model="Software" relations="software" table="softwares"/>
+        <x-filters.filter model="Software" relations="software" table="softwares" :locations="$locations"/>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
