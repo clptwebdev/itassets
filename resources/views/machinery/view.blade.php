@@ -78,7 +78,7 @@
                         <thead>
                         <tr>
                             <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-4 col-md-2"><small>Registration</small></th>
+                            <th class="col-4 col-md-2"><small>Description</small></th>
                             <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
                             <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
                             <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
@@ -91,7 +91,7 @@
                         <tfoot>
                         <tr>
                             <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-4 col-md-2"><small>Registration</small></th>
+                            <th class="col-4 col-md-2"><small>Description</small></th>
                             <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
                             <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
                             <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
