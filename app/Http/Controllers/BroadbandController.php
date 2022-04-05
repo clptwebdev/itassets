@@ -119,9 +119,13 @@ class BroadbandController extends Controller {
             return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to update Broadband.');
 
         }
+        // find the locations that the user has been assigned to
+
+        $broadbands = Broadband::whereLocationId($broadband->location->id)->get()->except($broadband->id);
 
         // Return the Create View to the browser
         return view('broadband.show', [
+            "broadbands" => $broadbands,
             "broadband" => $broadband,
         ]);
     }
