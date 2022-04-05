@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'View machineries')
+@section('title', 'View Plant and Machineries')
 
 
 @section('content')
-    <x-wrappers.nav title="machineries">
+    <x-wrappers.nav title="View Plant and Machineries">
         @can('recycleBin', \App\Models\Machinery::class)
             <x-buttons.recycle :route="route('machinery.bin')" :count="\App\Models\Machinery::onlyTrashed()->count()"/>
         @endcan
