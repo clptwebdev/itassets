@@ -189,7 +189,6 @@
                         @endif
                         </tbody>
                     </table>
-                    <x-paginate :model="$broadbands"/>
                 </div>
             </div>
         </div>
