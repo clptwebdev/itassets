@@ -379,6 +379,29 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/vehicle/{vehicle}/pdf', 'downloadShowPDF')->name('vehicle.showPdf');
     });
     /////////////////////////////////////////////
+    /////////////// Vehicle Routes ///////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\MachineryController::class)->group(function() {
+        Route::resource("/machineries", \App\Http\Controllers\MachineryController::class);
+        Route::post('/machinery/filter', 'filter')->name('machinery.filter');
+        Route::get('/machinery/filter/clear', 'clearFilter')->name('machinery.clear.filter');
+        Route::get('/machinery/filter', 'filter')->name('machinery.filtered');
+        Route::get('/machinery/bin', 'recycleBin')->name('machinery.bin');
+        Route::get('/machinery/{machinery}/restore', 'restore')->name('machinery.restore');
+        Route::post('/machinery/{machinery}/remove', 'forceDelete')->name('machinery.remove');
+        Route::post('/machinery/{machinery}/comment', 'newComment')->name('machinery.comment');
+        //Exports
+        Route::post("/export/machinery", "export");
+        //Imports
+        Route::post("/import/machinery", "import");
+        Route::Post("/import/machinery/errors", "importErrors");
+        Route::Post("/import/machinery/export", "exportImportErrors")->name("machinery.export.import");
+        //PDF
+        Route::post('/machinery/pdf', 'downloadPDF')->name('machinery.pdf');
+        Route::get('/machinery/{machinery}/pdf', 'downloadShowPDF')->name('machinery.showPdf');
+    });
+    /////////////////////////////////////////////
     /////////////// Report Routes /////////////
     /////////////////////////////////////////////
 

@@ -8,6 +8,11 @@ use Carbon\Carbon;
 
 class MachineryObserver {
 
+    public function __construct()
+    {
+        $this->user = auth()->user()->name ?? 'An Unauthorized User';
+    }
+
     public function created(Machinery $machinery)
     {
 
@@ -18,7 +23,7 @@ class MachineryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Machinery',
             'loggable_id' => $machinery->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised User has added a new Machinery: ' . $machinery->name . '. ' . $location,
+            'data' => $this->user . ' has added a new Machinery: ' . $machinery->name . '. ' . $location,
         ]);
     }
 
@@ -30,7 +35,7 @@ class MachineryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Machinery',
             'loggable_id' => $machinery->id ?? 0,
-            'data' => auth()->user()->name . ' has added a updated Machinery: ' . $machinery->name . '. ' . $location,
+            'data' => $this->user . ' has added a updated Machinery: ' . $machinery->name . '. ' . $location,
         ]);
     }
 
@@ -41,7 +46,7 @@ class MachineryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Machinery',
             'loggable_id' => $machinery->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has placed the Machinery: ' . $machinery->name . ' into the recycling bin',
+            'data' => $this->user . ' has placed the Machinery: ' . $machinery->name . ' into the recycling bin',
         ]);
     }
 
@@ -51,7 +56,7 @@ class MachineryObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'Machinery',
             'loggable_id' => $machinery->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has restored the Machinery: ' . $machinery->name,
+            'data' => $this->user . ' has restored the Machinery: ' . $machinery->name,
         ]);
     }
 
@@ -61,7 +66,7 @@ class MachineryObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'Machinery',
             'loggable_id' => $machinery->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has permanently removed the Machinery: ' . $machinery->name,
+            'data' => $this->user . ' has permanently removed the Machinery: ' . $machinery->name,
         ]);
     }
 

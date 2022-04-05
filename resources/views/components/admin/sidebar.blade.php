@@ -40,7 +40,8 @@
                 <span class="sidebar-title">FFE</span></a>
         </li>
         <li class="nav-item ">
-            <a class="nav-link text-left text-sm-center text-md-left" href="#">
+            <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('machineries.index')) {{ 'active' }} @endif "
+               href="{{route('machineries.index')}}">
                 <i class="fas fa-fw fa-tractor sidebar-icon"></i>
                 <span class="sidebar-title">Plant and Machinery</span></a>
         </li>

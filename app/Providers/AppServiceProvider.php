@@ -60,6 +60,7 @@ class AppServiceProvider extends ServiceProvider {
             'license' => 'App\Models\License',
             'software' => 'App\Models\Software',
             'vehicle' => 'App\Models\Vehicle',
+            'machinery' => 'App\Models\Machinery',
         ]);
 
         $charts->register([

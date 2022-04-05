@@ -127,6 +127,11 @@ class Location extends Model {
         return $this->hasMany(Broadband::class);
     }
 
+    public function machinery()
+    {
+        return $this->hasMany(Broadband::class);
+    }
+
     public function license()
     {
         return $this->hasMany(License::class);
@@ -141,6 +146,12 @@ class Location extends Model {
     {
         return $this->belongsToMany(User::class)
             ->using(LocationUser::class);
+    }
+
+    public function singleBroadband()
+    {
+        return $this->hasOne(Broadband::class)->latest('renewal_date');
+
     }
 
     public function full_address($sep = ', ')
