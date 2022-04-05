@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\machineryErrorsExport;
 use App\Exports\machineryExport;
-use App\Imports\machineryImport;
+use App\Imports\MachineryImport;
 use App\Jobs\machineryPdf;
 use App\Jobs\machineriesPdf;
 use App\Models\Location;
