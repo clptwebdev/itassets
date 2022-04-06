@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\machineryErrorsExport;
 use App\Exports\machineryExport;
-use App\Imports\machineryImport;
+use App\Imports\MachineryImport;
 use App\Jobs\machineryPdf;
 use App\Jobs\machineriesPdf;
 use App\Models\Location;
@@ -348,7 +348,7 @@ class MachineryController extends Controller {
         if(in_array($result[0], $extensions))
         {
             $path = $request->file("csv")->getRealPath();
-            $import = new machineryImport;
+            $import = new MachineryImport;
             $import->import($path, null, \Maatwebsite\Excel\Excel::CSV);
             $row = [];
             $attributes = [];
