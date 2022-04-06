@@ -26,65 +26,135 @@
                        aria-controls="home" aria-selected="true">Machinery Information</a>
                 </li>
             </ul>
-            <div class="tab-content border-left border-right border-bottom border-gray" id="myTabContent">
-                <div class="tab-content border-left border-right border-bottom border-gray" id="myTabContent">
-
-                    <div class="tab-pane fade show p-2 pt-4 active" id="location" role="tabpanel"
-                         aria-labelledby="location-tab">
-                        <div class="row">
-                            <div class="col-12 col-md-6 p-4 mb-3 ">
-                                <h4 class="font-weight-600 mb-4"><strong>Name:</strong><span>{{$machinery->name}}</span>
-                                </h4>
-                                <h5 class="font-weight-600 mb-4">
-                                    <strong>Description:</strong><span>{{$machinery->description}}</span></h5>
-                                <p><strong>Depreciation:</strong> {{$machinery->depreciation}} Years</p>
-                                <p><strong>Date
-                                           created:</strong><br>{{\Carbon\Carbon::parse($machinery->created_at)->format('jS M Y')}}
-                                </p>
-                                <p><strong>Purchase Cost (At Time of
-                                           Purchase):</strong><br>£{{number_format( (float) $machinery->purchased_cost, 2, '.', ',' )}}
-                                </p>
-                                <hr>
-                                <p><strong>Purchase
-                                           date</strong><br>{{\Carbon\Carbon::parse($machinery->purchased_date)->format('jS M Y')}}
-                                </p>
-                                <p><strong>
-                                        Supplier</strong><br>{{$machinery->supplier->name}}
-                                </p>
+            <div class="tab-content border-left border-right border-bottom border-gray mb-4" id="myTabContent">
+                <div class="tab-pane fade show p-2 pt-4 active" id="location" role="tabpanel"
+                        aria-labelledby="location-tab">
+                    <div class="row">
+                        <div class="col-12 col-md-6 p-4 mb-3 ">
+                            <table class="table table-sm table-bordered table-striped">
+                                <tr>
+                                    <th>Name:</th>
+                                    <td>{{ucwords($machinery->name)}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Serial No:</th>
+                                    <td>{{$machinery->serial_no}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <td>{{$machinery->status->name ?? 'Unknown'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Purchased Date</th>
+                                    <td>{{$machinery->purchased_date ?? 'N/A'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Purchased Cost</th>
+                                    <td>{{$machinery->purchased_cost ?? 'N/A'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Donated</th>
+                                    <td>@if($machinery->donated == 1) Yes @else No @endif</td>
+                                </tr>
+                                <tr>
+                                    <th>Order No</th>
+                                    <td>{{$machinery->order_no ?? 'N/A'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Manufacturer</th>
+                                    <td>{{$machinery->manufacturer->name ?? 'N/A'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Supplier</th>
+                                    <td>{{$machinery->supplier->name ?? 'N/A'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Warranty (Months)</th>
+                                    <td>{{$machinery->warranty ?? 'N/A'}}</td>
+                                </tr>
+                            </table>
+                            <div class="form-group">
+                                {{$machinery->notes}}
                             </div>
-                            <div class="col-12 col-md-6 p-4 mb-3 ">
-                                <div id="locationInfo" class="bg-light p-4">
-                                    <div class="model_title text-center h4 mb-3">{{$machinery->location->name}}</div>
-                                    <div class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                        @if($machinery->location()->exists() && $machinery->location->photo()->exists())
-                                            <img id="profileImage" src="{{ asset($machinery->location->photo->path) }}"
-                                                 height="200px" alt="Select Profile Picture">
-                                        @else
-                                            <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
-                                                 height="200px" alt="Select Profile Picture">
-                                        @endif
-                                    </div>
-                                    <div class="model_no py-2 px-4 text-center">
-                                        {{$machinery->location->full_address(', ')}}
-                                    </div>
-                                    <div class="model_no py-2 px-4 text-center">
-                                        {{$machinery->location->email}}
-                                    </div>
-                                    <div class="model_no py-2 px-4 text-center">
-                                        {{ $machinery->location->telephone}}
-                                    </div>
-                                    <div class="model_no py-2 px-4 text-center">
-                                        {{ $machinery->location->notes}}
-                                    </div>
+
+                            <hr>
+                            <h5>Finance</h5>
+                            <?php
+                                //If Date is > 1 September the Year is this Year else Year = Last Year
+                
+                                $now = \Carbon\Carbon::now();
+                                $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
+                                $nextYear = \Carbon\Carbon::now()->addYear()->format('Y');
+                                $nextStartDate = \Carbon\Carbon::parse('09/01/'.\Carbon\Carbon::now()->addYear()->format('Y'));
+                                $endDate = \Carbon\Carbon::parse('08/31/'.$nextYear);
+                                if(!$startDate->isPast()){
+                                    $startDate->subYear();
+                                    $endDate->subYear();
+                                    $nextStartDate->subYear();
+                                }
+                                $bf = $machinery->depreciation_value_by_date($startDate);
+                                $cf = $machinery->depreciation_value_by_date($nextStartDate);
+                            ?>
+                            
+                            <p><strong>Cost B/Fwd (01/09/{{$startDate->format('Y')}}):</strong><br>
+                                £{{number_format( (float) $bf, 2, '.', ',' )}}
+                            </p>
+                            <p><strong>Cost C/Fwd (31/08/{{$endDate->format('Y')}}):</strong><br>
+                                £{{number_format( (float) $cf, 2, '.', ',' )}}
+                            </p>
+                            <p><strong>Depreciation B/Fwd (01/09/{{$startDate->format('Y')}}):</strong><br>
+                                £{{number_format( (float) $machinery->purchased_cost - $bf, 2, '.', ',' )}}
+                            </p>
+                            <p><strong>Depreciation Charge:</strong><br>
+                                £{{number_format( (float) $bf - $cf, 2, '.', ',' )}}
+                            </p>
+                            <p><strong>Depreciation C/Fwd (31/08/{{$endDate->format('Y')}}):</strong><br>
+                                £{{number_format( (float) $machinery->purchased_cost - $cf, 2, '.', ',' )}}
+                            </p>
+                            <?php $prevYear = $startDate->subYear();?>
+                            @if($prevYear >= $machinery->purchased_date)
+                            <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
+                                £{{number_format( (float) $machinery->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
+                            </p>
+                            @endif
+                            <?php $prevYear = $startDate->subYear();?>
+                            @if($prevYear >= $machinery->purchased_date)
+                            <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
+                                £{{number_format( (float) $machinery->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
+                            </p>
+                            @endif
+                        </div>
+                        <div class="col-12 col-md-6 p-4 mb-3 ">
+                            <div id="locationInfo" class="bg-light p-4">
+                                <div class="model_title text-center h4 mb-3">{{$machinery->location->name}}</div>
+                                <div class="model_image p-4 d-flex justify-content-center align-items-middle">
+                                    @if($machinery->location()->exists() && $machinery->location->photo()->exists())
+                                        <img id="profileImage" src="{{ asset($machinery->location->photo->path) }}"
+                                                height="200px" alt="Select Profile Picture">
+                                    @else
+                                        <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
+                                                height="200px" alt="Select Profile Picture">
+                                    @endif
+                                </div>
+                                <div class="model_no py-2 px-4 text-center">
+                                    {{$machinery->location->full_address(', ')}}
+                                </div>
+                                <div class="model_no py-2 px-4 text-center">
+                                    {{$machinery->location->email}}
+                                </div>
+                                <div class="model_no py-2 px-4 text-center">
+                                    {{ $machinery->location->telephone}}
+                                </div>
+                                <div class="model_no py-2 px-4 text-center">
+                                    {{ $machinery->location->notes}}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-12 my-4">
-                    <x-comments.comment-layout :asset="$machinery"/>
-                </div>
             </div>
+
+            <x-comments.comment-layout :asset="$machinery"/>
         </div>
     </div>
 

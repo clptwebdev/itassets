@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'View Plant and Machineries')
+@section('title', 'View Plant and Machinery')
 
 
 @section('content')
-    <x-wrappers.nav title="View Plant and Machineries">
+    <x-wrappers.nav title="View Plant and Machinery">
         @can('recycleBin', \App\Models\Machinery::class)
             <x-buttons.recycle :route="route('machinery.bin')" :count="\App\Models\Machinery::onlyTrashed()->count()"/>
         @endcan
@@ -56,33 +56,29 @@
             $limit = auth()->user()->location_property()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
             $floor = auth()->user()->location_property()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
 
-        if(session()->has('property_amount')){
-            $amount = str_replace('£', '', session('property_amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
-        }else{
-            $start_value = $floor;
-            $end_value = $limit;
-        }
+            if(session()->has('machinery_min') && session()->has('machinery_max')){
+            $start_value = session('machinery_min');
+            $end_value = session('machinery_max');
+            }else{
+                $start_value = $floor;
+                $end_value = $limit;
+            }
         @endphp
 
-        <x-filters.navigation model="Machinery" relations="Machinery" table="machineries"/>
+        <x-filters.navigation model="Machinery" relations="machinery" table="machineries"/>
         <x-filters.filter model="Machinery" relations="machinery" table="machineries" :locations="$locations"/>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive" id="table">
                     <table id="assetsTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-4 col-md-2"><small>Registration</small></th>
-                            <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
+                            <th class="col-2 col-md-2"><small>Name</small></th>
+                            <th class="col-2 col-md-2 text-center"><small>Purchase Cost</small></th>
                             <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class="col-1 col-md-auto text-center"><small>Location</small></th>
+                            <th class="text-center col-3 d-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class="col-2 col-md-auto text-center"><small>Location</small></th>
                             <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
                             </th>
                             <th class="text-right col-1"><small>Options</small></th>
@@ -91,7 +87,6 @@
                         <tfoot>
                         <tr>
                             <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-4 col-md-2"><small>Registration</small></th>
                             <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
                             <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
                             <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
@@ -105,7 +100,6 @@
                         @foreach($machineries as $machinery)
                             <tr>
                                 <td class="text-left">{{$machinery->name}}</td>
-                                <td class="text-left">{{$machinery->description ?? 'N/A'}}</td>
                                 <td class="text-center">£{{number_format($machinery->purchased_cost, 2, '.', ',')}}</td>
                                 <td class="text-center">{{ \Illuminate\Support\Carbon::parse($machinery->purchased_date)->format('d-M-Y')}}</td>
                                 <td class="text-center">{{$machinery->supplier->name}}</td>
@@ -147,7 +141,6 @@
                         </tbody>
                     </table>
                     <x-paginate :model="$machineries"/>
-                </div>
             </div>
         </div>
     </section>

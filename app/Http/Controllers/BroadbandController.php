@@ -48,7 +48,7 @@ class BroadbandController extends Controller {
         $broadbands = Broadband::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['property_filter' => false]);
-        $currentCost = Broadband::locationFilter($locations->pluck('id')->toArray())->sum('purchased_cost');
+        $currentCost = Broadband::locationFilter($locations->pluck('id')->toArray())>whereYear('purchased_date', Carbon::now()->format('Y'))->sum('purchased_cost');
         $previousCost = Broadband::locationFilter($locations->pluck('id')->toArray())->whereYear('purchased_date', Carbon::now()->subYear()->format('Y'))->sum('purchased_cost');
 
         return view('broadband.view', [
