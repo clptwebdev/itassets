@@ -455,7 +455,7 @@ Route::group(['middleware' => 'auth'], function() {
     /////////////////////////////////////////////
 
     Route::controller(\App\Http\Controllers\OrderController::class)->group(function() {
-        Route::resource('/orders', \App\Http\Controllers\OrderController::class);
+        Route::resource('/orders', \App\Http\Controllers\OrderController::class)->only('index');
         Route::get('/order/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('order.show');
     });
 
