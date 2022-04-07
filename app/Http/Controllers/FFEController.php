@@ -44,7 +44,8 @@ class FFEController extends Controller {
         }
 
         //If there are filters currently set move to filtered function
-        if(session()->has('ffe_filter') && session('ffe_filter') === true){
+        if(session()->has('ffe_filter') && session('ffe_filter') === true)
+        {
             return to_route('ffe.filtered');
         }
 
@@ -110,6 +111,7 @@ class FFEController extends Controller {
         $manufacturers = Manufacturer::all();
         $suppliers = Supplier::all();
         $statuses = Status::all();
+
         // Return the Create View to the browser
         return view('FFE.create', [
             "locations" => $locations,
@@ -141,12 +143,12 @@ class FFEController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
         ]);
 
-
         $ffe = FFE::create(array_merge($request->only(
             'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ), ['user_id' => auth()->user()->id]));
 
-        if($request->category != '' && !empty(explode(',', $request->category))){
+        if($request->category != '' && ! empty(explode(',', $request->category)))
+        {
             $ffe->category()->attach(explode(',', $request->category));
         }
 
@@ -171,6 +173,7 @@ class FFEController extends Controller {
         $manufacturers = Manufacturer::all();
         $suppliers = Supplier::all();
         $statuses = Status::all();
+
         // Return the Create View to the browser
         return view('FFE.edit', [
             "ffe" => $ffe,
@@ -214,7 +217,7 @@ class FFEController extends Controller {
             'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ), ['donated' => $donated]))->save();
         session()->flash('success_message', $ffe->name . ' has been Updated successfully');
-        if($request->category != '' && !empty(explode(',', $request->category)))
+        if($request->category != '' && ! empty(explode(',', $request->category)))
         {
             $ffe->category()->sync(explode(',', $request->category));
         }
@@ -352,7 +355,7 @@ class FFEController extends Controller {
                     "statuses" => Status::all(),
                     "suppliers" => Supplier::all(),
                     "locations" => auth()->user()->locations,
-                    "manufacturers" => Manufacturer::all()
+                    "manufacturers" => Manufacturer::all(),
                 ]);
 
             } else
@@ -461,10 +464,9 @@ class FFEController extends Controller {
 
     }
 
-     ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
     ///////////////PDF Functions////////////////////////////
     ////////////////////////////////////////////////////////
-
 
     public function downloadPDF(Request $request)
     {
@@ -487,15 +489,17 @@ class FFEController extends Controller {
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£' . $f->purchased_cost;
             $array['donated'] = $f->donated;
-            if($f->depreciation_id != 0){
+            if($f->depreciation_id != 0)
+            {
                 $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation_id);
                 $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
                 $percent = 100 / $f->depreciation->years;
                 $percentage = floor($age) * $percent;
                 $dep = $f->purchased_cost * ((100 - $percentage) / 100);
-            }else{
+            } else
+            {
                 $dep = $f->purchased_cost;
-            } 
+            }
             $array['depreciation'] = $dep;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty;
@@ -679,4 +683,5 @@ class FFEController extends Controller {
 
         return to_route('ffes.index');
     }
+
 }

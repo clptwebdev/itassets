@@ -450,6 +450,14 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/asset/transfers', 'assets')->name('transfers.assets');
         Route::get('/accessory/transfers', 'accessories')->name('transfers.accessories');
     });
+    /////////////////////////////////////////////
+    /////////////// Orders Routes /////////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\OrderController::class)->group(function() {
+        Route::resource('/orders', \App\Http\Controllers\OrderController::class)->only('index');
+        Route::get('/order/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('order.show');
+    });
 
     Route::controller(\App\Http\Controllers\BackupController::class)->group(function() {
         //Database Backups Routes (Doesn't include import routes)
@@ -501,8 +509,10 @@ Route::group(['middleware' => 'auth'], function() {
         Route::Post("/settings/accessories/export", "accessories")->name("settings.accessories");
         Route::Post("/settings/assets/export", "assets")->name("settings.assets");
         Route::Post("/settings/components/export", "components")->name("settings.components");
+        Route::put("/settings/update/{setting}", "update")->name("settings.update");
         Route::Post("/settings/miscellaneous/export", "miscellaneous")->name("settings.miscellaneous");
         Route::get("/settings/roles/create", "roleBoot")->name('role.boot');
+        Route::get("/settings/default/create", "settingBoot")->name('setting.boot');
     });
     Route::controller(\App\Http\Controllers\SettingsController::class)->group(function() {
         //settings page
