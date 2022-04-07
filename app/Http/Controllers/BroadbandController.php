@@ -43,7 +43,7 @@ class BroadbandController extends Controller {
 
         // find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
-        //Find the properties that are assigned to the locations the User has permissions to.
+        //Find the properties that are asigned to thes locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
         $broadbands = Broadband::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
