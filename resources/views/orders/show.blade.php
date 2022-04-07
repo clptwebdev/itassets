@@ -44,8 +44,6 @@
                         </tfoot>
                         <tbody>
                         @foreach($assets as $asset)
-                            {{--                            {{dd($asset->getTable())}}--}}
-
                             <tr>
                                 <td class=""><a class='text-decoration-none' href='
                                                         @if($asset->getTable() == 'accessories'){{route('accessories.show', $asset->id)}} @endif @if($asset->getTable() == 'assets'){{route('assets.show', $asset->id)}} @endif @if($asset->getTable() == 'components'){{route('components.show', $asset->id)}} @endif @if($asset->getTable() == 'f_f_e_s'){{route('ffes.show', $asset->id)}} @endif @if($asset->getTable() == 'miscellaneas'){{route('miscellaneous.show', $asset->id)}} @endif @if($asset->getTable() == 'consumables'){{route('consumables.show', $asset->id)}} @endif'>{{$asset->name}}</a>
