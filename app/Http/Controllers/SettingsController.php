@@ -8,6 +8,7 @@ use App\Exports\ComponentsExport;
 use App\Exports\consumableExport;
 use App\Exports\miscellaneousExport;
 use App\Jobs\RoleBoot;
+use App\Jobs\SettingBoot;
 use App\Models\Accessory;
 use App\Models\Asset;
 use App\Models\AssetModel;
@@ -16,7 +17,9 @@ use App\Models\Consumable;
 use App\Models\Location;
 use App\Models\Miscellanea;
 use App\Models\Role;
+use App\Models\Setting;
 use App\Models\User;
+use Hamcrest\Core\Set;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use function PHPUnit\Framework\isEmpty;
@@ -28,6 +31,7 @@ class SettingsController extends Controller {
 
         $categories = \App\Models\Category::with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->get();
         $users = User::all();
+        $settings = Setting::all();
         $assetModel = AssetModel::all();
         $statuses = \App\Models\Status::all();
         $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'));
@@ -41,6 +45,7 @@ class SettingsController extends Controller {
 
         return view('settings.view', [
             "users" => $users,
+            "settings" => $settings,
             "assets" => $assets,
             "components" => $components,
             "accessories" => $accessories,
@@ -52,6 +57,18 @@ class SettingsController extends Controller {
             "models" => $models,
             "roles" => $roles,
         ]);
+    }
+
+    public function update(Setting $setting, Request $request)
+    {
+        $setting->update([
+            'name' => $request->name,
+            'value' => $request->value,
+            'priority' => $request->priority,
+        ]);
+
+        return to_route('settings.view')
+            ->with('success_message', "You have Updated the Setting " . ucwords(str_replace(['_', '-'], ' ', $setting->name)));
     }
 
     public function accessories(Request $request)
@@ -240,6 +257,14 @@ class SettingsController extends Controller {
 
         return to_route('settings.view')
             ->with('success_message', "Your Roles have been Synced please allow a few moments for this to take effect");
+    }
+
+    public function settingBoot()
+    {
+        SettingBoot::dispatch()->afterResponse();
+
+        return to_route('settings.view')
+            ->with('success_message', "Your Settings have been Synced please allow a few moments for this to take effect");
     }
 
 }

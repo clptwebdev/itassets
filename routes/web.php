@@ -509,8 +509,10 @@ Route::group(['middleware' => 'auth'], function() {
         Route::Post("/settings/accessories/export", "accessories")->name("settings.accessories");
         Route::Post("/settings/assets/export", "assets")->name("settings.assets");
         Route::Post("/settings/components/export", "components")->name("settings.components");
+        Route::put("/settings/update/{setting}", "update")->name("settings.update");
         Route::Post("/settings/miscellaneous/export", "miscellaneous")->name("settings.miscellaneous");
         Route::get("/settings/roles/create", "roleBoot")->name('role.boot');
+        Route::get("/settings/default/create", "settingBoot")->name('setting.boot');
     });
     Route::controller(\App\Http\Controllers\SettingsController::class)->group(function() {
         //settings page
