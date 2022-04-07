@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Accessories Recycle Bin')
+@section('title', 'FFE Recycle Bin')
 
 @section('content')
 
@@ -43,7 +43,6 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive">
                     <table id="usersTable" class="table table-striped">
                         <thead>
                         <tr>
@@ -130,11 +129,11 @@
                                         <div
                                             class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Accessory Options:</div>
-                                            <a href="{{ route('accessories.restore', $ffe->id) }}"
+                                            <div class="dropdown-header">FFE Options:</div>
+                                            <a href="{{ route('ffe.restore', $ffe->id) }}"
                                                class="dropdown-item">Restore</a>
                                             <form class="d-block" id="form{{$ffe->id}}"
-                                                  action="{{ route('accessories.remove', $ffe->id) }}"
+                                                  action="{{ route('ffe.remove', $ffe->id) }}"
                                                   method="POST">
                                                 @csrf
                                                 @can('delete', $ffe)
@@ -147,9 +146,14 @@
                                 </td>
                             </tr>
                         @endforeach
+
+                        @if($ffes->count() == 0)
+                            <tr>
+                                <td colspan="9" class="text-center">No results returned</td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
-                </div>
             </div>
         </div>
 

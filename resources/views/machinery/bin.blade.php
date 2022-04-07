@@ -16,7 +16,6 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive" id="table">
                     <table id="assetsTable" class="table table-striped">
                         <thead>
                         <tr>
@@ -54,7 +53,7 @@
                                 <td class="text-center">{{$machinery->supplier->name}}</td>
                                 <td class="text-center">{{$machinery->location->name}}</td>
                                 <td class="text-center">
-                                    £{{number_format($machinery->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
+                                    £{{number_format($machinery->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}<br>
                                     <small>{{$machinery->depreciation}} Years</small></td>
                                 <td class="text-right">
                                     <x-wrappers.table-settings>
@@ -86,7 +85,6 @@
                         </tbody>
                     </table>
                     <x-paginate :model="$machineries"/>
-                </div>
             </div>
         </div>
     </section>

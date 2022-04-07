@@ -25,6 +25,12 @@ class MachineryController extends Controller {
         {
             return ErrorController::forbidden('/dashboard', 'Unauthorised | View machineries.');
         }
+
+        //If there are filters currently set move to filtered function
+        if(session()->has('machinery_filter') && session('machinery_filter') === true){
+            return to_route('machinery.filtered');
+        }
+
         // find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('machinery')->get();
         //Find the properties that are assigned to the locations the User has permissions to.
@@ -547,8 +553,8 @@ class MachineryController extends Controller {
                 session(['machinery_end' => $request->end]);
             }
 
-            session(['machineries_min' => $request->minCost]);
-            session(['machineries_max' => $request->maxCost]);
+            session(['machinery_min' => $request->minCost]);
+            session(['machinery_max' => $request->maxCost]);
         }
         //Check the Users Locations Permissions
         $locations = Location::select('id', 'name')->withCount('machinery')->get();
@@ -567,10 +573,10 @@ class MachineryController extends Controller {
             session(['machinery_filter' => true]);
         }
 
-        if(session()->has('assets_min') && session()->has('assets_max'))
+        if(session()->has('machinery_min') && session()->has('assets_max'))
         {
-            $machinery->costFilter(session('assets_min'), session('assets_max'));
-            session(['assets_filter' => true]);
+            $machinery->costFilter(session('assets_min'), session('machinery_max'));
+            session(['machinery_filter' => true]);
         }
 
         if(session()->has('machinery_search'))
@@ -580,7 +586,9 @@ class MachineryController extends Controller {
         }
 
         $machinery->leftJoin('locations', 'machineries.location_id', '=', 'locations.id')
+            ->orderBy(session('machinery_orderby') ?? 'purchased_date', session('machinery_direction') ?? 'asc')
             ->select('machineries.*', 'locations.name as location_name');
+            
         $limit = session('machinery_limit') ?? 25;
 
         return view('machinery.view', [
@@ -592,7 +600,7 @@ class MachineryController extends Controller {
     public function clearFilter()
     {
         //Clear the Filters for the properties
-        session()->forget(['machinery_filter', 'machinery_locations', 'machinery_start', 'machinery_end', 'machinery_amount', 'machinery_search']);
+        session()->forget(['machinery_filter', 'machinery_locations', 'machinery_start', 'machinery_end', 'machinery_min', 'machinery_max', 'machinery_search']);
 
         return to_route('machineries.index');
     }
