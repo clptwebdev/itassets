@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/', "index")->name('home');
         Route::get('/statistics', 'statistics')->name('dashboard.statistics');
         Route::get('/business/statistics', 'business_statistics')->name('business.statistics');
+        Route::post('/assets/search', "search")->name('assets.search');
         //Caching
         Route::get('/cache/clear', 'clearCache')->name('cache.clear');
     });
@@ -105,7 +106,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::controller(\App\Http\Controllers\AssetController::class)->group(function() {
         // Asset Routes
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
-        Route::post('/assets/search', "search")->name('assets.search');
         Route::post('/asset/filter', 'filter')->name('asset.filter');
         Route::get('/asset/filter/clear', 'clearFilter')->name('asset.clear.filter');
         Route::get('/asset/filter', 'filter')->name('asset.filtered');

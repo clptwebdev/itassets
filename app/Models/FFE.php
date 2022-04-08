@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,8 +13,8 @@ class FFE extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'status_id', 'order_no', 
-    'warranty', 'location_id', 'room', 'notes', 'manufacturer_id', 'photo_id', 'depreciation_id', 'user_id'];
+    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'status_id', 'order_no',
+        'warranty', 'location_id', 'room', 'notes', 'manufacturer_id', 'photo_id', 'depreciation_id', 'user_id'];
 
     public function photo()
     {
@@ -100,7 +101,7 @@ class FFE extends Model {
         }
 
     }
-    
+
     /////////////////////////////////////////////////
     ///////////////////Filters///////////////////////
     /////////////////////////////////////////////////

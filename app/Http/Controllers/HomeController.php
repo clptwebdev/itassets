@@ -6,6 +6,7 @@ use App\Models\Accessory;
 use App\Models\Asset;
 use App\Models\Component;
 use App\Models\Consumable;
+use App\Models\FFE;
 use App\Models\Location;
 use App\Models\Miscellanea;
 use App\Models\Requests;
@@ -13,6 +14,7 @@ use App\Models\Archive;
 use App\Models\Transfer;
 use App\Models\Property;
 use App\Models\AUC;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -24,8 +26,36 @@ class HomeController extends Controller {
         return view('dashboard');
     }
 
-    public function business(){
+    public function business()
+    {
         return view('dashboard.business');
+    }
+    ////////////////////////////////////////
+    ////// Top Bar Search Functions ////////
+    ////////////////////////////////////////
+    public function search(Request $request)
+    {
+        $assets = Asset::searchFilter($request->name)->get();
+        $FFE = FFE::searchFilter($request->name)->get();
+        $accessory = Accessory::searchFilter($request->name)->get();
+
+        $component = Component::searchFilter($request->name)->get();
+        $misc = Miscellanea::searchFilter($request->name)->get();
+        $consumable = Consumable::searchFilter($request->name)->get();
+        $merged = collect([$FFE, $accessory, $component, $misc, $consumable, $assets]);
+        $single = Collection::empty();
+        //foreach $model then Foreach $item Push to a single collection
+        foreach($merged as $merge)
+        {
+            foreach($merge as $item)
+            {
+                $single->push($item);
+            }
+        }
+
+        return view("search.view", [
+            'assets' => $single,
+        ]);
     }
 
     ////////////////////////////////////////
@@ -247,8 +277,6 @@ class HomeController extends Controller {
         {
             Accessory::getCache($locations->pluck('id'));
         }
-
-       
 
         $obj = array(
             'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')],
