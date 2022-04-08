@@ -12,7 +12,7 @@
             @endcan
             @can('viewAny', \App\Models\Location::class)
                 <a href="{{ route('location.pdf')}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading">
+                   class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading">
                     <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
                 </a>
                 @if($locations->count() >1)
@@ -39,9 +39,8 @@
         <div class="row">
             @foreach($locations as $location)
                 <div class="col-xl-3 col-lg-6 col-md-12 col-12 mb-4">
-                    <div class="card shadow h-100 pb-2" 
-                    style="border-left: 0.25rem solid {{$location->icon}}; background-image: url({{ $location->photo->path ?? 'null' }}); background-size: 100px; background-repeat: no-repeat; 
-                    background-position: right center;">
+                    <div class="card shadow h-100 pb-2"
+                         style="border-left: 0.25rem solid {{$location->icon}}; background-image: url({{ $location->photo->path ?? 'null' }}); background-size: 100px; background-repeat: no-repeat;background-position: right center;">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold"
                                 style="color: {{$location->icon}};">{{ $location->name}}</h6>

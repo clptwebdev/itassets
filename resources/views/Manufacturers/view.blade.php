@@ -9,7 +9,7 @@
             <x-buttons.add :route="route('manufacturers.create')">Manufacturer(s)</x-buttons.add>
         @endcan
         @can('viewAny', \App\Models\Manufacturer::class)
-            <x-buttons.reports :route="route('manufacturer.pdf')">Generate Report</x-buttons.reports>
+            <x-buttons.reports :route="route('manufacturer.pdf')"></x-buttons.reports>
             @if($manufacturers->count() >1)
                 <x-buttons.export route="/exportmanufacturers"/>
             @endif

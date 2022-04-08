@@ -18,7 +18,7 @@
                 <x-form.layout class="d-inline-block" :action="route('machinery.pdf')">
                     <x-form.input type="hidden" name="machinery" :label="false" formAttributes="required"
                                   :value="json_encode($machineries->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-file-pdf" class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($machineries->count() >1)
@@ -71,76 +71,75 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                    <table id="assetsTable" class="table table-striped">
-                        <thead>
+                <table id="assetsTable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="col-2 col-md-2"><small>Name</small></th>
+                        <th class="col-2 col-md-2 text-center"><small>Purchase Cost</small></th>
+                        <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
+                        <th class="text-center col-3 d-none d-xl-table-cell"><small>Supplier</small></th>
+                        <th class="col-2 col-md-auto text-center"><small>Location</small></th>
+                        <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
+                        </th>
+                        <th class="text-right col-1"><small>Options</small></th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th class="col-4 col-md-2"><small>Name</small></th>
+                        <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
+                        <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
+                        <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
+                        <th class="col-1 col-md-auto text-center"><small>Location</small></th>
+                        <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
+                        </th>
+                        <th class="text-right col-1"><small>Options</small></th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    @foreach($machineries as $machinery)
                         <tr>
-                            <th class="col-2 col-md-2"><small>Name</small></th>
-                            <th class="col-2 col-md-2 text-center"><small>Purchase Cost</small></th>
-                            <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                            <th class="text-center col-3 d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class="col-2 col-md-auto text-center"><small>Location</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
-                            </th>
-                            <th class="text-right col-1"><small>Options</small></th>
+                            <td class="text-left">{{$machinery->name}}</td>
+                            <td class="text-center">£{{number_format($machinery->purchased_cost, 2, '.', ',')}}</td>
+                            <td class="text-center">{{ \Illuminate\Support\Carbon::parse($machinery->purchased_date)->format('d-M-Y')}}</td>
+                            <td class="text-center">{{$machinery->supplier->name}}</td>
+                            <td class="text-center">{{$machinery->location->name}}</td>
+                            <td class="text-center">
+                                £{{number_format($machinery->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
+                                <br><small>{{$machinery->depreciation}} Years</small></td>
+                            <td class="text-right">
+                                <x-wrappers.table-settings>
+                                    @can('view', $machinery)
+                                        <x-buttons.dropdown-item :route="route('machineries.show', $machinery->id)">
+                                            View
+                                        </x-buttons.dropdown-item>
+                                    @endcan
+                                    @can('update', $machinery)
+                                        <x-buttons.dropdown-item :route=" route('machineries.edit', $machinery->id)">
+                                            Edit
+                                        </x-buttons.dropdown-item>
+                                    @endcan
+                                    @can('delete', $machinery)
+                                        <x-form.layout method="DELETE" class="d-block p-0 m-0"
+                                                       :id="'form'.$machinery->id"
+                                                       :action="route('machineries.destroy', $machinery->id)">
+                                            <x-buttons.dropdown-item :data="$machinery->id" class="deleteBtn">
+                                                Delete
+                                            </x-buttons.dropdown-item>
+                                        </x-form.layout>
+                                    @endcan
+                                </x-wrappers.table-settings>
+                            </td>
                         </tr>
-                        </thead>
-                        <tfoot>
+                    @endforeach
+                    @if($machineries->count() == 0)
                         <tr>
-                            <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
-                            <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class="col-1 col-md-auto text-center"><small>Location</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
-                            </th>
-                            <th class="text-right col-1"><small>Options</small></th>
+                            <td colspan="9" class="text-center">No Plant and Machinery Returned</td>
                         </tr>
-                        </tfoot>
-                        <tbody>
-                        @foreach($machineries as $machinery)
-                            <tr>
-                                <td class="text-left">{{$machinery->name}}</td>
-                                <td class="text-center">£{{number_format($machinery->purchased_cost, 2, '.', ',')}}</td>
-                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($machinery->purchased_date)->format('d-M-Y')}}</td>
-                                <td class="text-center">{{$machinery->supplier->name}}</td>
-                                <td class="text-center">{{$machinery->location->name}}</td>
-                                <td class="text-center">
-                                    £{{number_format($machinery->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
-                                    <br><small>{{$machinery->depreciation}} Years</small></td>
-                                <td class="text-right">
-                                    <x-wrappers.table-settings>
-                                        @can('view', $machinery)
-                                            <x-buttons.dropdown-item :route="route('machineries.show', $machinery->id)">
-                                                View
-                                            </x-buttons.dropdown-item>
-                                        @endcan
-                                        @can('update', $machinery)
-                                            <x-buttons.dropdown-item
-                                                :route=" route('machineries.edit', $machinery->id)">
-                                                Edit
-                                            </x-buttons.dropdown-item>
-                                        @endcan
-                                        @can('delete', $machinery)
-                                            <x-form.layout method="DELETE" class="d-block p-0 m-0"
-                                                           :id="'form'.$machinery->id"
-                                                           :action="route('machineries.destroy', $machinery->id)">
-                                                <x-buttons.dropdown-item :data="$machinery->id" class="deleteBtn">
-                                                    Delete
-                                                </x-buttons.dropdown-item>
-                                            </x-form.layout>
-                                        @endcan
-                                    </x-wrappers.table-settings>
-                                </td>
-                            </tr>
-                        @endforeach
-                        @if($machineries->count() == 0)
-                            <tr>
-                                <td colspan="9" class="text-center">No Plant and Machinery Returned</td>
-                            </tr>
-                        @endif
-                        </tbody>
-                    </table>
-                    <x-paginate :model="$machineries"/>
+                    @endif
+                    </tbody>
+                </table>
+                <x-paginate :model="$machineries"/>
             </div>
         </div>
     </section>

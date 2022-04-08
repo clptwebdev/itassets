@@ -46,7 +46,8 @@
                 <span class="sidebar-title">Plant and Machinery</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-left text-sm-center text-md-left" href="{{route('vehicles.index')}}">
+            <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('vehicles.index')) {{ 'active' }} @endif"
+               href="{{route('vehicles.index')}}">
                 <i class="fas fa-fw fa-bus sidebar-icon"></i>
                 <span class="sidebar-title">Motor Vehicles</span></a>
         </li>
@@ -132,7 +133,8 @@
                    href="{{ route('components.index')}}" data-bs-toggle="collapse" data-bs-target="#accessoryDD"
                    aria-expanded="true" aria-controls="accessoryDD">
                     <i class="fas fa-fw fa-keyboard sidebar-icon"></i>
-                    <span class="sidebar-title">Computer Accessories <i
+                    <span
+                        class="sidebar-title  @if(Request::url() == route('accessories.index')) {{ 'font-weight-bold' }} @endif">Computer Accessories <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="accessoryDD" class="collapse p-0 text-center text-lg-left" aria-labelledby="accessoryTitle"
@@ -167,7 +169,9 @@
                    href="{{ route('components.index')}}" data-bs-toggle="collapse" data-bs-target="#componentsDD"
                    aria-expanded="true" aria-controls="componentsDD">
                     <i class="far fa-fw fa-hdd sidebar-icon"></i>
-                    <span class="sidebar-title">Computer Components <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
+                    <span
+                        class="sidebar-title @if(Request::url() == route('components.index')) {{ 'font-weight-bold' }} @endif">Computer Components <i
+                            class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="componentsDD" class="collapse" aria-labelledby="componentsTitle"
                      data-bs-parent="#accordionSidebar">
@@ -205,7 +209,8 @@
                    href="{{ route('miscellaneous.index')}}" data-bs-toggle="collapse" data-bs-target="#miscellaneousDD"
                    aria-expanded="true" aria-controls="miscellaneousDD">
                     <i class="fas fa-fw fa-question sidebar-icon"></i>
-                    <span class="sidebar-title">Miscellaneous <i
+                    <span
+                        class="sidebar-title @if(Request::url() == route('miscellaneous.index')) {{ 'font-weight-bold' }} @endif">Miscellaneous <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="miscellaneousDD" class="collapse" aria-labelledby="consumableTitle"
@@ -258,7 +263,9 @@
                 <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-bs-toggle="collapse"
                    data-bs-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-users sidebar-icon"></i>
-                    <span class="sidebar-title">Users <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
+                    <span
+                        class="sidebar-title @if(Request::url() == route('users.index')) {{ 'font-weight-bold' }} @endif">Users <i
+                            class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                      data-bs-parent="#accordionSidebar">
@@ -275,7 +282,8 @@
             <li class="nav-item">
                 <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('location.index')}}">
                     <i class="far fa-fw fa-map sidebar-icon"></i>
-                    <span class="sidebar-title">Locations</span></a>
+                    <span
+                        class="sidebar-title @if(Request::url() == route('location.index')) {{ 'font-weight-bold' }} @endif">Locations</span></a>
             </li>
         @endcan
     <!-- Nav Item - Charts -->
@@ -283,7 +291,8 @@
             <li class="nav-item">
                 <a class="nav-link text-left text-sm-center text-md-left" href="{{route("manufacturers.index")}}">
                     <i class="fas fa-fw fa-tools sidebar-icon"></i>
-                    <span class="sidebar-title">Manufacturers</span></a>
+                    <span
+                        class="sidebar-title @if(Request::url() == route('manufacturers.index')) {{ 'font-weight-bold' }} @endif">Manufacturers</span></a>
             </li>
         @endcan
         @can('viewAny' , \App\Models\Supplier::class)
@@ -291,7 +300,8 @@
             <li class="nav-item">
                 <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('suppliers.index') }}">
                     <i class="fas fa-fw fa-tags sidebar-icon"></i>
-                    <span class="sidebar-title">Suppliers</span></a>
+                    <span
+                        class="sidebar-title @if(Request::url() == route('suppliers.index')) {{ 'font-weight-bold' }} @endif">Suppliers</span></a>
             </li>
         @endcan
     <!-- Divider -->
@@ -300,7 +310,7 @@
             <a href="{{ route('archives.index')}}" title="Archived"
                class="nav-link text-left text-sm-center text-md-left">
                 <i class="fas fa-fw fa-archive sidebar-icon"></i> <span
-                    class="sidebar-title">Disposed/Archived</span></a>
+                    @if(Request::url() == route('archives.index')) {{ 'font-weight-bold' }} @endif class="sidebar-title">Disposed/Archived</span></a>
         </li>
     <!-- Divider -->
         <hr class="sidebar-divider">
@@ -313,24 +323,34 @@
             </a>
             <div id="settingPages" class="collapse" aria-labelledby="headingPages" data-bs-parent="#accordionSidebar">
                 @can('viewAny' , \App\Models\AssetModel::class)
-                    <a class="collapse-item" href="{{ route('asset-models.index')}}">Asset Models</a>
+                    <a class="collapse-item @if(Request::url() == route('asset-models.index')) {{ 'font-weight-bold text-white' }} @endif"
+                       href="{{ route('asset-models.index')}}">Asset Models</a>
                 @endcan
                 @can('viewAny' , \App\Models\Depreciation::class)
-                    <a class="collapse-item" href="{{ route('depreciation.index')}}">Depreciation</a>
+                    <a class="collapse-item @if(Request::url() == route('depreciation.index')) {{ 'font-weight-bold text-white' }} @endif"
+                       href="{{ route('depreciation.index')}}">Depreciation</a>
                 @endcan
                 @can('viewAny' , \App\Models\Category::class)
-                    <a class="collapse-item" href="{{ route('category.index')}}">Categories</a>
+                    <a class="collapse-item @if(Request::url() == route('category.index')) {{ 'font-weight-bold text-white' }} @endif"
+                       href="{{ route('category.index')}}">Categories</a>
                 @endcan
                 @can('viewAny' , \App\Models\Fieldset::class)
-                    <a class="collapse-item" href="{{ route('fieldsets.index')}}">Fieldsets</a>
+                    <a class="collapse-item @if(Request::url() == route('fieldsets.index')) {{ 'font-weight-bold text-white' }} @endif"
+                       href="{{ route('fieldsets.index')}}">Fieldsets</a>
                 @endcan
                 @can('viewAny' , \App\Models\Field::class)
-                    <a class="collapse-item" href="{{ route('fields.index')}}">Custom Fields</a>
+                    <a class="collapse-item @if(Request::url() == route('fields.index')) {{ 'font-weight-bold text-white' }} @endif"
+                       href="{{ route('fields.index')}}">Custom Fields</a>
                 @endcan
                 @can('viewAny' , \App\Models\Status::class)
-                    <a class="collapse-item" href="{{ route('status.index')}}">Status Fields</a>
+                    <a class="collapse-item @if(Request::url() == route('status.index')) {{ 'font-weight-bold text-white' }} @endif"
+                       href="{{ route('status.index')}}">Status Fields</a>
                 @endcan
-                <a id="export" class="collapse-item " href="{{route("settings.view")}}"> Settings page </a>
+                @can('viewAll' , \App\Models\Setting::class)
+                    <a id="export"
+                       class="collapse-item  @if(Request::url() == route('settings.view')) {{ 'font-weight-bold text-white' }} @endif"
+                       href="{{route("settings.view")}}"> Settings page </a>
+                @endcan
                 @can('view' , \App\Models\Backup::class)
                     <a class="collapse-item" href="/databasebackups">Database Backups</a>
                 @endcan

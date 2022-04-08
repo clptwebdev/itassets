@@ -18,7 +18,7 @@
                 <x-form.layout class="d-inline-block" :action="route('license.pdf')">
                     <x-form.input type="hidden" name="License" :label="false" formAttributes="required"
                                   :value="json_encode($licenses->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-file-pdf" class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($licenses->count() >1)

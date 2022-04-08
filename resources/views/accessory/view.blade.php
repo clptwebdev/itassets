@@ -15,12 +15,11 @@
         @can('generatePDF', \App\Models\Accessory::class)
             @if ($accessories->count() == 1)
                 <x-buttons.reports :route="route('accessories.showPdf', $accessories[0]->id)"/>
-
             @else
                 <x-form.layout class="d-inline-block" :action="route('accessories.pdf')" method="POST">
                     <x-form.input type="hidden" name="accessories" :label="false"
                                   :value="json_encode($accessories->pluck('id'))"/>
-                    <x-buttons.submit>Generate Report</x-buttons.submit>
+                    <x-buttons.submit class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
 
             @endif
@@ -31,33 +30,30 @@
         @can('import', \App\Models\Accessory::class)
             <x-buttons.import id="import"/>
         @endcan
-        <div class="dropdown ms-2 me-2 d-inline-block">
-            <button class=" btn btn-sm btn-lilac d-inline" type="button" id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                Bulk Options <i class="fas fa-fw fa-caret-down sidebar-icon"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li>
-                    <p class='text-blue text-center p-2 border-bottom border-secondary'>Bulk Options</p>
-                </li>
-                <li class='my-1'>
-                    @can('create', \App\Models\Accessory::class)
-                        <x-buttons.dropdown-item id="import">
-                            Import
-                        </x-buttons.dropdown-item>
-                    @endcan
-                    <x-buttons.dropdown-item
-                        form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
-                        Dispose
+        <button class=" btn btn-sm btn-lilac d-inline" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                aria-expanded="false">
+            Bulk Options <i class="fas fa-fw fa-caret-down sidebar-icon"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+                <p class='text-blue text-center p-2 border-bottom border-secondary'>Bulk Options</p>
+            </li>
+            <li class='my-1'>
+                @can('create', \App\Models\Accessory::class)
+                    <x-buttons.dropdown-item id="import">
+                        Import
                     </x-buttons.dropdown-item>
-                    <x-buttons.dropdown-item
-                        form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkTransferModal'">
-                        Transfer
-                    </x-buttons.dropdown-item>
-                </li>
-            </ul>
-
-        </div>
+                @endcan
+                <x-buttons.dropdown-item
+                    form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
+                    Dispose
+                </x-buttons.dropdown-item>
+                <x-buttons.dropdown-item
+                    form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkTransferModal'">
+                    Transfer
+                </x-buttons.dropdown-item>
+            </li>
+        </ul>
 
     </x-wrappers.nav>
     <x-handlers.alerts/>

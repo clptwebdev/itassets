@@ -156,11 +156,11 @@
     {{--    create javascript auto selct button for roles--}}
     <x-modals.role-add :models='$models'/>
     <x-modals.assign-role/>
-    <x-modals.setting-create/>
     <x-modals.delete-role/>
     <x-components.export :users="$users" :assets="$assets" :components="$components" :accessories="$accessories"
                          :miscellaneous="$miscellaneous" :locations="$locations" :categories="$categories"
                          :statuses="$statuses" :assetModel="$assetModel"/>
+    <x-modals.setting-create/>
 
 @endsection
 @section('js')

@@ -27,20 +27,12 @@
                         class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
             @endcan
             @can('viewAny' ,  \App\Models\Supplier::class)
-                <a href="{{ route('suppliers.showPdf', $supplier->id)}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                <x-buttons.reports :route="route('suppliers.showPdf', $supplier->id)"></x-buttons.reports>
             @endcan
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Information regarding {{ $supplier->name }}, the assets that are currently assigned to the
