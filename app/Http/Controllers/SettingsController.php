@@ -81,6 +81,30 @@ class SettingsController extends Controller {
             ->with('success_message', "You have Updated the Setting " . ucwords(str_replace(['_', '-'], ' ', $setting->name)));
     }
 
+    public function create(Request $request)
+    {
+        if(auth()->user()->cant('create', Setting::class))
+        {
+            return ErrorController::forbidden('/dashboard', 'Unauthorised to Create Settings.');
+
+        }
+
+        $request->validate([
+            'name' => 'required|string',
+            'value' => 'required|integer',
+            'priority' => 'required|integer',
+        ]);
+
+        Setting::create([
+            'name' => $request->name,
+            'value' => $request->value,
+            'priority' => $request->priority,
+        ]);
+
+        return to_route('settings.view')
+            ->with('success_message', "You have Created the Setting " . ucwords(str_replace(['_', '-'], ' ', $request->name) . '. Please Speak to your developer to implement this setting.'));
+    }
+
     public function accessories(Request $request)
     {
         $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'));

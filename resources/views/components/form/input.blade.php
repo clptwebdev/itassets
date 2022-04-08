@@ -13,5 +13,5 @@
        name="{{str_replace(' ', '_', strtolower($name))}}" value="{{$value ?? ''}}"
        id="{{ old(str_replace(' ', '_', strtolower($name)))}}"
        placeholder="{{str_replace(array('_','id'), ' ',ucfirst($title ?? $name))}}"
-    {!!$formAttributes ?? null!!}
+    {!! str_replace('required' , '', $formAttributes) ?? null!!}
 >  {{--  pass attribues seperated with spaces  --}}
