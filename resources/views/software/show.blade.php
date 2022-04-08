@@ -41,11 +41,19 @@
                                     <td>{{ucwords($software->name)}}</td>
                                 </tr>
                                 <tr>
+                                    <th>Order No</th>
+                                    <td>{{$software->order_no?? 'N/A'}}</td>
+                                </tr>
+                                <tr>
                                     <th>Purchased Date</th>
                                     <td>{{$software->purchased_date ?? 'N/A'}}</td>
                                 </tr>
                                 <tr>
                                     <th>Purchased Cost</th>
+                                    <td>{{$software->purchased_cost ?? 'N/A'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Donated</th>
                                     <td>{{$software->purchased_cost ?? 'N/A'}}</td>
                                 </tr>
                                 <tr>

@@ -56,9 +56,9 @@
             $limit = auth()->user()->location_software()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
             $floor = auth()->user()->location_software()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
 
-        if(session()->has('vehicle_min') && session()->has('vehicle_max')){
-            $start_value = session('vehicle_min');
-            $end_value = session('vehicle_max');
+        if(session()->has('software_min') && session()->has('software_max')){
+            $start_value = session('software_min');
+            $end_value = session('software_max');
         }else{
             $start_value = $floor;
             $end_value = $limit;
@@ -66,8 +66,8 @@
         @endphp
 
 
-        <x-filters.navigation model="Software" relations="software" table="softwares"/>
-        <x-filters.filter model="Software" relations="software" table="softwares" :locations="$locations"/>
+        <x-filters.navigation model="Software" relations="software" table="software"/>
+        <x-filters.filter model="Software" relations="software" table="software" :locations="$locations"/>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -124,7 +124,16 @@
                                 <td class="text-center">£{{number_format($software->purchased_cost, 2, '.', ',')}}</td>
                                 <td class="text-center">£{{number_format($software->depreciation_value(), 2, '.', ',')}}</td>
                                 <td class="text-center">{{$software->depreciation}} Years</td>
-                                <td class="text-center">{{$software->warranty.' months' ?? 'None'}}</td>
+                                <td class="text-center">
+                                    @php $warranty_end = \Carbon\Carbon::parse($software->purchased_date)->addMonths($software->warranty); dd($warranty_end)@endphp
+                                    {{ $software->warranty }} Months<br>
+                                    @if(\Carbon\Carbon::parse($warranty_end)->isPast())
+                                        <span class="text-coral">{{ 'Expired' }}</span>
+                                    @else
+                                        <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
+                                            Remaining</small>
+                                    @endif
+                                </td>
                                 <td class="text-end">
                                     <x-wrappers.table-settings>
                                         @can('view', $software, \App\Models\Software::class)
@@ -152,7 +161,7 @@
                         @endforeach
                         @if($softwares->count() == 0)
                             <tr>
-                                <td colspan="9" class="text-center">No Software Returned</td>
+                                <td colspan="10" class="text-center">No Software Returned</td>
                             </tr>
                         @endif
                         </tbody>

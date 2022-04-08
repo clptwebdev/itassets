@@ -138,8 +138,11 @@ class SoftwareController extends Controller {
             'manufacturer_id' => $request->manufacturer_id,
             'location_id' => $request->location_id,
             'purchased_cost' => $request->purchased_cost,
+            'donated' => $request->donated ?? 0,
             'purchased_date' => $request->purchased_date,
             'depreciation' => $request->depreciation,
+            'order_no' => $request->order_no,
+            'warranty' => $request->warranty,
         ]);
 
         return to_route('softwares.index')->with('success_message', $request->name . ' Has been Added!');
@@ -205,8 +208,11 @@ class SoftwareController extends Controller {
             'manufacturer_id' => $request->manufacturer_id,
             'location_id' => $request->location_id,
             'purchased_cost' => $request->purchased_cost,
+            'donated' => $request->donated ?? 0,
             'purchased_date' => $request->purchased_date,
             'depreciation' => $request->depreciation,
+            'order_no' => $request->order_no,
+            'warranty' => $request->warranty,
         ]);
 
         return to_route('softwares.index')->with('success_message', $request->name . ' Has been Updated!');
@@ -302,7 +308,7 @@ class SoftwareController extends Controller {
 
         }
         $softwares = array();
-        $found = Software::select('name', 'id', 'depreciation', 'supplier_id', 'manufacturer_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at')->withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
+        $found = Software::select('name', 'id', 'depreciation', 'supplier_id', 'manufacturer_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at', 'warranty', 'order_no')->withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
         foreach($found as $f)
         {
             $array = array();
@@ -313,6 +319,8 @@ class SoftwareController extends Controller {
             $array['depreciation'] = $f->depreciation;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
+            $array['warranty'] = $f->warranty ?? 'N/A';
+            $array['order_no'] = $f->order_no ?? 'N/A';
             $softwares[] = $array;
         }
 
@@ -581,8 +589,8 @@ class SoftwareController extends Controller {
                 session(['software_end' => $request->end]);
             }
 
-            session(['assets_min' => $request->minCost]);
-            session(['assets_max' => $request->maxCost]);
+            session(['software_min' => $request->minCost]);
+            session(['software_max' => $request->maxCost]);
         }
         //Check the Users Locations Permissions
         $locations = Location::select('id', 'name')->withCount('software')->get();
@@ -601,10 +609,10 @@ class SoftwareController extends Controller {
             session(['software_filter' => true]);
         }
 
-        if(session()->has('assets_min') && session()->has('assets_max'))
+        if(session()->has('software_min') && session()->has('software_max'))
         {
-            $software->costFilter(session('assets_min'), session('assets_max'));
-            session(['assets_filter' => true]);
+            $software->costFilter(session('software_min'), session('software_max'));
+            session(['software_filter' => true]);
         }
 
         if(session()->has('software_search'))
@@ -627,7 +635,7 @@ class SoftwareController extends Controller {
     public function clearFilter()
     {
         //Clear the Filters for the properties
-        session()->forget(['software_filter', 'software_locations', 'software_start', 'software_end', 'software_amount', 'software_search']);
+        session()->forget(['software_filter', 'software_locations', 'software_start', 'software_end', 'software_min', 'software_max', 'software_search']);
 
         return to_route('softwares.index');
     }
