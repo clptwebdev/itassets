@@ -119,11 +119,13 @@
                                class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                                     class="fas fa-plus fa-sm pl-1 pr-1"></i>Create a New Setting</a>
                             @foreach($settings as $setting)
-                                <h5 class='text-center'>{{ ucwords(str_replace(['_' ,'-'] , ' ' ,$setting->name)) ?? 'N/A'}}</h5>
+                                <h5 class='text-center mt-1 '>{{ ucwords(str_replace(['_' ,'-'] , ' ' ,$setting->name)) ?? 'N/A'}}</h5>
                                 <x-form.layout :action="route('settings.update' , $setting->id)" method="PUT">
                                     <div class='d-flex w-100 my-3 justify-content-center'>
                                         <div class='form-group m-2'>
-                                            <x-form.input name='name' :value="$setting->name"></x-form.input>
+
+                                            <x-form.input name='name' formAttributes='disabled'
+                                                          :value="$setting->name"></x-form.input>
                                         </div>
                                         <div class='form-group m-2'>
                                             <x-form.input name='value' :value="$setting->value"></x-form.input>
