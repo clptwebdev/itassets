@@ -12,6 +12,14 @@
         @can('viewAll', \App\Models\Machinery::class)
             <x-buttons.return :route="route('machineries.index')">Machinery</x-buttons.return>
         @endcan
+        @can('update', $machinery)
+        <x-buttons.edit :route="route('machineries.edit',$machinery->id)" />
+        <x-form.layout method="DELETE" class="d-sm-inline-block"
+                        :id="'form'.$machinery->id"
+                        :action="route('machineries.destroy', $machinery->id)" >
+            <x-buttons.delete formAttributes="data-id='{{$machinery->id}}'" /> 
+        </x-form.layout >
+        @endcan
         @can('generatePDF', \App\Models\Machinery::class)
             <x-buttons.reports :route="route('machinery.showPdf', $machinery->id)"/>
         @endcan

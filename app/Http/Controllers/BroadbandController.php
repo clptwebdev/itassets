@@ -48,9 +48,21 @@ class BroadbandController extends Controller {
         $broadbands = Broadband::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['property_filter' => false]);
+
+        $now = \Carbon\Carbon::now();
+        $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
+        $nextYear = \Carbon\Carbon::now()->addYear()->format('Y');
+        $nextStartDate = \Carbon\Carbon::parse('09/01/'.\Carbon\Carbon::now()->addYear()->format('Y'));
+        $endDate = \Carbon\Carbon::parse('08/31/'.$nextYear);
+        if(!$startDate->isPast()){
+            $startDate->subYear();
+            $endDate->subYear();
+            $nextStartDate->subYear();
+        }
+
+
         $currentCost = Broadband::locationFilter($locations->pluck('id')->toArray())->whereYear('purchased_date', Carbon::now()->format('Y'))->sum('purchased_cost');
         $previousCost = Broadband::locationFilter($locations->pluck('id')->toArray())->whereYear('purchased_date', Carbon::now()->subYear()->format('Y'))->sum('purchased_cost');
-
         return view('broadband.view', [
             'previous_cost' => $previousCost,
             'current_cost' => $currentCost,

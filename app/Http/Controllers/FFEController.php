@@ -54,15 +54,21 @@ class FFEController extends Controller {
 
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('ffe_limit') ?? 25;
-        $ffes = FFE::locationFilter($locations->pluck('id')->toArray())->paginate(intval($limit))->fragment('table');
-
+        $ffes = FFE::locationFilter($locations->pluck('id')->toArray());
+            $ffes->join('locations', 'f_f_e_s.location_id', '=', 'locations.id')
+            ->leftJoin('manufacturers', 'manufacturers.id', '=', 'f_f_e_s.manufacturer_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'f_f_e_s.supplier_id')                
+            ->orderBy(session('ffe_orderby') ?? 'purchased_date', session('ffe_direction') ?? 'asc')
+            ->select('f_f_e_s.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
+        $limit = session('limit') ?? 25;
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['ffe_filter' => false]);
         $categories = Category::withCount('ffe')->get();
         $statuses = Status::select('id', 'name', 'deployable')->withCount('ffe')->get();
+        
 
         return view('FFE.view', [
-            "ffes" => $ffes,
+            "ffes" => $ffes->paginate(intval($limit))->withPath('/accessory/filter')->fragment('table'),
             "locations" => $locations,
             "categories" => $categories,
             "statuses" => $statuses,
@@ -81,7 +87,7 @@ class FFEController extends Controller {
             return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | View FFE Recycle Bin.');
 
         }
-        $ffes = auth()->user()->location_ffes()->onlyTrashed()->get();
+        $ffes = auth()->user()->location_ffe()->onlyTrashed()->get();
 
         return view('FFE.bin', compact('ffes'));
     }
@@ -240,30 +246,30 @@ class FFEController extends Controller {
 
     public function restore($id)
     {
-        $accessory = FFE::withTrashed()->where('id', $id)->first();
-        if(auth()->user()->cant('delete', $accessory))
+        $ffe = FFE::withTrashed()->where('id', $id)->first();
+        if(auth()->user()->cant('delete', FFE::class))
         {
-            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Restore Accessory.');
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Restore FFE.');
         }
-        $accessory->restore();
-        session()->flash('success_message', "#" . $accessory->name . ' has been restored.');
+        $ffe->restore();
+        session()->flash('success_message', "#" . $ffe->name . ' has been restored.');
 
-        return to_route("accessories.index");
+        return to_route("ffes.index");
     }
 
     public function forceDelete($id)
     {
-        $accessory = FFE::withTrashed()->where('id', $id)->first();
-        if(auth()->user()->cant('forceDelete', $accessory))
+        $ffe = FFE::withTrashed()->where('id', $id)->first();
+        if(auth()->user()->cant('delete', $ffe))
         {
-            return ErrorController::forbidden(to_route('accessories.index'), 'Unauthorised to Delete Accessory.');
+            return ErrorController::forbidden(route('accesffessories.index'), 'Unauthorised | Delete Accessory.');
 
         }
-        $name = $accessory->name;
-        $accessory->forceDelete();
-        session()->flash('danger_message', "Accessory - " . $name . ' was deleted permanently');
+        $name = $ffe->name;
+        $ffe->forceDelete();
+        session()->flash('danger_message', "FFE - " . $name . ' was deleted permanently');
 
-        return to_route('accessories.bin');
+        return to_route('ffe.bin');
     }
 
     ///////////////////////////////////////////
@@ -658,9 +664,9 @@ class FFEController extends Controller {
         $ffe->join('locations', 'f_f_e_s.location_id', '=', 'locations.id')
             ->leftJoin('manufacturers', 'manufacturers.id', '=', 'f_f_e_s.manufacturer_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'f_f_e_s.supplier_id')
-            ->orderBy(session('orderby') ?? 'purchased_date', session('direction') ?? 'asc')
+            ->orderBy(session('ffe_orderby') ?? 'purchased_date', session('ffe_direction') ?? 'asc')
             ->select('f_f_e_s.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
-        $limit = session('limit') ?? 25;
+        $limit = session('ffe_limit') ?? 25;
 
         return view('FFE.view', [
             "ffes" => $ffe->paginate(intval($limit))->withPath('/accessory/filter')->fragment('table'),
@@ -673,7 +679,7 @@ class FFEController extends Controller {
     public function clearFilter()
     {
         //Clear the Filters for the properties
-        session()->forget(['ffe_locations', 'ffe_status', 'ffe_category', 'ffe_start', 'ffe_end', 'ffe_audit', 'ffe_warranty', 'ffe_min', 'ffe_max', 'ffe_search']);
+        session()->forget(['ffe_locations', 'ffe_status', 'ffe_category', 'ffe_start', 'ffe_end', 'ffe_audit', 'ffe_warranty', 'ffe_min', 'ffe_max', 'ffe_search', 'ffe_filter']);
 
         return to_route('ffes.index');
     }

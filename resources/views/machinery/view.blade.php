@@ -135,7 +135,7 @@
                         @endforeach
                         @if($machineries->count() == 0)
                             <tr>
-                                <td colspan="9" class="text-center">No Machineries Returned</td>
+                                <td colspan="9" class="text-center">No Plant and Machinery Returned</td>
                             </tr>
                         @endif
                         </tbody>

@@ -129,7 +129,7 @@ class Location extends Model {
 
     public function machinery()
     {
-        return $this->hasMany(Broadband::class);
+        return $this->hasMany(Machinery::class);
     }
 
     public function license()
