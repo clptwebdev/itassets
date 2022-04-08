@@ -152,7 +152,7 @@ class SupplierController extends Controller {
             $array['city'] = $f->city ?? 'N/A';
             $array['county'] = $f->county ?? 'N/A';
             $array['postcode'] = $f->postcode ?? 'N/A';
-            $array['asset'] = $f->asset->count();
+            $array['asset'] = $f->assets()->count();
             $array['accessory'] = $f->accessory->count() ?? 'N/A';
             $array['component'] = $f->component->count() ?? 'N/A';
             $array['consumable'] = $f->consumable->count() ?? 'N/A';
@@ -189,7 +189,6 @@ class SupplierController extends Controller {
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = str_replace(' ', '-', $supplier->name) . '-' . $date;
-
         dispatch(new supplierPdf($supplier, $user, $path))->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
