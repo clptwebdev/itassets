@@ -57,7 +57,7 @@ class HomeController extends Controller {
             'assets' => $single,
         ]);
     }
-
+    
     ////////////////////////////////////////
     ////// Statistic Functions /////////////
     ////////////////////////////////////////

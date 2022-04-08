@@ -59,7 +59,9 @@
                             </tr>
                         @endif
                         </tbody>
+
                     </table>
+                    <x-paginate :model="$assets"/>
                 </div>
             </div>
         </div>
