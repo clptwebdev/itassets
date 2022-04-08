@@ -30,33 +30,30 @@
         @can('import', \App\Models\Accessory::class)
             <x-buttons.import id="import"/>
         @endcan
-        <div class="dropdown ms-2 me-2 d-inline-block">
-            <button class=" btn btn-sm btn-lilac d-inline" type="button" id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                Bulk Options <i class="fas fa-fw fa-caret-down sidebar-icon"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li>
-                    <p class='text-blue text-center p-2 border-bottom border-secondary'>Bulk Options</p>
-                </li>
-                <li class='my-1'>
-                    @can('create', \App\Models\Accessory::class)
-                        <x-buttons.dropdown-item id="import">
-                            Import
-                        </x-buttons.dropdown-item>
-                    @endcan
-                    <x-buttons.dropdown-item
-                        form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
-                        Dispose
+        <button class=" btn btn-sm btn-lilac d-inline" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                aria-expanded="false">
+            Bulk Options <i class="fas fa-fw fa-caret-down sidebar-icon"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+                <p class='text-blue text-center p-2 border-bottom border-secondary'>Bulk Options</p>
+            </li>
+            <li class='my-1'>
+                @can('create', \App\Models\Accessory::class)
+                    <x-buttons.dropdown-item id="import">
+                        Import
                     </x-buttons.dropdown-item>
-                    <x-buttons.dropdown-item
-                        form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkTransferModal'">
-                        Transfer
-                    </x-buttons.dropdown-item>
-                </li>
-            </ul>
-
-        </div>
+                @endcan
+                <x-buttons.dropdown-item
+                    form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
+                    Dispose
+                </x-buttons.dropdown-item>
+                <x-buttons.dropdown-item
+                    form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkTransferModal'">
+                    Transfer
+                </x-buttons.dropdown-item>
+            </li>
+        </ul>
 
     </x-wrappers.nav>
     <x-handlers.alerts/>

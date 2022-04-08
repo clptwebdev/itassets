@@ -27,9 +27,7 @@
                         class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
             @endcan
             @can('viewAny' ,  \App\Models\Supplier::class)
-                <a href="{{ route('suppliers.showPdf', $supplier->id)}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                <x-buttons.reports :route="route('suppliers.showPdf', $supplier->id)"></x-buttons.reports>
             @endcan
         </div>
     </div>

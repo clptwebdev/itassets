@@ -23,9 +23,7 @@
                    class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
             @endcan
-            <a href="{{ route('manufacturer.showPdf', $manufacturer->id)}}"
-               class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+            <x-buttons.reports :route="route('manufacturer.pdf')"></x-buttons.reports>
         </div>
     </div>
 

@@ -15,6 +15,10 @@
                 <x-buttons.add :route="route('users.create')">User(s)</x-buttons.add>
             @endcan
             @can('viewAll', auth()->user())
+                @if($users->count() >1)
+                    <a href="/exportusers" class="d-inline-block btn btn-sm btn-yellow shadow-sm"><i
+                            class="fas fa-download fa-sm text-white-50"></i>Export</a>
+                @endif
                 <form class="d-inline-block" action="{{ route('users.pdf')}}" method="POST">
                     @csrf
                     <input type="hidden" value="{{ json_encode($users->pluck('id'))}}" name="users"/>
@@ -22,10 +26,7 @@
                             class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report
                     </button>
                 </form>
-                @if($users->count() >1)
-                    <a href="/exportusers" class="d-inline-block btn btn-sm btn-yellow shadow-sm"><i
-                            class="fas fa-download fa-sm text-white-50"></i>Export</a>
-                @endif
+
             @endcan
         </div>
     </div>
