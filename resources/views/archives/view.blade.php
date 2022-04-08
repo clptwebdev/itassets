@@ -17,7 +17,7 @@
                     <x-form.layout class="d-inline-block" :action="route('archives.pdf')">
                         <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
                                       :value="json_encode($archives->pluck('id'))"/>
-                        <x-buttons.submit>Generate Report</x-buttons.submit>
+                        <x-buttons.submit class="btn-blue">Generate Report</x-buttons.submit>
                     </x-form.layout>
                 @endif
             @endif

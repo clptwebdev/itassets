@@ -17,7 +17,7 @@
                 <x-form.layout class="d-inline-block" :action="route('assets.pdf')">
                     <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
                                   :value="json_encode($assets->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-file-pdf" class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($assets->count() >1)

@@ -17,20 +17,21 @@
             @else
                 <x-form.layout class="d-inline-block" :action="route('ffes.pdf')">
                     <x-form.input type="hidden" name="ffes" :label="false" formAttributes="required"
-                                :value="json_encode($ffes->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                                  :value="json_encode($ffes->pluck('id'))"/>
+                    <x-buttons.submit icon="fas fa-file-pdf" class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($ffes->count() > 1)
                 <x-form.layout class="d-inline-block" action="/export/aucs">
                     <x-form.input type="hidden" name="ffes" :label="false" formAttributes="required"
-                                :value="json_encode($ffes->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span></x-buttons.submit>
+                                  :value="json_encode($ffes->pluck('id'))"/>
+                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span>
+                    </x-buttons.submit>
                 </x-form.layout>
             @endif
             <div class="dropdown d-inline-block">
                 <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Bulk Options
                 </a>
                 <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
@@ -51,24 +52,24 @@
                              permissions, please contact apollo@clpt.co.uk </p>
 
         @php
-        
-        $limit = auth()->user()->location_ffe()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
-        $floor = auth()->user()->location_ffe()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
 
-        if(session()->has('ffe_min') && session()->has('ffe_max')){
-            $start_value = session('ffe_min');
-            $end_value = session('ffe_max');
-        }else{
-            $start_value = $floor;
-            $end_value = $limit;
-        }
+            $limit = auth()->user()->location_ffe()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_ffe()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+
+            if(session()->has('ffe_min') && session()->has('ffe_max')){
+                $start_value = session('ffe_min');
+                $end_value = session('ffe_max');
+            }else{
+                $start_value = $floor;
+                $end_value = $limit;
+            }
         @endphp
 
         {{-- If there are no Collections return there is not need to display the filter, unless its the filter thats return 0 results --}}
         @if($ffes->count() !== 0 || session('ffe_filter') === true)
             <x-filters.navigation model="FFE" relations="ffe" table="f_f_e_s"/>
             <x-filters.filter model="FFE" relations="ffe" table="f_f_e_s" :locations="$locations" :statuses="$statuses"
-            :categories="$categories" />
+                              :categories="$categories"/>
         @endif
 
     <!-- DataTales Example -->
@@ -130,7 +131,9 @@
                                 <td class="text-center d-none d-xl-table-cell">
                                     £{{$ffe->purchased_cost}} @if($ffe->donated == 1) <span
                                         class="text-sm">*Donated</span> @endif
-                                        <br><small class="text-coral">(*£{{number_format($ffe->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}})</small>
+                                    <br><small
+                                        class="text-coral">(*£{{number_format($ffe->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
+                                                           )</small>
                                 </td>
                                 <td class="d-none d-xl-table-cell">{{$ffe->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center d-none d-xl-table-cell">{{$ffe->status->name ??'N/A'}}</td>

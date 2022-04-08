@@ -13,7 +13,7 @@
             @endcan
             @can('viewAny', \App\Models\Supplier::class)
                 <a href="{{ route('suppliers.pdf')}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
+                   class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                 <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Export</a>

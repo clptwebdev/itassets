@@ -4,40 +4,7 @@
 
 
 @section('content')
-    <x-wrappers.nav title="Orders">
-        {{--        @can('generatePDF', \App\Models\Order::class)--}}
-        {{--            @if ($orders->count() == 1)--}}
-        {{--                <x-buttons.reports :route="route('order.showPdf', $orders[0]->id)"/>--}}
-        {{--            @elseif($orders->count() > 1)--}}
-        {{--                <x-form.layout class="d-inline-block" :action="route('order.pdf')">--}}
-        {{--                    <x-form.input type="hidden" name="Order" :label="false" formAttributes="required"--}}
-        {{--                                  :value="json_encode($orders->pluck('id'))"/>--}}
-        {{--                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>--}}
-        {{--                </x-form.layout>--}}
-        {{--            @endif--}}
-        {{--            @if($orders->count() >1)--}}
-        {{--                <x-form.layout class="d-inline-block" action="/export/order">--}}
-        {{--                    <x-form.input type="hidden" name="order" :label="false" formAttributes="required"--}}
-        {{--                                  :value="json_encode($orders->pluck('id'))"/>--}}
-        {{--                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span>--}}
-        {{--                    </x-buttons.submit>--}}
-        {{--                </x-form.layout>--}}
-        {{--            @endif--}}
-        {{--            <div class="dropdown d-inline-block">--}}
-        {{--                <a class="btn btn-sm btn-lilac dropdown-bs-toggle p-2 p-md-1" href="#" role="button"--}}
-        {{--                   id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-        {{--                    Bulk Options--}}
-        {{--                </a>--}}
-        {{--                <div class="dropdown-menu dropdown-menu-end text-end" aria-labelledby="dropdownMenuLink">--}}
-        {{--                    @can('create', \App\Models\Order::class)--}}
-        {{--                        <x-buttons.dropdown-item id="import">--}}
-        {{--                            Import--}}
-        {{--                        </x-buttons.dropdown-item>--}}
-        {{--                    @endcan--}}
-        {{--                </div>--}}
-        {{--            </div>--}}
-        {{--        @endcan--}}
-    </x-wrappers.nav>
+    <x-wrappers.nav title="Orders"></x-wrappers.nav>
     <x-handlers.alerts/>
     <section>
         <p class="mt-5 mb-4">Below are orders belonging to the Central Learning Partnership Trust.If You require

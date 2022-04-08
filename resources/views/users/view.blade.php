@@ -18,7 +18,7 @@
                 <form class="d-inline-block" action="{{ route('users.pdf')}}" method="POST">
                     @csrf
                     <input type="hidden" value="{{ json_encode($users->pluck('id'))}}" name="users"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
                             class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report
                     </button>
                 </form>

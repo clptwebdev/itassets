@@ -18,7 +18,7 @@
                 <x-form.layout class="d-inline-block" :action="route('broadband.pdf')">
                     <x-form.input type="hidden" name="broadband" :label="false" formAttributes="required"
                                   :value="json_encode($broadbands->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-file-pdf" class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($broadbands->count() >1)

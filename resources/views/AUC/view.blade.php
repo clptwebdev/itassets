@@ -19,7 +19,7 @@
                 <x-form.layout class="d-inline-block" :action="route('aucs.pdf')">
                     <x-form.input type="hidden" name="aucs" :label="false" formAttributes="required"
                                   :value="json_encode($aucs->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-file-pdf" class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($aucs->count() > 1)

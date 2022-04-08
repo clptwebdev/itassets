@@ -19,7 +19,7 @@
                 <x-form.layout class="d-inline-block" :action="route('miscellaneous.pdf')">
                     <x-form.input type="hidden" name="miscellaneous" :label="false" formAttributes="required"
                                   :value="json_encode($miscellaneous->pluck('id'))"/>
-                    <x-buttons.submit>Generate Report</x-buttons.submit>
+                    <x-buttons.submit class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($miscellaneous->count() >1)

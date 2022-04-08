@@ -15,12 +15,11 @@
         @can('generatePDF', \App\Models\Accessory::class)
             @if ($accessories->count() == 1)
                 <x-buttons.reports :route="route('accessories.showPdf', $accessories[0]->id)"/>
-
             @else
                 <x-form.layout class="d-inline-block" :action="route('accessories.pdf')" method="POST">
                     <x-form.input type="hidden" name="accessories" :label="false"
                                   :value="json_encode($accessories->pluck('id'))"/>
-                    <x-buttons.submit>Generate Report</x-buttons.submit>
+                    <x-buttons.submit class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
 
             @endif

@@ -18,7 +18,7 @@
                 <x-form.layout class="d-inline-block" :action="route('vehicle.pdf')">
                     <x-form.input type="hidden" name="vehicle" :label="false" formAttributes="required"
                                   :value="json_encode($vehicles->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-file-pdf" class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($vehicles->count() >1)
@@ -108,7 +108,8 @@
                                 <td class="text-center">{{$vehicle->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center">{{ \Illuminate\Support\Carbon::parse($vehicle->purchased_date)->format('d-M-Y')}}</td>
                                 <td class="text-center">£{{number_format($vehicle->purchased_cost, 2, '.', ',')}}</td>
-                                <td class="text-center">£{{number_format($vehicle->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
+                                <td class="text-center">
+                                    £{{number_format($vehicle->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
                                 <td class="text-center">{{$vehicle->depreciation}} Years</td>
                                 <td class="text-end">
                                     <x-wrappers.table-settings>

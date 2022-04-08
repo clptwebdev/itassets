@@ -18,7 +18,7 @@
                 <x-form.layout class="d-inline-block" :action="route('software.pdf')">
                     <x-form.input type="hidden" name="software" :label="false" formAttributes="required"
                                   :value="json_encode($softwares->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-file-pdf" class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($softwares->count() >1)
@@ -67,7 +67,6 @@
         }
         @endphp
 
-        
 
         <x-filters.navigation model="Software" relations="software" table="softwares"/>
         <x-filters.filter model="Software" relations="software" table="softwares" :locations="$locations"/>
