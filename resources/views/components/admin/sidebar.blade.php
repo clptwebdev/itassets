@@ -239,13 +239,15 @@
                 <i class="fas fa-fw fa-wifi sidebar-icon"></i>
                 <span class="sidebar-title">Broadband</span></a>
         </li>
-        <hr class="sidebar-divider">
-        <li class="nav-item">
-            <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('orders.index')) {{ 'show' }} @endif"
-               href="{{route('orders.index')}}">
-                <i class="fas fa-fw fa-money-check sidebar-icon"></i>
-                <span class="sidebar-title">Orders</span></a>
-        </li>
+        @can('viewAll',\App\Models\Order::class )
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('orders.index')) {{ 'show' }} @endif"
+                   href="{{route('orders.index')}}">
+                    <i class="fas fa-fw fa-money-check sidebar-icon"></i>
+                    <span class="sidebar-title">Orders</span></a>
+            </li>
+        @endcan
         @can('viewAll',\App\Models\User::class )
             <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->

@@ -12,6 +12,7 @@ use App\Jobs\SettingBoot;
 use App\Models\Accessory;
 use App\Models\Asset;
 use App\Models\AssetModel;
+use App\Models\Broadband;
 use App\Models\Component;
 use App\Models\Consumable;
 use App\Models\Location;
@@ -28,7 +29,11 @@ class SettingsController extends Controller {
 
     public function index()
     {
+        if(auth()->user()->cant('viewAll', Setting::class))
+        {
+            return ErrorController::forbidden('/dashboard', 'Unauthorised to View Settings.');
 
+        }
         $categories = \App\Models\Category::with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->get();
         $users = User::all();
         $settings = Setting::all();
@@ -61,6 +66,11 @@ class SettingsController extends Controller {
 
     public function update(Setting $setting, Request $request)
     {
+        if(auth()->user()->cant('update', Setting::class))
+        {
+            return ErrorController::forbidden('/dashboard', 'Unauthorised to Update Settings.');
+
+        }
         $setting->update([
             'name' => $request->name,
             'value' => $request->value,

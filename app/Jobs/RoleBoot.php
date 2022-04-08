@@ -61,6 +61,19 @@ class RoleBoot implements ShouldQueue {
         // global team start
         Permission::updateOrCreate([
             'role_id' => $global_admin->id,
+            'model' => 'Setting'], [
+            "Create" => 1,
+            "update" => 1,
+            "view" => 1,
+            "delete" => 1,
+            "archive" => 1,
+            "transfer" => 1,
+            "request" => 1,
+            "spec_reports" => 1,
+            "fin_reports" => 1,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $global_admin->id,
             'model' => 'Broadband'], [
             "Create" => 1,
             "update" => 1,
@@ -504,6 +517,19 @@ class RoleBoot implements ShouldQueue {
         // global team end
 
         // IT manager team start
+        Permission::updateOrCreate([
+            'role_id' => $it_manager->id,
+            'model' => 'Setting'], [
+            "Create" => 1,
+            "update" => 1,
+            "view" => 1,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
         Permission::updateOrCreate([
             'role_id' => $it_manager->id,
             'model' => 'Broadband'], [
@@ -952,6 +978,19 @@ class RoleBoot implements ShouldQueue {
         // Business Manager start
         Permission::updateOrCreate([
             'role_id' => $business_manager->id,
+            'model' => 'Setting'], [
+            "Create" => 1,
+            "update" => 1,
+            "view" => 1,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $business_manager->id,
             'model' => 'Broadband'], [
             "Create" => 0,
             "update" => 0,
@@ -1340,9 +1379,74 @@ class RoleBoot implements ShouldQueue {
             "spec_reports" => 0,
             "fin_reports" => 0,
         ]);
+        Permission::updateOrCreate([
+            'role_id' => $business_manager->id,
+            'model' => 'Requests'], [
+            "Create" => 1,
+            "update" => 1,
+            "view" => 1,
+            "delete" => 1,
+            "archive" => 1,
+            "transfer" => 1,
+            "request" => 1,
+            "spec_reports" => 1,
+            "fin_reports" => 1,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $business_manager->id,
+            'model' => 'Transfer'], [
+            "Create" => 1,
+            "update" => 1,
+            "view" => 1,
+            "delete" => 1,
+            "archive" => 1,
+            "transfer" => 1,
+            "request" => 1,
+            "spec_reports" => 1,
+            "fin_reports" => 1,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $business_manager->id,
+            'model' => 'Archive'], [
+            "Create" => 1,
+            "update" => 1,
+            "view" => 1,
+            "delete" => 0,
+            "archive" => 1,
+            "transfer" => 1,
+            "request" => 1,
+            "spec_reports" => 1,
+            "fin_reports" => 1,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $business_manager->id,
+            'model' => 'Report'], [
+            "Create" => 1,
+            "update" => 1,
+            "view" => 1,
+            "delete" => 1,
+            "archive" => 1,
+            "transfer" => 1,
+            "request" => 1,
+            "spec_reports" => 1,
+            "fin_reports" => 1,
+        ]);
 
         // Business Manager end
         // Technician start
+        Permission::updateOrCreate([
+            'role_id' => $technician->id,
+            'model' => 'Setting'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
         Permission::updateOrCreate([
             'role_id' => $technician->id,
             'model' => 'Order'], [
@@ -1790,6 +1894,19 @@ class RoleBoot implements ShouldQueue {
         // User Manager start
         Permission::updateOrCreate([
             'role_id' => $user_manager->id,
+            'model' => 'Setting'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $user_manager->id,
             'model' => 'Order'], [
             "Create" => 0,
             "update" => 0,
@@ -2235,6 +2352,19 @@ class RoleBoot implements ShouldQueue {
         // User start
         Permission::updateOrCreate([
             'role_id' => $user->id,
+            'model' => 'Setting'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
+        Permission::updateOrCreate([
+            'role_id' => $user->id,
             'model' => 'Order'], [
             "Create" => 0,
             "update" => 0,
@@ -2678,6 +2808,19 @@ class RoleBoot implements ShouldQueue {
 
         // User end
         // temporary start
+        Permission::updateOrCreate([
+            'role_id' => $temp->id,
+            'model' => 'Setting'], [
+            "Create" => 0,
+            "update" => 0,
+            "view" => 0,
+            "delete" => 0,
+            "archive" => 0,
+            "transfer" => 0,
+            "request" => 0,
+            "spec_reports" => 0,
+            "fin_reports" => 0,
+        ]);
         Permission::updateOrCreate([
             'role_id' => $temp->id,
             'model' => 'Order'], [
