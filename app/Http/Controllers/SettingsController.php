@@ -12,6 +12,7 @@ use App\Jobs\SettingBoot;
 use App\Models\Accessory;
 use App\Models\Asset;
 use App\Models\AssetModel;
+use App\Models\Broadband;
 use App\Models\Component;
 use App\Models\Consumable;
 use App\Models\Location;
@@ -28,7 +29,11 @@ class SettingsController extends Controller {
 
     public function index()
     {
+        if(auth()->user()->cant('viewAll', Setting::class))
+        {
+            return ErrorController::forbidden('/dashboard', 'Unauthorised to View Settings.');
 
+        }
         $categories = \App\Models\Category::with('assets', 'accessories', 'components', 'consumables', 'miscellanea')->get();
         $users = User::all();
         $settings = Setting::all();
@@ -61,6 +66,11 @@ class SettingsController extends Controller {
 
     public function update(Setting $setting, Request $request)
     {
+        if(auth()->user()->cant('update', Setting::class))
+        {
+            return ErrorController::forbidden('/dashboard', 'Unauthorised to Update Settings.');
+
+        }
         $setting->update([
             'name' => $request->name,
             'value' => $request->value,
@@ -69,6 +79,30 @@ class SettingsController extends Controller {
 
         return to_route('settings.view')
             ->with('success_message', "You have Updated the Setting " . ucwords(str_replace(['_', '-'], ' ', $setting->name)));
+    }
+
+    public function create(Request $request)
+    {
+        if(auth()->user()->cant('create', Setting::class))
+        {
+            return ErrorController::forbidden('/dashboard', 'Unauthorised to Create Settings.');
+
+        }
+
+        $request->validate([
+            'name' => 'required|string',
+            'value' => 'required|integer',
+            'priority' => 'required|integer',
+        ]);
+
+        Setting::create([
+            'name' => $request->name,
+            'value' => $request->value,
+            'priority' => $request->priority,
+        ]);
+
+        return to_route('settings.view')
+            ->with('success_message', "You have Created the Setting " . ucwords(str_replace(['_', '-'], ' ', $request->name) . '. Please Speak to your developer to implement this setting.'));
     }
 
     public function accessories(Request $request)

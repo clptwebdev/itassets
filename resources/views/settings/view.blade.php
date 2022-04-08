@@ -28,14 +28,12 @@
                 <a class="nav-link" id="broadband-tab" data-bs-toggle="tab" href="#broadband" role="tab"
                    aria-controls="home" aria-selected="true">Role Settings</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="custom-tab" data-bs-toggle="tab" href="#custom" role="tab" aria-controls="home"
-                   aria-selected="true">Custom Settings</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="depreciation-tab" data-bs-toggle="tab" href="#depreciation" role="tab"
-                   aria-controls="home" aria-selected="true">Depreciation</a>
-            </li>
+            @can('update' , \App\Models\Setting::class)
+                <li class="nav-item">
+                    <a class="nav-link" id="custom-tab" data-bs-toggle="tab" href="#custom" role="tab"
+                       aria-controls="home" aria-selected="true">Custom Settings</a>
+                </li>
+            @endcan
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-content " id="myTabContent">
@@ -111,41 +109,40 @@
                     <div class="row">
                         <div class="col-12 ">
                             <h4 class='text-blue'>Custom Settings</h4>
-                            <p class='text-muted'>Click the button below to generate the default settings.</p>
-                            <a href='{{route('setting.boot')}}'
-                               class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                                    class="fas fa-plus fa-sm pl-1 pr-1"></i>Create Default Settings</a>
-                            <a href='{{route('setting.boot')}}'
-                               class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
-                                    class="fas fa-plus fa-sm pl-1 pr-1"></i>Create a New Setting</a>
-                            @foreach($settings as $setting)
-                                <h5 class='text-center'>{{ ucwords(str_replace(['_' ,'-'] , ' ' ,$setting->name)) ?? 'N/A'}}</h5>
-                                <x-form.layout :action="route('settings.update' , $setting->id)" method="PUT">
-                                    <div class='d-flex w-100 my-3 justify-content-center'>
-                                        <div class='form-group m-2'>
-                                            <x-form.input name='name' :value="$setting->name"></x-form.input>
+                            @can('create' , \App\Models\Setting::class)
+                                <p class='text-muted'>Click the button below to generate the default settings.</p>
+                                <a href='{{route('setting.boot')}}'
+                                   class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                                        class="fas fa-plus fa-sm pl-1 pr-1"></i>Create Default Settings</a>
+                                <a data-bs-toggle='modal' data-bs-target='#settingModal'
+                                   class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
+                                        class="fas fa-plus fa-sm pl-1 pr-1"></i>Create a New Settings</a>
+                            @endcan
+                            @can('update' , \App\Models\Setting::class)
+                                @foreach($settings as $setting)
+                                    <h5 class='text-center mt-1 text-primary'>{{ ucwords(str_replace(['_' ,'-'] , ' ' ,$setting->name)) ?? 'N/A'}}</h5>
+                                    <x-form.layout :action="route('settings.update' , $setting->id)" method="PUT">
+                                        <div class='d-flex w-100 my-3 justify-content-center'>
+                                            <div class='form-group m-2'>
+                                                <input value='{{$setting->name}}' name='name' hidden>
+                                                <x-form.input name='name' formAttributes='disabled'
+                                                              :value="$setting->name"></x-form.input>
+                                            </div>
+                                            <div class='form-group m-2'>
+                                                <x-form.input name='value' :value="$setting->value"></x-form.input>
+                                            </div>
+                                            <div class='form-group m-2'>
+                                                <x-form.input name="priority"
+                                                              :value="$setting->priority"></x-form.input>
+                                            </div>
                                         </div>
-                                        <div class='form-group m-2'>
-                                            <x-form.input name='value' :value="$setting->value"></x-form.input>
+                                        <div class='d-flex justify-content-center mb-2'>
+                                            <x-buttons.submit class="justify-content-center">Submit</x-buttons.submit>
                                         </div>
-                                        <div class='form-group m-2'>
-                                            <x-form.input name="priority" :value="$setting->priority"></x-form.input>
-                                        </div>
-                                    </div>
-                                    <div class='d-flex justify-content-center mb-2'>
-                                        <x-buttons.submit class="justify-content-center">Submit</x-buttons.submit>
-                                    </div>
-                                </x-form.layout>
-                                <hr class='w-75 m-auto'>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade p-2 pt-4" id="depreciation" role="tabpanel"
-                     aria-labelledby="depreciation-tab">
-                    <div class="row">
-                        <div class="col-12 ">
-                            depreciation
+                                    </x-form.layout>
+                                    <hr class='w-75 m-auto'>
+                                @endforeach
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -159,6 +156,7 @@
     {{--    create javascript auto selct button for roles--}}
     <x-modals.role-add :models='$models'/>
     <x-modals.assign-role/>
+    <x-modals.setting-create/>
     <x-modals.delete-role/>
     <x-components.export :users="$users" :assets="$assets" :components="$components" :accessories="$accessories"
                          :miscellaneous="$miscellaneous" :locations="$locations" :categories="$categories"
