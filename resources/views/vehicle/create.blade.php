@@ -34,13 +34,13 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
                                             <div class="form-group">
-                                                <x-form.input name="name" value="{{old('name')}}"/>
+                                                <x-form.input name="name" value="{{old('name')}}" formAttributes="required"/>
                                             </div>
                                             <div class='form-group'>
-                                                <x-form.select name="supplier_id" :models="$suppliers" selected="{{ old('supplier_id')}}"/>
+                                                <x-form.select name="supplier_id" :models="$suppliers" selected="{{ old('supplier_id')}}" />
                                             </div>
                                             <div class="form-group position-relative">
-                                                <label for="findLocation">Location</label>
+                                                <label for="findLocation">Location <span class="text-danger">*</span></label>
                                                 <input type="hidden" id="location_id" name="location_id"
                                                        class="form-control mb-3" readonly value="{{old('location_id')}}">
                                                 <input class="form-control @if($errors->has('location_id')) border border-danger @endif" type="text" name="find_location"
@@ -55,17 +55,17 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="purchased_cost" value="{{ old('purchased_cost')}}"/>
+                                                <x-form.input name="purchased_cost" value="{{ old('purchased_cost')}}" formAttributes="required"/>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="registration" value="{{ old('registration')}}"/>
+                                                <x-form.input name="registration" value="{{ old('registration')}}" formAttributes="required" />
                                             </div>
 
                                             <div class="form-group">
-                                                <x-form.date name="purchased_date" value="{{ old('purchased_date')}}"/>
+                                                <x-form.date name="purchased_date" value="{{ old('purchased_date')}}" formAttributes="required"/>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="depreciation" value="{{ old('depreciation')}}"/>
+                                                <x-form.input name="depreciation" value="{{ old('depreciation')}}" formAttributes="required"/>
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 ">

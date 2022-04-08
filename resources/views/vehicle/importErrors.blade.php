@@ -244,11 +244,6 @@
         });
 
         function enableToolTips() {
-            /* let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
-            }) */
-
             const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             tooltips.forEach(t => {
                 new bootstrap.Tooltip(t);

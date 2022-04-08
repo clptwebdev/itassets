@@ -53,14 +53,12 @@
 
         @php
 
-            $limit = auth()->user()->location_property()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
-            $floor = auth()->user()->location_property()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+            $limit = auth()->user()->location_software()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_software()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
 
-        if(session()->has('property_amount')){
-            $amount = str_replace('£', '', session('property_amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
+        if(session()->has('vehicle_min') && session()->has('vehicle_max')){
+            $start_value = session('vehicle_min');
+            $end_value = session('vehicle_max');
         }else{
             $start_value = $floor;
             $end_value = $limit;
@@ -75,44 +73,60 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive" id="table">
                     <table id="assetsTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
-                            <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
+                            <th class="col-2"><small>Name</small></th>
                             <th class="col-1 col-md-auto text-center"><small>Location</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
-                            </th>
+                            <th class="text-center col-2"><small>Supplier</small></th>
+                            <th class="text-center col-1"><small>Manufacturer</small></th>
+                            <th class="text-center col-1"><small>Purchase Date</small></th>
+                            <th class="col-1 text-center"><small>Purchase Cost</small></th>
+                            <th class="col-1 text-center"><small>Current Value</small></th>
+                            <th class="text-center col-1"><small>Depreciation (Years)</small></th>
+                            <th class="text-center col-1"><small>Warranty</small></th>
                             <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
-                            <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
-                            <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class="col-1 col-md-auto text-center"><small>Location</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
-                            </th>
-                            <th class="text-right col-1"><small>Options</small></th>
+                            <th><small>Name</small></th>
+                            <th class="text-center"><small>Location</small></th>
+                            <th class="text-center"><small>Supplier</small></th>
+                            <th class="text-center"><small>Manufacturer</small></th>
+                            <th class="text-center"><small>Purchase Date</small></th>
+                            <th class="text-center"><small>Purchase Cost</small></th>
+                            <th class="text-center"><small>Current Value</small></th>
+                            <th class="text-center"><small>Warranty</small></th>
+                            <th class="text-center"><small>Depreciation (Years)</small></th>
+                            <th class="text-end"><small>Options</small></th>
                         </tr>
                         </tfoot>
                         <tbody>
                         @foreach($softwares as $software)
                             <tr>
-                                <td class="text-left">{{$software->name}}</td>
-                                <td class="text-center">£{{number_format($software->purchased_cost, 2, '.', ',')}}</td>
-                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($software->purchased_date)->format('d-M-Y')}}</td>
-                                <td class="text-center">{{$software->supplier->name}}</td>
-                                <td class="text-center">{{$software->location->name}}</td>
+                                <td class="text-start">{{$software->name}}</td>
                                 <td class="text-center">
-                                    £{{number_format($software->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
-                                    <br><small>{{$software->depreciation}} Years</small></td>
-                                <td class="text-right">
+                                    @if(isset($software->location->photo->path))
+                                        <img src="{{ asset($software->location->photo->path)}}" height="30px"
+                                                alt="{{$software->location->name}}"
+                                                title="{{ $software->location->name }}<br>{{ $software->room ?? 'Unknown'}}"/>
+                                    @else
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($software->location->icon ?? '#666').'" data-bs-toggle="tooltip" data-bs-placement="top" title="">'
+                                            .strtoupper(substr($software->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    {{$software->supplier->name ?? 'N/A'}}
+                                    @if($software->order_no) {!! '<br><small>'.$software->order_no.'</small>' !!}@endif
+                                </td>
+                                <td class="text-center">{{$software->manufacturer->name ?? 'N/A'}}</td>
+                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($software->purchased_date)->format('d-M-Y')}}</td>
+                                <td class="text-center">£{{number_format($software->purchased_cost, 2, '.', ',')}}</td>
+                                <td class="text-center">£{{number_format($software->depreciation_value(), 2, '.', ',')}}</td>
+                                <td class="text-center">{{$software->depreciation}} Years</td>
+                                <td class="text-center">{{$software->warranty.' months' ?? 'None'}}</td>
+                                <td class="text-end">
                                     <x-wrappers.table-settings>
                                         @can('view', $software, \App\Models\Software::class)
                                             <x-buttons.dropdown-item :route="route('softwares.show', $software->id)">
@@ -145,7 +159,6 @@
                         </tbody>
                     </table>
                     <x-paginate :model="$softwares"/>
-                </div>
             </div>
         </div>
     </section>

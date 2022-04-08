@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('requests', function (Blueprint $table) {
-            //
+            $table->foreignId('manager_id')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('requests', function (Blueprint $table) {
-            //
+            $table->dropColumn('manager_id');
         });
     }
 };

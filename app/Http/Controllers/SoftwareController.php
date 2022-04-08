@@ -13,11 +13,16 @@ use App\Models\Software;
 use App\Models\Location;
 use App\Models\Report;
 use App\Models\Supplier;
+use App\Models\Manufacturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\HeadingRowImport;
 
 class SoftwareController extends Controller {
+
+    ////////////////////////////////////////
+    /////////// View Functions /////////////
+    ////////////////////////////////////////
 
     public function index()
     {
@@ -42,12 +47,49 @@ class SoftwareController extends Controller {
         ]);
     }
 
+    public function show(Software $software)
+    {
+        //Check to see if the User is has permission to create
+        if(auth()->user()->cant('view', $software))
+        {
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to update Software.');
+
+        }
+
+        // Return the Create View to the browser
+        return view('software.show', [
+            "software" => $software,
+        ]);
+    }
+
+    public function recycleBin()
+    {
+        //Check to see if the user has permission to delete software on the system
+        if(auth()->user()->cant('delete', Software::class))
+        {
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Delete Software.');
+
+        }
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
+
+        // Return the Create View to the browser
+        return view('software.bin', [
+            "locations" => $locations,
+            "softwares" => Software::onlyTrashed()->paginate(),
+        ]);
+
+    }
+
+    ////////////////////////////////////////
+    /////////// Create Functions ///////////
+    ////////////////////////////////////////
+
     public function create()
     {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('create', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Create Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Create Software.');
         }
 
         //Get the Locations that the user has permission for
@@ -57,6 +99,7 @@ class SoftwareController extends Controller {
         return view('software.create', [
             "locations" => $locations,
             "suppliers" => Supplier::all(),
+            "manufacturers" => Manufacturer::all()->sortBy('name'),
         ]);
     }
 
@@ -74,15 +117,25 @@ class SoftwareController extends Controller {
         $validation = $request->validate([
             'name' => 'required',
             'location_id' => 'required',
-            'supplier_id' => 'required',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
+        ],[
+            'name.required' => 'You must provide a name to reference the Software!',
+            'location_id.required' => 'Please assign the Software to a Location',
+            'purchased_cost.required' => 'The purchased cost for the Software is empty!',
+            'purchased_cost.regex' => 'The purchased cost is not in a valid format. Please enter a decmial currency without the £ symbol',
+            'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
+            'depreciation.numeric' => 'The depreciation for the Software is a number of years - the value is currently invalid',
+            'purchased_date.required' => 'Please enter the date the Software was purchased',
+            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+
         ]);
 
         Software::create([
             'name' => $request->name,
             'supplier_id' => $request->supplier_id,
+            'manufacturer_id' => $request->manufacturer_id,
             'location_id' => $request->location_id,
             'purchased_cost' => $request->purchased_cost,
             'purchased_date' => $request->purchased_date,
@@ -92,20 +145,9 @@ class SoftwareController extends Controller {
         return to_route('softwares.index')->with('success_message', $request->name . ' Has been Added!');
     }
 
-    public function show(Software $software)
-    {
-        //Check to see if the User is has permission to create
-        if(auth()->user()->cant('view', $software))
-        {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
-
-        }
-
-        // Return the Create View to the browser
-        return view('software.show', [
-            "software" => $software,
-        ]);
-    }
+    ////////////////////////////////////////
+    /////////// Edit Functions /////////////
+    ////////////////////////////////////////
 
     public function edit(Software $software)
     {
@@ -124,6 +166,7 @@ class SoftwareController extends Controller {
             "locations" => $locations,
             "suppliers" => Supplier::all(),
             "software" => $software,
+            "manufacturers" => Manufacturer::all()->sortBy('name'),
         ]);
     }
 
@@ -144,11 +187,22 @@ class SoftwareController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
+        ],[
+            'name.required' => 'You must provide a name to reference the Software!',
+            'location_id.required' => 'Please assign the Software to a Location',
+            'purchased_cost.required' => 'The purchased cost for the Software is empty!',
+            'purchased_cost.regex' => 'The purchased cost is not in a valid format. Please enter a decmial currency without the £ symbol',
+            'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
+            'depreciation.numeric' => 'The depreciation for the Software is a number of years - the value is currently invalid',
+            'purchased_date.required' => 'Please enter the date the Software was purchased',
+            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+
         ]);
 
         $software->update([
             'name' => $request->name,
             'supplier_id' => $request->supplier_id,
+            'manufacturer_id' => $request->manufacturer_id,
             'location_id' => $request->location_id,
             'purchased_cost' => $request->purchased_cost,
             'purchased_date' => $request->purchased_date,
@@ -158,23 +212,7 @@ class SoftwareController extends Controller {
         return to_route('softwares.index')->with('success_message', $request->name . ' Has been Updated!');
     }
 
-    public function recycleBin()
-    {
-        //Check to see if the user has permission to delete software on the system
-        if(auth()->user()->cant('delete', Software::class))
-        {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Delete Software.');
 
-        }
-        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
-
-        // Return the Create View to the browser
-        return view('software.bin', [
-            "locations" => $locations,
-            "softwares" => Software::onlyTrashed()->paginate(),
-        ]);
-
-    }
 
     public function destroy(Software $software)
     {
@@ -264,7 +302,7 @@ class SoftwareController extends Controller {
 
         }
         $softwares = array();
-        $found = Software::select('name', 'id', 'depreciation', 'supplier_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at')->withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
+        $found = Software::select('name', 'id', 'depreciation', 'supplier_id', 'manufacturer_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at')->withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
         foreach($found as $f)
         {
             $array = array();
@@ -273,7 +311,8 @@ class SoftwareController extends Controller {
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = $f->purchased_cost;
             $array['depreciation'] = $f->depreciation;
-            $array['supplier'] = $f->supplier->name ?? 'No Supplier';
+            $array['supplier'] = $f->supplier->name ?? 'N/A';
+            $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
             $softwares[] = $array;
         }
 

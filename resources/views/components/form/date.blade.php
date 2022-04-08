@@ -1,4 +1,4 @@
-@props(['name','formAttributes' ,'value'=> \Carbon\Carbon::parse(now())->format('Y-m-d')]){{--form input Dynamic || enter a valid date which is parsed--}}
+@props(['name','formAttributes' => '' ,'value'=> \Carbon\Carbon::parse(now())->format('Y-m-d')]){{--form input Dynamic || enter a valid date which is parsed--}}
 
 <label for="name">{{str_replace(array('_','id'), ' ',ucfirst($name))}}</label>
 @if(isset($formAttributes))

@@ -628,7 +628,9 @@ class VehicleController extends Controller {
         }
 
         $vehicle->leftJoin('locations', 'vehicles.location_id', '=', 'locations.id')
-            ->select('vehicles.*', 'locations.name as location_name');
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'vehicles.supplier_id')
+            ->select('vehicles.*', 'locations.name as location_name', 'suppliers.name as supplier_name')
+            ->orderBy(session('vehicle_orderby') ?? 'purchased_date', session('vehicle_direction') ?? 'asc');
         $limit = session('vehicle_limit') ?? 25;
 
         return view('vehicle.view', [

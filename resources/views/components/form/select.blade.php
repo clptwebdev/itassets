@@ -1,4 +1,4 @@
-@props(['name','formAttributes' ,'models' ,'selected' => 0 ,'id' => $name]){{--defaults the selcted collumns if not set to edit and with id || selected value should be the id of the related model --}}
+@props(['name','formAttributes' => '' ,'models' ,'selected' => 0 ,'id' => $name]){{--defaults the selcted collumns if not set to edit and with id || selected value should be the id of the related model --}}
 
 <label for="{{$name}}">{{str_replace(array('_','id'), ' ',ucfirst($name))}}</label>
 @if(isset($formAttributes))

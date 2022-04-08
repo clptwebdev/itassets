@@ -114,6 +114,11 @@ class User extends Authenticatable {
         return $this->hasManyDeep(Property::class, ['location_user', Location::class]);
     }
 
+    public function location_software()
+    {
+        return $this->hasManyDeep(Property::class, ['location_user', Location::class]);
+    }
+
     public function location_auc()
     {
         return $this->hasManyDeep(AUC::class, ['location_user', Location::class]);

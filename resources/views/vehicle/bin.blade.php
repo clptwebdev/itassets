@@ -4,7 +4,7 @@
 
 
 @section('content')
-    <x-wrappers.nav title="Vehicle Recycle Bin">
+    <x-wrappers.nav title="Vehicle | Recycle Bin">
         <x-buttons.return :route="route('vehicles.index')">Vehicle</x-buttons.return>
     </x-wrappers.nav>
     <x-handlers.alerts/>
@@ -16,47 +16,45 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive" id="table">
                     <table id="assetsTable" class="table table-striped">
                         <thead>
-                        <tr>
-                            <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-4 col-md-2"><small>Registration</small></th>
-                            <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
-                            <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class="col-1 col-md-auto text-center"><small>Location</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
-                            </th>
-                            <th class="text-right col-1"><small>Options</small></th>
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-                            <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-4 col-md-2"><small>Registration</small></th>
-                            <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
-                            <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class="col-1 col-md-auto text-center"><small>Location</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
-                            </th>
-                            <th class="text-right col-1"><small>Options</small></th>
-                        </tr>
-                        </tfoot>
-                        <tbody>
-                        @foreach($vehicles as $vehicle)
                             <tr>
-                                <td class="text-left">{{$vehicle->name}}</td>
-                                <td class="text-left">{{$vehicle->registration ?? 'N/A'}}</td>
-                                <td class="text-center">£{{number_format($vehicle->purchased_cost, 2, '.', ',')}}</td>
-                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($vehicle->purchased_date)->format('d-M-Y')}}</td>
-                                <td class="text-center">{{$vehicle->supplier->name}}</td>
-                                <td class="text-center">{{$vehicle->location->name}}</td>
-                                <td class="text-center">
-                                    £{{number_format($vehicle->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
-                                    <small>{{$vehicle->depreciation}} Years</small></td>
-                                <td class="text-right">
+                                <th class="col-2"><small>Name</small></th>
+                                <th class="col-1"><small>Registration</small></th>
+                                <th class="col-2 col-md-auto text-center"><small>Location</small></th>
+                                <th class="text-center col-2"><small>Supplier</small></th>
+                                <th class="text-center col-1"><small>Purchase Date</small></th>
+                                <th class="col-1 text-center"><small>Purchase Cost</small></th>
+                                <th class="col-1 text-center"><small>Current Value</small></th>
+                                <th class="text-center col-1"><small>Depreciation (Years)</small></th>
+                                <th class="text-right col-1"><small>Options</small></th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th><small>Name</small></th>
+                                <th><small>Registration</small></th>
+                                <th class="text-center"><small>Location</small></th>
+                                <th class="text-center"><small>Supplier</small></th>
+                                <th class="text-center"><small>Purchase Date</small></th>
+                                <th class="text-center"><small>Purchase Cost</small></th>
+                                <th class="text-center"><small>Current Value</small></th>
+                                <th class="text-center"><small>Depreciation (Years)</small></th>
+                                <th class="text-end"><small>Options</small></th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            @foreach($vehicles as $vehicle)
+                                <tr>
+                                    <td class="text-start">{{$vehicle->name}}</td>
+                                    <td class="text-start">{{$vehicle->registration ?? 'N/A'}}</td>
+                                    <td class="text-center">{{$vehicle->location->name}}</td>
+                                    <td class="text-center">{{$vehicle->supplier->name ?? 'N/A'}}</td>
+                                    <td class="text-center">{{ \Illuminate\Support\Carbon::parse($vehicle->purchased_date)->format('d-M-Y')}}</td>
+                                    <td class="text-center">£{{number_format($vehicle->purchased_cost, 2, '.', ',')}}</td>
+                                    <td class="text-center">£{{number_format($vehicle->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
+                                    <td class="text-center">{{$vehicle->depreciation}} Years</td>
+                                <td class="text-end">
                                     <x-wrappers.table-settings>
                                         @can('viewAll', \App\Models\Vehicle::class)
                                             <x-buttons.dropdown-item :route="route('vehicle.restore', $vehicle->id)">
@@ -85,7 +83,6 @@
                         </tbody>
                     </table>
                     <x-paginate :model="$vehicles"/>
-                </div>
             </div>
         </div>
     </section>

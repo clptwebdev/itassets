@@ -26,6 +26,11 @@ class Software extends Model {
         return $this->belongsTo(Supplier::class);
     }
 
+    public function manufacturer()
+    {
+        return $this->belongsTo(Manufacturer::class);
+    }
+
     public function comment()
     {
         return $this->morphToMany(Comment::class, "commentables");
