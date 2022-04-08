@@ -10,7 +10,7 @@
 <textarea name="{{str_replace(' ', '_', strtolower($name))}}" value='{{$value}}'
           id="{{str_replace(' ', '_', strtolower($name))}}"
           class="form-control @if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
-    {!! str_replace('required' , '', $formAttributes) ?? null!!}
+    {!! str_replace('required' , '', $formAttributes  ?? null)!!}
 >{{old(str_replace(' ', '_', strtolower($name))) ?? $value}}</textarea>
 
 {{--  pass attribues seperated with spaces  --}}

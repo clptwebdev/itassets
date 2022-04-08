@@ -13,7 +13,7 @@
         @if(!$checked == null)
             @if(in_array($model->id, $checked)){{ 'checked'}}@endif
             @endif
-            {!! str_replace('required' , '', $formAttributes) ?? null!!}
+            {!! str_replace('required' , '', $formAttributes ?? null) !!}
         >
 
         <label class="form-check-label "

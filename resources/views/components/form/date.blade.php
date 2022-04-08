@@ -10,4 +10,4 @@
        class="form-control @if ($errors->has(str_replace(' ', '_', strtolower($name))))  {!! 'border-danger' !!} @endif"
        name="{{str_replace(' ', '_', strtolower($name))}}" id="{{str_replace(' ', '_', strtolower($name))}}"
        placeholder="{{ucfirst($name)}}" id="{{str_replace(' ', '_', strtolower($name))}}" value="{{$value ?? null}}"
-    {!! str_replace('required' , '', $formAttributes) ?? null!!} >  {{--  pass attribues seperated with spaces  --}}
+    {!! str_replace('required' , '', $formAttributes ?? null) !!} >  {{--  pass attribues seperated with spaces  --}}
