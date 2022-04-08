@@ -41,8 +41,8 @@ class VehicleExport implements FromArray, WithHeadings, ShouldAutoSize, WithEven
             $array = [];
             $array["name"] = $vehicle->name;
             $array["registration"] = $vehicle->registration;
-            $array["supplier_id"] = $vehicle->supplier_id;
-            $array["location_id"] = $vehicle->location_id ?? null;
+            $array["supplier_id"] = $vehicle->supplier->name ?? '';
+            $array["location_id"] = $vehicle->location->name ?? '';
             $array["purchased_cost"] = $vehicle->purchased_cost;
             $array["purchased_date"] = $vehicle->purchased_date;
             $array["depreciation"] = $vehicle->depreciation;

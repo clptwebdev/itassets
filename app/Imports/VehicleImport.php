@@ -76,6 +76,21 @@ class VehicleImport extends DefaultValueBinder implements ToModel, WithValidatio
 
     }
 
+    public function customValidationMessages()
+    {
+        return [
+            'name.required' => 'You must provide a name to reference the Vehicle!',
+            'registration.required' => 'Please enter the Vehicle Registration',
+            'location_id.required' => 'Please assign the Vehicle to a Location',
+            'purchased_cost.required' => 'The purchased cost for the Vehicle is empty!',
+            'purchased_cost.regex' => 'The purchased cost is not in a valid format. Please enter a decmial currency without the £ symbol',
+            'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
+            'depreciation.numeric' => 'The depreciation for the Vehicle is a number of years - the value is currently invalid',
+            'purchased_date.required' => 'Please enter the date the Vehicle was purchased',
+            'purchased_date.date_format' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+        ];
+    }
+
     public function model(array $row)
     {
 

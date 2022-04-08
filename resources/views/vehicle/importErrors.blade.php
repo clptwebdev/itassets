@@ -21,9 +21,9 @@
                         class="far fa-save fa-sm text-dark-50"></i> Download Errors
                 </button>
             </form>
-            <a href="{{ route('softwares.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+            <a href="{{ route('vehicles.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm te
-                    xt-white-50"></i> Back to Software</a>
+                    xt-white-50"></i> Back to Vehicles</a>
             <a id="importHelpBtn" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
             <a onclick="javscript:checkErrors(this);" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
@@ -244,9 +244,14 @@
         });
 
         function enableToolTips() {
-            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            /* let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
             let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl)
+            }) */
+
+            const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltips.forEach(t => {
+                new bootstrap.Tooltip(t);
             })
         }
 
@@ -316,24 +321,19 @@
                     });
 
                     let i = 0;
-                    console.log(xhr.response);
                     Object.entries(JSON.parse(xhr.responseText)).forEach(entry => {
-                        console.log(entry);
                         const [key, value] = entry;
                         res = key.split('.');
                         const error = value.toString().replace(key, res[0]);
-                        console.log(error);
-                        console.log(res[1]);
                         let elements = document.querySelectorAll(`[name='${res[0]}[]']`);
-                        console.log(elements[0]);
                         let num = parseInt(res[1]);
                         elements[num].classList.add('border-bottom', 'border-danger');
                         elements[num].setAttribute('data-bs-toggle', 'tooltip');
-                        elements[num].setAttribute('data-title', error);
+                        elements[num].setAttribute('data-bs-original-title', error);
+                        new bootstrap.Tooltip(elements[num]);
                         i++;
-                        enableToolTips();
+                        
                     });
-
                     errorMessage.innerHTML = `There were ${i} errors in the following rows`;
                 }
             };

@@ -53,14 +53,12 @@
 
         @php
 
-            $limit = auth()->user()->location_property()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
-            $floor = auth()->user()->location_property()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+            $limit = auth()->user()->location_vehicle()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_vehicle()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
 
-        if(session()->has('property_amount')){
-            $amount = str_replace('£', '', session('property_amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
+        if(session()->has('vehicle_min') && session()->has('vehicle_max')){
+            $start_value = session('vehicle_min');
+            $end_value = session('vehicle_max');
         }else{
             $start_value = $floor;
             $end_value = $limit;
@@ -77,43 +75,42 @@
                     <table id="assetsTable" class="table table-striped">
                         <thead>
                         <tr>
-                            <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-4 col-md-2"><small>Registration</small></th>
-                            <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
-                            <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class="col-1 col-md-auto text-center"><small>Location</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
-                            </th>
+                            <th class="col-2"><small>Name</small></th>
+                            <th class="col-1"><small>Registration</small></th>
+                            <th class="col-2 col-md-auto text-center"><small>Location</small></th>
+                            <th class="text-center col-2"><small>Supplier</small></th>
+                            <th class="text-center col-1"><small>Purchase Date</small></th>
+                            <th class="col-1 text-center"><small>Purchase Cost</small></th>
+                            <th class="col-1 text-center"><small>Current Value</small></th>
+                            <th class="text-center col-1"><small>Depreciation (Years)</small></th>
                             <th class="text-right col-1"><small>Options</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
-                            <th class="col-4 col-md-2"><small>Name</small></th>
-                            <th class="col-4 col-md-2"><small>Registration</small></th>
-                            <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
-                            <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
-                            <th class="col-1 col-md-auto text-center"><small>Location</small></th>
-                            <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
-                            </th>
-                            <th class="text-right col-1"><small>Options</small></th>
+                            <th><small>Name</small></th>
+                            <th><small>Registration</small></th>
+                            <th class="text-center"><small>Location</small></th>
+                            <th class="text-center"><small>Supplier</small></th>
+                            <th class="text-center"><small>Purchase Date</small></th>
+                            <th class="text-center"><small>Purchase Cost</small></th>
+                            <th class="text-center"><small>Current Value</small></th>
+                            <th class="text-center"><small>Depreciation (Years)</small></th>
+                            <th class="text-end"><small>Options</small></th>
                         </tr>
                         </tfoot>
                         <tbody>
                         @foreach($vehicles as $vehicle)
                             <tr>
-                                <td class="text-left">{{$vehicle->name}}</td>
-                                <td class="text-left">{{$vehicle->registration ?? 'N/A'}}</td>
-                                <td class="text-center">£{{number_format($vehicle->purchased_cost, 2, '.', ',')}}</td>
-                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($vehicle->purchased_date)->format('d-M-Y')}}</td>
-                                <td class="text-center">{{$vehicle->supplier->name}}</td>
+                                <td class="text-start">{{$vehicle->name}}</td>
+                                <td class="text-start">{{$vehicle->registration ?? 'N/A'}}</td>
                                 <td class="text-center">{{$vehicle->location->name}}</td>
-                                <td class="text-center">
-                                    £{{number_format($vehicle->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
-                                    <br><small>{{$vehicle->depreciation}} Years</small></td>
-                                <td class="text-right">
+                                <td class="text-center">{{$vehicle->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($vehicle->purchased_date)->format('d-M-Y')}}</td>
+                                <td class="text-center">£{{number_format($vehicle->purchased_cost, 2, '.', ',')}}</td>
+                                <td class="text-center">£{{number_format($vehicle->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}</td>
+                                <td class="text-center">{{$vehicle->depreciation}} Years</td>
+                                <td class="text-end">
                                     <x-wrappers.table-settings>
                                         @can('view', $vehicle)
                                             <x-buttons.dropdown-item :route="route('vehicles.show', $vehicle->id)">
