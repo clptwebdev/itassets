@@ -19,7 +19,6 @@
                 <div class="col-12">
                     <div class="card shadow h-100">
                         <div class="card-body">
-                            <x-form.errors/>
                             <x-handlers.alerts/>
                             <ul id="tab-bar" class="nav nav-tabs">
                                 <li class="nav-item">
@@ -38,13 +37,13 @@
                                                 <x-form.input name="name" value="{{old('name')}}"/>
                                             </div>
                                             <div class='form-group'>
-                                                <x-form.select name="supplier_id" :models="$suppliers"selected="{{ old('supplier_id')}}"/>
+                                                <x-form.select name="supplier_id" :models="$suppliers" selected="{{ old('supplier_id')}}"/>
                                             </div>
                                             <div class="form-group position-relative">
                                                 <label for="findLocation">Location</label>
                                                 <input type="hidden" id="location_id" name="location_id"
                                                        class="form-control mb-3" readonly value="{{old('location_id')}}">
-                                                <input class="form-control" type="text" name="find_location"
+                                                <input class="form-control @if($errors->has('location_id')) border border-danger @endif" type="text" name="find_location"
                                                        id="findLocation" value="{{old('find_location')}}" placeholder="Search for Location"
                                                        autocomplete="off">
                                                 <div id="locationResults"

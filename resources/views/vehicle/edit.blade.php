@@ -9,7 +9,7 @@
 @section('content')
     <x-form.layout :action="route('vehicles.update' , $vehicle->id)" method="PUT">
         <x-wrappers.nav title="Add Vehicle">
-            <x-buttons.return :route="route('softwares.index')">Vehicle</x-buttons.return>
+            <x-buttons.return :route="route('vehicles.index')">Vehicle</x-buttons.return>
             <x-buttons.submit>Save</x-buttons.submit>
         </x-wrappers.nav>
         <section>

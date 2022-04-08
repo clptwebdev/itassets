@@ -17,6 +17,10 @@ use Maatwebsite\Excel\HeadingRowImport;
 
 class VehicleController extends Controller {
 
+    ///////////////////////////////////////
+    //////// View Fucntions ///////////////
+    ///////////////////////////////////////
+
     public function index()
     {
         //Check to see if the User has permission to View All the vehicle.
@@ -39,6 +43,43 @@ class VehicleController extends Controller {
             "locations" => $locations,
         ]);
     }
+
+    public function show(Vehicle $vehicle)
+    {
+        //Check to see if the User is has permission to create
+        if(auth()->user()->cant('view', $vehicle))
+        {
+            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to update vehicle.');
+
+        }
+
+        // Return the Create View to the browser
+        return view('vehicle.show', [
+            "vehicle" => $vehicle,
+        ]);
+    }
+
+    public function recycleBin()
+    {
+        //Check to see if the user has permission to delete vehicle on the system
+        if(auth()->user()->cant('delete', Vehicle::class))
+        {
+            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Delete vehicle.');
+
+        }
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
+
+        // Return the Create View to the browser
+        return view('vehicle.bin', [
+            "locations" => $locations,
+            "vehicles" => Vehicle::onlyTrashed()->paginate(),
+        ]);
+
+    }
+
+    ///////////////////////////////////////
+    //////// Create Fucntions /////////////
+    ///////////////////////////////////////
 
     public function create()
     {
@@ -73,16 +114,26 @@ class VehicleController extends Controller {
             'name' => 'required',
             'registration' => 'required',
             'location_id' => 'required',
-            'supplier_id' => 'required',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
+        ],[
+            'name.required' => 'You must provide a name to reference the Vehicle!',
+            'registration.required' => 'Please enter the Vehicle Registration',
+            'location_id.required' => 'Please assign the Vehicle to a Location',
+            'purchased_cost.required' => 'The purchased cost for the Vehicle is empty!',
+            'purchased_cost.regex' => 'The purchased cost is not in a valid format. Please enter a decmial currency without the £ symbol',
+            'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
+            'depreciation.numeric' => 'The depreciation for the Vehicle is a number of years - the value is currently invalid',
+            'purchased_date.required' => 'Please enter the date the Vehicle was purchased',
+            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+
         ]);
         Vehicle::create([
             'name' => $request->name,
             'registration' => $request->registration,
-            'supplier_id' => $request->supplier_id,
             'location_id' => $request->location_id,
+            'supplier_id' => $request->supplier_id,
             'purchased_cost' => $request->purchased_cost,
             'purchased_date' => $request->purchased_date,
             'depreciation' => $request->depreciation,
@@ -91,20 +142,9 @@ class VehicleController extends Controller {
         return to_route('vehicles.index')->with('success_message', $request->name . ' Has been Added!');
     }
 
-    public function show(Vehicle $vehicle)
-    {
-        //Check to see if the User is has permission to create
-        if(auth()->user()->cant('view', $vehicle))
-        {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to update vehicle.');
-
-        }
-
-        // Return the Create View to the browser
-        return view('vehicle.show', [
-            "vehicle" => $vehicle,
-        ]);
-    }
+    ///////////////////////////////////////
+    //////// Edit Fucntions ///////////////
+    ///////////////////////////////////////
 
     public function edit(vehicle $vehicle)
     {
@@ -140,10 +180,20 @@ class VehicleController extends Controller {
             'name' => 'required',
             'registration' => 'required',
             'location_id' => 'required',
-            'supplier_id' => 'required',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
+        ],[
+            'name.required' => 'You must provide a name to reference the Vehicle!',
+            'registration.required' => 'Please enter the Vehicle Registration',
+            'location_id.required' => 'Please assign the Vehicle to a Location',
+            'purchased_cost.required' => 'The purchased cost for the Vehicle is empty!',
+            'purchased_cost.regex' => 'The purchased cost is not in a valid format. Please enter a decmial currency without the £ symbol',
+            'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
+            'depreciation.numeric' => 'The depreciation for the Vehicle is a number of years - the value is currently invalid',
+            'purchased_date.required' => 'Please enter the date the Vehicle was purchased',
+            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+
         ]);
 
         $vehicle->update([
@@ -159,23 +209,9 @@ class VehicleController extends Controller {
         return to_route('vehicles.index')->with('success_message', $request->name . ' Has been Updated!');
     }
 
-    public function recycleBin()
-    {
-        //Check to see if the user has permission to delete vehicle on the system
-        if(auth()->user()->cant('delete', Vehicle::class))
-        {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Delete vehicle.');
-
-        }
-        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
-
-        // Return the Create View to the browser
-        return view('vehicle.bin', [
-            "locations" => $locations,
-            "vehicles" => Vehicle::onlyTrashed()->paginate(),
-        ]);
-
-    }
+    ///////////////////////////////////////
+    //////// Delete Fucntions /////////////
+    ///////////////////////////////////////
 
     public function destroy(Vehicle $vehicle)
     {
@@ -274,6 +310,7 @@ class VehicleController extends Controller {
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = $f->purchased_cost;
+            $array['current_value'] = $f->depreciation_value();
             $array['depreciation'] = $f->depreciation;
             $array['supplier'] = $f->supplier->name ?? 'No Supplier';
             $vehicles[] = $array;
@@ -338,7 +375,7 @@ class VehicleController extends Controller {
         {
         } else
         {
-            return to_route('assets.index')->with('danger_message', "CSV Heading's Incorrect Please amend and try again!");
+            return to_route('vehicles.index')->with('danger_message', "CSV Heading's Incorrect Please amend and try again!");
         }
         //headings incorrect end
         $extensions = array("csv");
@@ -438,6 +475,17 @@ class VehicleController extends Controller {
             'purchased_date.*' => 'date',
             'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             "depreciation.*" => "nullable",
+        ],[
+            'name.*.required' => 'You must provide a name to reference the Vehicle!',
+            'registration.*.required' => 'Please enter the Vehicle Registration',
+            'location_id.*.required' => 'Please assign the Vehicle to a Location',
+            'purchased_cost.*.required' => 'The purchased cost for the Vehicle is empty!',
+            'purchased_cost.*.regex' => 'The purchased cost is not in a valid format. Please enter a decmial currency without the £ symbol',
+            'depreciation.*.required' => 'Please enter a depreciation value, this is a number of years',
+            'depreciation.*.numeric' => 'The depreciation for the Vehicle is a number of years - the value is currently invalid',
+            'purchased_date.*.required' => 'Please enter the date the Vehicle was purchased',
+            'purchased_date.*.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+
         ]);
 
         if($validation->fails())
@@ -547,8 +595,8 @@ class VehicleController extends Controller {
                 session(['vehicle_end' => $request->end]);
             }
 
-            session(['assets_min' => $request->minCost]);
-            session(['assets_max' => $request->maxCost]);
+            session(['vehicle_min' => $request->minCost]);
+            session(['vehicle_max' => $request->maxCost]);
         }
         //Check the Users Locations Permissions
         $locations = Location::select('id', 'name')->withCount('vehicle')->get();
@@ -567,10 +615,10 @@ class VehicleController extends Controller {
             session(['vehicle_filter' => true]);
         }
 
-        if(session()->has('assets_min') && session()->has('assets_max'))
+        if(session()->has('vehicle_min') && session()->has('vehicle_max'))
         {
-            $vehicle->costFilter(session('assets_min'), session('assets_max'));
-            session(['assets_filter' => true]);
+            $vehicle->costFilter(session('vehicle_min'), session('vehicle_max'));
+            session(['vehicle_filter' => true]);
         }
 
         if(session()->has('vehicle_search'))
@@ -592,7 +640,7 @@ class VehicleController extends Controller {
     public function clearFilter()
     {
         //Clear the Filters for the properties
-        session()->forget(['vehicle_filter', 'vehicle_locations', 'vehicle_start', 'vehicle_end', 'vehicle_amount', 'vehicle_search']);
+        session()->forget(['vehicle_filter', 'vehicle_locations', 'vehicle_start', 'vehicle_end', 'vehicle_min', 'vehicle_max', 'vehicle_search']);
 
         return to_route('vehicles.index');
     }
