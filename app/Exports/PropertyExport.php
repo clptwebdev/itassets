@@ -12,11 +12,12 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Carbon\Carbon;
 
-class PropertyExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents 
-{
+class PropertyExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents, WithTitle {
+
     use Exportable;
 
     private $properties;
@@ -29,12 +30,12 @@ class PropertyExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
     public function headings(): array
     {
         return [
-            "name",
-            "type",
-            "location",
-            "purchased_date",
-            "purchased_cost",
-            "depreciation"
+            "Name",
+            "Type",
+            "Location",
+            "Purchased Date",
+            "Purchased Cost",
+            "Depreciation",
         ];
     }
 
@@ -44,15 +45,19 @@ class PropertyExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         foreach($this->properties as $property)
         {
             $array = [];
-            $array['name'] = $property->name;
-            $array['type'] = $property->getType();
-            $array['location_id'] = $property->location->name ?? 'Unknown';
-            $array['purchased_date'] = Carbon::parse($property->purchased_date)->format('d\/m\/Y') ?? 'Unknown';
-            $array['purchased_cost'] = '£'.number_format( (float) $property->purchased_cost , 2, '.', ',' ) ?? 'Unknown';
-            $array['depreciation'] = $property->depreciation ?? 'Unknown';
+            $array['Name'] = $property->name;
+            $array['Type'] = $property->getType();
+            $array['Location'] = $property->location->name ?? 'Unknown';
+            $array['Purchased Date'] = Carbon::parse($property->purchased_date)->format('d\/m\/Y') ?? 'Unknown';
+            $array['Purchased Cost'] = '£' . number_format((float)$property->purchased_cost, 2, '.', ',') ?? 'Unknown';
+            $array['Depreciation'] = $property->depreciation ?? 'Unknown';
             $object[] = $array;
 
         }
+//        $purchased_details = [];
+//        $purchased_details['Purchased Cost'] = 'Total Cost:' . 123;
+//        $purchased_details['Purchased Date'] = 'Total Cost After Depreciation:' . 120;
+//        array_push($object, $purchased_details);
 
         return $object;
     }
@@ -67,4 +72,10 @@ class PropertyExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
             },
         ];
     }
+
+    public function title(): string
+    {
+        return 'Property';
+    }
+
 }

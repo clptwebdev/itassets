@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AssetExport;
+use App\Exports\BusinessExport;
 use App\Models\Accessory;
 use App\Models\Asset;
 use App\Models\Component;
 use App\Models\Consumable;
 use App\Models\FFE;
 use App\Models\Location;
+use App\Models\Machinery;
 use App\Models\Miscellanea;
 use App\Models\Requests;
 use App\Models\Archive;
+use App\Models\Software;
 use App\Models\Transfer;
 use App\Models\Property;
 use App\Models\AUC;
+use App\Models\Vehicle;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -29,6 +34,42 @@ class HomeController extends Controller {
     public function business()
     {
         return view('dashboard.business');
+    }
+    ////////////////////////////////////////
+    ////// business export Search Functions ////////
+    ////////////////////////////////////////
+    public function businessExport()
+    {
+        $property = Property::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $ffe = FFE::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $auc = AUC::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $machines = Machinery::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $vehicle = Vehicle::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $components = Component::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $miscellanea = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $software = Software::locationFilter(auth()->user()->locations->pluck('id'))->get();
+
+        $merged = collect([$components, $accessories, $miscellanea, $software, $assets]);
+        $computers = Collection::empty();
+        //foreach $model then Foreach $item Push to a single collection
+        foreach($merged as $merge)
+        {
+            foreach($merge as $item)
+            {
+                $computers->push($item);
+            }
+        }
+        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
+        \Maatwebsite\Excel\Facades\Excel::store(new BusinessExport($computers, $property, $ffe, $auc, $machines, $vehicle), "/public/csv/business-ex-{$date}.xlsx");
+        $url = asset("storage/csv/business-ex-{$date}.xlsx");
+
+        return to_route('business')
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
+
+
     }
     ////////////////////////////////////////
     ////// Top Bar Search Functions ////////
@@ -57,7 +98,7 @@ class HomeController extends Controller {
             'assets' => $single,
         ]);
     }
-    
+
     ////////////////////////////////////////
     ////// Statistic Functions /////////////
     ////////////////////////////////////////

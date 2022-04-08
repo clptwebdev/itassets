@@ -8,9 +8,10 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class MachineryExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents {
+class MachineryExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents, WithTitle {
 
     private $machineries;
 
@@ -22,13 +23,13 @@ class MachineryExport implements FromArray, WithHeadings, ShouldAutoSize, WithEv
     public function headings(): array
     {
         return [
-            "name",
-            "description",
-            "supplier_id",
-            "location_id",
-            "purchased_cost",
-            "purchased_date",
-            "depreciation",
+            "Name",
+            "Description",
+            "Supplier",
+            "Location",
+            "Purchased Cost",
+            "Purchased Date",
+            "Depreciation",
         ];
     }
 
@@ -39,13 +40,13 @@ class MachineryExport implements FromArray, WithHeadings, ShouldAutoSize, WithEv
         foreach($this->machineries as $machinery)
         {
             $array = [];
-            $array["name"] = $machinery->name;
-            $array["description"] = $machinery->description;
-            $array["supplier_id"] = $machinery->supplier_id;
-            $array["location_id"] = $machinery->location_id ?? null;
-            $array["purchased_cost"] = $machinery->purchased_cost;
-            $array["purchased_date"] = $machinery->purchased_date;
-            $array["depreciation"] = $machinery->depreciation;
+            $array["Name"] = $machinery->name;
+            $array["Description"] = $machinery->description;
+            $array["Supplier"] = $machinery->supplier_id;
+            $array["Location"] = $machinery->location_id ?? null;
+            $array["Purchased Cost"] = $machinery->purchased_cost;
+            $array["Purchased Date"] = $machinery->purchased_date;
+            $array["Depreciation"] = $machinery->depreciation;
             $object[] = $array;
 
 
@@ -63,6 +64,11 @@ class MachineryExport implements FromArray, WithHeadings, ShouldAutoSize, WithEv
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14)->setBold(1);
             },
         ];
+    }
+
+    public function title(): string
+    {
+        return 'Machinery';
     }
 
 }

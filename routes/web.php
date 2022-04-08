@@ -27,6 +27,7 @@ Route::group(['middleware' => 'auth'], function() {
         //Dashboard
         Route::get('/dashboard', "index")->name('dashboard');
         Route::get('/business', "business")->name('business');
+        Route::get('/business/export', "businessExport")->name('business.export');
         Route::get('/', "index")->name('home');
         Route::get('/statistics', 'statistics')->name('dashboard.statistics');
         Route::get('/business/statistics', 'business_statistics')->name('business.statistics');
