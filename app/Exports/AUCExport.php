@@ -12,12 +12,13 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 use Carbon\Carbon;
 
-class AUCExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents 
-{
+class AUCExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents, WithTitle {
+
     use Exportable;
 
     private $aucs;
@@ -30,12 +31,12 @@ class AUCExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
     public function headings(): array
     {
         return [
-            "name",
-            "type",
-            "location",
-            "purchased_date",
-            "purchased_cost",
-            "depreciation"
+            "Name",
+            "Type",
+            "Location",
+            "Purchased Date",
+            "Purchased Cost",
+            "Depreciation",
         ];
     }
 
@@ -44,13 +45,14 @@ class AUCExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
         $object = [];
         foreach($this->aucs as $auc)
         {
+
             $array = [];
-            $array['name'] = $auc->name;
-            $array['type'] = $auc->getType();
-            $array['location_id'] = $auc->location->name ?? 'Unknown';
-            $array['purchased_date'] = Carbon::parse($auc->purchased_date)->format('d\/m\/Y') ?? 'Unknown';
-            $array['purchased_cost'] = '£'.number_format( (float) $auc->purchased_cost , 2, '.', ',' ) ?? 'Unknown';
-            $array['depreciation'] = $auc->depreciation ?? 'Unknown';
+            $array['Name'] = $auc->name;
+            $array['Type'] = $auc->getType();
+            $array['Location'] = $auc->location->name ?? 'Unknown';
+            $array['Purchased Date'] = Carbon::parse($auc->purchased_date)->format('d\/m\/Y') ?? 'Unknown';
+            $array['Purchased Cost'] = '£' . number_format((float)$auc->purchased_cost, 2, '.', ',') ?? 'Unknown';
+            $array['Depreciation'] = $auc->depreciation ?? 'Unknown';
             $object[] = $array;
 
         }
@@ -69,4 +71,10 @@ class AUCExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
             },
         ];
     }
+
+    public function title(): string
+    {
+        return 'AUC';
+    }
+
 }

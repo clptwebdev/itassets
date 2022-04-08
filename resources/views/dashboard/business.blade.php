@@ -8,7 +8,7 @@
 
 @section('content')
     <!-- session messages -->
-    <x-handlers.alerts />
+    <x-handlers.alerts/>
 
     <!-- Page Heading -->
     <div class="d-flex align-items-center justify-content-between mb-4">
@@ -16,180 +16,196 @@
         <div>
             <button type="button" class="btn btn-blue">Reports</button>
             <a href="{{ route('cache.clear')}}" class="btn btn-grey"><i class="fas fa-sync-alt"></i></a>
+            <x-buttons.export :route="route('business.export')"/>
         </div>
     </div>
 
     @if(auth()->user()->role_id != 0)
         <!-- Asset stats -->
         <!-- Content Row -->
-<div class=" p-2 mb-1 ">
-    <!-- Total-->
-    <div class="row rounded p-2 pb-lg-4" style="background-color: #EEE">
+        <div class=" p-2 mb-1 ">
+            <!-- Total-->
+            <div class="row rounded p-2 pb-lg-4" style="background-color: #EEE">
 
-        <div class="col-12 col-sm-8 col-lg-2 mb-4 mb-lg-0 order-3 order-lg-1">
-            <div class="card border-left-lilac shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-lilac text-uppercase mb-1">
-                                Property</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="total_count" class="countup"></span></small><br>
-                                <span id="total_cost" class=""></span><br>
-                                <small class="text-coral">£<span id="total_dep" class=""></small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                <div class="col-12 col-sm-8 col-lg-2 mb-4 mb-lg-0 order-3 order-lg-1">
+                    <div class="card border-left-lilac shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-lilac text-uppercase mb-1">
+                                        Property
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="total_count" class="countup"></span></small><br>
+                                        <span id="total_cost" class=""></span><br>
+                                        <small class="text-coral">£<span id="total_dep" class=""></small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-school fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-school fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-1 order-lg-2">
-            <div class="card border-left-coral shadow h-100 py-2 postion-relative">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1">
-                            <div class="text-xs font-weight-bold text-coral text-uppercase mb-1">
-                                Assets Under Construction</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="auc_count" class="countup"></span></small><br>
-                                <span id="auc_cost" class=""></span><br>
-                                <small class="text-coral">(£<span id="auc_dep" class="countup"></span>)*</small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-tablet-alt fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                    </div>
+                </div>
+                <!-- Earnings (Monthly) Card Example -->
+                <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-1 order-lg-2">
+                    <div class="card border-left-coral shadow h-100 py-2 postion-relative">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-1">
+                                    <div class="text-xs font-weight-bold text-coral text-uppercase mb-1">
+                                        Assets Under Construction
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="auc_count" class="countup"></span></small><br>
+                                        <span id="auc_cost" class=""></span><br>
+                                        <small class="text-coral">(£<span id="auc_dep" class="countup"></span>)*</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-tablet-alt fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
-            <div class="card border-left-blue shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1">
-                            <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                FFE (Furniture, Fixtures and Equipment)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                £<span id="accessory_cost" class="countup"></span><br>
-                                <small class="text-coral">(£<span id="accessory_dep" class="countup"></span>)</small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
+                    <div class="card border-left-blue shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-1">
+                                    <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
+                                        FFE (Furniture, Fixtures and Equipment)
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="accessory_count" class="countup"></span></small><br>
+                                        £<span id="accessory_cost" class="countup"></span><br>
+                                        <small class="text-coral">(£<span id="accessory_dep"
+                                                                          class="countup"></span>)</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
-            <div class="card border-left-blue shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1">
-                            <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                Plant & Machinery
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                £<span id="accessory_cost" class="countup"></span><br>
-                                <small class="text-coral">(£<span id="accessory_dep" class="countup"></span>)</small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
+                    <div class="card border-left-blue shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-1">
+                                    <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
+                                        Plant & Machinery
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="accessory_count" class="countup"></span></small><br>
+                                        £<span id="accessory_cost" class="countup"></span><br>
+                                        <small class="text-coral">(£<span id="accessory_dep"
+                                                                          class="countup"></span>)</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
-            <div class="card border-left-blue shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1">
-                            <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                Motor Vehicles</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                £<span id="accessory_cost" class="countup"></span><br>
-                                <small class="text-coral">(£<span id="accessory_dep" class="countup"></span>)</small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
+                    <div class="card border-left-blue shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-1">
+                                    <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
+                                        Motor Vehicles
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="accessory_count" class="countup"></span></small><br>
+                                        £<span id="accessory_cost" class="countup"></span><br>
+                                        <small class="text-coral">(£<span id="accessory_dep"
+                                                                          class="countup"></span>)</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
-            <div class="card border-left-blue shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1">
-                            <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                Computer Equipment</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                £<span id="accessory_cost" class="countup"></span><br>
-                                <small class="text-coral">(£<span id="accessory_dep" class="countup"></span>)</small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
+                    <div class="card border-left-blue shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-1">
+                                    <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
+                                        Computer Equipment
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="accessory_count" class="countup"></span></small><br>
+                                        £<span id="accessory_cost" class="countup"></span><br>
+                                        <small class="text-coral">(£<span id="accessory_dep"
+                                                                          class="countup"></span>)</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
         {{-- <x-categories_status_info :statuses="$statuses" :category="$category"/> --}}
 
         <div class="row m-2">
@@ -304,7 +320,8 @@
             //Fetch the return JSON Object
             const obj = JSON.parse(xhttp.responseText);
             totalCount.innerHTML = obj.property.count;
-            totalCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.cost);;
+            totalCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.cost);
+            ;
             totalDep.innerHTML = obj.property.dep;
             //AUC
             aucCount.innerHTML = obj.auc.count;
@@ -319,8 +336,6 @@
             accessoryCost.innerHTML = obj.accessories.cost;
             accessoryDep.innerHTML = obj.accessories.dep; */
 
-
-            
 
             runAnimations();
         }
