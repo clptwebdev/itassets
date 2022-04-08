@@ -23,8 +23,7 @@
                         class="far fa-save fa-sm text-dark-50"></i> Download Errors
                 </button>
             </form>
-            <a href="{{ route('ffes.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                    class="fas fa-chevron-left fa-sm te
+            <a href="{{ route('ffes.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i class="fas fa-chevron-left fa-sm te
                     xt-white-50"></i> Back to FFE</a>
             <a id="import" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
                     class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Importing Help</a>
@@ -176,10 +175,10 @@
                                     ?>
                                     <span id="purchased_date{{$line}}" class="tooltip-danger">
                                         <input type="date"
-                                            class="import-control @if(in_array('purchased_date', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                            name="purchased_date[]" id="purchased_date"
-                                            placeholder="This Row is Empty Please Fill!" value="{{ $date }}" required
-                                            data-bs-container='#purchased_date{{$line}}' data-bs-placement='top'
+                                               class="import-control @if(in_array('purchased_date', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                               name="purchased_date[]" id="purchased_date"
+                                               placeholder="This Row is Empty Please Fill!" value="{{ $date }}" required
+                                               data-bs-container='#purchased_date{{$line}}' data-bs-placement='top'
                                             @if(array_key_exists('purchased_date', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['purchased_date']}'" !!}
                                                 @endif
                                             >
@@ -236,8 +235,7 @@
                                     <span id="warranty{{$line}}" class="tooltip-danger">
                                     <input type="text"
                                            class="import-control @if(in_array('warranty', $errors)){{'border-bottom border-danger'}}@endif"
-                                           name="warranty[]" id="warranty"
-                                           placeholder="This Row is Empty Please Fill!"
+                                           name="warranty[]" id="warranty" placeholder="This Row is Empty Please Fill!"
                                            value="{{ $valueArray[$row]['warranty'] }}" required
                                            data-bs-container='#warranty{{$line}}' data-bs-placement='top'
                                            @if(array_key_exists('warranty', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['warranty']}'" !!}@endif
@@ -248,7 +246,8 @@
                                     <span id="depreciation_id{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="import-control @if(in_array('depreciation_id', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                               name="depreciation_id[]" value="{{ $valueArray[$row]['depreciation_id'] }}"
+                                               name="depreciation_id[]"
+                                               value="{{ $valueArray[$row]['depreciation_id'] }}"
                                                placeholder="This Row is Empty Please Fill!"
                                                data-bs-container='#depreciation_id{{$line}}' data-bs-placement='top'
                                            @if(array_key_exists('depreciation_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['depreciation_id']}'" !!}@endif>
@@ -274,10 +273,10 @@
                                 <td>
                                         <span id="room{{$line}}" class="tooltip-danger">
                                         <input type="text"
-                                            class="import-control @if(in_array('room', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                            name="room[]" placeholder="This Row is Empty Please Fill!"
-                                            value="{{ $valueArray[$row]['room'] }}" required
-                                            data-bs-container='#room{{$line}}' data-bs-placement='top'
+                                               class="import-control @if(in_array('room', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                               name="room[]" placeholder="This Row is Empty Please Fill!"
+                                               value="{{ $valueArray[$row]['room'] }}" required
+                                               data-bs-container='#room{{$line}}' data-bs-placement='top'
                                             @if(array_key_exists('room', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['room']}'" !!}@endif
                                         >
                                         </span>
@@ -355,9 +354,9 @@
         });
 
         function enableToolTips() {
-            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
+            const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltips.forEach(t => {
+                new bootstrap.Tooltip(t);
             })
         }
 
@@ -478,7 +477,8 @@
                         let num = parseInt(res[1]);
                         elements[num].classList.add('border-bottom', 'border-danger');
                         elements[num].setAttribute('data-bs-toggle', 'tooltip');
-                        elements[num].setAttribute('data-title', error);
+                        elements[num].setAttribute('data-bs-original-title', error);
+                        new bootstrap.Tooltip(elements[num]);
                         i++;
                         enableToolTips();
                     });
