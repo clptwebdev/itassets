@@ -96,7 +96,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         return [
             AfterSheet::class => function(AfterSheet $event) {
                 $lastRow = $this->assets->count() + 2;
-                $cellRange = 'A1:J'; // All headers
+                $cellRange = 'A1:J1'; // All headers
                 $cellRange2 = 'A' . $lastRow . 'J' . $lastRow; // Last Row
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14)->setBold(1);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getAllBorders()->setBorderStyle(true);
