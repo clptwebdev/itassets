@@ -51,6 +51,9 @@
                                                     </ul>
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <x-form.input name="order_no" value="{{old('order_no')}}"/>
+                                            </div>
                                             <div class='form-group'>
                                                 <x-form.select name="supplier_id" :models="$suppliers" selected="{{old('supplier_id')}}"/>
                                             </div>
@@ -59,6 +62,14 @@
                                             </div>
                                             <div class="form-group">
                                                 <x-form.input name="purchased_cost" formAttributes="required" value="{{old('purchased_cost')}}"/>
+                                                <div class="form-check mt-2 ml-1">
+                                                    <input class="form-check-input" type="checkbox" value="1"
+                                                           @if(old('donated') == 1) checked @endif name="donated"
+                                                           id="donated">
+                                                    <label class="form-check-label" for="donated">
+                                                        Donated
+                                                    </label>
+                                                </div>
                                             </div>
 
                                             <div class="form-group">
@@ -66,6 +77,9 @@
                                             </div>
                                             <div class="form-group">
                                                 <x-form.input name="depreciation" formAttributes="required" value="{{old('depreciation')}}" />
+                                            </div>
+                                            <div class="form-group">
+                                                <x-form.input name="warranty" value="{{old('warranty')}}" />
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
