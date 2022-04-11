@@ -116,10 +116,12 @@ class Accessory extends Model {
 
     public function depreciation_value_by_date($date)
     {
-        if(! $this->depreciation == null)
+//        $dep = Depreciation::whereId($this->depreciation_id)->first();
+//        dd($dep);
+        if($this->depreciation_id != 0 && $this->depreciation->years)
         {
             $age = $date->floatDiffInYears($this->purchased_date);
-            $percent = 100 / 3;
+            $percent = 100 / $this->depreciation->years;
             $percentage = floor($age) * $percent;
             $value = $this->purchased_cost * ((100 - $percentage) / 100);
 
