@@ -55,9 +55,9 @@ class FFEController extends Controller {
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('ffe_limit') ?? 25;
         $ffes = FFE::locationFilter($locations->pluck('id')->toArray());
-            $ffes->join('locations', 'f_f_e_s.location_id', '=', 'locations.id')
+        $ffes->join('locations', 'f_f_e_s.location_id', '=', 'locations.id')
             ->leftJoin('manufacturers', 'manufacturers.id', '=', 'f_f_e_s.manufacturer_id')
-            ->leftJoin('suppliers', 'suppliers.id', '=', 'f_f_e_s.supplier_id')                
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'f_f_e_s.supplier_id')
             ->orderBy(session('ffe_orderby') ?? 'purchased_date', session('ffe_direction') ?? 'asc')
             ->select('f_f_e_s.*', 'locations.name as location_name', 'manufacturers.name as manufacturer_name', 'suppliers.name as supplier_name');
         $limit = session('limit') ?? 25;
@@ -65,7 +65,6 @@ class FFEController extends Controller {
         session(['ffe_filter' => false]);
         $categories = Category::withCount('ffe')->get();
         $statuses = Status::select('id', 'name', 'deployable')->withCount('ffe')->get();
-        
 
         return view('FFE.view', [
             "ffes" => $ffes->paginate(intval($limit))->withPath('/accessory/filter')->fragment('table'),
@@ -453,9 +452,9 @@ class FFEController extends Controller {
             return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Export FFE Information.');
 
         }
-        $aucs = FFE::withTrashed()->whereIn('id', json_decode($request->ffes))->with('location')->get();
+        $ffe = FFE::withTrashed()->whereIn('id', json_decode($request->ffes))->with('location')->get();
         $date = \Carbon\Carbon::now()->format('dmyHi');
-        \Maatwebsite\Excel\Facades\Excel::store(new FFEExport($aucs), "/public/csv/ffes-{$date}.xlsx");
+        \Maatwebsite\Excel\Facades\Excel::store(new FFEExport($ffe), "/public/csv/ffes-{$date}.xlsx");
         $url = asset("storage/csv/ffes-{$date}.xlsx");
 
         return to_route('ffes.index')

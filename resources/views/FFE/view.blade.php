@@ -22,7 +22,7 @@
                 </x-form.layout>
             @endif
             @if($ffes->count() > 1)
-                <x-form.layout class="d-inline-block" action="/export/aucs">
+                <x-form.layout class="d-inline-block" action="/export/ffes">
                     <x-form.input type="hidden" name="ffes" :label="false" formAttributes="required"
                                   :value="json_encode($ffes->pluck('id'))"/>
                     <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span>
