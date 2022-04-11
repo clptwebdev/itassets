@@ -116,39 +116,22 @@ class Accessory extends Model {
 
     public function depreciation_value_by_date($date)
     {
-        $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation->years ?? 0);
-        if($eol->isPast())
+        if($this->model()->exists() && $this->model->depreciation()->exists())
         {
-            $dep = 0;
-        } else
-        {
-
-            $age = Carbon::now()->floatDiffInYears($this->purchased_date);
-            $percent = 100 / $this->depreciation->years;
+            $age = $date->floatDiffInYears($this->purchased_date);
+            $percent = 100 / $this->model->depreciation->years;
             $percentage = floor($age) * $percent;
-            $dep = $this->purchased_cost * ((100 - $percentage) / 100);
+            $value = $this->purchased_cost * ((100 - $percentage) / 100);
+
+            if($value < 0)
+            {
+                return 0;
+            } else
+            {
+                return $value;
+            }
         }
-//        $age = $date->floatDiffInYears($this->purchased_date);
-//        $percent = $this->depreciation->years / 100;
-//        $percentage = floor($age) * $percent;
-//        $value = $this->purchased_cost * ((100 - $percentage) / 100);
-//
-//        if($value < 0)
-//        {
-//            return 0;
-//        } else
-//        {
-//            return $value;
-//        }
     }
-
-
-//    public function scopeTestExport($query, array $filters){
-//        $query->when($filters['status'] ?? false , fn($query ,$status_id) =>
-//        $query->where('accessories.status_id','like','%' . $status_id. '%')
-//          );
-//
-//    }
 
     public function depreciation_value()
     {

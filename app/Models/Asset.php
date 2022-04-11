@@ -160,7 +160,6 @@ class Asset extends Model {
     {
         if($this->model()->exists() && $this->model->depreciation()->exists())
         {
-
             $age = $date->floatDiffInYears($this->purchased_date);
             $percent = 100 / $this->model->depreciation->years;
             $percentage = floor($age) * $percent;
