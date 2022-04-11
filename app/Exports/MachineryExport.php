@@ -105,12 +105,12 @@ class MachineryExport implements FromArray, WithHeadings, ShouldAutoSize, WithEv
         $purchased_details['Purchased Cost'] = 'Total Cost: £' . $this->machineries->sum('purchased_cost');
         $purchased_details['Purchased Date'] = '';
         $purchased_details['Depreciation'] = '';
-        $purchased_details['Cost B/Fwd'] = 'Total: £' . $Cost_B_Fwd;
-        $purchased_details['Cost C/Fwd'] = 'Total: £' . $Cost_C_Fwd;
-        $purchased_details['Depreciation B/Fwd'] = 'Total: £' . $Depreciation_B_Fwd;
-        $purchased_details['Depreciation Charge'] = 'Total: £' . $Depreciation_charge;
-        $purchased_details['Depreciation C/Fwd'] = 'Total: £' . $Depreciation_C_Fwd;
-        $purchased_details['nbv'] = 'Total: £' . $nbv;
+        $purchased_details['Cost B/Fwd'] = 'Total: £' . number_format((float)$Cost_B_Fwd, 2, '.', ',');
+        $purchased_details['Cost C/Fwd'] = 'Total: £' . number_format((float)$Cost_C_Fwd, 2, '.', ',');
+        $purchased_details['Depreciation B/Fwd'] = 'Total: £' . number_format((float)$Depreciation_B_Fwd, 2, '.', ',');
+        $purchased_details['Depreciation Charge'] = 'Total: £' . number_format((float)$Depreciation_charge, 2, '.', ',');
+        $purchased_details['Depreciation C/Fwd'] = 'Total: £' . number_format((float)$Depreciation_C_Fwd, 2, '.', ',');
+        $purchased_details['nbv'] = 'Total: £' . number_format((float)$nbv, 2, '.', ',');
         array_push($object, $purchased_details);
 
         return $object;

@@ -67,7 +67,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
 
             $array = [];
             $array['Details'] = $asset->name;
-            $array['Purchased Cost'] = number_format((float)$asset->purchased_cost, 2, '.', ',');
+            $array['Purchased Cost'] = '£' . number_format((float)$asset->purchased_cost, 2, '.', ',');
             $array['Location'] = $asset->location->name ?? 'Unknown';
             $array['Created Date'] = \Illuminate\Support\Carbon::parse($asset->created_at)->format('d-M-Y') ?? 'Unknown';
             $array['Cost B/Fwd'] = '£' . number_format((float)$bf, 2, '.', ',') ?? 'Unknown';
@@ -93,7 +93,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         }
         $purchased_details = [];
         $purchased_details['Details'] = 'Total Assets: ' . $this->assets->count();
-        $purchased_details['Purchased Cost'] = 'Total Cost: £' . $this->assets->sum('purchased_cost');
+        $purchased_details['Purchased Cost'] = 'Total Cost: £' . number_format((float)$this->assets->sum('purchased_cost'), 2, '.', ',');;
         $purchased_details['Location'] = '';
         $purchased_details['Created Date'] = '';
         $purchased_details['Cost B/Fwd'] = 'Total: £' . number_format((float)$Cost_B_Fwd, 2, '.', ',');
