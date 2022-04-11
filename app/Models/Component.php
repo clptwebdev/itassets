@@ -112,6 +112,22 @@ class Component extends Model {
             ->orWhere('components.serial_no', 'LIKE', "%{$search}%");
     }
 
+    public function depreciation_value_by_date($date)
+    {
+        $age = $date->floatDiffInYears($this->purchased_date);
+        $percent = 100 / $this->depreciation;
+        $percentage = floor($age) * $percent;
+        $value = $this->purchased_cost * ((100 - $percentage) / 100);
+
+        if($value < 0)
+        {
+            return 0;
+        } else
+        {
+            return $value;
+        }
+    }
+
     public static function updateCache()
     {
         //The Variables holding the total of Accessories available to the User

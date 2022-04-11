@@ -66,6 +66,9 @@ class Property extends Model {
 
     }
 
+
+
+
     //Gets the building type in the table and displays it as a string
     // (1 = Freehold Land 2 = Freehold Buildings 3 = Leadsehold Land 4 = Leasehold Buildings)
     public function getType()
@@ -177,6 +180,7 @@ class Property extends Model {
             ->get()
             ->map(function($item, $key) {
                 $item['depreciation_value'] = $item->depreciation_value();
+
                 return $item;
             });
 
@@ -215,6 +219,7 @@ class Property extends Model {
                 ->get()
                 ->map(function($item, $key) {
                     $item['depreciation_value'] = $item->depreciation_value();
+
                     return $item;
                 });
 
