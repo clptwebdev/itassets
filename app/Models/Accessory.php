@@ -116,10 +116,10 @@ class Accessory extends Model {
 
     public function depreciation_value_by_date($date)
     {
-        if($this->model()->exists() && $this->model->depreciation()->exists())
+        if(! $this->depreciation == null)
         {
             $age = $date->floatDiffInYears($this->purchased_date);
-            $percent = 100 / $this->model->depreciation->years;
+            $percent = 100 / 3;
             $percentage = floor($age) * $percent;
             $value = $this->purchased_cost * ((100 - $percentage) / 100);
 
@@ -130,6 +130,9 @@ class Accessory extends Model {
             {
                 return $value;
             }
+        } else
+        {
+            return 0;
         }
     }
 
