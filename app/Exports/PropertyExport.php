@@ -51,8 +51,8 @@ class PropertyExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         $Cost_B_Fwd = 0;
         $Cost_C_Fwd = 0;
         $Depreciation_B_Fwd = 0;
+        $Depreciation_charge = 0;
         $Depreciation_C_Fwd = 0;
-        $Cost_B_Fwd = 0;
         $nbv = 0;
         foreach($this->properties as $property)
         {
@@ -94,8 +94,8 @@ class PropertyExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
             $Cost_B_Fwd += $bf;
             $Cost_C_Fwd += $cf;
             $Depreciation_B_Fwd += $property->purchased_cost - $bf;
-            $Depreciation_C_Fwd += $bf - $cf;
-            $Cost_B_Fwd += $property->purchased_cost - $cf;
+            $Depreciation_charge += $bf - $cf;
+            $Depreciation_C_Fwd += $property->purchased_cost - $cf;
             $nbv += $property->depreciation_value_by_date(\Carbon\Carbon::parse('09/01/' . \Carbon\Carbon::now()->format('Y'))->subYear());
             $object[] = $array;
 
@@ -111,8 +111,8 @@ class PropertyExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         $purchased_details['Cost B/Fwd'] = 'Total: £' . $Cost_B_Fwd;
         $purchased_details['Cost C/Fwd'] = 'Total: £' . $Cost_C_Fwd;
         $purchased_details['Depreciation B/Fwd'] = 'Total: £' . $Depreciation_B_Fwd;
-        $purchased_details['Depreciation Charge'] = 'Total: £' . $Depreciation_C_Fwd;
-        $purchased_details['Depreciation C/Fwd'] = 'Total: £' . $Cost_B_Fwd;
+        $purchased_details['Depreciation Charge'] = 'Total: £' . $Depreciation_charge;
+        $purchased_details['Depreciation C/Fwd'] = 'Total: £' . $Depreciation_C_Fwd;
         $purchased_details['nbv'] = 'Total: £' . $nbv;
         array_push($object, $purchased_details);
 

@@ -42,6 +42,12 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
     public function array(): array
     {
         $object = [];
+        $Cost_B_Fwd = 0;
+        $Cost_C_Fwd = 0;
+        $Depreciation_B_Fwd = 0;
+        $Depreciation_charge = 0;
+        $Depreciation_C_Fwd = 0;
+        $nbv = 0;
         foreach($this->assets as $asset)
         {
             //Maths Calculations
@@ -76,6 +82,12 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
             {
                 $array['NBV'] = '£' . 0.00;
             }
+            $Cost_B_Fwd += $bf;
+            $Cost_C_Fwd += $cf;
+            $Depreciation_B_Fwd += $asset->purchased_cost - $bf;
+            $Depreciation_charge += $bf - $cf;
+            $Depreciation_C_Fwd += $asset->purchased_cost - $cf;
+            $nbv += $asset->depreciation_value_by_date(\Carbon\Carbon::parse('09/01/' . \Carbon\Carbon::now()->format('Y'))->subYear());
             $object[] = $array;
 
         }
@@ -84,6 +96,13 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         $purchased_details['Purchased Cost'] = 'Total Cost: £' . $this->assets->sum('purchased_cost');
         $purchased_details['Location'] = '';
         $purchased_details['Created Date'] = '';
+        $purchased_details['Cost B/Fwd'] = 'Total: £' . $Cost_B_Fwd;
+        $purchased_details['Cost C/Fwd'] = 'Total: £' . $Cost_C_Fwd;
+        $purchased_details['Depreciation B/Fwd'] = 'Total: £' . $Depreciation_B_Fwd;
+        $purchased_details['Depreciation Charge'] = 'Total: £' . $Depreciation_charge;
+        $purchased_details['Depreciation C/Fwd'] = 'Total: £' . $Depreciation_C_Fwd;
+        $purchased_details['nbv'] = 'Total: £' . $nbv;
+
         array_push($object, $purchased_details);
 
         return $object;
