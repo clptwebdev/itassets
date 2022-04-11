@@ -67,7 +67,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
 
             $array = [];
             $array['Details'] = $asset->name;
-            $array['Purchased Cost'] = $asset->purchased_cost;
+            $array['Purchased Cost'] = number_format((float)$asset->purchased_cost, 2, '.', ',');
             $array['Location'] = $asset->location->name ?? 'Unknown';
             $array['Created Date'] = \Illuminate\Support\Carbon::parse($asset->created_at)->format('d-M-Y') ?? 'Unknown';
             $array['Cost B/Fwd'] = '£' . number_format((float)$bf, 2, '.', ',') ?? 'Unknown';
@@ -96,11 +96,11 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         $purchased_details['Purchased Cost'] = 'Total Cost: £' . $this->assets->sum('purchased_cost');
         $purchased_details['Location'] = '';
         $purchased_details['Created Date'] = '';
-        $purchased_details['Cost B/Fwd'] = 'Total: £' . $Cost_B_Fwd;
-        $purchased_details['Cost C/Fwd'] = 'Total: £' . $Cost_C_Fwd;
-        $purchased_details['Depreciation B/Fwd'] = 'Total: £' . $Depreciation_B_Fwd;
-        $purchased_details['Depreciation Charge'] = 'Total: £' . $Depreciation_charge;
-        $purchased_details['Depreciation C/Fwd'] = 'Total: £' . $Depreciation_C_Fwd;
+        $purchased_details['Cost B/Fwd'] = 'Total: £' . number_format((float)$Cost_B_Fwd, 2, '.', ',');
+        $purchased_details['Cost C/Fwd'] = 'Total: £' . number_format((float)$Cost_C_Fwd, 2, '.', ',');
+        $purchased_details['Depreciation B/Fwd'] = 'Total: £' . number_format((float)$Depreciation_B_Fwd, 2, '.', ',');
+        $purchased_details['Depreciation Charge'] = 'Total: £' . number_format((float)$Depreciation_charge, 2, '.', ',');
+        $purchased_details['Depreciation C/Fwd'] = 'Total: £' . number_format((float)$Depreciation_C_Fwd, 2, '.', ',');
         $purchased_details['nbv'] = 'Total: £' . $nbv;
 
         array_push($object, $purchased_details);
