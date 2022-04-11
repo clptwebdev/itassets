@@ -119,31 +119,24 @@ class Miscellanea extends Model {
 
     public function depreciation_value_by_date($date)
     {
-        $eol = Carbon::parse($this->purchased_date)->addYears($this->depreciation->years ?? 0);
-        if($eol->isPast())
+        if($this->depreciation_id != 0 && $this->depreciation->years)
         {
-            $dep = 0;
-        } else
-        {
-
-            $age = Carbon::now()->floatDiffInYears($this->purchased_date);
+            $age = $date->floatDiffInYears($this->purchased_date);
             $percent = 100 / $this->depreciation->years;
             $percentage = floor($age) * $percent;
-            $dep = $this->purchased_cost * ((100 - $percentage) / 100);
-        }
+            $value = $this->purchased_cost * ((100 - $percentage) / 100);
 
-//        $age = $date->floatDiffInYears($this->purchased_date);
-//        $percent = 100 / $this->depreciation;
-//        $percentage = floor($age) * $percent;
-//        $value = $this->purchased_cost * ((100 - $percentage) / 100);
-//
-//        if($value < 0)
-//        {
-//            return 0;
-//        } else
-//        {
-//            return $value;
-//        }
+            if($value < 0)
+            {
+                return 0;
+            } else
+            {
+                return $value;
+            }
+        } else
+        {
+            return 0;
+        }
     }
 
     public static function updateCache()

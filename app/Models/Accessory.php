@@ -116,8 +116,7 @@ class Accessory extends Model {
 
     public function depreciation_value_by_date($date)
     {
-//        $dep = Depreciation::whereId($this->depreciation_id)->first();
-//        dd($dep);
+
         if($this->depreciation_id != 0 && $this->depreciation->years)
         {
             $age = $date->floatDiffInYears($this->purchased_date);
