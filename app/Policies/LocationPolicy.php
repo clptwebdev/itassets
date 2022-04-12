@@ -22,7 +22,7 @@ class LocationPolicy {
         return $this->model->view;
     }
 
-    public function view(User $user, location $location)
+    public function view(User $user, Location $location)
     {
 
         return $this->model->view && in_array($location->id, $user->locationsArray());
@@ -33,27 +33,32 @@ class LocationPolicy {
         return $this->model->create;
     }
 
-    public function update(User $user, location $location)
+    public function update(User $user, Location $location)
     {
         return $this->model->update && in_array($location->id, $user->locationsArray());
     }
 
-    public function delete(User $user, location $location)
+    public function delete(User $user, Location $location)
     {
         return $this->model->archive;
     }
 
-    public function restore(User $user, location $location)
+    public function restore(User $user, Location $location)
     {
 
         return $this->model->archive;
 
     }
 
-    public function forceDelete(User $user, location $location)
+    public function forceDelete(User $user, Location $location)
     {
         return $this->model->delete;
 
+    }
+
+    public function businessReports(User $user, Location $location){
+        return true;
+        return $this->model->fin_reports && in_array($location->id, $user->locationsArray());
     }
 
 }

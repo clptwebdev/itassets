@@ -12,10 +12,15 @@ use PDF;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\LocationsPdf;
 use App\Jobs\LocationPdf;
+use App\Jobs\LocationBusinessReport;
 use App\Models\Report;
 
 class LocationController extends Controller {
 
+    ///////////////////////////////////////
+    //////////// Read Functions ///////////
+    ///////////////////////////////////////
+    
     public function index()
     {
 
@@ -28,6 +33,22 @@ class LocationController extends Controller {
 
         return view('locations.view', ['locations' => $locations]);
     }
+
+    public function show(Location $location)
+    {
+        if(auth()->user()->cant('view', $location))
+        {
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Show Locations.');
+
+        }
+
+        return view('locations.show', compact('location'));
+    }
+
+
+    ///////////////////////////////////////
+    ////////// Create Functions ///////////
+    ///////////////////////////////////////
 
     public function create()
     {
@@ -64,16 +85,9 @@ class LocationController extends Controller {
         return to_route('location.index');
     }
 
-    public function show(Location $location)
-    {
-        if(auth()->user()->cant('view', $location))
-        {
-            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Show Locations.');
-
-        }
-
-        return view('locations.show', compact('location'));
-    }
+    ///////////////////////////////////////
+    //////////// Edit Functions ///////////
+    ///////////////////////////////////////
 
     public function edit(Location $location)
     {
@@ -111,6 +125,10 @@ class LocationController extends Controller {
         return to_route('location.index');
     }
 
+    ///////////////////////////////////////
+    ////////// Delete Functions ///////////
+    ///////////////////////////////////////
+
     public function destroy(Location $location)
     {
         if(auth()->user()->cant('delete', $location))
@@ -126,6 +144,10 @@ class LocationController extends Controller {
         return to_route('location.index');
     }
 
+    ///////////////////////////////////////
+    ////////// Export Functions ///////////
+    ///////////////////////////////////////
+
     public function export(Location $location)
     {
         if(auth()->user()->cant('viewAny', Location::class))
@@ -136,6 +158,35 @@ class LocationController extends Controller {
 
         return \Maatwebsite\Excel\Facades\Excel::download(new LocationsExport, 'Location.xlsx');
     }
+
+    public function businessExport(Location $location){
+        
+        if(auth()->user()->cant('businessReports', $location))
+        {
+            return ErrorController::forbidden(route('business'), 'Unauthorised to Download Financial Report.');
+
+        }
+
+        $user = auth()->user();
+
+        $date = \Carbon\Carbon::now()->format('dmyHi');
+        $path = 'asset-register-' . $date.'.xlsx';
+        $url = "storage/csv/{$path}";
+
+        dispatch(new LocationBusinessReport($location, $user, $path))->afterResponse();
+        //Create Report
+
+        $url = "storage/csv/{$path}";
+        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
+
+        return to_route('business')
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
+    }
+
+    ///////////////////////////////////////
+    ///////////// PDF Functions ///////////
+    ///////////////////////////////////////
 
     public function downloadPDF(Request $request)
     {
@@ -205,6 +256,10 @@ class LocationController extends Controller {
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
+
+    ///////////////////////////////////////
+    /////////// Other Functions ///////////
+    ///////////////////////////////////////
 
     public function search(Request $request)
     {

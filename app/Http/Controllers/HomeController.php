@@ -33,7 +33,8 @@ class HomeController extends Controller {
 
     public function business()
     {
-        return view('dashboard.business');
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->get();
+        return view('dashboard.business', compact('locations'));
     }
     ////////////////////////////////////////
     ////// business export Search Functions ////////
@@ -74,6 +75,7 @@ class HomeController extends Controller {
     ////////////////////////////////////////
     ////// Top Bar Search Functions ////////
     ////////////////////////////////////////
+    
     public function search(Request $request)
     {
         $assets = Asset::searchFilter($request->name)->get();

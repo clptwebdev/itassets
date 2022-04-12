@@ -14,8 +14,19 @@
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Dashboard - Business Overview</h1>
         <div>
-            <button type="button" class="btn btn-blue">Reports</button>
-            <a href="{{ route('cache.clear')}}" class="btn btn-grey"><i class="fas fa-sync-alt"></i></a>
+            <div class="dropdown d-inline">
+                <a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    Download Report
+                </a>
+                
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    @foreach($locations as $location)
+                    <li><a class="dropdown-item" href="{{route('business.location.export', $location->id)}}">{{$location->name}}</a></li>
+                    @endforeach
+                </ul>
+            </div>
+            <button type="button" class="btn btn-sm btn-blue">Reports</button>
+            <a href="{{ route('cache.clear')}}" class="btn btn-sm btn-grey"><i class="fas fa-sync-alt"></i> Clear Report Cache</a>
             <x-buttons.export :route="route('business.export')"/>
         </div>
     </div>

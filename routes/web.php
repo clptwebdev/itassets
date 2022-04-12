@@ -55,6 +55,11 @@ Route::group(['middleware' => 'auth'], function() {
         //export users
         Route::get("/exportusers", "export");
     });
+
+    /////////////////////////////////////////////////
+    /////////  Location Controller Routes ///////////
+    /////////////////////////////////////////////////
+
     Route::controller(\App\Http\Controllers\LocationController::class)->group(function() {
         //location
         Route::resource('/location', 'App\Http\Controllers\LocationController');
@@ -64,7 +69,13 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/location/preview/', 'preview')->name('location.preview');
         //exports
         Route::get("/exportlocations", "export");
+        //Financial Exports
+        Route::get('/business/{location}/location/export', "businessExport")->name('business.location.export');
     });
+
+
+
+
     Route::controller(\App\Http\Controllers\CommentController::class)->group(function() {
         //comments
         Route::resource('/comment', 'App\Http\Controllers\CommentController');
