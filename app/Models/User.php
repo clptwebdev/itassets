@@ -124,6 +124,11 @@ class User extends Authenticatable {
         return $this->hasManyDeep(Software::class, ['location_user', Location::class]);
     }
 
+    public function location_license()
+    {
+        return $this->hasManyDeep(License::class, ['location_user', Location::class]);
+    }
+
     public function location_auc()
     {
         return $this->hasManyDeep(AUC::class, ['location_user', Location::class]);

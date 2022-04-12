@@ -26,7 +26,7 @@ class LicenseController extends Controller {
 
     public function index()
     {
-        //Check to see if the User has permission to View All the Software.
+        //Check to see if the User has permission to View All the license.
         if(auth()->user()->cant('viewAll', License::class))
         {
             return ErrorController::forbidden('/dashboard', 'Unauthorised to View License.');
@@ -34,7 +34,7 @@ class LicenseController extends Controller {
         }
 
         // find the locations that the user has been assigned to
-        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('license')->get();
         //Find the properties that are assigned to the locations the User has permissions to.
         $limit = session('property_limit') ?? 25;
         $licenses = License::locationFilter($locations->pluck('id')->toArray())->latest('expiry', '>=', Carbon::parse(now()))->paginate(intval($limit))->fragment('table');
@@ -69,7 +69,7 @@ class LicenseController extends Controller {
 
     public function store(Request $request)
     {
-        //Check to see if the user has permission to add new software on the system
+        //Check to see if the user has permission to add new license on the system
 
         if(auth()->user()->cant('create', License::class))
         {
@@ -136,7 +136,7 @@ class LicenseController extends Controller {
 
     public function update(Request $request, License $license)
     {
-        //Check to see if the user has permission to update software on the system
+        //Check to see if the user has permission to update license on the system
         if(auth()->user()->cant('update', License::class))
         {
             return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Update License.');
@@ -167,7 +167,7 @@ class LicenseController extends Controller {
 
     public function recycleBin()
     {
-        //Check to see if the user has permission to delete software on the system
+        //Check to see if the user has permission to delete license on the system
         if(auth()->user()->cant('delete', License::class))
         {
             return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Delete License.');
@@ -185,7 +185,7 @@ class LicenseController extends Controller {
 
     public function destroy(License $license)
     {
-        //Check to see if the user has permission to delete software on the system
+        //Check to see if the user has permission to delete license on the system
         if(auth()->user()->cant('recycleBin', License::class))
         {
             return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Archive License.');
@@ -199,17 +199,17 @@ class LicenseController extends Controller {
 
     public function restore($id)
     {
-        //Find the software (withTrashed needed)
+        //Find the license (withTrashed needed)
         $license = License::withTrashed()->where('id', $id)->first();
 
-        //Check to see if the user has permission to restore the software
+        //Check to see if the user has permission to restore the license
         if(auth()->user()->cant('delete', License::class))
         {
             return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Restore License.');
 
         }
 
-        //Restores the software
+        //Restores the license
         $license->restore();
 
         //Session message to be sent ot the View page (This is where the model will now appear)
@@ -221,10 +221,10 @@ class LicenseController extends Controller {
 
     public function forceDelete($id)
     {
-        //Find the software (withTrashed needed)
+        //Find the license (withTrashed needed)
         $license = License::withTrashed()->where('id', $id)->first();
 
-        //Check to see if the user has permission to restore the software
+        //Check to see if the user has permission to restore the license
         if(auth()->user()->cant('delete', License::class))
         {
             return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Delete License.');
@@ -564,6 +564,101 @@ class LicenseController extends Controller {
                 }
             }
         }
+    }
+    ////////////////////////////////////////
+    /////////// Filter Functions ///////////
+    ////////////////////////////////////////
+
+    public function filter(Request $request)
+    {
+
+        //Check to see if the Request is the POST or GET Method
+        if($request->isMethod('post'))
+        {
+            //If the request is a POST method then the filter needs to be set or redefined
+
+            //Check to see if the filter fields are empty
+            if(! empty($request->search))
+            {
+                //If they are not empty assign the filter type to the session
+                session(['license_search' => $request->search]);
+            }
+
+            if(! empty($request->limit))
+            {
+                session(['license_limit' => $request->limit]);
+            }
+
+            if(! empty($request->orderby))
+            {
+                $array = explode(' ', $request->orderby);
+
+                session(['license_orderby' => $array[0]]);
+                session(['license_direction' => $array[1]]);
+
+            }
+
+            if(! empty($request->locations))
+            {
+                session(['license_locations' => $request->locations]);
+            }
+
+            if($request->start != '' && $request->end != '')
+            {
+                session(['license_start' => $request->start]);
+                session(['license_end' => $request->end]);
+            }
+
+            session(['license_min' => $request->minCost]);
+            session(['license_max' => $request->maxCost]);
+        }
+        //Check the Users Locations Permissions
+        $locations = Location::select('id', 'name')->withCount('license')->get();
+
+        $license = License::locationFilter($locations->pluck('id'));
+
+        if(session()->has('license_locations'))
+        {
+            $license->locationFilter(session('license_locations'));
+            session(['license_filter' => true]);
+        }
+
+        if(session()->has('license_start') && session()->has('license_end'))
+        {
+            $license->purchaseFilter(session('license_start'), session('license_end'));
+            session(['license_filter' => true]);
+        }
+
+        if(session()->has('license_min') && session()->has('license_max'))
+        {
+            $license->costFilter(session('license_min'), session('license_max'));
+            session(['license_filter' => true]);
+        }
+
+        if(session()->has('license_search'))
+        {
+            $license->searchFilter(session('license_search'));
+            session(['license_filter' => true]);
+        }
+
+        $license->leftJoin('locations', 'licenses.location_id', '=', 'locations.id')
+            ->leftJoin('suppliers', 'licenses.supplier_id', '=', 'suppliers.id')
+            ->orderBy(session('licenses_orderby') ?? 'expiry', session('licenses_direction') ?? 'asc')
+            ->select('licenses.*', 'locations.name as location_name', 'suppliers.name as supplier_name');
+        $limit = session('license_limit') ?? 25;
+
+        return view('licenses.view', [
+            "licenses" => $license->paginate(intval($limit))->withPath(asset('/license/filter'))->fragment('table'),
+            "locations" => $locations,
+        ]);
+    }
+
+    public function clearFilter()
+    {
+        //Clear the Filters for the properties
+        session()->forget(['license_filter', 'license_locations', 'license_start', 'license_end', 'license_min', 'license_max', 'license_search']);
+
+        return to_route('licenses.index');
     }
 
 }
