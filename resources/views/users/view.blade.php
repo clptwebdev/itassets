@@ -30,14 +30,7 @@
             @endcan
         </div>
     </div>
-
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Below are the different suppliers of the assets stored in the management system. Each has
@@ -106,6 +99,12 @@
                                             @can('update', $user)
                                                 <a href="{{ route('users.edit', $user->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
+                                            @can('update', $user)
+                                                <a id='Manager' href="#" data-bs-toggle='modal'
+                                                   data-bs-target='#managerModal' class="dropdown-item"
+                                                   data-id='{{$user->id}}'>Manager
+                                                                           Assignment</a>
+                                            @endcan
                                             @can('delete', $user)
                                                 <form id="form{{$user->id}}"
                                                       action="{{ route('users.destroy', $user->id) }}" method="POST">
@@ -139,8 +138,15 @@
 
 @section('modals')
     <x-modals.delete :archive="true"/>
+    <x-modals.manager :model="$users" :route="route('manager.update')"/>
 @endsection
 
 @section('js')
     <script src="{{ asset('js/delete.js') }}"></script>
+    <script>
+
+        document.querySelectorAll("#Manager").forEach(elem => elem.addEventListener("click", (e) => {
+            document.querySelector('#currentUser').value = elem.getAttribute('data-id');
+        }));
+    </script>
 @endsection

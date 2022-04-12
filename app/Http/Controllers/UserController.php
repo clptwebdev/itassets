@@ -124,6 +124,36 @@ class UserController extends Controller {
         return to_route('users.index');
     }
 
+    public function managerUpdate(Request $request)
+    {
+        $request->validate([
+            'manager_id' => 'required',
+            'selectedUser' => 'required',
+        ]);
+        $user = User::whereId($request->selectedUser)->first();
+        $manager = User::whereId($request->manager_id)->first();
+        if($request->manager_id == $user->manager_id)
+        {
+            session()->flash('danger_message', $user->name . ' Is Already assigned to this Manager.');
+
+            return to_route('users.index');
+        } else if($request->manager_id == $user->id)
+        {
+            session()->flash('danger_message', 'You Cannot be your own Manager. Please select another user to be your Manager.');
+
+            return to_route('users.index');
+        } else
+        {
+            $user->update([
+                'manager_id' => $request->manager_id,
+            ]);
+
+            session()->flash('success_message', $user->name . ' Has Been assigned to the Manager ' . $manager->name . '.');
+
+            return to_route('user.details');
+        }
+    }
+
     public function destroy(User $user)
     {
         if(auth()->user()->cant('delete', $user))

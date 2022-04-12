@@ -49,6 +49,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/user/expired', 'invokeExpiredUsers')->name('user.expired');
         //Administrator Permissions Middleware
         Route::post('permissions/users', 'permissions');
+        Route::post('permissions/users/manager', 'managerUpdate')->name('manager.update');
         Route::get('/user/permissions', 'userPermissions')->name('user.permissions');
         Route::get('/users/{id}/role/{role}', 'changePermission')->name('change.permission');
         Route::get('/users/{id}/locations', 'getLocations')->name('user.permission');
