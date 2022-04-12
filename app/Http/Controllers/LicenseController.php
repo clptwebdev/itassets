@@ -289,7 +289,7 @@ class LicenseController extends Controller {
             $array['purchased_cost'] = $f->purchased_cost;
             $array['expiry'] = \Carbon\Carbon::parse($f->expiry)->format('d/m/Y') ?? 'N/A';
             $array['contact'] = $f->contact ?? 'N/A';
-            $array['supplier'] = $f->supplier->name ?? 'No Supplier';
+            $array['supplier'] = $f->suppliers->name ?? 'No Supplier';
             $licenses[] = $array;
         }
 
