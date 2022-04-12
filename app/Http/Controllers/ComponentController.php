@@ -34,7 +34,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Components.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Components.');
 
         }
 
@@ -196,7 +196,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('create', Component::class))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Create Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Create Components.');
 
         }
         $locations = auth()->user()->locations;
@@ -214,7 +214,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('create', Component::class))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Store Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Store Components.');
 
         }
 
@@ -246,7 +246,7 @@ class ComponentController extends Controller {
 
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Export Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Export Components.');
 
         }
 
@@ -304,7 +304,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('view', $component))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Show Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Show Components.');
 
         }
 
@@ -315,7 +315,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('update', $component))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Update Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Update Components.');
         }
 
         $locations = auth()->user()->locations;
@@ -334,7 +334,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('update', $component))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Comment on Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Comment on Components.');
 
         } else
         {
@@ -353,7 +353,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('update', $component))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Update Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Update Components.');
 
         } else
         {
@@ -383,7 +383,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('delete', $component))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Delete Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Delete Components.');
 
         } else
         {
@@ -400,7 +400,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Export Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Export Components.');
 
         }
         $components = Component::all();
@@ -417,7 +417,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('create', Component::class))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Import Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Import Components.');
 
         }
 //headings incorrect start
@@ -530,7 +530,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Download Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Download Components.');
 
         }
 
@@ -573,7 +573,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('view', $component))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Download Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Download Components.');
 
         }
 
@@ -598,7 +598,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Component::class))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Recycle Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Recycle Components.');
 
         }
 
@@ -613,7 +613,7 @@ class ComponentController extends Controller {
         $component = Component::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $component))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Restore Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Restore Components.');
 
         }
         $name = $component->name;
@@ -628,7 +628,7 @@ class ComponentController extends Controller {
         $component = Component::withTrashed()->where('id', $id)->first();
         if(auth()->user()->cant('delete', $component))
         {
-            return ErrorController::forbidden(to_route('components.index'), 'Unauthorised to Delete Components.');
+            return ErrorController::forbidden(route('components.index'), 'Unauthorised to Delete Components.');
 
         }
         $name = $component->name;
@@ -642,7 +642,7 @@ class ComponentController extends Controller {
     {
         if(auth()->user()->cant('update', $component))
         {
-            return ErrorController::forbidden(to_route('components.show', $component->id), 'Unauthorised to Change Statuses Component.');
+            return ErrorController::forbidden(route('components.show', $component->id), 'Unauthorised to Change Statuses Component.');
         }
         $component->status_id = $request->status;
         $component->save();

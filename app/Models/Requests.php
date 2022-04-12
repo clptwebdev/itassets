@@ -28,4 +28,9 @@ class Requests extends Model {
         Cache::set('request_count', Requests::all()->count());
     }
 
+    public function scopeManagerFilter($query, $users)
+    {
+        return $query->whereIn('user_id', $users);
+    }
+
 }

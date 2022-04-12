@@ -19,7 +19,7 @@
                 <div class="col-12">
                     <div class="card shadow h-100">
                         <div class="card-body">
-                            <x-form.errors/>
+
                             <x-handlers.alerts/>
                             <ul id="tab-bar" class="nav nav-tabs">
                                 <li class="nav-item">

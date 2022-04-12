@@ -14,7 +14,7 @@
         </div>
     </div>
     <x-handlers.alerts/>
-    <x-form.errors/>
+
 
     <section>
         <p class="mb-4">Below are the different categories of all the different assets statuses stored in the management

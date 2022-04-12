@@ -15,7 +15,7 @@ class BackupController extends Controller {
     {
         if(auth()->user()->cant('view', Backup::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Backups.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Backups.');
 
         }
         $files = collect(File::allFiles(Storage::disk('backups')->path('Apollo-backup')))

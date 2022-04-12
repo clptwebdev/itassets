@@ -88,6 +88,13 @@
                                        name="email" id="email" placeholder=""
                                        value="{{ old('email') ?? auth()->user()->email}}">
                             </div>
+                            <div class="form-group">
+                                <label for="email">Manager</label><span class="text-danger"></span>
+                                <input type="text"
+                                       class="form-control bg-gray-200 <?php if ($errors->has('manager_id')) {?>border-danger<?php }?>"
+                                       name="email" id="email" placeholder="" disabled
+                                       value="{{ old('manager_id') ?? auth()->user()->manager->name ?? 'No Manager'}}">
+                            </div>
 
                             <button class="btn btn-lg btn-info">Change</button>
 

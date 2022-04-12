@@ -13088,3 +13088,10 @@ tr.even:hover .btn,
     max-width: 250px;
     max-height: 160px;
 }
+
+.sidebar-toggle {
+    width: 4.5rem !important;
+    transition: all 0.5s ease-in-out;
+    position: relative;
+    z-index: 10px;
+}
