@@ -78,6 +78,11 @@ class User extends Authenticatable {
             ->using(LocationUser::class);
     }
 
+    public function manager()
+    {
+        return $this->hasOne(User::class, 'manager_id');
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class);

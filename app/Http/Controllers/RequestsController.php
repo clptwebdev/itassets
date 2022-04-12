@@ -19,10 +19,13 @@ class RequestsController extends Controller {
 
     public function index()
     {
-
+        $authUser = auth()->user()->id;
+        $mangersUsers = User::whereManagerId($authUser)->pluck('id')->toArray();
+        $requests = Requests::managerFilter($mangersUsers)->orderBy('created_at', 'desc')->paginate(25);
         //Returns the View for the list of requests
         $locations = Location::all();
-        $requests = Requests::orderBy('created_at', 'desc')->paginate(25);
+
+//        $requests = Requests::orderBy('created_at', 'desc')->paginate(25);
 
         return view('requests.view', compact('requests', 'locations'));
     }
@@ -39,10 +42,16 @@ class RequestsController extends Controller {
         ]);
 
         //Notify by email (change for new system elliot)
-        $admins = User::superAdmin()->get();
-        foreach($admins as $admin)
+        $admins = User::globalAdmins()->get();
+        if(auth()->user()->manager_id != null || auth()->user()->manager_id != 0)
         {
-            Mail::to($admin->email)->send(new \App\Mail\AccessRequest($admin, auth()->user()));
+            Mail::to(auth()->user()->manager->email)->send(new \App\Mail\AccessRequest(auth()->user()->manager, auth()->user()));
+        } else
+        {
+            foreach($admins as $admin)
+            {
+                Mail::to($admin->email)->send(new \App\Mail\AccessRequest($admin, auth()->user()));
+            }
         }
 
         return back()->with('success_message', 'Your request to access the Asset Management System has been sent. Please allow 24hours for a response.');
@@ -124,9 +133,16 @@ class RequestsController extends Controller {
         {
             //Notify by email
             $admins = User::globalAdmins();
-            foreach($admins as $admin)
+            if(auth()->user()->manager_id != null || auth()->user()->manager_id != 0)
             {
-                Mail::to($admin->email)->send(new \App\Mail\TransferRequest($admin, auth()->user(), $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->notes));
+                Mail::to(auth()->user()->manager->email)->send(new \App\Mail\TransferRequest(auth()->user()->manager, auth()->user(), $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->notes));
+            } else
+            {
+                foreach($admins as $admin)
+                {
+                    Mail::to($admin->email)->send(new \App\Mail\TransferRequest($admin, auth()->user(), $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->notes));
+
+                }
             }
 
             return back()->with('success_message', 'The request to transfer the asset has been sent.');
@@ -239,10 +255,18 @@ class RequestsController extends Controller {
         } else
         {
             //Notify by email
-            $admins = User::itManager();
-            foreach($admins as $admin)
+            $admins = User::globalAdmins();
+            if(auth()->user()->manager_id != null || auth()->user()->manager_id != 0)
             {
-                Mail::to($admin->email)->send(new \App\Mail\DisposeRequest(auth()->user(), $admin, $requests->model_type, $requests->model_id, \Carbon\Carbon::parse($requests->date)->format('d-m-Y'), $requests->notes));
+                Mail::to(auth()->user()->manager->email)->send(new \App\Mail\DisposeRequest(auth()->user(), auth()->user()->manager, $requests->model_type, $requests->model_id, \Carbon\Carbon::parse($requests->date)->format('d-m-Y'), $requests->notes));
+
+            } else
+            {
+                foreach($admins as $admin)
+                {
+                    Mail::to($admin->email)->send(new \App\Mail\DisposeRequest(auth()->user(), $admin, $requests->model_type, $requests->model_id, \Carbon\Carbon::parse($requests->date)->format('d-m-Y'), $requests->notes));
+
+                }
             }
 
             return back()->with('success_message', 'The request to dispose the asset has been sent. Now awaiting confirmation');
