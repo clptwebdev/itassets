@@ -27,7 +27,8 @@ class MachineryController extends Controller {
         }
 
         //If there are filters currently set move to filtered function
-        if(session()->has('machinery_filter') && session('machinery_filter') === true){
+        if(session()->has('machinery_filter') && session('machinery_filter') === true)
+        {
             return to_route('machinery.filtered');
         }
 
@@ -51,7 +52,7 @@ class MachineryController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('create', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised to Create machinery.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to Create machinery.');
         }
 
         //Get the Locations that the user has permission for
@@ -70,7 +71,7 @@ class MachineryController extends Controller {
 
         if(auth()->user()->cant('create', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised to Store machinery.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to Store machinery.');
 
         }
 
@@ -102,7 +103,7 @@ class MachineryController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('view', $machinery))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised to update machinery.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to update machinery.');
 
         }
 
@@ -117,7 +118,7 @@ class MachineryController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('update', $machinery))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised to update machinery.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to update machinery.');
 
         }
 
@@ -137,7 +138,7 @@ class MachineryController extends Controller {
         //Check to see if the user has permission to update machinery on the system
         if(auth()->user()->cant('update', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised to Update machinery.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to Update machinery.');
 
         }
 
@@ -170,7 +171,7 @@ class MachineryController extends Controller {
         //Check to see if the user has permission to delete machinery on the system
         if(auth()->user()->cant('delete', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised to Delete machinery.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to Delete machinery.');
 
         }
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
@@ -188,7 +189,7 @@ class MachineryController extends Controller {
         //Check to see if the user has permission to delete machinery on the system
         if(auth()->user()->cant('recycleBin', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised to Archive machinery.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to Archive machinery.');
 
         }
         $machinery->delete();
@@ -205,7 +206,7 @@ class MachineryController extends Controller {
         //Check to see if the user has permission to restore the machinery
         if(auth()->user()->cant('delete', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised to Restore machinery.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to Restore machinery.');
 
         }
 
@@ -227,7 +228,7 @@ class MachineryController extends Controller {
         //Check to see if the user has permission to restore the machinery
         if(auth()->user()->cant('delete', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised to Delete machinery.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to Delete machinery.');
 
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
@@ -267,7 +268,7 @@ class MachineryController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised | Download of machinery Information Report.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised | Download of machinery Information Report.');
 
         }
         $machineries = array();
@@ -303,7 +304,7 @@ class MachineryController extends Controller {
     {
         if(auth()->user()->cant('view', $machinery))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised | Download of machinery Information.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised | Download of machinery Information.');
 
         }
 
@@ -328,7 +329,7 @@ class MachineryController extends Controller {
     {
         if(auth()->user()->cant('create', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised | Import machinery.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised | Import machinery.');
 
         }
         //headings incorrect start
@@ -478,7 +479,7 @@ class MachineryController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised | Export machinery Information.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised | Export machinery Information.');
 
         }
         $machineries = Machinery::withTrashed()->whereIn('id', json_decode($request->machinery))->with('location')->get();
@@ -499,7 +500,7 @@ class MachineryController extends Controller {
         $export = json_decode($code);
         if(auth()->user()->cant('viewAll', Machinery::class))
         {
-            return ErrorController::forbidden(to_route('machineries.index'), 'Unauthorised to Export machinery Errors.');
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to Export machinery Errors.');
         }
         $date = \Carbon\Carbon::now()->format('dmyHis');
         \Maatwebsite\Excel\Facades\Excel::store(new MachineryErrorsExport($export), "/public/csv/machinery-errors-{$date}.csv");
@@ -588,7 +589,7 @@ class MachineryController extends Controller {
         $machinery->leftJoin('locations', 'machineries.location_id', '=', 'locations.id')
             ->orderBy(session('machinery_orderby') ?? 'purchased_date', session('machinery_direction') ?? 'asc')
             ->select('machineries.*', 'locations.name as location_name');
-            
+
         $limit = session('machinery_limit') ?? 25;
 
         return view('machinery.view', [

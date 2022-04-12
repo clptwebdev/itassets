@@ -13,7 +13,7 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Fieldset::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View FieldSets.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View FieldSets.');
 
         }
 
@@ -26,7 +26,7 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('create', Fieldset::class))
         {
-            return ErrorController::forbidden(to_route('fieldsets.index'), 'Unauthorised to Create FieldSets.');
+            return ErrorController::forbidden(route('fieldsets.index'), 'Unauthorised to Create FieldSets.');
 
         }
 
@@ -39,7 +39,7 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('create', Fieldset::class))
         {
-            return ErrorController::forbidden(to_route('fieldsets.index'), 'Unauthorised to Create FieldSets.');
+            return ErrorController::forbidden(route('fieldsets.index'), 'Unauthorised to Create FieldSets.');
 
         }
 
@@ -58,7 +58,7 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('update', Fieldset::class))
         {
-            return ErrorController::forbidden(to_route('fieldsets.index'), 'Unauthorised to Update FieldSets.');
+            return ErrorController::forbidden(route('fieldsets.index'), 'Unauthorised to Update FieldSets.');
 
         }
         $fields = Field::all();
@@ -70,7 +70,7 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('update', Fieldset::class))
         {
-            return ErrorController::forbidden(to_route('fieldsets.index'), 'Unauthorised to Update FieldSets.');
+            return ErrorController::forbidden(route('fieldsets.index'), 'Unauthorised to Update FieldSets.');
 
         }
 
@@ -89,7 +89,7 @@ class FieldsetController extends Controller {
     {
         if(auth()->user()->cant('delete', Fieldset::class))
         {
-            return ErrorController::forbidden(to_route('fieldsets.index'), 'Unauthorised to Delete FieldSets.');
+            return ErrorController::forbidden(route('fieldsets.index'), 'Unauthorised to Delete FieldSets.');
 
         }
 

@@ -12,7 +12,7 @@ class CategoryController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Category::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Categories.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Categories.');
 
         }
         $locations = auth()->user()->locations;
@@ -30,7 +30,7 @@ class CategoryController extends Controller {
     {
         if(auth()->user()->cant('create', Category::class))
         {
-            return ErrorController::forbidden(to_route('category.index'), 'Unauthorised to Store Categories.');
+            return ErrorController::forbidden(route('category.index'), 'Unauthorised to Store Categories.');
 
         }
 
@@ -48,7 +48,7 @@ class CategoryController extends Controller {
     {
         if(auth()->user()->cant('update', $category))
         {
-            return ErrorController::forbidden(to_route('category.index'), 'Unauthorised to Edit Categories.');
+            return ErrorController::forbidden(route('category.index'), 'Unauthorised to Edit Categories.');
 
         }
         $validated = $request->validate(['name' => 'required']);
@@ -63,7 +63,7 @@ class CategoryController extends Controller {
     {
         if(auth()->user()->cant('delete', $category))
         {
-            return ErrorController::forbidden(to_route('category.index'), 'Unauthorised to Delete Categories.');
+            return ErrorController::forbidden(route('category.index'), 'Unauthorised to Delete Categories.');
 
         }
 

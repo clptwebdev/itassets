@@ -50,19 +50,20 @@ class BroadbandController extends Controller {
         session(['property_filter' => false]);
 
         $now = \Carbon\Carbon::now();
-        $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
+        $startDate = \Carbon\Carbon::parse('09/01/' . $now->format('Y'));
         $nextYear = \Carbon\Carbon::now()->addYear()->format('Y');
-        $nextStartDate = \Carbon\Carbon::parse('09/01/'.\Carbon\Carbon::now()->addYear()->format('Y'));
-        $endDate = \Carbon\Carbon::parse('08/31/'.$nextYear);
-        if(!$startDate->isPast()){
+        $nextStartDate = \Carbon\Carbon::parse('09/01/' . \Carbon\Carbon::now()->addYear()->format('Y'));
+        $endDate = \Carbon\Carbon::parse('08/31/' . $nextYear);
+        if(! $startDate->isPast())
+        {
             $startDate->subYear();
             $endDate->subYear();
             $nextStartDate->subYear();
         }
 
-
         $currentCost = Broadband::locationFilter($locations->pluck('id')->toArray())->whereYear('purchased_date', Carbon::now()->format('Y'))->sum('purchased_cost');
         $previousCost = Broadband::locationFilter($locations->pluck('id')->toArray())->whereYear('purchased_date', Carbon::now()->subYear()->format('Y'))->sum('purchased_cost');
+
         return view('broadband.view', [
             'previous_cost' => $previousCost,
             'current_cost' => $currentCost,
@@ -76,7 +77,7 @@ class BroadbandController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('create', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Create Broadband.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised to Create Broadband.');
 
         }
 
@@ -96,7 +97,7 @@ class BroadbandController extends Controller {
 
         if(auth()->user()->cant('create', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Store Broadband.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised to Store Broadband.');
 
         }
 
@@ -128,7 +129,7 @@ class BroadbandController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('view', $broadband))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to update Broadband.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised to update Broadband.');
 
         }
         // find the locations that the user has been assigned to
@@ -147,7 +148,7 @@ class BroadbandController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('update', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to update Broadband.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised to update Broadband.');
 
         }
 
@@ -167,7 +168,7 @@ class BroadbandController extends Controller {
         //Check to see if the user has permission to update software on the system
         if(auth()->user()->cant('update', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Update Broadband.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised to Update Broadband.');
 
         }
 
@@ -199,7 +200,7 @@ class BroadbandController extends Controller {
         //Check to see if the user has permission to delete software on the system
         if(auth()->user()->cant('delete', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Delete Broadband.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised to Delete Broadband.');
 
         }
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
@@ -217,7 +218,7 @@ class BroadbandController extends Controller {
         //Check to see if the user has permission to delete software on the system
         if(auth()->user()->cant('recycleBin', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Archive Broadband.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised to Archive Broadband.');
 
         }
         $broadband->delete();
@@ -234,7 +235,7 @@ class BroadbandController extends Controller {
         //Check to see if the user has permission to restore the software
         if(auth()->user()->cant('delete', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Restore Broadband.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised to Restore Broadband.');
 
         }
 
@@ -256,7 +257,7 @@ class BroadbandController extends Controller {
         //Check to see if the user has permission to restore the software
         if(auth()->user()->cant('delete', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Delete Broadband.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised to Delete Broadband.');
 
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
@@ -296,7 +297,7 @@ class BroadbandController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised | Download of Broadband Information Report.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised | Download of Broadband Information Report.');
 
         }
         $broadbands = array();
@@ -332,7 +333,7 @@ class BroadbandController extends Controller {
     {
         if(auth()->user()->cant('view', $broadband))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised | Download of Broadband Information.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised | Download of Broadband Information.');
 
         }
 
@@ -357,7 +358,7 @@ class BroadbandController extends Controller {
     {
         if(auth()->user()->cant('create', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised | Import Broadband.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised | Import Broadband.');
 
         }
         //headings incorrect start
@@ -507,7 +508,7 @@ class BroadbandController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised | Export Broadband Information.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised | Export Broadband Information.');
 
         }
         $broadbands = Broadband::withTrashed()->whereIn('id', json_decode($request->broadband))->with('location')->get();
@@ -528,7 +529,7 @@ class BroadbandController extends Controller {
         $export = json_decode($code);
         if(auth()->user()->cant('viewAll', Broadband::class))
         {
-            return ErrorController::forbidden(to_route('broadbands.index'), 'Unauthorised to Export Broadband Errors.');
+            return ErrorController::forbidden(route('broadbands.index'), 'Unauthorised to Export Broadband Errors.');
         }
         $date = \Carbon\Carbon::now()->format('dmyHis');
         \Maatwebsite\Excel\Facades\Excel::store(new BroadbandErrorsExport($export), "/public/csv/broadband-errors-{$date}.csv");

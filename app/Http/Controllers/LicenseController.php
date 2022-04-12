@@ -53,7 +53,7 @@ class LicenseController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('create', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised to Create License.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Create License.');
 
         }
 
@@ -73,7 +73,7 @@ class LicenseController extends Controller {
 
         if(auth()->user()->cant('create', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised to Store License.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Store License.');
 
         }
 
@@ -104,7 +104,7 @@ class LicenseController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('view', $license))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised to update License.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to update License.');
 
         }
 
@@ -119,7 +119,7 @@ class LicenseController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('update', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised to update License.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to update License.');
 
         }
 
@@ -139,7 +139,7 @@ class LicenseController extends Controller {
         //Check to see if the user has permission to update software on the system
         if(auth()->user()->cant('update', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised to Update License.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Update License.');
 
         }
 
@@ -170,7 +170,7 @@ class LicenseController extends Controller {
         //Check to see if the user has permission to delete software on the system
         if(auth()->user()->cant('delete', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised to Delete License.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Delete License.');
 
         }
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
@@ -188,7 +188,7 @@ class LicenseController extends Controller {
         //Check to see if the user has permission to delete software on the system
         if(auth()->user()->cant('recycleBin', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised to Archive License.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Archive License.');
 
         }
         $license->delete();
@@ -205,7 +205,7 @@ class LicenseController extends Controller {
         //Check to see if the user has permission to restore the software
         if(auth()->user()->cant('delete', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised to Restore License.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Restore License.');
 
         }
 
@@ -227,7 +227,7 @@ class LicenseController extends Controller {
         //Check to see if the user has permission to restore the software
         if(auth()->user()->cant('delete', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised to Delete License.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Delete License.');
 
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
@@ -267,7 +267,7 @@ class LicenseController extends Controller {
     {
         if(auth()->user()->cant('viewAll', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised | Download of License Information Report.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised | Download of License Information Report.');
 
         }
         $licenses = array();
@@ -302,7 +302,7 @@ class LicenseController extends Controller {
     {
         if(auth()->user()->cant('view', $license))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised | Download of License Information.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised | Download of License Information.');
 
         }
 
@@ -327,7 +327,7 @@ class LicenseController extends Controller {
     {
         if(auth()->user()->cant('create', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised | Import License.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised | Import License.');
 
         }
         //headings incorrect start
@@ -474,7 +474,7 @@ class LicenseController extends Controller {
     {
         if(auth()->user()->cant('viewAll', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised | Export License Information.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised | Export License Information.');
 
         }
         $licenses = License::withTrashed()->whereIn('id', json_decode($request->license))->with('location')->get();
@@ -495,7 +495,7 @@ class LicenseController extends Controller {
         $export = json_decode($code);
         if(auth()->user()->cant('viewAll', License::class))
         {
-            return ErrorController::forbidden(to_route('licenses.index'), 'Unauthorised to Export License Errors.');
+            return ErrorController::forbidden(route('licenses.index'), 'Unauthorised to Export License Errors.');
         }
         $date = \Carbon\Carbon::now()->format('dmyHis');
         \Maatwebsite\Excel\Facades\Excel::store(new LicenseErrorsExport($export), "/public/csv/License-errors-{$date}.csv");

@@ -49,7 +49,7 @@ class VehicleController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('view', $vehicle))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to update vehicle.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised to update vehicle.');
 
         }
 
@@ -64,7 +64,7 @@ class VehicleController extends Controller {
         //Check to see if the user has permission to delete vehicle on the system
         if(auth()->user()->cant('delete', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Delete vehicle.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised to Delete vehicle.');
 
         }
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
@@ -86,7 +86,7 @@ class VehicleController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('create', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Create vehicle.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised to Create vehicle.');
         }
 
         //Get the Locations that the user has permission for
@@ -105,7 +105,7 @@ class VehicleController extends Controller {
 
         if(auth()->user()->cant('create', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Store vehicle.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised to Store vehicle.');
 
         }
 
@@ -117,7 +117,7 @@ class VehicleController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
-        ],[
+        ], [
             'name.required' => 'You must provide a name to reference the Vehicle!',
             'registration.required' => 'Please enter the Vehicle Registration',
             'location_id.required' => 'Please assign the Vehicle to a Location',
@@ -126,7 +126,7 @@ class VehicleController extends Controller {
             'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
             'depreciation.numeric' => 'The depreciation for the Vehicle is a number of years - the value is currently invalid',
             'purchased_date.required' => 'Please enter the date the Vehicle was purchased',
-            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY',
 
         ]);
         Vehicle::create([
@@ -151,7 +151,7 @@ class VehicleController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('update', $vehicle))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to update vehicle.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised to update vehicle.');
 
         }
 
@@ -171,7 +171,7 @@ class VehicleController extends Controller {
         //Check to see if the user has permission to update vehicle on the system
         if(auth()->user()->cant('update', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Update vehicle.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised to Update vehicle.');
 
         }
 
@@ -183,7 +183,7 @@ class VehicleController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
-        ],[
+        ], [
             'name.required' => 'You must provide a name to reference the Vehicle!',
             'registration.required' => 'Please enter the Vehicle Registration',
             'location_id.required' => 'Please assign the Vehicle to a Location',
@@ -192,7 +192,7 @@ class VehicleController extends Controller {
             'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
             'depreciation.numeric' => 'The depreciation for the Vehicle is a number of years - the value is currently invalid',
             'purchased_date.required' => 'Please enter the date the Vehicle was purchased',
-            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY',
 
         ]);
 
@@ -218,7 +218,7 @@ class VehicleController extends Controller {
         //Check to see if the user has permission to delete vehicle on the system
         if(auth()->user()->cant('recycleBin', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Archive vehicle.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised to Archive vehicle.');
 
         }
         $vehicle->delete();
@@ -235,7 +235,7 @@ class VehicleController extends Controller {
         //Check to see if the user has permission to restore the vehicle
         if(auth()->user()->cant('delete', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Restore vehicle.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised to Restore vehicle.');
 
         }
 
@@ -257,7 +257,7 @@ class VehicleController extends Controller {
         //Check to see if the user has permission to restore the vehicle
         if(auth()->user()->cant('delete', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Delete vehicle.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised to Delete vehicle.');
 
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
@@ -297,7 +297,7 @@ class VehicleController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised | Download of vehicle Information Report.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised | Download of vehicle Information Report.');
 
         }
         $vehicles = array();
@@ -334,7 +334,7 @@ class VehicleController extends Controller {
     {
         if(auth()->user()->cant('view', $vehicle))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised | Download of vehicle Information.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised | Download of vehicle Information.');
 
         }
 
@@ -359,7 +359,7 @@ class VehicleController extends Controller {
     {
         if(auth()->user()->cant('create', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised | Import vehicle.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised | Import vehicle.');
 
         }
         //headings incorrect start
@@ -475,7 +475,7 @@ class VehicleController extends Controller {
             'purchased_date.*' => 'date',
             'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             "depreciation.*" => "nullable",
-        ],[
+        ], [
             'name.*.required' => 'You must provide a name to reference the Vehicle!',
             'registration.*.required' => 'Please enter the Vehicle Registration',
             'location_id.*.required' => 'Please assign the Vehicle to a Location',
@@ -484,7 +484,7 @@ class VehicleController extends Controller {
             'depreciation.*.required' => 'Please enter a depreciation value, this is a number of years',
             'depreciation.*.numeric' => 'The depreciation for the Vehicle is a number of years - the value is currently invalid',
             'purchased_date.*.required' => 'Please enter the date the Vehicle was purchased',
-            'purchased_date.*.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+            'purchased_date.*.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY',
 
         ]);
 
@@ -520,7 +520,7 @@ class VehicleController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised | Export vehicle Information.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised | Export vehicle Information.');
 
         }
         $vehicles = Vehicle::withTrashed()->whereIn('id', json_decode($request->vehicle))->with('location')->get();
@@ -541,7 +541,7 @@ class VehicleController extends Controller {
         $export = json_decode($code);
         if(auth()->user()->cant('viewAll', Vehicle::class))
         {
-            return ErrorController::forbidden(to_route('vehicles.index'), 'Unauthorised to Export vehicle Errors.');
+            return ErrorController::forbidden(route('vehicles.index'), 'Unauthorised to Export vehicle Errors.');
         }
         $date = \Carbon\Carbon::now()->format('dmyHis');
         \Maatwebsite\Excel\Facades\Excel::store(new VehicleErrorsExport($export), "/public/csv/vehicle-errors-{$date}.csv");

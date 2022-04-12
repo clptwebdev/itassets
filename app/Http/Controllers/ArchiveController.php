@@ -19,7 +19,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Archive::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Archives.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Archives.');
 
         }
         $locations = auth()->user()->locations;
@@ -35,7 +35,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(to_route('assets.index'), 'Unauthorised to View Assets.');
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to View Assets.');
 
         }
 
@@ -52,7 +52,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Accessory::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Accessories.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Accessories.');
 
         }
 
@@ -69,7 +69,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('view', $archive))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Show Archives.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Show Archives.');
         }
 
         return view('archives.show', compact('archive'));
@@ -79,7 +79,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('delete', $archive))
         {
-            return ErrorController::forbidden(to_route('archives.index'), 'Unauthorised to Delete Archives.');
+            return ErrorController::forbidden(route('archives.index'), 'Unauthorised to Delete Archives.');
         }
 
         $archive->delete();
@@ -92,7 +92,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Asset::class))
         {
-            return ErrorController::forbidden(to_route('archives.index'), 'Unauthorised to Download Archives.');
+            return ErrorController::forbidden(route('archives.index'), 'Unauthorised to Download Archives.');
 
         }
         $assets = array();
@@ -140,7 +140,7 @@ class ArchiveController extends Controller {
     {
         if(auth()->user()->cant('view', $asset))
         {
-            return ErrorController::forbidden(to_route('archives.index'), 'Unauthorised to Download Archives.');
+            return ErrorController::forbidden(route('archives.index'), 'Unauthorised to Download Archives.');
 
         }
 
@@ -161,7 +161,8 @@ class ArchiveController extends Controller {
     {
         $options = json_decode($archive->options);
 
-        switch($archive->model_type){
+        switch($archive->model_type)
+        {
             case 'asset':
                 $model = new Asset;
                 $asset_model = AssetModel::where('name', '=', $archive->asset_model)->first();
@@ -171,7 +172,7 @@ class ArchiveController extends Controller {
                     'asset_model' => $asset_model->id,
                     'name' => $archive->name,
                     'asset_tag' => $archive->asset_tag,
-                    'serial_no' =>$archive->serial_no,
+                    'serial_no' => $archive->serial_no,
                     'purchased_date' => $archive->purchased_date,
                     'purchased_cost' => $archive->purchased_cost,
                     'donated' => 0,
@@ -188,14 +189,14 @@ class ArchiveController extends Controller {
                 $model = new Accessory;
 
                 //Options
-                
-                $options->depreciation ? $depreciation = $options->depreciation : $depreciation = 0;  
-                $options->type ? $type = $options->type : $type = 1;  
+
+                $options->depreciation ? $depreciation = $options->depreciation : $depreciation = 0;
+                $options->type ? $type = $options->type : $type = 1;
 
                 $model->fill([
                     'name' => $archive->name,
                     'asset_tag' => $archive->asset_tag,
-                    'serial_no' =>$archive->serial_no,
+                    'serial_no' => $archive->serial_no,
                     'purchased_date' => $archive->purchased_date,
                     'purchased_cost' => $archive->purchased_cost,
                     'donated' => 0,
@@ -207,14 +208,14 @@ class ArchiveController extends Controller {
                     'room' => $archive->room,
                     'audit_date' => $date,
                 ]);
-                break; 
+                break;
             case 'property':
                 $model = new Property;
 
                 //Options
-                
-                $options->depreciation_id ? $depreciation_id = $options->depreciation_id : $depreciation = 0;  
-                $options->type ? $type = $options->type : $type = 1;  
+
+                $options->depreciation_id ? $depreciation_id = $options->depreciation_id : $depreciation = 0;
+                $options->type ? $type = $options->type : $type = 1;
 
                 $model->fill([
                     'name' => $archive->name,
@@ -253,7 +254,7 @@ class ArchiveController extends Controller {
             $archive->delete();
         }
 
-        return back()->with('success_message', "The ".ucfirst($archive->model_type)." - ".$archive->model_name." has been successfully restored.");
+        return back()->with('success_message', "The " . ucfirst($archive->model_type) . " - " . $archive->model_name . " has been successfully restored.");
     }
 
 }

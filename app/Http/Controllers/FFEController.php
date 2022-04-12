@@ -124,7 +124,7 @@ class FFEController extends Controller {
     {
         if(auth()->user()->cant('create', FFE::class))
         {
-            return ErrorController::forbidden(to_route('ffes.index'), 'Unauthorised to Create Furniture, Fixtures and Equipment.');
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised to Create Furniture, Fixtures and Equipment.');
 
         }
 

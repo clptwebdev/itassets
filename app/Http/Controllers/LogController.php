@@ -13,7 +13,7 @@ class LogController extends Controller {
     {
         if(auth()->user()->cant('viewAll', auth()->user()))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Logs.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Logs.');
 
         }
 
@@ -26,7 +26,7 @@ class LogController extends Controller {
     {
         if(auth()->user()->cant('viewAll', auth()->user()))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Export Logs.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Export Logs.');
 
         }
         $logs = Log::all()->whereIn('id', json_decode($request->logs));
@@ -165,7 +165,7 @@ class LogController extends Controller {
     {
         if(auth()->user()->cant('delete', Log::class))
         {
-            return ErrorController::forbidden(to_route('logs.index'), 'Unauthorised to Delete Logs.');
+            return ErrorController::forbidden(route('logs.index'), 'Unauthorised to Delete Logs.');
 
         }
         Log::truncate();

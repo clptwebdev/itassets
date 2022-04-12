@@ -13,7 +13,7 @@ class FieldController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Field::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Fields.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Fields.');
 
         }
 
@@ -26,7 +26,7 @@ class FieldController extends Controller {
     {
         if(auth()->user()->cant('create', Field::class))
         {
-            return ErrorController::forbidden(to_route('fields.index'), 'Unauthorised to Create Fields.');
+            return ErrorController::forbidden(route('fields.index'), 'Unauthorised to Create Fields.');
 
         }
 
@@ -37,7 +37,7 @@ class FieldController extends Controller {
     {
         if(auth()->user()->cant('create', Field::class))
         {
-            return ErrorController::forbidden(to_route('fields.index'), 'Unauthorised to Create Fields.');
+            return ErrorController::forbidden(route('fields.index'), 'Unauthorised to Create Fields.');
 
         }
 
@@ -51,7 +51,7 @@ class FieldController extends Controller {
     {
         if(auth()->user()->cant('update', $field))
         {
-            return ErrorController::forbidden(to_route('fields.index'), 'Unauthorised to Update Fields.');
+            return ErrorController::forbidden(route('fields.index'), 'Unauthorised to Update Fields.');
 
         }
 
@@ -62,7 +62,7 @@ class FieldController extends Controller {
     {
         if(auth()->user()->cant('update', $field))
         {
-            return ErrorController::forbidden(to_route('fields.index'), 'Unauthorised to Update Fields.');
+            return ErrorController::forbidden(route('fields.index'), 'Unauthorised to Update Fields.');
 
         }
         $field->fill($request->only('name', 'format', 'type', 'required', 'value', 'help'))->save();
@@ -75,7 +75,7 @@ class FieldController extends Controller {
     {
         if(auth()->user()->cant('delete', $field))
         {
-            return ErrorController::forbidden(to_route('fields.index'), 'Unauthorised to Delete Fields.');
+            return ErrorController::forbidden(route('fields.index'), 'Unauthorised to Delete Fields.');
         }
         $name = $field->name;
         $field->delete();

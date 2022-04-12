@@ -109,7 +109,7 @@ class SoftwareController extends Controller {
 
         if(auth()->user()->cant('create', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Store Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Store Software.');
 
         }
 
@@ -120,7 +120,7 @@ class SoftwareController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
-        ],[
+        ], [
             'name.required' => 'You must provide a name to reference the Software!',
             'location_id.required' => 'Please assign the Software to a Location',
             'purchased_cost.required' => 'The purchased cost for the Software is empty!',
@@ -128,7 +128,7 @@ class SoftwareController extends Controller {
             'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
             'depreciation.numeric' => 'The depreciation for the Software is a number of years - the value is currently invalid',
             'purchased_date.required' => 'Please enter the date the Software was purchased',
-            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY',
 
         ]);
 
@@ -157,7 +157,7 @@ class SoftwareController extends Controller {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('update', $software))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to update Software.');
 
         }
 
@@ -178,7 +178,7 @@ class SoftwareController extends Controller {
         //Check to see if the user has permission to update software on the system
         if(auth()->user()->cant('update', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Update Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Update Software.');
 
         }
 
@@ -190,7 +190,7 @@ class SoftwareController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
-        ],[
+        ], [
             'name.required' => 'You must provide a name to reference the Software!',
             'location_id.required' => 'Please assign the Software to a Location',
             'purchased_cost.required' => 'The purchased cost for the Software is empty!',
@@ -198,7 +198,7 @@ class SoftwareController extends Controller {
             'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
             'depreciation.numeric' => 'The depreciation for the Software is a number of years - the value is currently invalid',
             'purchased_date.required' => 'Please enter the date the Software was purchased',
-            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY',
 
         ]);
 
@@ -218,14 +218,12 @@ class SoftwareController extends Controller {
         return to_route('softwares.index')->with('success_message', $request->name . ' Has been Updated!');
     }
 
-
-
     public function destroy(Software $software)
     {
         //Check to see if the user has permission to delete software on the system
         if(auth()->user()->cant('recycleBin', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Archive Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Archive Software.');
 
         }
         $software->delete();
@@ -242,7 +240,7 @@ class SoftwareController extends Controller {
         //Check to see if the user has permission to restore the software
         if(auth()->user()->cant('delete', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Restore Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Restore Software.');
 
         }
 
@@ -264,7 +262,7 @@ class SoftwareController extends Controller {
         //Check to see if the user has permission to restore the software
         if(auth()->user()->cant('delete', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Delete Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Delete Software.');
 
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
@@ -304,7 +302,7 @@ class SoftwareController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Download of Software Information Report.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised | Download of Software Information Report.');
 
         }
         $softwares = array();
@@ -342,7 +340,7 @@ class SoftwareController extends Controller {
     {
         if(auth()->user()->cant('view', $software))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Download of Software Information.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised | Download of Software Information.');
 
         }
 
@@ -367,7 +365,7 @@ class SoftwareController extends Controller {
     {
         if(auth()->user()->cant('create', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Import Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised | Import Software.');
 
         }
         //headings incorrect start
@@ -514,7 +512,7 @@ class SoftwareController extends Controller {
     {
         if(auth()->user()->cant('viewAll', software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Export Software Information.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised | Export Software Information.');
 
         }
         $softwares = Software::withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
@@ -535,7 +533,7 @@ class SoftwareController extends Controller {
         $export = json_decode($code);
         if(auth()->user()->cant('viewAll', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Export Software Errors.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Export Software Errors.');
         }
         $date = \Carbon\Carbon::now()->format('dmyHis');
         \Maatwebsite\Excel\Facades\Excel::store(new softwareErrorsExport($export), "/public/csv/software-errors-{$date}.csv");
