@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Exports\BusinessExport;
 use App\Models\Location;
 
+use \Carbon\Carbon;
+
 class LocationBusinessReport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -42,13 +44,35 @@ class LocationBusinessReport implements ShouldQueue
         $location = $this->location;
         $user = $this->user;
         $path = $this->path;
-        
-        $property = Property::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
 
-        $ffe_assets = FFE::where('location_id', '=', $location->id)->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
-        $ffe_disposed = Archive::where('model_type', '=', 'FFE')->where('location_id', '=', $location->id)->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')->get();
+        $now = Carbon::now();
+        $startDate = Carbon::parse('09/01/' . $now->format('Y'));
+        $endDate = Carbon::parse('08/31/' . $now->addYear()->format('Y'));
+        if(! $startDate->isPast())
+        {
+            $startDate->subYear();
+            $endDate->subYear();
+        }
         
+        $property = Property::where('location_id', '=', $location->id)
+                        ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
+                        ->get();
+
+        //Property Archive
+
         $auc = AUC::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
+
+        $ffe_assets = FFE::where('location_id', '=', $location->id)
+                        ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
+                        ->get();
+        
+        $ffe_disposed = Archive::where('model_type', '=', 'FFE')
+                        ->where('location_id', '=', $location->id)
+                        ->whereBetween('date', [$startDate, $endDate])
+                        ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+                        ->get();
+
+        
         $machines = Machinery::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
         $vehicle = Vehicle::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
         $assets = Asset::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'asset_model', 'donated')->get();
@@ -59,7 +83,7 @@ class LocationBusinessReport implements ShouldQueue
         $ffe_merged = collect([$ffe_assets, $ffe_disposed]);
         foreach($ffe_merged as $ffe_merge){
             foreach($ffe_merge as $ffe_item){
-                $ffe->push($ffe_item->item);
+                $ffe->push($ffe_item);
             }
         }
 

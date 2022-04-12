@@ -32,9 +32,11 @@ class BusinessExport implements WithMultipleSheets {
 
         for($model = 1; $model <= 1; $model++)
         {
+            $sheets[] = new PropertyBusinessExport($this->property);
+            //$sheets[] = new AUCBusinessExport($this->auc);
             $sheets[] = new FFEBusinessExport($this->ffe);/* 
-            $sheets[] = new AUCExport($this->auc);
-            $sheets[] = new PropertyExport($this->property);
+            
+            
             $sheets[] = new MachineryExport($this->machines);
             $sheets[] = new VehicleExport($this->vehicle);
             $sheets[] = new ComputerExport($this->computers); */

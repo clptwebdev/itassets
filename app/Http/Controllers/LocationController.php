@@ -15,6 +15,10 @@ use App\Jobs\LocationPdf;
 use App\Jobs\LocationBusinessReport;
 use App\Models\Report;
 
+use App\Models\FFE;
+use App\Models\Archive;
+use Illuminate\Database\Eloquent\Collection;
+
 class LocationController extends Controller {
 
     ///////////////////////////////////////
@@ -173,6 +177,18 @@ class LocationController extends Controller {
         $path = 'asset-register-' . $date.'.xlsx';
         $url = "storage/csv/{$path}";
 
+        /* $ffe_assets = FFE::where('location_id', '=', $location->id)->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
+        $ffe_disposed = Archive::where('model_type', '=', 'FFE')->where('location_id', '=', $location->id)->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')->get();
+
+        $ffe = Collection::empty();
+        $ffe_merged = collect([$ffe_assets, $ffe_disposed]);
+        foreach($ffe_merged as $ffe_merge){
+            foreach($ffe_merge as $ffe_item){
+                $ffe->push($ffe_item);
+            }
+        }
+
+        return dd($ffe); */
         dispatch(new LocationBusinessReport($location, $user, $path))->afterResponse();
         //Create Report
 
