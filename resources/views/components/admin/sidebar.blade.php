@@ -23,45 +23,57 @@
                 <i class="fas fa-fw fa-tachometer-alt sidebar-icon"></i>
                 <span class="sidebar-title">Dashboard</span></a>
         </li>
-        {{-- The are the Navigation tabs the Finance Users would be using --}}
-        <li class="nav-item @if(Request::url() == route('properties.index') || Str::contains(Request::url(), ['properties', 'property'])) {{ 'active' }} @endif">
-            <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('properties.index')}}">
-                <i class="fas fa-fw fa-school sidebar-icon"></i>
-                <span class="sidebar-title">Property</span></a>
-        </li>
-        <li class="nav-item @if(Request::url() == route('aucs.index') || Str::contains(Request::url(), ['aucs', 'auc'])) {{ 'active' }} @endif">
-            <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('aucs.index')}}">
-                <i class="fas fa-fw fa-hammer sidebar-icon"></i>
-                <span class="sidebar-title">AUC</span></a>
-        </li>
-        <li class="nav-item @if(Request::url() == route('ffes.index') || Str::contains(Request::url(), ['ffes', 'ffe'])) {{ 'active' }} @endif">
-            <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('ffes.index')}}">
-                <i class="fas fa-fw fa-chair sidebar-icon"></i>
-                <span class="sidebar-title">FFE</span></a>
-        </li>
-        <li class="nav-item ">
-            <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('machineries.index')) {{ 'active' }} @endif "
-               href="{{route('machineries.index')}}">
-                <i class="fas fa-fw fa-tractor sidebar-icon"></i>
-                <span class="sidebar-title">Plant and Machinery</span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('vehicles.index')) {{ 'active' }} @endif"
-               href="{{route('vehicles.index')}}">
-                <i class="fas fa-fw fa-bus sidebar-icon"></i>
-                <span class="sidebar-title">Motor Vehicles</span></a>
-        </li>
+        @can('viewAll' , \App\Models\Property::class)
+            {{-- The are the Navigation tabs the Finance Users would be using --}}
+            <li class="nav-item @if(Request::url() == route('properties.index') || Str::contains(Request::url(), ['properties', 'property'])) {{ 'active' }} @endif">
+                <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('properties.index')}}">
+                    <i class="fas fa-fw fa-school sidebar-icon"></i>
+                    <span class="sidebar-title">Property</span></a>
+            </li>
+        @endcan
+        @can('viewAll' , \App\Models\AUC::class)
+            <li class="nav-item @if(Request::url() == route('aucs.index') || Str::contains(Request::url(), ['aucs', 'auc'])) {{ 'active' }} @endif">
+                <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('aucs.index')}}">
+                    <i class="fas fa-fw fa-hammer sidebar-icon"></i>
+                    <span class="sidebar-title">AUC</span></a>
+            </li>
+        @endcan
+        @can('viewAll' , \App\Models\FFE::class)
+            <li class="nav-item @if(Request::url() == route('ffes.index') || Str::contains(Request::url(), ['ffes', 'ffe'])) {{ 'active' }} @endif">
+                <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('ffes.index')}}">
+                    <i class="fas fa-fw fa-chair sidebar-icon"></i>
+                    <span class="sidebar-title">FFE</span></a>
+            </li>
+        @endcan
+        @can('viewAll' , \App\Models\Machinery::class)
+            <li class="nav-item ">
+                <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('machineries.index')) {{ 'active' }} @endif "
+                   href="{{route('machineries.index')}}">
+                    <i class="fas fa-fw fa-tractor sidebar-icon"></i>
+                    <span class="sidebar-title">Plant and Machinery</span></a>
+            </li>
+        @endcan
+        @can('viewAll' , \App\Models\Vehicle::class)
+            <li class="nav-item">
+                <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('vehicles.index')) {{ 'active' }} @endif"
+                   href="{{route('vehicles.index')}}">
+                    <i class="fas fa-fw fa-bus sidebar-icon"></i>
+                    <span class="sidebar-title">Motor Vehicles</span></a>
+            </li>
+        @endcan
     @endif
 
 
 <!-- Divider -->
+    @can('viewAll' , \App\Models\Software::class)
+        <hr class="sidebar-divider">
 
-    <hr class="sidebar-divider">
-    <li class="nav-item @if(Request::url() == route('softwares.index')) {{ 'active' }} @endif">
-        <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('softwares.index')}}">
-            <i class="fas fa-fw fa-folder-open sidebar-icon"></i>
-            <span class="sidebar-title">Software</span></a>
-    </li>
+        <li class="nav-item @if(Request::url() == route('softwares.index')) {{ 'active' }} @endif">
+            <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('softwares.index')}}">
+                <i class="fas fa-fw fa-folder-open sidebar-icon"></i>
+                <span class="sidebar-title">Software</span></a>
+        </li>
+    @endcan
     @if(auth()->user()->role_id != 0)
         @can('viewAll' , \App\Models\Asset::class)
             <li class="nav-item @if(Request::url() == route('assets.index')) {{ 'active' }} @endif">
@@ -94,8 +106,9 @@
                         @endforeach
                     </div>
                     <a href="#locationMenu" class="sub-link collapse-item collapsed d-none d-sm-block"
-                       data-bs-toggle="collapse" data-bs-parent="#locationMenu"><i class="fas fa-school fa-xs"></i> By
-                                                                                                                    Location</a>
+                       data-bs-toggle="collapse" data-bs-parent="#locationMenu"><i class="fas fa-school fa-xs"></i>
+                        By
+                        Location</a>
                     <div class="collapse p-2" id="locationMenu">
                         @php
                             $locations = auth()->user()->locations;
@@ -220,7 +233,8 @@
                         <a class="collapse-item" href="{{ route('miscellaneous.index')}}">View All</a>
                     @endcan
                     @can('create' , \App\Models\Miscellanea::class)
-                        <a class="collapse-item" href="{{ route('miscellaneous.create')}}"> Add New Miscellaneous</a>
+                        <a class="collapse-item" href="{{ route('miscellaneous.create')}}"> Add New
+                                                                                            Miscellaneous</a>
                     @endcan
                     @can('import' , \App\Models\Miscellanea::class)
 
@@ -230,20 +244,25 @@
             </li>
         @endcan
     <!-- Divider -->
-        <hr class="sidebar-divider">
+        @can('viewAll' , \App\Models\License::class)
+            <hr class="sidebar-divider">
     <!-- Nav Item - Charts -->
-        <li class="nav-item">
-            <a class="nav-link text-left text-sm-center text-md-left  @if(Request::url() == route('licenses.index')) {{ 'show' }} @endif "
-               href="{{route('licenses.index')}}">
-                <i class="far fa-fw fa-id-badge sidebar-icon"></i>
-                <span class="sidebar-title">Licenses</span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('broadbands.index')) {{ 'show' }} @endif"
-               href="{{route('broadbands.index')}}">
-                <i class="fas fa-fw fa-wifi sidebar-icon"></i>
-                <span class="sidebar-title">Broadband</span></a>
-        </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-left text-sm-center text-md-left  @if(Request::url() == route('licenses.index')) {{ 'show' }} @endif "
+                   href="{{route('licenses.index')}}">
+                    <i class="far fa-fw fa-id-badge sidebar-icon"></i>
+                    <span class="sidebar-title">Licenses</span></a>
+            </li>
+        @endcan
+        @can('viewAll' , \App\Models\Broadband::class)
+            <li class="nav-item">
+                <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('broadbands.index')) {{ 'show' }} @endif"
+                   href="{{route('broadbands.index')}}">
+                    <i class="fas fa-fw fa-wifi sidebar-icon"></i>
+                    <span class="sidebar-title">Broadband</span></a>
+            </li>
+        @endcan
         @can('viewAll',\App\Models\Order::class )
             <hr class="sidebar-divider">
             <li class="nav-item">
@@ -256,8 +275,6 @@
         @can('viewAll',\App\Models\User::class )
             <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
-
-
 
             <li class="nav-item">
                 <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-bs-toggle="collapse"
@@ -305,20 +322,22 @@
             </li>
         @endcan
     <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-        <li class="nav-item">
-            <a href="{{ route('archives.index')}}" title="Archived"
-               class="nav-link text-left text-sm-center text-md-left">
-                <i class="fas fa-fw fa-archive sidebar-icon"></i> <span
-                    @if(Request::url() == route('archives.index')) {{ 'font-weight-bold' }} @endif class="sidebar-title">Disposed/Archived</span></a>
-        </li>
+        @can('viewAll' , \App\Models\Archive::class)
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item">
+                <a href="{{ route('archives.index')}}" title="Archived"
+                   class="nav-link text-left text-sm-center text-md-left">
+                    <i class="fas fa-fw fa-archive sidebar-icon"></i> <span
+                        @if(Request::url() == route('archives.index')) {{ 'font-weight-bold' }} @endif class="sidebar-title">Disposed/Archived</span></a>
+            </li>
+        @endcan
     <!-- Divider -->
         <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-bs-toggle="collapse"
                data-bs-target="#settingPages" aria-expanded="true" aria-controls="settingPages">
-                <i class="fas fa-fw fa-cogs sidebar-icon"></i>
+                <i class="fas fa-fw fa-cogs sidebar-icon mx-auto"></i>
                 <span class="sidebar-title">Settings <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
             </a>
             <div id="settingPages" class="collapse" aria-labelledby="headingPages" data-bs-parent="#accordionSidebar">
@@ -354,17 +373,21 @@
                 @can('view' , \App\Models\Backup::class)
                     <a class="collapse-item" href="/databasebackups">Database Backups</a>
                 @endcan
-                <a href="{{ route('reports.index')}}" class="collapse-item">Generated Reports</a>
+                @can('viewAll' , \App\Models\Report::class)
+                    <a href="{{ route('reports.index')}}" class="collapse-item">Generated Reports</a>
+                @endcan
                 <a class="collapse-item" href="{{ route("documentation.index") }}">Documentation</a>
             </div>
         </li>
 
 
     <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
+        @can('viewAll' , \App\Models\Report::class)
+            <hr class="sidebar-divider d-none d-md-block">
+        @endcan
 
     <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
+        <div class="text-center d-none d-md-inline mt-1">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
     @endif
