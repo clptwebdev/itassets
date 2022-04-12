@@ -32,18 +32,27 @@ class LicenseController extends Controller {
             return ErrorController::forbidden('/dashboard', 'Unauthorised to View License.');
 
         }
-
+//If there are filters currently set move to filtered function
+        if(session()->has('license_filter') && session('license_filter') === true)
+        {
+            return to_route('license.filtered');
+        }
         // find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('license')->get();
         //Find the properties that are assigned to the locations the User has permissions to.
-        $limit = session('property_limit') ?? 25;
-        $licenses = License::locationFilter($locations->pluck('id')->toArray())->latest('expiry', '>=', Carbon::parse(now()))->paginate(intval($limit))->fragment('table');
 
         //No filter is set so set the Filter Session to False - this is to display the filter if is set
         session(['property_filter' => false]);
+        $licenses = License::locationFilter($locations->pluck('id')->toArray());
+        $licenses->latest('expiry', '>=', Carbon::parse(now()))
+            ->leftJoin('locations', 'licenses.location_id', '=', 'locations.id')
+            ->leftJoin('suppliers', 'licenses.supplier_id', '=', 'suppliers.id')
+            ->orderBy(session('license_orderby') ?? 'expiry', session('license_direction') ?? 'asc')
+            ->select('licenses.*', 'locations.name as location_name', 'suppliers.name as supplier_name');
+        $limit = session('license_limit') ?? 25;
 
         return view('licenses.view', [
-            "licenses" => $licenses,
+            "licenses" => $licenses->paginate(intval($limit))->withPath(asset('/license/filter'))->fragment('table'),
             "locations" => $locations,
         ]);
     }
@@ -643,7 +652,7 @@ class LicenseController extends Controller {
 
         $license->leftJoin('locations', 'licenses.location_id', '=', 'locations.id')
             ->leftJoin('suppliers', 'licenses.supplier_id', '=', 'suppliers.id')
-            ->orderBy(session('licenses_orderby') ?? 'expiry', session('licenses_direction') ?? 'asc')
+            ->orderBy(session('license_orderby') ?? 'expiry', session('license_direction') ?? 'asc')
             ->select('licenses.*', 'locations.name as location_name', 'suppliers.name as supplier_name');
         $limit = session('license_limit') ?? 25;
 

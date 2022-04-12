@@ -28,7 +28,7 @@ class License extends Model {
         return $this->belongsTo(Location::class)->with('photo');
     }
 
-    public function supplier()
+    public function suppliers()
     {
         return $this->belongsTo(Supplier::class);
     }
