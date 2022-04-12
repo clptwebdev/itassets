@@ -23,7 +23,6 @@
                 <div class="card shadow h-100">
                     <div class="card-body">
                         <x-handlers.alerts/>
-
                         <ul id="tab-bar" class="nav nav-tabs">
                             <li class="nav-item">
                                 <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab"

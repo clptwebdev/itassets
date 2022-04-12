@@ -22,7 +22,6 @@
                 <div class="card shadow h-100">
                     <div class="card-body">
                         <x-handlers.alerts/>
-                        <x-handlers.alerts/>
 
                         <ul id="tab-bar" class="nav nav-tabs">
                             <li class="nav-item">
