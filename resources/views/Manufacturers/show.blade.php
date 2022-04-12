@@ -27,13 +27,7 @@
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Information regarding {{ $manufacturer->name }}, the assets that are currently assigned to the

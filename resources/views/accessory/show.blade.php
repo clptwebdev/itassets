@@ -16,8 +16,9 @@
         @can('generatePDF', \App\Models\Accessory::class)
             <x-buttons.reports :route="route('accessories.showPdf', $accessory->id)"/>
         @endcan
-        <x-buttons.edit :route="route('accessories.edit', $accessory->id)"/>
-
+        @can('update', $accessory)
+            <x-buttons.edit :route="route('accessories.edit', $accessory->id)"/>
+        @endcan
         @can('delete', $accessory)
             <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$accessory->id"
                            :action="route('accessories.destroy', $accessory->id)">

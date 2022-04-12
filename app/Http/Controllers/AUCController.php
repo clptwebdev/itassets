@@ -195,6 +195,7 @@ class AUCController extends Controller {
             'purchased_date' => $auc->purchased_date,
             'depreciation' => $auc->depreciation,
             'location_id' => $auc->location_id,
+            'user_id' => auth()->user()->id,
         ]);
         $property->save();
 

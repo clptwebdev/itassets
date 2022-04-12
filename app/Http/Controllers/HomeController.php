@@ -34,6 +34,7 @@ class HomeController extends Controller {
     public function business()
     {
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->get();
+
         return view('dashboard.business', compact('locations'));
     }
     ////////////////////////////////////////
@@ -75,9 +76,12 @@ class HomeController extends Controller {
     ////////////////////////////////////////
     ////// Top Bar Search Functions ////////
     ////////////////////////////////////////
-    
+
     public function search(Request $request)
     {
+        $request->validate([
+            'name' => 'required'
+        ]);
         $assets = Asset::searchFilter($request->name)->get();
         $FFE = FFE::searchFilter($request->name)->get();
         $accessory = Accessory::searchFilter($request->name)->get();

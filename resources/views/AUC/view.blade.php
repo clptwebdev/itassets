@@ -6,13 +6,15 @@
 
 @section('content')
     <x-wrappers.nav title="Assets Under Construction">
+        <x-buttons.return :route="route('dashboard')">Dashboard</x-buttons.return>
+
         @can('recycleBin', \App\Models\AUC::class)
             <x-buttons.recycle :route="route('auc.bin')" :count="\App\Models\AUC::onlyTrashed()->count()"/>
         @endcan
         @can('create' , \App\Models\AUC::class)
             <x-buttons.add :route="route('aucs.create')">Asset Under Construction</x-buttons.add>
         @endcan
-        @can('viewAll', \App\Models\AUC::class)
+        @can('generatePDF', \App\Models\AUC::class)
             @if ($aucs->count() == 1)
                 <x-buttons.reports :route="route('aucs.showPdf', $aucs[0]->id)"/>
             @else
@@ -30,20 +32,20 @@
                     </x-buttons.submit>
                 </x-form.layout>
             @endif
-            <div class="dropdown d-inline-block">
-                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Bulk Options
-                </a>
-                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                    @can('create', \App\Models\AUC::class)
-                        <x-buttons.dropdown-item id="import">
-                            Import
-                        </x-buttons.dropdown-item>
-                    @endcan
-                </div>
-            </div>
         @endcan
+        <div class="dropdown d-inline-block">
+            <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
+               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Bulk Options
+            </a>
+            <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
+                @can('create', \App\Models\AUC::class)
+                    <x-buttons.dropdown-item id="import">
+                        Import
+                    </x-buttons.dropdown-item>
+                @endcan
+            </div>
+        </div>
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>

@@ -14,7 +14,7 @@
         @can('viewAll', \App\Models\Component::class)
             @if ($components->count() == 1)
                 <x-buttons.reports :route="route('components.showPdf', $components[0]->id)"/>
-            @else
+            @elseif($components->count() > 1)
                 <x-form.layout class="d-inline-block" :action="route('components.pdf')">
                     <x-form.input type="hidden" name="components" :label="false" formAttributes="required"
                                   :value="json_encode($components->pluck('id'))"/>
