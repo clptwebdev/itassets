@@ -101,7 +101,7 @@
                                         </div>
                                         <div class="form-group">
                                             <x-form.input name="depreciation" formAttributes=""
-                                                          value="{{old('depreciation') ?? $ffe->depreciation_id}}"/>
+                                                          value="{{old('depreciation') ?? $ffe->depreciation}}"/>
                                         </div>
                                         <div class="form-group position-relative">
                                             <label for="findSupplier">Supplier</label>

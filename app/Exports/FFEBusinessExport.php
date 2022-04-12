@@ -99,8 +99,6 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
 
         foreach($ffes as $ffe)
         {
-            
-
             $bf = $ffe->depreciation_value_by_date($startDate);
             $cf = $ffe->depreciation_value_by_date($nextStartDate);
 

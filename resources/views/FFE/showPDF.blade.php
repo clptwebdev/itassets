@@ -57,7 +57,7 @@
         </tr>
         <tr>
             <td>Depreciation</td>
-            <td>{{ $ffe->depreciation_id}} Years</td>
+            <td>{{ $ffe->depreciation}} Years</td>
         </tr>
         <tr style="background-color: #454777; padding: 10px; color: #fff;">
             <th colspan="2">Finance</th>

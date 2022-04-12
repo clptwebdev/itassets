@@ -243,14 +243,14 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span id="depreciation_id{{$line}}" class="tooltip-danger">
+                                    <span id="depreciation{{$line}}" class="tooltip-danger">
                                         <input type="text"
-                                               class="import-control @if(in_array('depreciation_id', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                               name="depreciation_id[]"
-                                               value="{{ $valueArray[$row]['depreciation_id'] }}"
+                                               class="import-control @if(in_array('depreciation', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                               name="depreciation[]"
+                                               value="{{ $valueArray[$row]['depreciation'] }}"
                                                placeholder="This Row is Empty Please Fill!"
-                                               data-bs-container='#depreciation_id{{$line}}' data-bs-placement='top'
-                                           @if(array_key_exists('depreciation_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['depreciation_id']}'" !!}@endif>
+                                               data-bs-container='#depreciation{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('depreciation', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['depreciation']}'" !!}@endif>
                                     </span>
                                 </td>
                                 <td>

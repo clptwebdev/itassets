@@ -90,8 +90,8 @@
                                                           value="{{old('purchased_cost')}}"/>
                                         </div>
                                         <div class="form-group">
-                                            <x-form.input name="depreciation_id" formAttributes=""
-                                                          value="{{old('depreciation_id')}}"/>
+                                            <x-form.input name="depreciation" formAttributes=""
+                                                          value="{{old('depreciation')}}"/>
                                         </div>
                                         <div class="form-group position-relative">
                                             <label for="findSupplier">Supplier</label>

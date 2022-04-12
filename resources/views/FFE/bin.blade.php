@@ -95,13 +95,13 @@
                                     @if($ffe->depreciation)
                                         <br>
                                         @php
-                                            $eol = Carbon\Carbon::parse($ffe->purchased_date)->addYears($ffe->depreciation->years);
+                                            $eol = Carbon\Carbon::parse($ffe->purchased_date)->addYears($ffe->depreciation);
                                             if($eol->isPast()){
                                                 $dep = 0;
                                             }else{
 
                                                 $age = Carbon\Carbon::now()->floatDiffInYears($ffe->purchased_date);
-                                                $percent = 100 / $ffe->depreciation->years;
+                                                $percent = 100 / $ffe->depreciation;
                                                 $percentage = floor($age)*$percent;
                                                 $dep = $ffe->purchased_cost * ((100 - $percentage) / 100);
                                             }

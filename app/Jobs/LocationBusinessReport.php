@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Models\Property;
 use App\Models\FFE;
+use App\Models\Archive;
 use App\Models\AUC;
 use App\Models\Machinery;
 use App\Models\Vehicle;
@@ -43,14 +44,24 @@ class LocationBusinessReport implements ShouldQueue
         $path = $this->path;
         
         $property = Property::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
-        $ffe = FFE::where('location_id', '=', $location->id)->select('name', 'purchased_cost', 'purchased_date', 'depreciation_id')->get();
-        $ffe_disposed = Archive::where('model_type', '=', 'FFE')->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')->get();
+
+        $ffe_assets = FFE::where('location_id', '=', $location->id)->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
+        $ffe_disposed = Archive::where('model_type', '=', 'FFE')->where('location_id', '=', $location->id)->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')->get();
+        
         $auc = AUC::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
         $machines = Machinery::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
         $vehicle = Vehicle::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
         $assets = Asset::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'asset_model', 'donated')->get();
         $accessories = Accessory::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation_id', 'donated')->get();
         $software = Software::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation', 'donated')->get();
+
+        $ffe = Collection::empty();
+        $ffe_merged = collect([$ffe_assets, $ffe_disposed]);
+        foreach($ffe_merged as $ffe_merge){
+            foreach($ffe_merge as $ffe_item){
+                $ffe->push($ffe_item->item);
+            }
+        }
 
         $merged = collect([$accessories, $assets]);
         $computers = Collection::empty();
@@ -62,6 +73,7 @@ class LocationBusinessReport implements ShouldQueue
                 $computers->push($item);
             }
         }
+
 
         \Maatwebsite\Excel\Facades\Excel::store(new BusinessExport($computers, $property, $ffe, $auc, $machines, $vehicle), $path);
 

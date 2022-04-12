@@ -13,8 +13,7 @@ class FFE extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'serial_no', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'status_id', 'order_no',
-        'warranty', 'location_id', 'room', 'notes', 'manufacturer_id', 'photo_id', 'depreciation_id', 'user_id'];
+    protected $guarded = [];
 
     public function photo()
     {
@@ -71,7 +70,7 @@ class FFE extends Model {
     public function depreciation_value_by_date($date)
     {
         $age = $date->floatDiffInYears($this->purchased_date);
-        $percent = 100 / $this->depreciation_id;
+        $percent = 100 / $this->depreciation;
         $percentage = floor($age) * $percent;
         $value = $this->purchased_cost * ((100 - $percentage) / 100);
 
@@ -93,7 +92,7 @@ class FFE extends Model {
         } else
         {
             $age = Carbon::now()->floatDiffInYears($this->purchased_date);
-            $percent = 100 / $this->depreciation_id;
+            $percent = 100 / $this->depreciation;
             $percentage = floor($age) * $percent;
             $dep = $this->purchased_cost * ((100 - $percentage) / 100);
 

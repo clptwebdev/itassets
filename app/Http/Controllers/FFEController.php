@@ -143,7 +143,7 @@ class FFEController extends Controller {
         ]);
 
         $ffe = FFE::create(array_merge($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation'
         ), ['user_id' => auth()->user()->id]));
 
         if($request->category != '' && ! empty(explode(',', $request->category)))
@@ -213,7 +213,7 @@ class FFEController extends Controller {
         }
 
         $ffe->fill(array_merge($request->only(
-            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
+            'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation'
         ), ['donated' => $donated]))->save();
         session()->flash('success_message', $ffe->name . ' has been Updated successfully');
         if($request->category != '' && ! empty(explode(',', $request->category)))
@@ -409,7 +409,7 @@ class FFEController extends Controller {
                 $ffe->room = $request->room[$i] ?? 'N/A';
                 $ffe->notes = $request->notes[$i];
                 $ffe->photo_id = 0;
-                $ffe->depreciation_id = $request->depreciation_id[$i];
+                $ffe->depreciation = $request->depreciation[$i];
                 $ffe->user_id = auth()->user()->id;
                 $ffe->save();
             }
@@ -488,11 +488,11 @@ class FFEController extends Controller {
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£' . $f->purchased_cost;
             $array['donated'] = $f->donated;
-            if($f->depreciation_id != 0)
+            if($f->depreciation_ != 0)
             {
-                $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation_id);
+                $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation);
                 $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
-                $percent = 100 / $f->depreciation->years;
+                $percent = 100 / $f->depreciation;
                 $percentage = floor($age) * $percent;
                 $dep = $f->purchased_cost * ((100 - $percentage) / 100);
             } else
