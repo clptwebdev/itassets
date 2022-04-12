@@ -20,7 +20,7 @@
                 <div class="col-12 col-md-8 col-lg-9 col-xl-10">
                     <div class="card shadow h-100">
                         <div class="card-body">
-                            <x-form.errors/>
+                            <x-handlers.alerts/>
                             <div class="form-group">
                                 <x-form.input name="name" formAttributes="required"/>
                             </div>

@@ -17,7 +17,7 @@
             <x-buttons.submit>Save</x-buttons.submit>
         </x-wrappers.nav>
 
-        <x-form.errors/>
+        <x-handlers.alerts/>
         <section>
             <p class="mb-4">Edit {{ $data->name}}, Component stored in the Apollo Asset Management System. Change
                             the information
@@ -30,7 +30,7 @@
             <div class="col-12">
                 <div class="card shadow h-100">
                     <div class="card-body">
-                        <x-form.errors/>
+
                         <x-handlers.alerts/>
 
                         <ul id="tab-bar" class="nav nav-tabs">

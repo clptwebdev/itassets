@@ -26,7 +26,6 @@
         @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
-    <x-form.errors/>
     <section class="m-auto">
         <p class="mb-4">Information regarding {{ $accessory->name }} including the location and any comments made by
                         staff. </p>
