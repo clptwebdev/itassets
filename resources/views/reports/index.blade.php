@@ -37,7 +37,7 @@
                             <tr>
                                 <td>
                                     @if(file_exists($report->report))
-                                        <a href="{{ asset($report->report)}}"
+                                        <a href="{{ asset($report->report)}}" target='_blank'
                                            title="New">{{substr($report->report ,16) }}</a>
                                     @else
                                         @if(\Carbon\Carbon::now()->floatDiffInMinutes($report->created_at) < 15)
@@ -58,6 +58,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$reports"/>
                 </div>
             </div>
         </div>
