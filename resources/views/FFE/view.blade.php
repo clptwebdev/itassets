@@ -5,13 +5,15 @@
 
 @section('content')
     <x-wrappers.nav title="Furniture, Fixtures and Equipment (FFE)">
+        <x-buttons.return :route="route('dashboard')">Dashboard</x-buttons.return>
+
         @can('recycleBin', \App\Models\FFE::class)
             <x-buttons.recycle :route="route('ffe.bin')" :count="\App\Models\FFE::onlyTrashed()->count()"/>
         @endcan
         @can('create' , \App\Models\FFE::class)
             <x-buttons.add :route="route('ffes.create')">FFE</x-buttons.add>
         @endcan
-        @can('viewAll', \App\Models\FFE::class)
+        @can('generatePDF', \App\Models\FFE::class)
             @if ($ffes->count() == 1)
                 <x-buttons.reports :route="route('ffes.showPdf', $ffes[0]->id)"/>
             @else
@@ -29,20 +31,20 @@
                     </x-buttons.submit>
                 </x-form.layout>
             @endif
-            <div class="dropdown d-inline-block">
-                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Bulk Options
-                </a>
-                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                    @can('create', \App\Models\FFE::class)
-                        <x-buttons.dropdown-item id="import">
-                            Import
-                        </x-buttons.dropdown-item>
-                    @endcan
-                </div>
-            </div>
         @endcan
+        <div class="dropdown d-inline-block">
+            <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
+               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Bulk Options
+            </a>
+            <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
+                @can('create', \App\Models\FFE::class)
+                    <x-buttons.dropdown-item id="import">
+                        Import
+                    </x-buttons.dropdown-item>
+                @endcan
+            </div>
+        </div>
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>

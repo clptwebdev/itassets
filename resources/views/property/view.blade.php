@@ -5,6 +5,7 @@
 
 @section('content')
     <x-wrappers.nav title="Property">
+        <x-buttons.return :route="route('dashboard')">Dashboard</x-buttons.return>
         @can('recycleBin', \App\Models\Property::class)
             <x-buttons.recycle :route="route('property.bin')" :count="\App\Models\Property::onlyTrashed()->count()"/>
         @endcan

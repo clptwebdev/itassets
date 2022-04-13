@@ -24,7 +24,7 @@ class LocationController extends Controller {
     ///////////////////////////////////////
     //////////// Read Functions ///////////
     ///////////////////////////////////////
-    
+
     public function index()
     {
 
@@ -164,7 +164,7 @@ class LocationController extends Controller {
     }
 
     public function businessExport(Location $location){
-        
+
         if(auth()->user()->cant('businessReports', $location))
         {
             return ErrorController::forbidden(route('business'), 'Unauthorised to Download Financial Report.');

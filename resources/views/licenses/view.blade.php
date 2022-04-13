@@ -44,7 +44,23 @@
             </div>
         @endcan
     </x-wrappers.nav>
+
+    @php
+
+        $limit = auth()->user()->location_license()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+        $floor = auth()->user()->location_license()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+
+    if(session()->has('license_min') && session()->has('license_max')){
+        $start_value = session('license_min');
+        $end_value = session('license_max');
+    }else{
+        $start_value = $floor;
+        $end_value = $limit;
+    }
+    @endphp
     <x-handlers.alerts/>
+    <x-filters.navigation model="License" relations="license" table="licenses"/>
+    <x-filters.filter model="License" relations="license" table="licenses" :locations="$locations"/>
     <section>
         <p class="mt-5 mb-4">Below are licenses belonging to the Central Learning Partnership Trust.If You require
                              access to see
@@ -81,9 +97,10 @@
                         </tfoot>
                         <tbody>
                         @foreach($licenses as $license)
+
                             <tr>
                                 <td class="text-left">{{$license->name ?? 'No License Name'}}</td>
-                                <td class="text-center">{{$license->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center">{{$license->supplier_name ?? 'N/A'}}</td>
                                 <td class="text-center">{{$license->location->name}}</td>
                                 <td class="text-center">£{{number_format($license->purchased_cost, 2, '.', ',')}}</td>
                                 <td class="text-center"><span>{{ \Illuminate\Support\Carbon::parse($license->expiry)->format('d-M-Y')}}
@@ -148,6 +165,37 @@
 @endsection
 
 @section('js')
+    <script src="{{asset('js/filter.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/import.js')}}"></script>
+    <script>
+        let sliderMin = document.querySelector('#customRange1');
+        let sliderMax = document.querySelector('#customRange2');
+        let sliderMinValue = document.querySelector('#minRange');
+        let sliderMaxValue = document.querySelector('#maxRange');
+
+        //setting slider ranges
+        sliderMin.setAttribute('min', {{ floor($start_value)}});
+        sliderMin.setAttribute('max', {{ round($end_value)}});
+        sliderMax.setAttribute('min', {{ floor($start_value)}});
+        sliderMax.setAttribute('max', {{ round($end_value)}});
+        sliderMax.value = {{ round($end_value)}};
+        sliderMin.value = {{ floor($start_value)}};
+
+        sliderMinValue.innerHTML = {{ floor($start_value)}};
+        sliderMaxValue.innerHTML = {{ round($end_value)}};
+
+        sliderMin.addEventListener('input', function () {
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMaxValue.innerHTML = sliderMax.value;
+
+        });
+        sliderMax.addEventListener('input', function () {
+            sliderMaxValue.innerHTML = sliderMax.value;
+            sliderMinValue.innerHTML = sliderMin.value;
+            sliderMin.setAttribute('max', sliderMax.value);
+
+
+        });
+    </script>
 @endsection

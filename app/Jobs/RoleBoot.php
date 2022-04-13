@@ -1254,7 +1254,7 @@ class RoleBoot implements ShouldQueue {
             'model' => 'Log'], [
             "Create" => 0,
             "update" => 0,
-            "view" => 0,
+            "view" => 1,
             "delete" => 0,
             "archive" => 0,
             "transfer" => 0,
@@ -1777,7 +1777,7 @@ class RoleBoot implements ShouldQueue {
             'model' => 'Log'], [
             "Create" => 1,
             "update" => 0,
-            "view" => 1,
+            "view" => 0,
             "delete" => 0,
             "archive" => 0,
             "transfer" => 0,
@@ -2235,7 +2235,7 @@ class RoleBoot implements ShouldQueue {
             'model' => 'Log'], [
             "Create" => 0,
             "update" => 0,
-            "view" => 1,
+            "view" => 0,
             "delete" => 0,
             "archive" => 0,
             "transfer" => 0,

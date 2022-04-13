@@ -92,32 +92,33 @@
                         </div>
                     </div>
                 @endif
+                @if(Schema::hasColumn("{$table}",'purchased_date'))
+                    <div class="option">
+                        <div class="option-header collapsed pointer" id="purchasedDateHeader" data-bs-toggle="collapse"
+                             data-bs-target="#purchasedDateCollapse" aria-expanded="true"
+                             aria-controls="purchasedDateHeader">
+                            <small>Date</small>
+                        </div>
 
-                <div class="option">
-                    <div class="option-header collapsed pointer" id="purchasedDateHeader" data-bs-toggle="collapse"
-                         data-bs-target="#purchasedDateCollapse" aria-expanded="true"
-                         aria-controls="purchasedDateHeader">
-                        <small>Date</small>
-                    </div>
-
-                    <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader"
-                         data-bs-parent="#accordion">
-                        <div class="option-body">
-                            <div class="form-row">
-                                <label for="start" class="p-0 m-0 mb-1"><small>Start</small></label>
-                                <input class="form-control" type="date" name="start"
-                                       @if(session()->has('start'))@php $start = \Carbon\Carbon::parse(session($relations.'_start'))->format('Y-m-d')
-                                       @endphp value="{{ $start }}" @endif placeholder="DD/MM/YYYY"/>
-                            </div>
-                            <div class="form-row">
-                                <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
-                                <input class="form-control" type="date" name="end"
-                                       @if(session()->has('end'))@php $end = \Carbon\Carbon::parse(session($relations.'_end'))->format('Y-m-d')
-                                       @endphp value="{{ $end }}" @endif placeholder="DD/MM/YYYY"/>
+                        <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader"
+                             data-bs-parent="#accordion">
+                            <div class="option-body">
+                                <div class="form-row">
+                                    <label for="start" class="p-0 m-0 mb-1"><small>Start</small></label>
+                                    <input class="form-control" type="date" name="start"
+                                           @if(session()->has('start'))@php $start = \Carbon\Carbon::parse(session($relations.'_start'))->format('Y-m-d')
+                                           @endphp value="{{ $start }}" @endif placeholder="DD/MM/YYYY"/>
+                                </div>
+                                <div class="form-row">
+                                    <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
+                                    <input class="form-control" type="date" name="end"
+                                           @if(session()->has('end'))@php $end = \Carbon\Carbon::parse(session($relations.'_end'))->format('Y-m-d')
+                                           @endphp value="{{ $end }}" @endif placeholder="DD/MM/YYYY"/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
 
                 <div class="option">

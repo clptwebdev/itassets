@@ -61,8 +61,10 @@
 
                     @if(session()->has($relations.'_min') && session()->has($relations.'_max'))
                         <h6 class="dropdown-header text-center">Purchased Cost/Value</h6>
-                        <span class="dropdown-item">£{{ number_format(session($relations.'_min'), 2, '.', ',')}} - £{{ number_format(session($relations.'_max'), 2, '.', ',')}}</span>
+                        <span
+                            class="dropdown-item">£{{ number_format(session($relations.'_min'), 2, '.', ',')}} - £{{ number_format(session($relations.'_max'), 2, '.', ',')}}</span>
                     @endif
+
 
 
                     @if(session()->has($relations.'_audit') && session($relations.'_audit') != 0)
@@ -194,6 +196,16 @@
                     <option value="audit_date desc"
                             @if(session($relations.'_orderby') == 'audit_date' && (session($relations.'_direction')) == 'desc') selected @endif>
                         Audit Date (Latest to Earliest)
+                    </option>
+                @endif
+                @if(Schema::hasColumn("{$table}",'expiry'))
+                    <option value="expiry asc"
+                            @if(session($relations.'_orderby') == 'expiry' && (session($relations.'_direction')) == 'asc') selected @endif>
+                        Expiry Date (Earliest to Latest)
+                    </option>
+                    <option value="expiry desc"
+                            @if(session($relations.'_orderby') == 'expiry' && (session($relations.'_direction')) == 'desc') selected @endif>
+                        Expiry Date (Latest to Earliest)
                     </option>
                 @endif
             </select>

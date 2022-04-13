@@ -52,7 +52,7 @@
                                 <p><strong>Contact:</strong><br>{{$license->contact ?? 'No Contact Email'}}
                                 </p>
                                 <p><strong>
-                                        Supplier:</strong><br>{{$license->supplier->name ?? 'No Supplier'}}
+                                        Supplier:</strong><br>{{$license->suppliers->name ?? 'No Supplier'}}
                                 </p>
                                 <p class='font-weight-bold'>License Status:</p>
                                 @if($license->isExpired())

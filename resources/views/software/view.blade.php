@@ -5,6 +5,9 @@
 
 @section('content')
     <x-wrappers.nav title="Software">
+
+        <x-buttons.return :route="route('dashboard')">Dashboard</x-buttons.return>
+
         @can('recycleBin', \App\Models\Software::class)
             <x-buttons.recycle :route="route('software.bin')" :count="\App\Models\Software::onlyTrashed()->count()"/>
         @endcan
@@ -72,101 +75,102 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                    <table id="assetsTable" class="table table-striped">
-                        <thead>
+                <table id="assetsTable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="col-2"><small>Name</small></th>
+                        <th class="col-1 col-md-auto text-center"><small>Location</small></th>
+                        <th class="text-center col-2"><small>Supplier</small></th>
+                        <th class="text-center col-1"><small>Manufacturer</small></th>
+                        <th class="text-center col-1"><small>Purchase Date</small></th>
+                        <th class="col-1 text-center"><small>Purchase Cost</small></th>
+                        <th class="col-1 text-center"><small>Current Value</small></th>
+                        <th class="text-center col-1"><small>Depreciation (Years)</small></th>
+                        <th class="text-center col-1"><small>Warranty</small></th>
+                        <th class="text-right col-1"><small>Options</small></th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th><small>Name</small></th>
+                        <th class="text-center"><small>Location</small></th>
+                        <th class="text-center"><small>Supplier</small></th>
+                        <th class="text-center"><small>Manufacturer</small></th>
+                        <th class="text-center"><small>Purchase Date</small></th>
+                        <th class="text-center"><small>Purchase Cost</small></th>
+                        <th class="text-center"><small>Current Value</small></th>
+                        <th class="text-center"><small>Warranty</small></th>
+                        <th class="text-center"><small>Depreciation (Years)</small></th>
+                        <th class="text-end"><small>Options</small></th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    @foreach($softwares as $software)
                         <tr>
-                            <th class="col-2"><small>Name</small></th>
-                            <th class="col-1 col-md-auto text-center"><small>Location</small></th>
-                            <th class="text-center col-2"><small>Supplier</small></th>
-                            <th class="text-center col-1"><small>Manufacturer</small></th>
-                            <th class="text-center col-1"><small>Purchase Date</small></th>
-                            <th class="col-1 text-center"><small>Purchase Cost</small></th>
-                            <th class="col-1 text-center"><small>Current Value</small></th>
-                            <th class="text-center col-1"><small>Depreciation (Years)</small></th>
-                            <th class="text-center col-1"><small>Warranty</small></th>
-                            <th class="text-right col-1"><small>Options</small></th>
+                            <td class="text-start">{{$software->name}}</td>
+                            <td class="text-center">
+                                @if(isset($software->location->photo->path))
+                                    <img src="{{ asset($software->location->photo->path)}}" height="30px"
+                                         alt="{{$software->location->name}}"
+                                         title="{{ $software->location->name }}<br>{{ $software->room ?? 'Unknown'}}"/>
+                                @else
+                                    {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($software->location->icon ?? '#666').'" data-bs-toggle="tooltip" data-bs-placement="top" title="">'
+                                        .strtoupper(substr($software->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                {{$software->supplier->name ?? 'N/A'}}
+                                @if($software->order_no) {!! '<br><small>'.$software->order_no.'</small>' !!}@endif
+                            </td>
+                            <td class="text-center">{{$software->manufacturer->name ?? 'N/A'}}</td>
+                            <td class="text-center">{{ \Illuminate\Support\Carbon::parse($software->purchased_date)->format('d-M-Y')}}</td>
+                            <td class="text-center">£{{number_format($software->purchased_cost, 2, '.', ',')}}</td>
+                            <td class="text-center">
+                                £{{number_format($software->depreciation_value(), 2, '.', ',')}}</td>
+                            <td class="text-center">{{$software->depreciation}} Years</td>
+                            <td class="text-center">
+                                @php $warranty_end = \Carbon\Carbon::parse($software->purchased_date)->addMonths($software->warranty); dd($warranty_end)@endphp
+                                {{ $software->warranty }} Months<br>
+                                @if(\Carbon\Carbon::parse($warranty_end)->isPast())
+                                    <span class="text-coral">{{ 'Expired' }}</span>
+                                @else
+                                    <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
+                                        Remaining</small>
+                                @endif
+                            </td>
+                            <td class="text-end">
+                                <x-wrappers.table-settings>
+                                    @can('view', $software, \App\Models\Software::class)
+                                        <x-buttons.dropdown-item :route="route('softwares.show', $software->id)">
+                                            View
+                                        </x-buttons.dropdown-item>
+                                    @endcan
+                                    @can('update', $software)
+                                        <x-buttons.dropdown-item :route=" route('softwares.edit', $software->id)">
+                                            Edit
+                                        </x-buttons.dropdown-item>
+                                    @endcan
+                                    @can('delete', $software)
+                                        <x-form.layout method="DELETE" class="d-block p-0 m-0"
+                                                       :id="'form'.$software->id"
+                                                       :action="route('softwares.destroy', $software->id)">
+                                            <x-buttons.dropdown-item :data="$software->id" class="deleteBtn">
+                                                Delete
+                                            </x-buttons.dropdown-item>
+                                        </x-form.layout>
+                                    @endcan
+                                </x-wrappers.table-settings>
+                            </td>
                         </tr>
-                        </thead>
-                        <tfoot>
+                    @endforeach
+                    @if($softwares->count() == 0)
                         <tr>
-                            <th><small>Name</small></th>
-                            <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Supplier</small></th>
-                            <th class="text-center"><small>Manufacturer</small></th>
-                            <th class="text-center"><small>Purchase Date</small></th>
-                            <th class="text-center"><small>Purchase Cost</small></th>
-                            <th class="text-center"><small>Current Value</small></th>
-                            <th class="text-center"><small>Warranty</small></th>
-                            <th class="text-center"><small>Depreciation (Years)</small></th>
-                            <th class="text-end"><small>Options</small></th>
+                            <td colspan="10" class="text-center">No Software Returned</td>
                         </tr>
-                        </tfoot>
-                        <tbody>
-                        @foreach($softwares as $software)
-                            <tr>
-                                <td class="text-start">{{$software->name}}</td>
-                                <td class="text-center">
-                                    @if(isset($software->location->photo->path))
-                                        <img src="{{ asset($software->location->photo->path)}}" height="30px"
-                                                alt="{{$software->location->name}}"
-                                                title="{{ $software->location->name }}<br>{{ $software->room ?? 'Unknown'}}"/>
-                                    @else
-                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($software->location->icon ?? '#666').'" data-bs-toggle="tooltip" data-bs-placement="top" title="">'
-                                            .strtoupper(substr($software->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    {{$software->supplier->name ?? 'N/A'}}
-                                    @if($software->order_no) {!! '<br><small>'.$software->order_no.'</small>' !!}@endif
-                                </td>
-                                <td class="text-center">{{$software->manufacturer->name ?? 'N/A'}}</td>
-                                <td class="text-center">{{ \Illuminate\Support\Carbon::parse($software->purchased_date)->format('d-M-Y')}}</td>
-                                <td class="text-center">£{{number_format($software->purchased_cost, 2, '.', ',')}}</td>
-                                <td class="text-center">£{{number_format($software->depreciation_value(), 2, '.', ',')}}</td>
-                                <td class="text-center">{{$software->depreciation}} Years</td>
-                                <td class="text-center">
-                                    @php $warranty_end = \Carbon\Carbon::parse($software->purchased_date)->addMonths($software->warranty); dd($warranty_end)@endphp
-                                    {{ $software->warranty }} Months<br>
-                                    @if(\Carbon\Carbon::parse($warranty_end)->isPast())
-                                        <span class="text-coral">{{ 'Expired' }}</span>
-                                    @else
-                                        <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
-                                            Remaining</small>
-                                    @endif
-                                </td>
-                                <td class="text-end">
-                                    <x-wrappers.table-settings>
-                                        @can('view', $software, \App\Models\Software::class)
-                                            <x-buttons.dropdown-item :route="route('softwares.show', $software->id)">
-                                                View
-                                            </x-buttons.dropdown-item>
-                                        @endcan
-                                        @can('update', $software)
-                                            <x-buttons.dropdown-item :route=" route('softwares.edit', $software->id)">
-                                                Edit
-                                            </x-buttons.dropdown-item>
-                                        @endcan
-                                        @can('delete', $software)
-                                            <x-form.layout method="DELETE" class="d-block p-0 m-0"
-                                                           :id="'form'.$software->id"
-                                                           :action="route('softwares.destroy', $software->id)">
-                                                <x-buttons.dropdown-item :data="$software->id" class="deleteBtn">
-                                                    Delete
-                                                </x-buttons.dropdown-item>
-                                            </x-form.layout>
-                                        @endcan
-                                    </x-wrappers.table-settings>
-                                </td>
-                            </tr>
-                        @endforeach
-                        @if($softwares->count() == 0)
-                            <tr>
-                                <td colspan="10" class="text-center">No Software Returned</td>
-                            </tr>
-                        @endif
-                        </tbody>
-                    </table>
-                    <x-paginate :model="$softwares"/>
+                    @endif
+                    </tbody>
+                </table>
+                <x-paginate :model="$softwares"/>
             </div>
         </div>
     </section>

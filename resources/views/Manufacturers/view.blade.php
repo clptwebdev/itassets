@@ -13,7 +13,9 @@
             @if($manufacturers->count() >1)
                 <x-buttons.export route="/exportmanufacturers"/>
             @endif
-            <x-buttons.import id="import"/>
+            @can('create' , \App\Models\Manufacturer::class)
+                <x-buttons.import id="import"/>
+            @endcan
         @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
