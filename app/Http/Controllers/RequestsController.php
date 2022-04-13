@@ -168,30 +168,30 @@ class RequestsController extends Controller {
 
         $m = "\\App\\Models\\" . ucfirst($requests->model_type);
         $model = $m::find($requests->model_id);
+
+
         if(auth()->user()->can('bypass_transfer', $model))
         {
-            if($request->model_type == 'asset' && $model->model()->exists())
-            {
-                if($model->model->depreciation()->exists())
-                {
+            if($request->model_type == 'asset' && $model->model()->exists()){
+                if($model->model->depreciation()->exists()){
                     $years = $model->model->depreciation->years;
-                } else
-                {
+                }else{
                     $years = 0;
                 }
-            } else if($model->depreciation_id != 0)
-            {
-                if($model->depreciation()->exists())
-                {
+            }elseif($model->depreciation_id != 0){
+                if($model->depreciation()->exists()){
                     $years = $model->depreciation->years;
-                } else
-                {
+                }else{
                     $years = 0;
                 }
-            } else
+            }elseif($model->depreciation != 0)
             {
+                $years = $model->depreciation;
+            }else{
                 $years = 0;
             }
+
+
             $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($years);
             if($eol->isPast())
             {
@@ -203,17 +203,9 @@ class RequestsController extends Controller {
                 $percentage = floor($age) * $percent;
                 $dep = $model->purchased_cost * ((100 - $percentage) / 100);
             }
-            foreach($model->comment as $comment)
-            {
-                $array = [];
-                $array['title'] = $comment->title;
-                $array['comment'] = $comment->comment;
-                $array['user_id'] = $comment->user_id;
-                $array['created_at'] = $comment->created_at;
-                $array['updated_at'] = $comment->updated_at;
+            
 
-                $comments[] = $array;
-            }
+            $comments = $model->comment()->select('title', 'comment', 'user_id', 'created_at', 'updated_at')->orderBy('created_at', 'desc')->get()->toArray();
 
             $array = [
                 'title' => 'The Asset has been Archived!',
@@ -224,6 +216,15 @@ class RequestsController extends Controller {
             ];
 
             $comments[] = $array;
+
+            $logs = $model->logs()->orderBy('created_at', 'desc')->get()->toArray();
+
+            $fields = [];
+            if($model->fields){
+                foreach($model->fields as $field){
+                    $fields[$field->name] = $field->pivot->value;
+                }
+            }
 
             $archive = Archive::create([
                 'model_type' => $request->model_type ?? 'unknown',
@@ -236,19 +237,20 @@ class RequestsController extends Controller {
                 'purchased_date' => $model->purchased_date,
                 'purchased_cost' => $model->purchased_cost,
                 'archived_cost' => number_format($dep, 2),
-                'warranty' => $model->warranty,
+                'warranty' => $model->warranty ?? 0,
                 'location_id' => $model->location_id ?? 0,
                 'room' => $model->room ?? 'N/A',
-                'logs' => 'N/A',
-                'comments' => 'N/A',
+                'logs' => json_encode($logs),
+                'comments' => json_encode($comments),
                 'created_user' => $model->user_id ?? 0,
                 'created_on' => $model->created_at,
                 'user_id' => auth()->user()->id,
                 'super_id' => auth()->user()->id,
                 'date' => $requests->date,
                 'notes' => $requests->notes,
-                'comments' => json_encode($comments),
+                'options' => json_encode($fields)
             ]);
+
             $model->forceDelete();
             $requests->update(['status' => 1, 'super_id' => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
 

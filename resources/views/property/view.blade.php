@@ -215,6 +215,7 @@
 @endsection
 @section('modals')
 
+    <x-modals.dispose model="property"/>
     <x-modals.delete/>
     <x-modals.import route="/import/properties"/>
 @endsection

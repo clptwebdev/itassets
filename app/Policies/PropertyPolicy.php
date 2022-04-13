@@ -13,6 +13,7 @@ class PropertyPolicy {
     public function __construct()
     {
         $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Property')->first();
+        $this->request = auth()->user()->role->permissions->where('model', ' = ', 'Requests')->first();
     }
 
     public function view(User $user, Property $property)
@@ -59,6 +60,11 @@ class PropertyPolicy {
 
     public function generateShowPDF(User $user, Property $property){
         return $this->model->fin_reports && in_array($property->location_id, $user->locationsArray());
+    }
+
+    public function bypass_transfer(User $user)
+    {
+        return $this->request->request;
     }
 
 }

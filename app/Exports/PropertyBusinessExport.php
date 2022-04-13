@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\FFE;
+use App\Models\Property;
 use App\Models\Location;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -14,14 +14,13 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
-
 use Carbon\Carbon;
 
-class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents, WithTitle {
+class PropertyBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents, WithTitle {
 
     use Exportable;
 
-    private $ffes;
+    private $properties;
     private $now;
     private $startDate;
     private $nextYear;
@@ -30,10 +29,9 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
     private $nbvYear1;
     private $nbvYear2;
 
-    public function __construct($ffes)
+    public function __construct($properties)
     {
-        $this->ffes = $ffes;
-        //Maths Calculations
+        $this->properties = $properties;
         $this->now = Carbon::now();
         $this->startDate = Carbon::parse('09/01/' . $this->now->format('Y'));
         $this->nextYear = Carbon::now()->addYear()->format('Y');
@@ -56,10 +54,6 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
             "Name",
             "Cost",
             "Date",
-            "Depn End Date",
-            "Months at Start",
-            "Months Charged",
-            "Months at End",
             "Cost B/Fwd (" . $this->startDate->format('d\/m\/Y').")",
             "Additions",
             "Disposals",
@@ -75,7 +69,7 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
 
     public function array(): array
     {
-        $ffes = $this->ffes;
+        $properties = $this->properties;
 
         $now = $this->now;
         $startDate = $this->startDate;
@@ -97,10 +91,10 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
         $nbv1 = 0;
         $nbv2 = 0;
 
-        foreach($ffes as $ffe)
+        foreach($properties as $property)
         {
-            $bf = $ffe->depreciation_value_by_date($startDate);
-            $cf = $ffe->depreciation_value_by_date($nextStartDate);
+            $bf = $property->depreciation_value_by_date($startDate);
+            $cf = $property->depreciation_value_by_date($nextStartDate);
 
             $depEndDate = 0;
             $monthsStart = 0;
@@ -108,51 +102,31 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
             $monthsEnd = 0;
 
             $array = [];
-            $array['Name'] = $ffe->name;
-            $array['Purchased Cost'] = number_format((float)$ffe->purchased_cost, 2, '.', ',');
+            $array['Name'] = $property->name;
+            $array['Purchased Cost'] = number_format((float)$property->purchased_cost, 2, '.', ',');
 
-            $purchased_date = Carbon::parse($ffe->purchased_date);
+            $purchased_date = Carbon::parse($property->purchased_date);
             $array['Purchased Date'] = $purchased_date->format('d\/m\/Y') ?? '-';
             
-            $depEndDate = Carbon::parse($ffe->purchased_date)->addYears($ffe->depreciation_id);
-            $array['Depn End Date'] = $depEndDate->format('d\/m\/Y') ?? '-';
-
-            $purchased_date > $startDate ? $monthsStart = $ffe->depreciation * 12 : $monthsStart = $startDate->diffInMonths($depEndDate);
-
-            if($purchased_date > $startDate){
-                $monthsCharged = $purchased_date->diffInMonths($endDate);
-            }elseif( $depEndDate < $endDate){
-                $monthsCharged = $startDate->diffInMonths($depEndDate);
-            }elseif( $depEndDate > $endDate){
-                $monthsCharged = '12';
-            }else{
-                $monthsCharged = '0';
-            } 
-
-            $monthsEnd = $monthsStart - $monthsCharged;
-
-            $array['Months at Start'] = $monthsStart ?? '-';
-            $array['Months Charged'] = $monthsCharged ?? '-';
-            $array['Months at End'] = $monthsEnd ?? '0';
             $array['Cost B/Fwd'] = number_format((float)$bf, 2, '.', ',') ?? '0.00';
-            $purchased_date > $startDate? $add = $ffe->purchased_cost : $add = 0;
+            $purchased_date > $startDate? $add = $property->purchased_cost : $add = 0;
             $array['Additions'] = $add ?? '-';
-            $ffe->archived_cost ? $ac = number_format((float)$ffe->archived_cost, 2, '.', ',') : $ac = '0';
+            $property->archived_cost ? $ac = number_format((float)$property->archived_cost, 2, '.', ',') : $ac = '0';
             $array['Disposals'] = $ac ?? '-';
             $array['Cost C/Fwd'] = number_format((float)$cf, 2, '.', ',') ?? '0.00';
-            $array['Depn B/Fwd'] = number_format((float)$ffe->purchased_cost - $bf, 2, '.', ',') ?? '0.00';
+            $array['Depn B/Fwd'] = number_format((float)$property->purchased_cost - $bf, 2, '.', ',') ?? '0.00';
             $array['Depn Charge'] = number_format((float)$bf - $cf, 2, '.', ',') ?? '-';
             $array['Depn Disposal'] =  '-';
-            $array['Depn C/Fwd'] = number_format((float)$ffe->purchased_cost - $cf, 2, '.', ',') ?? '0.00';
+            $array['Depn C/Fwd'] = number_format((float)$property->purchased_cost - $cf, 2, '.', ',') ?? '0.00';
 
-            if($nbvYear1 >= $ffe->purchased_date){
-                $array['NBV '.$nbvYear1] = number_format((float)$ffe->depreciation_value_by_date($nbvYear1), 2, '.', ',');
+            if($nbvYear1 >= $property->purchased_date){
+                $array['NBV '.$nbvYear1] = number_format((float)$property->depreciation_value_by_date($nbvYear1), 2, '.', ',');
             }else{
                 $array['NBV '.$nbvYear1] = '-';
             } 
 
-            if($nbvYear2 >= $ffe->purchased_date){
-                $array['NBV '.$nbvYear2] = number_format((float)$ffe->depreciation_value_by_date($nbvYear2), 2, '.', ',');
+            if($nbvYear2 >= $property->purchased_date){
+                $array['NBV '.$nbvYear2] = number_format((float)$property->depreciation_value_by_date($nbvYear2), 2, '.', ',');
             }else{
                 $array['NBV '.$nbvYear2] = '-';
             } 
@@ -161,23 +135,19 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
             $additions += $add;
             $disposals += $ac;
             $costCFwd += $cf;
-            $depBFwd += $ffe->purchased_cost - $bf;
+            $depBFwd += $property->purchased_cost - $bf;
             $depCharge += $bf - $cf;
             $depDisposal += 0;
-            $depCFwd += $ffe->purchased_cost - $cf;
-            $nbv1 += $ffe->depreciation_value_by_date($nbvYear1);
-            $nbv2 += $ffe->depreciation_value_by_date($nbvYear2);
+            $depCFwd += $property->purchased_cost - $cf;
+            $nbv1 += $property->depreciation_value_by_date($nbvYear1);
+            $nbv2 += $property->depreciation_value_by_date($nbvYear2);
             $object[] = $array;
 
         }
         $purchased_details = [];
-        $purchased_details['Name'] = 'Total FFEs: ' . $this->ffes->count();
+        $purchased_details['Name'] = 'Total:  ' . $this->properties->count();
         $purchased_details['Purchased Cost'] = '';
         $purchased_details['Purchased Date'] = '';
-        $purchased_details['Depn End Date'] = '';
-        $purchased_details['Months at Start'] = '';
-        $purchased_details['Months Charged'] = '';
-        $purchased_details['Months at End'] = '';
         $purchased_details['Cost B/Fwd'] = number_format((float) $costBFwd, 2, '.', ',');
         $purchased_details['Additions'] = number_format((float) $additions, 2, '.', ',');
         $purchased_details['Disposals'] = number_format((float) $disposals, 2, '.', ',');
@@ -191,7 +161,6 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
         array_push($object, $purchased_details);
 
         return $object;
-
     }
 
     //adds styles
@@ -199,9 +168,9 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $lastRow = $this->ffes->count() + 2;
-                $cellRange = 'A1:Q1'; // All headers
-                $cellRange2 = 'A' . $lastRow . ':Q' . $lastRow; // Last Row
+                $lastRow = $this->properties->count() + 2;
+                $cellRange = 'A1:M1'; // All headers
+                $cellRange2 = 'A' . $lastRow . ':M' . $lastRow; // Last Row
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(12)->setBold(1);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getAllBorders()->setBorderStyle(true);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getFont()->setSize(11)->setBold(1);
@@ -211,7 +180,7 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
 
     public function title(): string
     {
-        return 'FFE';
+        return 'Property';
     }
 
 }

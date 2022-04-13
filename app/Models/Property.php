@@ -97,6 +97,11 @@ class Property extends Model {
         return $this->morphToMany(Comment::class, "commentables");
     }
 
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'loggable');
+    }
+
     /////////////////////////////////////////////////
     ///////////////////Filters///////////////////////
     /////////////////////////////////////////////////
