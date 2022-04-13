@@ -7,12 +7,14 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents, WithTitle {
+class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents, WithTitle, WithColumnFormatting {
 
     use Exportable;
 
@@ -25,24 +27,43 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
     private $nbvYear1;
     private $nbvYear2;
 
+    public function columnFormats(): array
+    {
+        return [
+            'A' => NumberFormat::FORMAT_TEXT,
+            'B' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+            'C' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'D' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+            'E' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+            'F' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+            'G' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+            'H' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+            'I' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+            'K' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+            'L' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+            'M' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+
+        ];
+    }
+
     public function __construct($assets)
     {
         $this->assets = $assets;
-         //Maths Calculations
-         $this->now = Carbon::now();
-         $this->startDate = Carbon::parse('09/01/' . $this->now->format('Y'));
-         $this->nextYear = Carbon::now()->addYear()->format('Y');
-         $this->nextStartDate = Carbon::parse('09/01/' . Carbon::now()->addYear()->format('Y'));
-         $this->endDate = Carbon::parse('08/31/' . $this->nextYear);
-         if(! $this->startDate->isPast())
-         {
-             $this->startDate->subYear();
-             $this->endDate->subYear();
-             $this->nextStartDate->subYear();
-         }
- 
-         $this->nbvYear1 = Carbon::parse($this->startDate->format('d-m-Y'))->subYear();
-         $this->nbvYear2 = Carbon::parse($this->nbvYear1->format('d-m-Y'))->subYear();
+        //Maths Calculations
+        $this->now = Carbon::now();
+        $this->startDate = Carbon::parse('09/01/' . $this->now->format('Y'));
+        $this->nextYear = Carbon::now()->addYear()->format('Y');
+        $this->nextStartDate = Carbon::parse('09/01/' . Carbon::now()->addYear()->format('Y'));
+        $this->endDate = Carbon::parse('08/31/' . $this->nextYear);
+        if(! $this->startDate->isPast())
+        {
+            $this->startDate->subYear();
+            $this->endDate->subYear();
+            $this->nextStartDate->subYear();
+        }
+
+        $this->nbvYear1 = Carbon::parse($this->startDate->format('d-m-Y'))->subYear();
+        $this->nbvYear2 = Carbon::parse($this->nbvYear1->format('d-m-Y'))->subYear();
     }
 
     public function headings(): array
@@ -51,16 +72,16 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
             "Name",
             "Cost",
             "Date",
-            "Cost B/Fwd (" . $this->startDate->format('d\/m\/Y').")",
+            "Cost B/Fwd (" . $this->startDate->format('d\/m\/Y') . ")",
             "Additions",
             "Disposals",
-            "Cost C/Fwd (" . $this->endDate->format('d\/m\/Y').")",
-            "Depn B/Fwd (" . $this->startDate->format('d\/m\/Y').")",
+            "Cost C/Fwd (" . $this->endDate->format('d\/m\/Y') . ")",
+            "Depn B/Fwd (" . $this->startDate->format('d\/m\/Y') . ")",
             "Depn Charge",
             "Depn Disposal",
-            "Depn C/Fwd (" . $this->endDate->format('d\/m\/Y').")",
-            "NBV (" . $this->nbvYear1->format('Y').")",
-            "NBV (" . $this->nbvYear2->format('Y').")",
+            "Depn C/Fwd (" . $this->endDate->format('d\/m\/Y') . ")",
+            "NBV (" . $this->nbvYear1->format('Y') . ")",
+            "NBV (" . $this->nbvYear2->format('Y') . ")",
         ];
     }
 
@@ -85,7 +106,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         $depCFwd = 0;
         $nbv1 = 0;
         $nbv2 = 0;
-        
+
         foreach($this->assets as $asset)
         {
             $bf = $asset->depreciation_value_by_date($startDate);
@@ -97,36 +118,40 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
             $monthsEnd = 0;
 
             $array = [];
-            $asset->asset_tag ? $name = $asset->name.' ('.$asset->asset_tag.')' : $name = $asset->name;
+            $asset->asset_tag ? $name = $asset->name . ' (' . $asset->asset_tag . ')' : $name = $asset->name;
             $array['Name'] = $name;
-            $array['Purchased Cost'] = number_format((float)$asset->purchased_cost, 2, '.', ',');
+            $array['Purchased Cost'] = $asset->purchased_cost;
 
             $purchased_date = Carbon::parse($asset->purchased_date);
             $array['Purchased Date'] = $purchased_date->format('d\/m\/Y') ?? '-';
-            
-            $array['Cost B/Fwd'] = number_format((float)$bf, 2, '.', ',') ?? '0.00';
-            $purchased_date > $startDate? $add = $asset->purchased_cost : $add = 0;
+
+            $array['Cost B/Fwd'] = $bf ?? '0.00';
+            $purchased_date > $startDate ? $add = $asset->purchased_cost : $add = 0;
             $array['Additions'] = $add ?? '-';
-            $asset->archived_cost ? $ac = number_format((float)$asset->archived_cost, 2, '.', ',') : $ac = '0';
+            $asset->archived_cost ? $ac = $asset->archived_cost : $ac = '0';
             $array['Disposals'] = $ac ?? '-';
-            $array['Cost C/Fwd'] = number_format((float)$cf, 2, '.', ',') ?? '0.00';
-            $array['Depn B/Fwd'] = number_format((float)$asset->purchased_cost - $bf, 2, '.', ',') ?? '0.00';
-            $array['Depn Charge'] = number_format((float)$bf - $cf, 2, '.', ',') ?? '-';
-            $array['Depn Disposal'] =  '-';
-            $array['Depn C/Fwd'] = number_format((float)$asset->purchased_cost - $cf, 2, '.', ',') ?? '0.00';
+            $array['Cost C/Fwd'] = $cf ?? '0.00';
+            $array['Depn B/Fwd'] = $asset->purchased_cost - $bf ?? '0.00';
+            $array['Depn Charge'] = $bf - $cf ?? '-';
+            $array['Depn Disposal'] = '-';
+            $array['Depn C/Fwd'] = $asset->purchased_cost - $cf ?? '0.00';
 
-            if($nbvYear1 >= $asset->purchased_date){
-                $array['NBV '.$nbvYear1] = number_format((float)$asset->depreciation_value_by_date($nbvYear1), 2, '.', ',');
-            }else{
-                $array['NBV '.$nbvYear1] = '-';
-            } 
+            if($nbvYear1 >= $asset->purchased_date)
+            {
+                $array['NBV ' . $nbvYear1] = $asset->depreciation_value_by_date($nbvYear1);
+            } else
+            {
+                $array['NBV ' . $nbvYear1] = '-';
+            }
 
-            if($nbvYear2 >= $asset->purchased_date){
-                $array['NBV '.$nbvYear2] = number_format((float)$asset->depreciation_value_by_date($nbvYear2), 2, '.', ',');
-            }else{
-                $array['NBV '.$nbvYear2] = '-';
-            } 
-            
+            if($nbvYear2 >= $asset->purchased_date)
+            {
+                $array['NBV ' . $nbvYear2] = $asset->depreciation_value_by_date($nbvYear2);
+            } else
+            {
+                $array['NBV ' . $nbvYear2] = '-';
+            }
+
             $costBFwd += $bf;
             $additions += $add;
             $disposals += $ac;
@@ -144,16 +169,16 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         $purchased_details['Name'] = 'Total:  ' . $this->assets->count();
         $purchased_details['Purchased Cost'] = '';
         $purchased_details['Purchased Date'] = '';
-        $purchased_details['Cost B/Fwd'] = number_format((float) $costBFwd, 2, '.', ',');
-        $purchased_details['Additions'] = number_format((float) $additions, 2, '.', ',');
-        $purchased_details['Disposals'] = number_format((float) $disposals, 2, '.', ',');
-        $purchased_details['Cost C/Fwd'] = number_format((float) $costCFwd, 2, '.', ',');;
-        $purchased_details['Depreciation B/Fwd'] = number_format((float) $depBFwd, 2, '.', ',');;
-        $purchased_details['Depreciation Charge'] = number_format((float) $depCharge, 2, '.', ',');
-        $purchased_details['Depreciation Disposal'] = number_format((float) $depDisposal, 2, '.', ',');
-        $purchased_details['Depreciation C/Fwd'] = number_format((float) $depCFwd, 2, '.', ',');;
-        $purchased_details['NBV '.$nbvYear1] = number_format((float) $nbv1, 2, '.', ',');
-        $purchased_details['NBV '.$nbvYear2] = number_format((float) $nbv2, 2, '.', ',');
+        $purchased_details['Cost B/Fwd'] = $costBFwd;
+        $purchased_details['Additions'] = $additions;
+        $purchased_details['Disposals'] = $disposals;
+        $purchased_details['Cost C/Fwd'] = $costCFwd;
+        $purchased_details['Depreciation B/Fwd'] = $depBFwd;
+        $purchased_details['Depreciation Charge'] = $depCharge;
+        $purchased_details['Depreciation Disposal'] = $depDisposal;
+        $purchased_details['Depreciation C/Fwd'] = $depCFwd;
+        $purchased_details['NBV ' . $nbvYear1] = $nbv1;
+        $purchased_details['NBV ' . $nbvYear2] = $nbv2;
         array_push($object, $purchased_details);
 
         return $object;
