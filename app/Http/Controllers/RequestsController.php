@@ -171,10 +171,15 @@ class RequestsController extends Controller {
 
         if(auth()->user()->can('bypass_transfer', $model))
         {
+
+            //Additional Field to be stored in the Fields Array then passed to the Options Column in the DB
+            $fields = [];
+
             if($request->model_type == 'asset' && $model->model()->exists())
             {
                 if($model->model->depreciation()->exists())
                 {
+
                     $years = $model->model->depreciation->years;
                 } else
                 {
@@ -185,6 +190,8 @@ class RequestsController extends Controller {
                 if($model->depreciation()->exists())
                 {
                     $years = $model->depreciation->years;
+
+                    $fields['depreciation_id'] = $model->depreciation_id;
                 } else
                 {
                     $years = 0;
@@ -263,6 +270,7 @@ class RequestsController extends Controller {
                 'date' => $requests->date,
                 'notes' => $requests->notes,
                 'options' => json_encode($fields),
+                'depreciation' => $years,
             ]);
 
             $model->forceDelete();

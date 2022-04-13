@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('archives', function (Blueprint $table) {
-            $table->integer('depreciation')->default(3);
+        Schema::table('vehicles', function (Blueprint $table) {
+            $table->integer('donated')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('archives', function (Blueprint $table) {
-            $table->dropColumn('depreciation');
+        Schema::table('vehicles', function (Blueprint $table) {
+            $table->dropColumn('donated');
         });
     }
 };
