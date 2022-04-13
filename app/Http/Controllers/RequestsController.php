@@ -251,6 +251,8 @@ class RequestsController extends Controller {
                 'options' => json_encode($fields)
             ]);
 
+            
+
             $model->forceDelete();
             $requests->update(['status' => 1, 'super_id' => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
 
