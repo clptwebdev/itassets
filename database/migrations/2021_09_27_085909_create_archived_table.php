@@ -27,6 +27,7 @@ class CreateArchivedTable extends Migration {
             $table->string("order_no")->nullable();
             $table->string("warranty")->default("0");
             $table->foreignId("location_id");
+            $table->foreignId("manufacturer_id")->nullable();
             $table->string("room")->nullable();
             $table->foreignId("created_user");
             $table->timestamp("created_on");

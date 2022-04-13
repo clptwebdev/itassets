@@ -161,6 +161,18 @@
                                                 Edit
                                             </x-buttons.dropdown-item>
                                         @endcan
+                                        @can('update', $ffe)
+                                            <x-buttons.dropdown-item class="transferBtn"
+                                                                     formRequirements="data-model-id='{{$ffe->id}}'  data-location-from='{{$ffe->location->name ?? 'Unallocated' }}' data-location-id='{{ $ffe->location_id }}'">
+                                                Transfer
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('delete', $ffe)
+                                            <x-buttons.dropdown-item class="disposeBtn"
+                                                                     formRequirements="data-model-id='{{$ffe->id}}' data-model-name='{{$ffe->name ?? 'No name' }}'">
+                                                Dispose
+                                            </x-buttons.dropdown-item>
+                                        @endcan
                                         @can('delete', $ffe)
                                             <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$ffe->id"
                                                            :action="route('ffes.destroy', $ffe->id)">
@@ -196,14 +208,16 @@
     </section>
 @endsection
 @section('modals')
-
+    <x-modals.dispose model="FFE"/>
+    <x-modals.transfer :models="$locations" model="FFE"/>
     <x-modals.delete/>
     <x-modals.import route="/import/ffes"/>
 
 @endsection
 
 @section('js')
-
+    <script src="{{asset('js/transfer.js')}}"></script>
+    <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/filter.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/import.js')}}"></script>

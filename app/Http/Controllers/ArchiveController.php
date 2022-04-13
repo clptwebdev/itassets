@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\AssetPdf;
+use App\Models\AUC;
+use App\Models\FFE;
+use App\Models\Machinery;
 use App\Models\Report;
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use App\Models\Archive;
 use App\Models\Asset;
@@ -24,7 +28,7 @@ class ArchiveController extends Controller {
         }
         $locations = auth()->user()->locations;
         $location_ids = $locations->pluck('id');
-        $archives = Archive::whereIn('location_id', $location_ids)->get();
+        $archives = Archive::whereIn('location_id', $location_ids)->orderBy('created_at', 'Desc')->paginate();
 
         $title = "Archived/Disposed";
 
@@ -160,7 +164,6 @@ class ArchiveController extends Controller {
     public function restoreArchive(Archive $archive)
     {
         $options = json_decode($archive->options);
-
         switch($archive->model_type)
         {
             case 'asset':
@@ -226,6 +229,63 @@ class ArchiveController extends Controller {
                     'location_id' => $archive->location_id,
                 ]);
                 break;
+            case 'FFE':
+                $model = new FFE;
+                //Options
+                $options->depreciation ? $depreciation = $options->depreciation : $depreciation = 0;
+
+                $model->fill([
+                    'name' => $archive->name,
+                    'serial_no' => $archive->serial_no,
+                    'purchased_date' => $archive->purchased_date,
+                    'purchased_cost' => $archive->purchased_cost,
+                    'status_id' => 0,
+                    'donated' => 0,
+                    'supplier_id' => $archive->supplier_id,
+                    'order_no' => $archive->model_no,
+                    'warranty' => $archive->warranty,
+                    'manufacturer' => $archive->manufacturer_id,
+                    'location_id' => $archive->location_id,
+                    'room' => $archive->room,
+                    'notes' => $archive->notes,
+                    'user_id' => $archive->user_id,
+                    'depreciation' => $depreciation,
+                ]);
+                break;
+
+            case 'machinery':
+                $model = new Machinery;
+                //Options
+//                $options->depreciation_id ? $depreciation_id = $options->depreciation_id : $depreciation = 0;
+
+                $model->fill([
+                    'name' => $archive->name,
+                    'purchased_date' => $archive->purchased_date,
+                    'purchased_cost' => $archive->purchased_cost,
+                    'donated' => 0,
+                    'manufacturer' => $archive->manufacturer_id,
+                    'supplier_id' => $archive->supplier_id,
+                    'location_id' => $archive->location_id,
+                    'depreciation' => 1,
+                ]);
+                break;
+            case 'vehicle':
+                $model = new Vehicle;
+                //Options
+//                $options->depreciation_id ? $depreciation_id = $options->depreciation_id : $depreciation = 0;
+//                $options->type ? $type = $options->type : $type = 1;
+
+                $model->fill([
+                    'name' => $archive->name,
+                    'purchased_date' => $archive->purchased_date,
+                    'purchased_cost' => $archive->purchased_cost,
+                    'donated' => 0,
+                    'supplier_id' => $archive->supplier_id,
+                    'location_id' => $archive->location_id,
+                    'depreciation' => 1,
+                ]);
+                break;
+
             case 'auc':
                 $model = new AUC;
                 $model->fill([
@@ -238,11 +298,10 @@ class ArchiveController extends Controller {
                 ]);
                 break;
         }
-
         if($model->save())
         {
             /* Foreach the Comments stored in the JSON Object within the Archive */
-            if($archive->comments != null)
+            if($archive->comments != null && $archive->comments != 'N/A')
             {
                 $comments = json_decode($archive->comments);
                 foreach($comments as $comment)

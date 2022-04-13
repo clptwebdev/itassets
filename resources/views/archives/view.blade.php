@@ -138,6 +138,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$archives"/>
                 </div>
             </div>
         </div>

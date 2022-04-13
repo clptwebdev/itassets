@@ -165,6 +165,7 @@ class RequestsController extends Controller {
 
             'status' => 0,
         ]);
+
         $m = "\\App\\Models\\" . ucfirst($requests->model_type);
         $model = $m::find($requests->model_id);
         if(auth()->user()->can('bypass_transfer', $model))
@@ -389,6 +390,7 @@ class RequestsController extends Controller {
                         'supplier_id' => $model->supplier_id ?? 0,
                         'purchased_date' => $model->purchased_date,
                         'purchased_cost' => $model->purchased_cost,
+                        'manufacturer' => $model->manufacturer_id || null,
                         'archived_cost' => number_format($dep, 2),
                         'warranty' => $model->warranty,
                         'location_id' => $model->location_id ?? 0,
