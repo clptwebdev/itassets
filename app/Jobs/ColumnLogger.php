@@ -43,6 +43,7 @@ class ColumnLogger implements ShouldQueue {
         $updateSentence = [];
         foreach($array as $id => $column)
         {
+            //checks if the columns have been edited if they have add it to the changes array
             if($this->model->isDirty($column))
             {
                 array_push($changes, [$column => $this->model->$column]);
@@ -56,6 +57,7 @@ class ColumnLogger implements ShouldQueue {
                 array_push($updateSentence, $data);
             }
         }
+        //create the sentence and create the log
         $sentence = implode(', ', $updateSentence);
 
         Log::create([
