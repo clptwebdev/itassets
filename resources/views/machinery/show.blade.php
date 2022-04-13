@@ -13,12 +13,11 @@
             <x-buttons.return :route="route('machineries.index')">Machinery</x-buttons.return>
         @endcan
         @can('update', $machinery)
-        <x-buttons.edit :route="route('machineries.edit',$machinery->id)" />
-        <x-form.layout method="DELETE" class="d-sm-inline-block"
-                        :id="'form'.$machinery->id"
-                        :action="route('machineries.destroy', $machinery->id)" >
-            <x-buttons.delete formAttributes="data-id='{{$machinery->id}}'" /> 
-        </x-form.layout >
+            <x-buttons.edit :route="route('machineries.edit',$machinery->id)"/>
+            <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$machinery->id"
+                           :action="route('machineries.destroy', $machinery->id)">
+                <x-buttons.delete formAttributes="data-id='{{$machinery->id}}'"/>
+            </x-form.layout>
         @endcan
         @can('generatePDF', \App\Models\Machinery::class)
             <x-buttons.reports :route="route('machinery.showPdf', $machinery->id)"/>
@@ -36,7 +35,7 @@
             </ul>
             <div class="tab-content border-left border-right border-bottom border-gray mb-4" id="myTabContent">
                 <div class="tab-pane fade show p-2 pt-4 active" id="location" role="tabpanel"
-                        aria-labelledby="location-tab">
+                     aria-labelledby="location-tab">
                     <div class="row">
                         <div class="col-12 col-md-6 p-4 mb-3 ">
                             <table class="table table-sm table-bordered table-striped">
@@ -47,10 +46,6 @@
                                 <tr>
                                     <th>Serial No:</th>
                                     <td>{{$machinery->serial_no}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Status</th>
-                                    <td>{{$machinery->status->name ?? 'Unknown'}}</td>
                                 </tr>
                                 <tr>
                                     <th>Purchased Date</th>
@@ -65,20 +60,12 @@
                                     <td>@if($machinery->donated == 1) Yes @else No @endif</td>
                                 </tr>
                                 <tr>
-                                    <th>Order No</th>
-                                    <td>{{$machinery->order_no ?? 'N/A'}}</td>
-                                </tr>
-                                <tr>
                                     <th>Manufacturer</th>
                                     <td>{{$machinery->manufacturer->name ?? 'N/A'}}</td>
                                 </tr>
                                 <tr>
                                     <th>Supplier</th>
                                     <td>{{$machinery->supplier->name ?? 'N/A'}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Warranty (Months)</th>
-                                    <td>{{$machinery->warranty ?? 'N/A'}}</td>
                                 </tr>
                             </table>
                             <div class="form-group">
@@ -88,22 +75,23 @@
                             <hr>
                             <h5>Finance</h5>
                             <?php
-                                //If Date is > 1 September the Year is this Year else Year = Last Year
-                
-                                $now = \Carbon\Carbon::now();
-                                $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
-                                $nextYear = \Carbon\Carbon::now()->addYear()->format('Y');
-                                $nextStartDate = \Carbon\Carbon::parse('09/01/'.\Carbon\Carbon::now()->addYear()->format('Y'));
-                                $endDate = \Carbon\Carbon::parse('08/31/'.$nextYear);
-                                if(!$startDate->isPast()){
-                                    $startDate->subYear();
-                                    $endDate->subYear();
-                                    $nextStartDate->subYear();
-                                }
-                                $bf = $machinery->depreciation_value_by_date($startDate);
-                                $cf = $machinery->depreciation_value_by_date($nextStartDate);
+                            //If Date is > 1 September the Year is this Year else Year = Last Year
+
+                            $now = \Carbon\Carbon::now();
+                            $startDate = \Carbon\Carbon::parse('09/01/' . $now->format('Y'));
+                            $nextYear = \Carbon\Carbon::now()->addYear()->format('Y');
+                            $nextStartDate = \Carbon\Carbon::parse('09/01/' . \Carbon\Carbon::now()->addYear()->format('Y'));
+                            $endDate = \Carbon\Carbon::parse('08/31/' . $nextYear);
+                            if(! $startDate->isPast())
+                            {
+                                $startDate->subYear();
+                                $endDate->subYear();
+                                $nextStartDate->subYear();
+                            }
+                            $bf = $machinery->depreciation_value_by_date($startDate);
+                            $cf = $machinery->depreciation_value_by_date($nextStartDate);
                             ?>
-                            
+
                             <p><strong>Cost B/Fwd (01/09/{{$startDate->format('Y')}}):</strong><br>
                                 £{{number_format( (float) $bf, 2, '.', ',' )}}
                             </p>
@@ -121,15 +109,15 @@
                             </p>
                             <?php $prevYear = $startDate->subYear();?>
                             @if($prevYear >= $machinery->purchased_date)
-                            <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
-                                £{{number_format( (float) $machinery->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
-                            </p>
+                                <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
+                                    £{{number_format( (float) $machinery->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
+                                </p>
                             @endif
                             <?php $prevYear = $startDate->subYear();?>
                             @if($prevYear >= $machinery->purchased_date)
-                            <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
-                                £{{number_format( (float) $machinery->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
-                            </p>
+                                <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
+                                    £{{number_format( (float) $machinery->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
+                                </p>
                             @endif
                         </div>
                         <div class="col-12 col-md-6 p-4 mb-3 ">
@@ -138,10 +126,10 @@
                                 <div class="model_image p-4 d-flex justify-content-center align-items-middle">
                                     @if($machinery->location()->exists() && $machinery->location->photo()->exists())
                                         <img id="profileImage" src="{{ asset($machinery->location->photo->path) }}"
-                                                height="200px" alt="Select Profile Picture">
+                                             height="200px" alt="Select Profile Picture">
                                     @else
                                         <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
-                                                height="200px" alt="Select Profile Picture">
+                                             height="200px" alt="Select Profile Picture">
                                     @endif
                                 </div>
                                 <div class="model_no py-2 px-4 text-center">

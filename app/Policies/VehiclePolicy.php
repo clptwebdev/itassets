@@ -15,6 +15,7 @@ class VehiclePolicy {
     public function __construct()
     {
         $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Vehicle')->first();
+        $this->request = auth()->user()->role->permissions->where('model', ' = ', 'Requests')->first();
     }
 
     public function view(User $user, Vehicle $vehicle)
@@ -56,6 +57,16 @@ class VehiclePolicy {
     public function generateShowPDF(User $user, Vehicle $vehicle)
     {
         return $this->model->fin_reports && in_array($vehicle->location_id, $user->locationsArray());
+    }
+
+    public function bypass_transfer(User $user)
+    {
+        return $this->request->request;
+    }
+
+    public function request()
+    {
+        return $this->model->request;
     }
 
 }

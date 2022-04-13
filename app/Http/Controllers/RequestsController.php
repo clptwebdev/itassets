@@ -169,32 +169,40 @@ class RequestsController extends Controller {
         $m = "\\App\\Models\\" . ucfirst($requests->model_type);
         $model = $m::find($requests->model_id);
 
-
         if(auth()->user()->can('bypass_transfer', $model))
         {
+
             //Additional Field to be stored in the Fields Array then passed to the Options Column in the DB
             $fields = [];
 
-            if($request->model_type == 'asset' && $model->model()->exists()){
-                if($model->model->depreciation()->exists()){
+            if($request->model_type == 'asset' && $model->model()->exists())
+            {
+                if($model->model->depreciation()->exists())
+                {
+
                     $years = $model->model->depreciation->years;
-                }else{
+                } else
+                {
                     $years = 0;
                 }
-            }elseif($model->depreciation_id != 0){
-                if($model->depreciation()->exists()){
+            } else if($model->depreciation_id != 0)
+            {
+                if($model->depreciation()->exists())
+                {
                     $years = $model->depreciation->years;
+
                     $fields['depreciation_id'] = $model->depreciation_id;
-                }else{
+                } else
+                {
                     $years = 0;
                 }
-            }elseif($model->depreciation != 0)
+            } else if($model->depreciation != 0)
             {
                 $years = $model->depreciation;
-            }else{
+            } else
+            {
                 $years = 0;
             }
-
 
             $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($years);
             if($eol->isPast())
@@ -207,7 +215,6 @@ class RequestsController extends Controller {
                 $percentage = floor($age) * $percent;
                 $dep = $model->purchased_cost * ((100 - $percentage) / 100);
             }
-            
 
             $comments = $model->comment()->select('title', 'comment', 'user_id', 'created_at', 'updated_at')->orderBy('created_at', 'desc')->get()->toArray();
 
@@ -223,13 +230,22 @@ class RequestsController extends Controller {
 
             $logs = $model->logs()->orderBy('created_at', 'desc')->get()->toArray();
 
-            
-            if($model->fields){
-                foreach($model->fields as $field){
+            $fields = [];
+            if($model->fields)
+            {
+                foreach($model->fields as $field)
+                {
                     $fields[$field->name] = $field->pivot->value;
                 }
             }
-            
+            if($model->registration)
+            {
+                $fields['registration'] = $model->registration;
+            }
+            if($model->description)
+            {
+                $fields['description'] = $model->description;
+            }
 
             $archive = Archive::create([
                 'model_type' => $request->model_type ?? 'unknown',
@@ -256,8 +272,6 @@ class RequestsController extends Controller {
                 'options' => json_encode($fields),
                 'depreciation' => $years,
             ]);
-
-
 
             $model->forceDelete();
             $requests->update(['status' => 1, 'super_id' => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);

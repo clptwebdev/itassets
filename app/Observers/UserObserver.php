@@ -2,15 +2,22 @@
 
 namespace App\Observers;
 
+use App\Jobs\ColumnLogger;
 use App\Models\User;
 use App\Models\Log;
 use Carbon\Carbon;
+use Schema;
 
 class UserObserver {
 
+    public function __construct()
+    {
+        $this->user = $this->user . 'An Unauthorized User';
+    }
+
     public function created(User $user)
     {
-        $name = auth()->user()->name ?? 'System';
+        $name = $this->user;
         $role = auth()->user()->role->name ?? 'N/A';
         $schools = "";
         foreach($user->locations as $location)
@@ -38,29 +45,16 @@ class UserObserver {
 
     public function updated(User $user)
     {
-        $role = auth()->user()->role->name;
-        $schools = "";
-        foreach($user->locations as $location)
-        {
-            if($schools == "")
-            {
-                $schools .= $location->name;
-            } else
-            {
-                $schools .= ", " . $location->name;
-            }
-        }
-        if($schools == "")
-        {
-            $schools = "No Locations";
-        }
-        Log::create([
-            'user_id' => auth()->user()->id,
-            'log_date' => Carbon::now(),
-            'loggable_type' => 'user',
-            'loggable_id' => $user->id,
-            'data' => auth()->user()->name . " updated user: {$user->name}. The Role of {$user->name} has been set to {$role}. Access Granted for {$schools}",
-        ]);
+        /////////////////////////////////////////////
+        /////////// Dynamic Column changes///////////
+        /////////////////////////////////////////////
+        // Ignored these Table names
+        $exceptions = ['id', 'created_at', 'updated_at'];
+        ColumnLogger::dispatchSync($exceptions, $user);
+        /////////////////////////////////////////////
+        //////// Dynamic Column changes End//////////
+        /////////////////////////////////////////////
+
     }
 
     public function deleted(User $user)
@@ -70,7 +64,7 @@ class UserObserver {
             'loggable_date' => Carbon::now(),
             'loggable_type' => 'user',
             'loggable_id' => $user->id,
-            'data' => auth()->user()->name . ' has deleted ' . $user->name,
+            'data' => $this->user . ' has deleted ' . $user->name,
         ]);
     }
 

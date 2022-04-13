@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\ColumnLogger;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,12 +16,12 @@ use Illuminate\Support\Facades\Storage;
 use App\Jobs\UsersPdf;
 use App\Jobs\UserPdf;
 use App\Models\Report;
+use Schema;
 
 class UserController extends Controller {
 
     public function index()
     {
-
         if(auth()->user()->cant('viewAll', User::class))
         {
             return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Users.');

@@ -8,6 +8,7 @@ use App\Models\AUC;
 use App\Models\FFE;
 use App\Models\Machinery;
 use App\Models\Report;
+use App\Models\Software;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use App\Models\Archive;
@@ -231,8 +232,6 @@ class ArchiveController extends Controller {
                 break;
             case 'FFE':
                 $model = new FFE;
-                //Options
-                $options->depreciation ? $depreciation = $options->depreciation : $depreciation = 0;
 
                 $model->fill([
                     'name' => $archive->name,
@@ -244,45 +243,56 @@ class ArchiveController extends Controller {
                     'supplier_id' => $archive->supplier_id,
                     'order_no' => $archive->model_no,
                     'warranty' => $archive->warranty,
-                    'manufacturer' => $archive->manufacturer_id,
+                    'manufacturer_id' => $archive->manufacturer_id,
                     'location_id' => $archive->location_id,
                     'room' => $archive->room,
                     'notes' => $archive->notes,
                     'user_id' => $archive->user_id,
-                    'depreciation' => $depreciation,
+                    'depreciation' => $archive->depreciation,
                 ]);
                 break;
 
             case 'machinery':
                 $model = new Machinery;
-                //Options
-//                $options->depreciation_id ? $depreciation_id = $options->depreciation_id : $depreciation = 0;
-
                 $model->fill([
                     'name' => $archive->name,
                     'purchased_date' => $archive->purchased_date,
                     'purchased_cost' => $archive->purchased_cost,
-                    'donated' => 0,
+                    'donated' => $options->donated ?? 0,
                     'manufacturer' => $archive->manufacturer_id,
                     'supplier_id' => $archive->supplier_id,
                     'location_id' => $archive->location_id,
-                    'depreciation' => 1,
+                    'depreciation' => $archive->depreciation,
+                    'description' => $options->description,
                 ]);
                 break;
             case 'vehicle':
                 $model = new Vehicle;
-                //Options
-//                $options->depreciation_id ? $depreciation_id = $options->depreciation_id : $depreciation = 0;
-//                $options->type ? $type = $options->type : $type = 1;
 
                 $model->fill([
                     'name' => $archive->name,
                     'purchased_date' => $archive->purchased_date,
                     'purchased_cost' => $archive->purchased_cost,
                     'donated' => 0,
+                    'registration' => $options->registration ?? null,
                     'supplier_id' => $archive->supplier_id,
                     'location_id' => $archive->location_id,
-                    'depreciation' => 1,
+                    'depreciation' => $archive->depreciation,
+                ]);
+                break;
+            case 'software':
+                $model = new Software;
+
+                $model->fill([
+                    'name' => $archive->name,
+                    'purchased_date' => $archive->purchased_date,
+                    'purchased_cost' => $archive->purchased_cost,
+                    'donated' => $options->donated ?? 0,
+                    'manufacturer_id' => $archive->manufacturer_id,
+                    'supplier_id' => $archive->supplier_id,
+                    'location_id' => $archive->location_id,
+                    'warranty' => $archive->warranty,
+                    'depreciation' => $archive->depreciation,
                 ]);
                 break;
 
