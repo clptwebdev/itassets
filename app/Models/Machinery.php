@@ -44,6 +44,11 @@ class Machinery extends Model {
         return $query->whereIn('location_id', $locations);
     }
 
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'loggable');
+    }
+
     public function depreciation_value_by_date($date)
     {
         $age = $date->floatDiffInYears($this->purchased_date);

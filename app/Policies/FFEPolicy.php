@@ -6,13 +6,15 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\FFE;
 
-class FFEPolicy
-{
+class FFEPolicy {
+
     use HandlesAuthorization;
 
     public function __construct()
     {
         $this->model = auth()->user()->role->permissions->where('model', ' = ', 'FFE')->first();
+        $this->request = auth()->user()->role->permissions->where('model', ' = ', 'Requests')->first();
+
     }
 
     public function view(User $user, FFE $ffe)
@@ -45,12 +47,24 @@ class FFEPolicy
         return $this->model->delete;
     }
 
-    public function generatePDF(User $user){
+    public function generatePDF(User $user)
+    {
         return $this->model->fin_reports;
     }
 
-    public function generateShowPDF(User $user, FFE $ffe){
+    public function generateShowPDF(User $user, FFE $ffe)
+    {
         return $this->model->fin_reports && in_array($ffe->location_id, $user->locationsArray());
+    }
+
+    public function bypass_transfer(User $user)
+    {
+        return $this->request->request;
+    }
+
+    public function request()
+    {
+        return $this->model->request;
     }
 
 }

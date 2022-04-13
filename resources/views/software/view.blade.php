@@ -129,7 +129,7 @@
                                 £{{number_format($software->depreciation_value(), 2, '.', ',')}}</td>
                             <td class="text-center">{{$software->depreciation}} Years</td>
                             <td class="text-center">
-                                @php $warranty_end = \Carbon\Carbon::parse($software->purchased_date)->addMonths($software->warranty); dd($warranty_end)@endphp
+                                @php $warranty_end = \Carbon\Carbon::parse($software->purchased_date)->addMonths($software->warranty);@endphp
                                 {{ $software->warranty }} Months<br>
                                 @if(\Carbon\Carbon::parse($warranty_end)->isPast())
                                     <span class="text-coral">{{ 'Expired' }}</span>
@@ -148,6 +148,18 @@
                                     @can('update', $software)
                                         <x-buttons.dropdown-item :route=" route('softwares.edit', $software->id)">
                                             Edit
+                                        </x-buttons.dropdown-item>
+                                    @endcan
+                                    @can('update', $software)
+                                        <x-buttons.dropdown-item class="transferBtn"
+                                                                 formRequirements="data-model-id='{{$software->id}}'  data-location-from='{{$software->location->name ?? 'Unallocated' }}' data-location-id='{{ $software->location_id }}'">
+                                            Transfer
+                                        </x-buttons.dropdown-item>
+                                    @endcan
+                                    @can('delete', $software)
+                                        <x-buttons.dropdown-item class="disposeBtn"
+                                                                 formRequirements="data-model-id='{{$software->id}}' data-model-name='{{$software->name ?? 'No name' }}'">
+                                            Dispose
                                         </x-buttons.dropdown-item>
                                     @endcan
                                     @can('delete', $software)
@@ -176,12 +188,15 @@
     </section>
 @endsection
 @section('modals')
-
+    <x-modals.dispose model="software"/>
+    <x-modals.transfer :models="$locations" model="software"/>
     <x-modals.delete/>
     <x-modals.import route="/import/software"/>
 @endsection
 
 @section('js')
+    <script src="{{asset('js/transfer.js')}}"></script>
+    <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/filter.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/import.js')}}"></script>

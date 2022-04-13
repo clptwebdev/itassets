@@ -45,6 +45,11 @@ class Vehicle extends Model {
     {
         return $this->morphToMany(Comment::class, "commentables");
     }
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'loggable');
+    }
     //Filters the properties that are based in the selected locations
     //$locations is an array of the location ids
     public function scopeLocationFilter($query, $locations)

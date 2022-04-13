@@ -121,6 +121,18 @@
                                             Edit
                                         </x-buttons.dropdown-item>
                                     @endcan
+                                    @can('update', $machinery)
+                                        <x-buttons.dropdown-item class="transferBtn"
+                                                                 formRequirements="data-model-id='{{$machinery->id}}'  data-location-from='{{$machinery->location->name ?? 'Unallocated' }}' data-location-id='{{ $machinery->location_id }}'">
+                                            Transfer
+                                        </x-buttons.dropdown-item>
+                                    @endcan
+                                    @can('delete', $machinery)
+                                        <x-buttons.dropdown-item class="disposeBtn"
+                                                                 formRequirements="data-model-id='{{$machinery->id}}' data-model-name='{{$machinery->name ?? 'No name' }}'">
+                                            Dispose
+                                        </x-buttons.dropdown-item>
+                                    @endcan
                                     @can('delete', $machinery)
                                         <x-form.layout method="DELETE" class="d-block p-0 m-0"
                                                        :id="'form'.$machinery->id"
@@ -148,12 +160,15 @@
 @endsection
 
 @section('modals')
-
+    <x-modals.dispose model="machinery"/>
+    <x-modals.transfer :models="$locations" model="machinery"/>
     <x-modals.delete/>
     <x-modals.import route="/import/machinery"/>
 @endsection
 
 @section('js')
+    <script src="{{asset('js/transfer.js')}}"></script>
+    <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/filter.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
     <script src="{{asset('js/import.js')}}"></script>
