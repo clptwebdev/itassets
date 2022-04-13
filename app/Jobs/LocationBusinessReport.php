@@ -54,12 +54,28 @@ class LocationBusinessReport implements ShouldQueue
             $endDate->subYear();
         }
         
-        $property = Property::where('location_id', '=', $location->id)
+        //Get Properties in the Porperties table
+        $property_assets = Property::where('location_id', '=', $location->id)
                         ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
                         ->get();
+        //Get the Properties in the Archive Table
+        $property_archived = Archive::where('model_type', '=', 'property')
+                        ->where('location_id', '=', $location->id)
+                        ->whereBetween('date', [$startDate, $endDate])
+                        ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+                        ->get(); 
 
-        //Property Archive
+        //Create an empty collection to pu the merge properties in to
+        $property = Collection::empty();
+        //merge the assets and the archives
+        $property_merged = collect([$property_assets, $property_archived]);
+        foreach($property_merged as $property_merge){
+            foreach($property_merge as $property_item){
+                $property->push($property_item);
+            }
+        }
 
+        //Get Assets Under Construction - AUC does not have an Archive Feature
         $auc = AUC::locationFilter($location->pluck('id')->toArray())->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
 
         $ffe_assets = FFE::where('location_id', '=', $location->id)

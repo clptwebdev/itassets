@@ -73,6 +73,22 @@ class AssetController extends Controller {
         ]);
     }
 
+    public function show(Asset $asset)
+    {
+        if(auth()->user()->cant('view', $asset))
+        {
+            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Show Assets.');
+
+        }
+        $locations = auth()->user()->locations;
+
+        return view('assets.show', [
+            "asset" => $asset,
+            "locations" => $locations,
+        ]);
+    }
+
+
     ///////////////////////////////////////////////
     //////////// Create Functions /////////////////
     ///////////////////////////////////////////////
@@ -239,42 +255,9 @@ class AssetController extends Controller {
 
     }
 
-    public function search()
-    {
-        return view("assets.show", [
-            'asset' => Asset::latest()->AssetFilter(request()->only(['asset_tag']))->firstOrFail(),
-            'locations' => Location::all(),
-        ]);
-    }
-
-    public function newComment(Request $request)
-    {
-        $request->validate([
-            "title" => "required|max:255",
-            "comment" => "nullable",
-        ]);
-
-        $asset = Asset::find($request->asset_id);
-        $asset->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
-        session()->flash('success_message', $request->title . ' has been created successfully');
-
-        return to_route('assets.show', $asset->id);
-    }
-
-    public function show(Asset $asset)
-    {
-        if(auth()->user()->cant('view', $asset))
-        {
-            return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Show Assets.');
-
-        }
-        $locations = auth()->user()->locations;
-
-        return view('assets.show', [
-            "asset" => $asset,
-            "locations" => $locations,
-        ]);
-    }
+    ///////////////////////////////////////////////
+    //////////// Edit Functions ///////////////////
+    ///////////////////////////////////////////////
 
     public function edit(Asset $asset)
     {
@@ -422,6 +405,33 @@ class AssetController extends Controller {
 
         return to_route('assets.index');
     }
+    
+    public function search()
+    {
+        return view("assets.show", [
+            'asset' => Asset::latest()->AssetFilter(request()->only(['asset_tag']))->firstOrFail(),
+            'locations' => Location::all(),
+        ]);
+    }
+
+    public function newComment(Request $request)
+    {
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $asset = Asset::find($request->asset_id);
+        $asset->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+        session()->flash('success_message', $request->title . ' has been created successfully');
+
+        return to_route('assets.show', $asset->id);
+    }
+
+    ///////////////////////////////////////////////
+    //////////// Delete Functions /////////////////
+    ///////////////////////////////////////////////
+    
 
     public function destroy(Asset $asset)
     {
