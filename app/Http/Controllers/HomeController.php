@@ -42,6 +42,8 @@ class HomeController extends Controller {
     ////////////////////////////////////////
     public function businessExport()
     {
+        
+
         $property = Property::locationFilter(auth()->user()->locations->pluck('id'))->get();
         $ffe = FFE::locationFilter(auth()->user()->locations->pluck('id'))->get();
         $auc = AUC::locationFilter(auth()->user()->locations->pluck('id'))->get();

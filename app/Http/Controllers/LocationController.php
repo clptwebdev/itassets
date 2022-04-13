@@ -16,6 +16,7 @@ use App\Jobs\LocationBusinessReport;
 use App\Models\Report;
 
 use App\Models\FFE;
+use App\Models\Setting;
 use App\Models\Archive;
 use Illuminate\Database\Eloquent\Collection;
 

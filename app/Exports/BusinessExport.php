@@ -16,14 +16,16 @@ class BusinessExport implements WithMultipleSheets {
 
     use Exportable;
 
-    public function __construct($computers, $property, $ffe, $auc, $machines, $vehicle)
+    public function __construct($computers, $property, $ffe, $auc, $machinery, $vehicles, $softwares)
     {
         $this->computers = $computers;
         $this->property = $property;
         $this->ffe = $ffe;
         $this->auc = $auc;
-        $this->machines = $machines;
-        $this->vehicle = $vehicle;
+        $this->machinery = $machinery;
+        $this->vehicles = $vehicles;
+        $this->softwares = $softwares;
+
     }
 
     public function sheets(): array
@@ -33,13 +35,12 @@ class BusinessExport implements WithMultipleSheets {
         for($model = 1; $model <= 1; $model++)
         {
             $sheets[] = new PropertyBusinessExport($this->property);
-            //$sheets[] = new AUCBusinessExport($this->auc);
-            $sheets[] = new FFEBusinessExport($this->ffe);/* 
-            
-            
-            $sheets[] = new MachineryExport($this->machines);
-            $sheets[] = new VehicleExport($this->vehicle);
-            $sheets[] = new ComputerExport($this->computers); */
+            $sheets[] = new AUCBusinessExport($this->auc);
+            $sheets[] = new FFEBusinessExport($this->ffe);
+            $sheets[] = new MachineryBusinessExport($this->machinery);
+            $sheets[] = new VehicleBusinessExport($this->vehicles);
+            $sheets[] = new ComputerExport($this->computers);
+            $sheets[] = new SoftwareBusinessExport($this->softwares);
         }
 
         return $sheets;
