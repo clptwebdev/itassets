@@ -16,14 +16,6 @@ class Log extends Model {
 
     protected $fillable = ['user_id', 'loggable_type', 'loggable_id', 'data', 'created_at'];
 
-    public function data(): Attribute
-    {
-        return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
-        );
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\ColumnLogger;
 use App\Models\Property;
 use App\Models\Log;
 use Carbon\Carbon;
@@ -24,14 +25,15 @@ class PropertyObserver {
 
     public function updated(Property $property)
     {
-        $location = 'It has been assigned to ' . $property->location->name ?? 'It has not been assigned to a location.';
-        Log::create([
-            'user_id' => auth()->user()->id ?? 0,
-            'log_date' => Carbon::now(),
-            'loggable_type' => 'Property',
-            'loggable_id' => $property->id ?? 0,
-            'data' => auth()->user()->name . ' has added a updated Property: ' . $property->name . '. ' . $location,
-        ]);
+        /////////////////////////////////////////////
+        /////////// Dynamic Column changes///////////
+        /////////////////////////////////////////////
+        // Ignored these Table names
+        $exceptions = ['id', 'created_at', 'updated_at'];
+        ColumnLogger::dispatchSync($exceptions, $property);
+        /////////////////////////////////////////////
+        //////// Dynamic Column changes End//////////
+        /////////////////////////////////////////////
     }
 
     public function deleted(Property $property)

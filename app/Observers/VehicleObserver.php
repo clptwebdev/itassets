@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\ColumnLogger;
 use App\Models\Log;
 use App\Models\Vehicle;
 use Carbon\Carbon;
@@ -29,14 +30,15 @@ class VehicleObserver {
 
     public function updated(Vehicle $vehicle)
     {
-        $location = 'It has been assigned to ' . $vehicle->location->name ?? 'It has not been assigned to a location.';
-        Log::create([
-            'user_id' => auth()->user()->id ?? 0,
-            'log_date' => Carbon::now(),
-            'loggable_type' => 'Vehicle',
-            'loggable_id' => $vehicle->id ?? 0,
-            'data' => $this->user . ' has added a updated Vehicle: ' . $vehicle->name . '. ' . $location,
-        ]);
+        ////////////////////////////////////////////
+        /////////// Dynamic Column changes///////////
+        /////////////////////////////////////////////
+        // Ignored these Table names
+        $exceptions = ['id', 'created_at', 'updated_at'];
+        ColumnLogger::dispatchSync($exceptions, $vehicle);
+        /////////////////////////////////////////////
+        //////// Dynamic Column changes End//////////
+        /////////////////////////////////////////////
     }
 
     public function deleted(Vehicle $vehicle)

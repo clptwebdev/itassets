@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\ColumnLogger;
 use App\Models\Log;
 use App\Models\Software;
 use Carbon\Carbon;
@@ -29,14 +30,15 @@ class SoftwareObserver {
 
     public function updated(Software $software)
     {
-        $location = 'It has been assigned to ' . $software->location->name ?? 'It has not been assigned to a location.';
-        Log::create([
-            'user_id' => auth()->user()->id ?? 0,
-            'log_date' => Carbon::now(),
-            'loggable_type' => 'Software',
-            'loggable_id' => $software->id ?? 0,
-            'data' => $this->user . ' has added a updated Software: ' . $software->name . '. ' . $location,
-        ]);
+        /////////////////////////////////////////////
+        /////////// Dynamic Column changes///////////
+        /////////////////////////////////////////////
+        // Ignored these Table names
+        $exceptions = ['id', 'created_at', 'updated_at'];
+        ColumnLogger::dispatchSync($exceptions, $software);
+        /////////////////////////////////////////////
+        //////// Dynamic Column changes End//////////
+        /////////////////////////////////////////////
     }
 
     public function deleted(Software $software)

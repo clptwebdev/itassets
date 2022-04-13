@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\ColumnLogger;
 use App\Models\License;
 use App\Models\Log;
 use Carbon\Carbon;
@@ -29,14 +30,15 @@ class LicenseObserver {
 
     public function updated(License $license)
     {
-        $location = 'It has been assigned to ' . $license->location->name ?? 'It has not been assigned to a location.';
-        Log::create([
-            'user_id' => auth()->user()->id ?? 0,
-            'log_date' => Carbon::now(),
-            'loggable_type' => 'License',
-            'loggable_id' => $license->id ?? 0,
-            'data' => $this->user . ' has added a updated License: ' . $license->name . '. ' . $location,
-        ]);
+        /////////////////////////////////////////////
+        /////////// Dynamic Column changes///////////
+        /////////////////////////////////////////////
+        // Ignored these Table names
+        $exceptions = ['id', 'created_at', 'updated_at'];
+        ColumnLogger::dispatchSync($exceptions, $license);
+        /////////////////////////////////////////////
+        //////// Dynamic Column changes End//////////
+        /////////////////////////////////////////////
     }
 
     public function deleted(License $license)

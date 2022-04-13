@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\ColumnLogger;
 use App\Models\location;
 use App\Models\Log;
 use App\Models\Role;
@@ -31,14 +32,15 @@ class LocationObserver {
 
     public function updated(Location $location)
     {
-        $name = auth()->user()->name ?? "Unknown";
-        Log::create([
-            'user_id' => auth()->user()->id ?? 0,
-            'log_date' => Carbon::now(),
-            'loggable_type' => 'location',
-            'loggable_id' => $location->id ?? 0,
-            'data' => $name . ' updated Location - ' . $location->name,
-        ]);
+        /////////////////////////////////////////////
+        /////////// Dynamic Column changes///////////
+        /////////////////////////////////////////////
+        // Ignored these Table names
+        $exceptions = ['id', 'created_at', 'updated_at'];
+        ColumnLogger::dispatchSync($exceptions, $location);
+        /////////////////////////////////////////////
+        //////// Dynamic Column changes End//////////
+        /////////////////////////////////////////////
     }
 
     public function deleted(Location $location)

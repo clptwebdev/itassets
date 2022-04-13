@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\ColumnLogger;
 use App\Models\Log;
 use App\Models\Machinery;
 use Carbon\Carbon;
@@ -29,14 +30,15 @@ class MachineryObserver {
 
     public function updated(Machinery $machinery)
     {
-        $location = 'It has been assigned to ' . $machinery->location->name ?? 'It has not been assigned to a location.';
-        Log::create([
-            'user_id' => auth()->user()->id ?? 0,
-            'log_date' => Carbon::now(),
-            'loggable_type' => 'Machinery',
-            'loggable_id' => $machinery->id ?? 0,
-            'data' => $this->user . ' has added a updated Machinery: ' . $machinery->name . '. ' . $location,
-        ]);
+        /////////////////////////////////////////////
+        /////////// Dynamic Column changes///////////
+        /////////////////////////////////////////////
+        // Ignored these Table names
+        $exceptions = ['id', 'created_at', 'updated_at'];
+        ColumnLogger::dispatchSync($exceptions, $machinery);
+        /////////////////////////////////////////////
+        //////// Dynamic Column changes End//////////
+        /////////////////////////////////////////////
     }
 
     public function deleted(Machinery $machinery)

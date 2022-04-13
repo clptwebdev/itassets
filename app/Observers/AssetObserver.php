@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\ColumnLogger;
 use App\Models\Asset;
 use App\Models\Log;
 use Carbon\Carbon;
@@ -37,15 +38,15 @@ class AssetObserver {
      */
     public function updated(Asset $asset)
     {
-        $name = $asset->model->name ?? "Unknown" . ' [' . $asset->asset_tag . ']' ?? $asset->asset_tag;
-        $location = 'It has been assigned to ' . $asset->location->name ?? 'It has not been assigned to a location.';
-        Log::create([
-            'user_id' => auth()->user()->id ?? 0,
-            'log_date' => Carbon::now(),
-            'loggable_type' => 'asset',
-            'loggable_id' => $asset->id ?? 0,
-            'data' => auth()->user()->name . ' has added a updated asset: ' . $name . '. ' . $location,
-        ]);
+        /////////////////////////////////////////////
+        /////////// Dynamic Column changes///////////
+        /////////////////////////////////////////////
+        // Ignored these Table names
+        $exceptions = ['id', 'created_at', 'updated_at'];
+        ColumnLogger::dispatchSync($exceptions, $asset);
+        /////////////////////////////////////////////
+        //////// Dynamic Column changes End//////////
+        /////////////////////////////////////////////
     }
 
     /**
