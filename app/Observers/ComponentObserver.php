@@ -9,6 +9,11 @@ use Carbon\Carbon;
 
 class ComponentObserver {
 
+    public function __construct()
+    {
+        $this->user = $this->user . 'An Unauthorized User';
+    }
+
     public function created(Component $component)
     {
         Log::create([
@@ -16,7 +21,7 @@ class ComponentObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'component',
             'loggable_id' => $component->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " created a new Component - {$component->name}",
+            'data' => $this->user . "Unknown" . " created a new Component - {$component->name}",
         ]);
     }
 
@@ -40,7 +45,7 @@ class ComponentObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'component',
             'loggable_id' => $component->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " sent Component - {$component->name} to the Recycle Bin",
+            'data' => $this->user . "Unknown" . " sent Component - {$component->name} to the Recycle Bin",
         ]);
     }
 
@@ -51,7 +56,7 @@ class ComponentObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'component',
             'loggable_id' => $component->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " restored Component - {$component->name}",
+            'data' => $this->user . "Unknown" . " restored Component - {$component->name}",
         ]);
     }
 
@@ -62,7 +67,7 @@ class ComponentObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'component',
             'loggable_id' => $component->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " has permanently deleted Component - {$component->name}",
+            'data' => $this->user . "Unknown" . " has permanently deleted Component - {$component->name}",
         ]);
     }
 

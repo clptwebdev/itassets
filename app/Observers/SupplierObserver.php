@@ -9,15 +9,19 @@ use Carbon\Carbon;
 
 class SupplierObserver {
 
+    public function __construct()
+    {
+        $this->user = $this->user . 'An Unauthorized User';
+    }
+
     public function created(supplier $supplier)
     {
-        $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id' => auth()->user()->id ?? 0,
             'log_date' => Carbon::now(),
             'loggable_type' => 'supplier',
             'loggable_id' => $supplier->id ?? 0,
-            'data' => $name . ' created a new supplier - ' . $supplier->name,
+            'data' => $this->user . ' created a new supplier - ' . $supplier->name,
         ]);
     }
 
@@ -36,37 +40,34 @@ class SupplierObserver {
 
     public function deleted(supplier $supplier)
     {
-        $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id' => auth()->user()->id ?? 0,
             'log_date' => Carbon::now(),
             'loggable_type' => 'supplier',
             'loggable_id' => $supplier->id ?? 0,
-            'data' => $name . ' deleted supplier - ' . $supplier->name,
+            'data' => $this->user . ' deleted supplier - ' . $supplier->name,
         ]);
     }
 
     public function restored(supplier $supplier)
     {
-        $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id' => auth()->user()->id ?? 0,
             'log_date' => Carbon::now(),
             'loggable_type' => 'supplier',
             'loggable_id' => $supplier->id ?? 0,
-            'data' => $name . ' restored supplier - ' . $supplier->name,
+            'data' => $this->user . ' restored supplier - ' . $supplier->name,
         ]);
     }
 
     public function forceDeleted(supplier $supplier)
     {
-        $name = auth()->user()->name ?? "Unknown";
         Log::create([
             'user_id' => auth()->user()->id ?? 0,
             'log_date' => Carbon::now(),
             'loggable_type' => 'supplier',
             'loggable_id' => $supplier->id ?? 0,
-            'data' => $name . ' permanently deleted supplier - ' . $supplier->name,
+            'data' => $this->user . ' permanently deleted supplier - ' . $supplier->name,
         ]);
     }
 

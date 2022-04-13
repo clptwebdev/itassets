@@ -9,6 +9,11 @@ use Carbon\Carbon;
 
 class ConsumableObserver {
 
+    public function __construct()
+    {
+        $this->user = $this->user . 'An Unauthorized User';
+    }
+
     public function created(Consumable $consumable)
     {
         Log::create([
@@ -16,7 +21,7 @@ class ConsumableObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'consumable',
             'loggable_id' => $consumable->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " created a new consumable - {$consumable->name}",
+            'data' => $this->user . "Unknown" . " created a new consumable - {$consumable->name}",
         ]);
     }
 
@@ -40,7 +45,7 @@ class ConsumableObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'consumable',
             'loggable_id' => $consumable->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " deleted consumable - {$consumable->name}",
+            'data' => $this->user . "Unknown" . " deleted consumable - {$consumable->name}",
         ]);
     }
 
@@ -51,7 +56,7 @@ class ConsumableObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'consumable',
             'loggable_id' => $consumable->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " restored consumable - {$consumable->name}",
+            'data' => $this->user . "Unknown" . " restored consumable - {$consumable->name}",
         ]);
     }
 
@@ -62,7 +67,7 @@ class ConsumableObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'consumable',
             'loggable_id' => $consumable->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " permanently delted consumable - {$consumable->name}",
+            'data' => $this->user . "Unknown" . " permanently delted consumable - {$consumable->name}",
         ]);
     }
 

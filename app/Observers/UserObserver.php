@@ -10,9 +10,14 @@ use Schema;
 
 class UserObserver {
 
+    public function __construct()
+    {
+        $this->user = $this->user . 'An Unauthorized User';
+    }
+
     public function created(User $user)
     {
-        $name = auth()->user()->name ?? 'System';
+        $name = $this->user;
         $role = auth()->user()->role->name ?? 'N/A';
         $schools = "";
         foreach($user->locations as $location)
@@ -40,22 +45,6 @@ class UserObserver {
 
     public function updated(User $user)
     {
-        $role = auth()->user()->role->name;
-        $schools = "";
-        foreach($user->locations as $location)
-        {
-            if($schools == "")
-            {
-                $schools .= $location->name;
-            } else
-            {
-                $schools .= ", " . $location->name;
-            }
-        }
-        if($schools == "")
-        {
-            $schools = "No Locations";
-        }
         /////////////////////////////////////////////
         /////////// Dynamic Column changes///////////
         /////////////////////////////////////////////
@@ -75,7 +64,7 @@ class UserObserver {
             'loggable_date' => Carbon::now(),
             'loggable_type' => 'user',
             'loggable_id' => $user->id,
-            'data' => auth()->user()->name . ' has deleted ' . $user->name,
+            'data' => $this->user . ' has deleted ' . $user->name,
         ]);
     }
 

@@ -9,6 +9,11 @@ use Carbon\Carbon;
 
 class AccessoryObserver {
 
+    public function __construct()
+    {
+        $this->user = $this->user . 'An Unauthorized User';
+    }
+
     public function created(Accessory $accessory)
     {
         Log::create([
@@ -16,7 +21,7 @@ class AccessoryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'accessory',
             'loggable_id' => $accessory->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " created a new Accessory - {$accessory->name}",
+            'data' => $this->user . "Unknown" . " created a new Accessory - {$accessory->name}",
         ]);
     }
 
@@ -40,7 +45,7 @@ class AccessoryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'accessory',
             'loggable_id' => $accessory->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " deleted Accessory - {$accessory->name}",
+            'data' => $this->user . "Unknown" . " deleted Accessory - {$accessory->name}",
         ]);
     }
 
@@ -51,7 +56,7 @@ class AccessoryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'accessory',
             'loggable_id' => $accessory->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " restored Accessory - {$accessory->name}",
+            'data' => $this->user . "Unknown" . " restored Accessory - {$accessory->name}",
         ]);
     }
 
@@ -62,7 +67,7 @@ class AccessoryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'accessory',
             'loggable_id' => $accessory->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " permanently deleted Accessory - {$accessory->name}",
+            'data' => $this->user . "Unknown" . " permanently deleted Accessory - {$accessory->name}",
         ]);
     }
 

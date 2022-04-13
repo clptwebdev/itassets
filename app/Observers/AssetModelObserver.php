@@ -9,6 +9,11 @@ use Carbon\Carbon;
 
 class AssetModelObserver {
 
+    public function __construct()
+    {
+        $this->user = $this->user . 'An Unauthorized User';
+    }
+
     public function created(AssetModel $assetModel)
     {
         Log::create([
@@ -16,7 +21,7 @@ class AssetModelObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'assetModel',
             'loggable_id' => $assetModel->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " created a new Asset Model - {$assetModel->name}",
+            'data' => $this->user . "Unknown" . " created a new Asset Model - {$assetModel->name}",
         ]);
     }
 
@@ -40,7 +45,7 @@ class AssetModelObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'assetModel',
             'loggable_id' => $assetModel->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " deleted Asset Model - {$assetModel->name}",
+            'data' => $this->user . "Unknown" . " deleted Asset Model - {$assetModel->name}",
         ]);
     }
 
@@ -51,7 +56,7 @@ class AssetModelObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'assetModel',
             'loggable_id' => $assetModel->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " restored Asset Model - {$assetModel->name}",
+            'data' => $this->user . "Unknown" . " restored Asset Model - {$assetModel->name}",
         ]);
     }
 
@@ -62,7 +67,7 @@ class AssetModelObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'assetModel',
             'loggable_id' => $assetModel->id ?? 0,
-            'data' => auth()->user()->name ?? "Unknown" . " permanently deleted Asset Model - {$assetModel->name}",
+            'data' => $this->user . "Unknown" . " permanently deleted Asset Model - {$assetModel->name}",
         ]);
     }
 

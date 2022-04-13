@@ -9,6 +9,11 @@ use Carbon\Carbon;
 
 class AUCObserver {
 
+    public function __construct()
+    {
+        $this->user = $this->user . 'An Unauthorized User';
+    }
+
     public function created(AUC $auc)
     {
 
@@ -19,7 +24,7 @@ class AUCObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'AUC',
             'loggable_id' => $auc->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised User has added a new AUC: ' . $auc->name . '. ' . $location,
+            'data' => $this->user . 'A Un-Authorised User has added a new AUC: ' . $auc->name . '. ' . $location,
         ]);
     }
 
@@ -43,7 +48,7 @@ class AUCObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'AUC',
             'loggable_id' => $auc->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has placed the AUC: ' . $auc->name . ' into the recycling bin',
+            'data' => $this->user . 'A Un-Authorised' . ' has placed the AUC: ' . $auc->name . ' into the recycling bin',
         ]);
     }
 
@@ -53,7 +58,7 @@ class AUCObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'AUC',
             'loggable_id' => $auc->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has restored the AUC: ' . $auc->name,
+            'data' => $this->user . 'A Un-Authorised' . ' has restored the AUC: ' . $auc->name,
         ]);
     }
 
@@ -63,7 +68,7 @@ class AUCObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'AUC',
             'loggable_id' => $auc->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has permanently removed the AUC: ' . $auc->name,
+            'data' => $this->user . 'A Un-Authorised' . ' has permanently removed the AUC: ' . $auc->name,
         ]);
     }
 

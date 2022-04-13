@@ -9,6 +9,11 @@ use Carbon\Carbon;
 
 class PropertyObserver {
 
+    public function __construct()
+    {
+        $this->user = $this->user . 'An Unauthorized User';
+    }
+
     public function created(Property $property)
     {
 
@@ -19,7 +24,7 @@ class PropertyObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Property',
             'loggable_id' => $property->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised User has added a new Property: ' . $property->name . '. ' . $location,
+            'data' => $this->user . 'A Un-Authorised User has added a new Property: ' . $property->name . '. ' . $location,
         ]);
     }
 
@@ -43,7 +48,7 @@ class PropertyObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'Property',
             'loggable_id' => $property->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has placed the Property: ' . $property->name . ' into the recycling bin',
+            'data' => $this->user . 'A Un-Authorised' . ' has placed the Property: ' . $property->name . ' into the recycling bin',
         ]);
     }
 
@@ -53,7 +58,7 @@ class PropertyObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'Property',
             'loggable_id' => $property->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has restored the Property: ' . $property->name,
+            'data' => $this->user . 'A Un-Authorised' . ' has restored the Property: ' . $property->name,
         ]);
     }
 
@@ -63,7 +68,7 @@ class PropertyObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'Property',
             'loggable_id' => $property->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has permanently removed the Property: ' . $property->name,
+            'data' => $this->user . 'A Un-Authorised' . ' has permanently removed the Property: ' . $property->name,
         ]);
     }
 

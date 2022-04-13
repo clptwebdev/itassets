@@ -9,6 +9,11 @@ use Carbon\Carbon;
 
 class AssetObserver {
 
+    public function __construct()
+    {
+        $this->user = $this->user . 'An Unauthorized User';
+    }
+
     /**
      * Handle the assets "created" event.
      *
@@ -26,7 +31,7 @@ class AssetObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'asset',
             'loggable_id' => $asset->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has added a new asset: ' . $name . '. ' . $location,
+            'data' => $this->user . 'A Un-Authorised' . ' has added a new asset: ' . $name . '. ' . $location,
         ]);
     }
 
@@ -63,7 +68,7 @@ class AssetObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'asset',
             'loggable_id' => $asset->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has placed the Asset: ' . $name . ' into the recycling bin',
+            'data' => $this->user . 'A Un-Authorised' . ' has placed the Asset: ' . $name . ' into the recycling bin',
         ]);
     }
 
@@ -80,7 +85,7 @@ class AssetObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'asset',
             'loggable_id' => $asset->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has restored the Asset: ' . $name,
+            'data' => $this->user . 'A Un-Authorised' . ' has restored the Asset: ' . $name,
         ]);
     }
 
@@ -97,7 +102,7 @@ class AssetObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'asset',
             'loggable_id' => $asset->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has permanently removed the Asset: ' . $name,
+            'data' => $this->user . 'A Un-Authorised' . ' has permanently removed the Asset: ' . $name,
         ]);
     }
 
