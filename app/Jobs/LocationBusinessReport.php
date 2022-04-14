@@ -224,13 +224,10 @@ class LocationBusinessReport implements ShouldQueue {
 
         //Notify User that there report is complete
 
-<<<<<<< HEAD
         //auth(->user()->notify(new App\Notifcations\SendBusinessReport))
 
         
         
-=======
->>>>>>> 35d30469dc74950c91e776e66be84eda36931997
     }
 
 }
