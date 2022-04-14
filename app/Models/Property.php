@@ -160,16 +160,18 @@ class Property extends Model {
             $dep_total += Cache::get("property-L{$id}-dep");
         }
 
+
+
         //Totals of the Assets
-        Cache::rememberForever('property_total', function() use ($property_total) {
+        Cache::rememberForever('property-total', function() use ($property_total) {
             return round($property_total);
         });
 
-        Cache::rememberForever('property_cost', function() use ($cost_total) {
+        Cache::rememberForever('property-cost', function() use ($cost_total) {
             return round($cost_total);
         });
 
-        Cache::rememberForever('property_dep', function() use ($dep_total) {
+        Cache::rememberForever('property-dep', function() use ($dep_total) {
             return round($dep_total);
         });
     }

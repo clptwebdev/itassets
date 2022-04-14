@@ -244,6 +244,8 @@ class HomeController extends Controller {
             Cache::set('user_id', auth()->user()->id);
         }
 
+        
+
         //Get the Users location which they have access to
         $locations = auth()->user()->locations;
         //Check to see if the cache has been set and exists
@@ -253,7 +255,7 @@ class HomeController extends Controller {
         )
         {
             /* This is to calculate all the assets for the individual schools and the grand total */
-            Property::getCache($locations->pluck('id'));
+            Property::getCache($locations->pluck('id')->toArray());
         }
 
         //Check to see if the cache has been set and exists
@@ -264,6 +266,36 @@ class HomeController extends Controller {
         {
             /* This is to calculate all the assets for the individual schools and the grand total */
             AUC::getCache($locations->pluck('id'));
+        }
+
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("ffes-total") &&
+            ! Cache::has("ffes-cost") &&
+            ! Cache::has("ffes-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            FFE::getCache($locations->pluck('id'));
+        }
+
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("machinery-total") &&
+            ! Cache::has("machinery-cost") &&
+            ! Cache::has("machinery-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            Machinery::getCache($locations->pluck('id'));
+        }
+
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("vehicle-total") &&
+            ! Cache::has("vehicle-cost") &&
+            ! Cache::has("vehicle-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            Vehicle::getCache($locations->pluck('id'));
         }
 
         //Get the Users location which they have access to
@@ -292,8 +324,11 @@ class HomeController extends Controller {
 
         $obj = array(
             'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')],
-            'property' => ['count' => Cache::get('property_total'), 'cost' => Cache::get('property_cost'), 'dep' => Cache::get('property_dep')],
-            'auc' => ['count' => Cache::get('auc_total'), 'cost' => Cache::get('auc_cost'), 'dep' => Cache::get('auc_dep')],
+            'property' => ['count' => Cache::get('property-total'), 'cost' => Cache::get('property-cost'), 'dep' => Cache::get('property-dep')],
+            'auc' => ['count' => Cache::get('auc-total'), 'cost' => Cache::get('auc-cost'), 'dep' => Cache::get('auc-dep')],
+            'ffe' => ['count' => Cache::get('ffe-total'), 'cost' => Cache::get('ffe-cost'), 'dep' => Cache::get('ffe-dep')],
+            'machinery' => ['count' => Cache::get('machinery-total'), 'cost' => Cache::get('machinery-cost'), 'dep' => Cache::get('machinery-dep')],
+            'vehicles' => ['count' => Cache::get('vehicle-total'), 'cost' => Cache::get('vehicle-cost'), 'dep' => Cache::get('vehicle-dep')],
             'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
         );
 

@@ -46,12 +46,12 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-lilac text-uppercase mb-1">
-                                        Property
+                                        Property {{Illuminate\Support\Facades\Cache::get("property-L7-total")}}
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                                         <small>Total: <span id="total_count" class="countup"></span></small><br>
                                         <span id="total_cost" class=""></span><br>
-                                        <small class="text-coral">£<span id="total_dep" class=""></small><br>
+                                        <small class="text-coral">(<span id="total_dep" class=""></span>)*</small><br>
                                         <span class="text-xs">*calculated depreciation</span>
                                     </div>
                                 </div>
@@ -80,12 +80,12 @@
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                                         <small>Total: <span id="auc_count" class="countup"></span></small><br>
                                         <span id="auc_cost" class=""></span><br>
-                                        <small class="text-coral">(£<span id="auc_dep" class="countup"></span>)*</small><br>
+                                        <small class="text-coral">(<span id="auc_dep" class="countup"></span>)*</small><br>
                                         <span class="text-xs">*calculated depreciation</span>
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="fas fa-tablet-alt fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                    <i class="fas fa-hammer fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                                 </div>
                             </div>
                         </div>
@@ -104,18 +104,17 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-1">
                                     <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                        FFE (Furniture, Fixtures and Equipment)
+                                        FFE
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                        £<span id="accessory_cost" class="countup"></span><br>
-                                        <small class="text-coral">(£<span id="accessory_dep"
-                                                                          class="countup"></span>)</small><br>
+                                        <small>Total: <span id="ffe_count"></span></small><br>
+                                        <span id="ffe_cost"></span><br>
+                                        <small class="text-coral">(<span id="ffe_dep"></span>)</small><br>
                                         <span class="text-xs">*calculated depreciation</span>
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                    <i class="fas fa-chair fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                                 </div>
                             </div>
                         </div>
@@ -137,15 +136,14 @@
                                         Plant & Machinery
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                        £<span id="accessory_cost" class="countup"></span><br>
-                                        <small class="text-coral">(£<span id="accessory_dep"
-                                                                          class="countup"></span>)</small><br>
+                                        <small>Total: <span id="machinery_count"></span></small><br>
+                                        <span id="machinery_cost"></span><br>
+                                        <small class="text-coral">(<span id="machinery_dep"></span>)</small><br>
                                         <span class="text-xs">*calculated depreciation</span>
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                    <i class="fas fa-tractor fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                                 </div>
                             </div>
                         </div>
@@ -167,15 +165,15 @@
                                         Motor Vehicles
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                        £<span id="accessory_cost" class="countup"></span><br>
-                                        <small class="text-coral">(£<span id="accessory_dep"
+                                        <small>Total: <span id="vehicle_count"></span></small><br>
+                                        <span id="vehicle_cost"></span><br>
+                                        <small class="text-coral">(<span id="vehicle_dep"
                                                                           class="countup"></span>)</small><br>
                                         <span class="text-xs">*calculated depreciation</span>
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                    <i class="fas fa-bus fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
                                 </div>
                             </div>
                         </div>
@@ -197,10 +195,9 @@
                                         Computer Equipment
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                        £<span id="accessory_cost" class="countup"></span><br>
-                                        <small class="text-coral">(£<span id="accessory_dep"
-                                                                          class="countup"></span>)</small><br>
+                                        <small>Total: <span id="computer_count"></span></small><br>
+                                        <span id="computer_cost"></span><br>
+                                        <small class="text-coral">(<span id="computer_dep"></span>)</small><br>
                                         <span class="text-xs">*calculated depreciation</span>
                                     </div>
                                 </div>
@@ -251,31 +248,26 @@
 
     <script type="text/javascript">
 
-        const totalCount = document.querySelector('#total_count');
-        const totalCost = document.querySelector('#total_cost');
-        const totalDep = document.querySelector('#total_dep');
+        const propertyCount = document.querySelector('#total_count');
+        const propertyCost = document.querySelector('#total_cost');
+        const propertyDep = document.querySelector('#total_dep');
         const aucCount = document.querySelector('#auc_count');
         const aucCost = document.querySelector('#auc_cost');
         const aucDep = document.querySelector('#auc_dep');
-        const accessoryCount = document.querySelector('#accessory_count');
-        const accessoryCost = document.querySelector('#accessory_cost');
-        const accessoryDep = document.querySelector('#accessory_dep');
-        const componentsCount = document.querySelector('#components_count');
-        const componentsCost = document.querySelector('#components_cost');
-        const consumablesCount = document.querySelector('#consumables_count');
-        const consumablesCost = document.querySelector('#consumables_cost');
-        const miscCount = document.querySelector('#miscellanea_count');
-        const miscCost = document.querySelector('#miscellanea_cost');
+        const ffeCount = document.querySelector('#ffe_count');
+        const ffeCost = document.querySelector('#ffe_cost');
+        const ffeDep = document.querySelector('#ffe_dep');
+        const machineryCount = document.querySelector('#machinery_count');
+        const machineryCost = document.querySelector('#machinery_cost');
+        const machineryDep = document.querySelector('#machinery_dep');
+        const vehicleCount = document.querySelector('#vehicle_count');
+        const vehicleCost = document.querySelector('#vehicle_cost');
+        const vehicleDep = document.querySelector('#vehicle_dep');
+        const computerCount = document.querySelector('#computer_count');
+        const computerCost = document.querySelector('#computer_cost');
+        const computerDep = document.querySelector('#computer_dep');
 
         const loader = document.querySelectorAll('.stats_loading');
-
-        const requests = document.querySelector('#requests_count');
-        const transfers = document.querySelector('#transfers_count');
-        const archives = document.querySelector('#archived_count');
-        const progress = document.querySelector('#undeployable_progress');
-        const progressCount = document.querySelector('#undeployable_count');
-        const auditsDue = document.querySelector('#audits_due_count');
-        const auditsOver = document.querySelector('#audits_over_count');
 
         const currencyOptions = {
             style: 'currency',
@@ -291,25 +283,31 @@
             });
             //Fetch the return JSON Object
             const obj = JSON.parse(xhttp.responseText);
-            totalCount.innerHTML = obj.property.count;
-            totalCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.cost);
-            ;
-            totalDep.innerHTML = obj.property.dep;
+            console.log(obj);
+            propertyCount.innerHTML = obj.property.count;
+            propertyCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.cost);
+            propertyDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.cost);
             //AUC
             aucCount.innerHTML = obj.auc.count;
             aucCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.auc.cost);
-            aucDep.innerHTML = obj.auc.dep;
-            /* //Asset
-            assetsCount.innerHTML = obj.asset.count;
-            assetsCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.asset.cost);
-            assetsDep.innerHTML = obj.asset.dep;
-            //Accessory
-            accessoryCount.innerHTML = obj.accessories.count;
-            accessoryCost.innerHTML = obj.accessories.cost;
-            accessoryDep.innerHTML = obj.accessories.dep; */
+            aucDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.auc.dep);
+            //FFE
+            ffeCount.innerHTML = obj.ffe.count;
+            ffeCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.ffe.cost);
+            ffeDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.ffe.dep);
+            //FFE
+            machineryCount.innerHTML = obj.machinery.count;
+            machineryCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.machinery.cost);
+            machineryDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.machinery.dep);
+            //Vehicles
+            vehicleCount.innerHTML = obj.vehicles.count;
+            vehicleCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.vehicles.cost);
+            vehicleDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.vehicles.dep);
+            //Asset
+            computerCount.innerHTML = obj.asset.count;
+            computerCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.asset.cost + obj.accessories.count);
+            computerDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.asset.dep + obj.accessories.dep)
 
-
-            runAnimations();
         }
 
         xhttp.open("GET", "/business/statistics");

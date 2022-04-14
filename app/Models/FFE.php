@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 
 class FFE extends Model {
 
@@ -14,6 +15,10 @@ class FFE extends Model {
     use SoftDeletes;
 
     protected $guarded = [];
+
+    /////////////////////////////////////////////////
+    //////////////// Relationships //////////////////
+    /////////////////////////////////////////////////
 
     public function photo()
     {
@@ -45,11 +50,6 @@ class FFE extends Model {
         return $this->belongsTo(Status::class);
     }
 
-    public function depreciation()
-    {
-        return $this->belongsTo(Depreciation::class);
-    }
-
     public function manufacturer()
     {
         return $this->belongsTo(Manufacturer::class, 'manufacturer_id');
@@ -64,6 +64,10 @@ class FFE extends Model {
     {
         return $this->morphMany(Log::class, 'loggable');
     }
+
+    /////////////////////////////////////////////////
+    //////////////// Finance Functions //////////////
+    /////////////////////////////////////////////////
 
     //Works out the depreciation value at the date that is passed through to the function
     //Use the Depreciation time to minus the depreication charge
@@ -138,6 +142,124 @@ class FFE extends Model {
     {
         return $query->where('f_f_e_s.name', 'LIKE', "%{$search}%")
             ->orWhere('f_f_e_s.serial_no', 'LIKE', "%{$search}%");
+    }
+
+    //////////////////////////////////////////////
+    ////////////////Cache Functions///////////////
+    //////////////////////////////////////////////
+
+    public static function getCache($ids)
+    {
+        $ffe_total = 0;
+        $cost_total = 0;
+        $dep_total = 0;
+
+        $locations = Location::find($ids);
+
+        foreach($locations as $location)
+        {
+            $id = $location->id;
+            /* The Cache Values for the Location */
+            if(! Cache::has("ffe-L{$id}-total") &&
+                ! Cache::has("ffe-L{$id}-cost") &&
+                ! Cache::has("ffe-L{$id}-dep")
+            )
+            {
+                FFE::updateLocationCache($location);
+            }
+
+            $ffe_total += Cache::get("ffe-L{$id}-total");
+            $cost_total += Cache::get("ffe-L{$id}-cost");
+            $dep_total += Cache::get("ffe-L{$id}-dep");
+        }
+
+        //Totals of the Assets
+        Cache::rememberForever('ffe-total', function() use ($ffe_total) {
+            return round($ffe_total);
+        });
+
+        Cache::rememberForever('ffe-cost', function() use ($cost_total) {
+            return round($cost_total);
+        });
+
+        Cache::rememberForever('ffe-dep', function() use ($dep_total) {
+            return round($dep_total);
+        });
+    }
+
+    public static function updateLocationCache(Location $location)
+    {
+        $loc_cost_total = 0;
+        $loc_dep_total = 0;
+        $id = $location->id;
+
+        $ffes = FFE::whereLocationId($location->id)
+            ->select('purchased_cost', 'purchased_date', 'depreciation')
+            ->get()
+            ->map(function($item, $key) {
+                $item['depreciation_value'] = $item->depreciation_value();
+                return $item;
+            });
+
+        //Get the Total Amount of Assets available for this location and set it in Cache
+        $loc_total = $ffes->count();
+        Cache::rememberForever("ffe-L{$id}-total", function() use ($loc_total) {
+            return $loc_total;
+        });
+
+        foreach($ffes as $ffe)
+        {
+            $loc_cost_total += $ffe->purchased_cost;
+            $loc_dep_total += $ffe->depreciation_value;
+        }
+
+        /* The Cache Values for the Location */
+        Cache::set("ffe-L{$id}-cost", round($loc_cost_total));
+        Cache::set("ffe-L{$id}-dep", round($loc_dep_total));
+    }
+
+    public static function updateCache()
+    {
+        //The Variables holding the total of Assets available to the User
+        $ffe_total = 0;
+        $cost_total = 0;
+        $dep_total = 0;
+
+        foreach(Location::all() as $location)
+        {
+            $loc_cost_total = 0;
+            $loc_dep_total = 0;
+            $id = $location->id;
+
+            $ffes = FFE::whereLocationId($location->id)
+                ->select('purchased_cost', 'purchased_date', 'depreciation')
+                ->get()
+                ->map(function($item, $key) {
+                    $item['depreciation_value'] = $item->depreciation_value();
+                    return $item;
+                });
+
+            //Get the Total Amount of Assets available for this location and set it in Cache
+            $loc_total = $ffes->count();
+            Cache::rememberForever("ffe-L{$id}-total", function() use ($loc_total) {
+                return $loc_total;
+            });
+
+            //Add the total to the Total amount of Assets
+            $ffe_total += $loc_total;
+
+            foreach($ffes as $ffe)
+            {
+                $loc_cost_total += $ffe->purchased_cost;
+                $loc_dep_total += $ffe->depreciation_value;
+            }
+
+            /* The Cache Values for the Location */
+            Cache::set("ffe-L{$id}-cost", round($loc_cost_total));
+            $cost_total += $loc_cost_total;
+            Cache::set("ffe-L{$id}-dep", round($loc_dep_total));
+            $dep_total += $loc_dep_total;
+        }
     }
 
 }
