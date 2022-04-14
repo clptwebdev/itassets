@@ -145,7 +145,6 @@ class Property extends Model {
 
         foreach($locations as $location)
         {
-            return dd($locations);
             $id = $location->id;
             /* The Cache Values for the Location */
             if(! Cache::has("property-L{$id}-total") &&
