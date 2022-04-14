@@ -187,8 +187,8 @@ class Location extends Model {
         $expenditure = 0;
         $assets = $this->assets()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
         $accessories = $this->accessories()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
-        $property = $this->property()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
-        $auc = $this->aucs()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $property = $this->property()->whereYear('purchased_date', $year)->sum('purchased_cost');
+        $auc = $this->aucs()->whereYear('purchased_date', $year)->sum('purchased_cost');
         $ffe = $this->ffes()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
         $machinery = $this->machinery()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
         $vehicles = $this->vehicles()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
