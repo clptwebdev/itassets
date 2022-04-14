@@ -29,7 +29,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
 
     public function columnFormats(): array
     {
-        
+
         return [
             'A' => NumberFormat::FORMAT_TEXT,
             'B' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
@@ -167,14 +167,27 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
             $nbv1 += $asset->depreciation_value_by_date($nbvYear1);
             $nbv2 += $asset->depreciation_value_by_date($nbvYear2);
             $object[] = $array;
-
-            if($asset->archive_cost != null)
+            if(strtolower(str_replace('App\\Models\\', '', get_class($asset))) == 'archive')
             {
                 $this->archived[] = $this->row;
             }
             $this->row++;
 
         }
+        $blank = [];
+        $blank['Name'] = '';
+        $blank['Purchased Cost'] = '';
+        $blank['Purchased Date'] = '';
+        $blank['Cost B/Fwd'] = '';
+        $blank['Additions'] = '';
+        $blank['Disposals'] = '';
+        $blank['Cost C/Fwd'] = '';
+        $blank['Depreciation B/Fwd'] = '';
+        $blank['Depreciation Charge'] = '';
+        $blank['Depreciation Disposal'] = '';
+        $blank['Depreciation C/Fwd'] = '';
+        $blank['NBV ' . $nbvYear1] = '';
+        $blank['NBV ' . $nbvYear2] = '';
         $purchased_details = [];
         $purchased_details['Name'] = 'Total:  ' . $this->assets->count();
         $purchased_details['Purchased Cost'] = '';
@@ -189,6 +202,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         $purchased_details['Depreciation C/Fwd'] = $depCFwd;
         $purchased_details['NBV ' . $nbvYear1] = $nbv1;
         $purchased_details['NBV ' . $nbvYear2] = $nbv2;
+        array_push($object, $blank);
         array_push($object, $purchased_details);
 
         return $object;
@@ -200,15 +214,23 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $lastRow = $this->assets->count() + 2;
+                $lastRow = $this->assets->count() + 3;
                 $cellRange = 'A1:M1'; // All headers
+
                 $cellRange2 = 'A' . $lastRow . ':M' . $lastRow; // Last Row
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(12)->setBold(1);
-                $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getAllBorders()->setBorderStyle(true);
+                $event->sheet->getDelegate()->getStyle($cellRange)->getBorders()->getBottom()->setBorderStyle(true);
+                $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getBottom()->setBorderStyle(true);
+                $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getTop()->setBorderStyle(true);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getFont()->setSize(11)->setBold(1);
                 foreach($this->archived as $archived)
                 {
-                    $event->sheet->getDelegate()->getStyleByColumnAndRow($cellRange, $archived)->getFill()->setStartColor('red');
+                    $cr = 'A' . $archived . ':' . 'M' . $archived;
+                    $event->sheet->getDelegate()->getStyle($cr)->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('FAA0A0');
+
                 }
             },
         ];
