@@ -43,6 +43,9 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
  
          $this->nbvYear1 = Carbon::parse($this->startDate->format('d-m-Y'))->subYear();
          $this->nbvYear2 = Carbon::parse($this->nbvYear1->format('d-m-Y'))->subYear();
+
+         $this->row = 2;
+         $archived = [];
     }
 
     public function headings(): array
@@ -85,6 +88,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         $depCFwd = 0;
         $nbv1 = 0;
         $nbv2 = 0;
+
         
         foreach($this->assets as $asset)
         {
@@ -138,6 +142,11 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
             $nbv1 += $asset->depreciation_value_by_date($nbvYear1);
             $nbv2 += $asset->depreciation_value_by_date($nbvYear2);
             $object[] = $array;
+
+            if($asset->archive_cost != null){
+                $this->archived[] = $this->row
+            }
+            $this->row++;
 
         }
         $purchased_details = [];

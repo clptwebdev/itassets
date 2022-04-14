@@ -174,27 +174,16 @@ class LocationController extends Controller {
 
         $user = auth()->user();
 
-        $date = \Carbon\Carbon::now()->format('dmyHi');
-        $path = 'asset-register-' . $date.'.xlsx';
-        $url = "storage/csv/{$path}";
+        $name = strtolower(str_replace(' ', '-', $location->name).'-asset-register');
+        $date = \Carbon\Carbon::now()->format('dmyHis');
+        $path = $name .'-'. $date.'.xlsx';
+        $url = "public/csv/{$path}";
+        $route = "storage/csv/{$path}";
 
-        /* $ffe_assets = FFE::where('location_id', '=', $location->id)->select('name', 'purchased_cost', 'purchased_date', 'depreciation')->get();
-        $ffe_disposed = Archive::where('model_type', '=', 'FFE')->where('location_id', '=', $location->id)->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')->get();
-
-        $ffe = Collection::empty();
-        $ffe_merged = collect([$ffe_assets, $ffe_disposed]);
-        foreach($ffe_merged as $ffe_merge){
-            foreach($ffe_merge as $ffe_item){
-                $ffe->push($ffe_item);
-            }
-        }
-
-        return dd($ffe); */
-        dispatch(new LocationBusinessReport($location, $user, $path))->afterResponse();
+        dispatch(new LocationBusinessReport($location, $user, $url))->afterResponse();
         //Create Report
 
-        $url = "storage/csv/{$path}";
-        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
+        $report = Report::create(['report' => $route, 'user_id' => $user->id]);
 
         return to_route('business')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")

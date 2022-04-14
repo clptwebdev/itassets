@@ -129,11 +129,7 @@
                                 £{{number_format($software->depreciation_value(), 2, '.', ',')}}</td>
                             <td class="text-center">{{$software->depreciation}} Years</td>
                             <td class="text-center">
-<<<<<<< HEAD
                                 @php $warranty_end = \Carbon\Carbon::parse($software->purchased_date)->addMonths($software->warranty); @endphp
-=======
-                                @php $warranty_end = \Carbon\Carbon::parse($software->purchased_date)->addMonths($software->warranty);@endphp
->>>>>>> df532c6beef8b93e1d45813e7e16854a922add4f
                                 {{ $software->warranty }} Months<br>
                                 @if(\Carbon\Carbon::parse($warranty_end)->isPast())
                                     <span class="text-coral">{{ 'Expired' }}</span>

@@ -38,10 +38,10 @@
                                 <td>
                                     @if(file_exists($report->report))
                                         <a href="{{ asset($report->report)}}" target='_blank'
-                                           title="New">{{substr($report->report ,16) }}</a>
+                                           title="New">{{$report->report}}</a>
                                     @else
                                         @if(\Carbon\Carbon::now()->floatDiffInMinutes($report->created_at) < 15)
-                                            {!! substr($report->report,16).' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' !!}
+                                            {!! $report->report.' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' !!}
                                         @else
                                             <span class='text-coral'> {{substr($report->report,16)}} <i
                                                     class='fas fa-times'></i></span>
