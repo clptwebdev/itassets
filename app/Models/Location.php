@@ -187,7 +187,7 @@ class Location extends Model {
         $expenditure = 0;
         $assets = $this->assets()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
         
-        $expenditure += $asset->purchased_cost;
+        $expenditure += $assets;
 
 
         return $expenditure;
