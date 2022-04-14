@@ -219,6 +219,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
 
                 $cellRange2 = 'A' . $lastRow . ':M' . $lastRow; // Last Row
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(12)->setBold(1);
+                $event->sheet->getDelegate()->getStyle($cellRange)->getBorders()->getBottom()->setBorderStyle(true);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getBottom()->setBorderStyle(true);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getTop()->setBorderStyle(true);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getFont()->setSize(11)->setBold(1);
@@ -229,7 +230,6 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
                         ->setARGB('FAA0A0');
-                    $event->sheet->getDelegate()->getStyle($cr)->getFont()->getColor()->getARGB('FF3131');
 
                 }
             },
