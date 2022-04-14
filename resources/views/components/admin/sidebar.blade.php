@@ -335,55 +335,57 @@
             </li>
         @endcan
     <!-- Divider -->
-        <hr class="sidebar-divider">
+        @if(auth()->user()->role->name != 'Temporary')
+            <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-bs-toggle="collapse"
-               data-bs-target="#settingPages" aria-expanded="true" aria-controls="settingPages">
-                <i class="fas fa-fw fa-cogs sidebar-icon mx-auto"></i>
-                <span class="sidebar-title">Settings <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
-            </a>
-            <div id="settingPages" class="collapse" aria-labelledby="headingPages" data-bs-parent="#accordionSidebar">
-                @can('viewAny' , \App\Models\AssetModel::class)
-                    <a class="collapse-item @if(Request::url() == route('asset-models.index')) {{ 'font-weight-bold text-white' }} @endif"
-                       href="{{ route('asset-models.index')}}">Asset Models</a>
-                @endcan
-                @can('viewAny' , \App\Models\Depreciation::class)
-                    <a class="collapse-item @if(Request::url() == route('depreciation.index')) {{ 'font-weight-bold text-white' }} @endif"
-                       href="{{ route('depreciation.index')}}">Depreciation</a>
-                @endcan
-                @can('viewAny' , \App\Models\Category::class)
-                    <a class="collapse-item @if(Request::url() == route('category.index')) {{ 'font-weight-bold text-white' }} @endif"
-                       href="{{ route('category.index')}}">Categories</a>
-                @endcan
-                @can('viewAny' , \App\Models\Fieldset::class)
-                    <a class="collapse-item @if(Request::url() == route('fieldsets.index')) {{ 'font-weight-bold text-white' }} @endif"
-                       href="{{ route('fieldsets.index')}}">Fieldsets</a>
-                @endcan
-                @can('viewAny' , \App\Models\Field::class)
-                    <a class="collapse-item @if(Request::url() == route('fields.index')) {{ 'font-weight-bold text-white' }} @endif"
-                       href="{{ route('fields.index')}}">Custom Fields</a>
-                @endcan
-                @can('viewAny' , \App\Models\Status::class)
-                    <a class="collapse-item @if(Request::url() == route('status.index')) {{ 'font-weight-bold text-white' }} @endif"
-                       href="{{ route('status.index')}}">Status Fields</a>
-                @endcan
-                @can('viewAll' , \App\Models\Setting::class)
-                    <a id="export"
-                       class="collapse-item  @if(Request::url() == route('settings.view')) {{ 'font-weight-bold text-white' }} @endif"
-                       href="{{route("settings.view")}}"> Settings page </a>
-                @endcan
-                @can('view' , \App\Models\Backup::class)
-                    <a class="collapse-item" href="/databasebackups">Database Backups</a>
-                @endcan
-                @can('viewAll' , \App\Models\Report::class)
-                    <a href="{{ route('reports.index')}}" class="collapse-item">Generated Reports</a>
-                @endcan
-                <a class="collapse-item" href="{{ route("documentation.index") }}">Documentation</a>
-            </div>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-bs-toggle="collapse"
+                   data-bs-target="#settingPages" aria-expanded="true" aria-controls="settingPages">
+                    <i class="fas fa-fw fa-cogs sidebar-icon mx-auto"></i>
+                    <span class="sidebar-title">Settings <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
+                </a>
+                <div id="settingPages" class="collapse" aria-labelledby="headingPages"
+                     data-bs-parent="#accordionSidebar">
+                    @can('viewAny' , \App\Models\AssetModel::class)
+                        <a class="collapse-item @if(Request::url() == route('asset-models.index')) {{ 'font-weight-bold text-white' }} @endif"
+                           href="{{ route('asset-models.index')}}">Asset Models</a>
+                    @endcan
+                    @can('viewAny' , \App\Models\Depreciation::class)
+                        <a class="collapse-item @if(Request::url() == route('depreciation.index')) {{ 'font-weight-bold text-white' }} @endif"
+                           href="{{ route('depreciation.index')}}">Depreciation</a>
+                    @endcan
+                    @can('viewAny' , \App\Models\Category::class)
+                        <a class="collapse-item @if(Request::url() == route('category.index')) {{ 'font-weight-bold text-white' }} @endif"
+                           href="{{ route('category.index')}}">Categories</a>
+                    @endcan
+                    @can('viewAny' , \App\Models\Fieldset::class)
+                        <a class="collapse-item @if(Request::url() == route('fieldsets.index')) {{ 'font-weight-bold text-white' }} @endif"
+                           href="{{ route('fieldsets.index')}}">Fieldsets</a>
+                    @endcan
+                    @can('viewAny' , \App\Models\Field::class)
+                        <a class="collapse-item @if(Request::url() == route('fields.index')) {{ 'font-weight-bold text-white' }} @endif"
+                           href="{{ route('fields.index')}}">Custom Fields</a>
+                    @endcan
+                    @can('viewAny' , \App\Models\Status::class)
+                        <a class="collapse-item @if(Request::url() == route('status.index')) {{ 'font-weight-bold text-white' }} @endif"
+                           href="{{ route('status.index')}}">Status Fields</a>
+                    @endcan
+                    @can('viewAll' , \App\Models\Setting::class)
+                        <a id="export"
+                           class="collapse-item  @if(Request::url() == route('settings.view')) {{ 'font-weight-bold text-white' }} @endif"
+                           href="{{route("settings.view")}}"> Settings page </a>
+                    @endcan
+                    @can('view' , \App\Models\Backup::class)
+                        <a class="collapse-item" href="/databasebackups">Database Backups</a>
+                    @endcan
+                    @can('viewAll' , \App\Models\Report::class)
+                        <a href="{{ route('reports.index')}}" class="collapse-item">Generated Reports</a>
+                    @endcan
+                    <a class="collapse-item" href="{{ route("documentation.index") }}">Documentation</a>
+                </div>
+            </li>
 
-
+        @endif
     <!-- Divider -->
         @can('viewAll' , \App\Models\Report::class)
             <hr class="sidebar-divider d-none d-md-block">
