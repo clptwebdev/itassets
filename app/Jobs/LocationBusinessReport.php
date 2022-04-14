@@ -25,14 +25,14 @@ use App\Models\Setting;
 
 use \Carbon\Carbon;
 
-class LocationBusinessReport implements ShouldQueue
-{
+class LocationBusinessReport implements ShouldQueue {
+
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $location;
     protected $user;
     public $path;
-    
+
     public function __construct(Location $location, $user, $path)
     {
         $this->location = $location;
@@ -47,7 +47,7 @@ class LocationBusinessReport implements ShouldQueue
         $path = $this->path;
 
         $threshold_setting = Setting::where('name', '=', 'asset_threshold')->first();
-        $threshold = $threshold_setting->value;
+        $threshold = $threshold_setting->value ?? 0;
 
         $now = Carbon::now();
         $startDate = Carbon::parse('09/01/' . $now->format('Y'));
@@ -57,125 +57,133 @@ class LocationBusinessReport implements ShouldQueue
             $startDate->subYear();
             $endDate->subYear();
         }
-        
+
         //Get Properties in the Porperties table
         $property_assets = Property::where('location_id', '=', $location->id)
-                        ->where('purchased_cost', '>=', $threshold)
-                        ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
-                        ->get();
+            ->where('purchased_cost', '>=', $threshold)
+            ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
+            ->get();
         //Get the Properties in the Archive Table
         $property_archived = Archive::where('model_type', '=', 'property')
-                        ->where('location_id', '=', $location->id)
-                        ->where('purchased_cost', '>=', $threshold)
-                        ->whereBetween('date', [$startDate, $endDate])
-                        ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
-                        ->get(); 
+            ->where('location_id', '=', $location->id)
+            ->where('purchased_cost', '>=', $threshold)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+            ->get();
 
         //Create an empty collection to pu the merge properties in to
         $property = Collection::empty();
         //merge the assets and the archives
         $property_merged = collect([$property_assets, $property_archived]);
-        foreach($property_merged as $property_merge){
-            foreach($property_merge as $property_item){
+        foreach($property_merged as $property_merge)
+        {
+            foreach($property_merge as $property_item)
+            {
                 $property->push($property_item);
             }
         }
 
         //Get Assets Under Construction - AUC does not have an Archive Feature
         $auc = AUC::where('location_id', '=', $location->id)
-                        ->where('purchased_cost', '>=', $threshold)
-                        ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
-                        ->get();
+            ->where('purchased_cost', '>=', $threshold)
+            ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
+            ->get();
 
         //Get FFE in the f_f_e_s table
         $ffe_assets = FFE::where('location_id', '=', $location->id)
-                        ->where('purchased_cost', '>=', $threshold)
-                        ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
-                        ->get();
+            ->where('purchased_cost', '>=', $threshold)
+            ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
+            ->get();
         //Get FFE in the archived table
         $ffe_disposed = Archive::where('model_type', '=', 'FFE')
-                        ->where('purchased_cost', '>=', $threshold)
-                        ->where('location_id', '=', $location->id)
-                        ->whereBetween('date', [$startDate, $endDate])
-                        ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
-                        ->get();
+            ->where('purchased_cost', '>=', $threshold)
+            ->where('location_id', '=', $location->id)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+            ->get();
 
         $ffe = Collection::empty();
         $ffe_merged = collect([$ffe_assets, $ffe_disposed]);
-        foreach($ffe_merged as $ffe_merge){
-            foreach($ffe_merge as $ffe_item){
+        foreach($ffe_merged as $ffe_merge)
+        {
+            foreach($ffe_merge as $ffe_item)
+            {
                 $ffe->push($ffe_item);
             }
         }
 
         //Get Plant and Machinery
         $machine_assets = Machinery::where('location_id', '=', $location->id)
-                        ->where('purchased_cost', '>=', $threshold)
-                        ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
-                        ->get();
+            ->where('purchased_cost', '>=', $threshold)
+            ->select('name', 'purchased_cost', 'purchased_date', 'depreciation')
+            ->get();
 
         //Get FFE in the archived table
         $machine_disposed = Archive::where('model_type', '=', 'machinery')
-                        ->where('location_id', '=', $location->id)
-                        ->where('purchased_cost', '>=', $threshold)
-                        ->whereBetween('date', [$startDate, $endDate])
-                        ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
-                        ->get();
+            ->where('location_id', '=', $location->id)
+            ->where('purchased_cost', '>=', $threshold)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+            ->get();
 
         $machinery = Collection::empty();
         $machine_merged = collect([$machine_assets, $machine_disposed]);
-        foreach($machine_merged as $machine_merge){
-            foreach($machine_merge as $machine_item){
+        foreach($machine_merged as $machine_merge)
+        {
+            foreach($machine_merge as $machine_item)
+            {
                 $machinery->push($machine_item);
             }
         }
 
         $vehicle_assets = Vehicle::where('location_id', '=', $location->id)
-                        ->where('purchased_cost', '>=', $threshold)                
-                        ->select('name', 'registration', 'purchased_cost', 'purchased_date', 'depreciation')
-                        ->get();
-        
-        //Get Vehicles in the archived table 
+            ->where('purchased_cost', '>=', $threshold)
+            ->select('name', 'registration', 'purchased_cost', 'purchased_date', 'depreciation')
+            ->get();
+
+        //Get Vehicles in the archived table
         $vehicle_disposed = Archive::where('model_type', '=', 'vehicles')
-                    ->where('location_id', '=', $location->id)
-                    ->where('purchased_cost', '>=', $threshold)
-                    ->whereBetween('date', [$startDate, $endDate])
-                    ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
-                    ->get();
+            ->where('location_id', '=', $location->id)
+            ->where('purchased_cost', '>=', $threshold)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+            ->get();
 
         $vehicles = Collection::empty();
         $vehicles_merged = collect([$vehicle_assets, $vehicle_disposed]);
-        foreach($vehicles_merged as $vehicle_merge){
-            foreach($vehicle_merge as $vehicle_item){
+        foreach($vehicles_merged as $vehicle_merge)
+        {
+            foreach($vehicle_merge as $vehicle_item)
+            {
                 $vehicles->push($vehicle_item);
             }
         }
 
         $assets = Asset::where('location_id', '=', $location->id)
-                    ->where('purchased_cost', '>=', $threshold)
-                    ->select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'asset_model', 'donated')
-                    ->get();
+            ->where('purchased_cost', '>=', $threshold)
+            ->select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'asset_model', 'donated')
+            ->get();
 
-        //Get Vehicles in the archived table 
+        //Get Vehicles in the archived table
         $assets_disposed = Archive::where('model_type', '=', 'asset')
-                    ->where('location_id', '=', $location->id)
-                    ->where('purchased_cost', '>=', $threshold)
-                    ->whereBetween('date', [$startDate, $endDate])
-                    ->select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
-                    ->get();
-        
+            ->where('location_id', '=', $location->id)
+            ->where('purchased_cost', '>=', $threshold)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+            ->get();
+
         $accessories = Accessory::where('location_id', '=', $location->id)
-                    ->where('purchased_cost', '>=', $threshold)
-                    ->select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'depreciation_id', 'donated')
-                    ->get();  
-                    
-        //Get Vehicles in the archived table 
+            ->where('purchased_cost', '>=', $threshold)
+            ->select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'depreciation_id', 'donated')
+            ->get();
+
+        //Get Vehicles in the archived table
         $accessories_disposed = Archive::where('model_type', '=', 'accessory')
-                    ->where('location_id', '=', $location->id)
-                    ->where('purchased_cost', '>=', $threshold)
-                    ->whereBetween('date', [$startDate, $endDate])
-                    ->select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
-                    ->get();
+            ->where('location_id', '=', $location->id)
+            ->where('purchased_cost', '>=', $threshold)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+            ->get();
 
         $merged = collect([$accessories, $assets, $assets_disposed, $accessories_disposed]);
         $computers = Collection::empty();
@@ -189,17 +197,17 @@ class LocationBusinessReport implements ShouldQueue
         }
 
         $software_assets = Software::where('location_id', '=', $location->id)
-                    ->where('purchased_cost', '>=', $threshold)
-                    ->select('name', 'purchased_cost', 'purchased_date', 'depreciation', 'donated')
-                    ->get();
+            ->where('purchased_cost', '>=', $threshold)
+            ->select('name', 'purchased_cost', 'purchased_date', 'depreciation', 'donated')
+            ->get();
 
-        //Get Vehicles in the archived table 
+        //Get Vehicles in the archived table
         $software_disposed = Archive::where('model_type', '=', 'software')
-                    ->where('location_id', '=', $location->id)
-                    ->where('purchased_cost', '>=', $threshold)
-                    ->whereBetween('date', [$startDate, $endDate])
-                    ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
-                    ->get();
+            ->where('location_id', '=', $location->id)
+            ->where('purchased_cost', '>=', $threshold)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->select('name', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+            ->get();
 
         $software_merged = collect([$software_assets, $software_disposed]);
         $softwares = Collection::empty();
@@ -212,14 +220,17 @@ class LocationBusinessReport implements ShouldQueue
             }
         }
 
-
         \Maatwebsite\Excel\Facades\Excel::store(new BusinessExport($computers, $property, $ffe, $auc, $machinery, $vehicles, $softwares), $path);
 
         //Notify User that there report is complete
 
+<<<<<<< HEAD
         //auth(->user()->notify(new App\Notifcations\SendBusinessReport))
 
         
         
+=======
+>>>>>>> 35d30469dc74950c91e776e66be84eda36931997
     }
+
 }
