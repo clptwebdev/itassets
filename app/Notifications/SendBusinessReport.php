@@ -52,7 +52,7 @@ class SendBusinessReport extends Notification
                     ->subject("Your Financial Report for {$location->name} has been completed")
                     ->view("mail.report-complete", ['user' => $user, 'location' => $location, 'route' => $route])
                     ->attach($route, [
-                        "mime" => "application/pdf"
+                        "mime" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     ]);
     }
 
