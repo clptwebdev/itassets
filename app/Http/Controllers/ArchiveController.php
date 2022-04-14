@@ -124,6 +124,7 @@ class ArchiveController extends Controller {
             $array['requested'] = $f->requested->name ?? 'N/A';
             $array['approved'] = $f->approved->name ?? 'N/A';
             $assets[] = $array;
+            
         }
 
         $user = auth()->user();
