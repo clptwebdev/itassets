@@ -64,6 +64,8 @@ class VehicleBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, 
 
         $this->nbvYear1 = Carbon::parse($this->startDate->format('d-m-Y'))->subYear();
         $this->nbvYear2 = Carbon::parse($this->nbvYear1->format('d-m-Y'))->subYear();
+        $this->row = 2;
+        $this->archived = [];
     }
 
     public function headings(): array
@@ -165,8 +167,27 @@ class VehicleBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, 
             $nbv1 += $vehicle->depreciation_value_by_date($nbvYear1);
             $nbv2 += $vehicle->depreciation_value_by_date($nbvYear2);
             $object[] = $array;
-
+            if(strtolower(str_replace('App\\Models\\', '', get_class($property))) == 'archive')
+            {
+                $this->archived[] = $this->row;
+            }
+            $this->row++;
         }
+        $blank = [];
+        $blank['Name'] = '';
+        $blank['Purchased Cost'] = '';
+        $blank['Purchased Date'] = '';
+        $blank['Cost B/Fwd'] = '';
+        $blank['Additions'] = '';
+        $blank['Disposals'] = '';
+        $blank['Cost C/Fwd'] = '';
+        $blank['Depreciation B/Fwd'] = '';
+        $blank['Depreciation Charge'] = '';
+        $blank['Depreciation Disposal'] = '';
+        $blank['Depreciation C/Fwd'] = '';
+        $blank['NBV ' . $nbvYear1] = '';
+        $blank['NBV ' . $nbvYear2] = '';
+        array_push($object, $blank);
         $purchased_details = [];
         $purchased_details['Name'] = 'Total:  ' . $this->vehicles->count();
         $purchased_details['Purchased Cost'] = '';
@@ -191,12 +212,23 @@ class VehicleBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, 
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $lastRow = $this->vehicles->count() + 2;
+                $lastRow = $this->vehicles->count() + 3;
                 $cellRange = 'A1:M1'; // All headers
                 $cellRange2 = 'A' . $lastRow . ':M' . $lastRow; // Last Row
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(12)->setBold(1);
-                $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getAllBorders()->setBorderStyle(true);
+                $event->sheet->getDelegate()->getStyle($cellRange)->getBorders()->getBottom()->setBorderStyle(true);
+                $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getBottom()->setBorderStyle(true);
+                $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getTop()->setBorderStyle(true);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getFont()->setSize(11)->setBold(1);
+                foreach($this->archived as $archived)
+                {
+                    $cr = 'A' . $archived . ':' . 'M' . $archived;
+                    $event->sheet->getDelegate()->getStyle($cr)->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('FAA0A0');
+
+                }
             },
         ];
     }
