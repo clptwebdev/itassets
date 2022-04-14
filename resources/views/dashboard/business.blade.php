@@ -17,7 +17,7 @@
             <div class="dropdown d-inline">
                 <a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Download Report
+                    Download Trust Report
                 </a>
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
