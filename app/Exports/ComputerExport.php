@@ -14,7 +14,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents, WithTitle, WithColumnFormatting {
+class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEvents, WithTitle {
 
     use Exportable;
 
@@ -27,24 +27,24 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
     private $nbvYear1;
     private $nbvYear2;
 
-    public function columnFormats(): array
-    {
-        return [
-            'A' => NumberFormat::FORMAT_TEXT,
-            'B' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
-            'C' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'D' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
-            'E' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
-            'F' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
-            'G' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
-            'H' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
-            'I' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
-            'K' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
-            'L' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
-            'M' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
-
-        ];
-    }
+//    public function columnFormats(): array
+//    {
+//        return [
+//            'A' => NumberFormat::FORMAT_TEXT,
+//            'B' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+//            'C' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+//            'D' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+//            'E' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+//            'F' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+//            'G' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+//            'H' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+//            'I' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+//            'K' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+//            'L' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+//            'M' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
+//
+//        ];
+//    }
 
     public function __construct($assets)
     {
