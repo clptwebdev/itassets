@@ -223,6 +223,7 @@ class LocationBusinessReport implements ShouldQueue {
         \Maatwebsite\Excel\Facades\Excel::store(new BusinessExport($computers, $property, $ffe, $auc, $machinery, $vehicles, $softwares), $path);
 
         //Notify User that there report is complete
+
     }
 
 }
