@@ -42,7 +42,6 @@ class HomeController extends Controller {
     ////////////////////////////////////////
     public function businessExport()
     {
-        
 
         $property = Property::locationFilter(auth()->user()->locations->pluck('id'))->get();
         $ffe = FFE::locationFilter(auth()->user()->locations->pluck('id'))->get();
@@ -66,7 +65,7 @@ class HomeController extends Controller {
             }
         }
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new BusinessExport($computers, $property, $ffe, $auc, $machines, $vehicle), "/public/csv/business-ex-{$date}.xlsx");
+        \Maatwebsite\Excel\Facades\Excel::store(new BusinessExport($computers, $property, $ffe, $auc, $machines, $vehicle, $software), "/public/csv/business-ex-{$date}.xlsx");
         $url = asset("storage/csv/business-ex-{$date}.xlsx");
 
         return to_route('business')
