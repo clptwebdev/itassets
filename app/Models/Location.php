@@ -185,14 +185,10 @@ class Location extends Model {
     public function business_expenditure($year)
     {
         $expenditure = 0;
-        $assets = $this->assets()->whereYear('purchased_date', $year)->select('donated', 'purchased_cost')->get();
-        foreach($assets as $asset)
-        {
-            if($asset->donated !== 1)
-            {
-                $expenditure += $asset->purchased_cost;
-            }
-        }
+        $assets = $this->assets()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        
+        $expenditure += $asset->purchased_cost;
+
 
         return $expenditure;
 

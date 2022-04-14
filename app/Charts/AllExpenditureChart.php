@@ -38,11 +38,11 @@ class AllExpenditureChart extends BaseChart
             $location_values = [];
             foreach(array_reverse($years) as $id => $y){
                 if(!Cache::get('location-'.$location->id.'-'.$y)){
-                    $total = Cache::rememberForever('location-'.$location->id.'-'.$y, function () use($location, $y){
-                        return round($location->expenditure($y));
+                    $total = Cache::rememberForever('location-business-'.$location->id.'-'.$y, function () use($location, $y){
+                        return round($location->busienss_expenditure($y));
                     });
                 }
-                $location_values[] = round(Cache::get('location-'.$location->id.'-'.$y));
+                $location_values[] = round(Cache::get('location-business-'.$location->id.'-'.$y));
             }
             $chart->advancedDataset($location->name, $location_values, ['borderColor'=> $location->icon, 'backgroundColor' => $location->icon]);
         }
