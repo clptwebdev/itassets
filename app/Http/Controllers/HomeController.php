@@ -42,19 +42,25 @@ class HomeController extends Controller {
     ////////////////////////////////////////
     public function businessExport()
     {
+        $assets = Asset::
+        select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'asset_model', 'donated')
+            ->get();
 
-        $property = Property::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $ffe = FFE::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $auc = AUC::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $machines = Machinery::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $vehicle = Vehicle::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $assets = Asset::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $components = Component::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $miscellanea = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $software = Software::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        //Get Vehicles in the archived table
+        $assets_disposed = Archive::
+        select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+            ->get();
 
-        $merged = collect([$components, $accessories, $miscellanea, $software, $assets]);
+        $accessories = Accessory::
+        select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'depreciation_id', 'donated')
+            ->get();
+
+        //Get Vehicles in the archived table
+        $accessories_disposed = Archive::
+        select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
+            ->get();
+
+        $merged = collect([$accessories, $assets, $assets_disposed, $accessories_disposed]);
         $computers = Collection::empty();
         //foreach $model then Foreach $item Push to a single collection
         foreach($merged as $merge)
@@ -64,6 +70,16 @@ class HomeController extends Controller {
                 $computers->push($item);
             }
         }
+        $property = Property::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $ffe = FFE::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $auc = AUC::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $machines = Machinery::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $vehicle = Vehicle::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $components = Component::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $miscellanea = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'))->get();
+        $software = Software::locationFilter(auth()->user()->locations->pluck('id'))->get();
+
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         \Maatwebsite\Excel\Facades\Excel::store(new BusinessExport($computers, $property, $ffe, $auc, $machines, $vehicle, $software), "/public/csv/business-ex-{$date}.xlsx");
         $url = asset("storage/csv/business-ex-{$date}.xlsx");
@@ -81,7 +97,7 @@ class HomeController extends Controller {
     public function search(Request $request)
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required',
         ]);
         $assets = Asset::searchFilter($request->name)->get();
         $FFE = FFE::searchFilter($request->name)->get();
