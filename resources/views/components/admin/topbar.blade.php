@@ -69,7 +69,7 @@
                     <i class="fas fa-fw fa-tasks" data-bs-toggle="tooltip" data-bs-placement="bottom"
                        title="Requests"></i>
                     <span
-                        class="badge badge-danger badge-counter">{{\App\Models\Requests::whereStatus(0)->count()}}</span>
+                        class="badge badge-danger badge-counter">{{\App\Models\Requests::managerFilter(App\Models\User::whereManagerId(auth()->user()->id)->pluck('id')->toArray())->whereStatus(0)->count()}}</span>
                 </a>
             </li>
         @endcan
