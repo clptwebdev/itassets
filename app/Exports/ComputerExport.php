@@ -169,7 +169,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
             $object[] = $array;
 
             if($asset->archive_cost != null){
-                $this->archived[] = $this->row
+                $this->archived[] = $this->row;
             }
             $this->row++;
 
