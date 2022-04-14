@@ -146,15 +146,15 @@ class Machinery extends Model {
         }
 
         //Totals of the Assets
-        Cache::rememberForever('machinery_total', function() use ($count_total) {
+        Cache::rememberForever('machinery-total', function() use ($count_total) {
             return round($count_total);
         });
 
-        Cache::rememberForever('machinery_cost', function() use ($cost_total) {
+        Cache::rememberForever('machinery-cost', function() use ($cost_total) {
             return round($cost_total);
         });
 
-        Cache::rememberForever('machinery_dep', function() use ($dep_total) {
+        Cache::rememberForever('machinery-dep', function() use ($dep_total) {
             return round($dep_total);
         });
     }

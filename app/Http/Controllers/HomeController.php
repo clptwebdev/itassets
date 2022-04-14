@@ -314,10 +314,10 @@ class HomeController extends Controller {
 
         $obj = array(
             'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')],
-            'property' => ['count' => Cache::get('property_total'), 'cost' => Cache::get('property_cost'), 'dep' => Cache::get('property_dep')],
-            'auc' => ['count' => Cache::get('auc_total'), 'cost' => Cache::get('auc_cost'), 'dep' => Cache::get('auc_dep')],
-            'ffe' => ['count' => Cache::get('ffe_total'), 'cost' => Cache::get('ffe_cost'), 'dep' => Cache::get('ffe_dep')],
-            'machinery' => ['count' => Cache::get('machinery_total'), 'cost' => Cache::get('machinery_cost'), 'dep' => Cache::get('machinery_dep')],
+            'property' => ['count' => Cache::get('property-total'), 'cost' => Cache::get('property-cost'), 'dep' => Cache::get('property-dep')],
+            'auc' => ['count' => Cache::get('auc-total'), 'cost' => Cache::get('auc-cost'), 'dep' => Cache::get('auc-dep')],
+            'ffe' => ['count' => Cache::get('ffe-total'), 'cost' => Cache::get('ffe-cost'), 'dep' => Cache::get('ffe-dep')],
+            'machinery' => ['count' => Cache::get('machinery-total'), 'cost' => Cache::get('machinery-cost'), 'dep' => Cache::get('machinery-dep')],
             'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
         );
 

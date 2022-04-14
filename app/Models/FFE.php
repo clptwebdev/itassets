@@ -174,15 +174,15 @@ class FFE extends Model {
         }
 
         //Totals of the Assets
-        Cache::rememberForever('ffe_total', function() use ($ffe_total) {
+        Cache::rememberForever('ffe-total', function() use ($ffe_total) {
             return round($ffe_total);
         });
 
-        Cache::rememberForever('ffe_cost', function() use ($cost_total) {
+        Cache::rememberForever('ffe-cost', function() use ($cost_total) {
             return round($cost_total);
         });
 
-        Cache::rememberForever('ffe_dep', function() use ($dep_total) {
+        Cache::rememberForever('ffe-dep', function() use ($dep_total) {
             return round($dep_total);
         });
     }

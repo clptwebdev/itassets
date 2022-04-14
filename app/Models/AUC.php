@@ -156,15 +156,15 @@ class AUC extends Model {
         }
 
         //Totals of the Assets
-        Cache::rememberForever('auc_total', function() use ($auc_total) {
+        Cache::rememberForever('auc-total', function() use ($auc_total) {
             return round($auc_total);
         });
 
-        Cache::rememberForever('auc_cost', function() use ($cost_total) {
+        Cache::rememberForever('auc-cost', function() use ($cost_total) {
             return round($cost_total);
         });
 
-        Cache::rememberForever('auc_dep', function() use ($dep_total) {
+        Cache::rememberForever('auc-dep', function() use ($dep_total) {
             return round($dep_total);
         });
     }
