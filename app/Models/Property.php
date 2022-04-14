@@ -145,6 +145,7 @@ class Property extends Model {
 
         foreach($locations as $location)
         {
+            return dd($locations);
             $id = $location->id;
             /* The Cache Values for the Location */
             if(! Cache::has("property-L{$id}-total") &&
@@ -159,6 +160,8 @@ class Property extends Model {
             $cost_total += Cache::get("property-L{$id}-cost");
             $dep_total += Cache::get("property-L{$id}-dep");
         }
+
+
 
         //Totals of the Assets
         Cache::rememberForever('property_total', function() use ($property_total) {

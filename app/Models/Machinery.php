@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 
 class Machinery extends Model {
 
@@ -113,6 +114,124 @@ class Machinery extends Model {
         $query->whereHas('category', function($q) use ($category, $pivot) {
             $q->whereIn("{$pivot}.category_id", $category);
         });
+    }
+
+    //////////////////////////////////////////////
+    ////////////////Cache Functions///////////////
+    //////////////////////////////////////////////
+
+    public static function getCache($ids)
+    {
+        $count_total = 0;
+        $cost_total = 0;
+        $dep_total = 0;
+
+        $locations = Location::find($ids);
+
+        foreach($locations as $location)
+        {
+            $id = $location->id;
+            /* The Cache Values for the Location */
+            if(! Cache::has("machinery-L{$id}-total") &&
+                ! Cache::has("machinery-L{$id}-cost") &&
+                ! Cache::has("machinery-L{$id}-dep")
+            )
+            {
+                Machinery::updateLocationCache($location);
+            }
+
+            $count_total += Cache::get("machinery-L{$id}-total");
+            $cost_total += Cache::get("machinery-L{$id}-cost");
+            $dep_total += Cache::get("machinery-L{$id}-dep");
+        }
+
+        //Totals of the Assets
+        Cache::rememberForever('machinery_total', function() use ($count_total) {
+            return round($count_total);
+        });
+
+        Cache::rememberForever('machinery_cost', function() use ($cost_total) {
+            return round($cost_total);
+        });
+
+        Cache::rememberForever('machinery_dep', function() use ($dep_total) {
+            return round($dep_total);
+        });
+    }
+
+    public static function updateLocationCache(Location $location)
+    {
+        $loc_cost_total = 0;
+        $loc_dep_total = 0;
+        $id = $location->id;
+
+        $machineries = Machinery::whereLocationId($location->id)
+            ->select('purchased_cost', 'purchased_date', 'depreciation')
+            ->get()
+            ->map(function($item, $key) {
+                $item['depreciation_value'] = $item->depreciation_value();
+                return $item;
+            });
+
+        //Get the Total Amount of Assets available for this location and set it in Cache
+        $loc_total = $machineries->count();
+        Cache::rememberForever("machinery-L{$id}-total", function() use ($loc_total) {
+            return $loc_total;
+        });
+
+        foreach($machineries as $machinery)
+        {
+            $loc_cost_total += $machinery->purchased_cost;
+            $loc_dep_total += $machinery->depreciation_value;
+        }
+
+        /* The Cache Values for the Location */
+        Cache::set("machinery-L{$id}-cost", round($loc_cost_total));
+        Cache::set("machinery-L{$id}-dep", round($loc_dep_total));
+    }
+
+    public static function updateCache()
+    {
+        //The Variables holding the total of Assets available to the User
+        $count_total = 0;
+        $cost_total = 0;
+        $dep_total = 0;
+
+        foreach(Location::all() as $location)
+        {
+            $loc_cost_total = 0;
+            $loc_dep_total = 0;
+            $id = $location->id;
+
+            $machineries = FFE::whereLocationId($location->id)
+                ->select('purchased_cost', 'purchased_date', 'depreciation')
+                ->get()
+                ->map(function($item, $key) {
+                    $item['depreciation_value'] = $item->depreciation_value();
+                    return $item;
+                });
+
+            //Get the Total Amount of Assets available for this location and set it in Cache
+            $loc_total = $machineries->count();
+            Cache::rememberForever("machinery-L{$id}-total", function() use ($loc_total) {
+                return $loc_total;
+            });
+
+            //Add the total to the Total amount of Assets
+            $count_total += $loc_total;
+
+            foreach($machineries as $machinery)
+            {
+                $loc_cost_total += $machinery->purchased_cost;
+                $loc_dep_total += $machinery->depreciation_value;
+            }
+
+            /* The Cache Values for the Location */
+            Cache::set("machinery-L{$id}-cost", round($loc_cost_total));
+            $cost_total += $loc_cost_total;
+            Cache::set("machinery-L{$id}-dep", round($loc_dep_total));
+            $dep_total += $loc_dep_total;
+        }
     }
 
 }

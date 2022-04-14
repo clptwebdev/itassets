@@ -296,16 +296,18 @@ class HomeController extends Controller {
             Cache::set('user_id', auth()->user()->id);
         }
 
+        
+
         //Get the Users location which they have access to
         $locations = auth()->user()->locations;
         //Check to see if the cache has been set and exists
-        if(! Cache::has("property-total") &&
-            ! Cache::has("property-cost") &&
-            ! Cache::has("property-dep")
+        if(! Cache::has("property_total") &&
+            ! Cache::has("property_cost") &&
+            ! Cache::has("property_dep")
         )
         {
             /* This is to calculate all the assets for the individual schools and the grand total */
-            Property::getCache($locations->pluck('id'));
+            Property::getCache($locations->pluck('id')->toArray());
         }
 
         //Check to see if the cache has been set and exists
@@ -316,6 +318,26 @@ class HomeController extends Controller {
         {
             /* This is to calculate all the assets for the individual schools and the grand total */
             AUC::getCache($locations->pluck('id'));
+        }
+
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("ffes-total") &&
+            ! Cache::has("ffes-cost") &&
+            ! Cache::has("ffes-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            FFE::getCache($locations->pluck('id'));
+        }
+
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("machinery-total") &&
+            ! Cache::has("machinery-cost") &&
+            ! Cache::has("machinery-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            Machinery::getCache($locations->pluck('id'));
         }
 
         //Get the Users location which they have access to
@@ -346,6 +368,8 @@ class HomeController extends Controller {
             'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')],
             'property' => ['count' => Cache::get('property_total'), 'cost' => Cache::get('property_cost'), 'dep' => Cache::get('property_dep')],
             'auc' => ['count' => Cache::get('auc_total'), 'cost' => Cache::get('auc_cost'), 'dep' => Cache::get('auc_dep')],
+            'ffe' => ['count' => Cache::get('ffe_total'), 'cost' => Cache::get('ffe_cost'), 'dep' => Cache::get('ffe_dep')],
+            'machinery' => ['count' => Cache::get('machinery_total'), 'cost' => Cache::get('machinery_cost'), 'dep' => Cache::get('machinery_dep')],
             'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
         );
 

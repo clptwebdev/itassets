@@ -185,7 +185,7 @@ class AUC extends Model {
 
         //Get the Total Amount of Assets available for this location and set it in Cache
         $loc_total = $aucs->count();
-        Cache::rememberForever("property-L{$id}-total", function() use ($loc_total) {
+        Cache::rememberForever("auc-L{$id}-total", function() use ($loc_total) {
             return $loc_total;
         });
 
