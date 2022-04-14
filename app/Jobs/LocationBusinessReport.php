@@ -23,6 +23,9 @@ use App\Exports\BusinessExport;
 use App\Models\Location;
 use App\Models\Setting;
 
+use App\Notifications\SendBusinessReport;
+use App\Models\User;
+
 use \Carbon\Carbon;
 
 class LocationBusinessReport implements ShouldQueue {
@@ -32,12 +35,14 @@ class LocationBusinessReport implements ShouldQueue {
     public $location;
     protected $user;
     public $path;
+    public $route;
 
-    public function __construct(Location $location, $user, $path)
+    public function __construct(Location $location, $user, $path, $route)
     {
         $this->location = $location;
         $this->user = $user;
         $this->path = $path;
+        $this->route = $route;
     }
 
     public function handle()
@@ -45,6 +50,7 @@ class LocationBusinessReport implements ShouldQueue {
         $location = $this->location;
         $user = $this->user;
         $path = $this->path;
+        $route = $this->route;
 
         $threshold_setting = Setting::where('name', '=', 'asset_threshold')->first();
         $threshold = $threshold_setting->value ?? 0;
@@ -224,6 +230,7 @@ class LocationBusinessReport implements ShouldQueue {
 
         //Notify User that there report is complete
 
+        \Notification::route('mail', auth()->user()->email)->notifyNow(new SendBusinessReport(auth()->user(), $location, $route));
         //auth(->user()->notify(new App\Notifcations\SendBusinessReport))
 
         

@@ -180,7 +180,7 @@ class LocationController extends Controller {
         $url = "public/csv/{$path}";
         $route = "storage/csv/{$path}";
 
-        dispatch(new LocationBusinessReport($location, $user, $url))->afterResponse();
+        dispatch(new LocationBusinessReport($location, $user, $url, $route))->afterResponse();
         //Create Report
 
         $report = Report::create(['report' => $route, 'user_id' => $user->id]);

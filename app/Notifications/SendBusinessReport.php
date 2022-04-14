@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use App\Models\User;
+use App\Models\Location;
 
 class SendBusinessReport extends Notification
 {
@@ -16,9 +18,11 @@ class SendBusinessReport extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Location $location, $route)
     {
-        //
+        $this->route = $route;
+        $this->user = $user;
+        $this->location = $location;
     }
 
     /**
@@ -40,10 +44,16 @@ class SendBusinessReport extends Notification
      */
     public function toMail($notifiable)
     {
+        $user = $this->user;
+        $location = $this->location;
+        $route = $this->route;
+
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                    ->subject("Your Financial Report for {$location->name} has been completed")
+                    ->view("mail.report-complete", ['user' => $user, 'location' => $location, 'route' => $route])
+                    ->attach($route, [
+                        "mime" => "application/pdf"
+                    ]);
     }
 
     /**
