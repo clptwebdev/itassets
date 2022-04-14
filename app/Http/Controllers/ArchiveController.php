@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ArchivesPdf;
 use App\Jobs\AssetPdf;
 use App\Models\AUC;
 use App\Models\FFE;
@@ -95,71 +96,50 @@ class ArchiveController extends Controller {
 
     public function downloadPDF(Request $request)
     {
-        if(auth()->user()->cant('viewAll', Asset::class))
+        if(auth()->user()->cant('viewAll', Archive::class))
         {
             return ErrorController::forbidden(route('archives.index'), 'Unauthorised to Download Archives.');
 
         }
         $assets = array();
-        $found = Asset::select('name', 'id', 'asset_tag', 'serial_no', 'purchased_date', 'purchased_cost', 'warranty', 'audit_date', 'location_id', 'asset_model')->withTrashed()->whereIn('id', json_decode($request->assets))->with('supplier', 'location', 'model')->get();
+        $found = Archive::select('name', 'id', 'asset_model', 'serial_no', 'order_no', 'purchased_date', 'asset_tag', 'archived_cost', 'purchased_cost', 'warranty', 'location_id', 'supplier_id', 'created_at', 'created_user', 'user_id', 'super_id')->whereIn('id', json_decode($request->assets))->with('supplier', 'location')->orderBy('created_at', 'Desc')->get();
         foreach($found as $f)
         {
             $array = array();
             $array['name'] = $f->name ?? 'No Name';
-            $array['model'] = $f->model->name ?? 'N/A';
+            $array['model'] = $f->asset_model ?? 'N/A';
             $array['location'] = $f->location->name ?? 'Unallocated';
             $array['icon'] = $f->location->icon ?? '#666';
-            $array['asset_tag'] = $f->asset_tag ?? 'N/A';
-            if($f->model()->exists())
-            {
-                $array['manufacturer'] = $f->model->manufacturer->name ?? 'N/A';
-            } else
-            {
-                $array['manufacturer'] = 'N/A';
-            }
+            $array['manufacturer'] = $f->model->manufacturer->name ?? 'N/A';
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
+            $array['created_at'] = \Carbon\Carbon::parse($f->created_at)->format('d/m/Y') ?? 'N/A';
+            $array['updated_at'] = \Carbon\Carbon::parse($f->updated_at)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = '£' . $f->purchased_cost;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty ?? 'N/A';
-            $array['audit'] = \Carbon\Carbon::parse($f->audit_date)->format('d/m/Y') ?? 'N/A';
+            $array['archived_cost'] = $f->archived_cost;
+            $array['serial_no'] = $f->serial_no ?? 'N/A';
+            $array['asset_tag'] = $f->asset_tag ?? 'N/A';
+            $array['order_no'] = $f->order_no ?? 'N/A';
+            $array['requested'] = $f->requested->name ?? 'N/A';
+            $array['approved'] = $f->approved->name ?? 'N/A';
             $assets[] = $array;
         }
 
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = 'assets-' . $date;
+        $path = 'archives-' . $date;
 
-        AssetsPdf::dispatch($assets, $user, $path)->afterResponse();
+        ArchivesPdf::dispatch($assets, $user, $path)->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return to_route('assets.index')
+        return to_route('archives.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
-    }
-
-    public function downloadShowPDF(Asset $asset)
-    {
-        if(auth()->user()->cant('view', $asset))
-        {
-            return ErrorController::forbidden(route('archives.index'), 'Unauthorised to Download Archives.');
-
-        }
-
-        $user = auth()->user();
-
-        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        $path = "asset-{$asset->asset_tag}-{$date}";
-        AssetPdf::dispatch($asset, $user, $path)->afterResponse();
-        $url = "storage/reports/{$path}.pdf";
-        $report = Report::create(['report' => $url, 'user_id' => $user->id]);
-
-        return to_route('assets.show', $asset->id)
-            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
-            ->withInput();
     }
 
     public function restoreArchive(Archive $archive)
