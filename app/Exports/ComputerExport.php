@@ -208,8 +208,11 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getFont()->setSize(11)->setBold(1);
                 foreach($this->archived as $archived)
                 {
-                    dd($archived);
-                    $event->sheet->getDelegate()->getStyleByColumnAndRow('A', $archived, 'M', $archived)->getFill()->setStartColor('red');
+                    $cr = 'A' . $archived . ':' . 'M' . $archived;
+                    $event->sheet->getDelegate()->getStyle($cr)->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('DD4B39');
                 }
             },
         ];
