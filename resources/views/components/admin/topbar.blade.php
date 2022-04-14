@@ -147,16 +147,17 @@
                 </div>
             </li>
         @endcan
-        <li class="nav-item mx-1">
-            <a class="nav-link" href="{{route("documentation.index")}}">
-                <i class="fas fa-fw fa-folder" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                   title="Documentation"></i>
-                <span class="badge badge-primary badge-counter"><i class="fas fa-eye text-white"></i></span>
-            </a>
-        </li>
-        <div class="topbar-divider d-none d-sm-block"></div>
-
-        <!-- Nav Item - User Information -->
+        @if(auth()->user()->role->name != 'Temporary')
+            <li class="nav-item mx-1">
+                <a class="nav-link" href="{{route("documentation.index")}}">
+                    <i class="fas fa-fw fa-folder" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                       title="Documentation"></i>
+                    <span class="badge badge-primary badge-counter"><i class="fas fa-eye text-white"></i></span>
+                </a>
+            </li>
+            <div class="topbar-divider d-none d-sm-block"></div>
+    @endif
+    <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
