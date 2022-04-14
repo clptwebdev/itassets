@@ -230,11 +230,14 @@ class LocationBusinessReport implements ShouldQueue {
 
         //Notify User that there report is complete
 
+<<<<<<< HEAD
         \Notification::route('mail', auth()->user()->email)->notifyNow(new SendBusinessReport(auth()->user(), $location, $route));
         //auth(->user()->notify(new App\Notifcations\SendBusinessReport))
 
         
         
+=======
+>>>>>>> bb691c54b97c5a3ef5ae3dda7ec01b4f04883f1e
     }
 
 }

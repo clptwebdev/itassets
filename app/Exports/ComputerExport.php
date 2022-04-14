@@ -29,6 +29,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
 
     public function columnFormats(): array
     {
+        
         return [
             'A' => NumberFormat::FORMAT_TEXT,
             'B' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
@@ -49,24 +50,24 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
     public function __construct($assets)
     {
         $this->assets = $assets;
-         //Maths Calculations
-         $this->now = Carbon::now();
-         $this->startDate = Carbon::parse('09/01/' . $this->now->format('Y'));
-         $this->nextYear = Carbon::now()->addYear()->format('Y');
-         $this->nextStartDate = Carbon::parse('09/01/' . Carbon::now()->addYear()->format('Y'));
-         $this->endDate = Carbon::parse('08/31/' . $this->nextYear);
-         if(! $this->startDate->isPast())
-         {
-             $this->startDate->subYear();
-             $this->endDate->subYear();
-             $this->nextStartDate->subYear();
-         }
- 
-         $this->nbvYear1 = Carbon::parse($this->startDate->format('d-m-Y'))->subYear();
-         $this->nbvYear2 = Carbon::parse($this->nbvYear1->format('d-m-Y'))->subYear();
+        //Maths Calculations
+        $this->now = Carbon::now();
+        $this->startDate = Carbon::parse('09/01/' . $this->now->format('Y'));
+        $this->nextYear = Carbon::now()->addYear()->format('Y');
+        $this->nextStartDate = Carbon::parse('09/01/' . Carbon::now()->addYear()->format('Y'));
+        $this->endDate = Carbon::parse('08/31/' . $this->nextYear);
+        if(! $this->startDate->isPast())
+        {
+            $this->startDate->subYear();
+            $this->endDate->subYear();
+            $this->nextStartDate->subYear();
+        }
 
-         $this->row = 2;
-         $archived = [];
+        $this->nbvYear1 = Carbon::parse($this->startDate->format('d-m-Y'))->subYear();
+        $this->nbvYear2 = Carbon::parse($this->nbvYear1->format('d-m-Y'))->subYear();
+
+        $this->row = 2;
+        $this->archived = [];
     }
 
     public function headings(): array
@@ -110,7 +111,6 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         $nbv1 = 0;
         $nbv2 = 0;
 
-        
         foreach($this->assets as $asset)
         {
             $bf = $asset->depreciation_value_by_date($startDate);
@@ -168,7 +168,8 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
             $nbv2 += $asset->depreciation_value_by_date($nbvYear2);
             $object[] = $array;
 
-            if($asset->archive_cost != null){
+            if($asset->archive_cost != null)
+            {
                 $this->archived[] = $this->row;
             }
             $this->row++;
@@ -205,6 +206,10 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(12)->setBold(1);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getBorders()->getAllBorders()->setBorderStyle(true);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->getFont()->setSize(11)->setBold(1);
+                foreach($this->archived as $archived)
+                {
+                    $event->sheet->getDelegate()->getStyleByColumnAndRow($cellRange, $archived)->getFill()->setStartColor('red');
+                }
             },
         ];
     }
