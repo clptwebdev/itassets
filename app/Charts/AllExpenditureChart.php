@@ -39,7 +39,7 @@ class AllExpenditureChart extends BaseChart
         foreach($locations as $location){
             $location_values = [];
             foreach(array_reverse($years) as $id => $y){
-                if(!Cache::get('location-'.$location->id.'-'.$y)){
+                if(!Cache::get('location-business-'.$location->id.'-'.$y)){
                     $total = Cache::rememberForever('location-business-'.$location->id.'-'.$y, function () use($location, $y){
                         return round($location->business_expenditure($y));
                     });
