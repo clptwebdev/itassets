@@ -7,19 +7,22 @@
     </div>
 
     <!-- Sidebar - Brand -->
+
     <a class="d-flex flex-column align-items-center justify-content-center p-2 pt-0 pb-4"
-       href="{{ route('dashboard') }}">
+       href=" @if(!auth()->user()->isBusiness()){{ route('dashboard')  }}    @else {{ route('business')  }} @endif">
         <div id="app-logo">
             <x-application-logo/>
         </div>
     </a>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 @if(auth()->user()->role_id != 0)
     <!-- Nav Item - Dashboard -->
         <li class="nav-item @if(Request::url() == route('dashboard')) {{ 'active' }} @endif">
-            <a class="nav-link" href="{{ route('dashboard') }}">
+            <a class="nav-link"
+               href="@if(!auth()->user()->isBusiness()){{ route('dashboard')  }}    @else {{ route('business')  }} @endif">
                 <i class="fas fa-fw fa-tachometer-alt sidebar-icon"></i>
                 <span class="sidebar-title">Dashboard</span></a>
         </li>

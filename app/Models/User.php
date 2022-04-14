@@ -232,4 +232,9 @@ class User extends Authenticatable {
         }
     }
 
+    public function isBusiness()
+    {
+        return $this->role->name == 'Business Manager';
+    }
+
 }
