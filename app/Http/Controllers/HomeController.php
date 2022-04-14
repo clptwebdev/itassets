@@ -37,59 +37,7 @@ class HomeController extends Controller {
 
         return view('dashboard.business', compact('locations'));
     }
-    ////////////////////////////////////////
-    ////// business export Search Functions ////////
-    ////////////////////////////////////////
-    public function businessExport()
-    {
-        $assets = Asset::
-        select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'asset_model', 'donated')
-            ->get();
 
-        //Get Vehicles in the archived table
-        $assets_disposed = Archive::
-        select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
-            ->get();
-
-        $accessories = Accessory::
-        select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'depreciation_id', 'donated')
-            ->get();
-
-        //Get Vehicles in the archived table
-        $accessories_disposed = Archive::
-        select('name', 'asset_tag', 'purchased_cost', 'purchased_date', 'archived_cost', 'depreciation')
-            ->get();
-
-        $merged = collect([$accessories, $assets, $assets_disposed, $accessories_disposed]);
-        $computers = Collection::empty();
-        //foreach $model then Foreach $item Push to a single collection
-        foreach($merged as $merge)
-        {
-            foreach($merge as $item)
-            {
-                $computers->push($item);
-            }
-        }
-        $property = Property::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $ffe = FFE::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $auc = AUC::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $machines = Machinery::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $vehicle = Vehicle::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $components = Component::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $accessories = Accessory::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $miscellanea = Miscellanea::locationFilter(auth()->user()->locations->pluck('id'))->get();
-        $software = Software::locationFilter(auth()->user()->locations->pluck('id'))->get();
-
-        $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
-        \Maatwebsite\Excel\Facades\Excel::store(new BusinessExport($computers, $property, $ffe, $auc, $machines, $vehicle, $software), "/public/csv/business-ex-{$date}.xlsx");
-        $url = asset("storage/csv/business-ex-{$date}.xlsx");
-
-        return to_route('business')
-            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
-            ->withInput();
-
-
-    }
     ////////////////////////////////////////
     ////// Top Bar Search Functions ////////
     ////////////////////////////////////////

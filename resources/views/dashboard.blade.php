@@ -12,7 +12,7 @@
         <a href="{{ route('cache.clear')}}" class="btn btn-grey"><i class="fas fa-sync-alt"></i></a>
     </div>
 
-    @if(auth()->user()->role_id != 0)
+    @if(auth()->user()->role->name != 'Temporary')
         <!-- Asset stats -->
         <x-admin.asset-info/>
         {{-- <x-categories_status_info :statuses="$statuses" :category="$category"/> --}}
