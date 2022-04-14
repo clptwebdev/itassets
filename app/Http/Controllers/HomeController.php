@@ -249,9 +249,9 @@ class HomeController extends Controller {
         //Get the Users location which they have access to
         $locations = auth()->user()->locations;
         //Check to see if the cache has been set and exists
-        if(! Cache::has("property_total") &&
-            ! Cache::has("property_cost") &&
-            ! Cache::has("property_dep")
+        if(! Cache::has("property-total") &&
+            ! Cache::has("property-cost") &&
+            ! Cache::has("property-dep")
         )
         {
             /* This is to calculate all the assets for the individual schools and the grand total */
