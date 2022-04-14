@@ -29,7 +29,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
 
     public function columnFormats(): array
     {
-        
+
         return [
             'A' => NumberFormat::FORMAT_TEXT,
             'B' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
@@ -167,8 +167,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
             $nbv1 += $asset->depreciation_value_by_date($nbvYear1);
             $nbv2 += $asset->depreciation_value_by_date($nbvYear2);
             $object[] = $array;
-
-            if($asset->archive_cost != null)
+            if(strtolower(str_replace('App\\Models\\', '', get_class($asset))) == 'archive')
             {
                 $this->archived[] = $this->row;
             }
