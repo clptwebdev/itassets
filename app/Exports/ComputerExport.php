@@ -29,6 +29,7 @@ class ComputerExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
 
     public function columnFormats(): array
     {
+        
         return [
             'A' => NumberFormat::FORMAT_TEXT,
             'B' => NumberFormat::FORMAT_CURRENCY_GBP_SIMPLE,
