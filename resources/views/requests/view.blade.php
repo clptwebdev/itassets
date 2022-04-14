@@ -44,63 +44,68 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($requests as $request)
-                            <tr>
-                                <td class="text-center">
-                                    @if($request->type == 'disposal')
-                                        <i class="fas fa-trash text-coral"></i>
-                                    @elseif($request->type == 'transfer')
-                                        <i class="fas fa-exchange-alt text-green"></i>
-                                    @else
-                                        <i class="fas fa-user-plus text-lilac"></i>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($request->type != 'access')
-                                        @php
-                                            $m = "\\App\\Models\\".ucfirst($request->model_type);
-                                            $model = $m::find($request->model_id);
-                                        @endphp
-                                        {{ $model->name ?? $model->asset_tag ?? 'Unknown Asset' }}
-                                    @else
-                                        Asset Management System
-                                    @endif
-                                </td>
-                                <td>
-                                    @php($user = App\Models\User::find($request->user_id))
-                                    {{ $user->name ?? 'Unknown'}}
-                                </td>
-                                <td><small>{{ $request->notes }}</small></td>
-                                <td class="text-center">{{ \Carbon\Carbon::parse($request->date)->format('d-m-Y') }}</td>
-                                <td class="text-center">
-
-                                    @if($request->status == 1)
-                                        @php($super = App\Models\User::find($request->super_id))
-                                        <i class="fas fa-check-circle text-green pointer" data-bs-toggle="tooltip"
-                                           data-html="true"
-                                           title="Approved by {{$super->name}}<br>{{\Carbon\Carbon::parse($request->updated_at)->format('d M y')}}"></i>
-                                    @elseif($request->status == 2)
-                                        @php($super = App\Models\User::find($request->super_id))
-                                        <i class="fas fa-times-circle text-coral pointer" data-bs-toggle="tooltip"
-                                           data-html="true"
-                                           title="Denied by {{$super->name}}<br>{{\Carbon\Carbon::parse($request->updated_at)->format('d M y')}}"></i>
-                                    @else
-                                        @if($request->type != 'access')
-                                            <a class="m-1" href="{{ route('request.handle', [$request->id, '1'])}}">
-                                                <i class="fas fa-check-circle text-green"></i></a>
-                                            <a class="m-1" href="{{ route('request.handle', [$request->id, '2'])}}"><i
-                                                    class="fas fa-times-circle text-coral"></i></a>
+                        @if($requests->count() != 0)
+                            @foreach($requests as $request)
+                                <tr>
+                                    <td class="text-center">
+                                        @if($request->type == 'disposal')
+                                            <i class="fas fa-trash text-coral"></i>
+                                        @elseif($request->type == 'transfer')
+                                            <i class="fas fa-exchange-alt text-green"></i>
                                         @else
-                                            <a class="m-1 accessBtn" href="#" data-id="{{$request->id}}"
-                                               data-name="{{$user->name}}"><i
-                                                    class="fas fa-check-circle text-green"></i></a>
-                                            <a class="m-1" href="{{ route('request.handle', [$request->id, '2'])}}"><i
-                                                    class="fas fa-times-circle text-coral"></i></a>
+                                            <i class="fas fa-user-plus text-lilac"></i>
                                         @endif
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
+                                    </td>
+                                    <td>
+                                        @if($request->type != 'access')
+                                            @php
+                                                $m = "\\App\\Models\\".ucfirst($request->model_type);
+                                                $model = $m::find($request->model_id);
+                                            @endphp
+                                            {{ $model->name ?? $model->asset_tag ?? 'Unknown Asset' }}
+                                        @else
+                                            Asset Management System
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @php($user = App\Models\User::find($request->user_id))
+                                        {{ $user->name ?? 'Unknown'}}
+                                    </td>
+                                    <td><small>{{ $request->notes }}</small></td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($request->date)->format('d-m-Y') }}</td>
+                                    <td class="text-center">
+
+                                        @if($request->status == 1)
+                                            @php($super = App\Models\User::find($request->super_id))
+                                            <i class="fas fa-check-circle text-green pointer" data-bs-toggle="tooltip"
+                                               data-html="true"
+                                               title="Approved by {{$super->name}}<br>{{\Carbon\Carbon::parse($request->updated_at)->format('d M y')}}"></i>
+                                        @elseif($request->status == 2)
+                                            @php($super = App\Models\User::find($request->super_id))
+                                            <i class="fas fa-times-circle text-coral pointer" data-bs-toggle="tooltip"
+                                               data-html="true"
+                                               title="Denied by {{$super->name}}<br>{{\Carbon\Carbon::parse($request->updated_at)->format('d M y')}}"></i>
+                                        @else
+                                            @if($request->type != 'access')
+                                                <a class="m-1" href="{{ route('request.handle', [$request->id, '1'])}}">
+                                                    <i class="fas fa-check-circle text-green"></i></a>
+                                                <a class="m-1" href="{{ route('request.handle', [$request->id, '2'])}}"><i
+                                                        class="fas fa-times-circle text-coral"></i></a>
+                                            @else
+                                                <a class="m-1 accessBtn" href="#" data-id="{{$request->id}}"
+                                                   data-name="{{$user->name}}"><i
+                                                        class="fas fa-check-circle text-green"></i></a>
+                                                <a class="m-1" href="{{ route('request.handle', [$request->id, '2'])}}"><i
+                                                        class="fas fa-times-circle text-coral"></i></a>
+                                            @endif
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <td colspan="10" class="text-center">No Requests Returned For
+                                                                 Manager {{auth()->user()->name}}</td>
+                        @endif
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-between align-content-center">
