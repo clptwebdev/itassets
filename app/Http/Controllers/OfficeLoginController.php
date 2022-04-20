@@ -71,15 +71,9 @@ class OfficeLoginController extends Controller {
 
         if(session()->has('url.intended'))
         {
+
             return redirect(session('url.intended'));
 
-        } else if(! $authUser->isBusiness())
-        {
-            return to_route('dashboard');
-        } else
-        {
-
-            return to_route('business');
         }
 
 

@@ -28,8 +28,14 @@ class HomeController extends Controller {
 
     public function index()
     {
-        //return dd($assets[0]);
-        return view('dashboard');
+        if(auth()->user()->isBusiness())
+        {
+            return to_route('business');
+        } else
+        {
+            return view('dashboard');
+        }
+
 
     }
 
