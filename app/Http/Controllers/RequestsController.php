@@ -42,7 +42,7 @@ class RequestsController extends Controller {
         ]);
 
         //Notify by email (change for new system elliot)
-        $admins = User::globalAdmins()->get();
+        $admins = User::globalAdmins();
         if(auth()->user()->manager_id != null || auth()->user()->manager_id != 0)
         {
             Mail::to(auth()->user()->manager->email)->send(new \App\Mail\AccessRequest(auth()->user()->manager, auth()->user()));
