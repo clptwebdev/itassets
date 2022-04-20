@@ -44,7 +44,7 @@ class UserController extends Controller {
         {
             return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Create Users.');
         }
-        $roles = Role::all();
+        $roles = Role::significance(auth()->user());
 
         $locations = auth()->user()->locations;
 
@@ -92,12 +92,19 @@ class UserController extends Controller {
     {
         if(auth()->user()->cant('update', $user))
         {
-            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Edit User.');
+            return ErrorController::forbidden(route('users.index'), 'Unauthorised to Edit User.');
         }
-        $roles = Role::significance($user);
-        $locations = auth()->user()->locations;
+        if(auth()->user()->role->significance >= $user->role->significance)
+        {
+            $roles = Role::significance(auth()->user());
+            $locations = auth()->user()->locations;
 
-        return view('users.edit', compact('user', 'locations', 'roles'));
+            return view('users.edit', compact('user', 'locations', 'roles'));
+        } else
+        {
+            return ErrorController::forbidden(route('users.index'), 'Unauthorised to Edit This User (Incorrect Significance)');
+        }
+
 
     }
 

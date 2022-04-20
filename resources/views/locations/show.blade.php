@@ -27,12 +27,12 @@
                         class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
             @endcan
             @can('view', $location)
-                <a href="{{ route('location.showPdf', $location->id)}}"
+                <a href="{{ route('business.location.export', $location->id)}}"
                    class="d-none d-sm-inline-block btn btn-sm bg-blue text-white shadow-sm loading"><i
                         class="fas fa-file-excel fa-sm text-white-50"></i> Generate Finance Report</a>
             @endcan
             @can('view', $location)
-                <a href="{{ route('business.location.export', $location->id)}}"
+                <a href="{{ route('location.show', $location->id)}}"
                    class="d-none d-sm-inline-block btn btn-sm bg-blue text-white shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
             @endcan

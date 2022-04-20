@@ -102,10 +102,12 @@
                                     @if($archive->requested()->exists() && $archive->requested->photo()->exists())
                                         <img class="img-profile rounded-circle"
                                              src="{{ asset($archive->requested->photo->path) ?? asset('images/profile.png') }}"
-                                             width="50px" title="{{ $archive->requested->name ?? 'Unknown' }}">
+                                             width="50px" title="{{ $archive->requested->name ?? 'Unknown' }}"
+                                             alt='Profile Picture {{$archive->requested->name}}'>
                                     @else
                                         <img class="img-profile rounded-circle" src="{{ asset('images/profile.png') }}"
-                                             width="50px" title="{{ $archive->requested->name ?? 'Unknown' }}">
+                                             width="50px" title="{{ $archive->requested->name ?? 'Unknown' }}"
+                                             alt='Profile Picture {{ $archive->requested->name}}'>
                                     @endif
                                     <small>{{ \Carbon\Carbon::parse($archive->created_at)->format("d/m/Y") }}</small>
                                 </td>
@@ -113,10 +115,12 @@
                                     @if($archive->approved()->exists() && $archive->approved->photo()->exists())
                                         <img class="img-profile rounded-circle"
                                              src="{{ asset($archive->approved->photo->path) ?? asset('images/profile.png') }}"
-                                             width="50px" title="{{ $archive->approved->name ?? 'Unknown' }}">
+                                             width="50px" title="{{ $archive->approved->name ?? 'Unknown' }}"
+                                             alt='Profile Picture {{ $archive->approved->name}}'>
                                     @else
                                         <img class="img-profile rounded-circle" src="{{ asset('images/profile.png') }}"
-                                             width="50px" title="{{ $archive->approved->name ?? 'Unknown' }}">
+                                             width="50px" title="{{ $archive->approved->name ?? 'Unknown' }}"
+                                             alt='Profile Picture {{ $archive->approved->name}}'>
                                     @endif
                                     <small>{{ \Carbon\Carbon::parse($archive->updated_at)->format("d/m/Y") }}</small>
                                 </td>

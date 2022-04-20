@@ -1163,13 +1163,13 @@ class RoleBoot implements ShouldQueue {
             'model' => 'Component'], [
             "Create" => 0,
             "update" => 0,
-            "view" => 1,
+            "view" => 0,
             "delete" => 0,
             "archive" => 0,
             "transfer" => 0,
             "request" => 0,
             "spec_reports" => 0,
-            "fin_reports" => 1,
+            "fin_reports" => 0,
         ]);
         Permission::updateOrCreate([
             'role_id' => $business_manager->id,

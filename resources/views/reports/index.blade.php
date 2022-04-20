@@ -37,11 +37,23 @@
                             <tr>
                                 <td>
                                     @if(file_exists($report->report))
+                                        @if(str_contains( $report->report ,'reports' ))
+                                            @php $name = str_replace('storage/reports/' , '' ,$report->report);@endphp
+                                        @endif
+                                        @if(str_contains( $report->report ,'csv' ))
+                                            @php $name = str_replace('storage/csv/' , '' ,$report->report);@endphp
+                                        @endif
                                         <a href="{{ asset($report->report)}}" target='_blank'
-                                           title="New">{{$report->report}}</a>
+                                           title="New">{{$name ??$report->report }}</a>
                                     @else
+                                        @if(str_contains( $report->report ,'reports' ))
+                                            @php $name = str_replace('storage/reports/' , '' ,$report->report);@endphp
+                                        @endif
+                                        @if(str_contains( $report->report ,'csv' ))
+                                            @php $name = str_replace('storage/csv/' , '' ,$report->report);@endphp
+                                        @endif
                                         @if(\Carbon\Carbon::now()->floatDiffInMinutes($report->created_at) < 15)
-                                            {!! $report->report.' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' !!}
+                                            {!! $name .' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' !!}
                                         @else
                                             <span class='text-coral'> {{substr($report->report,16)}} <i
                                                     class='fas fa-times'></i></span>

@@ -184,9 +184,11 @@
                 </div>
                 @if(auth()->user()->photo()->exists())
                     <img class="img-profile rounded-circle"
-                         src="{{ asset(auth()->user()->photo->path) ?? asset('images/profile.png') }}">
+                         src="{{ asset(auth()->user()->photo->path) ?? asset('images/profile.png') }}"
+                         alt='Profile Picture'>
                 @else
-                    <img class="img-profile rounded-circle" src="{{ asset('images/profile.png') }}">
+                    <img class="img-profile rounded-circle" src="{{ asset('images/profile.png') }}"
+                         alt='Profile Picture'>
                 @endif
             </a>
             <!-- Dropdown - User Information -->

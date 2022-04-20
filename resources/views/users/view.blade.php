@@ -97,21 +97,29 @@
                                                 <a href="{{ route('users.show', $user->id) }}" class="dropdown-item">View</a>
                                             @endcan
                                             @can('update', $user)
-                                                <a href="{{ route('users.edit', $user->id) }}" class="dropdown-item">Edit</a>
+                                                @if(auth()->user()->role->significance >= $user->role->significance)
+                                                    <a href="{{ route('users.edit', $user->id) }}"
+                                                       class="dropdown-item">Edit</a>
+                                                @endcan
                                             @endcan
                                             @can('update', $user)
                                                 <a id='Manager' href="#" data-bs-toggle='modal'
                                                    data-bs-target='#managerModal' class="dropdown-item"
                                                    data-id='{{$user->id}}'>Manager
                                                                            Assignment</a>
-                                            @endcan
+                                            @endif
+
                                             @can('delete', $user)
-                                                <form id="form{{$user->id}}"
-                                                      action="{{ route('users.destroy', $user->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a class="deleteBtn dropdown-item" href="#" data-id="{{$user->id}}">Delete</a>
-                                                </form>
+                                                @if(auth()->user()->role->significance >= $user->role->significance)
+                                                    <form id="form{{$user->id}}"
+                                                          action="{{ route('users.destroy', $user->id) }}"
+                                                          method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <a class="deleteBtn dropdown-item" href="#"
+                                                           data-id="{{$user->id}}">Delete</a>
+                                                    </form>
+                                                @endcan
                                             @endcan
                                         </div>
                                     </div>

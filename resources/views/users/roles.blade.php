@@ -48,8 +48,9 @@
                                                 <div class="dropdown-header">User Options:</div>
                                                 <a class="dropdown-item"
                                                    href="{{ route('users.show', $user->id)}}">View</a>
-                                                <a class="dropdown-item"
-                                                   href="{{ route('users.edit', $user->id)}}">Edit</a>
+                                                @if(auth()->user()->role->significance >= $user->role->significance)
+                                                    <a class="dropdown-item" href="{{ route('users.edit', $user->id)}}">Edit</a>
+                                                @endcan
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item permission" data-id="{{$user->id}}"
                                                    data-name="{{$user->name}}" href="#">Location Permissions</a>

@@ -14,7 +14,7 @@ class ComponentPolicy {
 
     public function __construct()
     {
-        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Comment')->first();
+        $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Component')->first();
     }
 
     public function viewAll(User $user)
