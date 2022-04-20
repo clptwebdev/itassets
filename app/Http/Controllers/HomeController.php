@@ -34,7 +34,7 @@ class HomeController extends Controller {
             return view('dashboard.business', compact('locations'));
         } else
         {
-            return view('dashboard');
+            return view('dashboard', compact('locations'));
         }
 
 
