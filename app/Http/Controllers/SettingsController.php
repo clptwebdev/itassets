@@ -46,7 +46,7 @@ class SettingsController extends Controller {
         $locations = Location::all();
         $models = $this->getModels();
         unset($models[array_search('Permission', $models)]);
-        $roles = Role::all();
+        $roles = Role::significance(auth()->user());
 
         return view('settings.view', [
             "users" => $users,

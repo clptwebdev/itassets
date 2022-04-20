@@ -26,21 +26,25 @@
                         <ul id="tab-bar" class="nav nav-tabs">
 
                             <li class="nav-item">
-                                <a class="nav-link active" id="location-tab" data-bs-toggle="tab" href="#location" role="tab"
-                                aria-controls="home" aria-selected="true">Custom Export</a>
+                                <a class="nav-link active" id="location-tab" data-bs-toggle="tab" href="#location"
+                                   role="tab" aria-controls="home" aria-selected="true">Custom Export</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="broadband-tab" data-bs-toggle="tab" href="#broadband" role="tab"
-                                aria-controls="home" aria-selected="true">User Roles</a>
+                                   aria-controls="home" aria-selected="true">User Roles</a>
                             </li>
                             @can('update' , \App\Models\Setting::class)
                                 <li class="nav-item">
                                     <a class="nav-link" id="custom-tab" data-bs-toggle="tab" href="#custom" role="tab"
-                                    aria-controls="home" aria-selected="true">Business Settings</a>
+                                       aria-controls="home" aria-selected="true">Business Settings</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="custom-tab" data-bs-toggle="tab" href="#custom" role="tab"
-                                    aria-controls="home" aria-selected="true">IT Settings</a>
+                                       aria-controls="home" aria-selected="true">IT Settings</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="developer-tab" data-bs-toggle="tab" href="#developer"
+                                       role="tab" aria-controls="home" aria-selected="true">Developer Settings</a>
                                 </li>
                             @endcan
                         </ul>
@@ -48,66 +52,63 @@
                         <div class="tab-content border-left border-right border-bottom border-gray" id="myTabContent">
                             <div class="tab-content " id="myTabContent">
                                 <div class="tab-pane fade show p-2 pt-4 active" id="location" role="tabpanel"
-                                    aria-labelledby="location-tab">
+                                     aria-labelledby="location-tab">
                                     <div class="row">
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
-                                            <h3 class="text-primary py-2">Select the button below for custom exports.</h3>
+                                            <h3 class="text-primary py-2">Select the button below for custom
+                                                                          exports.</h3>
                                             <a data-bs-toggle="modal" data-bs-target="#exportModal"
-                                            class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"> Exports Items Here</a>
+                                               class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"> Exports
+                                                                                                               Items
+                                                                                                               Here</a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade p-2 pt-4" id="broadband" role="tabpanel" aria-labelledby="broadband-tab">
+                                <div class="tab-pane fade p-2 pt-4" id="broadband" role="tabpanel"
+                                     aria-labelledby="broadband-tab">
                                     <div class="row">
                                         <div class="col-12 ">
                                             <div class='row justify-content-start m-1 py-2'>
 
                                                 <div class="mb-4 row">
                                                     <div class="col-8">
-                                                        <h4 class='text-blue'>Creating a new Role</h4>
-                                                        <p class='text-muted'>Click the button below to create new role to assign to a
-                                                                            User.</p>
-                                                        <a data-bs-toggle="modal" data-bs-target="#roleAddModal"
-                                                        class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
-                                                                class="fas fa-plus fa-sm pl-1 pr-1"></i> Create a new Role</a>
-                                                        <a data-bs-toggle="modal" data-bs-target="#roleDeleteModal"
-                                                        class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
-                                                                class="fas fa-minus fa-sm pl-1 pr-1"></i> Remove a Role</a>
+                                                        <h4 class='text-blue'>Assigning a new Role</h4>
                                                         <a data-bs-toggle="modal" data-bs-target="#roleSyncModal"
-                                                        class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                                                                class="fas fa-circle-notch fa-sm pl-1 pr-1"></i> Assign a Role to a user</a>
-                                                        <a href='{{route('role.boot')}}'
-                                                        class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                                                                class="fas fa-plus fa-sm pl-1 pr-1"></i>Create default Roles</a>
+                                                           class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                                                                class="fas fa-circle-notch fa-sm pl-1 pr-1"></i> Assign
+                                                                                                                 a Role
+                                                                                                                 to a
+                                                                                                                 user</a>
                                                     </div>
                                                     <div class="col-4">
                                                         <table>
                                                             <thead>
-                                                                <tr>
-                                                                    <th colspan="2">Table Key</th>
-                                                                </tr>
+                                                            <tr>
+                                                                <th colspan="2">Table Key</th>
+                                                            </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr>
-                                                                    <td><span class="badge bg-success">7</span></td>
-                                                                    <td><small>Full Read, Write and Delete Access</small></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><span class="badge bg-warning">6</span></td>
-                                                                    <td><small>Read and Write Access</small></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><span class="badge bg-warning">5</span></td>
-                                                                    <td><small>Read and Delete Access</small></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><span class="badge bg-secondary">4</span></td>
-                                                                    <td><small>Read Access Only</small></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><span class="badge bg-danger">0</span></td>
-                                                                    <td><small>No Access</small></td>
-                                                                </tr>
+                                                            <tr>
+                                                                <td><span class="badge bg-success">7</span></td>
+                                                                <td><small>Full Read, Write and Delete Access</small>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><span class="badge bg-warning">6</span></td>
+                                                                <td><small>Read and Write Access</small></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><span class="badge bg-warning">5</span></td>
+                                                                <td><small>Read and Delete Access</small></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><span class="badge bg-secondary">4</span></td>
+                                                                <td><small>Read Access Only</small></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><span class="badge bg-danger">0</span></td>
+                                                                <td><small>No Access</small></td>
+                                                            </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -125,7 +126,9 @@
                                                     <tbody>
                                                     @foreach($models as $model)
                                                         <tr>
-                                                            <td><small>{{ Illuminate\Support\Str::ucfirst($model)}}</small></td>
+                                                            <td>
+                                                                <small>{{ Illuminate\Support\Str::ucfirst($model)}}</small>
+                                                            </td>
                                                             @foreach($roles as $role)
                                                                 <td class="text-center">
                                                                     @php
@@ -147,36 +150,78 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade p-2 pt-4" id="custom" role="tabpanel" aria-labelledby="custom-tab">
+                                <div class="tab-pane fade p-2 pt-4" id="custom" role="tabpanel"
+                                     aria-labelledby="custom-tab">
                                     <div class="row">
                                         <div class="col-12 ">
                                             <h4 class='text-blue'>Business Settings</h4>
-                                           {{--  @can('create' , \App\Models\Setting::class)
-                                                <p class='text-muted'>Click the button below to generate the default settings.</p>
-                                                <a href='{{route('setting.boot')}}'
-                                                class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                                                        class="fas fa-plus fa-sm pl-1 pr-1"></i>Create Default Settings</a>
-                                                <a data-bs-toggle='modal' data-bs-target='#settingModal'
-                                                class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
-                                                        class="fas fa-plus fa-sm pl-1 pr-1"></i>Create a New Settings</a>
-                                            @endcan --}}
+                                            {{--  @can('create' , \App\Models\Setting::class)
+                                                 <p class='text-muted'>Click the button below to generate the default settings.</p>
+                                                 <a href='{{route('setting.boot')}}'
+                                                 class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                                                         class="fas fa-plus fa-sm pl-1 pr-1"></i>Create Default Settings</a>
+                                                 <a data-bs-toggle='modal' data-bs-target='#settingModal'
+                                                 class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
+                                                         class="fas fa-plus fa-sm pl-1 pr-1"></i>Create a New Settings</a>
+                                             @endcan --}}
 
                                             <h5 class='text-blue'>Assets</h5>
                                             <x-form.layout action="#" method="POST">
                                                 <div class='form-group m-2'>
                                                     <label for="asset_threshold">Asset Threshold</label>
-                                                    <input value='' name='asset_threshold' type="text" class="form-control">
-                                                    <small class="text-muted">** The Threshold an Asset has to reach for it be calculated in the yearly figures</small>
+                                                    <input value='' name='asset_threshold' type="text"
+                                                           class="form-control">
+                                                    <small class="text-muted">** The Threshold an Asset has to reach for
+                                                                              it be calculated in the yearly
+                                                                              figures</small>
                                                 </div>
                                                 <div class='form-group m-2'>
                                                     <label for="default_depreciation">Default Depreciation</label>
-                                                    <input value='' name='default_depreciation' type="text" class="form-control">
-                                                    <small class="text-muted">** If no depreciation is set when adding/uploading Assets, the default shall be (In Years)</small>
+                                                    <input value='' name='default_depreciation' type="text"
+                                                           class="form-control">
+                                                    <small class="text-muted">** If no depreciation is set when
+                                                                              adding/uploading Assets, the default shall
+                                                                              be (In Years)</small>
                                                 </div>
                                                 <div class='d-flex justify-content-center mb-2'>
-                                                    <x-buttons.submit class="justify-content-center">Submit</x-buttons.submit>
+                                                    <x-buttons.submit class="justify-content-center">Submit
+                                                    </x-buttons.submit>
                                                 </div>
                                             </x-form.layout>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade p-2 pt-4" id="developer" role="tabpanel"
+                                     aria-labelledby="developer-tab">
+                                    <div class="row">
+                                        <div class="col-12 ">
+                                            <h4 class='text-blue m-2'>Developer Settings</h4>
+                                            <hr class='rule'>
+                                            <h5 class='text-blue mx-4'>Creating a new Role</h5>
+                                            <p class='text-muted'>Click the button below to create new role to assign to
+                                                                  a
+                                                                  User.</p>
+                                            <a data-bs-toggle="modal" data-bs-target="#roleAddModal"
+                                               class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
+                                                    class="fas fa-plus fa-sm pl-1 pr-1"></i> Create a new Role</a>
+                                            <a data-bs-toggle="modal" data-bs-target="#roleDeleteModal"
+                                               class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+                                                    class="fas fa-minus fa-sm pl-1 pr-1"></i> Remove a Role</a>
+                                            <a href='{{route('role.boot')}}'
+                                               class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                                                    class="fas fa-plus fa-sm pl-1 pr-1"></i>Create default Roles</a>
+                                            <h5 class='text-blue mx-4 my-3'>Custom Settings</h5>
+                                            @can('create' , \App\Models\Setting::class)
+                                                <p class='text-muted'>Click the button below to generate the default
+                                                                      settings.</p>
+                                                <a href='{{route('setting.boot')}}'
+                                                   class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                                                        class="fas fa-plus fa-sm pl-1 pr-1"></i>Create Default Settings</a>
+                                                <a data-bs-toggle='modal' data-bs-target='#settingModal'
+                                                   class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
+                                                        class="fas fa-plus fa-sm pl-1 pr-1"></i>Create a New
+                                                                                                Settings</a>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>
