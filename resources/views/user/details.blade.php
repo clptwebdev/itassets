@@ -25,13 +25,7 @@
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Change Password</a>
             </div>
         </div>
-        @if(session('danger_message'))
-            <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-        @endif
-
-        @if(session('success_message'))
-            <div class="alert alert-success"> {!! session('success_message')!!} </div>
-        @endif
+        <x-handlers.alerts/>
         <section>
             <p class="mb-4">Adding a new Asset to the asset management system. Enter the following information and
                             click
@@ -41,17 +35,6 @@
                 <div class="col-12">
                     <div class="card shadow h-100">
                         <div class="card-body">
-
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-
                             @csrf
 
                             <h3 class="h6 text-center mb-3">User Information</h3>
