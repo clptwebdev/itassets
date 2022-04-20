@@ -182,6 +182,26 @@ class Location extends Model {
 
     }
 
+    public function business_expenditure($year)
+    {
+        $expenditure = 0;
+        $assets = $this->assets()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $accessories = $this->accessories()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $property = $this->property()->whereYear('purchased_date', $year)->sum('purchased_cost');
+        $auc = $this->auc()->whereYear('purchased_date', $year)->sum('purchased_cost');
+        $ffe = $this->ffe()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $machinery = $this->machinery()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $vehicle = $this->vehicle()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $software = $this->software()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        
+        $total = $assets + $accessories + $property + $auc + $ffe + $machinery + $vehicle +$software;
+        $expenditure += $total;
+
+
+        return $expenditure;
+
+    }
+
     public function donations($year)
     {
         $donations = 0;

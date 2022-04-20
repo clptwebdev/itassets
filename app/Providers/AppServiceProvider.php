@@ -68,6 +68,7 @@ class AppServiceProvider extends ServiceProvider {
             \App\Charts\DepChart::class,
             \App\Charts\DepreciationChart::class,
             \App\Charts\ExpenditureChart::class,
+            \App\Charts\AllExpenditureChart::class,
             \App\Charts\TotalExpenditure::class,
         ]);
     }

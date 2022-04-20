@@ -17,7 +17,7 @@
             <div class="dropdown d-inline">
                 <a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Download Report
+                    Download Trust Report
                 </a>
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -221,7 +221,7 @@
         <div class="row m-2">
             <div class="col-12  mb-4">
                 <div class="card shadow h-100 p-4">
-                    <div id="expenditure_chart" class="chart"></div>
+                    <div id="all_expenditure_chart" class="chart"></div>
                 </div>
             </div>
             {{-- Expenditure --}}
@@ -325,8 +325,8 @@
         const device = legend = (screen.width < 768) ? false : true; //when viewport will be under 575px
 
         const expenditure = new Chartisan({
-            el: '#expenditure_chart',
-            url: `@chart('expenditure_chart')`,
+            el: '#all_expenditure_chart',
+            url: `@chart('all_expenditure_chart')`,
             // You can also pass the data manually instead of the url:
             // data: { ... }
             hooks: new ChartisanHooks()
