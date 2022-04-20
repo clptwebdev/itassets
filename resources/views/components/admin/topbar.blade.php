@@ -120,6 +120,14 @@
                                         <div class="icon-circle bg-info">
                                             <i class="fas fa-tint text-white"></i>
                                         </div>
+                                    @elseif($log->loggable_type == "manufacturer")
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-building text-white"></i>
+                                        </div>
+                                    @elseif($log->loggable_type == "asset")
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-laptop text-white"></i>
+                                        </div>
                                     @else
                                         <div class="icon-circle bg-primary">
                                             <i class="fas fa-file-alt text-white"></i>
