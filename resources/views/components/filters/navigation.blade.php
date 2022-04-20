@@ -115,17 +115,18 @@
         </div>
     </div>
 
-    <div id="sortBar" class="d-none d-lg-inline-block col-12 col-lg-8">
+    <div id="sortBar" class="d-none d-lg-inline-block col-12 col-lg-8 pointer">
         <form class="form-inline w-100" method="POST" action="{{ route($route.'.filter')}}">
             @csrf
-            <label class="my-1 mr-2"><i class="fas fa-list-ol"></i></label>
-            <select class="form-control mr-2" name="limit">
+            <label class="my-1 mr-2 pointer"><i class="fas fa-list-ol"></i></label>
+            <select class="form-control mr-2 pointer" name="limit">
                 <option value="25" @if(session($relations.'_limit') == 25) selected @endif>25</option>
                 <option value="50" @if(session($relations.'_limit') == 50) selected @endif>50</option>
-                <option value="100" @if(session($relations.'_limit') == 100) selected @endif>100</option>
+                <option value="100" @if(session($relations.'_limit') == 100) selected @endif>100
+                </option>
             </select>
-            <label class="my-1 mr-2"><i class="fas fa-sort"></i></label>
-            <select class="form-control mr-2" name="orderby">
+            <label class="my-1 mr-2 pointer"><i class="fas fa-sort"></i></label>
+            <select class="form-control mr-2 pointer" name="orderby">
                 {{-- Check to see if the Model has a column name --}}
                 @if(Schema::hasColumn("{$table}",'name'))
                     <option value="name asc"
