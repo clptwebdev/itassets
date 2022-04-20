@@ -371,8 +371,7 @@
                            href="{{ route('status.index')}}">Status Fields</a>
                     @endcan
                     @can('viewAll' , \App\Models\Setting::class)
-                        <a id="export"
-                           class="collapse-item  @if(Request::url() == route('settings.view')) {{ 'font-weight-bold text-white' }} @endif"
+                        <a class="collapse-item  @if(Request::url() == route('settings.view')) {{ 'font-weight-bold text-white' }} @endif"
                            href="{{route("settings.view")}}"> Settings page </a>
                     @endcan
                     @can('view' , \App\Models\Backup::class)

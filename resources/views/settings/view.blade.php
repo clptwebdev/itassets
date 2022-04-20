@@ -137,7 +137,9 @@
                                             </div>
                                         </div>
                                         <div class='d-flex justify-content-center mb-2'>
-                                            <x-buttons.submit class="justify-content-center">Submit</x-buttons.submit>
+                                            <x-buttons.submit class="justify-content-center bg-success text-white">
+                                                Submit
+                                            </x-buttons.submit>
                                         </div>
                                     </x-form.layout>
                                     <hr class='w-75 m-auto'>
