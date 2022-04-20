@@ -155,39 +155,31 @@
                                 <div class="tab-pane fade p-2 pt-4" id="custom" role="tabpanel"
                                      aria-labelledby="custom-tab">
                                     <div class="row">
-                                        <div class="col-12 ">
-                                            <h4 class='text-blue'>Business Settings</h4>
-                                            {{--  @can('create' , \App\Models\Setting::class)
-                                                 <p class='text-muted'>Click the button below to generate the default settings.</p>
-                                                 <a href='{{route('setting.boot')}}'
-                                                 class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                                                         class="fas fa-plus fa-sm pl-1 pr-1"></i>Create Default Settings</a>
-                                                 <a data-bs-toggle='modal' data-bs-target='#settingModal'
-                                                 class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
-                                                         class="fas fa-plus fa-sm pl-1 pr-1"></i>Create a New Settings</a>
-                                             @endcan --}}
+                                        <div class="col-12 "> 
+                                            <h4 class='text-blue text-center'>Business Settings</h4>
 
-                                            <h5 class='text-blue'>Assets</h5>
-                                            <x-form.layout action="#" method="POST">
-                                                <div class='form-group m-2'>
-                                                    <label for="asset_threshold">Asset Threshold</label>
-                                                    <input value='' name='asset_threshold' type="text"
+                                            <h5 class='text-blue mb-4'>Assets</h5>
+                                            <x-form.layout action="{{route('update.business.settings')}}" method="POST">
+                                                <div class='form-group mb-4'>
+                                                    <?php $threshold = \App\Models\Setting::whereName('asset_threshold')->first();?>
+                                                    <label for="asset_threshold" class="form-label">Asset Threshold</label>
+                                                    <input value='{{$threshold->value ?? ''}}' name='asset_threshold' type="text"
                                                            class="form-control">
                                                     <small class="text-muted">** The Threshold an Asset has to reach for
                                                                               it be calculated in the yearly
                                                                               figures</small>
                                                 </div>
-                                                <div class='form-group m-2'>
-                                                    <label for="default_depreciation">Default Depreciation</label>
-                                                    <input value='' name='default_depreciation' type="text"
+                                                <div class='form-group mb-4'>
+                                                    <?php $default_dep = \App\Models\Setting::whereName('default_depreciation')->first();?>
+                                                    <label for="default_depreciation" class="form-label">Default Depreciation</label>
+                                                    <input value="{{$default_dep->value ?? ''}}" name='default_depreciation' type="text"
                                                            class="form-control">
                                                     <small class="text-muted">** If no depreciation is set when
                                                                               adding/uploading Assets, the default shall
                                                                               be (In Years)</small>
                                                 </div>
                                                 <div class='d-flex justify-content-center mb-2'>
-                                                    <x-buttons.submit class="justify-content-center">Submit
-                                                    </x-buttons.submit>
+                                                    <x-buttons.submit>Save</x-buttons.submit>
                                                 </div>
                                             </x-form.layout>
                                         </div>

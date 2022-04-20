@@ -16,14 +16,6 @@ class Property extends Model {
 
     protected $fillable = ['name', 'location_id', 'purchased_cost', 'depreciation', 'type', 'purchased_date', 'user_id'];
 
-    public function name(): Attribute
-    {
-        return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
-        );
-    }
-
     //Returns the Location attached to the property
     public function location()
     {

@@ -38,13 +38,6 @@ class HomeController extends Controller {
         }
     }
 
-    public function business()
-    {
-        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->get();
-
-        return view('dashboard.business', compact('locations'));
-    }
-
 
     ////////////////////////////////////////
     ////// Top Bar Search Functions ////////

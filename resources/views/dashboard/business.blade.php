@@ -273,7 +273,7 @@
             console.log(obj);
             propertyCount.innerHTML = obj.property.count;
             propertyCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.cost);
-            propertyDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.cost);
+            propertyDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.dep);
             //AUC
             aucCount.innerHTML = obj.auc.count;
             aucCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.auc.cost);
