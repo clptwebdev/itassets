@@ -26,13 +26,13 @@ Route::group(['middleware' => 'auth'], function() {
     Route::controller(\App\Http\Controllers\HomeController::class)->group(function() {
         //Dashboard
         Route::get('/dashboard', "index")->name('dashboard');
-        Route::get('/business', "business")->name('business');
+        Route::get('/business', "business")->name('business')->middleware('role');
         Route::get('/', "index")->name('home');
         Route::get('/statistics', 'statistics')->name('dashboard.statistics');
         Route::get('/business/statistics', 'business_statistics')->name('business.statistics');
         Route::post('/assets/search', "search")->name('assets.search');
         //Caching
-        Route::get('/cache/clear', 'clearCache')->name('cache.clear');
+        Route::get('/cache/clear', 'clearCache')->name('cache.clear')->middleware('role');;
     });
     Route::controller(\App\Http\Controllers\UserController::class)->group(function() {
         //User

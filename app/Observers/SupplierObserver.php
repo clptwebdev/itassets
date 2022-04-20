@@ -11,7 +11,7 @@ class SupplierObserver {
 
     public function __construct()
     {
-        $this->user = $this->user . 'An Unauthorized User';
+        $this->user = auth()->user()->name ?? 'An Unauthorized User';
     }
 
     public function created(supplier $supplier)

@@ -10,12 +10,15 @@
 
     <x-wrappers.nav title="View Property">
         <x-buttons.return :route="route('properties.index')"> Properties</x-buttons.return>
-        {{-- <x-buttons.reports :route="route('property.showPdf', $property->id)" /> --}}
-        <x-buttons.edit :route="route('properties.edit',$property->id)"/>
-        <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$property->id"
-                       :action="route('properties.destroy', $property->id)">
-            <x-buttons.delete formAttributes="data-id='{{$property->id}}'"/>
-        </x-form.layout>
+        @can('update',$property)
+            <x-buttons.edit :route="route('properties.edit',$property->id)"/>
+        @endcan
+        @can('delete',$property)
+            <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$property->id"
+                           :action="route('properties.destroy', $property->id)">
+                <x-buttons.delete formAttributes="data-id='{{$property->id}}'"/>
+            </x-form.layout>
+        @endcan
         @can('generateShowPDF', $property)
             <x-buttons.reports :route="route('properties.showPdf', $property->id)"/>
         @endcan
