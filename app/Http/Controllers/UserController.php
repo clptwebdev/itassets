@@ -44,7 +44,7 @@ class UserController extends Controller {
         {
             return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Create Users.');
         }
-        $roles = Role::all();
+        $roles = Role::significance(auth()->user());
 
         $locations = auth()->user()->locations;
 
@@ -96,7 +96,7 @@ class UserController extends Controller {
         }
         if(auth()->user()->role->significance >= $user->role->significance)
         {
-            $roles = Role::significance($user);
+            $roles = Role::significance(auth()->user());
             $locations = auth()->user()->locations;
 
             return view('users.edit', compact('user', 'locations', 'roles'));
