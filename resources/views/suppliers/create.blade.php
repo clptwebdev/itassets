@@ -45,45 +45,29 @@
                             @csrf
 
                             <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text"
-                                       class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name" id="name" placeholder="">
+                                <x-form.input name="name" formAttributes="required"/>
                             </div>
                             <div class="form-group">
-                                <label for="address2">Street Address</label>
-                                <input type="text"
-                                       class="form-control mb-3 <?php if ($errors->has('address_1') || $errors->has('address_2')) {?>border-danger<?php }?>"
-                                       name="address_1" id="address_1">
-                                <input type="text" class="form-control" name="address_2" id="address_2">
+                                <x-form.input name="address_1"/>
+                            </div>
+                            <div class="form-group">
+                                <x-form.input name="address_2"/>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="city">City</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('city')) {?>border-danger<?php }?>"
-                                           id="city" name="city">
+                                    <x-form.input name="city"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="city">County</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('county')) {?>border-danger<?php }?>"
-                                           id="county" name="county">
+                                    <x-form.input name="county"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="postcode">Post Code</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('postcode')) {?>border-danger<?php }?>"
-                                           id="postcode" name="postcode">
+                                    <x-form.input name="postcode"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="notes">Notes</label>
-                                <textarea name="notes" id="notes" class="form-control" rows="10"></textarea>
+                                <x-form.textarea name="notes" formAttributes=" cols=' 30' rows='10' "/>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -101,24 +85,18 @@
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="url">Website URL:</label>
-                                <input class="form-control" type="text" id="url" name="url" value=""
-                                       placeholder="https://">
+                                <x-form.input name="url"/>
+                            </div>
+                            <div class="form-group">
+                                <x-form.input name="telephone"/>
                             </div>
 
                             <div class="form-group">
-                                <label for="telephone">Telephone</label>
-                                <input type="text" class="form-control" name="telephone" id="telephone">
+                                <x-form.input name="fax"/>
                             </div>
 
                             <div class="form-group">
-                                <label for="telephone">Fax</label>
-                                <input type="text" class="form-control" name="fax" id="fax">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="telephone">Email Address</label>
-                                <input type="text" class="form-control" name="email" id="email" placeholder="@">
+                                <x-form.input name="email"/>
                             </div>
                         </div>
                     </div>
