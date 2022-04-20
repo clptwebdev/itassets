@@ -234,6 +234,8 @@ class User extends Authenticatable {
 
     public function isBusiness()
     {
+        dd($this->role->name);
+
         return $this->role->name == 'Business Manager';
     }
 
