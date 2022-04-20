@@ -55,8 +55,7 @@
                                             <x-form.select name="manufacturer_id" :models="$manufacturers"/>
                                         </div>
                                         <div class="form-group">
-                                            <x-form.input name="serial_no" formAttributes="required"
-                                                          value="{{old('serial_no')}}"/>
+                                            <x-form.input name="serial_no" value="{{old('serial_no')}}"/>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 p-4 mb-3 ">
@@ -156,6 +155,9 @@
                                                     <li>Nothing to Return</li>
                                                 </ul>
                                             </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <x-form.input name="room" value="{{old('room')}}"/>
                                         </div>
 
                                     </div>

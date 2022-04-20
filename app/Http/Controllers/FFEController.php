@@ -136,7 +136,6 @@ class FFEController extends Controller {
             "notes" => "nullable",
             "status_id" => "nullable",
             'order_no' => 'nullable',
-            'serial_no' => 'required',
             'warranty' => 'int|nullable',
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
