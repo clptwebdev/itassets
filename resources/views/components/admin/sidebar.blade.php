@@ -22,7 +22,7 @@
     <!-- Nav Item - Dashboard -->
         <li class="nav-item @if(Request::url() == route('dashboard')) {{ 'active' }} @endif">
             <a class="nav-link"
-               href="@if(!auth()->user()->isBusiness()){{ route('dashboard')  }}    @else {{ route('business')  }} @endif">
+               href="{{ route('dashboard')}}">
                 <i class="fas fa-fw fa-tachometer-alt sidebar-icon"></i>
                 <span class="sidebar-title">Dashboard</span></a>
         </li>
