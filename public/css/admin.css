@@ -13095,3 +13095,12 @@ tr.even:hover .btn,
     position: relative;
     z-index: 10px;
 }
+
+
+/* Settings Pages  */
+
+/* Table Headers */
+
+.th-rotated{
+    transform: rotate(90deg);
+}
