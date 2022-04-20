@@ -28,9 +28,10 @@ class HomeController extends Controller {
 
     public function index()
     {
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->get();
         if(auth()->user()->isBusiness())
         {
-            return to_route('business');
+            return view('dashboard.business', compact('locations'));
         } else
         {
             return view('dashboard');
@@ -39,12 +40,6 @@ class HomeController extends Controller {
 
     }
 
-    public function business()
-    {
-        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->get();
-
-        return view('dashboard.business', compact('locations'));
-    }
 
     ////////////////////////////////////////
     ////// Top Bar Search Functions ////////

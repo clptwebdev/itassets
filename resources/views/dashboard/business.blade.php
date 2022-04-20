@@ -17,7 +17,7 @@
             <div class="dropdown d-inline">
                 <a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Download Trust Report
+                    Download Asset Report (01/09/2021 - 31/08/2022)
                 </a>
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -224,19 +224,6 @@
                     <div id="all_expenditure_chart" class="chart"></div>
                 </div>
             </div>
-            {{-- Expenditure --}}
-            <div class="col-12 col-md-6 mb-3 ">
-                <div class="card shadow h-100 p-4 ">
-                    <div id="chart" class="chart"></div>
-                </div>
-            </div>
-            {{-- Depreication Information --}}
-
-            <div class="col-12 col-md-6 mb-3 ">
-                <div class="card shadow h-100 p-4">
-                    <div id="dep_chart" class="chart"></div>
-                </div>
-            </div>
         </div>
     @else
         <x-admin.request-access/>
@@ -355,33 +342,6 @@
                 })
         });
 
-        const chart = new Chartisan({
-            el: '#dep_chart',
-            url: `@chart('depreciation_chart')`,
-            // You can also pass the data manually instead of the url:
-            // data: { ... }
-            hooks: new ChartisanHooks()
-                .datasets([{type: 'line', fill: false}])
-                .responsive()
-                .colors(['#F99'])
-                .title('Asset Depreciation')
-                .legend(device)
-                .displayAxes(device)
-        })
-
-        const dep_chart = new Chartisan({
-            el: '#chart',
-            url: `@chart('total_expenditure')`,
-            // You can also pass the data manually instead of the url:
-            // data: { ... }
-            hooks: new ChartisanHooks()
-                .datasets('bar')
-                .colors(['#b087bc', '#474775'])
-                .title('CLPT Expenditure')
-                .legend(device)
-                .responsive()
-                .displayAxes(device)
-        })
     </script>
 
 @endsection
