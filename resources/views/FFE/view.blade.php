@@ -32,19 +32,21 @@
                 </x-form.layout>
             @endif
         @endcan
-        <div class="dropdown d-inline-block">
-            <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
-               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Bulk Options
-            </a>
-            <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
-                @can('create', \App\Models\FFE::class)
+        @can('create', \App\Models\FFE::class)
+            <div class="dropdown d-inline-block">
+                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
+                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Bulk Options
+                </a>
+                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
+
                     <x-buttons.dropdown-item id="import">
                         Import
                     </x-buttons.dropdown-item>
-                @endcan
+
+                </div>
             </div>
-        </div>
+        @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
     <section>

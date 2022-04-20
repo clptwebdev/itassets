@@ -23,7 +23,7 @@
                    class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
             @endcan
-            <x-buttons.reports :route="route('manufacturer.pdf')"></x-buttons.reports>
+            <x-buttons.reports :route="route('manufacturer.showPdf' , $manufacturer->id)"></x-buttons.reports>
         </div>
     </div>
 

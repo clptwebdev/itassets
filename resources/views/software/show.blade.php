@@ -9,13 +9,16 @@
 @section('content')
     <x-wrappers.nav title="Show {{$software->name}} in Software">
         <x-buttons.return :route="route('softwares.index')"> Software</x-buttons.return>
-        {{-- <x-buttons.reports :route="route('property.showPdf', $software->id)" /> --}}
-        <x-buttons.edit :route="route('softwares.edit',$software->id)" />
-        <x-form.layout method="DELETE" class="d-sm-inline-block"
-                       :id="'form'.$software->id"
-                       :action="route('ffes.destroy', $software->id)" >
-            <x-buttons.delete formAttributes="data-id='{{$software->id}}'" /> 
-        </x-form.layout >
+        @can('update',$software)
+            <x-buttons.edit :route="route('softwares.edit',$software->id)"/>
+        @endcan
+
+        @can('delete',$software)
+            <x-form.layout method="DELETE" class="d-sm-inline-block" :id="'form'.$software->id"
+                           :action="route('ffes.destroy', $software->id)">
+                <x-buttons.delete formAttributes="data-id='{{$software->id}}'"/>
+            </x-form.layout>
+        @endcan
         @can('generatePDF', \App\Models\Software::class)
             <x-buttons.reports :route="route('software.showPdf', $software->id)"/>
         @endcan
@@ -32,7 +35,7 @@
             </ul>
             <div class="tab-content border-left border-right border-bottom border-gray mb-4" id="myTabContent">
                 <div class="tab-pane fade show p-2 pt-4 active" id="location" role="tabpanel"
-                        aria-labelledby="location-tab">
+                     aria-labelledby="location-tab">
                     <div class="row">
                         <div class="col-12 col-md-6 p-4 mb-3 ">
                             <table class="table table-sm table-bordered table-striped">
@@ -72,22 +75,23 @@
                             <hr>
                             <h5>Finance</h5>
                             <?php
-                                //If Date is > 1 September the Year is this Year else Year = Last Year
-                
-                                $now = \Carbon\Carbon::now();
-                                $startDate = \Carbon\Carbon::parse('09/01/'.$now->format('Y'));
-                                $nextYear = \Carbon\Carbon::now()->addYear()->format('Y');
-                                $nextStartDate = \Carbon\Carbon::parse('09/01/'.\Carbon\Carbon::now()->addYear()->format('Y'));
-                                $endDate = \Carbon\Carbon::parse('08/31/'.$nextYear);
-                                if(!$startDate->isPast()){
-                                    $startDate->subYear();
-                                    $endDate->subYear();
-                                    $nextStartDate->subYear();
-                                }
-                                $bf = $software->depreciation_value_by_date($startDate);
-                                $cf = $software->depreciation_value_by_date($nextStartDate);
+                            //If Date is > 1 September the Year is this Year else Year = Last Year
+
+                            $now = \Carbon\Carbon::now();
+                            $startDate = \Carbon\Carbon::parse('09/01/' . $now->format('Y'));
+                            $nextYear = \Carbon\Carbon::now()->addYear()->format('Y');
+                            $nextStartDate = \Carbon\Carbon::parse('09/01/' . \Carbon\Carbon::now()->addYear()->format('Y'));
+                            $endDate = \Carbon\Carbon::parse('08/31/' . $nextYear);
+                            if(! $startDate->isPast())
+                            {
+                                $startDate->subYear();
+                                $endDate->subYear();
+                                $nextStartDate->subYear();
+                            }
+                            $bf = $software->depreciation_value_by_date($startDate);
+                            $cf = $software->depreciation_value_by_date($nextStartDate);
                             ?>
-                            
+
                             <p><strong>Cost B/Fwd (01/09/{{$startDate->format('Y')}}):</strong><br>
                                 £{{number_format( (float) $bf, 2, '.', ',' )}}
                             </p>
@@ -105,15 +109,15 @@
                             </p>
                             <?php $prevYear = $startDate->subYear();?>
                             @if($prevYear >= $software->purchased_date)
-                            <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
-                                £{{number_format( (float) $software->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
-                            </p>
+                                <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
+                                    £{{number_format( (float) $software->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
+                                </p>
                             @endif
                             <?php $prevYear = $startDate->subYear();?>
                             @if($prevYear >= $software->purchased_date)
-                            <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
-                                £{{number_format( (float) $software->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
-                            </p>
+                                <p><strong>NBV {{$prevYear->format('Y')}}:</strong><br>
+                                    £{{number_format( (float) $software->depreciation_value_by_date($prevYear), 2, '.', ',' )}}
+                                </p>
                             @endif
 
                         </div>
@@ -123,10 +127,10 @@
                                 <div class="model_image p-4 d-flex justify-content-center align-items-middle">
                                     @if($software->location()->exists() && $software->location->photo()->exists())
                                         <img id="profileImage" src="{{ asset($software->location->photo->path) }}"
-                                                height="200px" alt="Select Profile Picture">
+                                             height="200px" alt="Select Profile Picture">
                                     @else
                                         <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
-                                                height="200px" alt="Select Profile Picture">
+                                             height="200px" alt="Select Profile Picture">
                                     @endif
                                 </div>
                                 <div class="model_no py-2 px-4 text-center">

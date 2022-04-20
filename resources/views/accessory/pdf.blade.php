@@ -20,7 +20,7 @@
             <th align="center"><small>Warranty</small></th>
         </tr>
         </thead>
-        
+
         <tbody>
         @foreach($accessories as $accessory)
 
@@ -29,33 +29,36 @@
                     <br>
                     <small>{{$accessory['serial_no']}}</small>
                 </td>
-                <td class="text-center"><span style="color: {{ $accessory['icon'] ?? '#666'}}">{{$accessory['location'] ?? 'Unassigned'}}</span>
-                    @if($accessory->room != "")<br><small>{{ $accessory->room ?? 'N/A'}}</small>@endif</td>
-                <td class="text-center">{{ $accessory['model']}}<br><small>{{$accessory['manufacturer'] ?? "N/A"}}</small></td>
+                <td class="text-center"><span
+                        style="color: {{ $accessory['icon'] ?? '#666'}}">{{$accessory['location'] ?? 'Unassigned'}}</span>
+                    @if($accessory['room'] != "")<br><small>{{ $accessory['room'] ?? 'N/A'}}</small>@endif</td>
+                <td class="text-center">{{ $accessory['model']}}
+                    <br><small>{{$accessory['manufacturer'] ?? "N/A"}}</small></td>
                 <td>{{$accessory['purchased_date']}}</td>
                 <td class="text-center">
                     £{{$accessory['purchased_cost']}} @if($accessory['donated'] == 1)<span class="text-success text-sm">Donated</span>@endif
                     <small>(*£{{ number_format($accessory['depreciation'], 2)}})</small>
                 </td>
                 <td>{{$accessory['supplier'] ?? 'N/A'}}</td>
-                <td class="text-center"><span style="color:{{ $accessory['color']}};">{{$accessory['status'] ??'N/A'}}</span></td>
+                <td class="text-center"><span
+                        style="color:{{ $accessory['color']}};">{{$accessory['status'] ??'N/A'}}</span></td>
                 <td class="text-center">{{ $accessory['warranty'] }} Months</small>
                 </td>
-                
+
             </tr>
         @endforeach
         </tbody>
         <tfoot>
-            <tr>
-                <th><small>Name</small></th>
-                <th class="text-center"><small>Location</small></th>
-                <th class="text-center"><small>Manufacturers</small></th>
-                <th><small>Purchased Date</small></th>
-                <th><small>Cost (Value)</small></th>
-                <th><small>Supplier</small></th>
-                <th class="text-center"><small>Status</small></th>
-                <th class="text-center"><small>Warranty</small></th>
-            </tr>
-            </tfoot>
+        <tr>
+            <th><small>Name</small></th>
+            <th class="text-center"><small>Location</small></th>
+            <th class="text-center"><small>Manufacturers</small></th>
+            <th><small>Purchased Date</small></th>
+            <th><small>Cost (Value)</small></th>
+            <th><small>Supplier</small></th>
+            <th class="text-center"><small>Status</small></th>
+            <th class="text-center"><small>Warranty</small></th>
+        </tr>
+        </tfoot>
     </table>
-    @endsection
+@endsection

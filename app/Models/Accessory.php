@@ -77,6 +77,11 @@ class Accessory extends Model {
         return $query->whereIn('location_id', $locations);
     }
 
+    public function model()
+    {
+        return $this->belongsTo(AssetModel::class, 'asset_model', 'id')->with('manufacturer')->with('depreciation');
+    }
+
     public function scopeCategoryFilter($query, $category)
     {
         $pivot = $this->category()->getTable();

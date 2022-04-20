@@ -405,7 +405,7 @@ class AssetController extends Controller {
 
         return to_route('assets.index');
     }
-    
+
     public function search()
     {
         return view("assets.show", [
@@ -431,7 +431,7 @@ class AssetController extends Controller {
     ///////////////////////////////////////////////
     //////////// Delete Functions /////////////////
     ///////////////////////////////////////////////
-    
+
 
     public function destroy(Asset $asset)
     {

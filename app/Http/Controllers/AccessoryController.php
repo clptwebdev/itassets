@@ -640,22 +640,25 @@ class AccessoryController extends Controller {
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y');
             $array['purchased_cost'] = '£' . $f->purchased_cost;
             $array['donated'] = '£' . $f->donated;
-            $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation->years);
-            if($f->depreciation->exists())
+            if($f->model()->exists() && $f->model->depreciation()->exists())
             {
-                if($eol->isPast())
+                $eol = \Carbon\Carbon::parse($f->purchased_date)->addYears($f->depreciation->years);
+                if($f->depreciation->exists())
                 {
-                    $dep = 0;
-                } else
-                {
+                    if($eol->isPast())
+                    {
+                        $dep = 0;
+                    } else
+                    {
 
-                    $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
-                    $percent = 100 / $f->depreciation->years;
-                    $percentage = floor($age) * $percent;
-                    $dep = $f->purchased_cost * ((100 - $percentage) / 100);
+                        $age = \Carbon\Carbon::now()->floatDiffInYears($f->purchased_date);
+                        $percent = 100 / $f->depreciation->years;
+                        $percentage = floor($age) * $percent;
+                        $dep = $f->purchased_cost * ((100 - $percentage) / 100);
+                    }
                 }
             }
-            $array['depreciation'] = $dep;
+            $array['depreciation'] = $dep ?? 0;
             $array['supplier'] = $f->supplier->name ?? 'N/A';
             $array['warranty'] = $f->warranty;
             $array['status'] = $f->status->name;
@@ -667,7 +670,6 @@ class AccessoryController extends Controller {
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = 'accessories-' . $date;
-
         dispatch(new AccessoriesPdf($accessories, $user, $path))->afterResponse();
         //Create Report
 

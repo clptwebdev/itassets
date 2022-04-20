@@ -34,7 +34,7 @@ class ManufacturerController extends Controller {
 
     public function clearFilter()
     {
-        session()->forget(['log_search']);
+        session()->forget(['manufacturer_search']);
 
         return to_route('manufacturers.index');
     }
@@ -367,7 +367,7 @@ class ManufacturerController extends Controller {
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
 
-        return to_route('manufacturer.pdf')
+        return to_route('manufacturers.index')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
 
