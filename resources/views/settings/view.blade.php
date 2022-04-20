@@ -42,10 +42,12 @@
                                     <a class="nav-link" id="custom-tab" data-bs-toggle="tab" href="#custom" role="tab"
                                        aria-controls="home" aria-selected="true">IT Settings</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="developer-tab" data-bs-toggle="tab" href="#developer"
-                                       role="tab" aria-controls="home" aria-selected="true">Developer Settings</a>
-                                </li>
+                                @if(auth()->user()->isGlobal())
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="developer-tab" data-bs-toggle="tab" href="#developer"
+                                           role="tab" aria-controls="home" aria-selected="true">Developer Settings</a>
+                                    </li>
+                                @endif
                             @endcan
                         </ul>
 
@@ -191,40 +193,44 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade p-2 pt-4" id="developer" role="tabpanel"
-                                     aria-labelledby="developer-tab">
-                                    <div class="row">
-                                        <div class="col-12 ">
-                                            <h4 class='text-blue m-2'>Developer Settings</h4>
-                                            <hr class='rule'>
-                                            <h5 class='text-blue mx-4'>Creating a new Role</h5>
-                                            <p class='text-muted'>Click the button below to create new role to assign to
-                                                                  a
-                                                                  User.</p>
-                                            <a data-bs-toggle="modal" data-bs-target="#roleAddModal"
-                                               class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
-                                                    class="fas fa-plus fa-sm pl-1 pr-1"></i> Create a new Role</a>
-                                            <a data-bs-toggle="modal" data-bs-target="#roleDeleteModal"
-                                               class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
-                                                    class="fas fa-minus fa-sm pl-1 pr-1"></i> Remove a Role</a>
-                                            <a href='{{route('role.boot')}}'
-                                               class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                                                    class="fas fa-plus fa-sm pl-1 pr-1"></i>Create default Roles</a>
-                                            <h5 class='text-blue mx-4 my-3'>Custom Settings</h5>
-                                            @can('create' , \App\Models\Setting::class)
-                                                <p class='text-muted'>Click the button below to generate the default
-                                                                      settings.</p>
-                                                <a href='{{route('setting.boot')}}'
-                                                   class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                                                        class="fas fa-plus fa-sm pl-1 pr-1"></i>Create Default Settings</a>
-                                                <a data-bs-toggle='modal' data-bs-target='#settingModal'
-                                                   class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
-                                                        class="fas fa-plus fa-sm pl-1 pr-1"></i>Create a New
-                                                                                                Settings</a>
-                                            @endcan
+                                @if(auth()->user()->isGlobal())
+                                    <div class="tab-pane fade p-2 pt-4" id="developer" role="tabpanel"
+                                         aria-labelledby="developer-tab">
+                                        <div class="row">
+                                            <div class="col-12 ">
+                                                <h4 class='text-blue m-2'>Developer Settings</h4>
+                                                <hr class='rule'>
+                                                <h5 class='text-blue mx-4'>Creating a new Role</h5>
+                                                <p class='text-muted'>Click the button below to create new role to
+                                                                      assign to
+                                                                      a
+                                                                      User.</p>
+                                                <a data-bs-toggle="modal" data-bs-target="#roleAddModal"
+                                                   class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
+                                                        class="fas fa-plus fa-sm pl-1 pr-1"></i> Create a new Role</a>
+                                                <a data-bs-toggle="modal" data-bs-target="#roleDeleteModal"
+                                                   class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"><i
+                                                        class="fas fa-minus fa-sm pl-1 pr-1"></i> Remove a Role</a>
+                                                <a href='{{route('role.boot')}}'
+                                                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                                                        class="fas fa-plus fa-sm pl-1 pr-1"></i>Create default Roles</a>
+                                                <h5 class='text-blue mx-4 my-3'>Custom Settings</h5>
+                                                @can('create' , \App\Models\Setting::class)
+                                                    <p class='text-muted'>Click the button below to generate the default
+                                                                          settings.</p>
+                                                    <a href='{{route('setting.boot')}}'
+                                                       class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
+                                                            class="fas fa-plus fa-sm pl-1 pr-1"></i>Create Default
+                                                                                                    Settings</a>
+                                                    <a data-bs-toggle='modal' data-bs-target='#settingModal'
+                                                       class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
+                                                            class="fas fa-plus fa-sm pl-1 pr-1"></i>Create a New
+                                                                                                    Settings</a>
+                                                @endcan
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

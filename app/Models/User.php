@@ -238,4 +238,10 @@ class User extends Authenticatable {
         return $this->role->name == 'Business Manager';
     }
 
+    public function isGlobal()
+    {
+
+        return $this->role->name == 'Global Admin';
+    }
+
 }
