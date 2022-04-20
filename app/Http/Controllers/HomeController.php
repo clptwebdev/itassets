@@ -10,6 +10,7 @@ use App\Models\Component;
 use App\Models\Consumable;
 use App\Models\FFE;
 use App\Models\Location;
+use App\Models\Log;
 use App\Models\Machinery;
 use App\Models\Miscellanea;
 use App\Models\Requests;
@@ -29,6 +30,7 @@ class HomeController extends Controller {
     {
         //return dd($assets[0]);
         return view('dashboard');
+
     }
 
     public function business()
@@ -243,8 +245,6 @@ class HomeController extends Controller {
             //Set the new cached user id to the current user
             Cache::set('user_id', auth()->user()->id);
         }
-
-        
 
         //Get the Users location which they have access to
         $locations = auth()->user()->locations;

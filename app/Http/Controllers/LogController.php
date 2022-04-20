@@ -16,6 +16,7 @@ class LogController extends Controller {
             return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Logs.');
 
         }
+        Log::query()->update(['read' => 1]);
 
         return view('logs.view', [
             "logs" => Log::Latest('created_at')->paginate(),
