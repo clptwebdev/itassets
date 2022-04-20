@@ -61,34 +61,42 @@ class Vehicle extends Model {
 
     public function depreciation_value_by_date($date)
     {
-        $age = $date->floatDiffInYears($this->purchased_date);
-        $percent = 100 / $this->depreciation;
-        $percentage = floor($age) * $percent;
-        $value = $this->purchased_cost * ((100 - $percentage) / 100);
+        if($this->depreciation != 0){
+            $age = $date->floatDiffInYears($this->purchased_date);
+            $percent = 100 / $this->depreciation;
+            $percentage = floor($age) * $percent;
+            $value = $this->purchased_cost * ((100 - $percentage) / 100);
 
-        if($value < 0)
-        {
-            return 0;
-        } else
-        {
-            return $value;
+            if($value < 0)
+            {
+                return 0;
+            } else
+            {
+                return $value;
+            }
+        }else{
+            return $this->purchased_cost;
         }
     }
 
     public function depreciation_value()
     {
-        $eol = \Carbon\Carbon::parse($this->purchased_date)->addYears($this->depreciation);
-        if($eol->isPast())
-        {
-            return 0;
-        } else
-        {
-            $age = Carbon::now()->floatDiffInYears($this->purchased_date);
-            $percent = 100 / $this->depreciation;
-            $percentage = floor($age) * $percent;
-            $dep = $this->purchased_cost * ((100 - $percentage) / 100);
+        if($this->depreciation != 0){
+            $eol = \Carbon\Carbon::parse($this->purchased_date)->addYears($this->depreciation);
+            if($eol->isPast())
+            {
+                return 0;
+            } else
+            {
+                $age = Carbon::now()->floatDiffInYears($this->purchased_date);
+                $percent = 100 / $this->depreciation;
+                $percentage = floor($age) * $percent;
+                $dep = $this->purchased_cost * ((100 - $percentage) / 100);
 
-            return $dep;
+                return $dep;
+            }
+        }else{
+            return $this->purchased_cost;
         }
 
     }

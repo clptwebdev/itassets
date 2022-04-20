@@ -53,7 +53,7 @@ class LocationBusinessReport implements ShouldQueue {
         $route = $this->route;
 
         $threshold_setting = Setting::where('name', '=', 'asset_threshold')->first();
-        $threshold = $threshold_setting->value ?? 0;
+        $threshold = $threshold_setting->value ?? 200;
 
         $now = Carbon::now();
         $startDate = Carbon::parse('09/01/' . $now->format('Y'));

@@ -524,6 +524,11 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get("/settings/roles/create", "roleBoot")->name('role.boot');
         Route::get("/settings/default/create", "settingBoot")->name('setting.boot');
     });
+
+    ////////////////////////////////////
+    ///////// Settings Routes //////////
+    ////////////////////////////////////
+
     Route::controller(\App\Http\Controllers\SettingsController::class)->group(function() {
         //settings page
         Route::get("/settings", "index")->name("settings.view");
@@ -532,6 +537,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::Post("/settings/components/export", "components")->name("settings.components");
         Route::Post("/settings/miscellaneous/export", "miscellaneous")->name("settings.miscellaneous");
         Route::get("/settings/roles/create", "roleBoot")->name('role.boot');
+        Route::post("/business/settings/update", "updateBusinessSettings")->name("update.business.settings");
     });
     Route::controller(\App\Http\Controllers\ChartController::class)->group(function() {
         //Javascript pie charts for dashboard

@@ -301,4 +301,17 @@ class SettingsController extends Controller {
             ->with('success_message', "Your Settings have been Synced please allow a few moments for this to take effect");
     }
 
+    public function updateBusinessSettings(Request $request){
+        $validation = $request->validate([
+            'asset_threshold' => 'required',
+            'default_depreciation' => 'required',
+        ]);
+
+        $settings = Setting::updateOrCreate(['name' => 'asset_threshold'], ['value' => $request->asset_threshold, 'priority' => 1]);
+        $settings = Setting::updateOrCreate(['name' => 'default_depreciation'], ['value' => $request->default_depreciation, 'priority' => 1]);
+
+        return to_route('settings.view')
+            ->with('success_message', "You have successfully updated the Business Settings");
+    }
+
 }
