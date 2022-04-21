@@ -100,6 +100,7 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
         }
         $property->type = $type;
         $property->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
+
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
