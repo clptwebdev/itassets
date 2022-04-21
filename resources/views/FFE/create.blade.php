@@ -113,9 +113,7 @@
                                             <div class="form-group">
                                                 <x-form.input name="warranty" value="{{old('warranty')}}"/>
                                             </div>
-                                            <div class="form-group">
-                                                <x-form.input name="room" value="{{old('room')}}"/>
-                                            </div>
+                                            
                                         </div>
 
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
@@ -164,7 +162,9 @@
                                                     </ul>
                                                 </div>
                                             </div>
-
+                                            <div class="form-group">
+                                                <x-form.input name="room" value="{{old('room')}}"/>
+                                            </div>
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
                                             <div id="locationInfo" class="bg-light p-4">
