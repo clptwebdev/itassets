@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('machineries', function (Blueprint $table) {
-            $table->integer('donated')->nullable();
-            $table->foreignId('manufacturer_id')->nullable();
+            $table->string('order_no')->nullable();
+            $table->string('serial_no')->nullable();
         });
     }
 
@@ -27,8 +27,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('machineries', function (Blueprint $table) {
-            $table->dropColumn('donated');
-            $table->dropColumn('manufacturer_id');
+            $table->dropColumn('order_no');
+            $table->dropColumn('serial_no');
         });
     }
 };

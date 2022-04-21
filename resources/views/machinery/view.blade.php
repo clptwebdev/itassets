@@ -103,7 +103,13 @@
                     <tbody>
                     @foreach($machineries as $machinery)
                         <tr>
-                            <td class="text-left">{{$machinery->name}}</td>
+                            <td class="text-start">
+                                {{$machinery->name}}
+                                @if($machinery->serial_no)
+                                    <br>
+                                    <small>{{$machinery->serial_no}}</small>
+                                @endif
+                            </td>
                             <td class="text-center">£{{number_format($machinery->purchased_cost, 2, '.', ',')}}</td>
                             <td class="text-center">{{ \Illuminate\Support\Carbon::parse($machinery->purchased_date)->format('d-M-Y')}}</td>
                             <td class="text-center">{{$machinery->supplier->name ?? 'N/A'}}</td>

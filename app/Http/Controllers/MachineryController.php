@@ -14,8 +14,13 @@ use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\HeadingRowImport;
+use Illuminate\Support\Facades\Cache;
 
 class MachineryController extends Controller {
+
+    //////////////////////////////////////
+    /////////// View Functions ///////////
+    //////////////////////////////////////
 
     public function index()
     {
@@ -46,6 +51,43 @@ class MachineryController extends Controller {
             "locations" => $locations,
         ]);
     }
+
+    public function show(Machinery $machinery)
+    {
+        //Check to see if the User is has permission to create
+        if(auth()->user()->cant('view', $machinery))
+        {
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to update machinery.');
+
+        }
+
+        // Return the Create View to the browser
+        return view('machinery.show', [
+            "machinery" => $machinery,
+        ]);
+    }
+
+    public function recycleBin()
+    {
+        //Check to see if the user has permission to delete machinery on the system
+        if(auth()->user()->cant('delete', Machinery::class))
+        {
+            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to Delete machinery.');
+
+        }
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
+
+        // Return the Create View to the browser
+        return view('machinery.bin', [
+            "locations" => $locations,
+            "machineries" => Machinery::onlyTrashed()->paginate(),
+        ]);
+
+    }
+
+    //////////////////////////////////////
+    /////////// Create Functions ///////////
+    //////////////////////////////////////
 
     public function create()
     {
@@ -78,40 +120,38 @@ class MachineryController extends Controller {
         //Validate the post data
         $validation = $request->validate([
             'name' => 'required',
-            'description' => 'required',
             'location_id' => 'required',
-            'supplier_id' => 'required',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
+        ],[
+            'name.required' => 'Please enter a name to reference the Plant & Machinery.',
+            'location_id.required' => 'Please assign the Plant & Machinery to a Location.',
+            "purchased_date.required" => "Please enter a valid Purchased Date for the FFE.",
+            "purchased_date.date" => "Please enter a valid date for the Purchased Date. (DD/MM/YYYY)",
+            "purchased_cost.required" => "Please enter the cost of the FFE.",
         ]);
         Machinery::create([
             'name' => $request->name,
             'description' => $request->description,
+            'order_no' => $request->order_no,
             'supplier_id' => $request->supplier_id,
+            'manufacturer_id' => $request->manufacturer_id,
             'location_id' => $request->location_id,
             'purchased_cost' => $request->purchased_cost,
+            'donated' => $request->donated,
             'purchased_date' => $request->purchased_date,
             'depreciation' => $request->depreciation,
         ]);
 
+        Cache::flush('machinery-total', 'machinery-cost', 'machinery-dep');
+
         return to_route('machineries.index')->with('success_message', $request->name . ' Has been Added!');
     }
 
-    public function show(Machinery $machinery)
-    {
-        //Check to see if the User is has permission to create
-        if(auth()->user()->cant('view', $machinery))
-        {
-            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to update machinery.');
-
-        }
-
-        // Return the Create View to the browser
-        return view('machinery.show', [
-            "machinery" => $machinery,
-        ]);
-    }
+    //////////////////////////////////////
+    /////////// Edit Functions ///////////
+    //////////////////////////////////////
 
     public function edit(machinery $machinery)
     {
@@ -151,38 +191,35 @@ class MachineryController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
+        ],[
+            'name.required' => 'Please enter a name to reference the Plant & Machinery.',
+            'location_id.required' => 'Please assign the Plant & Machinery to a Location.',
+            "purchased_date.required" => "Please enter a valid Purchased Date for the FFE.",
+            "purchased_date.date" => "Please enter a valid date for the Purchased Date. (DD/MM/YYYY)",
+            "purchased_cost.required" => "Please enter the cost of the FFE.",
         ]);
 
         $machinery->update([
             'name' => $request->name,
             'description' => $request->description,
+            'order_no' => $request->order_no,
             'supplier_id' => $request->supplier_id,
+            'manufacturer_id' => $request->manufacturer_id,
             'location_id' => $request->location_id,
             'purchased_cost' => $request->purchased_cost,
+            'donated' => $request->donated,
             'purchased_date' => $request->purchased_date,
             'depreciation' => $request->depreciation,
         ]);
 
+        Cache::flush('machinery-total', 'machinery-cost', 'machinery-dep');
+
         return to_route('machineries.index')->with('success_message', $request->name . ' Has been Updated!');
     }
 
-    public function recycleBin()
-    {
-        //Check to see if the user has permission to delete machinery on the system
-        if(auth()->user()->cant('delete', Machinery::class))
-        {
-            return ErrorController::forbidden(route('machineries.index'), 'Unauthorised to Delete machinery.');
-
-        }
-        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
-
-        // Return the Create View to the browser
-        return view('machinery.bin', [
-            "locations" => $locations,
-            "machineries" => Machinery::onlyTrashed()->paginate(),
-        ]);
-
-    }
+    //////////////////////////////////////
+    ///////// Delete Functions ///////////
+    //////////////////////////////////////
 
     public function destroy(Machinery $machinery)
     {
@@ -422,6 +459,7 @@ class MachineryController extends Controller {
 
             } else
             {
+                Cache::flush('machinery-total', 'machinery-cost', 'machinery-dep');
                 return to_route('machineries.index')->with('success_message', 'All machineries were imported correctly!');
 
             }
