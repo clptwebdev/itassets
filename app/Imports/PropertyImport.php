@@ -85,13 +85,13 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
             case 'Freehold Land':
                 $type = 1;
                 break;
-            case 'Freehold Building':
+            case 'Freehold Buildings':
                 $type = 2;
                 break;
             case 'Leasehold Land':
                 $type = 3;
                 break;
-            case 'Leasehold Building':
+            case 'Leasehold Buildings':
                 $type = 4;
                 break;
             default:
@@ -108,12 +108,20 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
             $property->purchased_cost = floatval($row["purchased_cost"]);
         }
 
+        if(strtolower($row["donated"]) == 'yes')
+        {
+            $property->donated = 1;
+        } else
+        {
+            $property->donated = 0;
+        }
+
         $location = Location::where(["name" => $row["location_id"]])->first();
         $lid = $location->id ?? 0;
         $property->location_id = $lid;
 
         $property->depreciation = $row["depreciation"];
-
+        $property->user_id = auth()->user()->id;
         $property->save();
     }
 
