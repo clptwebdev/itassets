@@ -465,6 +465,7 @@ class PropertyController extends Controller {
                 $property->type = $request->type[$i];
                 $property->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
                 $property->purchased_cost = $request->purchased_cost[$i];
+                $property->donated = $request->donated[$i];
                 $property->location_id = $request->location_id[$i];
                 $property->depreciation = $request->depreciation[$i];
                 $property->save();

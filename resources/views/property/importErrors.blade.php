@@ -66,6 +66,7 @@
                             <th><small>Location</small></th>
                             <th><small>Date</small></th>
                             <th><small>Cost</small></th>
+                            <th><small>Donated</small></th>
                             <th><small>Depreciation</small></th>
                         </tr>
                         </thead>
@@ -76,6 +77,7 @@
                             <th><small>Location</small></th>
                             <th><small>Date</small></th>
                             <th><small>Cost</small></th>
+                            <th><small>Donated</small></th>
                             <th><small>Depreciation</small></th>
                         </tr>
                         </tfoot>
@@ -153,6 +155,18 @@
                                                data-bs-container='#purchased_cost{{$line}}' data-bs-placement='top'
                                                @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['purchased_cost']}'" !!}@endif
                                         >
+                                        </span>
+                                </td>
+                                <td>
+                                    <span id="donated{{$line}}" class="tooltip-danger">
+                                        <select type="dropdown"
+                                                class="import-control @if(in_array('donated', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                                name="donated[]" required data-bs-container='#donated{{$line}}'
+                                        @if(array_key_exists('donated', $errorValues[$row])) {!! "data-bs-toggle='tooltip' data-bs-placement='bottom' title='{$errorValues[$row]['donated']} - {$valueArray[$row]['donated']}'" !!}@endif
+                                        >
+                                            <option value="0" @if( $valueArray[$row]['donated'] == 0){{'selected'}}@endif>No</option>
+                                            <option value="1" @if( $valueArray[$row]['donated'] == 1){{'selected'}}@endif>Yes</option>
+                                        </select>
                                         </span>
                                 </td>
                                 <td>

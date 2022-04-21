@@ -167,6 +167,7 @@ class AssetImport extends DefaultValueBinder implements ToModel, WithValidation,
         $asset->status_id = $status->id ?? 0;
 
         $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
+        
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
@@ -175,6 +176,7 @@ class AssetImport extends DefaultValueBinder implements ToModel, WithValidation,
         {
             $asset->purchased_cost = floatval($row["purchased_cost"]);
         }
+
         if(strtolower($row["donated"]) == 'yes')
         {
             $asset->donated = 1;
