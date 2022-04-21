@@ -242,6 +242,9 @@ class FFEController extends Controller {
             $ffe->category()->sync(explode(',', $request->category));
         }
 
+         //Clear the Filters for the properties
+         Cache::flush(['ffe_locations', 'ffe_status', 'ffe_category', 'ffe_start', 'ffe_end', 'ffe_warranty', 'ffe_min', 'ffe_max', 'ffe_search', 'ffe_filter', 'ffes-total', 'ffes-cost', 'ffes-dep']);
+
         return to_route("ffes.index");
     }
 
