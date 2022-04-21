@@ -83,6 +83,8 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
     public function model(array $row)
     {
 
+        try{
+
         $ffe = new FFE;
         $ffe->name = $row["name"];
         //Serial No
@@ -143,6 +145,7 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
                 $supplier->save();
             }
         }
+
         $ffe->supplier_id = $supplier->id ?? 0;
         //check for already existing Manufacturers upon import if else create
         $man_email = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
@@ -171,7 +174,10 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
         $ffe->room = $row['room'];
         $ffe->notes = $row['notes'];
         $ffe->user_id = auth()->user()->id;
-   
+        $ffe->save();
+        }catch(\Exception $e){
+            return dd($e->getMessage());
+        }
     }
 
     public function batchSize(): int
