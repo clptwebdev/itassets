@@ -137,8 +137,15 @@ class FFEController extends Controller {
             "status_id" => "nullable",
             'order_no' => 'nullable',
             'warranty' => 'int|nullable',
-            'purchased_date' => 'nullable|date',
+            'purchased_date' => 'required|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+        ],[
+            "name.required" => "Please enter a name to reference the FFE.",
+            "name.max:255" => "The name for the FFE is only 255 characters long. Any additional text required please enter in the notes section.",
+            "location_id.required" => "Please assign the FFE to a Location.",
+            "purchased_date.required" => "Please enter a valid Purchased Date for the FFE.",
+            "purchased_date.date" => "Please enter a valid date for the Purchased Date. (DD/MM/YYYY)",
+            "purchased_cost.required" => "Please enter the cost of the FFE.",
         ]);
 
         $ffe = FFE::create(array_merge($request->only(
@@ -197,10 +204,17 @@ class FFEController extends Controller {
             "notes" => "nullable",
             "status_id" => "nullable",
             'order_no' => 'nullable',
-            'serial_no' => 'required',
+            'serial_no' => 'nullable',
             'warranty' => 'int|nullable',
-            'purchased_date' => 'nullable|date',
+            'purchased_date' => 'required|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+        ],[
+            "name.required" => "Please enter a name to reference the FFE.",
+            "name.max:255" => "The name for the FFE is only 255 characters long. Any additional text required please enter in the notes section.",
+            "location_id.required" => "Please assign the FFE to a Location.",
+            "purchased_date.required" => "Please enter a valid Purchased Date for the FFE.",
+            "purchased_date.date" => "Please enter a valid date for the Purchased Date. (DD/MM/YYYY)",
+            "purchased_cost.required" => "Please enter the cost of the FFE.",
         ]);
 
         if(isset($request->donated) && $request->donated == 1)
