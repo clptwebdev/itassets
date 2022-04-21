@@ -125,7 +125,7 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    @foreach($assetModel->assets as $asset)
+                    @foreach($assetModel->assets()->paginate(20) as $asset)
                         <tr>
                             <td>{{ $assetModel->name ?? 'No Model'}}<br><small
                                     class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
@@ -206,6 +206,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                <x-paginate :model="$assetModel->assets()->paginate()"/>
             </div>
         </div>
 

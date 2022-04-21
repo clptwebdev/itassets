@@ -1,13 +1,12 @@
 @extends('layouts.app')@section('title', 'View Suppliers')
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
+
 
 @section('content')
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Suppliers</h1>
         <div>
+
             @can('create', \App\Models\Supplier::class)
                 <x-buttons.add :route="route('suppliers.create')">Supplier(s)</x-buttons.add>
             @endcan
@@ -80,15 +79,15 @@
                                             class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Supplier Options:</div>
-                                            @can('view', $supplier)
+                                            @can('view',  \App\Models\Supplier::class)
                                                 <a href="{{ route('suppliers.show', $supplier->id) }}"
                                                    class="dropdown-item">View</a>
                                             @endcan
-                                            @can('update', $supplier)
+                                            @can('update',  \App\Models\Supplier::class)
                                                 <a href="{{ route('suppliers.edit', $supplier->id) }}"
                                                    class="dropdown-item">Edit</a>
                                             @endcan
-                                            @can('delete', $supplier)
+                                            @can('forceDelete', \App\Models\Supplier::class)
                                                 <form id="form{{$supplier->id}}"
                                                       action="{{ route('suppliers.destroy', $supplier->id) }}"
                                                       method="POST">

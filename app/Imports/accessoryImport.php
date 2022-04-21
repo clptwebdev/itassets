@@ -147,10 +147,10 @@ class accessoryImport extends DefaultValueBinder implements ToModel, WithValidat
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $accessory->purchased_cost = floatval($binary);
+            $accessory->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $accessory->purchased_cost = floatval($row["purchased_cost"]);
+            $accessory->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         if(strtolower($row["donated"]) == 'yes')
@@ -183,17 +183,20 @@ class accessoryImport extends DefaultValueBinder implements ToModel, WithValidat
 
         //check for already existing Manufacturers upon import if else create
         $man_email = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
-        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->orWhere(['supportEmail' => $supplier_email])->first()){
+        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->orWhere(['supportEmail' => $supplier_email])->first())
+        {
 
-        }else{
-            if(isset($row["manufacturer_id"])){
+        } else
+        {
+            if(isset($row["manufacturer_id"]))
+            {
                 $manufacturer = new Manufacturer;
                 $manufacturer->name = $row["manufacturer_id"];
                 $manufacturer->supportEmail = $man_email;
                 $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
                 $manufacturer->supportPhone = "Unknown";
                 $manufacturer->save();
-            } 
+            }
         }
 
         $accessory->manufacturer_id = $manufacturer->id ?? 0;

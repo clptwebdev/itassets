@@ -89,7 +89,7 @@ class AssetImport extends DefaultValueBinder implements ToModel, WithValidation,
             ],
             'purchased_cost' => [
                 'required',
-                'regex:/^\d+(\.\d{1,2})?$/',
+                'regex:/\d+(\.\d{1,2})?$/',
             ],
             'order_no' => [
                 'nullable',
@@ -167,14 +167,14 @@ class AssetImport extends DefaultValueBinder implements ToModel, WithValidation,
         $asset->status_id = $status->id ?? 0;
 
         $asset->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
-        
+
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $asset->purchased_cost = floatval($binary);
+            $asset->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $asset->purchased_cost = floatval($row["purchased_cost"]);
+            $asset->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         if(strtolower($row["donated"]) == 'yes')

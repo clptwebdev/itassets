@@ -82,10 +82,10 @@ class LicenseImport extends DefaultValueBinder implements ToModel, WithValidatio
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $license->purchased_cost = floatval($binary);
+            $license->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $license->purchased_cost = floatval($row["purchased_cost"]);
+            $license->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         $location = Location::where(["name" => $row["location_id"]])->first();

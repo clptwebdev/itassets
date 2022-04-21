@@ -57,7 +57,7 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
             ],
             'purchased_cost' => [
                 'required',
-                'regex:/^\d+(\.\d{1,2})?$/',
+                'regex:/\d+(\.\d{1,2})?$/',
             ],
             'purchased_date' => [
                 'date_format:"d/m/Y"',
@@ -103,10 +103,10 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $property->purchased_cost = floatval($binary);
+            $property->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $property->purchased_cost = floatval($row["purchased_cost"]);
+            $property->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         if(strtolower($row["donated"]) == 'yes')

@@ -82,10 +82,10 @@ class SoftwareImport extends DefaultValueBinder implements ToModel, WithValidati
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $software->purchased_cost = floatval($binary);
+            $software->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $software->purchased_cost = floatval($row["purchased_cost"]);
+            $software->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         $location = Location::where(["name" => $row["location_id"]])->first();

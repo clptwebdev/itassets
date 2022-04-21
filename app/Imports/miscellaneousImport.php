@@ -122,10 +122,10 @@ class miscellaneousImport extends DefaultValueBinder implements ToModel, WithVal
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $miscellanea->purchased_cost = floatval($binary);
+            $miscellanea->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $miscellanea->purchased_cost = floatval($row["purchased_cost"]);
+            $miscellanea->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         //check for already existing Suppliers upon import if else create

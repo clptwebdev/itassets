@@ -12,7 +12,7 @@
             <h1 class="h3 mb-0 text-gray-800">Asset Model</h1>
 
             <div>
-                @can('viewAll' , \App\Models\AssetModel::class)
+                @can('viewAny' , \App\Models\AssetModel::class)
                     <a href="{{ route('asset-models.index') }}"
                        class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                             class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Asset Models</a>

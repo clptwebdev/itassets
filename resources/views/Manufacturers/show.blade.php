@@ -14,7 +14,7 @@
                    class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @endcan
-            @can('delete', $manufacturer)
+            @can('forceDelete', $manufacturer)
                 <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"><i
                         class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
             @endcan

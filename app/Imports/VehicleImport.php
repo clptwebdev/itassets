@@ -87,7 +87,7 @@ class VehicleImport extends DefaultValueBinder implements ToModel, WithValidatio
             'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
             'depreciation.numeric' => 'The depreciation for the Vehicle is a number of years - the value is currently invalid',
             'purchased_date.required' => 'Please enter the date the Vehicle was purchased',
-            'purchased_date.date_format' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY'
+            'purchased_date.date_format' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY',
         ];
     }
 
@@ -101,10 +101,10 @@ class VehicleImport extends DefaultValueBinder implements ToModel, WithValidatio
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $vehicle->purchased_cost = floatval($binary);
+            $vehicle->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $vehicle->purchased_cost = floatval($row["purchased_cost"]);
+            $vehicle->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         $location = Location::where(["name" => $row["location_id"]])->first();

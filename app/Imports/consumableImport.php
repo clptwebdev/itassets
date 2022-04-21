@@ -58,7 +58,7 @@ class consumableImport extends DefaultValueBinder implements ToModel, WithValida
             ],
             'purchased_cost' => [
                 'required',
-                'regex:/^\d+(\.\d{1,2})?$/',
+                'regex:/\d+(\.\d{1,2})?$/',
             ],
             'order_no' => [
                 'required',
@@ -124,10 +124,10 @@ class consumableImport extends DefaultValueBinder implements ToModel, WithValida
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $consumable->purchased_cost = floatval($binary);
+            $consumable->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $consumable->purchased_cost = floatval($row["purchased_cost"]);
+            $consumable->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         //check for already existing Suppliers upon import if else create

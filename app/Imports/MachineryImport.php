@@ -86,10 +86,10 @@ class MachineryImport extends DefaultValueBinder implements ToModel, WithValidat
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $machinery->purchased_cost = floatval($binary);
+            $machinery->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $machinery->purchased_cost = floatval($row["purchased_cost"]);
+            $machinery->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         $location = Location::where(["name" => $row["location_id"]])->first();

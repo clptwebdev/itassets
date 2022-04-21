@@ -62,7 +62,7 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
             ],
             'purchased_cost' => [
                 'required',
-                'regex:/^\d+(\.\d{1,2})?$/',
+                'regex:/\d+(\.\d{1,2})?$/',
             ],
             'purchased_date' => [
                 'date_format:"d/m/Y"',
@@ -100,7 +100,7 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
                 $status->name = $row["status_id"];
                 $status->deployable = 1;
                 $status->save();
-            } 
+            }
         }
 
         $ffe->status_id = $status->id ?? 0;
@@ -111,25 +111,30 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $ffe->purchased_cost = floatval($binary);
+            $ffe->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $ffe->purchased_cost = floatval($row["purchased_cost"]);
+            $ffe->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         //Donated FFE
-        if(strtolower($row["donated"]) == 'yes'){
+        if(strtolower($row["donated"]) == 'yes')
+        {
             $ffe->donated = 1;
-        }else{
+        } else
+        {
             $ffe->donated = 0;
         }
 
         //check for already existing Suppliers upon import if else create
         $supplier_email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
-        if($supplier = Supplier::where(["name" => $row["supplier_id"]])->orWhere(['email' => $supplier_email])->first()){
+        if($supplier = Supplier::where(["name" => $row["supplier_id"]])->orWhere(['email' => $supplier_email])->first())
+        {
 
-        }else{
-            if(isset($row["supplier_id"]) && $row["supplier_id"] != ''){
+        } else
+        {
+            if(isset($row["supplier_id"]) && $row["supplier_id"] != '')
+            {
                 $supplier = new Supplier;
                 $supplier->name = $row["supplier_id"];
                 $supplier->email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
@@ -139,13 +144,16 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
             }
         }
         $ffe->supplier_id = $supplier->id ?? 0;
-           
+
         //check for already existing Manufacturers upon import if else create
         $man_email = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
-        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->orWhere(['supportEmail' => $supplier_email])->first()){
+        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->orWhere(['supportEmail' => $supplier_email])->first())
+        {
 
-        }else{
-            if(isset($row["manufacturer_id"])){
+        } else
+        {
+            if(isset($row["manufacturer_id"]))
+            {
                 $manufacturer = new Manufacturer;
 
                 $manufacturer->name = $row["manufacturer_id"];
@@ -185,6 +193,6 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
     function isBinary($str)
     {
         return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
-    }
+	}
 
 }

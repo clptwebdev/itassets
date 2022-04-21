@@ -84,10 +84,10 @@ class BroadbandImport extends DefaultValueBinder implements ToModel, WithValidat
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $broadband->purchased_cost = floatval($binary);
+            $broadband->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $broadband->purchased_cost = floatval($row["purchased_cost"]);
+            $broadband->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         $location = Location::where(["name" => $row["location_id"]])->first();
