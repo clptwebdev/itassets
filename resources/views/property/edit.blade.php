@@ -65,7 +65,14 @@
                                                 <x-form.input name="purchased_cost" formAttributes="required"
                                                               value="{{ old('purchased_cost') ?? $property->purchased_cost}}"/>
                                             </div>
-
+                                            <div class="form-check mt-2 ml-1">
+                                                <input class="form-check-input" type="checkbox" value="1"
+                                                       @if(old('donated') == 1 || $property->donated == 1) checked @endif name="donated"
+                                                       id="donated">
+                                                <label class="form-check-label" for="donated">
+                                                    Donated
+                                                </label>
+                                            </div>
                                             <div class="form-group">
                                                 <x-form.date name="purchased_date" formAttributes="required"
                                                              value="{{\Carbon\Carbon::parse($property->purchased_date)->format('Y-m-d')}}"/>

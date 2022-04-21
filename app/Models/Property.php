@@ -14,7 +14,7 @@ class Property extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'location_id', 'purchased_cost', 'depreciation', 'type', 'purchased_date', 'user_id'];
+    protected $fillable = ['name', 'location_id', 'purchased_cost', 'donated', 'depreciation', 'type', 'purchased_date', 'user_id'];
 
     //Returns the Location attached to the property
     public function location()
