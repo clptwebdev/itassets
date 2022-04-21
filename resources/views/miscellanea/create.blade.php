@@ -64,10 +64,21 @@
                                             <x-form.input name="serial_no" formAttributes="required"
                                                           value="{{old('serial_no')}}"/>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="depreciation_id">Depreciation</label>
+                                            <select
+                                                class="form-control <?php if ($errors->has('depreciation_id')){?>border-danger<?php }?>"
+                                                name="depreciation_id" id="depreciation_id" required>
+                                                <option value="0">No Depreciation Set</option>
+                                                @foreach($depreciations as $dep)
+                                                    <option value="{{ $dep->id}}">{{ $dep->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="col-12 col-md-6 p-4 mb-3 ">
                                         <div id="modelInfo" class="bg-light p-4">
-                                            <div class="model_title text-center h4 mb-3">Component Image</div>
+                                            <div class="model_title text-center h4 mb-3">Misc Image</div>
                                             <div class="model_image p-4">
                                                 <img id="profileImage" src="{{ asset('images/svg/device-image.svg') }}"
                                                      width="100%" alt="Select Profile Picture" data-bs-toggle="modal"
@@ -157,6 +168,9 @@
                                                 <ul id="locationSelect">
                                                     <li>Nothing to Return</li>
                                                 </ul>
+                                            </div>
+                                            <div class='form-group mt-1'>
+                                                <x-form.input name="room"/>
                                             </div>
                                         </div>
 

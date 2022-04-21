@@ -21,8 +21,7 @@
 @if(auth()->user()->role_id != 0)
     <!-- Nav Item - Dashboard -->
         <li class="nav-item @if(Request::url() == route('dashboard')) {{ 'active' }} @endif">
-            <a class="nav-link"
-               href="{{ route('dashboard')}}">
+            <a class="nav-link" href="{{ route('dashboard')}}">
                 <i class="fas fa-fw fa-tachometer-alt sidebar-icon"></i>
                 <span class="sidebar-title">Dashboard</span></a>
         </li>
@@ -150,7 +149,7 @@
                    aria-expanded="true" aria-controls="accessoryDD">
                     <i class="fas fa-fw fa-keyboard sidebar-icon"></i>
                     <span
-                        class="sidebar-title  @if(Request::url() == route('accessories.index')) {{ 'font-weight-bold' }} @endif">Computer Accessories <i
+                        class="sidebar-title  @if(Request::url() == route('accessories.index')) {{ 'font-weight-bold text-white' }} @endif">Computer Accessories <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="accessoryDD" class="collapse p-0 text-center text-lg-left" aria-labelledby="accessoryTitle"
@@ -186,7 +185,7 @@
                    aria-expanded="true" aria-controls="componentsDD">
                     <i class="far fa-fw fa-hdd sidebar-icon"></i>
                     <span
-                        class="sidebar-title @if(Request::url() == route('components.index')) {{ 'font-weight-bold' }} @endif">Computer Components <i
+                        class="sidebar-title @if(Request::url() == route('components.index')) {{ 'font-weight-bold text-white' }} @endif">Computer Components <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="componentsDD" class="collapse" aria-labelledby="componentsTitle"
@@ -226,7 +225,7 @@
                    aria-expanded="true" aria-controls="miscellaneousDD">
                     <i class="fas fa-fw fa-question sidebar-icon"></i>
                     <span
-                        class="sidebar-title @if(Request::url() == route('miscellaneous.index')) {{ 'font-weight-bold' }} @endif">Miscellaneous <i
+                        class="sidebar-title @if(Request::url() == route('miscellaneous.index')) {{ 'font-weight-bold text-white' }} @endif">Miscellaneous <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="miscellaneousDD" class="collapse" aria-labelledby="consumableTitle"
@@ -252,7 +251,7 @@
     <!-- Nav Item - Charts -->
 
             <li class="nav-item">
-                <a class="nav-link text-left text-sm-center text-md-left  @if(Request::url() == route('licenses.index')) {{ 'show' }} @endif "
+                <a class="nav-link text-left text-sm-center text-md-left  @if(Request::url() == route('licenses.index')) {{ 'font-weight-bold text-white' }} @endif "
                    href="{{route('licenses.index')}}">
                     <i class="far fa-fw fa-id-badge sidebar-icon"></i>
                     <span class="sidebar-title">Licenses</span></a>
@@ -260,7 +259,7 @@
         @endcan
         @can('viewAll' , \App\Models\Broadband::class)
             <li class="nav-item">
-                <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('broadbands.index')) {{ 'show' }} @endif"
+                <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('broadbands.index')) {{ 'font-weight-bold text-white' }} @endif"
                    href="{{route('broadbands.index')}}">
                     <i class="fas fa-fw fa-wifi sidebar-icon"></i>
                     <span class="sidebar-title">Broadband</span></a>
@@ -269,7 +268,7 @@
         @can('viewAll',\App\Models\Order::class )
             <hr class="sidebar-divider">
             <li class="nav-item">
-                <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('orders.index')) {{ 'show' }} @endif"
+                <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('orders.index')) {{ 'font-weight-bold text-white' }} @endif"
                    href="{{route('orders.index')}}">
                     <i class="fas fa-fw fa-money-check sidebar-icon"></i>
                     <span class="sidebar-title">Orders</span></a>
@@ -284,7 +283,7 @@
                    data-bs-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-users sidebar-icon"></i>
                     <span
-                        class="sidebar-title @if(Request::url() == route('users.index')) {{ 'font-weight-bold' }} @endif">Users <i
+                        class="sidebar-title @if(Request::url() == route('users.index')) {{ 'font-weight-bold text-white' }} @endif">Users <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
@@ -303,7 +302,7 @@
                 <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('location.index')}}">
                     <i class="far fa-fw fa-map sidebar-icon"></i>
                     <span
-                        class="sidebar-title @if(Request::url() == route('location.index')) {{ 'font-weight-bold' }} @endif">Locations</span></a>
+                        class="sidebar-title @if(Request::url() == route('location.index')) {{ 'font-weight-bold text-white' }} @endif">Locations</span></a>
             </li>
         @endcan
     <!-- Nav Item - Charts -->
@@ -312,7 +311,7 @@
                 <a class="nav-link text-left text-sm-center text-md-left" href="{{route("manufacturers.index")}}">
                     <i class="fas fa-fw fa-tools sidebar-icon"></i>
                     <span
-                        class="sidebar-title @if(Request::url() == route('manufacturers.index')) {{ 'font-weight-bold' }} @endif">Manufacturers</span></a>
+                        class="sidebar-title @if(Request::url() == route('manufacturers.index')) {{ 'font-weight-bold text-white' }} @endif">Manufacturers</span></a>
             </li>
         @endcan
         @can('viewAny' , \App\Models\Supplier::class)
@@ -321,7 +320,7 @@
                 <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('suppliers.index') }}">
                     <i class="fas fa-fw fa-tags sidebar-icon"></i>
                     <span
-                        class="sidebar-title @if(Request::url() == route('suppliers.index')) {{ 'font-weight-bold' }} @endif">Suppliers</span></a>
+                        class="sidebar-title @if(Request::url() == route('suppliers.index')) {{ 'font-weight-bold text-white' }} @endif">Suppliers</span></a>
             </li>
         @endcan
     <!-- Divider -->

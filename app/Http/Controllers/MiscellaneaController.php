@@ -43,6 +43,8 @@ class MiscellaneaController extends Controller {
         $miscellanea = Miscellanea::find($request->miscellanea_id);
         $miscellanea->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
 
+        session()->flash('success_message', $request->title . ' has successfully been added as a comment.');
+
         return to_route('miscellaneous.show', $miscellanea->id);
     }
 
@@ -112,7 +114,6 @@ class MiscellaneaController extends Controller {
         if(auth()->user()->cant('create', Miscellanea::class))
         {
             return ErrorController::forbidden(route('miscellaneous.index'), 'Unauthorised to Store Miscellaneous.');
-
         }
 
         $request->validate([
@@ -125,12 +126,14 @@ class MiscellaneaController extends Controller {
             'warranty' => 'int|nullable',
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'depreciation_id' => 'required|integer',
+            'room' => 'nullable|string',
         ]);
-
         $miscellanea = Miscellanea::create($request->only(
             'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id'
         ));
         $miscellanea->category()->attach($request->category);
+        session()->flash('success_message', 'You have successfully added this Miscellaneous item');
 
         return to_route("miscellaneous.index");
 
@@ -372,6 +375,8 @@ class MiscellaneaController extends Controller {
             'warranty' => 'int|nullable',
             'purchased_date' => 'nullable|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'depreciation_id' => 'required|integer',
+            'room' => 'nullable|string',
         ]);
 
         if(isset($request->donated) && $request->donated == 1)

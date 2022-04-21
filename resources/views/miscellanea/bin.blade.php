@@ -17,16 +17,6 @@
             <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
                class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
                     class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
-            {{--            @can('viewAny', \App\Models\Miscellanea::class)--}}
-            {{--                <form class="d-inline-block" action="{{ route('miscellaneous.pdf')}}" method="POST">--}}
-            {{--                    @csrf--}}
-            {{--                    <x-form.input type="hidden" name="miscellaneous" :label="false" formAttributes="required"--}}
-            {{--                                  :value="json_encode($miscellaneous->pluck('id'))"/>--}}
-            {{--                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i--}}
-            {{--                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report--}}
-            {{--                    </button>--}}
-            {{--                </form>--}}
-            {{--            @endcan--}}
         </div>
     </div>
 
@@ -38,7 +28,7 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive">
+                <div>
                     <table id="usersTable" class="table table-striped">
                         <thead>
                         <tr>
@@ -67,63 +57,67 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($miscellaneous as $miscellanea)
+                        @if($miscellaneous->count() != 0)
+                            @foreach($miscellaneous as $miscellanea)
 
-                            <tr>
-                                <td>{{$miscellanea->name}}
-                                    <br>
-                                    <small>{{$miscellanea->serial_no}}</small>
-                                </td>
-                                <td class="text-center">
-                                    @if($miscellanea->location->photo()->exists())
-                                        <img src="{{ asset($miscellanea->location->photo->path)}}" height="30px"
-                                             alt="{{$miscellanea->location->name}}"
-                                             title="{{ $miscellanea->location->name ?? 'Unnassigned'}}"/>
-                                    @else
-                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($miscellanea->location->icon ?? '#666').'">'
-                                            .strtoupper(substr($miscellanea->location->name ?? 'u', 0, 1)).'</span>' !!}
-                                    @endif
-                                </td>
-                                <td class="text-center">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
-                                <td data-sort="{{ strtotime($miscellanea->purchased_date)}}">{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
-                                <td>£{{$miscellanea->purchased_cost}}</td>
-                                <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
-                                <td class="text-center" style="color: {{$miscellanea->status->colour ?? '#666'}};">
-                                    <i class="{{$miscellanea->status->icon ?? 'fas fa-circle'}}"></i> {{ $miscellanea->status->name ?? 'N/A' }}
-                                </td>
-                                @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
-                                <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
-                                    {{ $miscellanea->warranty }} Months
+                                <tr>
+                                    <td>{{$miscellanea->name}}
+                                        <br>
+                                        <small>{{$miscellanea->serial_no}}</small>
+                                    </td>
+                                    <td class="text-center">
+                                        @if($miscellanea->location->photo()->exists())
+                                            <img src="{{ asset($miscellanea->location->photo->path)}}" height="30px"
+                                                 alt="{{$miscellanea->location->name}}"
+                                                 title="{{ $miscellanea->location->name ?? 'Unnassigned'}}"/>
+                                        @else
+                                            {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($miscellanea->location->icon ?? '#666').'">'
+                                                .strtoupper(substr($miscellanea->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                        @endif
+                                    </td>
+                                    <td class="text-center">{{$miscellanea->manufacturer->name ?? "N/A"}}</td>
+                                    <td data-sort="{{ strtotime($miscellanea->purchased_date)}}">{{\Carbon\Carbon::parse($miscellanea->purchased_date)->format("d/m/Y")}}</td>
+                                    <td>£{{$miscellanea->purchased_cost}}</td>
+                                    <td>{{$miscellanea->supplier->name ?? 'N/A'}}</td>
+                                    <td class="text-center" style="color: {{$miscellanea->status->colour ?? '#666'}};">
+                                        <i class="{{$miscellanea->status->icon ?? 'fas fa-circle'}}"></i> {{ $miscellanea->status->name ?? 'N/A' }}
+                                    </td>
+                                    @php $warranty_end = \Carbon\Carbon::parse($miscellanea->purchased_date)->addMonths($miscellanea->warranty);@endphp
+                                    <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
+                                        {{ $miscellanea->warranty }} Months
 
-                                    <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
-                                        Remaining</small></td>
-                                <td class="text-right">
-                                    <div class="dropdown no-arrow">
-                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
-                                           aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div
-                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">miscellanea Options:</div>
-                                            @can('delete', $miscellanea)
-                                                <a href="{{ route('miscellaneous.restore', $miscellanea->id) }}"
-                                                   class="dropdown-item">Restore</a>
-                                                <form class="d-block" id="form{{$miscellanea->id}}"
-                                                      action="{{ route('miscellaneous.remove', $miscellanea->id) }}"
-                                                      method="POST">
-                                                    @csrf
-                                                    <a class="deleteBtn dropdown-item" href="#"
-                                                       data-id="{{$miscellanea->id}}">Delete</a>
-                                                </form>
-                                            @endcan
+                                        <br><small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
+                                            Remaining</small></td>
+                                    <td class="text-right">
+                                        <div class="dropdown no-arrow">
+                                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                               id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                                               aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                            </a>
+                                            <div
+                                                class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
+                                                aria-labelledby="dropdownMenuLink">
+                                                <div class="dropdown-header">miscellanea Options:</div>
+                                                @can('delete', $miscellanea)
+                                                    <a href="{{ route('miscellaneous.restore', $miscellanea->id) }}"
+                                                       class="dropdown-item">Restore</a>
+                                                    <form class="d-block" id="form{{$miscellanea->id}}"
+                                                          action="{{ route('miscellaneous.remove', $miscellanea->id) }}"
+                                                          method="POST">
+                                                        @csrf
+                                                        <a class="deleteBtn dropdown-item" href="#"
+                                                           data-id="{{$miscellanea->id}}">Delete</a>
+                                                    </form>
+                                                @endcan
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <td colspan="10" class="text-center">No Miscellaneous Returned</td>
+                        @endif
                         </tbody>
                     </table>
                     <x-paginate :model="$miscellaneous"/>
@@ -145,7 +139,7 @@
 @endsection
 
 @section('modals')
-    <x-modals.delete> Miscellanea</x-modals.delete>
+    <x-modals.delete :archive="true"> Miscellanea</x-modals.delete>
 @endsection
 
 @section('js')
