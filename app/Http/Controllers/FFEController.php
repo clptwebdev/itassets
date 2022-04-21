@@ -67,7 +67,7 @@ class FFEController extends Controller {
         $statuses = Status::select('id', 'name', 'deployable')->withCount('ffe')->get();
 
         return view('FFE.view', [
-            "ffes" => $ffes->paginate(intval($limit))->withPath('/accessory/filter')->fragment('table'),
+            "ffes" => $ffes->paginate(intval($limit))->withPath('/ffes/filter')->fragment('table'),
             "locations" => $locations,
             "categories" => $categories,
             "statuses" => $statuses,
