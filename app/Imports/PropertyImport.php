@@ -81,8 +81,7 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
 
         $property = new Property;
         $property->name = $row["name"];
-        switch($row['type'])
-        {
+        switch($row['type']){
             case 'Freehold Land':
                 $type = 1;
                 break;

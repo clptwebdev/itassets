@@ -144,7 +144,6 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
             }
         }
         $ffe->supplier_id = $supplier->id ?? 0;
-
         //check for already existing Manufacturers upon import if else create
         $man_email = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
         if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->orWhere(['supportEmail' => $supplier_email])->first())
@@ -164,20 +163,15 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
             }
         }
         $ffe->manufacturer_id = $manufacturer->id ?? 0;
-
-        $ffe->depreciation_id = $row["depreciation_id"];
+        $ffe->depreciation = $row["depreciation"];
         $ffe->warranty = $row["warranty"];
-
         $location = Location::where(["name" => $row["location_id"]])->first();
         $lid = $location->id ?? 0;
         $ffe->location_id = $lid;
-
         $ffe->room = $row['room'];
         $ffe->notes = $row['notes'];
-
         $ffe->user_id = auth()->user()->id;
-
-        $ffe->save();
+   
     }
 
     public function batchSize(): int
