@@ -27,6 +27,8 @@ use App\Exports\FFEExport;
 use App\Jobs\FFESPdf;
 use App\Jobs\FFEPdf;
 
+use Illuminate\Support\Facades\Cache;
+
 class FFEController extends Controller {
 
     //FFE = Furniture, Fixtures and Equipment
@@ -160,7 +162,7 @@ class FFEController extends Controller {
         }
 
         //Clear the Filters for the properties
-        session()->forget(['ffe_locations', 'ffe_status', 'ffe_category', 'ffe_start', 'ffe_end', 'ffe_warranty', 'ffe_min', 'ffe_max', 'ffe_search', 'ffe_filter', 'ffes-total', 'ffes-cost', 'ffes-dep']);
+        Cache::flush(['ffe_locations', 'ffe_status', 'ffe_category', 'ffe_start', 'ffe_end', 'ffe_warranty', 'ffe_min', 'ffe_max', 'ffe_search', 'ffe_filter', 'ffes-total', 'ffes-cost', 'ffes-dep']);
 
         return to_route("ffes.index")->with('success_message', $request->name . 'has been successfully created!');
     }
