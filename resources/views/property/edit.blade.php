@@ -65,7 +65,7 @@
                                                 <x-form.input name="purchased_cost" formAttributes="required"
                                                               value="{{ old('purchased_cost') ?? $property->purchased_cost}}"/>
                                             </div>
-                                            <div class="form-check mt-2 ml-1">
+                                            <div class="form-check mt-1 mb-3">
                                                 <input class="form-check-input" type="checkbox" value="1"
                                                        @if(old('donated') == 1 || $property->donated == 1) checked @endif name="donated"
                                                        id="donated">
