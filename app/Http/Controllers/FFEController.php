@@ -67,7 +67,7 @@ class FFEController extends Controller {
         $statuses = Status::select('id', 'name', 'deployable')->withCount('ffe')->get();
 
         return view('FFE.view', [
-            "ffes" => $ffes->paginate(intval($limit))->withPath('/accessory/filter')->fragment('table'),
+            "ffes" => $ffes->paginate(intval($limit))->withPath('/ffe/filter')->fragment('table'),
             "locations" => $locations,
             "categories" => $categories,
             "statuses" => $statuses,
@@ -137,10 +137,16 @@ class FFEController extends Controller {
             "status_id" => "nullable",
             "depreciation" => "integer|nullable",
             'order_no' => 'nullable',
-            'serial_no' => 'required',
             'warranty' => 'int|nullable',
-            'purchased_date' => 'nullable|date',
+            'purchased_date' => 'required|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+        ],[
+            "name.required" => "Please enter a name to reference the FFE.",
+            "name.max:255" => "The name for the FFE is only 255 characters long. Any additional text required please enter in the notes section.",
+            "location_id.required" => "Please assign the FFE to a Location.",
+            "purchased_date.required" => "Please enter a valid Purchased Date for the FFE.",
+            "purchased_date.date" => "Please enter a valid date for the Purchased Date. (DD/MM/YYYY)",
+            "purchased_cost.required" => "Please enter the cost of the FFE.",
         ]);
 
         $ffe = FFE::create(array_merge($request->only(
@@ -151,6 +157,9 @@ class FFEController extends Controller {
         {
             $ffe->category()->attach(explode(',', $request->category));
         }
+
+        //Clear the Filters for the properties
+        session()->forget(['ffe_locations', 'ffe_status', 'ffe_category', 'ffe_start', 'ffe_end', 'ffe_audit', 'ffe_warranty', 'ffe_min', 'ffe_max', 'ffe_search', 'ffe_filter']);
 
         return to_route("ffes.index")->with('success_message', $request->name . 'has been successfully created!');
     }
@@ -200,10 +209,17 @@ class FFEController extends Controller {
             "notes" => "nullable",
             "status_id" => "nullable",
             'order_no' => 'nullable',
-            'serial_no' => 'required',
+            'serial_no' => 'nullable',
             'warranty' => 'int|nullable',
-            'purchased_date' => 'nullable|date',
+            'purchased_date' => 'required|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+        ],[
+            "name.required" => "Please enter a name to reference the FFE.",
+            "name.max:255" => "The name for the FFE is only 255 characters long. Any additional text required please enter in the notes section.",
+            "location_id.required" => "Please assign the FFE to a Location.",
+            "purchased_date.required" => "Please enter a valid Purchased Date for the FFE.",
+            "purchased_date.date" => "Please enter a valid date for the Purchased Date. (DD/MM/YYYY)",
+            "purchased_cost.required" => "Please enter the cost of the FFE.",
         ]);
 
         if(isset($request->donated) && $request->donated == 1)
@@ -670,7 +686,7 @@ class FFEController extends Controller {
         $limit = session('ffe_limit') ?? 25;
 
         return view('FFE.view', [
-            "ffes" => $ffe->paginate(intval($limit))->withPath('/accessory/filter')->fragment('table'),
+            "ffes" => $ffe->paginate(intval($limit))->withPath('/ffe/filter')->fragment('table'),
             'statuses' => Status::withCount('ffe')->get(),
             'categories' => Category::withCount('ffe')->get(),
             "locations" => $locations,
