@@ -84,7 +84,7 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($status->assets as $asset)
+                        @foreach($status->assets()->paginate() as $asset)
                             <tr>
                                 <td>{{ $assetModel->name ?? 'No Model'}}<br><small
                                         class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
@@ -167,6 +167,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$status->assets()->paginate()"/>
                 </div>
             </div>
         </div>
@@ -208,7 +209,7 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($status->accessory as $accessory)
+                        @foreach($status->accessory()->paginate() as $accessory)
 
                             <tr>
                                 <td>{{$accessory->name}}
@@ -274,6 +275,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$status->accessory()->paginate()"/>
                 </div>
             </div>
         </div>
@@ -315,7 +317,7 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($status->components as $component)
+                        @foreach($status->components()->paginate() as $component)
 
                             <tr>
                                 <td>{{$component->name}}
@@ -378,6 +380,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$status->components()->paginate()"/>
                 </div>
             </div>
         </div>
@@ -419,7 +422,7 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        @foreach($status->consumable as $consumable)
+                        @foreach($status->consumable()->paginate() as $consumable)
                             <tr>
                                 <td>{{$consumable->name}}
                                     <br>
@@ -483,6 +486,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-paginate :model="$status->consumable()->paginate()"/>
                 </div>
             </div>
         </div>

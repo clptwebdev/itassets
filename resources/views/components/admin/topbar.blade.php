@@ -63,19 +63,16 @@
             </li>
         @endcan
         <div class="topbar-divider d-none d-sm-block"></div>
+        <li class="nav-item mx-1">
+            <a class="nav-link" href="{{route("requests.index")}}">
+                <i class="fas fa-fw fa-tasks" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Requests"></i>
+                @if(\App\Models\Requests::managerFilter(App\Models\User::whereManagerId(auth()->user()->id)->pluck('id')->toArray())->whereStatus(0)->count() !== 0)
+                    <span
+                        class="badge badge-danger badge-counter">{{\App\Models\Requests::managerFilter(App\Models\User::whereManagerId(auth()->user()->id)->pluck('id')->toArray())->whereStatus(0)->count()}}</span>
+                @endif
+            </a>
+        </li>
 
-        @can('request', App\Models\Asset::class)
-            <li class="nav-item mx-1">
-                <a class="nav-link" href="{{route("requests.index")}}">
-                    <i class="fas fa-fw fa-tasks" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                       title="Requests"></i>
-                    @if(\App\Models\Requests::managerFilter(App\Models\User::whereManagerId(auth()->user()->id)->pluck('id')->toArray())->whereStatus(0)->count() !== 0)
-                        <span
-                            class="badge badge-danger badge-counter">{{\App\Models\Requests::managerFilter(App\Models\User::whereManagerId(auth()->user()->id)->pluck('id')->toArray())->whereStatus(0)->count()}}</span>
-                    @endif
-                </a>
-            </li>
-        @endcan
         @can('viewAny' , App\Models\Log::class)
         <!-- Nav Item - Alerts -->
             <li class="nav-item dropdown no-arrow mx-1">

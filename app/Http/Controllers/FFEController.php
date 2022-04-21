@@ -39,7 +39,7 @@ class FFEController extends Controller {
 
     public function index()
     {
-        //Check to see if the User has permission to View All the AUC.
+        //Check to see if the User has permission to View All the FFE.
         if(auth()->user()->cant('viewAll', FFE::class))
         {
             return ErrorController::forbidden(route('dashboard'), 'Unauthorised | View FFE.');
@@ -173,7 +173,7 @@ class FFEController extends Controller {
 
     public function edit(FFE $ffe)
     {
-        //Check to see if the User is has permission to create an AUC
+        //Check to see if the User is has permission to create an FFE
         if(auth()->user()->cant('update', $ffe))
         {
             return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Update FFE.');

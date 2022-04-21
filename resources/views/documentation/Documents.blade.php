@@ -1423,6 +1423,38 @@
             </div>
         </div>
         {{--     headingEighteen end       --}}
+        {{--     headingNinteen start      --}}
+        <div id="headingNineteen" class="slide">
+            <button class="btn btn-link collapsed slide" data-bs-toggle="collapse"
+                    data-bs-target="#collapseNineteenRequests" aria-expanded="false" aria-controls="headingNineteen">
+                Requests
+            </button>
+        </div>
+        <div id="collapseNineteenRequests" class="collapse" aria-labelledby="headingNineteen"
+             data-bs-parent="#accordion">
+            <div class="card-body">
+                <h2 class="text-info">How Do Requests function?</h2>
+                <p class="text-gray-700">Requests allow actions to be queued and allow for approval from a manager
+                                         before any changes to a specific item are persisted.</p>
+                <h3 class="text-info">Rules applied towards Requests:</h3>
+                <ol>
+                    <li>If you are a <strong class='text-info'>Manager</strong> or <strong class='text-info'>Global
+                                                                                                             Admin</strong>
+                        Requests will automatically be approved without any input.
+                    </li>
+                    <li>If you are a <strong class='text-info'>Technician</strong> or any role below, all
+                        Requests will need to be approved. An input from the Manager will be required to approve or deny
+                        your request.
+                    </li>
+                </ol>
+                <h3 class="text-info">How do I tell my manager I am waiting for a request to be approved?</h3>
+                <p class="text-gray-700">No Need , Email notifications will be sent out to your manager for them to
+                                         approve or deny your request.</p>
+                <p class="text-gray-700">You can navigate to <strong class="text-info">Requests</strong> in the
+                                         navigation menu or click <a href="/requests">here</a>!</p>
+            </div>
+        </div>
+        {{--     headingNinteen end      --}}
     </section>
 @endsection
 

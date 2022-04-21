@@ -49,6 +49,21 @@
                                     {{$dep->models->count()}}
                                 </td>
                                 <td class="text-right">
+                                    <x-wrappers.table-settings>
+                                        @can('update', $fieldset)
+                                            <x-buttons.dropdown-item :route="route('depreciation.update', $dep->id) ">
+                                                Edit
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('delete', $fieldset)
+                                            <x-form.layout method="DELETE" :id="'form'.$fieldset->id"
+                                                           :action="route('fieldsets.destroy', $fieldset->id)">
+                                                <x-buttons.dropdown-item class="deleteBtn" :data="$fieldset->id">
+                                                    Delete
+                                                </x-buttons.dropdown-item>
+                                            </x-form.layout>
+                                        @endcan
+                                    </x-wrappers.table-settings>
                                     <div class="dropdown no-arrow">
                                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
                                            id="dropdownMenu{{$dep->id}}Link" data-bs-toggle="dropdown"

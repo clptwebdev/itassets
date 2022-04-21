@@ -2,25 +2,12 @@
 
 @section('title', 'Asset Model Fieldsets')
 
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
-
 @section('content')
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Asset Model Custom Fieldsets</h1>
-        <div>
-            @can('create' ,\App\Models\Fieldset::class)
-
-                <a href="{{ route('fieldsets.create')}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Add New Custom Fieldset</a>
-            @endcan
-            <x-buttons.add :route="route('fieldsets.create')">Custom Fieldset</x-buttons.add>
-
-        </div>
-    </div>
+    <x-wrappers.nav title="Asset Model Custom Fieldsets">
+        <x-buttons.return :route="route('dashboard')">Dashboard</x-buttons.return>
+        <x-buttons.add :route="route('fieldsets.create')">Custom Fieldset</x-buttons.add>
+    </x-wrappers.nav>
 
     <x-handlers.alerts/>
 
@@ -53,36 +40,36 @@
                             <tr>
                                 <td>{{ $fieldset->name }}</td>
                                 <td>{{ $fieldset->fields->count()}}</td>
-                                <td>
-                                    @foreach($fieldset->models as $model)
+                                <td class='m-2 p-2'>
+                                    @foreach($fieldset->models->take(10) as $model)
                                         <small class="p-1 bg-secondary rounded text-white">{{ $model->name }}</small>
                                     @endforeach
+                                    @if($fieldset->models->count() > 10)
+                                        <small
+                                            class="p-1 bg-secondary rounded text-white">...{{$fieldset->models->count() - 10}}
+                                                                                        +</small>
+                                    @endif
                                 </td>
                                 <td class="text-right">
-                                    <div class="dropdown no-arrow">
-                                        <a class="btn btn-lilac dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
-                                           aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div
-                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Asset Options:</div>
-                                            @can('update', $fieldset)
-                                                <a href="{{ route('fieldsets.edit', $fieldset->id) }}"
-                                                   class="dropdown-item">Edit</a>
-                                            @endcan
-                                            @can('delete', $fieldset)
-                                                <a class="dropdown-item deleteBtn" href="#"
-                                                   data-route="{{ route('fieldsets.destroy', $fieldset->id)}}">Delete</a>
-                                            @endcan
-                                        </div>
-                                    </div>
+                                    <x-wrappers.table-settings>
+                                        @can('update', $fieldset)
+                                            <x-buttons.dropdown-item :route="route('fieldsets.edit', $fieldset->id) ">
+                                                Edit
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('delete', $fieldset)
+                                            <x-form.layout method="DELETE" :id="'form'.$fieldset->id"
+                                                           :action="route('fieldsets.destroy', $fieldset->id)">
+                                                <x-buttons.dropdown-item class="deleteBtn" :data="$fieldset->id">
+                                                    Delete
+                                                </x-buttons.dropdown-item>
+                                            </x-form.layout>
+                                        @endcan
+                                    </x-wrappers.table-settings>
+
                                 </td>
                             </tr>
-                        @endforeach
-                        </tbody>
+                        @endforeach</tbody>
                     </table>
                     <x-paginate :model="$fieldsets"/>
                 </div>

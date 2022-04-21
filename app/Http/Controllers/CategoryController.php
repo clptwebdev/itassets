@@ -17,7 +17,7 @@ class CategoryController extends Controller {
         }
         $locations = auth()->user()->locations;
 
-        $categories = Category::paginate(10);
+        $categories = Category::orderBy('name', 'ASC')->paginate(15);
 
         /* $categories = $categories->map(function($item){
             $item-
