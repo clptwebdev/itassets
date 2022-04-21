@@ -40,7 +40,8 @@ class FFEController extends Controller {
         //Check to see if the User has permission to View All the AUC.
         if(auth()->user()->cant('viewAll', FFE::class))
         {
-            return to_route('errors.forbidden', ['area', 'FFE', 'view']);
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised | View FFE.');
+
         }
 
         //If there are filters currently set move to filtered function
@@ -81,7 +82,7 @@ class FFEController extends Controller {
 
     public function recycleBin()
     {
-        if(auth()->user()->cant('viewAll', FFE::class))
+        if(auth()->user()->cant('recycleBin', FFE::class))
         {
             return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | View FFE Recycle Bin.');
 
@@ -98,10 +99,10 @@ class FFEController extends Controller {
     public function create()
     {
 
-        //Check to see if the User is has permission to create an AUC
+        //Check to see if the User is has permission to create an FFE
         if(auth()->user()->cant('create', FFE::class))
         {
-            return to_route('errors.forbidden', ['area', 'FFE', 'create']);
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised | Create FFE.');
         }
 
         //Find the locations that the user has been assigned to
@@ -140,7 +141,7 @@ class FFEController extends Controller {
             'warranty' => 'int|nullable',
             'purchased_date' => 'required|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-        ],[
+        ], [
             "name.required" => "Please enter a name to reference the FFE.",
             "name.max:255" => "The name for the FFE is only 255 characters long. Any additional text required please enter in the notes section.",
             "location_id.required" => "Please assign the FFE to a Location.",
@@ -213,7 +214,7 @@ class FFEController extends Controller {
             'warranty' => 'int|nullable',
             'purchased_date' => 'required|date',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-        ],[
+        ], [
             "name.required" => "Please enter a name to reference the FFE.",
             "name.max:255" => "The name for the FFE is only 255 characters long. Any additional text required please enter in the notes section.",
             "location_id.required" => "Please assign the FFE to a Location.",
