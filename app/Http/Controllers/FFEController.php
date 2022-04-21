@@ -667,7 +667,7 @@ class FFEController extends Controller {
         $limit = session('ffe_limit') ?? 25;
 
         return view('FFE.view', [
-            "ffes" => $ffe->paginate(intval($limit))->withPath('/accessory/filter')->fragment('table'),
+            "ffes" => $ffe->paginate(intval($limit))->withPath('/ffes/filter')->fragment('table'),
             'statuses' => Status::withCount('ffe')->get(),
             'categories' => Category::withCount('ffe')->get(),
             "locations" => $locations,
