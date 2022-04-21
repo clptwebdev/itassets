@@ -1308,7 +1308,7 @@ class RoleBoot implements ShouldQueue {
             "update" => 1,
             "view" => 1,
             "delete" => 1,
-            "archive" => 0,
+            "archive" => 1,
             "transfer" => 0,
             "request" => 1,
             "spec_reports" => 1,

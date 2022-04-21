@@ -171,7 +171,7 @@ class FFEImport extends DefaultValueBinder implements ToModel, WithValidation, W
         $ffe->room = $row['room'];
         $ffe->notes = $row['notes'];
         $ffe->user_id = auth()->user()->id;
-   
+
     }
 
     public function batchSize(): int
