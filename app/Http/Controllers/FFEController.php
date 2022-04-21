@@ -157,6 +157,9 @@ class FFEController extends Controller {
             $ffe->category()->attach(explode(',', $request->category));
         }
 
+        //Clear the Filters for the properties
+        session()->forget(['ffe_locations', 'ffe_status', 'ffe_category', 'ffe_start', 'ffe_end', 'ffe_audit', 'ffe_warranty', 'ffe_min', 'ffe_max', 'ffe_search', 'ffe_filter']);
+
         return to_route("ffes.index")->with('success_message', $request->name . 'has been successfully created!');
     }
 
