@@ -57,13 +57,14 @@
                                             <x-form.select name="manufacturer_id" :models="$manufacturers" selected="{{$ffe->manufacturer_id}}"/>
                                         </div>
                                         <div class="form-group">
-                                            <x-form.input name="serial_no" formAttributes="required"
+                                            <x-form.input name="serial_no"
                                                           value="{{old('serial_no') ?? $ffe->serial_no}}"/>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 p-4 mb-3 ">
                                         <div id="modelInfo" class="bg-light p-4">
-                                            <div class="model_title text-center h4 mb-3">FFE Image</div>
+                                            <div class="model_title text-center h4">FFE Image</div>
+                                            <div class="text-center mb-3"><small class="text-muted">*click on the image to change photo</small></div>
                                             <div class="model_image p-4">
                                                 @if($ffe->photo()->exists() && $ffe->photo()->exists())
                                                     <img id="profileImage"
@@ -176,7 +177,9 @@
                                                 </ul>
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <x-form.input name="room" value="{{old('room')}}"/>
+                                        </div>
                                     </div>
                                     <div class="col-12 col-md-6 p-4 mb-3 ">
                                         <div id="locationInfo" class="bg-light p-4">

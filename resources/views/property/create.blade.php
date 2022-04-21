@@ -61,6 +61,14 @@
                                             <div class="form-group" >
                                                 <x-form.input name="purchased_cost" formAttributes="" value="{{old('purchased_cost')}}" />
                                             </div >
+                                            <div class="form-check mt-1 mb-3">
+                                                <input class="form-check-input" type="checkbox" value="1"
+                                                       @if(old('donated') == 1) checked @endif name="donated"
+                                                       id="donated">
+                                                <label class="form-check-label" for="donated">
+                                                    Donated
+                                                </label>
+                                            </div>
 
                                             <div class="form-group" >
                                                 <x-form.date name="purchased_date" formAttributes="" value="{{old('purchased_date')}}" />

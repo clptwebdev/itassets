@@ -121,6 +121,7 @@ class PropertyController extends Controller {
             'name' => $request->name,
             'location_id' => $request->location_id,
             'purchased_cost' => $request->purchased_cost,
+            'donated' => $request->donated,
             'depreciation' => $request->depreciation,
             'type' => $request->type,
             'purchased_date' => $request->purchased_date,
@@ -168,7 +169,7 @@ class PropertyController extends Controller {
         ]);
 
         //Fill the Model fields from the request
-        $property->fill($request->only('name', 'location_id', 'purchased_cost', 'purchased_date', 'depreciation', 'type'))->save();
+        $property->fill($request->only('name', 'location_id', 'purchased_cost', 'donated', 'purchased_date', 'depreciation', 'type'))->save();
 
         //Return the session message to the index
         session()->flash('success_message', $request->name . ' has been updated successfully');

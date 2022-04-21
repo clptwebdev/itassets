@@ -56,13 +56,14 @@
                                                 <x-form.select name="manufacturer_id" :models="$manufacturers"/>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="serial_no" formAttributes="required"
+                                                <x-form.input name="serial_no"
                                                               value="{{old('serial_no')}}"/>
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
                                             <div id="modelInfo" class="bg-light p-4">
-                                                <div class="model_title text-center h4 mb-3">FFE Image</div>
+                                                <div class="model_title text-center h4">FFE Image</div>
+                                                <div class="text-center mb-3"><small class="text-muted">*click on the image to change photo</small></div>
                                                 <div class="model_image p-4">
                                                     <img id="profileImage" src="{{ asset('images/svg/ffe.svg') }}"
                                                          width="100%" alt="Select Profile Picture"
@@ -113,9 +114,7 @@
                                             <div class="form-group">
                                                 <x-form.input name="warranty" value="{{old('warranty')}}"/>
                                             </div>
-                                            <div class="form-group">
-                                                <x-form.input name="room" value="{{old('room')}}"/>
-                                            </div>
+                                            
                                         </div>
 
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
@@ -164,7 +163,9 @@
                                                     </ul>
                                                 </div>
                                             </div>
-
+                                            <div class="form-group">
+                                                <x-form.input name="room" value="{{old('room')}}"/>
+                                            </div>
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
                                             <div id="locationInfo" class="bg-light p-4">
