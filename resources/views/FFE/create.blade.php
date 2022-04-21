@@ -56,7 +56,8 @@
                                                 <x-form.select name="manufacturer_id" :models="$manufacturers"/>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="serial_no" value="{{old('serial_no')}}"/>
+                                                <x-form.input name="serial_no" formAttributes="required"
+                                                              value="{{old('serial_no')}}"/>
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
@@ -69,181 +70,158 @@
                                                     <input type="hidden" id="photo_id" name="photo_id"
                                                            value="{{ old('photo_id') ?? 0}}">
                                                 </div>
-                                                <div class="form-group">
-                                                    <x-form.select name="manufacturer_id" :models="$manufacturers"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <x-form.input name="serial_no" formAttributes="required"
-                                                                  value="{{old('serial_no')}}"/>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6 p-4 mb-3 ">
-                                                <div id="modelInfo" class="bg-light p-4">
-                                                    <div class="model_title text-center h4 mb-3">FFE Image</div>
-                                                    <div class="model_image p-4">
-                                                        <img id="profileImage" src="{{ asset('images/svg/ffe.svg') }}"
-                                                             width="100%" alt="Select Profile Picture"
-                                                             data-bs-toggle="modal" data-bs-target="#imgModal">
-                                                        <input type="hidden" id="photo_id" name="photo_id"
-                                                               value="{{ old('photo_id') ?? 0}}">
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade  p-2 pt-4 " id="purchase" role="tabpanel"
-                                         aria-labelledby="purchase-tab">
-                                        <div class="row">
-                                            <div class="col-12 col-md-6 p-4 mb-3">
-                                                <h3 class="h6 text-center mb-3">Purchase Information</h3>
-                                                <div class="form-group">
-                                                    <x-form.input name="order_no" value="{{old('order_no')}}"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <x-form.date name="purchased_date" formAttributes=""/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <x-form.input name="purchased_cost" formAttributes=""
-                                                                  value="{{old('purchased_cost')}}"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <x-form.input name="depreciation" formAttributes=""
-                                                                  value="{{old('depreciation')}}"/>
-                                                </div>
-                                                <div class="form-group position-relative">
-                                                    <label for="findSupplier">Supplier</label>
-                                                    <input type="hidden" id="supplier_id" name="supplier_id"
-                                                           class="form-control mb-3" readonly
-                                                           value="{{old('supplier_id')}}">
-                                                    <input class="form-control" type="text" name="find_supplier"
-                                                           id="findSupplier" value="" value="{{old('find_supplier')}}"
-                                                           placeholder="Search for Supplier" autocomplete="off">
-                                                    <div id="supplierResults"
-                                                         class="w-100 h-auto mb-5 d-block search-modal position-absolute"
-                                                         style="visibility: hidden; z-index: 2;">
-                                                        <ul id="supplierSelect">
-                                                            <li>Nothing to Return</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <x-form.input name="warranty" value="{{old('warranty')}}"/>
+                                <div class="tab-pane fade  p-2 pt-4 " id="purchase" role="tabpanel"
+                                     aria-labelledby="purchase-tab">
+                                    <div class="row">
+                                        <div class="col-12 col-md-6 p-4 mb-3">
+                                            <h3 class="h6 text-center mb-3">Purchase Information</h3>
+                                            <div class="form-group">
+                                                <x-form.input name="order_no" value="{{old('order_no')}}"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <x-form.date name="purchased_date" formAttributes=""/>
+                                            </div>
+                                            <div class="form-group">
+                                                <x-form.input name="purchased_cost" formAttributes=""
+                                                              value="{{old('purchased_cost')}}"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <x-form.input name="depreciation" formAttributes=""
+                                                              value="{{old('depreciation')}}"/>
+                                            </div>
+                                            <div class="form-group position-relative">
+                                                <label for="findSupplier">Supplier</label>
+                                                <input type="hidden" id="supplier_id" name="supplier_id"
+                                                       class="form-control mb-3" readonly
+                                                       value="{{old('supplier_id')}}">
+                                                <input class="form-control" type="text" name="find_supplier"
+                                                       id="findSupplier" value="" value="{{old('find_supplier')}}"
+                                                       placeholder="Search for Supplier" autocomplete="off">
+                                                <div id="supplierResults"
+                                                     class="w-100 h-auto mb-5 d-block search-modal position-absolute"
+                                                     style="visibility: hidden; z-index: 2;">
+                                                    <ul id="supplierSelect">
+                                                        <li>Nothing to Return</li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="room" value="{{old('room')}}"/>
+                                                <x-form.input name="warranty" value="{{old('warranty')}}"/>
                                             </div>
+                                        </div>
 
-                                            <div class="col-12 col-md-6 p-4 mb-3 ">
-                                                <div id="supplierInfo" class="bg-light p-4">
-                                                    <div class="model_title text-center h4 mb-3">Supplier Name</div>
-                                                    <div
-                                                        class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                        <img id="profileImage"
-                                                             src="{{ asset('images/svg/suppliers.svg') }}"
-                                                             height="150px" alt="Select Profile Picture">
-                                                    </div>
-                                                    <div class="model_no py-2 px-4 text-center">
-                                                        Address
-                                                    </div>
-                                                    <div class="model_no py-2 px-4 text-center">
-                                                        Website
-                                                    </div>
-                                                    <div class="model_no py-2 px-4 text-center">
-                                                        Email
-                                                    </div>
-                                                    <div class="model_no py-2 px-4 text-center">
-                                                        Notes
-                                                    </div>
+                                        <div class="col-12 col-md-6 p-4 mb-3 ">
+                                            <div id="supplierInfo" class="bg-light p-4">
+                                                <div class="model_title text-center h4 mb-3">Supplier Name</div>
+                                                <div
+                                                    class="model_image p-4 d-flex justify-content-center align-items-middle">
+                                                    <img id="profileImage" src="{{ asset('images/svg/suppliers.svg') }}"
+                                                         height="150px" alt="Select Profile Picture">
+                                                </div>
+                                                <div class="model_no py-2 px-4 text-center">
+                                                    Address
+                                                </div>
+                                                <div class="model_no py-2 px-4 text-center">
+                                                    Website
+                                                </div>
+                                                <div class="model_no py-2 px-4 text-center">
+                                                    Email
+                                                </div>
+                                                <div class="model_no py-2 px-4 text-center">
+                                                    Notes
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade p-2 pt-4" id="location" role="tabpanel"
-                                         aria-labelledby="location-tab">
-                                        <div class="row">
-                                            <div class="col-12 col-md-6 p-4 mb-3 ">
-                                                <div class="form-group position-relative">
-                                                    <label for="findLocation">Location</label>
-                                                    <input type="hidden" id="location_id" name="location_id"
+                                <div class="tab-pane fade p-2 pt-4" id="location" role="tabpanel"
+                                     aria-labelledby="location-tab">
+                                    <div class="row">
+                                        <div class="col-12 col-md-6 p-4 mb-3 ">
+                                            <div class="form-group position-relative">
+                                                <label for="findLocation">Location</label>
+                                                <input type="hidden" id="location_id" name="location_id"
+                                                       class="form-control mb-3" readonly
+                                                       value="{{old('location_id')}}">
+                                                <input class="form-control" type="text" name="find_location"
+                                                       id="findLocation" autocomplete="off"
+                                                       placeholder="Search for Location"
+                                                       value="{{old('find_location')}}">
+                                                <div id="locationResults"
+                                                     class="w-100 h-auto mb-5 d-block search-modal position-absolute"
+                                                     style="visibility: hidden; z-index: 2;">
+                                                    <ul id="locationSelect">
+                                                        <li>Nothing to Return</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-12 col-md-6 p-4 mb-3 ">
+                                            <div id="locationInfo" class="bg-light p-4">
+                                                <div class="model_title text-center h4 mb-3">Location Name</div>
+                                                <div
+                                                    class="model_image p-4 d-flex justify-content-center align-items-middle">
+                                                    <img id="profileImage"
+                                                         src="{{ asset('images/svg/location-image.svg') }}"
+                                                         height="200px" alt="Select Profile Picture">
+                                                </div>
+                                                <div class="model_no py-2 px-4 text-center">
+                                                    Address
+                                                </div>
+                                                <div class="model_no py-2 px-4 text-center">
+                                                    Website
+                                                </div>
+                                                <div class="model_no py-2 px-4 text-center">
+                                                    Email
+                                                </div>
+                                                <div class="model_no py-2 px-4 text-center">
+                                                    Notes
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade p-2 pt-4" id="attributes" role="tabpanel"
+                                     aria-labelledby="attributes-tab">
+                                    <div class="row">
+                                        <div class="col-12 p-4 mb-3">
+                                            <div id="categories" class="form-control h-auto p-4 mb-3 bg-light">
+                                                <h4 class="h6 mb-4 text-center">Categories</h4>
+                                                <div class="position-relative">
+                                                    @csrf
+                                                    <input type="hidden" id="category_id" name="category"
                                                            class="form-control mb-3" readonly
-                                                           value="{{old('location_id')}}">
-                                                    <input class="form-control" type="text" name="find_location"
-                                                           id="findLocation" autocomplete="off"
-                                                           placeholder="Search for Location"
-                                                           value="{{old('find_location')}}">
-                                                    <div id="locationResults"
+                                                           value="{{old('category')}}">
+                                                    <input class="form-control" type="text" name="find_category"
+                                                           id="findCategory" value=""
+                                                           placeholder="Search for Categories" autocomplete="off"
+                                                           value="">
+                                                    <div id="categoryResults"
                                                          class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                          style="visibility: hidden; z-index: 2;">
-                                                        <ul id="locationSelect">
+                                                        <ul id="categorySelect">
                                                             <li>Nothing to Return</li>
                                                         </ul>
                                                     </div>
-                                                </div>
+                                                    <div id="selectedCategories" class="row mt-3 mb-2 p-2">
 
-                                            </div>
-                                            <div class="col-12 col-md-6 p-4 mb-3 ">
-                                                <div id="locationInfo" class="bg-light p-4">
-                                                    <div class="model_title text-center h4 mb-3">Location Name</div>
-                                                    <div
-                                                        class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                        <img id="profileImage"
-                                                             src="{{ asset('images/svg/location-image.svg') }}"
-                                                             height="200px" alt="Select Profile Picture">
-                                                    </div>
-                                                    <div class="model_no py-2 px-4 text-center">
-                                                        Address
-                                                    </div>
-                                                    <div class="model_no py-2 px-4 text-center">
-                                                        Website
-                                                    </div>
-                                                    <div class="model_no py-2 px-4 text-center">
-                                                        Email
-                                                    </div>
-                                                    <div class="model_no py-2 px-4 text-center">
-                                                        Notes
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="tab-pane fade p-2 pt-4" id="attributes" role="tabpanel"
-                                         aria-labelledby="attributes-tab">
-                                        <div class="row">
-                                            <div class="col-12 p-4 mb-3">
-                                                <div id="categories" class="form-control h-auto p-4 mb-3 bg-light">
-                                                    <h4 class="h6 mb-4 text-center">Categories</h4>
-                                                    <div class="position-relative">
-                                                        @csrf
-                                                        <input type="hidden" id="category_id" name="category"
-                                                               class="form-control mb-3" readonly
-                                                               value="{{old('category')}}">
-                                                        <input class="form-control" type="text" name="find_category"
-                                                               id="findCategory" value=""
-                                                               placeholder="Search for Categories" autocomplete="off"
-                                                               value="">
-                                                        <div id="categoryResults"
-                                                             class="w-100 h-auto mb-5 d-block search-modal position-absolute"
-                                                             style="visibility: hidden; z-index: 2;">
-                                                            <ul id="categorySelect">
-                                                                <li>Nothing to Return</li>
-                                                            </ul>
-                                                        </div>
-                                                        <div id="selectedCategories" class="row mt-3 mb-2 p-2">
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row mb-3">
-                                                    <x-form.select name="status_id" :models="$statuses"/>
-                                                </div>
-                                                <div class="form-row">
-                                                    <x-form.textarea name="notes" formAttributes="rows='10'"
-                                                                     value="{{old('notes')}}"/>
-                                                </div>
+                                            <div class="form-row mb-3">
+                                                <x-form.select name="status_id" :models="$statuses"/>
+                                            </div>
+                                            <div class="form-row">
+                                                <x-form.textarea name="notes" formAttributes="rows='10'"
+                                                                 value="{{old('notes')}}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -252,6 +230,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
     </x-form.layout>
 @endsection
