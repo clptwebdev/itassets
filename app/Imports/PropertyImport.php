@@ -57,7 +57,11 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
             ],
             'purchased_cost' => [
                 'required',
+<<<<<<< HEAD
                 'regex:/\d+(\.\d{1,2})?$/',
+=======
+                'regex:/^\d+(\.\d{1,2})?$/',
+>>>>>>> f378d6c391ce1f6057a9fb6438ece2adbfea73ef
             ],
             'purchased_date' => [
                 'date_format:"d/m/Y"',
