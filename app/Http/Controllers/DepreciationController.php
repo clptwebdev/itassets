@@ -41,7 +41,7 @@ class DepreciationController extends Controller {
 
     public function update(Request $request, Depreciation $depreciation)
     {
-        if(auth()->user()->cant('update', $depreciation))
+        if(auth()->user()->cant('update', Depreciation::class))
         {
             return ErrorController::forbidden(route('depreciation.index'), 'Unauthorised to Update Depreciation.');
 

@@ -32,22 +32,22 @@ class DepreciationPolicy {
         return $this->model->create;
     }
 
-    public function update(User $user, Depreciation $depreciation)
+    public function update()
     {
         return $this->model->update;
     }
 
-    public function delete(User $user, Depreciation $depreciation)
+    public function delete()
     {
         return $this->model->archive;
     }
 
-    public function restore(User $user, Depreciation $depreciation)
+    public function restore(Depreciation $depreciation)
     {
         return $this->model->archive;
     }
 
-    public function forceDelete(User $user, Depreciation $depreciation)
+    public function forceDelete(Depreciation $depreciation)
     {
         return $this->model->delete;
     }
