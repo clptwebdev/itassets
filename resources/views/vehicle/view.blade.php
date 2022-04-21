@@ -118,24 +118,24 @@
                                             View
                                         </x-buttons.dropdown-item>
                                     @endcan
-                                    @can('update', $vehicle)
+                                    @can('update', \App\Models\Vehicle::class)
                                         <x-buttons.dropdown-item :route=" route('vehicles.edit', $vehicle->id)">
                                             Edit
                                         </x-buttons.dropdown-item>
                                     @endcan
-                                    @can('update', $vehicle)
+                                    @can('update', \App\Models\Vehicle::class)
                                         <x-buttons.dropdown-item class="transferBtn"
                                                                  formRequirements="data-model-id='{{$vehicle->id}}'  data-location-from='{{$vehicle->location->name ?? 'Unallocated' }}' data-location-id='{{ $vehicle->location_id }}'">
                                             Transfer
                                         </x-buttons.dropdown-item>
                                     @endcan
-                                    @can('delete', $vehicle)
+                                    @can('delete', \App\Models\Vehicle::class)
                                         <x-buttons.dropdown-item class="disposeBtn"
                                                                  formRequirements="data-model-id='{{$vehicle->id}}' data-model-name='{{$vehicle->name ?? 'No name' }}'">
                                             Dispose
                                         </x-buttons.dropdown-item>
                                     @endcan
-                                    @can('delete', $vehicle)
+                                    @can('delete', \App\Models\Vehicle::class)
                                         <x-form.layout method="DELETE" class="d-block p-0 m-0" :id="'form'.$vehicle->id"
                                                        :action="route('vehicles.destroy', $vehicle->id)">
                                             <x-buttons.dropdown-item :data="$vehicle->id" class="deleteBtn">

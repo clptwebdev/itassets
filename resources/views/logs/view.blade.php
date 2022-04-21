@@ -91,9 +91,11 @@
                     </form>
                 </div>
             </div>
-            <div class="col-4">
-                <a href="{{route('logs.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
-            </div>
+            @if(session()->has('log_search') || session()->has('log_type'))
+                <div class="col-4">
+                    <a href="{{route('logs.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
+                </div>
+            @endif
         </div>
 
         <div class="card shadow mb-4">

@@ -119,7 +119,7 @@ class AUCController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'type' => 'required|gt:0',
-            'user_id' => auth()->user()->id,
+
         ]);
 
         $property = new AUC;
@@ -131,6 +131,7 @@ class AUCController extends Controller {
             'depreciation' => $request->depreciation,
             'type' => $request->type,
             'purchased_date' => $request->purchased_date,
+            'user_id' => auth()->user()->id,
         ])->save();
 
         session()->flash('success_message', $request->name . ' has been created successfully');
@@ -236,7 +237,7 @@ class AUCController extends Controller {
     public function recycleBin()
     {
         //Check to see if the users have permissions to view the recycle bin
-        if(auth()->user()->cant('delete', AUC::class))
+        if(auth()->user()->cant('recycleBin', AUC::class))
         {
             return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Recycle Assets Under Construction.');
 

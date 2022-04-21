@@ -260,7 +260,11 @@ class AccessoryController extends Controller {
         $accessory = Accessory::create(array_merge($request->only(
             'name', 'asset_tag', 'model', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'donated', 'supplier_id', 'order_no', 'warranty', 'location_id', 'room', 'manufacturer_id', 'notes', 'photo_id', 'depreciation_id', 'user_id'
         ), ['user_id' => auth()->user()->id]));
-        $accessory->category()->attach(explode(',', $request->category));
+        if($request->category)
+        {
+            $accessory->category()->attach(explode(',', $request->category));
+
+        }
 
         return to_route("accessories.index")->with('success_message', $request->name . 'has been successfully created!');
     }

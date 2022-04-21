@@ -24,7 +24,7 @@ class FFEObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'FFE',
             'loggable_id' => $ffe->id ?? 0,
-            'data' => $this->user . 'A Un-Authorised User has added a new FFE: ' . $ffe->name . '. ' . $location,
+            'data' => $this->user . ' has added a new FFE: ' . $ffe->name . '. ' . $location,
         ]);
     }
 
@@ -48,7 +48,7 @@ class FFEObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'FFE',
             'loggable_id' => $ffe->id ?? 0,
-            'data' => $this->user . 'A Un-Authorised' . ' has placed the FFE: ' . $ffe->name . ' into the recycling bin',
+            'data' => $this->user . ' has placed the FFE: ' . $ffe->name . ' into the recycling bin',
         ]);
     }
 
@@ -58,7 +58,7 @@ class FFEObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'FFE',
             'loggable_id' => $ffe->id ?? 0,
-            'data' => $this->user . 'A Un-Authorised' . ' has restored the FFE: ' . $ffe->name,
+            'data' => $this->user . ' has restored the FFE: ' . $ffe->name,
         ]);
     }
 
@@ -68,7 +68,7 @@ class FFEObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'FFE',
             'loggable_id' => $ffe->id ?? 0,
-            'data' => $this->user . 'A Un-Authorised' . ' has permanently removed the FFE: ' . $ffe->name,
+            'data' => $this->user . ' has permanently removed the FFE: ' . $ffe->name,
         ]);
     }
 

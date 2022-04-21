@@ -21,7 +21,7 @@ class AccessoryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'accessory',
             'loggable_id' => $accessory->id ?? 0,
-            'data' => $this->user . "Unknown" . " created a new Accessory - {$accessory->name}",
+            'data' => $this->user . " created a new Accessory - {$accessory->name}",
         ]);
     }
 
@@ -45,7 +45,7 @@ class AccessoryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'accessory',
             'loggable_id' => $accessory->id ?? 0,
-            'data' => $this->user . "Unknown" . " deleted Accessory - {$accessory->name}",
+            'data' => $this->user . " deleted Accessory - {$accessory->name}",
         ]);
     }
 
@@ -56,7 +56,7 @@ class AccessoryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'accessory',
             'loggable_id' => $accessory->id ?? 0,
-            'data' => $this->user . "Unknown" . " restored Accessory - {$accessory->name}",
+            'data' => $this->user . " restored Accessory - {$accessory->name}",
         ]);
     }
 
@@ -67,7 +67,7 @@ class AccessoryObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'accessory',
             'loggable_id' => $accessory->id ?? 0,
-            'data' => $this->user . "Unknown" . " permanently deleted Accessory - {$accessory->name}",
+            'data' => $this->user . " permanently deleted Accessory - {$accessory->name}",
         ]);
     }
 

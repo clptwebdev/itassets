@@ -21,7 +21,7 @@ class ConsumableObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'consumable',
             'loggable_id' => $consumable->id ?? 0,
-            'data' => $this->user . "Unknown" . " created a new consumable - {$consumable->name}",
+            'data' => $this->user . " created a new consumable - {$consumable->name}",
         ]);
     }
 
@@ -45,7 +45,7 @@ class ConsumableObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'consumable',
             'loggable_id' => $consumable->id ?? 0,
-            'data' => $this->user . "Unknown" . " deleted consumable - {$consumable->name}",
+            'data' => $this->user . " deleted consumable - {$consumable->name}",
         ]);
     }
 
@@ -56,7 +56,7 @@ class ConsumableObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'consumable',
             'loggable_id' => $consumable->id ?? 0,
-            'data' => $this->user . "Unknown" . " restored consumable - {$consumable->name}",
+            'data' => $this->user . " restored consumable - {$consumable->name}",
         ]);
     }
 
@@ -67,7 +67,7 @@ class ConsumableObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'consumable',
             'loggable_id' => $consumable->id ?? 0,
-            'data' => $this->user . "Unknown" . " permanently delted consumable - {$consumable->name}",
+            'data' => $this->user . " permanently delted consumable - {$consumable->name}",
         ]);
     }
 

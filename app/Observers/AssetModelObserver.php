@@ -21,7 +21,7 @@ class AssetModelObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'assetModel',
             'loggable_id' => $assetModel->id ?? 0,
-            'data' => $this->user . "Unknown" . " created a new Asset Model - {$assetModel->name}",
+            'data' => $this->user . " created a new Asset Model - {$assetModel->name}",
         ]);
     }
 
@@ -45,7 +45,7 @@ class AssetModelObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'assetModel',
             'loggable_id' => $assetModel->id ?? 0,
-            'data' => $this->user . "Unknown" . " deleted Asset Model - {$assetModel->name}",
+            'data' => $this->user . " deleted Asset Model - {$assetModel->name}",
         ]);
     }
 
@@ -56,7 +56,7 @@ class AssetModelObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'assetModel',
             'loggable_id' => $assetModel->id ?? 0,
-            'data' => $this->user . "Unknown" . " restored Asset Model - {$assetModel->name}",
+            'data' => $this->user . " restored Asset Model - {$assetModel->name}",
         ]);
     }
 
@@ -67,7 +67,7 @@ class AssetModelObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'assetModel',
             'loggable_id' => $assetModel->id ?? 0,
-            'data' => $this->user . "Unknown" . " permanently deleted Asset Model - {$assetModel->name}",
+            'data' => $this->user . " permanently deleted Asset Model - {$assetModel->name}",
         ]);
     }
 

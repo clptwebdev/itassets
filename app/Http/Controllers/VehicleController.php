@@ -112,7 +112,7 @@ class VehicleController extends Controller {
         //Validate the post data
         $validation = $request->validate([
             'name' => 'required',
-            'registration' => 'required',
+            'registration' => [\Illuminate\Validation\Rule::unique('vehicles', 'registration'), 'required'],
             'location_id' => 'required',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
@@ -178,7 +178,7 @@ class VehicleController extends Controller {
         //Validate the post data
         $validation = $request->validate([
             'name' => 'required',
-            'registration' => 'required',
+            'registration' => [\Illuminate\Validation\Rule::unique('vehicles', 'registration'), 'required'],
             'location_id' => 'required',
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',

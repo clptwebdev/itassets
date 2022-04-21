@@ -158,7 +158,7 @@ class UserController extends Controller {
 
             session()->flash('success_message', $user->name . ' Has Been assigned to the Manager ' . $manager->name . '.');
 
-            return to_route('user.details');
+            return to_route('users.index');
         }
     }
 

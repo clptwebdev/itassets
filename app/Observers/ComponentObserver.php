@@ -21,7 +21,7 @@ class ComponentObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'component',
             'loggable_id' => $component->id ?? 0,
-            'data' => $this->user . "Unknown" . " created a new Component - {$component->name}",
+            'data' => $this->user . " created a new Component - {$component->name}",
         ]);
     }
 
@@ -45,7 +45,7 @@ class ComponentObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'component',
             'loggable_id' => $component->id ?? 0,
-            'data' => $this->user . "Unknown" . " sent Component - {$component->name} to the Recycle Bin",
+            'data' => $this->user . " sent Component - {$component->name} to the Recycle Bin",
         ]);
     }
 
@@ -56,7 +56,7 @@ class ComponentObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'component',
             'loggable_id' => $component->id ?? 0,
-            'data' => $this->user . "Unknown" . " restored Component - {$component->name}",
+            'data' => $this->user . " restored Component - {$component->name}",
         ]);
     }
 
@@ -67,7 +67,7 @@ class ComponentObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'component',
             'loggable_id' => $component->id ?? 0,
-            'data' => $this->user . "Unknown" . " has permanently deleted Component - {$component->name}",
+            'data' => $this->user . " has permanently deleted Component - {$component->name}",
         ]);
     }
 

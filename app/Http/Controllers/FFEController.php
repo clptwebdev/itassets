@@ -135,6 +135,7 @@ class FFEController extends Controller {
             "room" => "nullable",
             "notes" => "nullable",
             "status_id" => "nullable",
+            "depreciation" => "integer|nullable",
             'order_no' => 'nullable',
             'serial_no' => 'required',
             'warranty' => 'int|nullable',
@@ -191,6 +192,7 @@ class FFEController extends Controller {
         }
 
         $request->validate([
+            "depreciation" => "integer|nullable",
             "name" => "required|max:255",
             "supplier_id" => "nullable",
             "location_id" => "required",
