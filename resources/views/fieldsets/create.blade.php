@@ -10,15 +10,9 @@
     <form action="{{ route('fieldsets.store') }}" method="POST">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Add New Fieldset</h1>
-
             <div>
-                @can('viewAll' ,\App\Models\Fieldset::class)
-
-                    <a href="{{ route('fieldsets.index') }}"
-                       class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                            class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Fieldsets</a>
-                @endcan
-
+                <a href="{{ route('fieldsets.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+                        class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Fieldsets</a>
                 <button type="submit" class="d-inline-block btn btn-sm btn-green shadow-sm"><i
                         class="far fa-save fa-sm text-white-50"></i> Save
                 </button>

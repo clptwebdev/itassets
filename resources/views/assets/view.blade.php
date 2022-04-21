@@ -4,11 +4,12 @@
 
 @section('content')
     <x-wrappers.nav title="Computer Equipment">
+        <x-buttons.return :route="route('dashboard')">Dashboard</x-buttons.return>
         @can('recycleBin', \App\Models\Asset::class)
             <x-buttons.recycle :route="route('assets.bin')" :count="\App\Models\Asset::onlyTrashed()->count()"/>
         @endcan
         @can('create' , \App\Models\Asset::class)
-            <x-buttons.add :route="route('assets.create')">Equipment)</x-buttons.add>
+            <x-buttons.add :route="route('assets.create')">Equipment</x-buttons.add>
         @endcan
         @can('generatePDF', \App\Models\Asset::class)
             @if ($assets->count() == 1)

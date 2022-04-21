@@ -50,6 +50,7 @@ class FieldsetController extends Controller {
         $fieldset = Fieldset::create(['name' => $request->name]);
         $array = explode(',', $request->fields);
         $fieldset->fields()->attach($array);
+        session()->flash('success_message', 'The ' . $fieldset->name . ' field was created Successfully.');
 
         return to_route('fieldsets.index');
     }
@@ -81,6 +82,8 @@ class FieldsetController extends Controller {
         $fieldset->update(['name' => $request->name]);
         $array = explode(',', $request->fields);
         $fieldset->fields()->sync($array);
+
+        session()->flash('success_message', 'The ' . $fieldset->name . ' field was updated Successfully.');
 
         return to_route('fieldsets.index');
     }
