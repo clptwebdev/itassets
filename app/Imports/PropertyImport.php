@@ -57,7 +57,6 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
             ],
             'purchased_cost' => [
                 'required',
-                'regex:/^\d+(\.\d{1,2})?$/',
             ],
             'purchased_date' => [
                 'date_format:"d/m/Y"',
@@ -81,7 +80,8 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
 
         $property = new Property;
         $property->name = $row["name"];
-        switch($row['type']){
+        switch($row['type'])
+        {
             case 'Freehold Land':
                 $type = 1;
                 break;
