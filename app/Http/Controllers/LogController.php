@@ -11,7 +11,7 @@ class LogController extends Controller {
 
     public function index()
     {
-        if(auth()->user()->cant('viewAll', auth()->user()))
+        if(auth()->user()->cant('viewAny', Log::class))
         {
             return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Logs.');
 
@@ -26,7 +26,7 @@ class LogController extends Controller {
 
     public function export(Request $request)
     {
-        if(auth()->user()->cant('viewAll', auth()->user()))
+        if(auth()->user()->cant('viewAny', Log::class))
         {
             return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Export Logs.');
 
@@ -122,7 +122,7 @@ class LogController extends Controller {
     public
     function store(Request $request)
     {
-        //
+        abort(404);
     }
 
     /**

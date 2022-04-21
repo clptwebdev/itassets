@@ -76,8 +76,12 @@
                                                 <a href="{{route('fields.edit', $field->id) }}" class="dropdown-item">Edit</a>
                                             @endcan
                                             @can('delete', $field)
-                                                <a class="dropdown-item" href="#"
-                                                   data-route="{{ route('fields.destroy', $field->id)}}">Delete</a>
+                                                <x-form.layout method="DELETE" :id="'form'.$field->id"
+                                                               :action="route('fields.destroy', $field->id)">
+                                                    <x-buttons.dropdown-item class="deleteBtn" :data="$field->id">
+                                                        Delete
+                                                    </x-buttons.dropdown-item>
+                                                </x-form.layout>
                                             @endcan
                                         </div>
                                     </div>
