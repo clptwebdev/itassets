@@ -45,11 +45,9 @@ const path = window.location.href.split('?')[0];
 
 function modal() {
     if (window.location.href === path) {
-        alert('fresh page');
         sessionStorage.setItem("SessionName", "false");
     }
     if (sessionStorage.getItem("SessionName") === 'true') {
-        alert('not a fresh page load modal');
         photoModal.show();
     }
 }
@@ -59,7 +57,6 @@ modal();
 document.querySelectorAll(".page-link").forEach(elem => elem.addEventListener("click", (e) => {
     sessionStorage.SessionName = 'paginate';
     sessionStorage.setItem("SessionName", "true");
-    alert(sessionStorage.getItem("SessionName"));
 }));
 
 /* function updatePhotos(page = 1){
