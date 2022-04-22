@@ -233,7 +233,10 @@ class ComponentController extends Controller {
         $component = Component::create($request->only(
             'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
         ));
-        $component->category()->attach(explode(',', $request->category));
+        if($request->category)
+        {
+            $component->category()->attach(explode(',', $request->category));
+        }
 
         return to_route("components.index")->with('success_message', $request->name . ' Has been successfully added!');
     }
@@ -372,7 +375,11 @@ class ComponentController extends Controller {
             $component->fill($request->only(
                 'name', 'serial_no', 'status_id', 'purchased_date', 'purchased_cost', 'supplier_id', 'order_no', 'warranty', 'location_id', 'manufacturer_id', 'notes', 'photo_id'
             ))->save();
-            $component->category()->sync(explode(',', $request->category));
+            if($request->category)
+            {
+                $component->category()->sync(explode(',', $request->category));
+
+            }
             session()->flash('success_message', $component->name . ' has been updated successfully');
 
             return to_route("components.index");

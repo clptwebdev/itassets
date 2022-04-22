@@ -1,5 +1,7 @@
 @props(['models'=>null , 'model' ,'tag'=>null])
 <!-- Transfer Modal-->
+@php    $m = "\\App\\Models\\" . ucfirst($model);   $table = $m::first()->getTable();@endphp
+
 <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog"
      aria-labelledby="requestTransferLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -13,12 +15,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="disposal_date">Asset Tag</label>
-                        <input type="text" value="{{$tag}}" id="asset_tag_transfer" name="asset_tag"
+                    @if(Schema::hasColumn("{$table}",'asset_tag'))
+                        <div class="form-group">
+                            <label for="disposal_date">Asset Tag</label>
+                            <input type="text" value="{{$tag}}" id="asset_tag_transfer" name="asset_tag"
+                                   class="form-control">
+                            <small class="text-warning">Enter a new Asset Tag if required</small>
+                        </div>
+                    @else
+                        <input type="text" hidden value="{{$tag}}" id="asset_tag_transfer" name="asset_tag"
                                class="form-control">
-                        <small class="text-warning">Enter a new Asset Tag if required</small>
-                    </div>
+                    @endif
                     <div class="form-group">
                         @csrf
                         <input name="model_type" type="hidden" value="{{$model}}">

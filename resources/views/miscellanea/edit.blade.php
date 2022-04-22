@@ -113,7 +113,7 @@
                                         <h3 class="h6 text-center mb-3">Purchase Information</h3>
                                         <div class="form-group">
                                             <x-form.input name="order_no"
-                                                          value="{{old('order_no') ?? $miscellanea->order_id}}"/>
+                                                          value="{{old('order_no') ?? $miscellanea->order_no}}"/>
                                         </div>
                                         <div class="form-group">
                                             <x-form.date name="purchased_date" formAttributes="required"
