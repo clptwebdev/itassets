@@ -20,16 +20,16 @@
                 {{--                @endforeach--}}
 
             </div>
-            {{--            <hr class='rule'>--}}
+            <hr class='rule'>
             {{--            <div class='m-3'>--}}
             {{--                <x-paginate :model="$photos"/>--}}
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-info" data-bs-dismiss="modal" data-bs-toggle="modal"
-                    data-bs-target="#uploadModal">Upload
-                                                  file
-            </button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-bs-dismiss="modal" data-bs-toggle="modal"
+                        data-bs-target="#uploadModal">Upload
+                                                      file
+                </button>
+            </div>
         </div>
     </div>
-</div></div>
+</div>
 
