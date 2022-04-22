@@ -81,6 +81,7 @@ Route::group(['middleware' => 'auth'], function() {
         //photos
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
         Route::post('/photo/upload', 'upload');
+        Route::get('/photo/get/{page}', 'getPhotos');
     });
     Route::controller(\App\Http\Controllers\DepreciationController::class)->group(function() {
         //photos

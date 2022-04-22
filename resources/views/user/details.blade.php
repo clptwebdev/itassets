@@ -49,7 +49,7 @@
                                         }
                                     @endphp
                                     <img id="profileImage" src="{{ asset($path)}}" width="100%"
-                                         alt="Select Profile Picture">
+                                         alt="Select Profile Picture" onclick='getPhotoPage(2)'>
                                 </div>
 
                                 <input type="hidden" id="photo_id" name="photo_id"
@@ -245,10 +245,25 @@
 @section('js')
     <script src="{{asset('js/photo.js')}}"></script>
     <script>
+        const photoContent = document.querySelector('#photoContent');
+
+        //place inside a function getPhotos(page)
+
+        function getPhotoPage(page) {
+            const xhr = new XMLHttpRequest();
+
+            xhr.onload = function () {
+                //place the response text in the modal
+                photoContent.innerHTML = xhr.responseText
+            }
+
+            xhr.open('get', `/photo/get/${page}`)
+            xhr.send()
+        }
 
 
         //validation for resetting passwords
-        var input = document.querySelector('#confirmNewPassword');
+        let input = document.querySelector('#confirmNewPassword');
         var firstInput = document.querySelector('#newFirstPassword');
         var oldPasswordInput = document.querySelector('#oldPassword');
         var messages = document.querySelector('#messages');
