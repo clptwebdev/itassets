@@ -41,23 +41,7 @@ photoUpload.onsubmit = async (e) => {
 
 
 }
-// const path = window.location.href.split('?')[0];
-//
-// function modal() {
-//     if (window.location.href === path) {
-//         sessionStorage.setItem("SessionName", "false");
-//     }
-//     if (sessionStorage.getItem("SessionName") === 'true') {
-//         photoModal.show();
-//     }
-// }
-//
-// modal();
-//
-// document.querySelectorAll(".page-link").forEach(elem => elem.addEventListener("click", (e) => {
-//     sessionStorage.SessionName = 'paginate';
-//     sessionStorage.setItem("SessionName", "true");
-// }));
+
 
 /* function updatePhotos(page = 1){
 
