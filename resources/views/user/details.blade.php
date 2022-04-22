@@ -49,7 +49,7 @@
                                         }
                                     @endphp
                                     <img id="profileImage" src="{{ asset($path)}}" width="100%"
-                                         alt="Select Profile Picture" onclick='getPhotoPage(2)'>
+                                         alt="Select Profile Picture" onclick='getPhotoPage(1)'>
                                 </div>
 
                                 <input type="hidden" id="photo_id" name="photo_id"
