@@ -94,7 +94,7 @@ class PhotoController extends Controller {
 
         if($page + 1 < $pages)
         {
-            $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page + 1 . ')">' . $page++ . '</a ></li >';
+            $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page + 1 . ')">' . $page + 1 . '</a ></li >';
         }
 
         if($page + 1 < $pages)
