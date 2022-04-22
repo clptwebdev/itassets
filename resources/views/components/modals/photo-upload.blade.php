@@ -11,7 +11,7 @@
             </div>
             <div class="modal-body">
                 <p>Select an image below:.</p>
-                <?php $photos = App\Models\Photo::paginate();?>
+                <?php $photos = App\Models\Photo::paginate(40);?>
                 <img src="{{ asset('images/svg/location-image.svg') }}" width="80px" alt="Default Picture"
                      onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">
                 @foreach($photos as $photo)
