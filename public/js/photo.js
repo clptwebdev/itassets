@@ -57,6 +57,7 @@ modal();
 document.querySelectorAll(".page-link").forEach(elem => elem.addEventListener("click", (e) => {
     sessionStorage.SessionName = 'paginate';
     sessionStorage.setItem("SessionName", "true");
+    alert(sessionStorage.getItem("SessionName"));
 }));
 
 /* function updatePhotos(page = 1){
