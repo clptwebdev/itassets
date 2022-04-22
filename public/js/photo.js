@@ -45,9 +45,11 @@ const path = window.location.href.split('?')[0];
 
 function modal() {
     if (window.location.href === path) {
+        alert('fresh page');
         sessionStorage.setItem("SessionName", "false");
     }
     if (sessionStorage.getItem("SessionName") === 'true') {
+        alert('not a fresh page load modal');
         photoModal.show();
     }
 }
