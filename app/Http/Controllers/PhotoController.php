@@ -85,7 +85,7 @@ class PhotoController extends Controller {
             $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page - 1 . ')" > Previous</a ></li >';
         }
 
-        if($page - 1 > $pages)
+        if($page - 1 > 1)
         {
             $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page - 1 . ')" >' . $page - 1 . '</a ></li >';
         }
@@ -97,7 +97,7 @@ class PhotoController extends Controller {
             $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page + 1 . ')">' . $page++ . '</a ></li >';
         }
 
-        if($page < $pages)
+        if($page + 1 < $pages)
         {
             $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page + 1 . ')"> Next</a ></li >';
         }
