@@ -78,8 +78,9 @@ class PhotoController extends Controller {
             $html .= '<img src="' . asset($photo->path) . '" width="80px" alt="' . $photo->name . '"onclick="selectPhoto(' . $photo->id . ', ' . asset($photo->path) . ')">';
 
         }
-        $html .= '<nav aria-label="Page navigation example">
-                  <ul class="pagination">';
+        $html .= '<hr class="rule">';
+        $html .= '<nav aria-label="Page navigation example ">
+                  <ul class="pagination justify-content-center">';
         if($page > 1)
         {
             $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page - 1 . ')" > Previous</a ></li >';

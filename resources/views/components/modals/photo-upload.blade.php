@@ -20,7 +20,7 @@
                 {{--                @endforeach--}}
 
             </div>
-            <hr class='rule'>
+
             {{--            <div class='m-3'>--}}
             {{--                <x-paginate :model="$photos"/>--}}
             <div class="modal-footer">
