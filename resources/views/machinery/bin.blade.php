@@ -50,7 +50,7 @@
                                 <td class="text-left">{{$machinery->dexcription ?? 'N/A'}}</td>
                                 <td class="text-center">£{{number_format($machinery->purchased_cost, 2, '.', ',')}}</td>
                                 <td class="text-center">{{ \Illuminate\Support\Carbon::parse($machinery->purchased_date)->format('d-M-Y')}}</td>
-                                <td class="text-center">{{$machinery->supplier->name}}</td>
+                                <td class="text-center">{{$machinery->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center">{{$machinery->location->name}}</td>
                                 <td class="text-center">
                                     £{{number_format($machinery->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}<br>
