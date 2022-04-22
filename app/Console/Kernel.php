@@ -33,7 +33,8 @@ class Kernel extends ConsoleKernel {
 
         //cleans all backups Monthly
         $schedule->call('\App\Http\Controllers\BackupController@dbClean')->monthly();
-
+        //makes all backups Daily
+        $schedule->call('\App\Http\Controllers\BackupController@createDB')->daily();
         //deletes all PDF's Monthly
         $schedule->call('\App\Http\Controllers\ReportController@clean')->weekly();
         //deletes all Csv's Monthly
@@ -48,7 +49,8 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function() {
             foreach(Location::all() as $location)
             {
-                $total = Cache::rememberForever("location_{$location->id}_assets_total", function() {
+                $total = Cache::rememberForever("location_{$location->id}_assets_total", function() use ($location) {
+
                     return \App\Models\Asset::where('location_id', '=', $location->id)->count();
                 });
             }
