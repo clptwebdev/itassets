@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::table('machineries', function (Blueprint $table) {
             $table->string('order_no')->nullable();
             $table->string('serial_no')->nullable();
+            $table->integer('warranty')->nullable();
+            $table->foreignId('user_id')->nullable();
         });
     }
 
@@ -29,6 +31,8 @@ return new class extends Migration
         Schema::table('machineries', function (Blueprint $table) {
             $table->dropColumn('order_no');
             $table->dropColumn('serial_no');
+            $table->dropColumn('warranty');
+            $table->dropColumn('user_id');
         });
     }
 };

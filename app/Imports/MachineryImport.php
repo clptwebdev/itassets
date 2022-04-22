@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Location;
 use App\Models\Machinery;
 use App\Models\Supplier;
+use App\Models\Manufacturer;
 use App\Models\Vehicle;
 use App\Rules\findLocation;
 use App\Rules\permittedLocation;
@@ -55,6 +56,7 @@ class MachineryImport extends DefaultValueBinder implements ToModel, WithValidat
             ],
             'purchased_cost' => [
                 'required',
+                'regex:/\d+(\.\d{1,2})?$/',
             ],
             'purchased_date' => [
                 'date_format:"d/m/Y"',
@@ -81,6 +83,9 @@ class MachineryImport extends DefaultValueBinder implements ToModel, WithValidat
 
         $machinery = new Machinery;
         $machinery->name = $row["name"];
+        //Serial No
+        //If Serial No is empty enter '-'
+        $row["serial_no"] != '' ? $machinery->serial_no = $row["serial_no"] : $machinery->serial_no = '-';
 
         $machinery->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
         if($this->isBinary($row["purchased_cost"]))
@@ -91,16 +96,65 @@ class MachineryImport extends DefaultValueBinder implements ToModel, WithValidat
         {
             $machinery->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
+        if(strtolower($row["donated"]) == 'yes')
+        {
+            $machinery->donated = 1;
+        } else
+        {
+            $machinery->donated = 0;
+        }
+
+        //check for already existing Suppliers upon import if else create
+        $supplier_email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+        if($supplier = Supplier::where(["name" => $row["supplier_id"]])->orWhere(['email' => $supplier_email])->first())
+        {
+
+        } else
+        {
+            if(isset($row["supplier_id"]) && $row["supplier_id"] != '')
+            {
+                $supplier = new Supplier;
+                $supplier->name = $row["supplier_id"];
+                $supplier->email = 'info@' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+                $supplier->url = 'www.' . str_replace(' ', '', strtolower($row["supplier_id"])) . '.com';
+                $supplier->telephone = "Unknown";
+                $supplier->save();
+            }
+        }
+
+        $machinery->supplier_id = $supplier->id ?? 0;
+        //check for already existing Manufacturers upon import if else create
+        $man_email = 'info@' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
+        if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->orWhere(['supportEmail' => $supplier_email])->first())
+        {
+
+        } else
+        {
+            if(isset($row["manufacturer_id"]))
+            {
+                $manufacturer = new Manufacturer;
+
+                $manufacturer->name = $row["manufacturer_id"];
+                $manufacturer->supportEmail = $man_email;
+                $manufacturer->supportUrl = 'www.' . str_replace(' ', '', strtolower($row["manufacturer_id"])) . '.com';
+                $manufacturer->supportPhone = "Unknown";
+                $manufacturer->save();
+            }
+        }
+        $machinery->manufacturer_id = $manufacturer->id ?? 0;
 
         $location = Location::where(["name" => $row["location_id"]])->first();
         $lid = $location->id ?? 0;
         $machinery->location_id = $lid;
-        $supplier = Supplier::where(["name" => $row["supplier_id"]])->first();
-        $sid = $supplier->id ?? 0;
-        $machinery->supplier_id = $sid;
+        
+        $machinery->warranty = $row["warranty"];
+        $machinery->order_no = $row["order_no"];
 
         $machinery->depreciation = $row["depreciation"];
+
         $machinery->description = $row["description"];
+
+        $machinery->user_id = auth()->user()->id;
 
         $machinery->save();
     }

@@ -11,6 +11,7 @@ use App\Models\Location;
 use App\Models\Machinery;
 use App\Models\Report;
 use App\Models\Supplier;
+use App\Models\Manufacturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\HeadingRowImport;
@@ -455,6 +456,7 @@ class MachineryController extends Controller {
                     "errorValues" => $errorValues,
                     "locations" => auth()->user()->locations,
                     "suppliers" => Supplier::all(),
+                    "manufacturers" => Manufacturer::all(),
                 ]);
 
             } else
@@ -475,14 +477,23 @@ class MachineryController extends Controller {
 
     public function importErrors(Request $request)
     {
+
         $validation = Validator::make($request->all(), [
             "name.*" => "required|max:255",
-            "description.*" => "required|max:255",
             'location_id.*' => 'required|gt:0',
-            'supplier_id.*' => 'required|gt:0',
             'purchased_date.*' => 'date',
             'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            "depreciation.*" => "nullable",
+            "depreciation.*" => "required",
+        ], [
+            'name.*.required' => 'You must provide a name to reference the Machniery!',
+            'location_id.*.required' => 'Please assign the Machinery to a Location',
+            'purchased_cost.*.required' => 'The purchased cost for the Machinery is empty!',
+            'purchased_cost.*.regex' => 'The purchased cost is not in a valid format. Please enter a decmial currency without the £ symbol',
+            'depreciation.*.required' => 'Please enter a depreciation value, this is a number of years',
+            'depreciation.*.numeric' => 'The depreciation for the Machinery is a number of years - the value is currently invalid',
+            'purchased_date.*.required' => 'Please enter the date the Machinery was purchased',
+            'purchased_date.*.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY',
+
         ]);
 
         if($validation->fails())
@@ -493,17 +504,27 @@ class MachineryController extends Controller {
             for($i = 0; $i < count($request->name); $i++)
             {
                 $machinery = new machinery;
+
+                $location = Location::find($request->location_id[$i]);
                 $machinery->name = $request->name[$i];
-                $machinery->description = $request->description[$i];
-                $machinery->supplier_id = $request->supplier_id[$i];
+                //Serial No Cannot be ""
+                //If the imported Serial Number is empty assign it to "0"
+                //$request->serial_no[$i] != '' ? $machinery->serial_no = $request->serial_no[$i] : $machinery->serial_no = "-";
                 $machinery->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
                 $machinery->purchased_cost = $request->purchased_cost[$i];
+                $machinery->donated = $request->donated[$i];
+                $machinery->supplier_id = $request->supplier_id[$i];
+                $machinery->manufacturer_id = $request->manufacturer_id[$i];
+                $machinery->order_no = $request->order_no[$i];
+                $machinery->warranty = $request->warranty[$i];
                 $machinery->location_id = $request->location_id[$i];
+                $machinery->description = $request->description[$i];
                 $machinery->depreciation = $request->depreciation[$i];
+                $machinery->user_id = auth()->user()->id;
                 $machinery->save();
             }
 
-            session()->flash('success_message', 'You have successfully added all machinery Items!');
+            session()->flash('success_message', 'You have successfully added all machinery items!');
 
             return 'Success';
         }
