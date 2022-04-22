@@ -246,6 +246,7 @@
     <script src="{{asset('js/photo.js')}}"></script>
     <script>
 
+
         //validation for resetting passwords
         var input = document.querySelector('#confirmNewPassword');
         var firstInput = document.querySelector('#newFirstPassword');
