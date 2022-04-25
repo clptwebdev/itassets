@@ -36,6 +36,12 @@
                                             <div class="form-group">
                                                 <x-form.input name="name" value="{{old('name')}}" formAttributes="required"/>
                                             </div>
+
+                                            
+                                            <div class="form-group">
+                                                <x-form.input name="registration" value="{{ old('registration')}}" formAttributes="required" />
+                                            </div>
+                                            
                                             <div class='form-group'>
                                                 <x-form.select name="supplier_id" :models="$suppliers" selected="{{ old('supplier_id')}}" />
                                             </div>
@@ -56,9 +62,6 @@
                                             </div>
                                             <div class="form-group">
                                                 <x-form.input name="purchased_cost" value="{{ old('purchased_cost')}}" formAttributes="required"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <x-form.input name="registration" value="{{ old('registration')}}" formAttributes="required" />
                                             </div>
 
                                             <div class="form-group">

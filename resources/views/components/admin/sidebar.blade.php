@@ -18,7 +18,7 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
-@if(auth()->user()->role_id != 0)
+    @if(auth()->user()->role_id != 0)
     <!-- Nav Item - Dashboard -->
         <li class="nav-item @if(Request::url() == route('dashboard')) {{ 'active' }} @endif">
             <a class="nav-link" href="{{ route('dashboard')}}">
@@ -48,16 +48,16 @@
             </li>
         @endcan
         @can('viewAll' , \App\Models\Machinery::class)
-            <li class="nav-item ">
-                <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('machineries.index')) {{ 'active' }} @endif "
+            <li class="nav-item @if(Request::url() == route('machineries.index') || Str::contains(Request::url(), ['machinery', 'machineries'])) {{ 'active' }} @endif">
+                <a class="nav-link text-left text-sm-center text-md-left"
                    href="{{route('machineries.index')}}">
                     <i class="fas fa-fw fa-tractor sidebar-icon"></i>
                     <span class="sidebar-title">Plant and Machinery</span></a>
             </li>
         @endcan
         @can('viewAll' , \App\Models\Vehicle::class)
-            <li class="nav-item">
-                <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('vehicles.index')) {{ 'active' }} @endif"
+            <li class="nav-item @if(Request::url() == route('vehicles.index') || Str::contains(Request::url(), ['vehicle', 'vehicles'])) {{ 'active' }} @endif">
+                <a class="nav-link text-left text-sm-center text-md-left"
                    href="{{route('vehicles.index')}}">
                     <i class="fas fa-fw fa-bus sidebar-icon"></i>
                     <span class="sidebar-title">Motor Vehicles</span></a>
@@ -70,7 +70,7 @@
     @can('viewAll' , \App\Models\Software::class)
         <hr class="sidebar-divider">
 
-        <li class="nav-item @if(Request::url() == route('softwares.index')) {{ 'active' }} @endif">
+        <li class="nav-item @if(Request::url() == route('softwares.index') || Str::contains(Request::url(), ['software', 'softwares'])) {{ 'active' }} @endif">
             <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('softwares.index')}}">
                 <i class="fas fa-fw fa-folder-open sidebar-icon"></i>
                 <span class="sidebar-title">Software</span></a>
@@ -78,7 +78,7 @@
     @endcan
     @if(auth()->user()->role_id != 0)
         @can('viewAll' , \App\Models\Asset::class)
-            <li class="nav-item @if(Request::url() == route('assets.index')) {{ 'active' }} @endif">
+            <li class="nav-item @if(Request::url() == route('assets.index')  || Str::contains(Request::url(), ['assets/', 'asset/'])) {{ 'active' }} @endif">
                 <a class="nav-link collapsed text-left text-sm-center text-md-left" href="{{ route('assets.index')}}"
                    data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
                    aria-controls="collapseTwo">
@@ -87,7 +87,7 @@
                         <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="collapseTwo"
-                     class="collapse p-0 @if(Request::url() == route('assets.index')) {{ 'show' }} @endif"
+                     class="collapse p-0 @if(Request::url() == route('assets.index')  || Str::contains(Request::url(), ['assets/', 'asset/'])) {{ 'show' }} @endif"
                      aria-labelledby="headingTwo" data-bs-parent="#accordionSidebar">
                     <a class="sub-link collapse-item" href="{{ route('assets.index')}}"><i
                             class="far fa-circle text-secondary"></i> All Equipment
@@ -97,8 +97,7 @@
                         $statuses = App\Models\Status::all();
                     @endphp
                     <a href="#statusMenu" class="sub-link collapse-item collapsed d-none d-sm-block"
-                       data-bs-toggle="collapse" data-bs-parent="#statusMenu"><i class="fas fa-shield-alt fa-xs"></i> By
-                                                                                                                      Status</a>
+                       data-bs-toggle="collapse" data-bs-parent="#statusMenu"><i class="fas fa-shield-alt fa-xs"></i> By Status</a>
                     <div class="collapse p-2" id="statusMenu">
                         @foreach($statuses as $status)
                             <a href="{{ route('assets.status', $status->id)}}" title="Add New Asset"
@@ -149,10 +148,10 @@
                    aria-expanded="true" aria-controls="accessoryDD">
                     <i class="fas fa-fw fa-keyboard sidebar-icon"></i>
                     <span
-                        class="sidebar-title  @if(Request::url() == route('accessories.index')) {{ 'font-weight-bold text-white' }} @endif">Computer Accessories <i
+                        class="sidebar-title  @if(Request::url() == route('accessories.index')  || Str::contains(Request::url(), ['accessory', 'accessories'])) {{ 'font-weight-bold text-white' }} @endif">Computer Accessories <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
-                <div id="accessoryDD" class="collapse p-0 text-center text-lg-left" aria-labelledby="accessoryTitle"
+                <div id="accessoryDD" class="collapse p-0 text-center text-lg-left @if(Request::url() == route('accessories.index')  || Str::contains(Request::url(), ['accessory', 'accessories'])) {{ 'show' }} @endif" aria-labelledby="accessoryTitle"
                      data-bs-parent="#accordionSidebar">
                     @can('viewAll'  ,\App\Models\Accessory::class)
                         <a class="collapse-item sub-link" href="{{ route('accessories.index')}}"><i

@@ -18,7 +18,7 @@ use Maatwebsite\Excel\HeadingRowImport;
 class VehicleController extends Controller {
 
     ///////////////////////////////////////
-    //////// View Fucntions ///////////////
+    //////// View Functions ///////////////
     ///////////////////////////////////////
 
     public function index()
@@ -29,6 +29,7 @@ class VehicleController extends Controller {
         {
             return ErrorController::forbidden('/dashboard', 'Unauthorised | View Vehicles.');
         }
+        
         // find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('vehicle')->get();
         //Find the properties that are assigned to the locations the User has permissions to.
@@ -114,7 +115,7 @@ class VehicleController extends Controller {
             'name' => 'required',
             'registration' => [\Illuminate\Validation\Rule::unique('vehicles', 'registration'), 'required'],
             'location_id' => 'required',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'purchased_cost' => ['required','regex:/^(£)?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\.[0-9][0-9])?$/'],
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
         ], [
@@ -180,7 +181,7 @@ class VehicleController extends Controller {
             'name' => 'required',
             'registration' => [\Illuminate\Validation\Rule::unique('vehicles', 'registration'), 'required'],
             'location_id' => 'required',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'purchased_cost' => 'required|regex:/^(£)?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\.[0-9][0-9])?$/',
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
         ], [
@@ -380,6 +381,7 @@ class VehicleController extends Controller {
         //headings incorrect end
         $extensions = array("csv");
 
+
         $result = array($request->file('csv')->getClientOriginalExtension());
 
         if(in_array($result[0], $extensions))
@@ -473,7 +475,7 @@ class VehicleController extends Controller {
             'location_id.*' => 'required|gt:0',
             'supplier_id.*' => 'required|gt:0',
             'purchased_date.*' => 'date',
-            'purchased_cost.*' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'purchased_cost.*' => ['required', 'regex:/^(£)?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\.[0-9][0-9])?$/'],
             "depreciation.*" => "nullable",
         ], [
             'name.*.required' => 'You must provide a name to reference the Vehicle!',
@@ -500,7 +502,7 @@ class VehicleController extends Controller {
                 $vehicle->registration = $request->registration[$i];
                 $vehicle->supplier_id = $request->supplier_id[$i];
                 $vehicle->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
-                $vehicle->purchased_cost = $request->purchased_cost[$i];
+                $vehicle->purchased_cost = str_replace(array('£', ','), '', $request->purchased_cost[$i]);
                 $vehicle->location_id = $request->location_id[$i];
                 $vehicle->depreciation = $request->depreciation[$i];
                 $vehicle->save();

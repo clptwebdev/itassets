@@ -1,0 +1,3 @@
+name,registration,supplier_id,purchased_date,purchased_cost,depreciation,location_id
+Mini-Bus,YA14 DTO,Mercedes,10/12/2021,"£19,499.98",15,Heath Park School
+,,,,,,
