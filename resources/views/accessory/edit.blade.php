@@ -72,12 +72,12 @@
                                             <div class="model_title text-center h4 mb-3">Accessory Image</div>
                                             <div class="model_image p-4">
                                                 @if($accessory->photo()->exists() && $accessory->photo()->exists())
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset($accessory->photo->path) ?? asset('images/svg/device-image.svg') }}"
                                                          width="100%" alt="Select Profile Picture"
                                                          data-bs-toggle="modal" data-bs-target="#imgModal">
                                                 @else
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/device-image.svg') }}" width="100%"
                                                          alt="Select Profile Picture" data-bs-toggle="modal"
                                                          data-bs-target="#imgModal">
@@ -143,12 +143,13 @@
                                             <div
                                                 class="model_image p-4 d-flex justify-content-center align-items-middle">
                                                 @if($accessory->supplier()->exists() && $accessory->supplier->photo()->exists())
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset($accessory->supplier->photo->path) }}"
                                                          height="150px" alt="Select Profile Picture">
                                                 @else
-                                                    <img id="profileImage" src="{{ asset('images/svg/suppliers.svg') }}"
-                                                         height="150px" alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
+                                                         src="{{ asset('images/svg/suppliers.svg') }}" height="150px"
+                                                         alt="Select Profile Picture">
                                                 @endif
                                             </div>
                                             <div class="model_no py-2 px-4 text-center">
@@ -206,11 +207,11 @@
                                             <div
                                                 class="model_image p-4 d-flex justify-content-center align-items-middle">
                                                 @if($accessory->location()->exists() && $accessory->location->photo()->exists())
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset($accessory->location->photo->path) }}"
                                                          height="200px" alt="Select Profile Picture">
                                                 @else
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/location-image.svg') }}"
                                                          height="200px" alt="Select Profile Picture">
                                                 @endif

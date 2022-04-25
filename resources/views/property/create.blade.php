@@ -11,39 +11,39 @@
         <x-wrappers.nav title="Add New Property">
             <x-buttons.return :route="route('properties.index')"> Property</x-buttons.return>
             <a href="{{ route('documentation.index')."#collapseThreeAssets"}}"
-               class="btn btn-sm  bg-yellow shadow-sm p-2 p-md-1" ><i
-                    class="fas fa-question fa-sm text-dark-50 mr-lg-1" ></i ><span class="d-none d-lg-inline-block">Help</span></a >
-            <x-buttons.submit >Save</x-buttons.submit >
-        </x-wrappers.nav >
-        <section >
-            <p class="mb-4" >
-                Add a new property to the Apollo Asset Manager. 
-            </p >
-            <div class="row row-eq-height no-gutters p-0 p-md-4 container m-auto" >
-                <div class="col-12" >
-                    <div class="card shadow h-100" >
-                        <div class="card-body" >
-                            <x-handlers.alerts />
+               class="btn btn-sm  bg-yellow shadow-sm p-2 p-md-1"><i
+                    class="fas fa-question fa-sm text-dark-50 mr-lg-1"></i><span
+                    class="d-none d-lg-inline-block">Help</span></a>
+            <x-buttons.submit>Save</x-buttons.submit>
+        </x-wrappers.nav>
+        <section>
+            <p class="mb-4">
+                Add a new property to the Apollo Asset Manager. </p>
+            <div class="row row-eq-height no-gutters p-0 p-md-4 container m-auto">
+                <div class="col-12">
+                    <div class="card shadow h-100">
+                        <div class="card-body">
+                            <x-handlers.alerts/>
 
-                            <ul id="tab-bar" class="nav nav-tabs" >
+                            <ul id="tab-bar" class="nav nav-tabs">
 
-                                <li class="nav-item" >
-                                    <a class="nav-link active" id="location-tab" data-toggle="tab" href="#location" role="tab"
-                                       aria-controls="home" aria-selected="true" >Location Information</a >
-                                </li >
-                            </ul >
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="location-tab" data-toggle="tab" href="#location"
+                                       role="tab" aria-controls="home" aria-selected="true">Location Information</a>
+                                </li>
+                            </ul>
                             <div class="tab-content border-left border-right border-bottom border-gray"
                                  id="myTabContent">
 
                                 <div class="tab-pane fade show p-2 pt-4 active" id="location" role="tabpanel"
-                                     aria-labelledby="location-tab" >
-                                    <div class="row" >
-                                        <div class="col-12 col-md-6 p-4 mb-3 " >
-                                            <div class="form-group" >
+                                     aria-labelledby="location-tab">
+                                    <div class="row">
+                                        <div class="col-12 col-md-6 p-4 mb-3 ">
+                                            <div class="form-group">
                                                 <x-form.input name="name" formAttributes="" value="{{old('name')}}"/>
-                                            </div >
-                                            <div class="form-group position-relative" >
-                                                <label for="findLocation" >Location</label >
+                                            </div>
+                                            <div class="form-group position-relative">
+                                                <label for="findLocation">Location</label>
                                                 <input type="hidden" id="location_id" name="location_id"
                                                        class="form-control mb-3" readonly value="1">
                                                 <input class="form-control" type="text" name="find_location"
@@ -58,9 +58,10 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group" >
-                                                <x-form.input name="purchased_cost" formAttributes="" value="{{old('purchased_cost')}}" />
-                                            </div >
+                                            <div class="form-group">
+                                                <x-form.input name="purchased_cost" formAttributes=""
+                                                              value="{{old('purchased_cost')}}"/>
+                                            </div>
                                             <div class="form-check mt-1 mb-3">
                                                 <input class="form-check-input" type="checkbox" value="1"
                                                        @if(old('donated') == 1) checked @endif name="donated"
@@ -70,13 +71,15 @@
                                                 </label>
                                             </div>
 
-                                            <div class="form-group" >
-                                                <x-form.date name="purchased_date" formAttributes="" value="{{old('purchased_date')}}" />
-                                            </div >
+                                            <div class="form-group">
+                                                <x-form.date name="purchased_date" formAttributes=""
+                                                             value="{{old('purchased_date')}}"/>
+                                            </div>
 
-                                            <div class="form-group" >
-                                                <x-form.input name="depreciation" formAttributes="" value="{{old('depreciation')}}" />
-                                            </div >
+                                            <div class="form-group">
+                                                <x-form.input name="depreciation" formAttributes=""
+                                                              value="{{old('depreciation')}}"/>
+                                            </div>
 
                                             <div class="form-group">
                                                 <label for="name">Property Type</label>
@@ -101,7 +104,7 @@
                                                 <div class="model_title text-center h4 mb-3">Location Name</div>
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/location-image.svg') }}"
                                                          height="200px" alt="Select Profile Picture">
                                                 </div>

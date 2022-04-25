@@ -34,15 +34,20 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
                                             <div class="form-group">
-                                                <x-form.input name="name" formAttributes="required" value="{{old('name')}}"/>
+                                                <x-form.input name="name" formAttributes="required"
+                                                              value="{{old('name')}}"/>
                                             </div>
                                             <div class="form-group position-relative">
-                                                <label for="findLocation">Location <span class="text-danger">*</span></label>
+                                                <label for="findLocation">Location <span
+                                                        class="text-danger">*</span></label>
                                                 <input type="hidden" id="location_id" name="location_id"
-                                                       class="form-control mb-3" readonly value="{{old('location_id')}}">
-                                                <input class="form-control @if($errors->has('location_id')) border border-danger @endif" type="text" name="find_location"
-                                                       id="findLocation" value="{{ old('find_location')}}" placeholder="Search for Location"
-                                                       autocomplete="off">
+                                                       class="form-control mb-3" readonly
+                                                       value="{{old('location_id')}}">
+                                                <input
+                                                    class="form-control @if($errors->has('location_id')) border border-danger @endif"
+                                                    type="text" name="find_location" id="findLocation"
+                                                    value="{{ old('find_location')}}" placeholder="Search for Location"
+                                                    autocomplete="off">
                                                 <div id="locationResults"
                                                      class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                      style="visibility: hidden; z-index: 2;">
@@ -55,13 +60,16 @@
                                                 <x-form.input name="order_no" value="{{old('order_no')}}"/>
                                             </div>
                                             <div class='form-group'>
-                                                <x-form.select name="supplier_id" :models="$suppliers" selected="{{old('supplier_id')}}"/>
+                                                <x-form.select name="supplier_id" :models="$suppliers"
+                                                               selected="{{old('supplier_id')}}"/>
                                             </div>
                                             <div class='form-group'>
-                                                <x-form.select name="manufacturer_id" :models="$manufacturers" selected="{{old('manufacturer_id')}}"/>
+                                                <x-form.select name="manufacturer_id" :models="$manufacturers"
+                                                               selected="{{old('manufacturer_id')}}"/>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="purchased_cost" formAttributes="required" value="{{old('purchased_cost')}}"/>
+                                                <x-form.input name="purchased_cost" formAttributes="required"
+                                                              value="{{old('purchased_cost')}}"/>
                                                 <div class="form-check mt-2 ml-1">
                                                     <input class="form-check-input" type="checkbox" value="1"
                                                            @if(old('donated') == 1) checked @endif name="donated"
@@ -73,13 +81,15 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <x-form.date name="purchased_date" formAttributes="required" value="{{old('purchased_date')}}"/>
+                                                <x-form.date name="purchased_date" formAttributes="required"
+                                                             value="{{old('purchased_date')}}"/>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="depreciation" formAttributes="required" value="{{old('depreciation')}}" />
+                                                <x-form.input name="depreciation" formAttributes="required"
+                                                              value="{{old('depreciation')}}"/>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="warranty" value="{{old('warranty')}}" />
+                                                <x-form.input name="warranty" value="{{old('warranty')}}"/>
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
@@ -87,7 +97,7 @@
                                                 <div class="model_title text-center h4 mb-3">Location Name</div>
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/location-image.svg') }}"
                                                          height="200px" alt="Select Profile Picture">
                                                 </div>

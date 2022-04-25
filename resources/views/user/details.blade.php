@@ -245,21 +245,6 @@
 @section('js')
     <script src="{{asset('js/photo.js')}}"></script>
     <script>
-        const photoContent = document.querySelector('#photoContent');
-
-        //place inside a function getPhotos(page)
-
-        function getPhotoPage(page) {
-            const xhr = new XMLHttpRequest();
-
-            xhr.onload = function () {
-                //place the response text in the modal
-                photoContent.innerHTML = xhr.responseText
-            }
-
-            xhr.open('get', `/photo/get/${page}`)
-            xhr.send()
-        }
 
 
         //validation for resetting passwords

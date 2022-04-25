@@ -123,7 +123,7 @@
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Asset Model Image</h4>
-                                    <img id="profileImage"
+                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                          src="{{ asset($assetModel->photo->path ?? 'images/svg/device-image.svg') }}"
                                          width="100%" alt="Select Profile Picture" data-bs-toggle="modal"
                                          data-bs-target="#imgModal">

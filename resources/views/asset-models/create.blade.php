@@ -101,7 +101,8 @@
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Asset Model Image</h4>
-                                    <img id="profileImage" src="{{ asset('images/svg/device-image.svg') }}" width="100%"
+                                    <img id="profileImage" onclick='getPhotoPage(1)'
+                                         src="{{ asset('images/svg/device-image.svg') }}" width="100%"
                                          alt="Select Profile Picture">
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>

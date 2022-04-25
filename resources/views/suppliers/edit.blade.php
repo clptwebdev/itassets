@@ -90,7 +90,7 @@
                                             $path = 'images/svg/suppliers.svg';
                                         }
                                     @endphp
-                                    <img id="profileImage" src="{{asset($path)}}" width="100%"
+                                    <img id="profileImage" onclick='getPhotoPage(1)' src="{{asset($path)}}" width="100%"
                                          alt="Select Profile Picture" data-bs-toggle="modal" data-bs-target="#imgModal">
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>
