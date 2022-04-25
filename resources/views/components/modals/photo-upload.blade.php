@@ -9,20 +9,7 @@
                 </button>
 
             </div>
-            <div class="modal-body" id='photoContent'>
-                {{--                <p>Select an image below:.</p>--}}
-                {{--                <?php $photos = App\Models\Photo::paginate(51);?>--}}
-                {{--                <img src="{{ asset('images/svg/location-image.svg') }}" width="80px" alt="Default Picture"--}}
-                {{--                     onclick="selectPhoto(0, '{{ asset('images/svg/location-image.svg') }}');">--}}
-                {{--                @foreach($photos as $photo)--}}
-                {{--                    <img src="{{ asset($photo->path) }}" width="80px" alt="{{ $photo->name }}"--}}
-                {{--                         onclick="selectPhoto('{{ $photo->id }}', '{{ asset($photo->path) }}');">--}}
-                {{--                @endforeach--}}
-
-            </div>
-
-            {{--            <div class='m-3'>--}}
-            {{--                <x-paginate :model="$photos"/>--}}
+            <div class="modal-body" id='photoContent'></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-info" data-bs-dismiss="modal" data-bs-toggle="modal"
                         data-bs-target="#uploadModal">Upload

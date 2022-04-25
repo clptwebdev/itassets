@@ -64,7 +64,7 @@ class PhotoController extends Controller {
     {
         $limit = 51;
         $offset = $limit * ($page - 1);
-        $photos = Photo::take($limit)->offset($offset)->get();
+        $photos = Photo::take($limit)->offset($offset)->orderBy('created_at')->get();
         $photoCount = Photo::count();
         $pages = round(ceil($photoCount / $limit), 0);
 
