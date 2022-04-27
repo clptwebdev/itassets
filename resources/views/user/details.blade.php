@@ -49,7 +49,7 @@
                                         }
                                     @endphp
                                     <img id="profileImage" src="{{ asset($path)}}" width="100%"
-                                         alt="Select Profile Picture">
+                                         alt="Select Profile Picture" onclick='getPhotoPage(1)'>
                                 </div>
 
                                 <input type="hidden" id="photo_id" name="photo_id"
@@ -246,8 +246,9 @@
     <script src="{{asset('js/photo.js')}}"></script>
     <script>
 
+
         //validation for resetting passwords
-        var input = document.querySelector('#confirmNewPassword');
+        let input = document.querySelector('#confirmNewPassword');
         var firstInput = document.querySelector('#newFirstPassword');
         var oldPasswordInput = document.querySelector('#oldPassword');
         var messages = document.querySelector('#messages');

@@ -19,7 +19,7 @@ function selectPhoto(id, src) {
 photoUpload.onsubmit = async (e) => {
 
     e.preventDefault();
-    
+
     let response = await fetch('/photo/upload', {
 
         method: 'POST',
@@ -36,12 +36,24 @@ photoUpload.onsubmit = async (e) => {
     photoId.value = result.id;
 
     photoUploadModal.hide();
+}
+//ajax get photos pagination
+const photoContent = document.querySelector('#photoContent');
 
-    //updatePhotos();
 
+function getPhotoPage(page) {
+    const xhr = new XMLHttpRequest();
 
+    xhr.onload = function () {
+        //place the response text in the modal
+        photoContent.innerHTML = xhr.responseText
+    }
+
+    xhr.open('get', `/photo/get/${page}`)
+    xhr.send()
 }
 
+//updatePhotos();
 /* function updatePhotos(page = 1){
 
     const xhr = new XMLHttpRequest();

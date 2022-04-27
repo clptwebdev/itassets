@@ -239,7 +239,7 @@
                                             <div id="modelInfo" class="bg-light p-4">
                                                 <div class="model_title text-center h4 mb-3">Asset Model</div>
                                                 <div class="model_image p-4">
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/device-image.svg') }}" width="100%"
                                                          alt="Select Profile Picture">
                                                 </div>
@@ -309,8 +309,9 @@
                                                 <div class="model_title text-center h4 mb-3">Supplier Name</div>
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                    <img id="profileImage" src="{{ asset('images/svg/suppliers.svg') }}"
-                                                         height="150px" alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
+                                                         src="{{ asset('images/svg/suppliers.svg') }}" height="150px"
+                                                         alt="Select Profile Picture">
                                                 </div>
                                                 <div class="model_no py-2 px-4 text-center">
                                                     Address
@@ -355,7 +356,7 @@
                                                 <div class="model_title text-center h4 mb-3">Location Name</div>
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/location-image.svg') }}"
                                                          height="200px" alt="Select Profile Picture">
                                                 </div>

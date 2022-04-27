@@ -59,7 +59,13 @@ class RequestsController extends Controller {
 
     public function transfer(Request $request)
     {
-
+        $request->validate([
+            'location_to' => 'required|gt:0',
+            'location_from' => 'required',
+        ], [
+            'location_to.gt' => 'Please Select a location to Complete your Transfer!',
+            'location_from.required' => 'You must select a Location to Transfer From!',
+        ]);
         $requests = Requests::create([
             'type' => 'transfer',
             'model_type' => $request->model_type,

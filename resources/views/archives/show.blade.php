@@ -11,11 +11,6 @@
         <div>
             <a href="{{ url()->previous() }}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm text-dark-50"></i> Back</a>
-            @can('generatePDF', $archive)
-                <a href="{{ route('asset.showPdf', $archive->id)}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-green shadow-sm loading"><i
-                        class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report</a>
-            @endcan
             @can('delete', $archive)
                 <form class="d-inline-block" id="form{{$archive->id}}"
                       action="{{ route('archives.destroy', $archive->id) }}" method="POST">

@@ -28,6 +28,7 @@ class HomeController extends Controller {
 
     public function index()
     {
+
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->get();
         if(auth()->user()->isBusiness())
         {

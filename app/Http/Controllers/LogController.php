@@ -162,8 +162,7 @@ class LogController extends Controller {
         abort(404);
     }
 
-    public
-    function destroy()
+    public function destroy()
     {
         if(auth()->user()->cant('delete', Log::class))
         {

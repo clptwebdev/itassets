@@ -5,7 +5,7 @@
             {!!$model->onEachSide(2)->links()!!}
         @endif
     </div>
-    <div class="text-left text-md-right d-block d-md-inline-block">
+    <div class="text-left text-md-right d-block d-md-inline-block my-auto">
         Showing Results: {{ $model->firstItem() }} to {{ $model->lastItem() }} ({{ $model->total() }} Total Results)
     </div>
 </div>

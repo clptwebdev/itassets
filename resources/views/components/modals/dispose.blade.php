@@ -20,7 +20,7 @@
                     </div>
                     <div class="form-group">
                         <label for="disposal_date">Date of Disposal</label>
-                        <input type="date" value="" id="disposed_date" name="disposed_date" class="form-control"
+                        <input type="date" id="disposed_date" name="disposed_date" class="form-control"
                                value="{{\Carbon\Carbon::now()->format('Y-m-d')}}">
                     </div>
                     <div class="form-group">

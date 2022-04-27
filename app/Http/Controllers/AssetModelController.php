@@ -206,7 +206,7 @@ class AssetModelController extends Controller {
             $output = " <div class='model_title text-center h4 mb-3'>Asset Model</div>
                         <div class='model_image p-4'>
                             <img id='profileImage' src='{$src}' width='100%'
-                                alt='Select Profile Picture'>
+                                alt='Select Profile Picture' onclick='getPhotoPage(1)'>
                         </div>
                         <div class='model_no py-2 px-4'>
                             Manufacturer: {$model->manufacturer->name}

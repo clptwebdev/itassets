@@ -56,18 +56,21 @@
                                                 <x-form.select name="manufacturer_id" :models="$manufacturers"/>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="serial_no"
-                                                              value="{{old('serial_no')}}"/>
+                                                <x-form.input name="serial_no" value="{{old('serial_no')}}"/>
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
                                             <div id="modelInfo" class="bg-light p-4">
                                                 <div class="model_title text-center h4">FFE Image</div>
-                                                <div class="text-center mb-3"><small class="text-muted">*click on the image to change photo</small></div>
+                                                <div class="text-center mb-3"><small class="text-muted">*click on the
+                                                                                                        image to change
+                                                                                                        photo</small>
+                                                </div>
                                                 <div class="model_image p-4">
-                                                    <img id="profileImage" src="{{ asset('images/svg/ffe.svg') }}"
-                                                         width="100%" alt="Select Profile Picture"
-                                                         data-bs-toggle="modal" data-bs-target="#imgModal">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
+                                                         src="{{ asset('images/svg/ffe.svg') }}" width="100%"
+                                                         alt="Select Profile Picture" data-bs-toggle="modal"
+                                                         data-bs-target="#imgModal">
                                                     <input type="hidden" id="photo_id" name="photo_id"
                                                            value="{{ old('photo_id') ?? 0}}">
                                                 </div>
@@ -114,7 +117,7 @@
                                             <div class="form-group">
                                                 <x-form.input name="warranty" value="{{old('warranty')}}"/>
                                             </div>
-                                            
+
                                         </div>
 
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
@@ -122,8 +125,9 @@
                                                 <div class="model_title text-center h4 mb-3">Supplier Name</div>
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                    <img id="profileImage" src="{{ asset('images/svg/suppliers.svg') }}"
-                                                         height="150px" alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
+                                                         src="{{ asset('images/svg/suppliers.svg') }}" height="150px"
+                                                         alt="Select Profile Picture">
                                                 </div>
                                                 <div class="model_no py-2 px-4 text-center">
                                                     Address
@@ -172,7 +176,7 @@
                                                 <div class="model_title text-center h4 mb-3">Location Name</div>
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/location-image.svg') }}"
                                                          height="200px" alt="Select Profile Picture">
                                                 </div>

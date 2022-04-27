@@ -43,9 +43,11 @@
                                                 <input type="hidden" id="location_id" name="location_id"
                                                        class="form-control mb-3" readonly
                                                        value="{{old('location_id') ?? $software->location_id}}">
-                                                <input class="form-control @if($errors->has('location_id')) border border-danger @endif" type="text" name="find_location"
-                                                       id="findLocation" value="{{old('find_location') ?? $software->location->name}}"
-                                                       placeholder="Search for Location" autocomplete="off">
+                                                <input
+                                                    class="form-control @if($errors->has('location_id')) border border-danger @endif"
+                                                    type="text" name="find_location" id="findLocation"
+                                                    value="{{old('find_location') ?? $software->location->name}}"
+                                                    placeholder="Search for Location" autocomplete="off">
                                                 <div id="locationResults"
                                                      class="w-100 h-auto mb-5 d-block search-modal position-absolute"
                                                      style="visibility: hidden; z-index: 2;">
@@ -55,7 +57,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="order_no" value="{{ old('order_no') ?? $software->order_no}}"/>
+                                                <x-form.input name="order_no"
+                                                              value="{{ old('order_no') ?? $software->order_no}}"/>
                                             </div>
                                             <div class='form-group'>
                                                 <x-form.select name="supplier_id" :models="$suppliers"
@@ -72,8 +75,8 @@
                                                               value="{{ old('purchased_cost') ?? $software->purchased_cost}}"/>
                                                 <div class="form-check mt-2 ml-1">
                                                     <input class="form-check-input" type="checkbox" value="1"
-                                                            @if(old('donated') == 1 || $software->donated == 1) checked @endif name="donated"
-                                                            id="donated">
+                                                           @if(old('donated') == 1 || $software->donated == 1) checked
+                                                           @endif name="donated" id="donated">
                                                     <label class="form-check-label" for="donated">
                                                         Donated
                                                     </label>
@@ -100,11 +103,11 @@
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle">
                                                     @if($software->location()->exists() && $software->location->photo()->exists())
-                                                        <img id="profileImage"
+                                                        <img id="profileImage" onclick='getPhotoPage(1)'
                                                              src="{{ asset($software->location->photo->path) }}"
                                                              height="200px" alt="Select Profile Picture">
                                                     @else
-                                                        <img id="profileImage"
+                                                        <img id="profileImage" onclick='getPhotoPage(1)'
                                                              src="{{ asset('images/svg/location-image.svg') }}"
                                                              height="200px" alt="Select Profile Picture">
                                                     @endif

@@ -147,12 +147,13 @@
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Consumable Image</h4>
                                     @if($consumable->photo()->exists())
-                                        <img id="profileImage"
+                                        <img id="profileImage" onclick='getPhotoPage(1)'
                                              src="{{ asset($consumable->photo->path) ?? asset('images/svg/consumables-image.svg')}}"
                                              width="100%" alt="Select Profile Picture">
                                     @else
-                                        <img id="profileImage" src="{{ asset('images/svg/consumables-image.svg') }}"
-                                             width="100%" alt="Select Profile Picture">
+                                        <img id="profileImage" onclick='getPhotoPage(1)'
+                                             src="{{ asset('images/svg/consumables-image.svg') }}" width="100%"
+                                             alt="Select Profile Picture">
                                     @endif
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>

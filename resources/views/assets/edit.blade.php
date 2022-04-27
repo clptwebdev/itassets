@@ -192,8 +192,8 @@
                                                     @else
                                                         @php($path = asset('images/svg/device-image.svg'))
                                                     @endif
-                                                    <img id="profileImage" src="{{ $path }}" height="150px"
-                                                         alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)' src="{{ $path }}"
+                                                         height="150px" alt="Select Profile Picture">
                                                 </div>
                                                 <div class="model_no py-2 px-4">
                                                     Manufacturer: {{ $asset->model->manufacturer->name ?? 'No Manufacturer found'}}
@@ -286,8 +286,8 @@
                                                     @else
                                                         @php($path = asset('images/svg/suppliers.svg'))
                                                     @endif
-                                                    <img id="profileImage" src="{{ $path }}" height="150px"
-                                                         alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)' src="{{ $path }}"
+                                                         height="150px" alt="Select Profile Picture">
                                                 </div>
                                                 @if($asset->supplier()->exists() && $asset->supplier->address_1 != '')
                                                     <div class="model_no py-2 px-4 text-center">
@@ -343,8 +343,8 @@
                                                     @else
                                                         @php($path = asset('images/svg/location-image.svg'))
                                                     @endif
-                                                    <img id="profileImage" src="{{ $path }}" height="150px"
-                                                         alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)' src="{{ $path }}"
+                                                         height="150px" alt="Select Profile Picture">
                                                 </div>
                                                 @if($asset->location()->exists() && $asset->location->address_1 != '')
                                                     <div class="model_no py-2 px-4 text-center">

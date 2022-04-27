@@ -75,12 +75,12 @@
                                             <div class="model_title text-center h4 mb-3">Component Image</div>
                                             <div class="model_image p-4">
                                                 @if($data->photo()->exists() && $data->photo()->exists())
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset($data->photo->path) ?? asset('images/svg/device-image.svg') }}"
                                                          width="100%" alt="Select Profile Picture"
                                                          data-bs-toggle="modal" data-bs-target="#imgModal">
                                                 @else
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/device-image.svg') }}" width="100%"
                                                          alt="Select Profile Picture" data-bs-toggle="modal"
                                                          data-bs-target="#imgModal">
@@ -100,7 +100,7 @@
                                         <h3 class="h6 text-center mb-3">Purchase Information</h3>
                                         <div class="form-group">
                                             <x-form.input name="order_no"
-                                                          value="{{old('order_no') ?? $data->order_id}}"/>
+                                                          value="{{old('order_no') ?? $data->order_no}}"/>
                                         </div>
                                         <div class="form-group">
                                             <x-form.date name="purchased_date" formAttributes="required"
@@ -139,12 +139,13 @@
                                             <div
                                                 class="model_image p-4 d-flex justify-content-center align-items-middle">
                                                 @if($data->supplier()->exists() && $data->supplier->photo()->exists())
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset($data->supplier->photo->path) }}" height="150px"
                                                          alt="Select Profile Picture">
                                                 @else
-                                                    <img id="profileImage" src="{{ asset('images/svg/suppliers.svg') }}"
-                                                         height="150px" alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
+                                                         src="{{ asset('images/svg/suppliers.svg') }}" height="150px"
+                                                         alt="Select Profile Picture">
                                                 @endif
                                             </div>
                                             <div class="model_no py-2 px-4 text-center">
@@ -198,11 +199,11 @@
                                             <div
                                                 class="model_image p-4 d-flex justify-content-center align-items-middle">
                                                 @if($data->location()->exists() && $data->location->photo()->exists())
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset($data->location->photo->path) }}" height="200px"
                                                          alt="Select Profile Picture">
                                                 @else
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/location-image.svg') }}"
                                                          height="200px" alt="Select Profile Picture">
                                                 @endif

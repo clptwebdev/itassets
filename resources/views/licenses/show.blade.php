@@ -76,11 +76,13 @@
                                     <div class="model_title text-center h4 mb-3">{{$license->location->name}}</div>
                                     <div class="model_image p-4 d-flex justify-content-center align-items-middle">
                                         @if($license->location()->exists() && $license->location->photo()->exists())
-                                            <img id="profileImage" src="{{ asset($license->location->photo->path) }}"
-                                                 height="200px" alt="Select Profile Picture">
+                                            <img id="profileImage" onclick='getPhotoPage(1)'
+                                                 src="{{ asset($license->location->photo->path) }}" height="200px"
+                                                 alt="Select Profile Picture">
                                         @else
-                                            <img id="profileImage" src="{{ asset('images/svg/location-image.svg') }}"
-                                                 height="200px" alt="Select Profile Picture">
+                                            <img id="profileImage" onclick='getPhotoPage(1)'
+                                                 src="{{ asset('images/svg/location-image.svg') }}" height="200px"
+                                                 alt="Select Profile Picture">
                                         @endif
                                     </div>
                                     <div class="model_no py-2 px-4 text-center">

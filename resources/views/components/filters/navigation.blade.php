@@ -115,7 +115,7 @@
         </div>
     </div>
 
-    <div id="sortBar" class="d-none d-lg-inline-block col-12 col-lg-8 pointer">
+    <div id="sortBar" class="d-none d-lg-inline-block col-12 col-lg-8">
         <form class="form-inline w-100" method="POST" action="{{ route($route.'.filter')}}">
             @csrf
             <label class="my-1 mr-2 pointer"><i class="fas fa-list-ol"></i></label>

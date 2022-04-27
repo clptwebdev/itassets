@@ -84,11 +84,11 @@
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle">
                                                     @if($vehicle->location()->exists() && $vehicle->location->photo()->exists())
-                                                        <img id="profileImage"
+                                                        <img id="profileImage" onclick='getPhotoPage(1)'
                                                              src="{{ asset($vehicle->location->photo->path) }}"
                                                              height="200px" alt="Select Profile Picture">
                                                     @else
-                                                        <img id="profileImage"
+                                                        <img id="profileImage" onclick='getPhotoPage(1)'
                                                              src="{{ asset('images/svg/location-image.svg') }}"
                                                              height="200px" alt="Select Profile Picture">
                                                     @endif

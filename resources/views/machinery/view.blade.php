@@ -106,7 +106,7 @@
                     @foreach($machineries as $machinery)
                         <tr>
                             <td class="text-start">
-                                {{$machinery->name}}
+                                {{$machinery->name ?? 'N/A'}}
                                 @if($machinery->serial_no)
                                     <br>
                                     <small>{{$machinery->serial_no}}</small>

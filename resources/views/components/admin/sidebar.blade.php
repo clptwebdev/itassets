@@ -72,7 +72,7 @@
 
         <li class="nav-item @if(Request::url() == route('softwares.index') || Str::contains(Request::url(), ['software', 'softwares'])) {{ 'active' }} @endif">
             <a class="nav-link text-left text-sm-center text-md-left" href="{{ route('softwares.index')}}">
-                <i class="fas fa-fw fa-folder-open sidebar-icon"></i>
+                <i class="fas fa-fw fa-compact-disc sidebar-icon"></i>
                 <span class="sidebar-title">Software</span></a>
         </li>
     @endcan
