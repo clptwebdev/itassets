@@ -37,8 +37,6 @@ class Kernel extends ConsoleKernel {
         $schedule->call('\App\Http\Controllers\BackupController@createDB')->daily();
         //deletes all PDF's Monthly
         $schedule->call('\App\Http\Controllers\ReportController@clean')->weekly();
-        //deletes all Csv's Monthly
-        $schedule->call('\App\Http\Controllers\ReportController@clean')->weekly();
         $schedule->call('\App\Http\Controllers\UserController@invokeExpiredUsers')->weekly();
         $schedule->call('\App\Http\Controllers\BroadbandController@expired')->daily();
         $schedule->call('\App\Http\Controllers\LicenseController@expired')->daily();
