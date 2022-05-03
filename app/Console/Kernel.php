@@ -44,6 +44,7 @@ class Kernel extends ConsoleKernel {
             $files = Storage::files('public/csv/');
             Storage::delete($files);
         })->everyTwoHours();
+        
         $schedule->call(function() {
             foreach(Location::all() as $location)
             {

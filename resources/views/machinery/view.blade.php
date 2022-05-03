@@ -79,25 +79,27 @@
                     <thead>
                     <tr>
                         <th class="col-2 col-md-2"><small>Name</small></th>
-                        <th class="col-2 col-md-2 text-center"><small>Purchase Cost</small></th>
-                        <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                        <th class="text-center col-3 d-none d-xl-table-cell"><small>Supplier</small></th>
-                        <th class="col-2 col-md-auto text-center"><small>Location</small></th>
-                        <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
-                        </th>
-                        <th class="text-right col-1"><small>Options</small></th>
+                        <th class="col-1 col-md-auto text-center"><small>Location</small></th>
+                        <th class="col-2 col-md-auto text-center"><small>Manufacturer</small></th>
+                        <th class="text-center col-1 col-md-auto"><small>Purchase Date</small></th>
+                        <th class="col-1 text-center"><small>Purchase Cost</small></th>
+                        <th class="text-center col-2 d-none d-xl-table-cell"><small>Supplier</small></th>
+                        <th class="text-center col-1 d-none d-xl-table-cell"><small>Warranty</small></th>
+                        <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small></th>
+                        <th class="text-end col-1"><small>Options</small></th>
                     </tr>
                     </thead>
                     <tfoot>
                     <tr>
-                        <th class="col-4 col-md-2"><small>Name</small></th>
-                        <th class="col-3 col-md-2 text-center"><small>Purchase Cost</small></th>
-                        <th class="text-center col-2 col-md-auto"><small>Purchase Date</small></th>
-                        <th class="text-center col-1 d-none d-xl-table-cell"><small>Supplier</small></th>
-                        <th class="col-1 col-md-auto text-center"><small>Location</small></th>
-                        <th class="text-center col-1 d-none d-xl-table-cell"><small>Depreciation (Years)</small>
-                        </th>
-                        <th class="text-right col-1"><small>Options</small></th>
+                        <th ><small>Name</small></th>
+                        <th class="text-center"><small>Location</small></th>
+                        <th class="text-center"><small>Manufacturer</small></th>
+                        <th><small>Purchase Date</small></th>
+                        <th class="text-center"><small>Purchase Cost</small></th>
+                        <th class="text-center"><small>Supplier</small></th>
+                        <th class="text-center"><small>Warranty</small></th>
+                        <th class="text-center"><small>Depreciation (Years)</small></th>
+                        <th class="text-end"><small>Options</small></th>
                     </tr>
                     </tfoot>
                     <tbody>
@@ -110,10 +112,32 @@
                                     <small>{{$machinery->serial_no}}</small>
                                 @endif
                             </td>
+                            <td class="text-center">
+                                @if($machinery->location()->exists())
+                                    @if($machinery->location->photo()->exists())
+                                        <img src="{{ asset($machinery->location->photo->path)}}" height="30px"
+                                             alt="{{$machinery->location->name}}"
+                                             title="{{ $machinery->location->name ?? 'Unnassigned'}}"/>
+                                    @else
+                                        {!! '<span class="display-5 font-weight-bold btn btn-sm rounded-circle text-white" style="background-color:'.strtoupper($machinery->location->icon ?? '#666').'">'
+                                            .strtoupper(substr($machinery->location->name ?? 'u', 0, 1)).'</span>' !!}
+                                    @endif
+                                @endif
+                            </td>
+                            <td class="text-center ">{{$machinery->manufacturer->name ?? "N/A"}}</td>
+                            <td class="text-center">{{ \Illuminate\Support\Carbon::parse($machinery->purchased_date)->format('d/m/Y')}}</td>
                             <td class="text-center">£{{number_format($machinery->purchased_cost, 2, '.', ',')}}</td>
-                            <td class="text-center">{{ \Illuminate\Support\Carbon::parse($machinery->purchased_date)->format('d-M-Y')}}</td>
                             <td class="text-center">{{$machinery->supplier->name ?? 'N/A'}}</td>
-                            <td class="text-center">{{$machinery->location->name}}</td>
+                            @php $warranty_end = \Carbon\Carbon::parse($machinery->purchased_date)->addMonths($machinery->warranty);@endphp
+                            <td class="text-center  d-none d-xl-table-cell" data-sort="{{ $warranty_end }}">
+                                {{ $machinery->warranty ?? 0}} Months<br>
+                                @if(\Carbon\Carbon::parse($warranty_end)->isPast() || \Carbon\Carbon::now()->floatDiffInMonths($warranty_end) < 1)
+                                    <span class="text-coral">{{ 'Expired' }}</span>
+                                @else
+                                    <small>{{ round(\Carbon\Carbon::now()->floatDiffInMonths($warranty_end)) }}
+                                        Remaining</small>
+                                @endif
+                            </td>
                             <td class="text-center">
                                 £{{number_format($machinery->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
                                 <br><small>{{$machinery->depreciation}} Years</small></td>

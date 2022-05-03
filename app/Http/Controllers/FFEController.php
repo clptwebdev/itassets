@@ -444,26 +444,6 @@ class FFEController extends Controller {
         }
     }
 
-    public function exportImportErrors(Request $request)
-    {
-        $export = $request['name'];
-        $code = (htmlspecialchars_decode($export));
-        $export = json_decode($code);
-
-        if(auth()->user()->cant('viewAll', FFE::class))
-        {
-            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised to Export FFE Errors.');
-
-        }
-
-        $date = \Carbon\Carbon::now()->format('dmyHis');
-        \Maatwebsite\Excel\Facades\Excel::store(new FFEErrorsExport($export), "/public/csv/ffe-errors-{$date}.csv");
-        $url = asset("storage/csv/ffe-errors-{$date}.csv");
-
-        return to_route('ffes.index')
-            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
-            ->withInput();
-    }
 
     ///////////////////////////////////////////
     ///////////// Export Functions ////////////
@@ -485,6 +465,27 @@ class FFEController extends Controller {
             ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
             ->withInput();
 
+    }
+
+    public function exportImportErrors(Request $request)
+    {
+        $export = $request['name'];
+        $code = (htmlspecialchars_decode($export));
+        $export = json_decode($code);
+
+        if(auth()->user()->cant('viewAll', FFE::class))
+        {
+            return ErrorController::forbidden(route('ffes.index'), 'Unauthorised to Export FFE Errors.');
+
+        }
+
+        $date = \Carbon\Carbon::now()->format('dmyHis');
+        \Maatwebsite\Excel\Facades\Excel::store(new FFEErrorsExport($export), "/public/csv/ffe-errors-{$date}.csv");
+        $url = asset("storage/csv/ffe-errors-{$date}.csv");
+
+        return to_route('ffes.index')
+            ->with('success_message', "Your Export has been created successfully. Click Here to <a href='{$url}'>Download CSV</a>")
+            ->withInput();
     }
 
     ////////////////////////////////////////////////////////

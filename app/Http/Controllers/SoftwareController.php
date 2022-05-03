@@ -32,6 +32,13 @@ class SoftwareController extends Controller {
         {
             return ErrorController::forbidden('/dashboard', 'Unauthorised | View Software.');
         }
+
+        //If there are filters currently set move to filtered function
+        if(session()->has('software_filter') && session('software_filter') === true)
+        {
+            return to_route('software.filtered');
+        }
+
         // find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('software')->get();
         //Find the properties that are assigned to the locations the User has permissions to.
@@ -117,7 +124,7 @@ class SoftwareController extends Controller {
         $validation = $request->validate([
             'name' => 'required',
             'location_id' => 'required',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'purchased_cost' => ['required',' regex:/^(£)?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\.[0-9][0-9])?$/'],
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
         ], [
@@ -187,7 +194,7 @@ class SoftwareController extends Controller {
             'name' => 'required',
             'location_id' => 'required',
             'supplier_id' => 'required',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'purchased_cost' => ['required',' regex:/^(£)?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\.[0-9][0-9])?$/'],
             'depreciation' => 'required|numeric',
             'purchased_date' => 'required|date',
         ], [
@@ -217,6 +224,10 @@ class SoftwareController extends Controller {
 
         return to_route('softwares.index')->with('success_message', $request->name . ' Has been Updated!');
     }
+
+    ////////////////////////////////////////
+    /////////// Delete Functions ///////////
+    ////////////////////////////////////////
 
     public function destroy(Software $software)
     {
@@ -620,7 +631,7 @@ class SoftwareController extends Controller {
         }
 
         $software->leftJoin('locations', 'software.location_id', '=', 'locations.id')
-            ->orderBy(session('software_orderby') ?? 'date', session('software_direction') ?? 'asc')
+            ->orderBy(session('software_orderby') ?? 'purchased_date', session('software_direction') ?? 'asc')
             ->select('software.*', 'locations.name as location_name');
         $limit = session('software_limit') ?? 25;
 

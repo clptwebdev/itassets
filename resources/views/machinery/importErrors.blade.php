@@ -11,7 +11,7 @@
         @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
 
         <div>
-            <form action="{{route('software.export.import')}}" method="POST" class="d-inline">
+            <form action="{{route('machinery.export.import')}}" method="POST" class="d-inline">
                 @csrf
                 <div class="form-group">
                     <input type="hidden" class="form-control " name="name" id="name" placeholder=""
@@ -21,7 +21,7 @@
                         class="far fa-save fa-sm text-dark-50"></i> Download Errors
                 </button>
             </form>
-            <a href="{{ route('softwares.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
+            <a href="{{ route('machineries.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                     class="fas fa-chevron-left fa-sm te
                     xt-white-50"></i> Back to Software</a>
             <a id="importHelpBtn" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
@@ -58,23 +58,33 @@
                         <thead>
                         <tr>
                             <th><small>Name</small></th>
+                            <th><small>Serial Num</small></th>
+                            <th><small>Purchased Cost</small></th>
+                            <th><small>Donated</small></th>
+                            <th><small>Purchased Date</small></th>
                             <th><small>Supplier</small></th>
-                            <th><small>Location</small></th>
-                            <th><small>Date</small></th>
-                            <th><small>Cost</small></th>
-                            <th><small>Description</small></th>
+                            <th><small>Manufacturers</small></th>
+                            <th><small>Order_no</small></th>
+                            <th><small>Warranty</small></th>
                             <th><small>Depreciation</small></th>
+                            <th><small>Location</small></th>
+                            <th><small>Description</small></th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
                             <th><small>Name</small></th>
+                            <th><small>Serial Num</small></th>
+                            <th><small>Purchased Cost</small></th>
+                            <th><small>Donated</small></th>
+                            <th><small>Purchased Date</small></th>
                             <th><small>Supplier</small></th>
-                            <th><small>Location</small></th>
-                            <th><small>Date</small></th>
-                            <th><small>Cost</small></th>
-                            <th><small>Description</small></th>
+                            <th><small>Manufacturers</small></th>
+                            <th><small>Order_no</small></th>
+                            <th><small>Warranty</small></th>
                             <th><small>Depreciation</small></th>
+                            <th><small>Location</small></th>
+                            <th><small>Description</small></th>
                         </tr>
                         </tfoot>
 
@@ -84,46 +94,52 @@
                             <?php $errors = explode(",", $error); ?>
                             <tr>
                                 <td>
-                                    <span id="name{{$line}}" class="tooltip-danger">
+                                        <span id="name{{$line}}" class="tooltip-danger">
                                             <input type="text"
                                                    class="import-control @if(in_array('name', $errors)){{ 'border-bottom border-danger'}}@endif"
                                                    name="name[]" value="{{ $valueArray[$row]['name'] }}"
-                                                   placeholder="This Row is Empty Please Fill!" required
+                                                   placeholder="This Row is Empty Please Fill!"
                                                    data-bs-container='#name{{$line}}' data-bs-placement='top'
                                                @if(array_key_exists('name', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['name']}'" !!}@endif>
                                         </span>
                                 </td>
                                 <td>
-                                    <span id="supplier_id{{$line}}" class="tooltip-danger">
-                                        <select type="dropdown"
-                                                class="import-control @if(in_array('supplier_id', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                                name="supplier_id[]" required data-bs-container='#supplier_id{{$line}}'
-                                                data-bs-placement='top'
-                                        @if(array_key_exists('supplier_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['supplier_id']}'" !!}@endif>
-                                            <option
-                                                value="0" @if($valueArray[$row]['supplier_id'] === ''){{'selected'}}@endif>No Supplier</option>
-                                            @foreach($suppliers as $supplier)
-                                                <option
-                                                    value="{{ $supplier->id }}" @if(  strtolower($valueArray[$row]['supplier_id']) ==  strtolower($supplier->name)){{'selected'}}@endif>{{ $supplier->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        </span>
+                                    <span id="serial_no{{$line}}" class="tooltip-danger">
+                                    <input type="text"
+                                           class="import-control @if(in_array('serial_no', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                           name="serial_no[]" id="serial_no"
+                                           placeholder="This Row is Empty Please Fill!"
+                                           value="{{ $valueArray[$row]['serial_no'] }}"
+                                           data-bs-container='#serial_no{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('serial_no', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['serial_no']}'" !!}@endif
+                                    >
+                                    </span>
                                 </td>
                                 <td>
-                                        <span id="location_id{{$line}}" class="tooltip-danger">
+                                    <span id="purchased_cost{{$line}}" class="tooltip-danger">
+                                    <input type="text"
+                                           class="import-control @if(in_array('purchased_cost', $errors)){{'border-bottom border-danger'}}@endif"
+                                           name="purchased_cost[]" id="purchased_cost"
+                                           placeholder="This Row is Empty Please Fill!"
+                                           value="{{ $valueArray[$row]['purchased_cost'] }}" required
+                                           data-bs-container='#purchased_cost{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['purchased_cost']}'" !!}@endif
+                                    >
+                                    </span>
+                                </td>
+                                <td>
+                                    <span id="donated{{$line}}" class="tooltip-danger">
                                         <select type="dropdown"
-                                                class="import-control @if(in_array('location_id', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                                name="location_id[]" required data-bs-container='#location_id{{$line}}'
-                                        @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' data-bs-placement='bottom' title='{$errorValues[$row]['location_id']} - {$valueArray[$row]['location_id']}'" !!}@endif
-                                        >
+                                                class="import-control <?php if (in_array('donated', $errors)) {?>border-bottom border-danger<?php }?>"
+                                                name="donated[]" id="donatedInput{{$line}}" onchange="getFields(this);"
+                                                autocomplete="off" required data-bs-container='#donated{{$line}}'
+                                                data-bs-placement='top'
+                                                @if(array_key_exists('donated', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['donated']}'" !!}@endif>>
+                                            <option value="0" @if($valueArray[$row]['donated'] == 0){{'selected'}}@endif>No</option>
                                             <option
-                                                value="0" @if($valueArray[$row]['location_id'] == ''){{'selected'}}@endif>Please Select a Location</option>
-                                            @foreach($locations as $location)
-                                                <option
-                                                    value="{{ $location->id  }}" @if( $valueArray[$row]['location_id'] == $location->name){{'selected'}}@endif>{{ $location->name }}</option>
-                                            @endforeach
+                                                value="1" @if( $valueArray[$row]['donated'] == 1){{'selected'}}@endif>Yes</option>
                                         </select>
-                                        </span>
+                                    </span>
                                 </td>
                                 <td>
                                     <?php
@@ -141,50 +157,108 @@
                                                name="purchased_date[]" id="purchased_date"
                                                placeholder="This Row is Empty Please Fill!" value="{{ $date }}" required
                                                data-bs-container='#purchased_date{{$line}}' data-bs-placement='top'
-                                               @if(array_key_exists('purchased_date', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['purchased_date']}'" !!}
-                                                   @endif
-                                               >
+                                            @if(array_key_exists('purchased_date', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['purchased_date']}'" !!}
+                                                @endif
+                                            >
                                         </span>
 
                                 </td>
                                 <td>
-                                        <span id="purchased_cost{{$line}}" class="tooltip-danger">
+                                        <span id="supplier_id{{$line}}" class="tooltip-danger">
+                                        <select type="dropdown"
+                                                class="import-control @if(in_array('supplier_id', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                                name="supplier_id[]" required data-bs-container='#supplier_id{{$line}}'
+                                                data-bs-placement='top'
+                                        @if(array_key_exists('supplier_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['supplier_id']}'" !!}@endif
+                                        >
+                                            <option
+                                                value="0" @if($valueArray[$row]['supplier_id'] == ''){{'selected'}}@endif>No Supplier</option>
+                                            @foreach($suppliers as $supplier)
+                                                <option
+                                                    value="{{ $supplier->id }}" @if(  strtolower($valueArray[$row]['supplier_id']) ==  strtolower($supplier->name)){{'selected'}}@endif>{{ $supplier->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        </span>
+                                </td>
+                                <td>
+                                        <span id="manufacturer_id{{$line}}" class="tooltip-danger">
+                                        <select type="dropdown"
+                                                class="import-control @if(in_array('manufacturer_id', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                                name="manufacturer_id[]" required
+                                                data-bs-container='#manufacturer_id{{$line}}' data-bs-placement='top'
+                                        @if(array_key_exists('manufacturer_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['manufacturer_id']}'" !!}@endif
+                                        >
+                                            <option
+                                                value="0" @if($valueArray[$row]['manufacturer_id'] == ''){{'selected'}}@endif>Please Select a Manufacturer</option>
+                                            @foreach($manufacturers as $manufacturer)
+                                                <option
+                                                    value="{{$manufacturer->id }}" @if( $valueArray[$row]['manufacturer_id'] == $manufacturer->name){{'selected'}}@endif>{{ $manufacturer->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        </span>
+                                </td>
+                                <td>
+                                        <span id="order_no{{$line}}" class="tooltip-danger">
                                         <input type="text"
-                                               class="import-control @if(in_array('purchased_cost', $errors)){{'border-bottom border-danger'}}@endif"
-                                               name="purchased_cost[]" id="purchased_cost"
+                                               class="import-control @if(in_array('order_no', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                               name="order_no[]" id="order_no"
                                                placeholder="This Row is Empty Please Fill!"
-                                               value="{{ preg_replace('/[[:^print:]]/', '', $valueArray[$row]['purchased_cost'])  }}"
-                                               required data-bs-container='#purchased_cost{{$line}}'
-                                               data-bs-placement='top'
-                                               @if(array_key_exists('purchased_cost', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['purchased_cost']}'" !!}@endif
+                                               value="{{ $valueArray[$row]['order_no'] }}" required
+                                               data-bs-container='#order_no{{$line}}' data-bs-placement='top'
+                                            @if(array_key_exists('order_no', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['order_no']}'" !!}@endif
                                         >
                                         </span>
                                 </td>
                                 <td>
-                                    <span id="description{{$line}}" class="tooltip-danger">
-                                            <input type="text"
-                                                   class="import-control @if(in_array('description', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                                   name="description[]" placeholder="This Row is Empty Please Fill!"
-                                                   required data-bs-container='#description{{$line}}'
-                                                   data-bs-placement='top'
-                                                   value='{{ $valueArray[$row]['description'] }}'
-                                               @if(array_key_exists('description', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['description']}'" !!}@endif>
-
-                                        </span>
+                                    <span id="warranty{{$line}}" class="tooltip-danger">
+                                    <input type="text"
+                                           class="import-control @if(in_array('warranty', $errors)){{'border-bottom border-danger'}}@endif"
+                                           name="warranty[]" id="warranty" placeholder="This Row is Empty Please Fill!"
+                                           value="{{ $valueArray[$row]['warranty'] }}" required
+                                           data-bs-container='#warranty{{$line}}' data-bs-placement='top'
+                                           @if(array_key_exists('warranty', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['warranty']}'" !!}@endif
+                                    >
+                                    </span>
                                 </td>
                                 <td>
-                                        <span id="depreciation{{$line}}" class="tooltip-danger">
+                                    <span id="depreciation{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="import-control @if(in_array('depreciation', $errors)){{ 'border-bottom border-danger'}}@endif"
-                                               name="depreciation[]" id="order_no"
+                                               name="depreciation[]"
+                                               value="{{ $valueArray[$row]['depreciation'] }}"
                                                placeholder="This Row is Empty Please Fill!"
-                                               value="{{ $valueArray[$row]['depreciation'] }}" required
                                                data-bs-container='#depreciation{{$line}}' data-bs-placement='top'
-                                            @if(array_key_exists('depreciation', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['depreciation']}'" !!}@endif
-                                        >
+                                           @if(array_key_exists('depreciation', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['depreciation']}'" !!}@endif>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span id="location_id{{$line}}" class="tooltip-danger">
+                                    <select type="dropdown"
+                                            class="import-control @if(in_array('location_id', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                            name="location_id[]" required data-bs-container='#location_id{{$line}}'
+                                            data-bs-placement='top'
+                                    @if(array_key_exists('location_id', $errorValues[$row])) {!! "data-bs-toggle='tooltip' title='{$errorValues[$row]['location_id']} - {$valueArray[$row]['location_id']}'" !!}@endif
+                                    >
+                                        <option
+                                            value="0" @if($valueArray[$row]['location_id'] == ''){{'selected'}}@endif>Please Select a Location</option>
+                                        @foreach($locations as $location)
+                                            <option
+                                                value="{{ $location->id  }}" @if( $valueArray[$row]['location_id'] == $location->name){{'selected'}}@endif>{{ $location->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    </span>
+                                </td>
+                                <td>
+                                        <span id="description{{$line}}" class="tooltip-danger">
+                                        <input type="text"
+                                               class="import-control @if(in_array('description', $errors)){{'border-bottom border-danger'}}@endif"
+                                               name="description[]" id="description" placeholder="This Row is Empty Please Fill!"
+                                               value="{{ $valueArray[$row]['description'] }}" required
+                                               data-bs-container='#description{{$line}}' data-bs-placement='top'
+                                               @if(array_key_exists('description', $errorValues[$row])) {!! "data-bs-toggle='tooltip'  title='{$errorValues[$row]['description']}'" !!}@endif
+                                               >
                                         </span>
                                 </td>
-
                             </tr>
                             @php($line++)@endforeach{{--    </form>--}}</tbody>
                     </table>
@@ -268,14 +342,19 @@
             data.append('_token', token);
 
             //Names
-            const nmeInputs = document.querySelectorAll("input[name='name[]']");
-            nmeInputs.forEach(element => {
+            const inputs = document.querySelectorAll("input[name='name[]']");
+            inputs.forEach(element => {
                 data.append('name[]', element.value);
             });
-            //registration
-            const dcInputs = document.querySelectorAll("input[name='description[]']");
-            dcInputs.forEach(element => {
-                data.append('description[]', element.value);
+            //supplier
+            const supplierInputs = document.querySelectorAll("select[name='supplier_id[]']");
+            supplierInputs.forEach(element => {
+                data.append('supplier_id[]', element.value);
+            });
+            //Manufacturer
+            const mfInputs = document.querySelectorAll("select[name='manufacturer_id[]']");
+            mfInputs.forEach(element => {
+                data.append('manufacturer_id[]', element.value);
             });
 
             //Location
@@ -301,11 +380,33 @@
             dpInputs.forEach(element => {
                 data.append('depreciation[]', element.value);
             });
-            //Supplier
-            const supInputs = document.querySelectorAll("select[name='supplier_id[]']");
-            supInputs.forEach(element => {
-                data.append('supplier_id[]', element.value);
+            //Order Number
+            const orderNoInputs = document.querySelectorAll("input[name='order_no[]']");
+            orderNoInputs.forEach(element => {
+                data.append('order_no[]', element.value);
             });
+
+            //Serial Number
+            const serialNoInputs = document.querySelectorAll("input[name='serial_no[]']");
+            serialNoInputs.forEach(element => {
+                data.append('serial_no[]', element.value);
+            });
+            //Donated
+            const donInputs = document.querySelectorAll("select[name='donated[]']");
+            donInputs.forEach(element => {
+                data.append('donated[]', element.value);
+            });
+            //Warranty
+            const warInputs = document.querySelectorAll("input[name='warranty[]']");
+            warInputs.forEach(element => {
+                data.append('warranty[]', element.value);
+            });
+            //Notes
+            const descriptionInputs = document.querySelectorAll("input[name='description[]']");
+            descriptionInputs.forEach(element => {
+                data.append('description[]', element.value);
+            });
+
 
             const xhr = new XMLHttpRequest()
 

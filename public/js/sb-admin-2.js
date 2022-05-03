@@ -58,6 +58,11 @@
     //Two buttons should have seperate add eventlisteners as one should shrink the sidebar and only be available on small screens
 
     sideButton.addEventListener("click", function () {
+        this.classList.toggle('toggled');
+        sidebar.classList.toggle("sidebar-toggle");
+        dropdowns.forEach((dd) => {
+            dd.classList.toggle('dropdown-toggled');
+        });
         if (window.innerWidth > 768) {
             sideTitles.forEach((item) => {
                 item.classList.toggle("d-none");
