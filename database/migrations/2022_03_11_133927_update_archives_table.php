@@ -29,6 +29,8 @@ return new class extends Migration {
     {
         Schema::table('archives', function(Blueprint $table) {
             $table->dropColumn('options');
+            $table->dropColumn('donated');
+            $table->dropColumn('manufacturer');
         });
     }
 

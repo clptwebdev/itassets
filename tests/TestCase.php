@@ -14,6 +14,7 @@ abstract class TestCase extends BaseTestCase {
 
     public function login(User $user = null): User
     {
+
         $user ??= $user = User::factory()->create([
             'role_id' => 1,
         ]);

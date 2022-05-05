@@ -23,7 +23,7 @@ class LocationUser extends Pivot {
             $user = User::find($pivot->user_id);
             $location = Location::find($pivot->location_id);
             Log::create([
-                'user_id' => auth()->user()->id,
+                'user_id' => auth()->user()->id ?? 'No User',
                 'loggable_type' => 'App\Models\User',
                 'loggable_id' => $user->id,
                 'data' => auth()->user()->name . ' granted ' . $user->name . ' with permissions for ' . $location->name,
@@ -34,7 +34,7 @@ class LocationUser extends Pivot {
             $user = User::find($pivot->user_id);
             $location = Location::find($pivot->location_id);
             Log::create([
-                'user_id' => auth()->user()->id,
+                'user_id' => auth()->user()->id ?? 'No User',
                 'log_type' => 'App\Models\User',
                 'log_id' => $user->id,
                 'data' => auth()->user()->name . ' removed ' . $user->name . ' with permissions for ' . $location->name,

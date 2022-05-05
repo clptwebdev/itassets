@@ -241,7 +241,7 @@
 @endsection
 @section('modals')
     <x-modals.dispose model="asset"/>
-    <x-modals.transfer :models="$locations" model="asset"/>
+    <x-modals.transfer :models="$locations" model="Asset"/>
     <x-modals.delete/>
     <x-modals.bulk-file title="disposal" :route="route('assets.bulk.disposal')"/>
     <x-modals.bulk-file title="transfer" :route="route('assets.bulk.transfer')"/>

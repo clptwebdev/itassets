@@ -36,6 +36,7 @@ class UserPolicy {
 
     public function update(User $user, User $accessedUser)
     {
+
         return $this->model->update || $user->id === $accessedUser->id;
     }
 

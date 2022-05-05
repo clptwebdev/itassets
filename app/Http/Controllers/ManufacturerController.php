@@ -143,7 +143,7 @@ class ManufacturerController extends Controller {
         }
         request()->validate([
             "name" => "required|unique:manufacturers,name|max:255",
-            "supportPhone" => "max:14",
+            "supportPhone" => "nullable|integer",
             "supportEmail" => 'sometimes|nullable|unique:manufacturers,supportEmail|email:rfc,dns,filter',
             "PhotoId" => "nullable",
         ]);

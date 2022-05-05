@@ -90,8 +90,10 @@ class UserController extends Controller {
 
     public function edit(User $user)
     {
+
         if(auth()->user()->cant('update', $user))
         {
+
             return ErrorController::forbidden(route('users.index'), 'Unauthorised to Edit User.');
         }
         if(auth()->user()->role->significance >= $user->role->significance)
@@ -102,9 +104,9 @@ class UserController extends Controller {
             return view('users.edit', compact('user', 'locations', 'roles'));
         } else
         {
+
             return ErrorController::forbidden(route('users.index'), 'Unauthorised to Edit This User (Incorrect Significance)');
         }
-
 
     }
 
