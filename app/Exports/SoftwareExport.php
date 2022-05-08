@@ -24,8 +24,9 @@ class SoftwareExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
     {
         return [
             "name",
-            "supplier_id",
             "location_id",
+            "manufacturer_id",
+            "supplier_id",
             "purchased_cost",
             "purchased_date",
             "depreciation",
@@ -40,8 +41,9 @@ class SoftwareExport implements FromArray, WithHeadings, ShouldAutoSize, WithEve
         {
             $array = [];
             $array["name"] = $software->name;
-            $array["supplier_id"] = $software->supplier_id;
-            $array["location_id"] = $software->location_id ?? null;
+            $array["location_id"] = $software->location->name ?? '';
+            $array["manufacturer_id"] = $software->manufacturer->name ?? '';
+            $array["supplier_id"] = $software->supplier->name ?? '';
             $array["purchased_cost"] = $software->purchased_cost;
             $array["purchased_date"] = $software->purchased_date;
             $array["depreciation"] = $software->depreciation;

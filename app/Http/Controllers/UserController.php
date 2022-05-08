@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\ColumnLogger;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,15 +16,15 @@ use Illuminate\Support\Facades\Storage;
 use App\Jobs\UsersPdf;
 use App\Jobs\UserPdf;
 use App\Models\Report;
+use Schema;
 
 class UserController extends Controller {
 
     public function index()
     {
-
         if(auth()->user()->cant('viewAll', User::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Users.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Users.');
         }
         $users = User::whereHas('locations', function($query) {
             $locs = [];
@@ -41,9 +42,9 @@ class UserController extends Controller {
     {
         if(auth()->user()->cant('create', User::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Create Users.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Create Users.');
         }
-        $roles = Role::all();
+        $roles = Role::significance(auth()->user());
 
         $locations = auth()->user()->locations;
 
@@ -78,7 +79,7 @@ class UserController extends Controller {
     {
         if(auth()->user()->cant('view', $user))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Show User.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Show User.');
 
         }
 
@@ -89,14 +90,23 @@ class UserController extends Controller {
 
     public function edit(User $user)
     {
+
         if(auth()->user()->cant('update', $user))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Edit User.');
-        }
-        $roles = Role::significance($user);
-        $locations = auth()->user()->locations;
 
-        return view('users.edit', compact('user', 'locations', 'roles'));
+            return ErrorController::forbidden(route('users.index'), 'Unauthorised to Edit User.');
+        }
+        if(auth()->user()->role->significance >= $user->role->significance)
+        {
+            $roles = Role::significance(auth()->user());
+            $locations = auth()->user()->locations;
+
+            return view('users.edit', compact('user', 'locations', 'roles'));
+        } else
+        {
+
+            return ErrorController::forbidden(route('users.index'), 'Unauthorised to Edit This User (Incorrect Significance)');
+        }
 
     }
 
@@ -105,7 +115,7 @@ class UserController extends Controller {
 
         if(auth()->user()->cant('update', $user))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Edit User.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Edit User.');
 
         }
 
@@ -124,11 +134,41 @@ class UserController extends Controller {
         return to_route('users.index');
     }
 
+    public function managerUpdate(Request $request)
+    {
+        $request->validate([
+            'manager_id' => 'required',
+            'selectedUser' => 'required',
+        ]);
+        $user = User::whereId($request->selectedUser)->first();
+        $manager = User::whereId($request->manager_id)->first();
+        if($request->manager_id == $user->manager_id)
+        {
+            session()->flash('danger_message', $user->name . ' Is Already assigned to this Manager.');
+
+            return to_route('users.index');
+        } else if($request->manager_id == $user->id)
+        {
+            session()->flash('danger_message', 'You Cannot be your own Manager. Please select another user to be your Manager.');
+
+            return to_route('users.index');
+        } else
+        {
+            $user->update([
+                'manager_id' => $request->manager_id,
+            ]);
+
+            session()->flash('success_message', $user->name . ' Has Been assigned to the Manager ' . $manager->name . '.');
+
+            return to_route('users.index');
+        }
+    }
+
     public function destroy(User $user)
     {
         if(auth()->user()->cant('delete', $user))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Delete User.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Delete User.');
 
         }
 
@@ -144,7 +184,7 @@ class UserController extends Controller {
     {
         if(auth()->user()->cant('viewAll', User::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Export Users.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Export Users.');
 
         }
 
@@ -157,7 +197,7 @@ class UserController extends Controller {
 
         if(auth()->user()->cant('viewAll', User::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Permissions.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Permissions.');
 
         }
         $ids = explode(',', $request->ids);
@@ -169,7 +209,7 @@ class UserController extends Controller {
     {
         if(auth()->user()->cant('viewAll', User::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Permissions.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Permissions.');
 
         }
 
@@ -202,7 +242,7 @@ class UserController extends Controller {
     {
         if(auth()->user()->cant('view', auth()->user()))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View User.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View User.');
 
         }
         $validated = $request->validate([
@@ -275,7 +315,7 @@ class UserController extends Controller {
     {
         if(auth()->user()->cant('viewAll', User::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Download Users.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Download Users.');
         }
 
         $users = User::all();
@@ -297,7 +337,7 @@ class UserController extends Controller {
     {
         if(auth()->user()->cant('view', $user))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Download Users.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Download Users.');
 
         }
 

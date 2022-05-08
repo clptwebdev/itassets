@@ -156,6 +156,26 @@ class Asset extends Model {
 
     }
 
+    public function depreciation_value_by_date($date)
+    {
+        if($this->model()->exists() && $this->model->depreciation()->exists())
+        {
+            $age = $date->floatDiffInYears($this->purchased_date);
+            $percent = 100 / $this->model->depreciation->years;
+            $percentage = floor($age) * $percent;
+            $value = $this->purchased_cost * ((100 - $percentage) / 100);
+
+            if($value < 0)
+            {
+                return 0;
+            } else
+            {
+                return $value;
+            }
+        }
+
+    }
+
     public function depreciation()
     {
         return $this->model->depreciation->years ?? 0;

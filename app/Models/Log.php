@@ -14,15 +14,7 @@ class Log extends Model {
 
     use HasFactory;
 
-    protected $fillable = ['user_id', 'loggable_type', 'loggable_id', 'data', 'created_at'];
-
-    public function data(): Attribute
-    {
-        return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
-        );
-    }
+    protected $fillable = ['user_id', 'loggable_type', 'loggable_id', 'data', 'created_at', 'read'];
 
     public function user()
     {

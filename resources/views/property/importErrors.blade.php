@@ -66,6 +66,7 @@
                             <th><small>Location</small></th>
                             <th><small>Date</small></th>
                             <th><small>Cost</small></th>
+                            <th><small>Donated</small></th>
                             <th><small>Depreciation</small></th>
                         </tr>
                         </thead>
@@ -76,6 +77,7 @@
                             <th><small>Location</small></th>
                             <th><small>Date</small></th>
                             <th><small>Cost</small></th>
+                            <th><small>Donated</small></th>
                             <th><small>Depreciation</small></th>
                         </tr>
                         </tfoot>
@@ -156,6 +158,18 @@
                                         </span>
                                 </td>
                                 <td>
+                                    <span id="donated{{$line}}" class="tooltip-danger">
+                                        <select type="dropdown"
+                                                class="import-control @if(in_array('donated', $errors)){{ 'border-bottom border-danger'}}@endif"
+                                                name="donated[]" required data-bs-container='#donated{{$line}}'
+                                        @if(array_key_exists('donated', $errorValues[$row])) {!! "data-bs-toggle='tooltip' data-bs-placement='bottom' title='{$errorValues[$row]['donated']} - {$valueArray[$row]['donated']}'" !!}@endif
+                                        >
+                                            <option value="0" @if( $valueArray[$row]['donated'] == 0){{'selected'}}@endif>No</option>
+                                            <option value="1" @if( $valueArray[$row]['donated'] == 1){{'selected'}}@endif>Yes</option>
+                                        </select>
+                                        </span>
+                                </td>
+                                <td>
                                         <span id="depreciation{{$line}}" class="tooltip-danger">
                                         <input type="text"
                                                class="import-control @if(in_array('depreciation', $errors)){{ 'border-bottom border-danger'}}@endif"
@@ -230,9 +244,9 @@
         });
 
         function enableToolTips() {
-            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
+            const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltips.forEach(t => {
+                new bootstrap.Tooltip(t);
             })
         }
 
@@ -311,7 +325,8 @@
                         let num = parseInt(res[1]);
                         elements[num].classList.add('border-bottom', 'border-danger');
                         elements[num].setAttribute('data-bs-toggle', 'tooltip');
-                        elements[num].setAttribute('data-title', error);
+                        elements[num].setAttribute('data-bs-original-title', error);
+                        new bootstrap.Tooltip(elements[num]);
                         i++;
                         enableToolTips();
                     });

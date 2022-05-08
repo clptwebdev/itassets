@@ -117,6 +117,26 @@ class Location extends Model {
         return $this->hasMany(Software::class);
     }
 
+    public function vehicle()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
+
+    public function broadband()
+    {
+        return $this->hasMany(Broadband::class);
+    }
+
+    public function machinery()
+    {
+        return $this->hasMany(Machinery::class);
+    }
+
+    public function license()
+    {
+        return $this->hasMany(License::class);
+    }
+
     public function auc()
     {
         return $this->hasMany(AUC::class);
@@ -128,7 +148,13 @@ class Location extends Model {
             ->using(LocationUser::class);
     }
 
-    public function full_address($sep)
+    public function singleBroadband()
+    {
+        return $this->hasOne(Broadband::class)->latest('renewal_date');
+
+    }
+
+    public function full_address($sep = ', ')
     {
         $output = $this->address_1 . $sep;
         if($this->address_2 != '')
@@ -151,6 +177,26 @@ class Location extends Model {
                 $expenditure += $asset->purchased_cost;
             }
         }
+
+        return $expenditure;
+
+    }
+
+    public function business_expenditure($year)
+    {
+        $expenditure = 0;
+        $assets = $this->assets()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $accessories = $this->accessories()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $property = $this->property()->whereYear('purchased_date', $year)->sum('purchased_cost');
+        $auc = $this->auc()->whereYear('purchased_date', $year)->sum('purchased_cost');
+        $ffe = $this->ffe()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $machinery = $this->machinery()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $vehicle = $this->vehicle()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        $software = $this->software()->whereYear('purchased_date', $year)->where('donated', '=', 0)->sum('purchased_cost');
+        
+        $total = $assets + $accessories + $property + $auc + $ffe + $machinery + $vehicle +$software;
+        $expenditure += $total;
+
 
         return $expenditure;
 

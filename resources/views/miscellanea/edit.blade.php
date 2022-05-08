@@ -25,7 +25,7 @@
             <div class="col-12">
                 <div class="card shadow h-100">
                     <div class="card-body">
-                        <x-form.errors/>
+
                         <x-handlers.alerts/>
 
                         <ul id="tab-bar" class="nav nav-tabs">
@@ -64,18 +64,36 @@
                                             <x-form.input name="serial_no" formAttributes="required"
                                                           value="{{old('serial_no') ?? $miscellanea->serial_no}}"/>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="depreciation_id">Depreciation</label>
+                                            <select
+                                                class="form-control <?php if ($errors->has('depreciation_id')){?>border-danger<?php }?>"
+                                                name="depreciation_id" id="depreciation_id" required>
+                                                <option
+                                                    value="0" @if($miscellanea->depreciation_id == 0){{ 'selected'}}@endif>
+                                                    No
+                                                    Depreciation
+                                                    Set
+                                                </option>
+                                                @foreach($depreciations as $dep)
+                                                    <option
+                                                        value="{{ $dep->id}}" @if($miscellanea->depreciation_id == $dep->id){{ 'selected'}}@endif>{{ $dep->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
+
                                     <div class="col-12 col-md-6 p-4 mb-3 ">
                                         <div id="modelInfo" class="bg-light p-4">
-                                            <div class="model_title text-center h4 mb-3">Component Image</div>
+                                            <div class="model_title text-center h4 mb-3">Misc Image</div>
                                             <div class="model_image p-4">
                                                 @if($miscellanea->photo()->exists() && $miscellanea->photo()->exists())
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset($miscellanea->photo->path) ?? asset('images/svg/device-image.svg') }}"
                                                          width="100%" alt="Select Profile Picture"
                                                          data-bs-toggle="modal" data-bs-target="#imgModal">
                                                 @else
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/device-image.svg') }}" width="100%"
                                                          alt="Select Profile Picture" data-bs-toggle="modal"
                                                          data-bs-target="#imgModal">
@@ -95,7 +113,7 @@
                                         <h3 class="h6 text-center mb-3">Purchase Information</h3>
                                         <div class="form-group">
                                             <x-form.input name="order_no"
-                                                          value="{{old('order_no') ?? $miscellanea->order_id}}"/>
+                                                          value="{{old('order_no') ?? $miscellanea->order_no}}"/>
                                         </div>
                                         <div class="form-group">
                                             <x-form.date name="purchased_date" formAttributes="required"
@@ -134,12 +152,13 @@
                                             <div
                                                 class="model_image p-4 d-flex justify-content-center align-items-middle">
                                                 @if($miscellanea->supplier()->exists() && $miscellanea->supplier->photo()->exists())
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset($miscellanea->supplier->photo->path) }}"
                                                          height="150px" alt="Select Profile Picture">
                                                 @else
-                                                    <img id="profileImage" src="{{ asset('images/svg/suppliers.svg') }}"
-                                                         height="150px" alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
+                                                         src="{{ asset('images/svg/suppliers.svg') }}" height="150px"
+                                                         alt="Select Profile Picture">
                                                 @endif
                                             </div>
                                             <div class="model_no py-2 px-4 text-center">
@@ -186,6 +205,9 @@
                                                 </ul>
                                             </div>
                                         </div>
+                                        <div class='form-group mt-1'>
+                                            <x-form.input name="room" :value="$miscellanea->room"/>
+                                        </div>
                                     </div>
                                     <div class="col-12 col-md-6 p-4 mb-3 ">
                                         <div id="locationInfo" class="bg-light p-4">
@@ -193,11 +215,11 @@
                                             <div
                                                 class="model_image p-4 d-flex justify-content-center align-items-middle">
                                                 @if($miscellanea->location()->exists() && $miscellanea->location->photo()->exists())
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset($miscellanea->location->photo->path) }}"
                                                          height="200px" alt="Select Profile Picture">
                                                 @else
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/location-image.svg') }}"
                                                          height="200px" alt="Select Profile Picture">
                                                 @endif

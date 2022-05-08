@@ -32,13 +32,7 @@
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Information regarding Asset Model: {{ $assetModel->name }}, the assets that are currently
@@ -131,7 +125,7 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    @foreach($assetModel->assets as $asset)
+                    @foreach($assetModel->assets()->paginate(20) as $asset)
                         <tr>
                             <td>{{ $assetModel->name ?? 'No Model'}}<br><small
                                     class="d-none d-md-inline-block">{{ $asset->serial_no }}</small></td>
@@ -212,6 +206,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                <x-paginate :model="$assetModel->assets()->paginate()"/>
             </div>
         </div>
 

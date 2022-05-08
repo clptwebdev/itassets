@@ -2,17 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AssetExport;
+use App\Exports\BusinessExport;
 use App\Models\Accessory;
 use App\Models\Asset;
 use App\Models\Component;
 use App\Models\Consumable;
+use App\Models\FFE;
 use App\Models\Location;
+use App\Models\Log;
+use App\Models\Machinery;
 use App\Models\Miscellanea;
 use App\Models\Requests;
 use App\Models\Archive;
+use App\Models\Software;
 use App\Models\Transfer;
 use App\Models\Property;
 use App\Models\AUC;
+use App\Models\Vehicle;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -20,12 +28,48 @@ class HomeController extends Controller {
 
     public function index()
     {
-        //return dd($assets[0]);
-        return view('dashboard');
+
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->get();
+        if(auth()->user()->isBusiness())
+        {
+            return view('dashboard.business', compact('locations'));
+        } else
+        {
+            return view('dashboard', compact('locations'));
+        }
     }
 
-    public function business(){
-        return view('dashboard.business');
+
+    ////////////////////////////////////////
+    ////// Top Bar Search Functions ////////
+    ////////////////////////////////////////
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+        ]);
+        $assets = Asset::searchFilter($request->name)->get();
+        $FFE = FFE::searchFilter($request->name)->get();
+        $accessory = Accessory::searchFilter($request->name)->get();
+
+        $component = Component::searchFilter($request->name)->get();
+        $misc = Miscellanea::searchFilter($request->name)->get();
+        $consumable = Consumable::searchFilter($request->name)->get();
+        $merged = collect([$FFE, $accessory, $component, $misc, $consumable, $assets]);
+        $single = Collection::empty();
+        //foreach $model then Foreach $item Push to a single collection
+        foreach($merged as $merge)
+        {
+            foreach($merge as $item)
+            {
+                $single->push($item);
+            }
+        }
+
+        return view("search.view", [
+            'assets' => $single,
+        ]);
     }
 
     ////////////////////////////////////////
@@ -211,7 +255,7 @@ class HomeController extends Controller {
         )
         {
             /* This is to calculate all the assets for the individual schools and the grand total */
-            Property::getCache($locations->pluck('id'));
+            Property::getCache($locations->pluck('id')->toArray());
         }
 
         //Check to see if the cache has been set and exists
@@ -222,6 +266,36 @@ class HomeController extends Controller {
         {
             /* This is to calculate all the assets for the individual schools and the grand total */
             AUC::getCache($locations->pluck('id'));
+        }
+
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("ffes-total") &&
+            ! Cache::has("ffes-cost") &&
+            ! Cache::has("ffes-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            FFE::getCache($locations->pluck('id'));
+        }
+
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("machinery-total") &&
+            ! Cache::has("machinery-cost") &&
+            ! Cache::has("machinery-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            Machinery::getCache($locations->pluck('id'));
+        }
+
+        //Check to see if the cache has been set and exists
+        if(! Cache::has("vehicle-total") &&
+            ! Cache::has("vehicle-cost") &&
+            ! Cache::has("vehicle-dep")
+        )
+        {
+            /* This is to calculate all the assets for the individual schools and the grand total */
+            Vehicle::getCache($locations->pluck('id'));
         }
 
         //Get the Users location which they have access to
@@ -248,12 +322,13 @@ class HomeController extends Controller {
             Accessory::getCache($locations->pluck('id'));
         }
 
-       
-
         $obj = array(
             'asset' => ['count' => Cache::get('assets_total'), 'cost' => Cache::get('assets_cost'), 'dep' => Cache::get('assets_dep')],
-            'property' => ['count' => Cache::get('property_total'), 'cost' => Cache::get('property_cost'), 'dep' => Cache::get('property_dep')],
-            'auc' => ['count' => Cache::get('auc_total'), 'cost' => Cache::get('auc_cost'), 'dep' => Cache::get('auc_dep')],
+            'property' => ['count' => Cache::get('property-total'), 'cost' => Cache::get('property-cost'), 'dep' => Cache::get('property-dep')],
+            'auc' => ['count' => Cache::get('auc-total'), 'cost' => Cache::get('auc-cost'), 'dep' => Cache::get('auc-dep')],
+            'ffe' => ['count' => Cache::get('ffe-total'), 'cost' => Cache::get('ffe-cost'), 'dep' => Cache::get('ffe-dep')],
+            'machinery' => ['count' => Cache::get('machinery-total'), 'cost' => Cache::get('machinery-cost'), 'dep' => Cache::get('machinery-dep')],
+            'vehicles' => ['count' => Cache::get('vehicle-total'), 'cost' => Cache::get('vehicle-cost'), 'dep' => Cache::get('vehicle-dep')],
             'accessories' => ['count' => Cache::get('accessories_total'), 'cost' => Cache::get('accessories_cost'), 'dep' => Cache::get('accessories_dep')],
         );
 

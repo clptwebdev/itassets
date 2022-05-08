@@ -14,7 +14,7 @@
                    class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                         class="fas fa-chevron-left fa-sm text-white-50"></i> Back</a>
             @endcan
-            @can('delete', $manufacturer)
+            @can('forceDelete', $manufacturer)
                 <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-coral shadow-sm deleteBtn"><i
                         class="fas fa-trash fa-sm text-white-50"></i> Delete</a>
             @endcan
@@ -23,19 +23,11 @@
                    class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
             @endcan
-            <a href="{{ route('manufacturer.showPdf', $manufacturer->id)}}"
-               class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
-                    class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+            <x-buttons.reports :route="route('manufacturer.showPdf' , $manufacturer->id)"></x-buttons.reports>
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Information regarding {{ $manufacturer->name }}, the assets that are currently assigned to the

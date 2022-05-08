@@ -1,33 +1,24 @@
 @extends('layouts.app')@section('title', 'View Suppliers')
-@section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
-@endsection
+
 
 @section('content')
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Suppliers</h1>
         <div>
+
             @can('create', \App\Models\Supplier::class)
                 <x-buttons.add :route="route('suppliers.create')">Supplier(s)</x-buttons.add>
             @endcan
             @can('viewAny', \App\Models\Supplier::class)
-                <a href="{{ route('suppliers.pdf')}}"
-                   class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-                <a href="exportsuppliers" class="d-none d-sm-inline-block btn btn-sm btn-yellow shadow-sm loading"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Export</a>
+                <x-buttons.export route="/exportsuppliers"/>
+                <x-buttons.reports :route="route('suppliers.pdf')"></x-buttons.reports>
+
             @endcan
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Below are the different suppliers of the assets stored in the management system. Each has
@@ -88,15 +79,15 @@
                                             class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Supplier Options:</div>
-                                            @can('view', $supplier)
+                                            @can('view',  \App\Models\Supplier::class)
                                                 <a href="{{ route('suppliers.show', $supplier->id) }}"
                                                    class="dropdown-item">View</a>
                                             @endcan
-                                            @can('update', $supplier)
+                                            @can('update',  \App\Models\Supplier::class)
                                                 <a href="{{ route('suppliers.edit', $supplier->id) }}"
                                                    class="dropdown-item">Edit</a>
                                             @endcan
-                                            @can('delete', $supplier)
+                                            @can('forceDelete', \App\Models\Supplier::class)
                                                 <form id="form{{$supplier->id}}"
                                                       action="{{ route('suppliers.destroy', $supplier->id) }}"
                                                       method="POST">

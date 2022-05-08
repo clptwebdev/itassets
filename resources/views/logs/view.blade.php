@@ -30,13 +30,7 @@
             @endcan
         </div>
     </div>
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!!session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
     <section>
         <p class="mb-4">Below are the different Logs of Processes that have taken place stored in the management
                         system.</p>
@@ -88,6 +82,24 @@
                                 <option value="component" @if(session('log_type') == "component") selected @endif>
                                     component
                                 </option>
+                                <option value="software" @if(session('log_type') == "software") selected @endif>
+                                    software
+                                </option>
+                                <option value="FFE" @if(session('log_type') == "FFE") selected @endif>
+                                    FFE
+                                </option>
+                                <option value="property" @if(session('log_type') == "property") selected @endif>
+                                    property
+                                </option>
+                                <option value="AUC" @if(session('log_type') == "AUC") selected @endif>
+                                    AUC
+                                </option>
+                                <option value="license" @if(session('log_type') == "license") selected @endif>
+                                    license
+                                </option>
+                                <option value="broadband" @if(session('log_type') == "broadband") selected @endif>
+                                    broadband
+                                </option>
                             </select>
                             <div class="input-group-append">
                                 <button class="btn btn-blue">Search</button>
@@ -97,9 +109,11 @@
                     </form>
                 </div>
             </div>
-            <div class="col-4">
-                <a href="{{route('logs.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
-            </div>
+            @if(session()->has('log_search') || session()->has('log_type'))
+                <div class="col-4">
+                    <a href="{{route('logs.clear.filter')}}" class="btn btn-warning shadow-sm">Clear Filter</a>
+                </div>
+            @endif
         </div>
 
         <div class="card shadow mb-4">

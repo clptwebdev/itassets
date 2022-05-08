@@ -1,5 +1,21 @@
-@props(['models'=>null , 'model' ,'tag'=>null])
+@props(['models'=>null , 'model'=>'Asset' ,'tag'=>null])
 <!-- Transfer Modal-->
+@if($model != null)
+    @php
+        $m = "\\App\\Models\\" . ucfirst($model);
+            if($model){
+                $firstM = $m::first();
+
+                if($firstM){
+
+                $table =$firstM->getTable();
+                }else{
+					$table = 'assets';
+                }
+
+                }
+    @endphp
+@endif
 <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog"
      aria-labelledby="requestTransferLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -13,12 +29,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="disposal_date">Asset Tag</label>
-                        <input type="text" value="{{$tag}}" id="asset_tag_transfer" name="asset_tag"
+                    @if(Schema::hasColumn("{$table}",'asset_tag'))
+                        <div class="form-group">
+                            <label for="disposal_date">Asset Tag</label>
+                            <input type="text" value="{{$tag}}" id="asset_tag_transfer" name="asset_tag"
+                                   class="form-control">
+                            <small class="text-warning">Enter a new Asset Tag if required</small>
+                        </div>
+                    @else
+                        <input type="text" hidden value="{{$tag}}" id="asset_tag_transfer" name="asset_tag"
                                class="form-control">
-                        <small class="text-warning">Enter a new Asset Tag if required</small>
-                    </div>
+                    @endif
                     <div class="form-group">
                         @csrf
                         <input name="model_type" type="hidden" value="{{$model}}">
@@ -60,3 +81,4 @@
         </div>
     </div>
 </div>
+

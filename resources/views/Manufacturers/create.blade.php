@@ -20,7 +20,7 @@
                 <div class="col-12 col-md-8 col-lg-9 col-xl-10">
                     <div class="card shadow h-100">
                         <div class="card-body">
-                            <x-form.errors/>
+                            <x-handlers.alerts/>
                             <div class="form-group">
                                 <x-form.input name="name" formAttributes="required"/>
                             </div>
@@ -43,9 +43,9 @@
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Manufacturer Logo</h4>
-                                    <img id="profileImage" src="{{ asset('images/svg/manufacturer_image.svg') }}"
-                                         width="100%" alt="Select Profile Picture" data-bs-toggle="modal"
-                                         data-bs-target="#imgModal">
+                                    <img id="profileImage" onclick='getPhotoPage(1)'
+                                         src="{{ asset('images/svg/manufacturer_image.svg') }}" width="100%"
+                                         alt="Select Profile Picture" data-bs-toggle="modal" data-bs-target="#imgModal">
                                     <input type="hidden" id="photoId" name="photoId" value="0">
                                 </div>
                             </div>

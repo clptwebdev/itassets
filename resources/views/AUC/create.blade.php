@@ -23,7 +23,7 @@
                 <div class="col-12">
                     <div class="card shadow h-100">
                         <div class="card-body">
-                            <x-form.errors/>
+
                             <x-handlers.alerts/>
 
 
@@ -85,7 +85,7 @@
                                                 <div class="model_title text-center h4 mb-3">Location Name</div>
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                    <img id="profileImage"
+                                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                                          src="{{ asset('images/svg/location-image.svg') }}"
                                                          height="200px" alt="Select Profile Picture">
                                                 </div>

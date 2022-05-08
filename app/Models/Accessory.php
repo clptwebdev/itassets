@@ -77,6 +77,11 @@ class Accessory extends Model {
         return $query->whereIn('location_id', $locations);
     }
 
+    public function model()
+    {
+        return $this->belongsTo(AssetModel::class, 'asset_model', 'id')->with('manufacturer')->with('depreciation');
+    }
+
     public function scopeCategoryFilter($query, $category)
     {
         $pivot = $this->category()->getTable();
@@ -114,13 +119,28 @@ class Accessory extends Model {
 
     }
 
+    public function depreciation_value_by_date($date)
+    {
 
-//    public function scopeTestExport($query, array $filters){
-//        $query->when($filters['status'] ?? false , fn($query ,$status_id) =>
-//        $query->where('accessories.status_id','like','%' . $status_id. '%')
-//          );
-//
-//    }
+        if($this->depreciation_id != 0 && $this->depreciation->years)
+        {
+            $age = $date->floatDiffInYears($this->purchased_date);
+            $percent = 100 / $this->depreciation->years;
+            $percentage = floor($age) * $percent;
+            $value = $this->purchased_cost * ((100 - $percentage) / 100);
+
+            if($value < 0)
+            {
+                return 0;
+            } else
+            {
+                return $value;
+            }
+        } else
+        {
+            return 0;
+        }
+    }
 
     public function depreciation_value()
     {

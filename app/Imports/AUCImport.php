@@ -57,7 +57,7 @@ class AUCImport extends DefaultValueBinder implements ToModel, WithValidation, W
             ],
             'purchased_cost' => [
                 'required',
-                'regex:/^\d+(\.\d{1,2})?$/',
+                'regex:/\d+(\.\d{1,2})?$/',
             ],
             'purchased_date' => [
                 'date_format:"d/m/Y"',
@@ -81,7 +81,8 @@ class AUCImport extends DefaultValueBinder implements ToModel, WithValidation, W
 
         $auc = new AUC;
         $auc->name = $row["name"];
-        switch($row['type']){
+        switch($row['type'])
+        {
             case 'Freehold Land':
                 $type = 1;
                 break;
@@ -102,10 +103,10 @@ class AUCImport extends DefaultValueBinder implements ToModel, WithValidation, W
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $auc->purchased_cost = floatval($binary);
+            $auc->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $auc->purchased_cost = floatval($row["purchased_cost"]);
+            $auc->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         $location = Location::where(["name" => $row["location_id"]])->first();

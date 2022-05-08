@@ -4,11 +4,12 @@
 
 @section('content')
     <x-wrappers.nav title="Computer Equipment">
+        <x-buttons.return :route="route('dashboard')">Dashboard</x-buttons.return>
         @can('recycleBin', \App\Models\Asset::class)
             <x-buttons.recycle :route="route('assets.bin')" :count="\App\Models\Asset::onlyTrashed()->count()"/>
         @endcan
         @can('create' , \App\Models\Asset::class)
-            <x-buttons.add :route="route('assets.create')">Equipment)</x-buttons.add>
+            <x-buttons.add :route="route('assets.create')">Equipment</x-buttons.add>
         @endcan
         @can('generatePDF', \App\Models\Asset::class)
             @if ($assets->count() == 1)
@@ -17,7 +18,7 @@
                 <x-form.layout class="d-inline-block" :action="route('assets.pdf')">
                     <x-form.input type="hidden" name="assets" :label="false" formAttributes="required"
                                   :value="json_encode($assets->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-file-pdf" class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($assets->count() >1)
@@ -28,33 +29,32 @@
                     </x-buttons.submit>
                 </x-form.layout>
             @endif
-            <div class="dropdown ms-2 me-2 d-inline-block">
-                <button class=" btn btn-sm btn-lilac d-inline" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    Bulk Options <i class="fas fa-fw fa-caret-down sidebar-icon"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li>
-                        <p class='text-blue text-center p-2 border-bottom border-secondary'>Bulk Options</p>
-                    </li>
-                    <li class='my-1'>
-                        @can('create', \App\Models\Asset::class)
-                            <x-buttons.dropdown-item id="import">
-                                Import
-                            </x-buttons.dropdown-item>
-                        @endcan
-                        <x-buttons.dropdown-item
-                            form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
-                            Dispose
-                        </x-buttons.dropdown-item>
-                        <x-buttons.dropdown-item
-                            form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkTransferModal'">
-                            Transfer
-                        </x-buttons.dropdown-item>
-                    </li>
-                </ul>
 
-            </div>
+            <button class=" btn btn-sm btn-lilac d-inline" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                Bulk Options <i class="fas fa-fw fa-caret-down sidebar-icon"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li>
+                    <p class='text-blue text-center p-2 border-bottom border-secondary'>Bulk Options</p>
+                </li>
+                <li class='my-1'>
+                    @can('create', \App\Models\Asset::class)
+                        <x-buttons.dropdown-item id="import">
+                            Import
+                        </x-buttons.dropdown-item>
+                    @endcan
+                    <x-buttons.dropdown-item
+                        form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkDisposalModal'">
+                        Dispose
+                    </x-buttons.dropdown-item>
+                    <x-buttons.dropdown-item
+                        form-requirements=" data-bs-toggle='modal' data-bs-target='#bulkTransferModal'">
+                        Transfer
+                    </x-buttons.dropdown-item>
+                </li>
+            </ul>
+
         @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
@@ -241,7 +241,7 @@
 @endsection
 @section('modals')
     <x-modals.dispose model="asset"/>
-    <x-modals.transfer :models="$locations" model="asset"/>
+    <x-modals.transfer :models="$locations" model="Asset"/>
     <x-modals.delete/>
     <x-modals.bulk-file title="disposal" :route="route('assets.bulk.disposal')"/>
     <x-modals.bulk-file title="transfer" :route="route('assets.bulk.transfer')"/>

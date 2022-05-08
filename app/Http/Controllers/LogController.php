@@ -11,11 +11,13 @@ class LogController extends Controller {
 
     public function index()
     {
-        if(auth()->user()->cant('viewAll', auth()->user()))
+        if(auth()->user()->cant('viewAny', Log::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Logs.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Logs.');
 
         }
+        //shows the logs have been read
+        Log::query()->update(['read' => 1]);
 
         return view('logs.view', [
             "logs" => Log::Latest('created_at')->paginate(),
@@ -24,9 +26,9 @@ class LogController extends Controller {
 
     public function export(Request $request)
     {
-        if(auth()->user()->cant('viewAll', auth()->user()))
+        if(auth()->user()->cant('viewAny', Log::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Export Logs.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Export Logs.');
 
         }
         $logs = Log::all()->whereIn('id', json_decode($request->logs));
@@ -120,7 +122,7 @@ class LogController extends Controller {
     public
     function store(Request $request)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -160,12 +162,11 @@ class LogController extends Controller {
         abort(404);
     }
 
-    public
-    function destroy()
+    public function destroy()
     {
         if(auth()->user()->cant('delete', Log::class))
         {
-            return ErrorController::forbidden(to_route('logs.index'), 'Unauthorised to Delete Logs.');
+            return ErrorController::forbidden(route('logs.index'), 'Unauthorised to Delete Logs.');
 
         }
         Log::truncate();

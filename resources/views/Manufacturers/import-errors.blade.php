@@ -39,13 +39,7 @@
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Below are the different Import Failures of all the different assets stored in the management
@@ -184,9 +178,9 @@
         });
 
         function enableToolTips() {
-            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
+            const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltips.forEach(t => {
+                new bootstrap.Tooltip(t);
             })
         }
 
@@ -248,7 +242,8 @@
                         let num = parseInt(res[1]);
                         elements[num].classList.add('border-bottom', 'border-danger');
                         elements[num].setAttribute('data-bs-toggle', 'tooltip');
-                        elements[num].setAttribute('data-title', error);
+                        elements[num].setAttribute('data-bs-original-title', error);
+                        new bootstrap.Tooltip(elements[num]);
                         i++;
                         enableToolTips();
                     });

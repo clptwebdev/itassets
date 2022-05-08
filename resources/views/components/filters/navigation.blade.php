@@ -59,10 +59,12 @@
                             class="dropdown-item">{{ session($relations.'_start').' to '.session($relations.'_end') ?? 'No Dates'}}</span>
                     @endif
 
-                    @if(session()->has($relations.'_amount'))
+                    @if(session()->has($relations.'_min') && session()->has($relations.'_max'))
                         <h6 class="dropdown-header text-center">Purchased Cost/Value</h6>
-                        <span class="dropdown-item">{{ session($relations.'_amount')}}</span>
+                        <span
+                            class="dropdown-item">£{{ number_format(session($relations.'_min'), 2, '.', ',')}} - £{{ number_format(session($relations.'_max'), 2, '.', ',')}}</span>
                     @endif
+
 
 
                     @if(session()->has($relations.'_audit') && session($relations.'_audit') != 0)
@@ -116,14 +118,15 @@
     <div id="sortBar" class="d-none d-lg-inline-block col-12 col-lg-8">
         <form class="form-inline w-100" method="POST" action="{{ route($route.'.filter')}}">
             @csrf
-            <label class="my-1 mr-2"><i class="fas fa-list-ol"></i></label>
-            <select class="form-control mr-2" name="limit">
+            <label class="my-1 mr-2 pointer"><i class="fas fa-list-ol"></i></label>
+            <select class="form-control mr-2 pointer" name="limit">
                 <option value="25" @if(session($relations.'_limit') == 25) selected @endif>25</option>
                 <option value="50" @if(session($relations.'_limit') == 50) selected @endif>50</option>
-                <option value="100" @if(session($relations.'_limit') == 100) selected @endif>100</option>
+                <option value="100" @if(session($relations.'_limit') == 100) selected @endif>100
+                </option>
             </select>
-            <label class="my-1 mr-2"><i class="fas fa-sort"></i></label>
-            <select class="form-control mr-2" name="orderby">
+            <label class="my-1 mr-2 pointer"><i class="fas fa-sort"></i></label>
+            <select class="form-control mr-2 pointer" name="orderby">
                 {{-- Check to see if the Model has a column name --}}
                 @if(Schema::hasColumn("{$table}",'name'))
                     <option value="name asc"
@@ -194,6 +197,16 @@
                     <option value="audit_date desc"
                             @if(session($relations.'_orderby') == 'audit_date' && (session($relations.'_direction')) == 'desc') selected @endif>
                         Audit Date (Latest to Earliest)
+                    </option>
+                @endif
+                @if(Schema::hasColumn("{$table}",'expiry'))
+                    <option value="expiry asc"
+                            @if(session($relations.'_orderby') == 'expiry' && (session($relations.'_direction')) == 'asc') selected @endif>
+                        Expiry Date (Earliest to Latest)
+                    </option>
+                    <option value="expiry desc"
+                            @if(session($relations.'_orderby') == 'expiry' && (session($relations.'_direction')) == 'desc') selected @endif>
+                        Expiry Date (Latest to Earliest)
                     </option>
                 @endif
             </select>

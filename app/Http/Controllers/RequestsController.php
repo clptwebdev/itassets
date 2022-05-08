@@ -19,10 +19,13 @@ class RequestsController extends Controller {
 
     public function index()
     {
-
+        $authUser = auth()->user()->id;
+        $mangersUsers = User::whereManagerId($authUser)->pluck('id')->toArray();
+        $requests = Requests::managerFilter($mangersUsers)->orderBy('created_at', 'desc')->paginate(25);
         //Returns the View for the list of requests
         $locations = Location::all();
-        $requests = Requests::orderBy('created_at', 'desc')->paginate(25);
+
+//        $requests = Requests::orderBy('created_at', 'desc')->paginate(25);
 
         return view('requests.view', compact('requests', 'locations'));
     }
@@ -39,10 +42,16 @@ class RequestsController extends Controller {
         ]);
 
         //Notify by email (change for new system elliot)
-        $admins = User::superAdmin()->get();
-        foreach($admins as $admin)
+        $admins = User::globalAdmins();
+        if(auth()->user()->manager_id != null || auth()->user()->manager_id != 0)
         {
-            Mail::to($admin->email)->send(new \App\Mail\AccessRequest($admin, auth()->user()));
+            Mail::to(auth()->user()->manager->email)->send(new \App\Mail\AccessRequest(auth()->user()->manager, auth()->user()));
+        } else
+        {
+            foreach($admins as $admin)
+            {
+                Mail::to($admin->email)->send(new \App\Mail\AccessRequest($admin, auth()->user()));
+            }
         }
 
         return back()->with('success_message', 'Your request to access the Asset Management System has been sent. Please allow 24hours for a response.');
@@ -50,7 +59,13 @@ class RequestsController extends Controller {
 
     public function transfer(Request $request)
     {
-
+        $request->validate([
+            'location_to' => 'required|gt:0',
+            'location_from' => 'required',
+        ], [
+            'location_to.gt' => 'Please Select a location to Complete your Transfer!',
+            'location_from.required' => 'You must select a Location to Transfer From!',
+        ]);
         $requests = Requests::create([
             'type' => 'transfer',
             'model_type' => $request->model_type,
@@ -124,9 +139,16 @@ class RequestsController extends Controller {
         {
             //Notify by email
             $admins = User::globalAdmins();
-            foreach($admins as $admin)
+            if(auth()->user()->manager_id != null || auth()->user()->manager_id != 0)
             {
-                Mail::to($admin->email)->send(new \App\Mail\TransferRequest($admin, auth()->user(), $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->notes));
+                Mail::to(auth()->user()->manager->email)->send(new \App\Mail\TransferRequest(auth()->user()->manager, auth()->user(), $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->notes));
+            } else
+            {
+                foreach($admins as $admin)
+                {
+                    Mail::to($admin->email)->send(new \App\Mail\TransferRequest($admin, auth()->user(), $requests->model_type, $requests->model_id, $requests->location_from, $requests->location_to, $requests->date, $requests->notes));
+
+                }
             }
 
             return back()->with('success_message', 'The request to transfer the asset has been sent.');
@@ -149,14 +171,21 @@ class RequestsController extends Controller {
 
             'status' => 0,
         ]);
+
         $m = "\\App\\Models\\" . ucfirst($requests->model_type);
         $model = $m::find($requests->model_id);
+
         if(auth()->user()->can('bypass_transfer', $model))
         {
+
+            //Additional Field to be stored in the Fields Array then passed to the Options Column in the DB
+            $fields = [];
+
             if($request->model_type == 'asset' && $model->model()->exists())
             {
                 if($model->model->depreciation()->exists())
                 {
+
                     $years = $model->model->depreciation->years;
                 } else
                 {
@@ -167,14 +196,20 @@ class RequestsController extends Controller {
                 if($model->depreciation()->exists())
                 {
                     $years = $model->depreciation->years;
+
+                    $fields['depreciation_id'] = $model->depreciation_id;
                 } else
                 {
                     $years = 0;
                 }
+            } else if($model->depreciation != 0)
+            {
+                $years = $model->depreciation;
             } else
             {
                 $years = 0;
             }
+
             $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($years);
             if($eol->isPast())
             {
@@ -186,17 +221,8 @@ class RequestsController extends Controller {
                 $percentage = floor($age) * $percent;
                 $dep = $model->purchased_cost * ((100 - $percentage) / 100);
             }
-            foreach($model->comment as $comment)
-            {
-                $array = [];
-                $array['title'] = $comment->title;
-                $array['comment'] = $comment->comment;
-                $array['user_id'] = $comment->user_id;
-                $array['created_at'] = $comment->created_at;
-                $array['updated_at'] = $comment->updated_at;
 
-                $comments[] = $array;
-            }
+            $comments = $model->comment()->select('title', 'comment', 'user_id', 'created_at', 'updated_at')->orderBy('created_at', 'desc')->get()->toArray();
 
             $array = [
                 'title' => 'The Asset has been Archived!',
@@ -208,6 +234,25 @@ class RequestsController extends Controller {
 
             $comments[] = $array;
 
+            $logs = $model->logs()->orderBy('created_at', 'desc')->get()->toArray();
+
+            $fields = [];
+            if($model->fields)
+            {
+                foreach($model->fields as $field)
+                {
+                    $fields[$field->name] = $field->pivot->value;
+                }
+            }
+            if($model->registration)
+            {
+                $fields['registration'] = $model->registration;
+            }
+            if($model->description)
+            {
+                $fields['description'] = $model->description;
+            }
+
             $archive = Archive::create([
                 'model_type' => $request->model_type ?? 'unknown',
                 'name' => $model->name ?? 'No Name',
@@ -218,20 +263,23 @@ class RequestsController extends Controller {
                 'supplier_id' => $model->supplier_id ?? 0,
                 'purchased_date' => $model->purchased_date,
                 'purchased_cost' => $model->purchased_cost,
+                'donated' => $model->donated ?? 0,
                 'archived_cost' => number_format($dep, 2),
-                'warranty' => $model->warranty,
+                'warranty' => $model->warranty ?? 0,
                 'location_id' => $model->location_id ?? 0,
                 'room' => $model->room ?? 'N/A',
-                'logs' => 'N/A',
-                'comments' => 'N/A',
+                'logs' => json_encode($logs),
+                'comments' => json_encode($comments),
                 'created_user' => $model->user_id ?? 0,
                 'created_on' => $model->created_at,
                 'user_id' => auth()->user()->id,
                 'super_id' => auth()->user()->id,
                 'date' => $requests->date,
                 'notes' => $requests->notes,
-                'comments' => json_encode($comments),
+                'options' => json_encode($fields),
+                'depreciation' => $years,
             ]);
+
             $model->forceDelete();
             $requests->update(['status' => 1, 'super_id' => auth()->user()->id, 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d')]);
 
@@ -239,10 +287,18 @@ class RequestsController extends Controller {
         } else
         {
             //Notify by email
-            $admins = User::itManager();
-            foreach($admins as $admin)
+            $admins = User::globalAdmins();
+            if(auth()->user()->manager_id != null || auth()->user()->manager_id != 0)
             {
-                Mail::to($admin->email)->send(new \App\Mail\DisposeRequest(auth()->user(), $admin, $requests->model_type, $requests->model_id, \Carbon\Carbon::parse($requests->date)->format('d-m-Y'), $requests->notes));
+                Mail::to(auth()->user()->manager->email)->send(new \App\Mail\DisposeRequest(auth()->user(), auth()->user()->manager, $requests->model_type, $requests->model_id, \Carbon\Carbon::parse($requests->date)->format('d-m-Y'), $requests->notes));
+
+            } else
+            {
+                foreach($admins as $admin)
+                {
+                    Mail::to($admin->email)->send(new \App\Mail\DisposeRequest(auth()->user(), $admin, $requests->model_type, $requests->model_id, \Carbon\Carbon::parse($requests->date)->format('d-m-Y'), $requests->notes));
+
+                }
             }
 
             return back()->with('success_message', 'The request to dispose the asset has been sent. Now awaiting confirmation');
@@ -365,6 +421,8 @@ class RequestsController extends Controller {
                         'supplier_id' => $model->supplier_id ?? 0,
                         'purchased_date' => $model->purchased_date,
                         'purchased_cost' => $model->purchased_cost,
+                        'donated' => $model->donated ?? 0,
+                        'manufacturer' => $model->manufacturer_id || null,
                         'archived_cost' => number_format($dep, 2),
                         'warranty' => $model->warranty,
                         'location_id' => $model->location_id ?? 0,

@@ -13,11 +13,16 @@ use App\Models\Software;
 use App\Models\Location;
 use App\Models\Report;
 use App\Models\Supplier;
+use App\Models\Manufacturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\HeadingRowImport;
 
 class SoftwareController extends Controller {
+
+    ////////////////////////////////////////
+    /////////// View Functions /////////////
+    ////////////////////////////////////////
 
     public function index()
     {
@@ -27,6 +32,13 @@ class SoftwareController extends Controller {
         {
             return ErrorController::forbidden('/dashboard', 'Unauthorised | View Software.');
         }
+
+        //If there are filters currently set move to filtered function
+        if(session()->has('software_filter') && session('software_filter') === true)
+        {
+            return to_route('software.filtered');
+        }
+
         // find the locations that the user has been assigned to
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('software')->get();
         //Find the properties that are assigned to the locations the User has permissions to.
@@ -42,62 +54,12 @@ class SoftwareController extends Controller {
         ]);
     }
 
-    public function create()
-    {
-        //Check to see if the User is has permission to create
-        if(auth()->user()->cant('create', Software::class))
-        {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Create Software.');
-        }
-
-        //Get the Locations that the user has permission for
-        $locations = auth()->user()->locations;
-
-        // Return the Create View to the browser
-        return view('software.create', [
-            "locations" => $locations,
-            "suppliers" => Supplier::all(),
-        ]);
-    }
-
-    public function store(Request $request)
-    {
-        //Check to see if the user has permission to add new software on the system
-
-        if(auth()->user()->cant('create', Software::class))
-        {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Store Software.');
-
-        }
-
-        //Validate the post data
-        $validation = $request->validate([
-            'name' => 'required',
-            'location_id' => 'required',
-            'supplier_id' => 'required',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'depreciation' => 'required|numeric',
-            'purchased_date' => 'required|date',
-        ]);
-
-        Software::create([
-            'name' => $request->name,
-            'supplier_id' => $request->supplier_id,
-            'location_id' => $request->location_id,
-            'purchased_cost' => $request->purchased_cost,
-            'purchased_date' => $request->purchased_date,
-            'depreciation' => $request->depreciation,
-        ]);
-
-        return to_route('softwares.index')->with('success_message', $request->name . ' Has been Added!');
-    }
-
     public function show(Software $software)
     {
         //Check to see if the User is has permission to create
         if(auth()->user()->cant('view', $software))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to update Software.');
 
         }
 
@@ -107,63 +69,12 @@ class SoftwareController extends Controller {
         ]);
     }
 
-    public function edit(Software $software)
-    {
-        //Check to see if the User is has permission to create
-        if(auth()->user()->cant('update', $software))
-        {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to update Software.');
-
-        }
-
-        //Get the Locations that the user has permission for
-        $locations = auth()->user()->locations;
-
-        // Return the Create View to the browser
-        return view('software.edit', [
-            "locations" => $locations,
-            "suppliers" => Supplier::all(),
-            "software" => $software,
-        ]);
-    }
-
-    public function update(Request $request, Software $software)
-    {
-        //Check to see if the user has permission to update software on the system
-        if(auth()->user()->cant('update', Software::class))
-        {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Update Software.');
-
-        }
-
-        //Validate the post data
-        $validation = $request->validate([
-            'name' => 'required',
-            'location_id' => 'required',
-            'supplier_id' => 'required',
-            'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'depreciation' => 'required|numeric',
-            'purchased_date' => 'required|date',
-        ]);
-
-        $software->update([
-            'name' => $request->name,
-            'supplier_id' => $request->supplier_id,
-            'location_id' => $request->location_id,
-            'purchased_cost' => $request->purchased_cost,
-            'purchased_date' => $request->purchased_date,
-            'depreciation' => $request->depreciation,
-        ]);
-
-        return to_route('softwares.index')->with('success_message', $request->name . ' Has been Updated!');
-    }
-
     public function recycleBin()
     {
         //Check to see if the user has permission to delete software on the system
         if(auth()->user()->cant('delete', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Delete Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Delete Software.');
 
         }
         $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name');
@@ -176,12 +87,154 @@ class SoftwareController extends Controller {
 
     }
 
+    ////////////////////////////////////////
+    /////////// Create Functions ///////////
+    ////////////////////////////////////////
+
+    public function create()
+    {
+        //Check to see if the User is has permission to create
+        if(auth()->user()->cant('create', Software::class))
+        {
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Create Software.');
+        }
+
+        //Get the Locations that the user has permission for
+        $locations = auth()->user()->locations;
+
+        // Return the Create View to the browser
+        return view('software.create', [
+            "locations" => $locations,
+            "suppliers" => Supplier::all(),
+            "manufacturers" => Manufacturer::all()->sortBy('name'),
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        //Check to see if the user has permission to add new software on the system
+
+        if(auth()->user()->cant('create', Software::class))
+        {
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Store Software.');
+
+        }
+
+        //Validate the post data
+        $validation = $request->validate([
+            'name' => 'required',
+            'location_id' => 'required',
+            'purchased_cost' => ['required',' regex:/^(£)?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\.[0-9][0-9])?$/'],
+            'depreciation' => 'required|numeric',
+            'purchased_date' => 'required|date',
+        ], [
+            'name.required' => 'You must provide a name to reference the Software!',
+            'location_id.required' => 'Please assign the Software to a Location',
+            'purchased_cost.required' => 'The purchased cost for the Software is empty!',
+            'purchased_cost.regex' => 'The purchased cost is not in a valid format. Please enter a decmial currency without the £ symbol',
+            'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
+            'depreciation.numeric' => 'The depreciation for the Software is a number of years - the value is currently invalid',
+            'purchased_date.required' => 'Please enter the date the Software was purchased',
+            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY',
+
+        ]);
+
+        Software::create([
+            'name' => $request->name,
+            'supplier_id' => $request->supplier_id,
+            'manufacturer_id' => $request->manufacturer_id,
+            'location_id' => $request->location_id,
+            'purchased_cost' => $request->purchased_cost,
+            'donated' => $request->donated ?? 0,
+            'purchased_date' => $request->purchased_date,
+            'depreciation' => $request->depreciation,
+            'order_no' => $request->order_no,
+            'warranty' => $request->warranty,
+        ]);
+
+        return to_route('softwares.index')->with('success_message', $request->name . ' Has been Added!');
+    }
+
+    ////////////////////////////////////////
+    /////////// Edit Functions /////////////
+    ////////////////////////////////////////
+
+    public function edit(Software $software)
+    {
+        //Check to see if the User is has permission to create
+        if(auth()->user()->cant('update', $software))
+        {
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to update Software.');
+
+        }
+
+        //Get the Locations that the user has permission for
+        $locations = auth()->user()->locations;
+
+        // Return the Create View to the browser
+        return view('software.edit', [
+            "locations" => $locations,
+            "suppliers" => Supplier::all(),
+            "software" => $software,
+            "manufacturers" => Manufacturer::all()->sortBy('name'),
+        ]);
+    }
+
+    public function update(Request $request, Software $software)
+    {
+        //Check to see if the user has permission to update software on the system
+        if(auth()->user()->cant('update', Software::class))
+        {
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Update Software.');
+
+        }
+
+        //Validate the post data
+        $validation = $request->validate([
+            'name' => 'required',
+            'location_id' => 'required',
+            'supplier_id' => 'required',
+            'purchased_cost' => ['required',' regex:/^(£)?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\.[0-9][0-9])?$/'],
+            'depreciation' => 'required|numeric',
+            'purchased_date' => 'required|date',
+        ], [
+            'name.required' => 'You must provide a name to reference the Software!',
+            'location_id.required' => 'Please assign the Software to a Location',
+            'purchased_cost.required' => 'The purchased cost for the Software is empty!',
+            'purchased_cost.regex' => 'The purchased cost is not in a valid format. Please enter a decmial currency without the £ symbol',
+            'depreciation.required' => 'Please enter a depreciation value, this is a number of years',
+            'depreciation.numeric' => 'The depreciation for the Software is a number of years - the value is currently invalid',
+            'purchased_date.required' => 'Please enter the date the Software was purchased',
+            'purchased_date.date' => 'An invalid date was entered for the Purchased Date, please follow the format: dd/mm/YYYY',
+
+        ]);
+
+        $software->update([
+            'name' => $request->name,
+            'supplier_id' => $request->supplier_id,
+            'manufacturer_id' => $request->manufacturer_id,
+            'location_id' => $request->location_id,
+            'purchased_cost' => $request->purchased_cost,
+            'donated' => $request->donated ?? 0,
+            'purchased_date' => $request->purchased_date,
+            'depreciation' => $request->depreciation,
+            'order_no' => $request->order_no,
+            'warranty' => $request->warranty,
+        ]);
+
+        return to_route('softwares.index')->with('success_message', $request->name . ' Has been Updated!');
+    }
+
+    ////////////////////////////////////////
+    /////////// Delete Functions ///////////
+    ////////////////////////////////////////
+
     public function destroy(Software $software)
     {
         //Check to see if the user has permission to delete software on the system
         if(auth()->user()->cant('recycleBin', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Archive Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Archive Software.');
 
         }
         $software->delete();
@@ -198,7 +251,7 @@ class SoftwareController extends Controller {
         //Check to see if the user has permission to restore the software
         if(auth()->user()->cant('delete', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Restore Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Restore Software.');
 
         }
 
@@ -220,7 +273,7 @@ class SoftwareController extends Controller {
         //Check to see if the user has permission to restore the software
         if(auth()->user()->cant('delete', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Delete Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Delete Software.');
 
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
@@ -260,11 +313,11 @@ class SoftwareController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Download of Software Information Report.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised | Download of Software Information Report.');
 
         }
         $softwares = array();
-        $found = Software::select('name', 'id', 'depreciation', 'supplier_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at')->withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
+        $found = Software::select('name', 'id', 'depreciation', 'supplier_id', 'manufacturer_id', 'purchased_date', 'purchased_cost', 'location_id', 'created_at', 'warranty', 'order_no')->withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
         foreach($found as $f)
         {
             $array = array();
@@ -273,14 +326,17 @@ class SoftwareController extends Controller {
             $array['purchased_date'] = \Carbon\Carbon::parse($f->purchased_date)->format('d/m/Y') ?? 'N/A';
             $array['purchased_cost'] = $f->purchased_cost;
             $array['depreciation'] = $f->depreciation;
-            $array['supplier'] = $f->supplier->name ?? 'No Supplier';
+            $array['supplier'] = $f->supplier->name ?? 'N/A';
+            $array['manufacturer'] = $f->manufacturer->name ?? 'N/A';
+            $array['warranty'] = $f->warranty ?? 'N/A';
+            $array['order_no'] = $f->order_no ?? 'N/A';
             $softwares[] = $array;
         }
 
         $user = auth()->user();
 
         $date = \Carbon\Carbon::now()->format('dmyHis');
-        $path = 'properties-report-' . $date;
+        $path = 'software-report-' . $date;
         SoftwaresPdf::dispatch($softwares, $user, $path)->afterResponse();
         $url = "storage/reports/{$path}.pdf";
         $report = Report::create(['report' => $url, 'user_id' => $user->id]);
@@ -295,7 +351,7 @@ class SoftwareController extends Controller {
     {
         if(auth()->user()->cant('view', $software))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Download of Software Information.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised | Download of Software Information.');
 
         }
 
@@ -320,7 +376,7 @@ class SoftwareController extends Controller {
     {
         if(auth()->user()->cant('create', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Import Software.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised | Import Software.');
 
         }
         //headings incorrect start
@@ -467,7 +523,7 @@ class SoftwareController extends Controller {
     {
         if(auth()->user()->cant('viewAll', software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised | Export Software Information.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised | Export Software Information.');
 
         }
         $softwares = Software::withTrashed()->whereIn('id', json_decode($request->software))->with('location')->get();
@@ -488,7 +544,7 @@ class SoftwareController extends Controller {
         $export = json_decode($code);
         if(auth()->user()->cant('viewAll', Software::class))
         {
-            return ErrorController::forbidden(to_route('softwares.index'), 'Unauthorised to Export Software Errors.');
+            return ErrorController::forbidden(route('softwares.index'), 'Unauthorised to Export Software Errors.');
         }
         $date = \Carbon\Carbon::now()->format('dmyHis');
         \Maatwebsite\Excel\Facades\Excel::store(new softwareErrorsExport($export), "/public/csv/software-errors-{$date}.csv");
@@ -542,8 +598,8 @@ class SoftwareController extends Controller {
                 session(['software_end' => $request->end]);
             }
 
-            session(['assets_min' => $request->minCost]);
-            session(['assets_max' => $request->maxCost]);
+            session(['software_min' => $request->minCost]);
+            session(['software_max' => $request->maxCost]);
         }
         //Check the Users Locations Permissions
         $locations = Location::select('id', 'name')->withCount('software')->get();
@@ -562,10 +618,10 @@ class SoftwareController extends Controller {
             session(['software_filter' => true]);
         }
 
-        if(session()->has('assets_min') && session()->has('assets_max'))
+        if(session()->has('software_min') && session()->has('software_max'))
         {
-            $software->costFilter(session('assets_min'), session('assets_max'));
-            session(['assets_filter' => true]);
+            $software->costFilter(session('software_min'), session('software_max'));
+            session(['software_filter' => true]);
         }
 
         if(session()->has('software_search'))
@@ -575,7 +631,7 @@ class SoftwareController extends Controller {
         }
 
         $software->leftJoin('locations', 'software.location_id', '=', 'locations.id')
-            ->orderBy(session('software_orderby') ?? 'date', session('software_direction') ?? 'asc')
+            ->orderBy(session('software_orderby') ?? 'purchased_date', session('software_direction') ?? 'asc')
             ->select('software.*', 'locations.name as location_name');
         $limit = session('software_limit') ?? 25;
 
@@ -588,7 +644,7 @@ class SoftwareController extends Controller {
     public function clearFilter()
     {
         //Clear the Filters for the properties
-        session()->forget(['software_filter', 'software_locations', 'software_start', 'software_end', 'software_amount', 'software_search']);
+        session()->forget(['software_filter', 'software_locations', 'software_start', 'software_end', 'software_min', 'software_max', 'software_search']);
 
         return to_route('softwares.index');
     }

@@ -71,10 +71,12 @@ class OfficeLoginController extends Controller {
 
         if(session()->has('url.intended'))
         {
+
             return redirect(session('url.intended'));
+
         }
 
-        return to_route('dashboard');
+
     }
 
 }

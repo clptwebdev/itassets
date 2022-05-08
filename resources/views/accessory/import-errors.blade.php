@@ -240,7 +240,6 @@
                                 </td>
                                 <td>
                                         <span id="purchased_cost{{$line}}" class="tooltip-danger">
-                                            {{ $valueArray[$row]['purchased_cost']}}
                                         <input type="text"
                                                class="import-control @if(in_array('purchased_cost', $errors)){{'border-bottom border-danger'}}@endif"
                                                name="purchased_cost[]" id="purchased_cost"
@@ -390,9 +389,9 @@
         });
 
         function enableToolTips() {
-            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
+            const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltips.forEach(t => {
+                new bootstrap.Tooltip(t);
             })
         }
 
@@ -520,7 +519,8 @@
                         let num = parseInt(res[1]);
                         elements[num].classList.add('border-bottom', 'border-danger');
                         elements[num].setAttribute('data-bs-toggle', 'tooltip');
-                        elements[num].setAttribute('data-title', error);
+                        elements[num].setAttribute('data-bs-original-title', error);
+                        new bootstrap.Tooltip(elements[num]);
                         i++;
                         enableToolTips();
                     });

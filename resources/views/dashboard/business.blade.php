@@ -8,207 +8,220 @@
 
 @section('content')
     <!-- session messages -->
-    <x-handlers.alerts />
+    <x-handlers.alerts/>
 
     <!-- Page Heading -->
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Dashboard - Business Overview</h1>
         <div>
-            <button type="button" class="btn btn-blue">Reports</button>
-            <a href="{{ route('cache.clear')}}" class="btn btn-grey"><i class="fas fa-sync-alt"></i></a>
+            <div class="dropdown d-inline">
+                <a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    Download Asset Report (01/09/2021 - 31/08/2022)
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    @foreach($locations as $location)
+                        <li><a class="dropdown-item"
+                               href="{{route('business.location.export', $location->id)}}">{{$location->name}}</a></li>
+                    @endforeach
+                </ul>
+            </div>
+            <button type="button" class="btn btn-sm btn-blue">Reports</button>
+            <a href="{{ route('cache.clear')}}" class="btn btn-sm btn-grey"><i class="fas fa-sync-alt"></i> Clear Report
+                                                                                                            Cache</a>
         </div>
     </div>
 
     @if(auth()->user()->role_id != 0)
         <!-- Asset stats -->
         <!-- Content Row -->
-<div class=" p-2 mb-1 ">
-    <!-- Total-->
-    <div class="row rounded p-2 pb-lg-4" style="background-color: #EEE">
+        <div class=" p-2 mb-1 ">
+            <!-- Total-->
+            <div class="row rounded p-2 pb-lg-4" style="background-color: #EEE">
 
-        <div class="col-12 col-sm-8 col-lg-2 mb-4 mb-lg-0 order-3 order-lg-1">
-            <div class="card border-left-lilac shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-lilac text-uppercase mb-1">
-                                Property</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="total_count" class="countup"></span></small><br>
-                                <span id="total_cost" class=""></span><br>
-                                <small class="text-coral">£<span id="total_dep" class=""></small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                <div class="col-12 col-sm-8 col-lg-2 mb-4 mb-lg-0 order-3 order-lg-1">
+                    <div class="card border-left-lilac shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-lilac text-uppercase mb-1">
+                                        Property {{Illuminate\Support\Facades\Cache::get("property-L7-total")}}
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="total_count" class="countup"></span></small><br>
+                                        <span id="total_cost" class=""></span><br>
+                                        <small class="text-coral">(<span id="total_dep" class=""></span>)*</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-school fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-school fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-1 order-lg-2">
-            <div class="card border-left-coral shadow h-100 py-2 postion-relative">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1">
-                            <div class="text-xs font-weight-bold text-coral text-uppercase mb-1">
-                                Assets Under Construction</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="auc_count" class="countup"></span></small><br>
-                                <span id="auc_cost" class=""></span><br>
-                                <small class="text-coral">(£<span id="auc_dep" class="countup"></span>)*</small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-tablet-alt fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                    </div>
+                </div>
+                <!-- Earnings (Monthly) Card Example -->
+                <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-1 order-lg-2">
+                    <div class="card border-left-coral shadow h-100 py-2 postion-relative">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-1">
+                                    <div class="text-xs font-weight-bold text-coral text-uppercase mb-1">
+                                        Assets Under Construction
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="auc_count" class="countup"></span></small><br>
+                                        <span id="auc_cost" class=""></span><br>
+                                        <small class="text-coral">(<span id="auc_dep" class="countup"></span>)*</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-hammer fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
-            <div class="card border-left-blue shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1">
-                            <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                FFE (Furniture, Fixtures and Equipment)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                £<span id="accessory_cost" class="countup"></span><br>
-                                <small class="text-coral">(£<span id="accessory_dep" class="countup"></span>)</small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
+                    <div class="card border-left-blue shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-1">
+                                    <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
+                                        FFE
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="ffe_count"></span></small><br>
+                                        <span id="ffe_cost"></span><br>
+                                        <small class="text-coral">(<span id="ffe_dep"></span>)</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-chair fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
-            <div class="card border-left-blue shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1">
-                            <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                Plant & Machinery
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                £<span id="accessory_cost" class="countup"></span><br>
-                                <small class="text-coral">(£<span id="accessory_dep" class="countup"></span>)</small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
+                    <div class="card border-left-blue shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-1">
+                                    <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
+                                        Plant & Machinery
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="machinery_count"></span></small><br>
+                                        <span id="machinery_cost"></span><br>
+                                        <small class="text-coral">(<span id="machinery_dep"></span>)</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-tractor fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
-            <div class="card border-left-blue shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1">
-                            <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                Motor Vehicles</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                £<span id="accessory_cost" class="countup"></span><br>
-                                <small class="text-coral">(£<span id="accessory_dep" class="countup"></span>)</small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
+                    <div class="card border-left-blue shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-1">
+                                    <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
+                                        Motor Vehicles
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="vehicle_count"></span></small><br>
+                                        <span id="vehicle_cost"></span><br>
+                                        <small class="text-coral">(<span id="vehicle_dep"
+                                                                          class="countup"></span>)</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-bus fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
-            <div class="card border-left-blue shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1">
-                            <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
-                                Computer Equipment</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <small>Total: <span id="accessory_count" class="countup"></span></small><br>
-                                £<span id="accessory_cost" class="countup"></span><br>
-                                <small class="text-coral">(£<span id="accessory_dep" class="countup"></span>)</small><br>
-                                <span class="text-xs">*calculated depreciation</span>
+                <div class="col-12 col-sm-6 col-lg-2 mb-4 mb-lg-0 order-2 order-lg-3">
+                    <div class="card border-left-blue shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-1">
+                                    <div class="text-xs font-weight-bold text-blue text-uppercase mb-1">
+                                        Computer Equipment
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <small>Total: <span id="computer_count"></span></small><br>
+                                        <span id="computer_cost"></span><br>
+                                        <small class="text-coral">(<span id="computer_dep"></span>)</small><br>
+                                        <span class="text-xs">*calculated depreciation</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-keyboard fa-2x text-gray-300 d-md-none d-lg-inline-block"></i>
+                        <div class="stats_loading d-flex justify-content-center align-items-center"
+                             style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="stats_loading d-flex justify-content-center align-items-center" style="position: absolute; z-index: 2; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.8);">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
         {{-- <x-categories_status_info :statuses="$statuses" :category="$category"/> --}}
 
         <div class="row m-2">
             <div class="col-12  mb-4">
                 <div class="card shadow h-100 p-4">
-                    <div id="expenditure_chart" class="chart"></div>
-                </div>
-            </div>
-            {{-- Expenditure --}}
-            <div class="col-12 col-md-6 mb-3 ">
-                <div class="card shadow h-100 p-4 ">
-                    <div id="chart" class="chart"></div>
-                </div>
-            </div>
-            {{-- Depreication Information --}}
-
-            <div class="col-12 col-md-6 mb-3 ">
-                <div class="card shadow h-100 p-4">
-                    <div id="dep_chart" class="chart"></div>
+                    <div id="all_expenditure_chart" class="chart"></div>
                 </div>
             </div>
         </div>
@@ -222,72 +235,26 @@
 
     <script type="text/javascript">
 
-        const totalCount = document.querySelector('#total_count');
-        const totalCost = document.querySelector('#total_cost');
-        const totalDep = document.querySelector('#total_dep');
+        const propertyCount = document.querySelector('#total_count');
+        const propertyCost = document.querySelector('#total_cost');
+        const propertyDep = document.querySelector('#total_dep');
         const aucCount = document.querySelector('#auc_count');
         const aucCost = document.querySelector('#auc_cost');
         const aucDep = document.querySelector('#auc_dep');
-        const accessoryCount = document.querySelector('#accessory_count');
-        const accessoryCost = document.querySelector('#accessory_cost');
-        const accessoryDep = document.querySelector('#accessory_dep');
-        const componentsCount = document.querySelector('#components_count');
-        const componentsCost = document.querySelector('#components_cost');
-        const consumablesCount = document.querySelector('#consumables_count');
-        const consumablesCost = document.querySelector('#consumables_cost');
-        const miscCount = document.querySelector('#miscellanea_count');
-        const miscCost = document.querySelector('#miscellanea_cost');
+        const ffeCount = document.querySelector('#ffe_count');
+        const ffeCost = document.querySelector('#ffe_cost');
+        const ffeDep = document.querySelector('#ffe_dep');
+        const machineryCount = document.querySelector('#machinery_count');
+        const machineryCost = document.querySelector('#machinery_cost');
+        const machineryDep = document.querySelector('#machinery_dep');
+        const vehicleCount = document.querySelector('#vehicle_count');
+        const vehicleCost = document.querySelector('#vehicle_cost');
+        const vehicleDep = document.querySelector('#vehicle_dep');
+        const computerCount = document.querySelector('#computer_count');
+        const computerCost = document.querySelector('#computer_cost');
+        const computerDep = document.querySelector('#computer_dep');
 
         const loader = document.querySelectorAll('.stats_loading');
-
-        const requests = document.querySelector('#requests_count');
-        const transfers = document.querySelector('#transfers_count');
-        const archives = document.querySelector('#archived_count');
-        const progress = document.querySelector('#undeployable_progress');
-        const progressCount = document.querySelector('#undeployable_count');
-        const auditsDue = document.querySelector('#audits_due_count');
-        const auditsOver = document.querySelector('#audits_over_count');
-
-        // How long you want the animation to take, in ms
-        const animationDuration = 2000;
-        // Calculate how long each ‘frame’ should last if we want to update the animation 60 times per second
-        const frameDuration = 1000 / 60;
-        // Use that to calculate how many frames we need to complete the animation
-        const totalFrames = Math.round(animationDuration / frameDuration);
-        // An ease-out function that slows the count as it progresses
-        const easeOutQuad = t => t * (2 - t);
-
-        // The animation function, which takes an Element
-        const animateCountUp = el => {
-            let frame = 0;
-            const countTo = parseInt(el.innerHTML, 10);
-            // Start the animation running 60 times per second
-            const counter = setInterval(() => {
-                frame++;
-                // Calculate our progress as a value between 0 and 1
-                // Pass that value to our easing function to get our
-                // progress on a curve
-                const progress = easeOutQuad(frame / totalFrames);
-                // Use the progress value to calculate the current count
-                const currentCount = Math.round(countTo * progress);
-
-                // If the current count has changed, update the element
-                if (parseInt(el.innerHTML, 10) !== currentCount) {
-                    el.innerHTML = currentCount;
-                }
-
-                // If we’ve reached our last frame, stop the animation
-                if (frame === totalFrames) {
-                    clearInterval(counter);
-                }
-            }, frameDuration);
-        };
-
-        // Run the animation on all elements with a class of ‘countup’
-        const runAnimations = () => {
-            const countupEls = document.querySelectorAll('.countup');
-            countupEls.forEach(animateCountUp);
-        };
 
         const currencyOptions = {
             style: 'currency',
@@ -303,26 +270,31 @@
             });
             //Fetch the return JSON Object
             const obj = JSON.parse(xhttp.responseText);
-            totalCount.innerHTML = obj.property.count;
-            totalCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.cost);;
-            totalDep.innerHTML = obj.property.dep;
+            console.log(obj);
+            propertyCount.innerHTML = obj.property.count;
+            propertyCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.cost);
+            propertyDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.property.dep);
             //AUC
             aucCount.innerHTML = obj.auc.count;
             aucCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.auc.cost);
-            aucDep.innerHTML = obj.auc.dep;
-            /* //Asset
-            assetsCount.innerHTML = obj.asset.count;
-            assetsCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.asset.cost);
-            assetsDep.innerHTML = obj.asset.dep;
-            //Accessory
-            accessoryCount.innerHTML = obj.accessories.count;
-            accessoryCost.innerHTML = obj.accessories.cost;
-            accessoryDep.innerHTML = obj.accessories.dep; */
+            aucDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.auc.dep);
+            //FFE
+            ffeCount.innerHTML = obj.ffe.count;
+            ffeCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.ffe.cost);
+            ffeDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.ffe.dep);
+            //FFE
+            machineryCount.innerHTML = obj.machinery.count;
+            machineryCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.machinery.cost);
+            machineryDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.machinery.dep);
+            //Vehicles
+            vehicleCount.innerHTML = obj.vehicles.count;
+            vehicleCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.vehicles.cost);
+            vehicleDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.vehicles.dep);
+            //Asset
+            computerCount.innerHTML = obj.asset.count;
+            computerCost.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.asset.cost + obj.accessories.count);
+            computerDep.innerHTML = new Intl.NumberFormat('en-GB', currencyOptions).format(obj.asset.dep + obj.accessories.dep)
 
-
-            
-
-            runAnimations();
         }
 
         xhttp.open("GET", "/business/statistics");
@@ -340,8 +312,8 @@
         const device = legend = (screen.width < 768) ? false : true; //when viewport will be under 575px
 
         const expenditure = new Chartisan({
-            el: '#expenditure_chart',
-            url: `@chart('expenditure_chart')`,
+            el: '#all_expenditure_chart',
+            url: `@chart('all_expenditure_chart')`,
             // You can also pass the data manually instead of the url:
             // data: { ... }
             hooks: new ChartisanHooks()
@@ -370,33 +342,6 @@
                 })
         });
 
-        const chart = new Chartisan({
-            el: '#dep_chart',
-            url: `@chart('depreciation_chart')`,
-            // You can also pass the data manually instead of the url:
-            // data: { ... }
-            hooks: new ChartisanHooks()
-                .datasets([{type: 'line', fill: false}])
-                .responsive()
-                .colors(['#F99'])
-                .title('Asset Depreciation')
-                .legend(device)
-                .displayAxes(device)
-        })
-
-        const dep_chart = new Chartisan({
-            el: '#chart',
-            url: `@chart('total_expenditure')`,
-            // You can also pass the data manually instead of the url:
-            // data: { ... }
-            hooks: new ChartisanHooks()
-                .datasets('bar')
-                .colors(['#b087bc', '#474775'])
-                .title('CLPT Expenditure')
-                .legend(device)
-                .responsive()
-                .displayAxes(device)
-        })
     </script>
 
 @endsection

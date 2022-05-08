@@ -12,7 +12,7 @@
             <h1 class="h3 mb-0 text-gray-800">Asset Model</h1>
 
             <div>
-                @can('viewAll' , \App\Models\AssetModel::class)
+                @can('viewAny' , \App\Models\AssetModel::class)
                     <a href="{{ route('asset-models.index') }}"
                        class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
                             class="fas fa-chevron-left fa-sm text-white-50"></i> Back to Asset Models</a>
@@ -123,7 +123,7 @@
                             <div class="w-100">
                                 <div class="formgroup mb-2 p-2">
                                     <h4 class="h6 mb-3">Asset Model Image</h4>
-                                    <img id="profileImage"
+                                    <img id="profileImage" onclick='getPhotoPage(1)'
                                          src="{{ asset($assetModel->photo->path ?? 'images/svg/device-image.svg') }}"
                                          width="100%" alt="Select Profile Picture" data-bs-toggle="modal"
                                          data-bs-target="#imgModal">

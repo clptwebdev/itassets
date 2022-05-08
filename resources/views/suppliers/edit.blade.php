@@ -49,47 +49,30 @@
                             @method('PATCH')
 
                             <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text"
-                                       class="form-control <?php if ($errors->has('name')) {?>border-danger<?php }?>"
-                                       name="name" id="name" placeholder="" value="{{ $supplier->name}}" required>
+                                <x-form.input name="name" formAttributes="required" :value="$supplier->name"/>
                             </div>
                             <div class="form-group">
-                                <label for="address2">Street Address</label>
-                                <input type="text"
-                                       class="form-control mb-3 <?php if ($errors->has('address_1') || $errors->has('address_2')) {?>border-danger<?php }?>"
-                                       name="address_1" id="address_1" value="{{ $supplier->address_1}}">
-                                <input type="text" class="form-control" name="address_2" id="address_2"
-                                       value="{{ $supplier->address_2}}">
+                                <x-form.input name="address_1" :value="$supplier->address_1"/>
+                            </div>
+                            <div class="form-group">
+                                <x-form.input name="address_2" :value="$supplier->address_2"/>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="city">City</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('city')) {?>border-danger<?php }?>"
-                                           id="city" name="city" value="{{ $supplier->city}}">
+                                    <x-form.input name="city" :value="$supplier->city"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="city">County</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('county')) {?>border-danger<?php }?>"
-                                           id="county" name="county" value="{{ $supplier->county}}">
+                                    <x-form.input name="county" :value="$supplier->county"/>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="postcode">Post Code</label>
-                                    <input type="text"
-                                           class="form-control <?php if ($errors->has('postcode')) {?>border-danger<?php }?>"
-                                           id="postcode" name="postcode" value="{{ $supplier->postcode}}">
+                                    <x-form.input name="postcode" :value="$supplier->postcode"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="notes">Notes</label>
-                                <textarea name="notes" id="notes" class="form-control"
-                                          rows="10">{{ $supplier->notes }}</textarea>
+                                <x-form.textarea name="notes" formAttributes=" cols=' 30' rows='10' "
+                                                 :value="$supplier->notes"/>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -107,34 +90,25 @@
                                             $path = 'images/svg/suppliers.svg';
                                         }
                                     @endphp
-                                    <img id="profileImage" src="{{asset($path)}}" width="100%"
+                                    <img id="profileImage" onclick='getPhotoPage(1)' src="{{asset($path)}}" width="100%"
                                          alt="Select Profile Picture" data-bs-toggle="modal" data-bs-target="#imgModal">
                                     <input type="hidden" id="photo_id" name="photo_id" value="0">
                                 </div>
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="url">Website URL:</label>
-                                <input class="form-control" type="text" id="url" name="url" placeholder="https://"
-                                       value="{{ $supplier->url}}">
+                                <x-form.input name="url" :value="$supplier->url"/>
                             </div>
 
                             <div class="form-group">
-                                <label for="telephone">Telephone</label>
-                                <input type="text" class="form-control" name="telephone" id="telephone"
-                                       value="{{ $supplier->telephone }}">
+                                <x-form.input name="telephone" :value="$supplier->telephone"/>
                             </div>
 
                             <div class="form-group">
-                                <label for="telephone">Fax</label>
-                                <input type="text" class="form-control" name="fax" id="fax"
-                                       value="{{ $supplier->fax ?? ''}}">
+                                <x-form.input name="fax" :value="$supplier->fax"/>
                             </div>
-
                             <div class="form-group">
-                                <label for="telephone">Email Address</label>
-                                <input type="text" class="form-control" name="email" id="email" placeholder="@"
-                                       value="{{ $supplier->email }}">
+                                <x-form.input name="email" :value="$supplier->email"/>
                             </div>
                         </div>
                     </div>

@@ -26,12 +26,13 @@ Route::group(['middleware' => 'auth'], function() {
     Route::controller(\App\Http\Controllers\HomeController::class)->group(function() {
         //Dashboard
         Route::get('/dashboard', "index")->name('dashboard');
-        Route::get('/business', "business")->name('business');
+        Route::get('/business', "business")->name('business')->middleware('role');
         Route::get('/', "index")->name('home');
         Route::get('/statistics', 'statistics')->name('dashboard.statistics');
         Route::get('/business/statistics', 'business_statistics')->name('business.statistics');
+        Route::post('/assets/search', "search")->name('assets.search');
         //Caching
-        Route::get('/cache/clear', 'clearCache')->name('cache.clear');
+        Route::get('/cache/clear', 'clearCache')->name('cache.clear')->middleware('role');;
     });
     Route::controller(\App\Http\Controllers\UserController::class)->group(function() {
         //User
@@ -47,12 +48,18 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/user/expired', 'invokeExpiredUsers')->name('user.expired');
         //Administrator Permissions Middleware
         Route::post('permissions/users', 'permissions');
+        Route::post('permissions/users/manager', 'managerUpdate')->name('manager.update');
         Route::get('/user/permissions', 'userPermissions')->name('user.permissions');
         Route::get('/users/{id}/role/{role}', 'changePermission')->name('change.permission');
         Route::get('/users/{id}/locations', 'getLocations')->name('user.permission');
         //export users
         Route::get("/exportusers", "export");
     });
+
+    /////////////////////////////////////////////////
+    /////////  Location Controller Routes ///////////
+    /////////////////////////////////////////////////
+
     Route::controller(\App\Http\Controllers\LocationController::class)->group(function() {
         //location
         Route::resource('/location', 'App\Http\Controllers\LocationController');
@@ -62,7 +69,10 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/location/preview/', 'preview')->name('location.preview');
         //exports
         Route::get("/exportlocations", "export");
+        //Financial Exports
+        Route::get('/business/{location}/location/export', "businessExport")->name('business.location.export');
     });
+
     Route::controller(\App\Http\Controllers\CommentController::class)->group(function() {
         //comments
         Route::resource('/comment', 'App\Http\Controllers\CommentController');
@@ -71,6 +81,7 @@ Route::group(['middleware' => 'auth'], function() {
         //photos
         Route::resource('/photo', 'App\Http\Controllers\PhotoController');
         Route::post('/photo/upload', 'upload');
+        Route::get('/photo/get/{page}', 'getPhotos');
     });
     Route::controller(\App\Http\Controllers\DepreciationController::class)->group(function() {
         //photos
@@ -105,7 +116,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::controller(\App\Http\Controllers\AssetController::class)->group(function() {
         // Asset Routes
         Route::resource('/assets', 'App\Http\Controllers\AssetController');
-        Route::post('/assets/search', "search")->name('assets.search');
         Route::post('/asset/filter', 'filter')->name('asset.filter');
         Route::get('/asset/filter/clear', 'clearFilter')->name('asset.clear.filter');
         Route::get('/asset/filter', 'filter')->name('asset.filtered');
@@ -152,6 +162,8 @@ Route::group(['middleware' => 'auth'], function() {
         //PDF
         Route::post('/aucs/pdf', 'downloadPDF')->name('aucs.pdf');
         Route::get('/aucs/{auc}/pdf', 'downloadShowPDF')->name('aucs.showPdf');
+        //Comments
+        Route::post('/aucs/{auc}/comment', 'newComment')->name('aucs.comment');
     });
     Route::controller(\App\Http\Controllers\ComponentController::class)->group(function() {
         //Component Routes
@@ -229,15 +241,21 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/ffe/{ffe}/restore', 'restore')->name('ffe.restore');
         Route::post('/ffe/{ffe}/remove', 'forceDelete')->name('ffe.remove');
         //Exports
-        Route::post("/export/aucs", "export");
+        Route::post("/export/ffes", "export");
         //Imports
         Route::post("/import/ffes", "import");
         Route::Post("/import/ffes/errors", "importErrors");
         Route::Post("/import/ffes/errors/export", "exportImportErrors")->name("ffes.export.import");
         //PDF
         Route::post('/ffes/pdf', 'downloadPDF')->name('ffes.pdf');
-        Route::get('/ffes/{auc}/pdf', 'downloadShowPDF')->name('ffes.showPdf');
+        Route::get('/ffes/{ffe}/pdf', 'downloadShowPDF')->name('ffes.showPdf');
+        //Comments
+        Route::post('/ffes/{ffe}/comment', 'newComment')->name('ffes.comment');
     });
+
+    /////////////////////////////////////////////
+    /////////// Manufacturer Routes /////////////
+    /////////////////////////////////////////////
 
     Route::controller(\App\Http\Controllers\ManufacturerController::class)->group(function() {
         //Manufacturer Routes
@@ -283,7 +301,6 @@ Route::group(['middleware' => 'auth'], function() {
     /////////////////////////////////////////////
 
     Route::controller(\App\Http\Controllers\SoftwareController::class)->group(function() {
-        //Property
         Route::resource("/softwares", \App\Http\Controllers\SoftwareController::class);
         Route::post('/software/filter', 'filter')->name('software.filter');
         Route::get('/software/filter/clear', 'clearFilter')->name('software.clear.filter');
@@ -301,6 +318,98 @@ Route::group(['middleware' => 'auth'], function() {
         //PDF
         Route::post('/software/pdf', 'downloadPDF')->name('software.pdf');
         Route::get('/software/{software}/pdf', 'downloadShowPDF')->name('software.showPdf');
+    });
+    /////////////////////////////////////////////
+    /////////////// Broadband Routes ////////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\BroadbandController::class)->group(function() {
+        Route::resource("/broadbands", \App\Http\Controllers\BroadbandController::class);
+        Route::post('/broadband/filter', 'filter')->name('broadband.filter');
+        Route::get('/broadband/filter/clear', 'clearFilter')->name('broadband.clear.filter');
+        Route::get('/broadband/filter', 'filter')->name('broadband.filtered');
+        Route::get('/broadband/bin', 'recycleBin')->name('broadband.bin');
+        Route::get('/broadband/{asset}/restore', 'restore')->name('broadband.restore');
+        Route::post('/broadband/{asset}/remove', 'forceDelete')->name('broadband.remove');
+        Route::post('/broadband/{asset}/comment', 'newComment')->name('broadband.comment');
+        //Exports
+        Route::post("/export/broadband", "export");
+        //Imports
+        Route::post("/import/broadband", "import");
+        Route::Post("/import/broadband/errors", "importErrors");
+        Route::Post("/import/broadband/export", "exportImportErrors")->name("broadband.export.import");
+        //PDF
+        Route::post('/broadband/pdf', 'downloadPDF')->name('broadband.pdf');
+        Route::get('/broadband/{broadband}/pdf', 'downloadShowPDF')->name('broadband.showPdf');
+    });
+    /////////////////////////////////////////////
+    /////////////// Licenses Routes ///////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\LicenseController::class)->group(function() {
+        Route::resource("/licenses", \App\Http\Controllers\LicenseController::class);
+        Route::post('/license/filter', 'filter')->name('license.filter');
+        Route::get('/license/filter/clear', 'clearFilter')->name('license.clear.filter');
+        Route::get('/license/filter', 'filter')->name('license.filtered');
+        Route::get('/license/bin', 'recycleBin')->name('license.bin');
+        Route::get('/license/{asset}/restore', 'restore')->name('license.restore');
+        Route::post('/license/{asset}/remove', 'forceDelete')->name('license.remove');
+        Route::post('/license/{asset}/comment', 'newComment')->name('license.comment');
+        //Exports
+        Route::post("/export/license", "export");
+        //Imports
+        Route::post("/import/license", "import");
+        Route::Post("/import/license/errors", "importErrors");
+        Route::Post("/import/license/export", "exportImportErrors")->name("license.export.import");
+        //PDF
+        Route::post('/license/pdf', 'downloadPDF')->name('license.pdf');
+        Route::get('/license/{license}/pdf', 'downloadShowPDF')->name('license.showPdf');
+    });
+    /////////////////////////////////////////////
+    /////////////// Vehicle Routes ///////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\VehicleController::class)->group(function() {
+        Route::resource("/vehicles", \App\Http\Controllers\VehicleController::class);
+        Route::post('/vehicle/filter', 'filter')->name('vehicle.filter');
+        Route::get('/vehicle/filter/clear', 'clearFilter')->name('vehicle.clear.filter');
+        Route::get('/vehicle/filter', 'filter')->name('vehicle.filtered');
+        Route::get('/vehicle/bin', 'recycleBin')->name('vehicle.bin');
+        Route::get('/vehicle/{vehicle}/restore', 'restore')->name('vehicle.restore');
+        Route::post('/vehicle/{vehicle}/remove', 'forceDelete')->name('vehicle.remove');
+        Route::post('/vehicle/{vehicle}/comment', 'newComment')->name('vehicle.comment');
+        //Exports
+        Route::post("/export/vehicle", "export");
+        //Imports
+        Route::post("/import/vehicle", "import");
+        Route::Post("/import/vehicle/errors", "importErrors");
+        Route::Post("/import/vehicle/export", "exportImportErrors")->name("vehicle.export.import");
+        //PDF
+        Route::post('/vehicle/pdf', 'downloadPDF')->name('vehicle.pdf');
+        Route::get('/vehicle/{vehicle}/pdf', 'downloadShowPDF')->name('vehicle.showPdf');
+    });
+    /////////////////////////////////////////////
+    /////////////// Vehicle Routes ///////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\MachineryController::class)->group(function() {
+        Route::resource("/machineries", \App\Http\Controllers\MachineryController::class);
+        Route::post('/machinery/filter', 'filter')->name('machinery.filter');
+        Route::get('/machinery/filter/clear', 'clearFilter')->name('machinery.clear.filter');
+        Route::get('/machinery/filter', 'filter')->name('machinery.filtered');
+        Route::get('/machinery/bin', 'recycleBin')->name('machinery.bin');
+        Route::get('/machinery/{machinery}/restore', 'restore')->name('machinery.restore');
+        Route::post('/machinery/{machinery}/remove', 'forceDelete')->name('machinery.remove');
+        Route::post('/machinery/{machinery}/comment', 'newComment')->name('machinery.comment');
+        //Exports
+        Route::post("/export/machinery", "export");
+        //Imports
+        Route::post("/import/machinery", "import");
+        Route::Post("/import/machinery/errors", "importErrors");
+        Route::Post("/import/machinery/export", "exportImportErrors")->name("machinery.export.import");
+        //PDF
+        Route::post('/machinery/pdf', 'downloadPDF')->name('machinery.pdf');
+        Route::get('/machinery/{machinery}/pdf', 'downloadShowPDF')->name('machinery.showPdf');
     });
     /////////////////////////////////////////////
     /////////////// Report Routes /////////////
@@ -350,6 +459,14 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/transfers', 'index')->name('transfers.index');
         Route::get('/asset/transfers', 'assets')->name('transfers.assets');
         Route::get('/accessory/transfers', 'accessories')->name('transfers.accessories');
+    });
+    /////////////////////////////////////////////
+    /////////////// Orders Routes /////////////
+    /////////////////////////////////////////////
+
+    Route::controller(\App\Http\Controllers\OrderController::class)->group(function() {
+        Route::resource('/orders', \App\Http\Controllers\OrderController::class)->only('index');
+        Route::get('/order/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('order.show');
     });
 
     Route::controller(\App\Http\Controllers\BackupController::class)->group(function() {
@@ -402,9 +519,17 @@ Route::group(['middleware' => 'auth'], function() {
         Route::Post("/settings/accessories/export", "accessories")->name("settings.accessories");
         Route::Post("/settings/assets/export", "assets")->name("settings.assets");
         Route::Post("/settings/components/export", "components")->name("settings.components");
+        Route::put("/settings/update/{setting}", "update")->name("settings.update");
+        Route::Post("/settings/create", "create")->name("settings.create");
         Route::Post("/settings/miscellaneous/export", "miscellaneous")->name("settings.miscellaneous");
         Route::get("/settings/roles/create", "roleBoot")->name('role.boot');
+        Route::get("/settings/default/create", "settingBoot")->name('setting.boot');
     });
+
+    ////////////////////////////////////
+    ///////// Settings Routes //////////
+    ////////////////////////////////////
+
     Route::controller(\App\Http\Controllers\SettingsController::class)->group(function() {
         //settings page
         Route::get("/settings", "index")->name("settings.view");
@@ -413,6 +538,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::Post("/settings/components/export", "components")->name("settings.components");
         Route::Post("/settings/miscellaneous/export", "miscellaneous")->name("settings.miscellaneous");
         Route::get("/settings/roles/create", "roleBoot")->name('role.boot');
+        Route::post("/business/settings/update", "updateBusinessSettings")->name("update.business.settings");
     });
     Route::controller(\App\Http\Controllers\ChartController::class)->group(function() {
         //Javascript pie charts for dashboard

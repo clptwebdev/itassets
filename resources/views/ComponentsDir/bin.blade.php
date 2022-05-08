@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'Recycle Bin | Components')
 
 @section('content')
 
@@ -8,30 +9,15 @@
         <div>
             @can('viewAll' , \App\Models\Component::class)
                 <a href="{{ route('components.index')}}" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm"><i
-                        class="fas fa-trash-alt fa-sm text-white-50"></i> Back to Components</a>
+                        class="fas fa-arrow-alt-circle-left fa-sm text-white-50"></i> Back to Components</a>
             @endcan
             <a href="{{ route('documentation.index')."#collapseSixRecycleBin"}}"
                class="d-none d-sm-inline-block btn btn-sm  bg-yellow shadow-sm"><i
                     class="fas fa-question fa-sm text-dark-50"></i> Recycle Bin Help</a>
-            @can('generatePDF', \App\Models\Component::class)
-                <form class="d-inline-block" action="{{ route('components.pdf')}}" method="POST">
-                    @csrf
-                    <input type="hidden" value="{{ json_encode($components->pluck('id'))}}" name="assets"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm"><i
-                            class="fas fa-file-pdf fa-sm text-white-50"></i> Generate Report
-                    </button>
-                </form>
-            @endcan
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {{ session('danger_message')}} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {{ session('success_message')}} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Below are the different Components stored in the management system. Each has
@@ -39,35 +25,35 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table id="usersTable" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th><small>Name</small></th>
-                            <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
-                            <th><small>Purchased Date</small></th>
-                            <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="text-center"><small>Status</small></th>
-                            <th class="text-center"><small>Warranty</small></th>
-                            <th class="text-right"><small>Options</small></th>
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-                            <th><small>Name</small></th>
-                            <th class="text-center"><small>Location</small></th>
-                            <th class="text-center"><small>Manufacturers</small></th>
-                            <th><small>Purchased Date</small></th>
-                            <th><small>Purchased Cost</small></th>
-                            <th><small>Supplier</small></th>
-                            <th class="text-center"><small>Status</small></th>
-                            <th class="text-center"><small>Warranty</small></th>
-                            <th class="text-right"><small>Options</small></th>
-                        </tr>
-                        </tfoot>
-                        <tbody>
+                <table id="usersTable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th><small>Name</small></th>
+                        <th class="text-center"><small>Location</small></th>
+                        <th class="text-center"><small>Manufacturers</small></th>
+                        <th><small>Purchased Date</small></th>
+                        <th><small>Purchased Cost</small></th>
+                        <th><small>Supplier</small></th>
+                        <th class="text-center"><small>Status</small></th>
+                        <th class="text-center"><small>Warranty</small></th>
+                        <th class="text-right"><small>Options</small></th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th><small>Name</small></th>
+                        <th class="text-center"><small>Location</small></th>
+                        <th class="text-center"><small>Manufacturers</small></th>
+                        <th><small>Purchased Date</small></th>
+                        <th><small>Purchased Cost</small></th>
+                        <th><small>Supplier</small></th>
+                        <th class="text-center"><small>Status</small></th>
+                        <th class="text-center"><small>Warranty</small></th>
+                        <th class="text-right"><small>Options</small></th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    @if($components->count() != 0)
                         @foreach($components as $component)
                             <tr>
                                 <td>{{$component->name}}
@@ -123,10 +109,11 @@
                                 </td>
                             </tr>
                         @endforeach
-                        </tbody>
-                    </table>
-                    <x-paginate :model="$components"/>
-                </div>
+                    @else
+                        <td colspan="10" class="text-center">No Components Returned</td>
+                    @endif
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -144,7 +131,7 @@
 
 @section('modals')
 
-    <x-modals.delete :archive="false"/>
+    <x-modals.delete :archive="true"/>
     <x-modals.import/>
 @endsection
 

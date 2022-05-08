@@ -12,7 +12,7 @@ class StatusController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Status::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Statuses.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Statuses.');
 
         }
         $locations = auth()->user()->locations;
@@ -24,7 +24,7 @@ class StatusController extends Controller {
     {
         if(auth()->user()->cant('update', Status::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Statuses.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Statuses.');
 
         }
         $validated = $request->validate([
@@ -41,7 +41,7 @@ class StatusController extends Controller {
     {
         if(auth()->user()->cant('view', $status))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Show Statuses.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Show Statuses.');
 
         }
 
@@ -54,7 +54,7 @@ class StatusController extends Controller {
     {
         if(auth()->user()->cant('update', $status))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Update Statuses.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Update Statuses.');
 
 
         }
@@ -72,7 +72,7 @@ class StatusController extends Controller {
     {
         if(auth()->user()->cant('delete', $status))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to Delete Statuses.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to Delete Statuses.');
 
         }
         $name = $status->name;

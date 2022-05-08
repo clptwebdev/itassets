@@ -27,20 +27,19 @@
                         class="fas fa-plus fa-sm text-white-50"></i> Edit</a>
             @endcan
             @can('view', $location)
-                <a href="{{ route('location.showPdf', $location->id)}}"
+                <a href="{{ route('business.location.export', $location->id)}}"
+                   class="d-none d-sm-inline-block btn btn-sm bg-blue text-white shadow-sm loading"><i
+                        class="fas fa-file-excel fa-sm text-white-50"></i> Generate Finance Report</a>
+            @endcan
+            @can('view', $location)
+                <a href="{{ route('location.show', $location->id)}}"
                    class="d-none d-sm-inline-block btn btn-sm bg-blue text-white shadow-sm loading"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
             @endcan
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Information regarding {{ $location->name }}, the assets that are currently assigned to the

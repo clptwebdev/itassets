@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Depreciation;
 use App\Models\Miscellanea;
 use App\Models\Location;
 use App\Models\Manufacturer;
@@ -96,6 +97,7 @@ class miscellaneousImport extends DefaultValueBinder implements ToModel, WithVal
 
         $miscellanea = new Miscellanea;
         $miscellanea->name = $row["name"];
+        $miscellanea->room = $row["room"];
 
         $miscellanea->serial_no = $row["serial_no"];
 
@@ -122,10 +124,10 @@ class miscellaneousImport extends DefaultValueBinder implements ToModel, WithVal
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $miscellanea->purchased_cost = floatval($binary);
+            $miscellanea->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $miscellanea->purchased_cost = floatval($row["purchased_cost"]);
+            $miscellanea->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         //check for already existing Suppliers upon import if else create
@@ -147,8 +149,24 @@ class miscellaneousImport extends DefaultValueBinder implements ToModel, WithVal
             } else
                 $miscellanea->supplier_id = 0;
         }
+        if($depreciation = Depreciation::where(["name" => $row["depreciation_id"]])->first())
+        {
 
-        $miscellanea->supplier_id = $supplier->id ?? 0;
+        } else
+        {
+            if(isset($row["depreciation_id"]))
+            {
+                $depreciation = new Depreciation();
+
+                $depreciation->name = $row["depreciation_id"];
+                $depreciation->years = 3;
+                $depreciation->save();
+
+            } else
+                $miscellanea->depreciation_id = 0;
+        }
+
+        $miscellanea->depreciation_id = $depreciation->id ?? 0;
 
         //check for already existing Manufacturers upon import if else create
         if($manufacturer = Manufacturer::where(["name" => $row["manufacturer_id"]])->first())

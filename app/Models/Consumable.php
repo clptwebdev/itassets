@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
 class Consumable extends Model {
 
     protected $fillable = [
-        'name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id', 'status_id', 'order_no', 'warranty', 'location_id', 'notes', 'manufacturer_id', 'photo_id'
+        'name', 'serial_no', 'purchased_date', 'purchased_cost', 'supplier_id', 'status_id', 'order_no', 'warranty', 'location_id', 'notes', 'manufacturer_id', 'photo_id',
     ];
 
     public function name(): Attribute
@@ -91,6 +91,12 @@ class Consumable extends Model {
     public function scopeStatusFilter($query, $status)
     {
         return $query->whereIn('status_id', $status);
+    }
+
+    public function scopeSearchFilter($query, $search)
+    {
+        return $query->where('consumables.name', 'LIKE', "%{$search}%")
+            ->orWhere('consumables.serial_no', 'LIKE', "%{$search}%");
     }
 
     public static function updateCache()

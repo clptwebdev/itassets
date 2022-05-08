@@ -16,7 +16,7 @@ class AUC extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'location_id', 'purchased_date', 'depreciation', 'type', 'purchased_cost'];
+    protected $fillable = ['name', 'location_id', 'purchased_date', 'depreciation', 'type', 'purchased_cost', 'user_id'];
 
     public function name(): Attribute
     {
@@ -121,6 +121,11 @@ class AUC extends Model {
         return $query->whereIn('location_id', $locations);
     }
 
+    public function scopeSearchFilter($query, $search)
+    {
+        return $query->where('a_u_c_s.name', 'LIKE', "%{$search}%");
+    }
+
     //////////////////////////////////////////////
     ////////////////Cache Functions///////////////
     //////////////////////////////////////////////
@@ -151,15 +156,15 @@ class AUC extends Model {
         }
 
         //Totals of the Assets
-        Cache::rememberForever('auc_total', function() use ($auc_total) {
+        Cache::rememberForever('auc-total', function() use ($auc_total) {
             return round($auc_total);
         });
 
-        Cache::rememberForever('auc_cost', function() use ($cost_total) {
+        Cache::rememberForever('auc-cost', function() use ($cost_total) {
             return round($cost_total);
         });
 
-        Cache::rememberForever('auc_dep', function() use ($dep_total) {
+        Cache::rememberForever('auc-dep', function() use ($dep_total) {
             return round($dep_total);
         });
     }
@@ -180,7 +185,7 @@ class AUC extends Model {
 
         //Get the Total Amount of Assets available for this location and set it in Cache
         $loc_total = $aucs->count();
-        Cache::rememberForever("property-L{$id}-total", function() use ($loc_total) {
+        Cache::rememberForever("auc-L{$id}-total", function() use ($loc_total) {
             return $loc_total;
         });
 

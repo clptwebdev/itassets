@@ -11698,6 +11698,13 @@ a:focus {
     margin-right: 0.1rem;
 }
 
+.sidebar #sidebarToggle.toggled::after {
+    font-weight: 900;
+    content: "\f054";
+    font-family: "Font Awesome 5 Free";
+    margin-right: 0.1rem;
+}
+
 .sidebar #sidebarToggle:hover {
     text-decoration: none;
 }
@@ -13087,4 +13094,26 @@ tr.even:hover .btn,
 #barcode {
     max-width: 250px;
     max-height: 160px;
+}
+
+.sidebar-toggle {
+    width: 4.5rem !important;
+    transition: all 0.5s ease-in-out;
+    position: relative;
+    z-index: 10px;
+}
+
+.dropdown-toggled{
+    position: absolute !important;
+    left: calc(4.5rem + 1rem / 2)!important;
+    z-index: 10px;
+    top: 2px;
+}
+
+/* Settings Pages  */
+
+/* Table Headers */
+
+.th-rotated{
+    transform: rotate(90deg);
 }

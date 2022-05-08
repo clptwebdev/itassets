@@ -17,7 +17,7 @@ class CreateSoftwareTable extends Migration {
             $table->id();
             $table->string('name');
             $table->decimal("purchased_cost", 11, 2)->nullable();
-            $table->integer("depreciation_id");
+            $table->integer("depreciation");
             $table->dateTime("purchased_date");
             $table->foreignId('supplier_id');
             $table->foreignId('location_id');

@@ -2,11 +2,17 @@
 
 namespace App\Observers;
 
+use App\Jobs\ColumnLogger;
 use App\Models\Asset;
 use App\Models\Log;
 use Carbon\Carbon;
 
 class AssetObserver {
+
+    public function __construct()
+    {
+        $this->user = auth()->user()->name ?? 'An Unauthorized User';
+    }
 
     /**
      * Handle the assets "created" event.
@@ -25,7 +31,7 @@ class AssetObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'asset',
             'loggable_id' => $asset->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has added a new asset: ' . $name . '. ' . $location,
+            'data' => $this->user . ' has added a new asset: ' . $name . '. ' . $location,
         ]);
     }
 
@@ -37,15 +43,15 @@ class AssetObserver {
      */
     public function updated(Asset $asset)
     {
-        $name = $asset->model->name ?? "Unknown" . ' [' . $asset->asset_tag . ']' ?? $asset->asset_tag;
-        $location = 'It has been assigned to ' . $asset->location->name ?? 'It has not been assigned to a location.';
-        Log::create([
-            'user_id' => auth()->user()->id ?? 0,
-            'log_date' => Carbon::now(),
-            'loggable_type' => 'asset',
-            'loggable_id' => $asset->id ?? 0,
-            'data' => auth()->user()->name . ' has added a updated asset: ' . $name . '. ' . $location,
-        ]);
+        /////////////////////////////////////////////
+        /////////// Dynamic Column changes///////////
+        /////////////////////////////////////////////
+        // Ignored these Table names
+        $exceptions = ['id', 'created_at', 'updated_at'];
+        ColumnLogger::dispatchSync($exceptions, $asset);
+        /////////////////////////////////////////////
+        //////// Dynamic Column changes End//////////
+        /////////////////////////////////////////////
     }
 
     /**
@@ -62,7 +68,7 @@ class AssetObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'asset',
             'loggable_id' => $asset->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has placed the Asset: ' . $name . ' into the recycling bin',
+            'data' => $this->user . ' has placed the Asset: ' . $name . ' into the recycling bin',
         ]);
     }
 
@@ -79,7 +85,7 @@ class AssetObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'asset',
             'loggable_id' => $asset->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has restored the Asset: ' . $name,
+            'data' => $this->user . ' has restored the Asset: ' . $name,
         ]);
     }
 
@@ -96,7 +102,7 @@ class AssetObserver {
             'user_id' => auth()->user()->id ?? 0,
             'loggable_type' => 'asset',
             'loggable_id' => $asset->id ?? 0,
-            'data' => auth()->user()->name ?? 'A Un-Authorised' . ' has permanently removed the Asset: ' . $name,
+            'data' => $this->user . ' has permanently removed the Asset: ' . $name,
         ]);
     }
 

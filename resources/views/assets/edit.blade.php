@@ -28,7 +28,7 @@
                     <div class="card shadow h-100">
                         <div class="card-body">
 
-                            <x-form.errors/>
+                            <x-handlers.alerts/>
 
                             <ul id="tab-bar" class="nav nav-tabs">
                                 <li class="nav-item">
@@ -73,8 +73,8 @@
                                                 </div>
                                                 <small class="form-text text-muted">Can't find the Model your
                                                                                     after?
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#newModel">Click
-                                                                                                                  Here</a>to
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#newModel"> Click
+                                                                                                                   Here</a>to
                                                                                     create one.</small>
                                             </div>
                                             <div class="form-group">
@@ -192,23 +192,29 @@
                                                     @else
                                                         @php($path = asset('images/svg/device-image.svg'))
                                                     @endif
-                                                    <img id="profileImage" src="{{ $path }}" height="150px"
-                                                         alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)' src="{{ $path }}"
+                                                         height="150px" alt="Select Profile Picture">
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    Manufacturer: {{ $asset->model->manufacturer->name}}
+                                                    Manufacturer: {{ $asset->model->manufacturer->name ?? 'No Manufacturer found'}}
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    Model No: {{ $asset->model->model_no}}
+                                                    Model No: {{ $asset->model->model_no ?? 'N/A'}}
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    @php($months = $asset->model->depreciation->years * 12)
-                                                    Depreication: {{ $asset->model->depreciation->name}}
-                                                    ({{$months}}
-                                                    months)
+                                                    @if($asset->model && $asset->model->depreciation()->exists())
+                                                        @php($months = $asset->model->depreciation->years * 12)
+                                                        Deprecation: {{ $asset->model->depreciation->name}}
+                                                        ({{$months}}
+                                                        months)
+                                                    @else
+                                                        Deprecation:Null
+                                                    @endif
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    Additional Fieldsets: {{ $asset->model->fieldset->name}}
+                                                    @if($asset->model)
+                                                        Additional Fieldsets: {{ $asset->model->fieldset->name}}
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -280,8 +286,8 @@
                                                     @else
                                                         @php($path = asset('images/svg/suppliers.svg'))
                                                     @endif
-                                                    <img id="profileImage" src="{{ $path }}" height="150px"
-                                                         alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)' src="{{ $path }}"
+                                                         height="150px" alt="Select Profile Picture">
                                                 </div>
                                                 @if($asset->supplier()->exists() && $asset->supplier->address_1 != '')
                                                     <div class="model_no py-2 px-4 text-center">
@@ -337,8 +343,8 @@
                                                     @else
                                                         @php($path = asset('images/svg/location-image.svg'))
                                                     @endif
-                                                    <img id="profileImage" src="{{ $path }}" height="150px"
-                                                         alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)' src="{{ $path }}"
+                                                         height="150px" alt="Select Profile Picture">
                                                 </div>
                                                 @if($asset->location()->exists() && $asset->location->address_1 != '')
                                                     <div class="model_no py-2 px-4 text-center">

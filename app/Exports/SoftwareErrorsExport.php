@@ -43,7 +43,7 @@ class SoftwareErrorsExport implements FromArray, WithHeadings, ShouldAutoSize {
                 $array['location_id'] = $exportError->location_id;
                 $array['purchased_cost'] = $exportError->purchased_cost;
                 $array['purchased_date'] = $exportError->purchased_date;
-                $array['depreciation'] = $exportError->notes;
+                $array['depreciation'] = $exportError->depreciation;
 
                 $object[] = $array;
 

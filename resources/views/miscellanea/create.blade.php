@@ -26,7 +26,7 @@
             <div class="col-12">
                 <div class="card shadow h-100">
                     <div class="card-body">
-                        <x-form.errors/>
+
                         <x-handlers.alerts/>
 
                         <ul id="tab-bar" class="nav nav-tabs">
@@ -64,13 +64,25 @@
                                             <x-form.input name="serial_no" formAttributes="required"
                                                           value="{{old('serial_no')}}"/>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="depreciation_id">Depreciation</label>
+                                            <select
+                                                class="form-control <?php if ($errors->has('depreciation_id')){?>border-danger<?php }?>"
+                                                name="depreciation_id" id="depreciation_id" required>
+                                                <option value="0">No Depreciation Set</option>
+                                                @foreach($depreciations as $dep)
+                                                    <option value="{{ $dep->id}}">{{ $dep->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="col-12 col-md-6 p-4 mb-3 ">
                                         <div id="modelInfo" class="bg-light p-4">
-                                            <div class="model_title text-center h4 mb-3">Component Image</div>
+                                            <div class="model_title text-center h4 mb-3">Misc Image</div>
                                             <div class="model_image p-4">
-                                                <img id="profileImage" src="{{ asset('images/svg/device-image.svg') }}"
-                                                     width="100%" alt="Select Profile Picture" data-bs-toggle="modal"
+                                                <img id="profileImage" onclick='getPhotoPage(1)'
+                                                     src="{{ asset('images/svg/device-image.svg') }}" width="100%"
+                                                     alt="Select Profile Picture" data-bs-toggle="modal"
                                                      data-bs-target="#imgModal">
                                                 <input type="hidden" id="photo_id" name="photo_id"
                                                        value="{{ old('photo_id') ?? 0}}">
@@ -120,8 +132,9 @@
                                             <div class="model_title text-center h4 mb-3">Supplier Name</div>
                                             <div
                                                 class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                <img id="profileImage" src="{{ asset('images/svg/suppliers.svg') }}"
-                                                     height="150px" alt="Select Profile Picture">
+                                                <img id="profileImage" onclick='getPhotoPage(1)'
+                                                     src="{{ asset('images/svg/suppliers.svg') }}" height="150px"
+                                                     alt="Select Profile Picture">
                                             </div>
                                             <div class="model_no py-2 px-4 text-center">
                                                 Address
@@ -158,6 +171,9 @@
                                                     <li>Nothing to Return</li>
                                                 </ul>
                                             </div>
+                                            <div class='form-group mt-1'>
+                                                <x-form.input name="room"/>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -166,7 +182,7 @@
                                             <div class="model_title text-center h4 mb-3">Location Name</div>
                                             <div
                                                 class="model_image p-4 d-flex justify-content-center align-items-middle">
-                                                <img id="profileImage"
+                                                <img id="profileImage" onclick='getPhotoPage(1)'
                                                      src="{{ asset('images/svg/location-image.svg') }}" height="200px"
                                                      alt="Select Profile Picture">
                                             </div>

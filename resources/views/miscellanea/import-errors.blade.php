@@ -9,13 +9,12 @@
         <h1 class="h3 mb-0 text-gray-800">Import Failures</h1>
         @php $errorRows = '';foreach($errorArray as $id => $key){ $errorRows = !empty($errorRows)? $errorRows.', '.$id:$id;}  @endphp
         <div>
-          
+
             <form action="{{route('miscellanea-export.import')}}" method="POST" class="d-inline">
                 @csrf
                 <div class="form-group">
-
                     <input type="hidden" class="form-control " name="name" id="name" placeholder=""
-                           value="{{htmlspecialchars(json_encode($valueArray))}}">
+                           value="{{json_encode($valueArray)}}">
                 </div>
                 @if(collect($errorArray)->count() > 1)
                     <button type='submit' class="d-inline-block btn btn-sm btn-yellow shadow-sm"><i
@@ -366,9 +365,9 @@
         });
 
         function enableToolTips() {
-            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
+            const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltips.forEach(t => {
+                new bootstrap.Tooltip(t);
             })
         }
 
@@ -486,7 +485,8 @@
                         let num = parseInt(res[1]);
                         elements[num].classList.add('border-bottom', 'border-danger');
                         elements[num].setAttribute('data-bs-toggle', 'tooltip');
-                        elements[num].setAttribute('data-title', error);
+                        elements[num].setAttribute('data-bs-original-title', error);
+                        new bootstrap.Tooltip(elements[num]);
                         i++;
                         enableToolTips();
                     });

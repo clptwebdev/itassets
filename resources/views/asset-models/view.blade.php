@@ -3,7 +3,7 @@
 @section('title', 'Asset Models')
 
 @section('css')
-    <link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"/>
+
 @endsection
 
 @section('content')
@@ -22,13 +22,7 @@
         </div>
     </div>
 
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Below are the different suppliers of the assets stored in the management system. Each has
@@ -78,17 +72,24 @@
                                             class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenu{{$model->id}}Link">
                                             <div class="dropdown-header">Asset Model Options:</div>
-                                            <a href="{{ route('asset-models.show', $model->id) }}"
-                                               class="dropdown-item">View</a>
-                                            <a href="{{route('asset-models.edit', $model->id) }}" class="dropdown-item">Edit</a>
-                                            <form class="d-block" id="form{{$model->id}}"
-                                                  action="{{ route('asset-models.destroy', $model->id) }}"
-                                                  method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a class="dropdown-item deleteBtn" href="#" data-id="{{$model->id}}"
-                                                   data-count="{{ $model->assets->count()}}">Delete</a>
-                                            </form>
+                                            @can('view', $model)
+                                                <a href="{{ route('asset-models.show', $model->id) }}"
+                                                   class="dropdown-item">View</a>
+                                            @endcan
+                                            @can('update',$model)
+                                                <a href="{{route('asset-models.edit', $model->id) }}"
+                                                   class="dropdown-item">Edit</a>
+                                            @endcan
+                                            @can('forceDelete', $model)
+                                                <form class="d-block" id="form{{$model->id}}"
+                                                      action="{{ route('asset-models.destroy', $model->id) }}"
+                                                      method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a class="dropdown-item deleteBtn" href="#" data-id="{{$model->id}}"
+                                                       data-count="{{ $model->assets->count()}}">Delete</a>
+                                                </form>
+                                            @endcan
                                         </div>
                                     </div>
 

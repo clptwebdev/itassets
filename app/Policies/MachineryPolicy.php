@@ -11,8 +11,6 @@ class MachineryPolicy {
 
     use HandlesAuthorization;
 
-    private $model;
-
     /**
      * Create a new policy instance.
      *
@@ -21,6 +19,8 @@ class MachineryPolicy {
     public function __construct()
     {
         $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Machinery')->first();
+        $this->request = auth()->user()->role->permissions->where('model', ' = ', 'Requests')->first();
+
     }
 
     public function view(User $user, Machinery $machinery)
@@ -61,6 +61,16 @@ class MachineryPolicy {
     public function generateShowPDF(User $user, Machinery $machinery)
     {
         return $this->model->fin_reports && in_array($machinery->location_id, $user->locationsArray());
+    }
+
+    public function bypass_transfer(User $user)
+    {
+        return $this->request->request;
+    }
+
+    public function request()
+    {
+        return $this->model->request;
     }
 
 }

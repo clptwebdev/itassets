@@ -5,6 +5,7 @@
 
 @section('content')
     <x-wrappers.nav title="Property">
+        <x-buttons.return :route="route('dashboard')">Dashboard</x-buttons.return>
         @can('recycleBin', \App\Models\Property::class)
             <x-buttons.recycle :route="route('property.bin')" :count="\App\Models\Property::onlyTrashed()->count()"/>
         @endcan
@@ -18,7 +19,7 @@
                 <x-form.layout class="d-inline-block" :action="route('properties.pdf')">
                     <x-form.input type="hidden" name="property" :label="false" formAttributes="required"
                                   :value="json_encode($properties->pluck('id'))"/>
-                    <x-buttons.submit icon="fas fa-file-pdf">Generate Report</x-buttons.submit>
+                    <x-buttons.submit icon="fas fa-file-pdf " class="btn-blue">Generate Report</x-buttons.submit>
                 </x-form.layout>
             @endif
             @if($properties->count() >1)
@@ -56,11 +57,9 @@
             $limit = auth()->user()->location_property()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
             $floor = auth()->user()->location_property()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
 
-        if(session()->has('property_amount')){
-            $amount = str_replace('£', '', session('property_amount'));
-            $amount = explode(' - ', $amount);
-            $start_value = intval($amount[0]);
-            $end_value = intval($amount[1]);
+        if(session()->has('property_min') && session()->has('property_max')){
+            $start_value = session('property_min');
+            $end_value = session('property_max');
         }else{
             $start_value = $floor;
             $end_value = $limit;
@@ -216,6 +215,7 @@
 @endsection
 @section('modals')
 
+    <x-modals.dispose model="property"/>
     <x-modals.delete/>
     <x-modals.import route="/import/properties"/>
 @endsection

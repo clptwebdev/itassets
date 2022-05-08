@@ -12,16 +12,26 @@ use PDF;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\LocationsPdf;
 use App\Jobs\LocationPdf;
+use App\Jobs\LocationBusinessReport;
 use App\Models\Report;
 
+use App\Models\FFE;
+use App\Models\Setting;
+use App\Models\Archive;
+use Illuminate\Database\Eloquent\Collection;
+
 class LocationController extends Controller {
+
+    ///////////////////////////////////////
+    //////////// Read Functions ///////////
+    ///////////////////////////////////////
 
     public function index()
     {
 
         if(auth()->user()->cant('viewAll', Location::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Locations.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Locations.');
 
         }
         $locations = auth()->user()->locations;
@@ -29,11 +39,27 @@ class LocationController extends Controller {
         return view('locations.view', ['locations' => $locations]);
     }
 
+    public function show(Location $location)
+    {
+        if(auth()->user()->cant('view', $location))
+        {
+            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Show Locations.');
+
+        }
+
+        return view('locations.show', compact('location'));
+    }
+
+
+    ///////////////////////////////////////
+    ////////// Create Functions ///////////
+    ///////////////////////////////////////
+
     public function create()
     {
         if(auth()->user()->cant('create', Location::class))
         {
-            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Create Locations.');
+            return ErrorController::forbidden(route('location.index'), 'Unauthorised to Create Locations.');
 
         }
 
@@ -44,7 +70,7 @@ class LocationController extends Controller {
     {
         if(auth()->user()->cant('create', Location::class))
         {
-            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Create Locations.');
+            return ErrorController::forbidden(route('location.index'), 'Unauthorised to Create Locations.');
 
         }
 
@@ -64,22 +90,15 @@ class LocationController extends Controller {
         return to_route('location.index');
     }
 
-    public function show(Location $location)
-    {
-        if(auth()->user()->cant('view', $location))
-        {
-            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Show Locations.');
-
-        }
-
-        return view('locations.show', compact('location'));
-    }
+    ///////////////////////////////////////
+    //////////// Edit Functions ///////////
+    ///////////////////////////////////////
 
     public function edit(Location $location)
     {
         if(auth()->user()->cant('update', $location))
         {
-            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Edit Locations.');
+            return ErrorController::forbidden(route('location.index'), 'Unauthorised to Edit Locations.');
 
         }
         $locations = auth()->user()->locations;
@@ -91,7 +110,7 @@ class LocationController extends Controller {
     {
         if(auth()->user()->cant('update', $location))
         {
-            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Update Locations.');
+            return ErrorController::forbidden(route('location.index'), 'Unauthorised to Update Locations.');
 
         }
 
@@ -111,11 +130,15 @@ class LocationController extends Controller {
         return to_route('location.index');
     }
 
+    ///////////////////////////////////////
+    ////////// Delete Functions ///////////
+    ///////////////////////////////////////
+
     public function destroy(Location $location)
     {
         if(auth()->user()->cant('delete', $location))
         {
-            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Delete Locations.');
+            return ErrorController::forbidden(route('location.index'), 'Unauthorised to Delete Locations.');
 
         }
 
@@ -126,22 +149,56 @@ class LocationController extends Controller {
         return to_route('location.index');
     }
 
+    ///////////////////////////////////////
+    ////////// Export Functions ///////////
+    ///////////////////////////////////////
+
     public function export(Location $location)
     {
         if(auth()->user()->cant('viewAny', Location::class))
         {
-            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Export Locations.');
+            return ErrorController::forbidden(route('location.index'), 'Unauthorised to Export Locations.');
 
         }
 
         return \Maatwebsite\Excel\Facades\Excel::download(new LocationsExport, 'Location.xlsx');
     }
 
+    public function businessExport(Location $location){
+
+        if(auth()->user()->cant('businessReports', $location))
+        {
+            return ErrorController::forbidden(route('business'), 'Unauthorised to Download Financial Report.');
+
+        }
+
+        $user = auth()->user();
+
+        $name = strtolower(str_replace(' ', '-', $location->name).'-asset-register');
+        $date = \Carbon\Carbon::now()->format('dmyHis');
+        $path = $name .'-'. $date.'.xlsx';
+        $url = "public/csv/{$path}";
+        $route = "storage/csv/{$path}";
+
+        dispatch(new LocationBusinessReport($location, $user, $url, $route))->afterResponse();
+        //Create Report
+
+        $report = Report::create(['report' => $route, 'user_id' => $user->id]);
+
+        return to_route('business')
+            ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
+            ->withInput();
+    }
+
+    ///////////////////////////////////////
+    ///////////// PDF Functions ///////////
+    ///////////////////////////////////////
+
     public function downloadPDF(Request $request)
     {
         if(auth()->user()->cant('viewAny', Location::class))
         {
-            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Download Locations.');
+            return ErrorController::forbidden(route('location.index'), 'Unauthorised to Download Locations.');
 
         }
 
@@ -187,7 +244,7 @@ class LocationController extends Controller {
     {
         if(auth()->user()->cant('view', $location))
         {
-            return ErrorController::forbidden(to_route('location.index'), 'Unauthorised to Download Locations.');
+            return ErrorController::forbidden(route('location.index'), 'Unauthorised to Download Locations.');
 
         }
 
@@ -205,6 +262,10 @@ class LocationController extends Controller {
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
+
+    ///////////////////////////////////////
+    /////////// Other Functions ///////////
+    ///////////////////////////////////////
 
     public function search(Request $request)
     {

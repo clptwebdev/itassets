@@ -2,14 +2,7 @@
 
 @section('title', 'Recycle Bin | Assets')
 
-@section('css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
-          integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css"
-          integrity="sha512-9h7XRlUeUwcHUf9bNiWSTO9ovOWFELxTlViP801e5BbwNJ5ir9ua6L20tEroWZdm+HFBAWBLx2qH4l4QHHlRyg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-@endsection
+
 
 @section('content')
 
@@ -39,7 +32,7 @@
 
         <div class="card shadow mb-4">
             <div class="card-body">
-                <div class="table-responsive">
+                <div>
                     <table id="assetsTable" class="table table-striped">
                         <thead>
                         <tr>

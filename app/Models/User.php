@@ -78,6 +78,11 @@ class User extends Authenticatable {
             ->using(LocationUser::class);
     }
 
+    public function manager()
+    {
+        return $this->hasOne(User::class, 'manager_id');
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class);
@@ -114,9 +119,29 @@ class User extends Authenticatable {
         return $this->hasManyDeep(Property::class, ['location_user', Location::class]);
     }
 
+    public function location_software()
+    {
+        return $this->hasManyDeep(Software::class, ['location_user', Location::class]);
+    }
+
+    public function location_license()
+    {
+        return $this->hasManyDeep(License::class, ['location_user', Location::class]);
+    }
+
     public function location_auc()
     {
         return $this->hasManyDeep(AUC::class, ['location_user', Location::class]);
+    }
+
+    public function location_ffe()
+    {
+        return $this->hasManyDeep(FFE::class, ['location_user', Location::class]);
+    }
+
+    public function location_vehicle()
+    {
+        return $this->hasManyDeep(Vehicle::class, ['location_user', Location::class]);
     }
 
     public function locationsArray(): array
@@ -205,6 +230,18 @@ class User extends Authenticatable {
         {
             return User::whereRoleId($role->id)->get();
         }
+    }
+
+    public function isBusiness()
+    {
+
+        return $this->role->name == 'Business Manager';
+    }
+
+    public function isGlobal()
+    {
+
+        return $this->role->name == 'Global Admin';
     }
 
 }

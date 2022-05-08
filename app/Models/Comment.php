@@ -43,14 +43,24 @@ class Comment extends Model {
         return $this->morphedByMany(Accessory::class, 'commentables');
     }
 
+    public function broadband()
+    {
+        return $this->morphedByMany(Broadband::class, 'commentables');
+    }
+
     public function consumable()
     {
         return $this->morphedByMany(Consumable::class, 'commentables');
     }
 
+    public function vehicle()
+    {
+        return $this->morphedByMany(Vehicle::class, 'commentables');
+    }
+
     public function miscellanea()
     {
-        return $this->morphedByMany(Miscellanea::class);
+        return $this->morphedByMany(Miscellanea::class, 'commentables');
     }
 
     public function asset()

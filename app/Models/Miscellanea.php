@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -114,6 +115,28 @@ class Miscellanea extends Model {
     {
         return $query->where('miscellaneas.name', 'LIKE', "%{$search}%")
             ->orWhere('miscellaneas.serial_no', 'LIKE', "%{$search}%");
+    }
+
+    public function depreciation_value_by_date($date)
+    {
+        if($this->depreciation_id != 0 && $this->depreciation->years)
+        {
+            $age = $date->floatDiffInYears($this->purchased_date);
+            $percent = 100 / $this->depreciation->years;
+            $percentage = floor($age) * $percent;
+            $value = $this->purchased_cost * ((100 - $percentage) / 100);
+
+            if($value < 0)
+            {
+                return 0;
+            } else
+            {
+                return $value;
+            }
+        } else
+        {
+            return 0;
+        }
     }
 
     public static function updateCache()

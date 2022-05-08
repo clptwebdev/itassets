@@ -4,7 +4,8 @@
 <div id="filter" class="card shadow mb-4">
     <div id="filter-header" class="card-header d-flex justify-content-between align-items-center text-white"
          style="background-color: #474775; border-top-left-radius: 0px;"><h6 class="m-0">Filter Results</h6><a
-            class="btn-sm btn-lilac" onclick="javascript:toggleFilter();"><i class="fa fa-times" aria-hidden="true"></i></a>
+            class="btn-sm btn-lilac pointer" onclick="javascript:toggleFilter();"><i class="fa fa-times"
+                                                                                     aria-hidden="true"></i></a>
     </div>
     <div class="card-body">
         <form action="{{ route($route.'.filter')}}" method="POST">
@@ -92,54 +93,60 @@
                         </div>
                     </div>
                 @endif
+                @if(Schema::hasColumn("{$table}",'purchased_date'))
+                    <div class="option">
+                        <div class="option-header collapsed pointer" id="purchasedDateHeader" data-bs-toggle="collapse"
+                             data-bs-target="#purchasedDateCollapse" aria-expanded="true"
+                             aria-controls="purchasedDateHeader">
+                            <small>Date</small>
+                        </div>
 
-                <div class="option">
-                    <div class="option-header collapsed pointer" id="purchasedDateHeader" data-bs-toggle="collapse"
-                         data-bs-target="#purchasedDateCollapse" aria-expanded="true"
-                         aria-controls="purchasedDateHeader">
-                        <small>Date</small>
-                    </div>
-
-                    <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader"
-                         data-bs-parent="#accordion">
-                        <div class="option-body">
-                            <div class="form-row">
-                                <label for="start" class="p-0 m-0 mb-1"><small>Start</small></label>
-                                <input class="form-control" type="date" name="start"
-                                       @if(session()->has('start'))@php $start = \Carbon\Carbon::parse(session($relations.'_start'))->format('Y-m-d')
-                                       @endphp value="{{ $start }}" @endif placeholder="DD/MM/YYYY"/>
-                            </div>
-                            <div class="form-row">
-                                <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
-                                <input class="form-control" type="date" name="end"
-                                       @if(session()->has('end'))@php $end = \Carbon\Carbon::parse(session($relations.'_end'))->format('Y-m-d')
-                                       @endphp value="{{ $end }}" @endif placeholder="DD/MM/YYYY"/>
+                        <div id="purchasedDateCollapse" class="collapse" aria-labelledby="purchasedDateHeader"
+                             data-bs-parent="#accordion">
+                            <div class="option-body">
+                                <div class="form-row">
+                                    <label for="start" class="p-0 m-0 mb-1"><small>Start</small></label>
+                                    <input class="form-control" type="date" name="start"
+                                           @if(session()->has('start'))@php $start = \Carbon\Carbon::parse(session($relations.'_start'))->format('Y-m-d')
+                                           @endphp value="{{ $start }}" @endif placeholder="DD/MM/YYYY"/>
+                                </div>
+                                <div class="form-row">
+                                    <label for="end" class="p-0 m-0 mb-1"><small>End</small></label>
+                                    <input class="form-control" type="date" name="end"
+                                           @if(session()->has('end'))@php $end = \Carbon\Carbon::parse(session($relations.'_end'))->format('Y-m-d')
+                                           @endphp value="{{ $end }}" @endif placeholder="DD/MM/YYYY"/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
 
                 <div class="option">
                     <div class="option-header collapsed pointer" id="costHeader" data-bs-toggle="collapse"
-                         data-bs-target="#costCollapse" aria-expanded="true" aria-controls="costHeader">
+                         data-bs-target="#costHeaderCollapse" aria-expanded="true" aria-controls="costHeader">
                         <small>Cost/Value</small>
                     </div>
                     {{-- new fully javascript slider--}}
-                    <div class='m-2'>
-                        <label for="customRange1" class="form-label font-weight-bold">MIN </label>
-                        <div class='d-flex'>
-                            <span>£</span>
-                            <p id='minRange'></p>
-                        </div>
+                    <div id="costHeaderCollapse" class="collapse" aria-labelledby="costHeaderCollapse"
+                         data-bs-parent="#accordion">
+                        <div class='m-2 option-body'>
+                            <label for="customRange1" class="form-label font-weight-bold">MIN </label>
+                            <div class='d-flex'>
+                                <span>£</span>
+                                <p id='minRange'></p>
+                            </div>
 
-                        <input type="range" class="form-control-range custom-range" name='minCost' id="customRange1">
-                        <label for="customRange2" class="form-label font-weight-bold ">MAX</label>
-                        <div class='d-flex'>
-                            <span>£</span>
-                            <p id='maxRange'></p>
+                            <input type="range" class="form-control-range custom-range" name='minCost'
+                                   id="customRange1">
+                            <label for="customRange2" class="form-label font-weight-bold ">MAX</label>
+                            <div class='d-flex'>
+                                <span>£</span>
+                                <p id='maxRange'></p>
+                            </div>
+                            <input type="range" class="form-control-range custom-range" name='maxCost'
+                                   id="customRange2">
                         </div>
-                        <input type="range" class="form-control-range custom-range" name='maxCost' id="customRange2">
                     </div>
                     {{--  end--}}
                 </div>

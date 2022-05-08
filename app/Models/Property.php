@@ -14,15 +14,7 @@ class Property extends Model {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'location_id', 'purchased_cost', 'depreciation', 'type', 'purchased_date'];
-
-    public function name(): Attribute
-    {
-        return new Attribute(
-            fn($value) => ucfirst($value),
-            fn($value) => strtolower($value),
-        );
-    }
+    protected $fillable = ['name', 'location_id', 'purchased_cost', 'donated', 'depreciation', 'type', 'purchased_date', 'user_id'];
 
     //Returns the Location attached to the property
     public function location()
@@ -66,6 +58,9 @@ class Property extends Model {
 
     }
 
+
+
+
     //Gets the building type in the table and displays it as a string
     // (1 = Freehold Land 2 = Freehold Buildings 3 = Leadsehold Land 4 = Leasehold Buildings)
     public function getType()
@@ -87,6 +82,16 @@ class Property extends Model {
             default:
                 return "Unknown";
         }
+    }
+
+    public function comment()
+    {
+        return $this->morphToMany(Comment::class, "commentables");
+    }
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'loggable');
     }
 
     /////////////////////////////////////////////////
@@ -113,13 +118,10 @@ class Property extends Model {
         return $query->whereIn('location_id', $locations);
     }
 
-    public function comment()
+    public function scopeSearchFilter($query, $search)
     {
-        return $this->morphToMany(Comment::class, "commentables");
+        return $query->where('properties.name', 'LIKE', "%{$search}%");
     }
-
-
-
 
     //////////////////////////////////////////////
     ////////////////Cache Functions///////////////
@@ -150,16 +152,18 @@ class Property extends Model {
             $dep_total += Cache::get("property-L{$id}-dep");
         }
 
+
+
         //Totals of the Assets
-        Cache::rememberForever('property_total', function() use ($property_total) {
+        Cache::rememberForever('property-total', function() use ($property_total) {
             return round($property_total);
         });
 
-        Cache::rememberForever('property_cost', function() use ($cost_total) {
+        Cache::rememberForever('property-cost', function() use ($cost_total) {
             return round($cost_total);
         });
 
-        Cache::rememberForever('property_dep', function() use ($dep_total) {
+        Cache::rememberForever('property-dep', function() use ($dep_total) {
             return round($dep_total);
         });
     }
@@ -175,6 +179,7 @@ class Property extends Model {
             ->get()
             ->map(function($item, $key) {
                 $item['depreciation_value'] = $item->depreciation_value();
+
                 return $item;
             });
 
@@ -213,6 +218,7 @@ class Property extends Model {
                 ->get()
                 ->map(function($item, $key) {
                     $item['depreciation_value'] = $item->depreciation_value();
+
                     return $item;
                 });
 

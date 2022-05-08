@@ -18,7 +18,7 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('view', Supplier::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Suppliers.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Suppliers.');
 
         }
 
@@ -29,7 +29,7 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('create', Supplier::class))
         {
-            return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Create Suppliers.');
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Create Suppliers.');
 
         }
 
@@ -40,7 +40,7 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('create', Supplier::class))
         {
-            return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Create Suppliers.');
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Create Suppliers.');
 
         }
         $validated = $request->validate([
@@ -60,7 +60,7 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('view', Supplier::class))
         {
-            return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Show Suppliers.');
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Show Suppliers.');
 
         }
 
@@ -71,7 +71,7 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('update', Supplier::class))
         {
-            return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Edit Suppliers.');
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Edit Suppliers.');
 
         }
 
@@ -82,7 +82,7 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('update', Supplier::class))
         {
-            return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Update Suppliers.');
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Update Suppliers.');
 
         }
         $validated = $request->validate([
@@ -102,7 +102,7 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('forceDelete', Supplier::class))
         {
-            return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Delete Suppliers.');
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Delete Suppliers.');
 
         }
         $name = $supplier->name;
@@ -116,7 +116,7 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('viewAny', $supplier))
         {
-            return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Export Suppliers.');
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Export Suppliers.');
 
         }
 
@@ -133,7 +133,7 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Supplier::class))
         {
-            return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Download Suppliers.');
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Download Suppliers.');
 
         }
 
@@ -152,7 +152,7 @@ class SupplierController extends Controller {
             $array['city'] = $f->city ?? 'N/A';
             $array['county'] = $f->county ?? 'N/A';
             $array['postcode'] = $f->postcode ?? 'N/A';
-            $array['asset'] = $f->asset->count();
+            $array['asset'] = $f->assets()->count();
             $array['accessory'] = $f->accessory->count() ?? 'N/A';
             $array['component'] = $f->component->count() ?? 'N/A';
             $array['consumable'] = $f->consumable->count() ?? 'N/A';
@@ -181,7 +181,7 @@ class SupplierController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Supplier::class))
         {
-            return ErrorController::forbidden(to_route('suppliers.index'), 'Unauthorised to Download Suppliers.');
+            return ErrorController::forbidden(route('suppliers.index'), 'Unauthorised to Download Suppliers.');
 
         }
 
@@ -189,7 +189,6 @@ class SupplierController extends Controller {
 
         $date = \Carbon\Carbon::now()->format('d-m-y-Hi');
         $path = str_replace(' ', '-', $supplier->name) . '-' . $date;
-
         dispatch(new supplierPdf($supplier, $user, $path))->afterResponse();
 
         $url = "storage/reports/{$path}.pdf";

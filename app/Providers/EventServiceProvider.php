@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\AUC;
+use App\Models\Broadband;
 use App\Models\FFE;
+use App\Models\License;
 use App\Models\Machinery;
 use App\Models\Property;
 use App\Models\Software;
@@ -72,6 +74,8 @@ class EventServiceProvider extends ServiceProvider {
         Machinery::observe(\App\Observers\MachineryObserver::class);
         Vehicle::observe(\App\Observers\VehicleObserver::class);
         Software::observe(\App\Observers\SoftwareObserver::class);
+        Broadband::observe(\App\Observers\BroadbandObserver::class);
+        License::observe(\App\Observers\LicenseObserver::class);
     }
 
 }

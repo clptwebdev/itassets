@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\permittedLocation;
 use App\Rules\findLocation;
 
+use \Carbon\Carbon;
+
 class PropertyController extends Controller {
 
     ////////////////////////////////////////////
@@ -36,8 +38,14 @@ class PropertyController extends Controller {
         //Check to see if the User has permission to View All the Properties.
         if(auth()->user()->cant('viewAll', Property::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Properties.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Properties.');
 
+        }
+
+        //If there are filters currently set move to filtered function
+        if(session()->has('property_filter') && session('property_filter') === true)
+        {
+            return to_route('property.filtered');
         }
 
         // find the locations that the user has been assigned to
@@ -60,7 +68,7 @@ class PropertyController extends Controller {
     {
         if(auth()->user()->cant('view', $property))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Show Properties.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised to Show Properties.');
 
         }
 
@@ -76,7 +84,7 @@ class PropertyController extends Controller {
     {
         if(auth()->user()->cant('create', Property::class))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Create Properties.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised to Create Properties.');
 
         }
 
@@ -94,7 +102,7 @@ class PropertyController extends Controller {
         //Check to see if the user has permission to add nw property on the system
         if(auth()->user()->cant('create', Property::class))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Store Properties.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised to Store Properties.');
 
         }
 
@@ -113,9 +121,11 @@ class PropertyController extends Controller {
             'name' => $request->name,
             'location_id' => $request->location_id,
             'purchased_cost' => $request->purchased_cost,
+            'donated' => $request->donated,
             'depreciation' => $request->depreciation,
             'type' => $request->type,
             'purchased_date' => $request->purchased_date,
+            'user_id' => auth()->user()->id,
         ])->save();
 
         session()->flash('success_message', $request->name . ' has been created successfully');
@@ -133,7 +143,7 @@ class PropertyController extends Controller {
         // Check to see whether the user has permission to edit the sleected property
         if(auth()->user()->cant('update', $property))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Edit Properties.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised to Edit Properties.');
 
         }
 
@@ -145,7 +155,7 @@ class PropertyController extends Controller {
         // Check to see whether the user has permission to edit the selected property
         if(auth()->user()->cant('update', $property))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Update Properties.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised to Update Properties.');
 
         }
 
@@ -159,7 +169,7 @@ class PropertyController extends Controller {
         ]);
 
         //Fill the Model fields from the request
-        $property->fill($request->only('name', 'location_id', 'purchased_cost', 'purchased_date', 'depreciation', 'type'))->save();
+        $property->fill($request->only('name', 'location_id', 'purchased_cost', 'donated', 'purchased_date', 'depreciation', 'type'))->save();
 
         //Return the session message to the index
         session()->flash('success_message', $request->name . ' has been updated successfully');
@@ -178,7 +188,7 @@ class PropertyController extends Controller {
         //Check to see whether the User has permissions to remove the property or send it to the Recycle Bin
         if(auth()->user()->cant('delete', $property))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Delete Properties.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised to Delete Properties.');
 
         }
 
@@ -194,7 +204,7 @@ class PropertyController extends Controller {
     {
         if(auth()->user()->cant('recycleBin', Property::class))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Recycle Properties.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised to Recycle Properties.');
 
         }
 
@@ -218,7 +228,7 @@ class PropertyController extends Controller {
         //Check to see if the user has permission to restore the property
         if(auth()->user()->cant('delete', $property))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Restore Properties.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised to Restore Properties.');
 
         }
 
@@ -240,7 +250,7 @@ class PropertyController extends Controller {
         //Check to see if the user has permission to restore the property
         if(auth()->user()->cant('delete', $property))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Delete Properties.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised to Delete Properties.');
 
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
@@ -280,7 +290,7 @@ class PropertyController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Property::class))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised | Download of Property Information Report.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised | Download of Property Information Report.');
 
         }
         $properties = array();
@@ -318,7 +328,7 @@ class PropertyController extends Controller {
     {
         if(auth()->user()->cant('view', $property))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised | Download of Property Information.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised | Download of Property Information.');
 
         }
 
@@ -343,7 +353,7 @@ class PropertyController extends Controller {
     {
         if(auth()->user()->cant('create', Property::class))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised | Import Properties.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised | Import Properties.');
 
         }
         $extensions = array("csv");
@@ -455,6 +465,7 @@ class PropertyController extends Controller {
                 $property->type = $request->type[$i];
                 $property->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $request->purchased_date[$i]))->format("Y-m-d");
                 $property->purchased_cost = $request->purchased_cost[$i];
+                $property->donated = $request->donated[$i];
                 $property->location_id = $request->location_id[$i];
                 $property->depreciation = $request->depreciation[$i];
                 $property->save();
@@ -474,7 +485,7 @@ class PropertyController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Property::class))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised | Export Property Information.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised | Export Property Information.');
 
         }
         $properties = Property::withTrashed()->whereIn('id', json_decode($request->properties))->with('location')->get();
@@ -496,7 +507,7 @@ class PropertyController extends Controller {
 
         if(auth()->user()->cant('viewAll', Property::class))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised to Export Property Errors.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised to Export Property Errors.');
 
         }
 
@@ -552,11 +563,11 @@ class PropertyController extends Controller {
                 session(['property_end' => $request->end]);
             }
 
-            session(['assets_min' => $request->minCost]);
-            session(['assets_max' => $request->maxCost]);
+            session(['property_min' => $request->minCost]);
+            session(['property_max' => $request->maxCost]);
         }
-        //Check the Users Locations Permissions
-        $locations = Location::select('id', 'name')->withCount('property')->get();
+        // find the locations that the user has been assigned to
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('property')->get();
 
         $property = Property::locationFilter($locations->pluck('id'));
 
@@ -568,14 +579,14 @@ class PropertyController extends Controller {
 
         if(session()->has('property_start') && session()->has('property_end'))
         {
-            $property->purchaseFilter(session('property_start'), session('property_end'));
+            $property->purchaseFilter(Carbon::parse(session('property_start')), Carbon::parse(session('property_end')));
             session(['property_filter' => true]);
         }
 
-        if(session()->has('assets_min') && session()->has('assets_max'))
+        if(session()->has('property_min') && session()->has('property_max'))
         {
-            $property->costFilter(session('assets_min'), session('assets_max'));
-            session(['assets_filter' => true]);
+            $property->costFilter(session('property_min'), session('property_max'));
+            session(['property_filter' => true]);
         }
 
         if(session()->has('property_search'))
@@ -585,7 +596,7 @@ class PropertyController extends Controller {
         }
 
         $property->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
-            ->orderBy(session('property_orderby') ?? 'date', session('property_direction') ?? 'asc')
+            ->orderBy(session('property_orderby') ?? 'purchased_date', session('property_direction') ?? 'asc')
             ->select('properties.*', 'locations.name as location_name');
         $limit = session('property_limit') ?? 25;
 
@@ -598,9 +609,9 @@ class PropertyController extends Controller {
     public function clearFilter()
     {
         //Clear the Filters for the properties
-        session()->forget(['property_filter', 'property_locations', 'property_start', 'property_end', 'property_amount', 'property_search']);
+        session()->forget(['property_filter', 'property_locations', 'property_start', 'property_end', 'property_min', 'property_max', 'property_search']);
 
-        return to_route('property.index');
+        return to_route('properties.index');
     }
 
 }

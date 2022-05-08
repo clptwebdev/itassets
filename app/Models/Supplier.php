@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminte\Contracts\Queue\ShouldQueue;
 
 class Supplier extends Model {
 
@@ -83,13 +82,37 @@ class Supplier extends Model {
 
     }
 
+    public function software()
+    {
+        return $this->hasMany(Software::class);
+
+    }
+
+    public function vehicle()
+    {
+        return $this->hasMany(Vehicle::class);
+
+    }
+
+    public function broadband()
+    {
+        return $this->hasMany(Broadband::class);
+
+    }
+
     public function consumable()
     {
         return $this->hasMany(Consumable::class);
 
     }
 
-    public function full_address($sep)
+    public function ffe()
+    {
+        return $this->hasMany(FFE::class);
+
+    }
+
+    public function full_address($sep = ', ')
     {
         $output = $this->address_1 . $sep;
         if($this->address_2 != '')

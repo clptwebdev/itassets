@@ -57,7 +57,7 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
             ],
             'purchased_cost' => [
                 'required',
-                'regex:/^\d+(\.\d{1,2})?$/',
+                'regex:/\d+(\.\d{1,2})?$/',
             ],
             'purchased_date' => [
                 'date_format:"d/m/Y"',
@@ -85,13 +85,13 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
             case 'Freehold Land':
                 $type = 1;
                 break;
-            case 'Freehold Building':
+            case 'Freehold Buildings':
                 $type = 2;
                 break;
             case 'Leasehold Land':
                 $type = 3;
                 break;
-            case 'Leasehold Building':
+            case 'Leasehold Buildings':
                 $type = 4;
                 break;
             default:
@@ -99,13 +99,22 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
         }
         $property->type = $type;
         $property->purchased_date = \Carbon\Carbon::parse(str_replace('/', '-', $row["purchased_date"]))->format("Y-m-d");
+
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $property->purchased_cost = floatval($binary);
+            $property->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $property->purchased_cost = floatval($row["purchased_cost"]);
+            $property->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
+        }
+
+        if(strtolower($row["donated"]) == 'yes')
+        {
+            $property->donated = 1;
+        } else
+        {
+            $property->donated = 0;
         }
 
         $location = Location::where(["name" => $row["location_id"]])->first();
@@ -113,7 +122,7 @@ class PropertyImport extends DefaultValueBinder implements ToModel, WithValidati
         $property->location_id = $lid;
 
         $property->depreciation = $row["depreciation"];
-
+        $property->user_id = auth()->user()->id;
         $property->save();
     }
 

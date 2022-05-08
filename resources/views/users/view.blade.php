@@ -15,28 +15,22 @@
                 <x-buttons.add :route="route('users.create')">User(s)</x-buttons.add>
             @endcan
             @can('viewAll', auth()->user())
-                <form class="d-inline-block" action="{{ route('users.pdf')}}" method="POST">
-                    @csrf
-                    <input type="hidden" value="{{ json_encode($users->pluck('id'))}}" name="users"/>
-                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-grey shadow-sm loading"><i
-                            class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report
-                    </button>
-                </form>
                 @if($users->count() >1)
                     <a href="/exportusers" class="d-inline-block btn btn-sm btn-yellow shadow-sm"><i
                             class="fas fa-download fa-sm text-white-50"></i>Export</a>
                 @endif
+                <form class="d-inline-block" action="{{ route('users.pdf')}}" method="POST">
+                    @csrf
+                    <input type="hidden" value="{{ json_encode($users->pluck('id'))}}" name="users"/>
+                    <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-blue shadow-sm loading"><i
+                            class="fas fa-file-pdf fa-sm text-dark-50"></i> Generate Report
+                    </button>
+                </form>
+
             @endcan
         </div>
     </div>
-
-    @if(session('danger_message'))
-        <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-    @endif
-
-    @if(session('success_message'))
-        <div class="alert alert-success"> {!! session('success_message')!!} </div>
-    @endif
+    <x-handlers.alerts/>
 
     <section>
         <p class="mb-4">Below are the different suppliers of the assets stored in the management system. Each has
@@ -103,15 +97,29 @@
                                                 <a href="{{ route('users.show', $user->id) }}" class="dropdown-item">View</a>
                                             @endcan
                                             @can('update', $user)
-                                                <a href="{{ route('users.edit', $user->id) }}" class="dropdown-item">Edit</a>
+                                                @if(auth()->user()->role->significance >= $user->role->significance)
+                                                    <a href="{{ route('users.edit', $user->id) }}"
+                                                       class="dropdown-item">Edit</a>
+                                                @endcan
                                             @endcan
+                                            @can('update', $user)
+                                                <a id='Manager' href="#" data-bs-toggle='modal'
+                                                   data-bs-target='#managerModal' class="dropdown-item"
+                                                   data-id='{{$user->id}}'>Manager
+                                                                           Assignment</a>
+                                            @endif
+
                                             @can('delete', $user)
-                                                <form id="form{{$user->id}}"
-                                                      action="{{ route('users.destroy', $user->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a class="deleteBtn dropdown-item" href="#" data-id="{{$user->id}}">Delete</a>
-                                                </form>
+                                                @if(auth()->user()->role->significance >= $user->role->significance)
+                                                    <form id="form{{$user->id}}"
+                                                          action="{{ route('users.destroy', $user->id) }}"
+                                                          method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <a class="deleteBtn dropdown-item" href="#"
+                                                           data-id="{{$user->id}}">Delete</a>
+                                                    </form>
+                                                @endcan
                                             @endcan
                                         </div>
                                     </div>
@@ -138,8 +146,15 @@
 
 @section('modals')
     <x-modals.delete :archive="true"/>
+    <x-modals.manager :model="$users" :route="route('manager.update')"/>
 @endsection
 
 @section('js')
     <script src="{{ asset('js/delete.js') }}"></script>
+    <script>
+
+        document.querySelectorAll("#Manager").forEach(elem => elem.addEventListener("click", (e) => {
+            document.querySelector('#currentUser').value = elem.getAttribute('data-id');
+        }));
+    </script>
 @endsection

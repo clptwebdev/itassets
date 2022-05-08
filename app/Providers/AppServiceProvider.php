@@ -56,7 +56,11 @@ class AppServiceProvider extends ServiceProvider {
             'role' => 'App\Models\Role',
             'status' => 'App\Models\Status',
             'transfer' => 'App\Models\Transfer',
+            'broadband' => 'App\Models\Transfer',
+            'license' => 'App\Models\License',
             'software' => 'App\Models\Software',
+            'vehicle' => 'App\Models\Vehicle',
+            'machinery' => 'App\Models\Machinery',
         ]);
 
         $charts->register([
@@ -64,6 +68,7 @@ class AppServiceProvider extends ServiceProvider {
             \App\Charts\DepChart::class,
             \App\Charts\DepreciationChart::class,
             \App\Charts\ExpenditureChart::class,
+            \App\Charts\AllExpenditureChart::class,
             \App\Charts\TotalExpenditure::class,
         ]);
     }

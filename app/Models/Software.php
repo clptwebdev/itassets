@@ -26,11 +26,20 @@ class Software extends Model {
         return $this->belongsTo(Supplier::class);
     }
 
+    public function manufacturer()
+    {
+        return $this->belongsTo(Manufacturer::class);
+    }
+
     public function comment()
     {
         return $this->morphToMany(Comment::class, "commentables");
     }
 
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'loggable');
+    }
     //Works out the depreciation value at the date that is passed through to the function
     //Use the Depreciation time to minus the depreication charge
     public function depreciation_value_by_date($date)

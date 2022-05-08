@@ -12,7 +12,7 @@ class DepreciationController extends Controller {
     {
         if(auth()->user()->cant('viewAny', Depreciation::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Depreciation.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Depreciation.');
 
         }
 
@@ -25,7 +25,7 @@ class DepreciationController extends Controller {
     {
         if(auth()->user()->cant('create', Depreciation::class))
         {
-            return ErrorController::forbidden(to_route('depreciation.index'), 'Unauthorised to Create Depreciation.');
+            return ErrorController::forbidden(route('depreciation.index'), 'Unauthorised to Create Depreciation.');
 
         }
         Depreciation::create($request->only('name', 'years'))->save();
@@ -41,9 +41,9 @@ class DepreciationController extends Controller {
 
     public function update(Request $request, Depreciation $depreciation)
     {
-        if(auth()->user()->cant('update', $depreciation))
+        if(auth()->user()->cant('update', Depreciation::class))
         {
-            return ErrorController::forbidden(to_route('depreciation.index'), 'Unauthorised to Update Depreciation.');
+            return ErrorController::forbidden(route('depreciation.index'), 'Unauthorised to Update Depreciation.');
 
         }
 
@@ -57,7 +57,7 @@ class DepreciationController extends Controller {
     {
         if(auth()->user()->cant('delete', Depreciation::class))
         {
-            return ErrorController::forbidden(to_route('depreciation.index'), 'Unauthorised to Delete Depreciation.');
+            return ErrorController::forbidden(route('depreciation.index'), 'Unauthorised to Delete Depreciation.');
 
         }
 

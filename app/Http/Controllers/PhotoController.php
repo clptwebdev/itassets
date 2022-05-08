@@ -60,4 +60,58 @@ class PhotoController extends Controller {
         return response()->json($response);
     }
 
+    public function getPhotos($page)
+    {
+        $limit = 51;
+        $offset = $limit * ($page - 1);
+        $photos = Photo::take($limit)->offset($offset)->orderBy('created_at', 'Desc')->get();
+        $photoCount = Photo::count();
+        $pages = round(ceil($photoCount / $limit), 0);
+
+        //Get the amount of pages
+//        $photos = Photo::all();
+        $html = '<p>Select an image below:</p>';
+        $html .= '<img src="' . asset('images/svg/location-image.svg') . '" width="80px" alt="Default Picture" onclick="selectPhoto(0, \"' . asset('images/svg/location-image.svg') . '\");">';
+
+        foreach($photos as $photo)
+        {
+            $html .= '<img src="' . asset($photo->path) . '" width="80px" alt="' . $photo->name . '"onclick="selectPhoto(' . $photo->id . ', ' . asset($photo->path) . ')">';
+
+        }
+        $html .= '<hr class="rule">';
+        $html .= '<nav aria-label="Page navigation example ">
+                  <ul class="pagination justify-content-center">';
+        if($page > 1)
+        {
+            $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page - 1 . ')" > Previous</a ></li >';
+        }
+
+        if($page - 1 > 1)
+        {
+            $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page - 1 . ')" >' . $page - 1 . '</a ></li >';
+        }
+
+        $html .= '<li class="page-item active" ><a class="page-link" href = "#" >' . $page . '</a ></li >';
+
+        if($page + 1 <= $pages)
+        {
+            $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page + 1 . ')">' . $page + 1 . '</a ></li >';
+        }
+
+        if($page + 1 <= $pages)
+        {
+            $html .= '<li class="page-item" ><a class="page-link" href = "#" onclick="getPhotoPage(' . $page + 1 . ')"> Next</a ></li >';
+        }
+
+        $html .= '</ul>
+                </nav>';
+
+//            <div class='m-3'>
+        //bootstrap style button
+//            onclick="getPhotoPages(4);"
+//            </div>
+
+        return $html;
+    }
+
 }

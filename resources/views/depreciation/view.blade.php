@@ -49,30 +49,26 @@
                                     {{$dep->models->count()}}
                                 </td>
                                 <td class="text-right">
-                                    <div class="dropdown no-arrow">
-                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                           id="dropdownMenu{{$dep->id}}Link" data-bs-toggle="dropdown"
-                                           aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div
-                                            class="dropdown-menu text-right dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenu{{$dep->id}}Link">
-                                            <div class="dropdown-header">Asset Options:</div>
-                                            @can('update', $dep)
-                                                <a href="#" class="dropdown-item updateBtn" data-id="{{$dep->id}}"
-                                                   data-route="{{ route('depreciation.update', $dep->id)}}"
-                                                   data-name="{{$dep->name}}" data-years="{{$dep->years}}">Edit</a>
-                                            @endcan
-                                            @can('delete', $dep)
-                                                <a class="dropdown-item deleteBtn" href="#"
-                                                   data-route="{{ route('depreciation.destroy', $dep->id)}}">Delete</a>
-                                            @endcan
-                                            <a class="dropdown-item showBtn" href="#" data-id="{{$dep->id}}"
-                                               data-name="{{$dep->name}}"
-                                               data-route="{{ route('depreciation.show', $dep->id)}}">View</a>
-                                        </div>
-                                    </div>
+                                    <x-wrappers.table-settings>
+                                        <x-buttons.dropdown-item class="showBtn" :data="$dep->id"
+                                                                 formRequirements=" data-name='{{$dep->name}}'data-route='{{ route('depreciation.show', $dep->id)}}'">
+                                            View
+                                        </x-buttons.dropdown-item>
+                                        @can('update', $dep)
+                                            <x-buttons.dropdown-item class="updateBtn" :data="$dep->id"
+                                                                     formRequirements="data-route='{{ route('depreciation.update', $dep->id)}} 'data-name='{{$dep->name}}' data-years='{{$dep->years}}'">
+                                                Edit
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('delete',  $dep)
+                                            <x-form.layout method="DELETE" :id="'form'.$dep->id"
+                                                           :action="route('depreciation.destroy', $dep->id)">
+                                                <x-buttons.dropdown-item class="deleteBtn" :data="$dep->id">
+                                                    Delete
+                                                </x-buttons.dropdown-item>
+                                            </x-form.layout>
+                                        @endcan
+                                    </x-wrappers.table-settings>
                                 </td>
                             </tr>
                         @endforeach
@@ -95,6 +91,7 @@
 @endsection
 
 @section('modals')
+    <x-modals.delete :archive="true"/>
     <!-- Create Modal-->
     <div class="modal fade bd-example-modal-lg" id="addStatusModal" tabindex="-1" role="dialog"
          aria-labelledby="addStatusModalLabel" aria-hidden="true">
@@ -126,7 +123,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Save</button>
+                        <button type="submit" class="btn btn-success" type="button" id="confirmBtn">Save</button>
                     </div>
                 </form>
             </div>
@@ -157,16 +154,16 @@
                             <label for="years">Depreciation Model Duration*:</label>
                             <input class="form-control" type="number" id="update_years" name="years" value="3">
                             <small class="text-info">This is amount of years the depreciation will be spread. For
-                                                     example a 3 year depreciation model will deduct 33% of its
+                                                     example a 3-year depreciation model will deduct 33% of its
                                                      value each year.
-                                                     Whereas a 4 year model will deduct 25% each calender year from
-                                                     it's purchase date.
+                                                     Whereas a 4-year model will deduct 25% each calendar year from
+                                                     its purchase date.
                             </small>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-grey" type="button" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-coral" type="button" id="confirmBtn">Save</button>
+                        <button type="submit" class="btn btn-success" type="button" id="confirmBtn">Save</button>
                     </div>
                 </form>
             </div>
@@ -188,7 +185,7 @@
             </div>
         </div>
     </div>
-    <x-modals.delete :archive="true"/>
+
 @endsection
 
 @section('js')

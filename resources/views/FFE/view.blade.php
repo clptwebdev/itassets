@@ -5,11 +5,47 @@
 
 @section('content')
     <x-wrappers.nav title="Furniture, Fixtures and Equipment (FFE)">
+        <x-buttons.return :route="route('dashboard')">Dashboard</x-buttons.return>
+
         @can('recycleBin', \App\Models\FFE::class)
             <x-buttons.recycle :route="route('ffe.bin')" :count="\App\Models\FFE::onlyTrashed()->count()"/>
         @endcan
         @can('create' , \App\Models\FFE::class)
             <x-buttons.add :route="route('ffes.create')">FFE</x-buttons.add>
+        @endcan
+        @can('generatePDF', \App\Models\FFE::class)
+            @if ($ffes->count() == 1)
+                <x-buttons.reports :route="route('ffes.showPdf', $ffes[0]->id)"/>
+            @else
+                <x-form.layout class="d-inline-block" :action="route('ffes.pdf')">
+                    <x-form.input type="hidden" name="ffes" :label="false" formAttributes="required"
+                                  :value="json_encode($ffes->pluck('id'))"/>
+                    <x-buttons.submit icon="fas fa-file-pdf" class="btn-blue">Generate Report</x-buttons.submit>
+                </x-form.layout>
+            @endif
+            @if($ffes->count() > 1)
+                <x-form.layout class="d-inline-block" action="/export/ffes">
+                    <x-form.input type="hidden" name="ffes" :label="false" formAttributes="required"
+                                  :value="json_encode($ffes->pluck('id'))"/>
+                    <x-buttons.submit icon="fas fa-table" class="btn-yellow"><span class="d-none d-md-inline-block">Export</span>
+                    </x-buttons.submit>
+                </x-form.layout>
+            @endif
+        @endcan
+        @can('create', \App\Models\FFE::class)
+            <div class="dropdown d-inline-block">
+                <a class="btn btn-sm btn-lilac dropdown-toggle p-2 p-md-1" href="#" role="button" id="dropdownMenuLink"
+                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Bulk Options
+                </a>
+                <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="dropdownMenuLink">
+
+                    <x-buttons.dropdown-item id="import">
+                        Import
+                    </x-buttons.dropdown-item>
+
+                </div>
+            </div>
         @endcan
     </x-wrappers.nav>
     <x-handlers.alerts/>
@@ -20,18 +56,13 @@
                              permissions, please contact apollo@clpt.co.uk </p>
 
         @php
-            if(auth()->user()->role_id == 1){
-                $limit = \App\Models\FFE::orderByRaw('CAST(purchased_cost as DECIMAL(11,2)) DESC')->pluck('purchased_cost')->first();
-                $floor = \App\Models\FFE::orderByRaw('CAST(purchased_cost as DECIMAL(11,2)) ASC')->pluck('purchased_cost')->first();
-            }else{
-                $limit = auth()->user()->location_property()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
-                $floor = auth()->user()->location_property()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
-            }
-            if(session()->has('auc_amount')){
-                $amount = str_replace('£', '', session('ffe_amount'));
-                $amount = explode(' - ', $amount);
-                $start_value = intval($amount[0]);
-                $end_value = intval($amount[1]);
+
+            $limit = auth()->user()->location_ffe()->orderBy('purchased_cost', 'desc')->pluck('purchased_cost')->first();
+            $floor = auth()->user()->location_ffe()->orderBy('purchased_cost', 'asc')->pluck('purchased_cost')->first();
+
+            if(session()->has('ffe_min') && session()->has('ffe_max')){
+                $start_value = session('ffe_min');
+                $end_value = session('ffe_max');
             }else{
                 $start_value = $floor;
                 $end_value = $limit;
@@ -39,9 +70,10 @@
         @endphp
 
         {{-- If there are no Collections return there is not need to display the filter, unless its the filter thats return 0 results --}}
-        @if(!session()->has('ffe_filter') && $ffes->count() !== 0)
+        @if($ffes->count() !== 0 || session('ffe_filter') === true)
             <x-filters.navigation model="FFE" relations="ffe" table="f_f_e_s"/>
-            <x-filters.filter model="FFE" relations="ffe" table="f_f_e_s" :locations="$locations"/>
+            <x-filters.filter model="FFE" relations="ffe" table="f_f_e_s" :locations="$locations" :statuses="$statuses"
+                              :categories="$categories"/>
         @endif
 
     <!-- DataTales Example -->
@@ -103,7 +135,9 @@
                                 <td class="text-center d-none d-xl-table-cell">
                                     £{{$ffe->purchased_cost}} @if($ffe->donated == 1) <span
                                         class="text-sm">*Donated</span> @endif
-                                        <br><small class="text-coral">(*£{{number_format($ffe->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}})</small>
+                                    <br><small
+                                        class="text-coral">(*£{{number_format($ffe->depreciation_value_by_date(\Carbon\Carbon::now()), 2, '.', ',')}}
+                                                           )</small>
                                 </td>
                                 <td class="d-none d-xl-table-cell">{{$ffe->supplier->name ?? 'N/A'}}</td>
                                 <td class="text-center d-none d-xl-table-cell">{{$ffe->status->name ??'N/A'}}</td>
@@ -127,6 +161,18 @@
                                         @can('update', $ffe)
                                             <x-buttons.dropdown-item :route=" route('ffes.edit', $ffe->id)">
                                                 Edit
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('update', $ffe)
+                                            <x-buttons.dropdown-item class="transferBtn"
+                                                                     formRequirements="data-model-id='{{$ffe->id}}'  data-location-from='{{$ffe->location->name ?? 'Unallocated' }}' data-location-id='{{ $ffe->location_id }}'">
+                                                Transfer
+                                            </x-buttons.dropdown-item>
+                                        @endcan
+                                        @can('delete', $ffe)
+                                            <x-buttons.dropdown-item class="disposeBtn"
+                                                                     formRequirements="data-model-id='{{$ffe->id}}' data-model-name='{{$ffe->name ?? 'No name' }}'">
+                                                Dispose
                                             </x-buttons.dropdown-item>
                                         @endcan
                                         @can('delete', $ffe)
@@ -164,15 +210,19 @@
     </section>
 @endsection
 @section('modals')
-
+    <x-modals.dispose model="FFE"/>
+    <x-modals.transfer :models="$locations" model="FFE"/>
     <x-modals.delete/>
+    <x-modals.import route="/import/ffes"/>
 
 @endsection
 
 @section('js')
-
+    <script src="{{asset('js/transfer.js')}}"></script>
+    <script src="{{asset('js/dispose.js')}}"></script>
     <script src="{{asset('js/filter.js')}}"></script>
     <script src="{{asset('js/delete.js')}}"></script>
+    <script src="{{asset('js/import.js')}}"></script>
     <script>
 
         let sliderMin = document.querySelector('#customRange1');

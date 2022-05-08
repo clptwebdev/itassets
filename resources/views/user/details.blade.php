@@ -25,13 +25,7 @@
                         class="fas fa-download fa-sm text-white-50 fa-text-width"></i> Change Password</a>
             </div>
         </div>
-        @if(session('danger_message'))
-            <div class="alert alert-danger"> {!! session('danger_message')!!} </div>
-        @endif
-
-        @if(session('success_message'))
-            <div class="alert alert-success"> {!! session('success_message')!!} </div>
-        @endif
+        <x-handlers.alerts/>
         <section>
             <p class="mb-4">Adding a new Asset to the asset management system. Enter the following information and
                             click
@@ -41,17 +35,6 @@
                 <div class="col-12">
                     <div class="card shadow h-100">
                         <div class="card-body">
-
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-
                             @csrf
 
                             <h3 class="h6 text-center mb-3">User Information</h3>
@@ -66,7 +49,7 @@
                                         }
                                     @endphp
                                     <img id="profileImage" src="{{ asset($path)}}" width="100%"
-                                         alt="Select Profile Picture">
+                                         alt="Select Profile Picture" onclick='getPhotoPage(1)'>
                                 </div>
 
                                 <input type="hidden" id="photo_id" name="photo_id"
@@ -87,6 +70,13 @@
                                        class="form-control <?php if ($errors->has('email')) {?>border-danger<?php }?>"
                                        name="email" id="email" placeholder=""
                                        value="{{ old('email') ?? auth()->user()->email}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Manager</label><span class="text-danger"></span>
+                                <input type="text"
+                                       class="form-control bg-gray-200 <?php if ($errors->has('manager_id')) {?>border-danger<?php }?>"
+                                       name="email" id="email" placeholder="" disabled
+                                       value="{{ old('manager_id') ?? auth()->user()->manager->name ?? 'No Manager'}}">
                             </div>
 
                             <button class="btn btn-lg btn-info">Change</button>
@@ -256,8 +246,9 @@
     <script src="{{asset('js/photo.js')}}"></script>
     <script>
 
+
         //validation for resetting passwords
-        var input = document.querySelector('#confirmNewPassword');
+        let input = document.querySelector('#confirmNewPassword');
         var firstInput = document.querySelector('#newFirstPassword');
         var oldPasswordInput = document.querySelector('#oldPassword');
         var messages = document.querySelector('#messages');

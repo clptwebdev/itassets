@@ -100,61 +100,63 @@
                     </div>
                 </div>
 
-                <div class="col-12 mt-4">
-                    <div class="card shadow">
+                @can('viewAll' ,\App\Models\Location::class)
+                    <div class="col-12 mt-4">
+                        <div class="card shadow">
 
-                        <div class="card-body">
-                            <div class="card-title">Permissions</div>
-                            <div class="form-group">
-                                <input type="hidden" class="form-control" name="permission_ids" id="permission_ids"
-                                       value="{{ implode(',', $user->locations->pluck('id')->toArray())}}"
-                                       autocomplete="off">
-                            </div>
+                            <div class="card-body">
+                                <div class="card-title">Permissions</div>
+                                <div class="form-group">
+                                    <input type="hidden" class="form-control" name="permission_ids" id="permission_ids"
+                                           value="{{ implode(',', $user->locations->pluck('id')->toArray())}}"
+                                           autocomplete="off">
+                                </div>
 
-                            <div class="form-inline">
+                                <div class="form-inline">
 
-                                <select type="text" class="form-control mb-2 mr-sm-2" name="permission_id"
-                                        id="permission_id">
-                                    <option value="0">Please select a Location</option>
-                                    @foreach($locations as $location)
-                                        <option
-                                            value="{{$location->id}}" @if(old('location_id') == $location->id){{'selected'}}@endif>{{$location->name}}</option>
-                                    @endforeach
-                                </select>
-                                <a id="submitPermission" class="btn btn-blue mb-2"
-                                   onclick="javascript:addPermission();">Add</a>
-                                <hr>
-                                <div class="w-100">
-                                    <div id="permissions" class="p-2 row">
-                                        @foreach($user->locations as $location)
-                                            <div class="col-12 col-md-6 col-lg-4 p-2 h-100">
-                                                <div class="card h-100">
-                                                    <div
-                                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between h-100">
-                                                        @if ($location->photo()->exists())
-                                                            <img src="{{ asset($location->photo->path) ?? 'null' }}"
-                                                                 alt="{{ $location->name}}" height="40px">
-                                                        @else
-                                                            <i class="fas fa-school fa-2x text-gray-300"></i>
-                                                        @endif
-                                                        <small style="color:{{$location->icon}}">
-                                                            {{ $location->name}}
-                                                        </small>
-                                                        <a href="#"
-                                                           onclick="javascript:removePermission({{$location->id}});"
-                                                           role="button">
-                                                            <i class="fas fa-times fa-sm fa-fw text-gray-400"></i>
-                                                        </a>
+                                    <select type="text" class="form-control mb-2 mr-sm-2" name="permission_id"
+                                            id="permission_id">
+                                        <option value="0">Please select a Location</option>
+                                        @foreach($locations as $location)
+                                            <option
+                                                value="{{$location->id}}" @if(old('location_id') == $location->id){{'selected'}}@endif>{{$location->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <a id="submitPermission" class="btn btn-blue mb-2"
+                                       onclick="javascript:addPermission();">Add</a>
+                                    <hr>
+                                    <div class="w-100">
+                                        <div id="permissions" class="p-2 row">
+                                            @foreach($user->locations as $location)
+                                                <div class="col-12 col-md-6 col-lg-4 p-2 h-100">
+                                                    <div class="card h-100">
+                                                        <div
+                                                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between h-100">
+                                                            @if ($location->photo()->exists())
+                                                                <img src="{{ asset($location->photo->path) ?? 'null' }}"
+                                                                     alt="{{ $location->name}}" height="40px">
+                                                            @else
+                                                                <i class="fas fa-school fa-2x text-gray-300"></i>
+                                                            @endif
+                                                            <small style="color:{{$location->icon}}">
+                                                                {{ $location->name}}
+                                                            </small>
+                                                            <a href="#"
+                                                               onclick="javascript:removePermission({{$location->id}});"
+                                                               role="button">
+                                                                <i class="fas fa-times fa-sm fa-fw text-gray-400"></i>
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endcan
             </div>
         </section>
     </form>
@@ -168,7 +170,7 @@
     <script>
         const permission = document.querySelector('#permission_id');
         const permissions = document.querySelector('#permission_ids');
-        const permDisplay =  document.querySelector('#permissions');
+        const permDisplay = document.querySelector('#permissions');
 
         function addPermission() {
             let array = permissions.value.split(",");

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 //Jobs
 use App\Jobs\AUCSPdf;
 use App\Jobs\AUCPdf;
+
 //Models
 use App\Models\Report;
 
@@ -25,6 +26,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\permittedLocation;
 use App\Rules\findLocation;
 
+use \Carbon\Carbon;
+
 class AUCController extends Controller {
 
     //AUC = Assets Under Construction
@@ -38,8 +41,13 @@ class AUCController extends Controller {
         //Check to see if the User has permission to View All the AUC.
         if(auth()->user()->cant('viewAll', AUC::class))
         {
-            return ErrorController::forbidden(to_route('dashboard'), 'Unauthorised to View Assets Under Construction.');
+            return ErrorController::forbidden(route('dashboard'), 'Unauthorised to View Assets Under Construction.');
 
+        }
+
+        if(session()->has('auc_filter') && session('auc_filter') === true)
+        {
+            return to_route('auc.filtered');
         }
 
         //Find the locations that the user has been assigned to
@@ -62,7 +70,7 @@ class AUCController extends Controller {
     {
         if(auth()->user()->cant('view', $auc))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Show Assets Under Construction.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Show Assets Under Construction.');
 
         }
 
@@ -80,7 +88,7 @@ class AUCController extends Controller {
         //Check to see if the User is has permission to create an AUC
         if(auth()->user()->cant('create', AUC::class))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Create Assets Under Construction.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Create Assets Under Construction.');
 
         }
 
@@ -100,7 +108,7 @@ class AUCController extends Controller {
         //Check to see if the user has permission to add nw property on the system
         if(auth()->user()->cant('create', AUC::class))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Store Assets Under Construction.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Store Assets Under Construction.');
 
         }
 
@@ -111,6 +119,7 @@ class AUCController extends Controller {
             'purchased_cost' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'depreciation' => 'required|numeric',
             'type' => 'required|gt:0',
+
         ]);
 
         $property = new AUC;
@@ -122,6 +131,7 @@ class AUCController extends Controller {
             'depreciation' => $request->depreciation,
             'type' => $request->type,
             'purchased_date' => $request->purchased_date,
+            'user_id' => auth()->user()->id,
         ])->save();
 
         session()->flash('success_message', $request->name . ' has been created successfully');
@@ -139,7 +149,7 @@ class AUCController extends Controller {
         // Check to see whether the user has permission to edit the sleected property
         if(auth()->user()->cant('update', AUC::class))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Edit Assets Under Construction.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Edit Assets Under Construction.');
 
         }
 
@@ -151,7 +161,7 @@ class AUCController extends Controller {
         // Check to see whether the user has permission to edit the sleected property
         if(auth()->user()->cant('update', AUC::class))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Update Assets Under Construction.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Update Assets Under Construction.');
 
         }
 
@@ -186,8 +196,15 @@ class AUCController extends Controller {
             'purchased_date' => $auc->purchased_date,
             'depreciation' => $auc->depreciation,
             'location_id' => $auc->location_id,
+            'user_id' => auth()->user()->id,
         ]);
         $property->save();
+
+        foreach($auc->comment as $comment)
+        {
+            $property->comment()->create(['title' => $comment->title, 'comment' => $comment->comment, 'user_id' => $comment->user_id]);
+            $comment->delete();
+        }
 
         $auc->forceDelete();
 
@@ -205,7 +222,7 @@ class AUCController extends Controller {
         //Check to see whether the User has permissions to remove the collection or send it to the Recycle Bin
         if(auth()->user()->cant('delete', $auc))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Delete Assets Under Construction.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Delete Assets Under Construction.');
 
         }
 
@@ -220,9 +237,9 @@ class AUCController extends Controller {
     public function recycleBin()
     {
         //Check to see if the users have permissions to view the recycle bin
-        if(auth()->user()->cant('delete', AUC::class))
+        if(auth()->user()->cant('recycleBin', AUC::class))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Recycle Assets Under Construction.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Recycle Assets Under Construction.');
 
         }
 
@@ -247,7 +264,7 @@ class AUCController extends Controller {
         //Check to see if the user has permission to restore the property
         if(auth()->user()->cant('delete', $auc))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Restore Assets Under Construction.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Restore Assets Under Construction.');
 
         }
 
@@ -269,7 +286,7 @@ class AUCController extends Controller {
         //Check to see if the user has permission to restore the Collection
         if(auth()->user()->cant('delete', $auc))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Delete Assets Under Construction.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Delete Assets Under Construction.');
 
         }
         //Assign the name to a variable else will not be able to reference the name in hte session flash
@@ -325,12 +342,13 @@ class AUCController extends Controller {
                 session(['auc_start' => $request->start]);
                 session(['auc_end' => $request->end]);
             }
-            session(['assets_min' => $request->minCost]);
-            session(['assets_max' => $request->maxCost]);
+
+            session(['auc_min' => $request->minCost]);
+            session(['auc_max' => $request->maxCost]);
         }
 
-        //Check the Users Locations Permissions
-        $locations = Location::select('id', 'name')->withCount('aocs')->get();
+        //Find the locations that the user has been assigned to
+        $locations = Location::whereIn('id', auth()->user()->locations->pluck('id'))->select('id', 'name')->withCount('auc')->get();
 
         $auc = AUC::locationFilter($locations->pluck('id'));
 
@@ -342,14 +360,14 @@ class AUCController extends Controller {
 
         if(session()->has('auc_start') && session()->has('auc_end'))
         {
-            $auc->purchaseFilter(session('auc_start'), session('auc_end'));
+            $auc->purchaseFilter(Carbon::parse(session('auc_start')), Carbon::parse(session('auc_end')));
             session(['auc_filter' => true]);
         }
 
-        if(session()->has('assets_min') && session()->has('assets_max'))
+        if(session()->has('auc_min') && session()->has('auc_max'))
         {
-            $auc->costFilter(session('assets_min'), session('assets_max'));
-            session(['assets_filter' => true]);
+            $auc->costFilter(session('auc_min'), session('auc_max'));
+            session(['auc_filter' => true]);
 
         }
 
@@ -359,8 +377,8 @@ class AUCController extends Controller {
             session(['auc_filter' => true]);
         }
 
-        $auc->leftJoin('locations', 'auc.location_id', '=', 'locations.id')
-            ->orderBy(session('auc_orderby') ?? 'date', session('auc_direction') ?? 'asc')
+        $auc->leftJoin('locations', 'a_u_c_s.location_id', '=', 'locations.id')
+            ->orderBy(session('auc_orderby') ?? 'purchased_date', session('auc_direction') ?? 'asc')
             ->select('a_u_c_s.*', 'locations.name as location_name');
         $limit = session('auc_limit') ?? 25;
 
@@ -373,21 +391,20 @@ class AUCController extends Controller {
     public function clearFilter()
     {
         //Clear the Filters for the properties
-        session()->forget(['property_filter', 'property_locations', 'property_start', 'property_end', 'property_amount', 'property_search']);
+        session()->forget(['auc_filter', 'auc_locations', 'auc_start', 'auc_end', 'auc_min', 'auc_max', 'auc_search']);
 
-        return to_route('property.index');
+        return to_route('aucs.index');
     }
 
-     ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
     ///////////////PDF Functions////////////////////////////
     ////////////////////////////////////////////////////////
-
 
     public function downloadPDF(Request $request)
     {
         if(auth()->user()->cant('viewAll', AUC::class))
         {
-            return ErrorController::forbidden(to_route('properties.index'), 'Unauthorised | Download of Assets Under Construction Report.');
+            return ErrorController::forbidden(route('properties.index'), 'Unauthorised | Download of Assets Under Construction Report.');
 
         }
         $aucs = array();
@@ -425,7 +442,7 @@ class AUCController extends Controller {
     {
         if(auth()->user()->cant('generateShowPDF', $auc))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised | Download of Property Information.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised | Download of Property Information.');
 
         }
 
@@ -450,7 +467,7 @@ class AUCController extends Controller {
     {
         if(auth()->user()->cant('create', AUC::class))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised | Import Properties.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised | Import Properties.');
 
         }
         $extensions = array("csv");
@@ -517,7 +534,7 @@ class AUCController extends Controller {
 
                 }
 
-                return view('auc.importErrors', [
+                return view('AUC.importErrors', [
                     "errorArray" => $errorArray,
                     "valueArray" => $valueArray,
                     "errorValues" => $errorValues,
@@ -585,7 +602,7 @@ class AUCController extends Controller {
 
         if(auth()->user()->cant('viewAll', AUC::class))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised to Export AUC Errors.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised to Export AUC Errors.');
 
         }
 
@@ -602,7 +619,7 @@ class AUCController extends Controller {
     {
         if(auth()->user()->cant('viewAll', Property::class))
         {
-            return ErrorController::forbidden(to_route('aucs.index'), 'Unauthorised | Export AUC Information.');
+            return ErrorController::forbidden(route('aucs.index'), 'Unauthorised | Export AUC Information.');
 
         }
         $aucs = AUC::withTrashed()->whereIn('id', json_decode($request->aucs))->with('location')->get();
@@ -616,5 +633,22 @@ class AUCController extends Controller {
 
     }
 
+    ////////////////////////////////////////
+    /////////// Comment Functions ///////////
+    ////////////////////////////////////////
+
+    public function newComment(Request $request)
+    {
+        $request->validate([
+            "title" => "required|max:255",
+            "comment" => "nullable",
+        ]);
+
+        $auc = AUC::find($request->auc_id);
+        $auc->comment()->create(['title' => $request->title, 'comment' => $request->comment, 'user_id' => auth()->user()->id]);
+        session()->flash('success_message', $request->title . ' has been created successfully');
+
+        return to_route('aucs.show', $auc->id);
+    }
 
 }

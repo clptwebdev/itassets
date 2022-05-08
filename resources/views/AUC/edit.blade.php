@@ -9,7 +9,8 @@
 @section('content')
     <x-form.layout :action="route('aucs.update' , $auc->id)">
         <x-wrappers.nav title="Asset Under Construction">
-            <x-buttons.return :route="route('aucs.index')"> AUC</x-buttons.return>
+            <x-buttons.return :route="route('aucs.index')"> all AUCs</x-buttons.return>
+            <x-buttons.return :route="route('aucs.show', $auc->id)"> {{$auc->name}}</x-buttons.return>
             <a href="{{ route('documentation.index')."#collapseThreeAssets"}}"
                class="btn btn-sm  bg-yellow shadow-sm p-2 p-md-1"><i
                     class="fas fa-question fa-sm text-dark-50 mr-lg-1"></i><span
@@ -21,7 +22,6 @@
                 <div class="col-12">
                     <div class="card shadow h-100">
                         <div class="card-body">
-                            <x-form.errors/>
                             <x-handlers.alerts/>
 
 
@@ -100,11 +100,11 @@
                                                 <div
                                                     class="model_image p-4 d-flex justify-content-center align-items-middle">
                                                     @if($auc->location()->exists() && $auc->location->photo()->exists())
-                                                        <img id="profileImage"
+                                                        <img id="profileImage" onclick='getPhotoPage(1)'
                                                              src="{{ asset($auc->location->photo->path) }}"
                                                              height="200px" alt="Select Profile Picture">
                                                     @else
-                                                        <img id="profileImage"
+                                                        <img id="profileImage" onclick='getPhotoPage(1)'
                                                              src="{{ asset('images/svg/location-image.svg') }}"
                                                              height="200px" alt="Select Profile Picture">
                                                     @endif

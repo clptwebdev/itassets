@@ -111,10 +111,10 @@ class ComponentsImport extends DefaultValueBinder implements ToModel, WithValida
         if($this->isBinary($row["purchased_cost"]))
         {
             $binary = preg_replace('/[[:^print:]]/', '', $row['purchased_cost']);
-            $component->purchased_cost = floatval($binary);
+            $component->purchased_cost = str_replace(',', '', $binary);
         } else
         {
-            $component->purchased_cost = floatval($row["purchased_cost"]);
+            $component->purchased_cost = str_replace(',', '', $row["purchased_cost"]);
         }
 
         //check for already existing Suppliers upon import if else create
