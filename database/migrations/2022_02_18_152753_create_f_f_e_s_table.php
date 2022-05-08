@@ -27,8 +27,8 @@ class CreateFFESTable extends Migration
             $table->string("warranty")->default("0")->nullable();
             $table->foreignId("depreciation_id");
             $table->foreignId("location_id");
+            $table->foreignId("user_id");
             $table->string("room");
-            $table->foreignId("photo_id")->default("0");;
             $table->text("notes")->nullable();
             $table->softDeletes();
             $table->timestamps();

@@ -11,13 +11,6 @@ class VehiclePolicy {
 
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    private $model;
-
     public function __construct()
     {
         $this->model = auth()->user()->role->permissions->where('model', ' = ', 'Vehicle')->first();

@@ -22,6 +22,7 @@ class CreateMachineriesTable extends Migration
             $table->dateTime("purchased_date");
             $table->foreignId('supplier_id');
             $table->foreignId('location_id');
+            $table->foreignId('user_id');
             $table->softDeletes();
             $table->timestamps();
         });

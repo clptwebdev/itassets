@@ -21,6 +21,7 @@ class CreateAUCSTable extends Migration
             $table->integer("depreciation");
             $table->dateTime("purchased_date");
             $table->foreignId('location_id');
+            $table->foreignId('user_id');
             $table->softDeletes();
             $table->timestamps();
         });
