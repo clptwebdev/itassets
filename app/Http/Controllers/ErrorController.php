@@ -12,11 +12,11 @@ class ErrorController extends Controller {
     public static function forbidden($link, $message)
     {
 
-        return view('errors.403', [
+        return response(view('errors.403', [
             "link" => $link ?? '/',
             'message' => $message ?? 'Unauthorised for this action.',
 
-        ]);
+        ]), 403);
 
     }
 

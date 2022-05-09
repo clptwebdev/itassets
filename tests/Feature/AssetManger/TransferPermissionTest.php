@@ -25,7 +25,7 @@ class TransferPermissionTest extends TestCase {
         $locationOne = Location::factory()->create();
         $locationTwo = Location::factory(1)->create();
         $this->actingAs($notAdmin)->get('/assets')
-            ->assertSuccessful();
+            ->assertForbidden();
         //create a new asset
         $asset2 = Asset::factory(1)->create(['location_id' => $locationTwo->first()->id])->first();
         //do transfer logic again see if automatically goes through or not

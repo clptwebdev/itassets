@@ -28,7 +28,7 @@ class UpdateManufacturerAuthTest extends TestCase {
             "photoId" => $manufacturer->photoID,
         ])->assertRedirect(action([ManufacturerController::class, 'show'], $manufacturer->id))
             ->assertSessionHas('success_message');
-//
+
         $this->assertNotEquals('title for Updating', $manufacturer->name);
 
 // updates the title of the post
