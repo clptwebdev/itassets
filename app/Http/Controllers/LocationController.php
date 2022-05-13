@@ -164,7 +164,8 @@ class LocationController extends Controller {
         return \Maatwebsite\Excel\Facades\Excel::download(new LocationsExport, 'Location.xlsx');
     }
 
-    public function businessExport(Location $location){
+    public function businessExport(Location $location)
+    {
 
         if(auth()->user()->cant('businessReports', $location))
         {
@@ -174,9 +175,9 @@ class LocationController extends Controller {
 
         $user = auth()->user();
 
-        $name = strtolower(str_replace(' ', '-', $location->name).'-asset-register');
+        $name = strtolower(str_replace(' ', '-', $location->name) . '-asset-register');
         $date = \Carbon\Carbon::now()->format('dmyHis');
-        $path = $name .'-'. $date.'.xlsx';
+        $path = $name . '-' . $date . '.xlsx';
         $url = "public/csv/{$path}";
         $route = "storage/csv/{$path}";
 
