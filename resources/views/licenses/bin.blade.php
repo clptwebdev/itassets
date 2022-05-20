@@ -46,8 +46,8 @@
                         @foreach($licenses as $license)
                             <tr>
                                 <td class="text-left">{{$license->name ?? 'No License Name'}}</td>
-                                <td class="text-center">{{$license->supplier->name}}</td>
-                                <td class="text-center">{{$license->location->name}}</td>
+                                <td class="text-center">{{$license->supplier->name ?? 'N/A'}}</td>
+                                <td class="text-center">{{$license->location->name ?? 'N/A'}}</td>
                                 <td class="text-center">£{{number_format($license->purchased_cost, 2, '.', ',')}}</td>
                                 <td class="text-center"><span>{{ \Illuminate\Support\Carbon::parse($license->expiry)->format('d-M-Y')}}
                                     </span><br>@if($license->isExpired())<small
