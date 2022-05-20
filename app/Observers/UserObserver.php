@@ -39,7 +39,7 @@ class UserObserver {
             'log_date' => Carbon::now(),
             'loggable_type' => 'user',
             'loggable_id' => $user->id,
-            'data' => "{$name} created a new user with '{$role}' permissions. Access has been granted for {$schools}",
+            'data' => $this->user . " created a new user with '{$role}' permissions. Access has been granted for {$schools}",
         ]);
     }
 
