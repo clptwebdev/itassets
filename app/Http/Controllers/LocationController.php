@@ -159,6 +159,7 @@ class LocationController extends Controller {
         {
             return ErrorController::forbidden(route('location.index'), 'Unauthorised to Export Locations.');
 
+            
         }
 
         return \Maatwebsite\Excel\Facades\Excel::download(new LocationsExport, 'Location.xlsx');

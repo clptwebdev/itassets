@@ -243,7 +243,7 @@ class AssetController extends Controller {
                 $asset->fields()->attach($array);
             }
 
-            if(! empty(explode(',', $request->category)))
+            if($request->category != "" && ! empty(explode(',', $request->category)))
             {
                 $asset->category()->attach(explode(',', $request->category));
             }
