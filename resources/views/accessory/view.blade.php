@@ -144,7 +144,7 @@
                                         £{{$accessory->purchased_cost}} @if($accessory->donated == 1) <span
                                             class="text-sm">*Donated</span> @endif
                                         <br>
-                                        <small>(*£{{ number_format($accessory->depreciation_value(), 2)}})</small>
+                                      
                                     </td>
                                     <td class="d-none d-xl-table-cell">{{$accessory->supplier->name ?? 'N/A'}}</td>
                                     @php $warranty_end = \Carbon\Carbon::parse($accessory->purchased_date)->addMonths($accessory->warranty);@endphp

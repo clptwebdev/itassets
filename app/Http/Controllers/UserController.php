@@ -55,7 +55,7 @@ class UserController extends Controller {
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|unique:users|email:rfc,dns,spoof,filter',
+            'email' => 'required|unique:users|email:rfc,dns,filter',
             'role_id' => 'required',
         ]);
 
@@ -90,8 +90,10 @@ class UserController extends Controller {
 
     public function edit(User $user)
     {
+
         if(auth()->user()->cant('update', $user))
         {
+
             return ErrorController::forbidden(route('users.index'), 'Unauthorised to Edit User.');
         }
         if(auth()->user()->role->significance >= $user->role->significance)
@@ -102,9 +104,9 @@ class UserController extends Controller {
             return view('users.edit', compact('user', 'locations', 'roles'));
         } else
         {
+
             return ErrorController::forbidden(route('users.index'), 'Unauthorised to Edit This User (Incorrect Significance)');
         }
-
 
     }
 
@@ -119,7 +121,7 @@ class UserController extends Controller {
 
         $validated = $request->validate([
             'name' => 'required|max:255',
-            'email' => ['required', \Illuminate\Validation\Rule::unique('users')->ignore($user->id), 'email:rfc,dns,spoof,filter'],
+            'email' => ['required', \Illuminate\Validation\Rule::unique('users')->ignore($user->id), 'email:rfc,dns,filter'],
             'role_id' => 'required',
         ]);
 

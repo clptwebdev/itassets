@@ -2,17 +2,14 @@
 
 namespace AssetManger;
 
-use App\Http\Controllers\UserController;
 use App\Jobs\RoleBoot;
 use App\Mail\NewUserPassword;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Testing\Fakes\MailFake;
 use Tests\TestCase;
 
-class UserControllerMail extends TestCase {
+class UserControllerMailTest extends TestCase {
 
     public function test_New_User_Creation()
     {

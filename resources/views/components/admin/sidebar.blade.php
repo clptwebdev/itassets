@@ -18,7 +18,7 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
-    @if(auth()->user()->role_id != 0)
+@if(auth()->user()->role_id != 0)
     <!-- Nav Item - Dashboard -->
         <li class="nav-item @if(Request::url() == route('dashboard')) {{ 'active' }} @endif">
             <a class="nav-link" href="{{ route('dashboard')}}">
@@ -49,16 +49,14 @@
         @endcan
         @can('viewAll' , \App\Models\Machinery::class)
             <li class="nav-item @if(Request::url() == route('machineries.index') || Str::contains(Request::url(), ['machinery', 'machineries'])) {{ 'active' }} @endif">
-                <a class="nav-link text-left text-sm-center text-md-left"
-                   href="{{route('machineries.index')}}">
+                <a class="nav-link text-left text-sm-center text-md-left" href="{{route('machineries.index')}}">
                     <i class="fas fa-fw fa-tractor sidebar-icon"></i>
                     <span class="sidebar-title">Plant and Machinery</span></a>
             </li>
         @endcan
         @can('viewAll' , \App\Models\Vehicle::class)
             <li class="nav-item @if(Request::url() == route('vehicles.index') || Str::contains(Request::url(), ['vehicle', 'vehicles'])) {{ 'active' }} @endif">
-                <a class="nav-link text-left text-sm-center text-md-left"
-                   href="{{route('vehicles.index')}}">
+                <a class="nav-link text-left text-sm-center text-md-left" href="{{route('vehicles.index')}}">
                     <i class="fas fa-fw fa-bus sidebar-icon"></i>
                     <span class="sidebar-title">Motor Vehicles</span></a>
             </li>
@@ -97,7 +95,8 @@
                         $statuses = App\Models\Status::all();
                     @endphp
                     <a href="#statusMenu" class="sub-link collapse-item collapsed d-none d-sm-block"
-                       data-bs-toggle="collapse" data-bs-parent="#statusMenu"><i class="fas fa-shield-alt fa-xs"></i> By Status</a>
+                       data-bs-toggle="collapse" data-bs-parent="#statusMenu"><i class="fas fa-shield-alt fa-xs"></i> By
+                                                                                                                      Status</a>
                     <div class="collapse p-2" id="statusMenu">
                         @foreach($statuses as $status)
                             <a href="{{ route('assets.status', $status->id)}}" title="Add New Asset"
@@ -151,8 +150,9 @@
                         class="sidebar-title  @if(Request::url() == route('accessories.index')  || Str::contains(Request::url(), ['accessory', 'accessories'])) {{ 'font-weight-bold text-white' }} @endif">CPU Accessories <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
-                <div id="accessoryDD" class="collapse p-0 text-center text-lg-left @if(Request::url() == route('accessories.index')  || Str::contains(Request::url(), ['accessory', 'accessories'])) {{ 'show' }} @endif" aria-labelledby="accessoryTitle"
-                     data-bs-parent="#accordionSidebar">
+                <div id="accessoryDD"
+                     class="collapse p-0 text-center text-lg-left @if(Request::url() == route('accessories.index')  || Str::contains(Request::url(), ['accessory', 'accessories'])) {{ 'show' }} @endif"
+                     aria-labelledby="accessoryTitle" data-bs-parent="#accordionSidebar">
                     @can('viewAll'  ,\App\Models\Accessory::class)
                         <a class="collapse-item sub-link" href="{{ route('accessories.index')}}"><i
                                 class="far fa-circle text-secondary"></i> View All</a>
@@ -184,12 +184,12 @@
                    aria-expanded="true" aria-controls="componentsDD">
                     <i class="far fa-fw fa-hdd sidebar-icon"></i>
                     <span
-                        class="sidebar-title @if(Request::url() == route('components.index')  || Str::contains(Request::url(), ['component', 'components'])) {{ 'font-weight-bold text-white' }} @endif
-                        ">CPU Components <i
+                        class="sidebar-title @if(Request::url() == route('components.index')  || Str::contains(Request::url(), ['component', 'components'])) {{ 'font-weight-bold text-white' }} @endif">CPU Components <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
-                <div id="componentsDD" class="collapse @if(Request::url() == route('components.index')  || Str::contains(Request::url(), ['component', 'components'])) {{ 'show' }} @endif" aria-labelledby="componentsTitle"
-                     data-bs-parent="#accordionSidebar">
+                <div id="componentsDD"
+                     class="collapse @if(Request::url() == route('components.index')  || Str::contains(Request::url(), ['component', 'components'])) {{ 'show' }} @endif"
+                     aria-labelledby="componentsTitle" data-bs-parent="#accordionSidebar">
                     @can('viewAll',\App\Models\Component::class)
 
 
@@ -228,8 +228,9 @@
                         class="sidebar-title @if(Request::url() == route('miscellaneous.index') || Str::contains(Request::url(), ['miscellaneous', 'miscellanea'])) {{ 'font-weight-bold text-white' }} @endif">Miscellaneous <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
-                <div id="miscellaneousDD" class="collapse @if(Request::url() == route('miscellaneous.index') || Str::contains(Request::url(), ['miscellaneous', 'miscellanea'])) {{ 'show' }} @endif" aria-labelledby="consumableTitle"
-                     data-bs-parent="#accordionSidebar">
+                <div id="miscellaneousDD"
+                     class="collapse @if(Request::url() == route('miscellaneous.index') || Str::contains(Request::url(), ['miscellaneous', 'miscellanea'])) {{ 'show' }} @endif"
+                     aria-labelledby="consumableTitle" data-bs-parent="#accordionSidebar">
                     @can('viewAny' , \App\Models\Miscellanea::class)
 
                         <a class="collapse-item" href="{{ route('miscellaneous.index')}}">View All</a>
@@ -265,7 +266,7 @@
                     <span class="sidebar-title">Broadband</span></a>
             </li>
         @endcan
-        @can('viewAll',\App\Models\Order::class )
+        @can('viewAll',\App\Models\Asset::class )
             <hr class="sidebar-divider">
             <li class="nav-item">
                 <a class="nav-link text-left text-sm-center text-md-left @if(Request::url() == route('orders.index') || Str::contains(Request::url(), ['orders', 'order'])) {{ 'font-weight-bold text-white' }} @endif"
@@ -286,8 +287,9 @@
                         class="sidebar-title @if(Request::url() == route('users.index') || Str::contains(Request::url(), ['users', 'user'])) {{ 'font-weight-bold text-white' }} @endif">Users <i
                             class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
-                <div id="collapsePages" class="collapse @if(Request::url() == route('users.index') || Str::contains(Request::url(), ['users', 'user'])) {{ 'show' }} @endif" aria-labelledby="headingPages"
-                     data-bs-parent="#accordionSidebar">
+                <div id="collapsePages"
+                     class="collapse @if(Request::url() == route('users.index') || Str::contains(Request::url(), ['users', 'user'])) {{ 'show' }} @endif"
+                     aria-labelledby="headingPages" data-bs-parent="#accordionSidebar">
                     @can('viewAll',\App\Models\User::class)
                         <a class="collapse-item" href="{{ route('users.index')}}">View Users</a>
                     @endcan
@@ -341,7 +343,9 @@
                 <a class="nav-link collapsed text-left text-sm-center text-md-left" href="#" data-bs-toggle="collapse"
                    data-bs-target="#settingPages" aria-expanded="true" aria-controls="settingPages">
                     <i class="fas fa-fw fa-cogs sidebar-icon mx-auto"></i>
-                    <span class="sidebar-title @if(Request::url() == route('settings.view') || Str::contains(Request::url(), ['setting', 'settings'])) {{ 'font-weight-bold text-white' }} @endif">Settings <i class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
+                    <span
+                        class="sidebar-title @if(Request::url() == route('settings.view') || Str::contains(Request::url(), ['setting', 'settings'])) {{ 'font-weight-bold text-white' }} @endif">Settings <i
+                            class="fas fa-fw fa-caret-down sidebar-icon"></i></span>
                 </a>
                 <div id="settingPages" class="collapse" aria-labelledby="headingPages"
                      data-bs-parent="#accordionSidebar">

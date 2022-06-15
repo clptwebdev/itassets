@@ -2,9 +2,7 @@
 
 namespace AssetManger;
 
-use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\RequestsController;
-use App\Http\Controllers\TransferController;
 use App\Jobs\RoleBoot;
 use App\Models\Asset;
 use App\Models\Location;
@@ -12,13 +10,14 @@ use App\Models\Requests;
 use App\Models\Transfer;
 use App\Models\User;
 use Carbon\Carbon;
-use Database\Factories\AssetFactory;
 use Tests\TestCase;
+use function action;
 
-class TransferPermission extends TestCase {
+class TransferPermissionTest extends TestCase {
 
     public function test_transfer_without_permission()
     {
+
         $this->withoutExceptionHandling();
         RoleBoot::dispatch();
         $notAdmin = User::factory(['role_id' => 7])->create();
@@ -26,7 +25,7 @@ class TransferPermission extends TestCase {
         $locationOne = Location::factory()->create();
         $locationTwo = Location::factory(1)->create();
         $this->actingAs($notAdmin)->get('/assets')
-            ->assertSuccessful();
+            ->assertForbidden();
         //create a new asset
         $asset2 = Asset::factory(1)->create(['location_id' => $locationTwo->first()->id])->first();
         //do transfer logic again see if automatically goes through or not

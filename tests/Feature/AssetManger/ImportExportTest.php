@@ -9,8 +9,10 @@ use Carbon\Carbon;
 use Excel;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
+use function action;
+use function asset;
 
-class ImportExport extends TestCase {
+class ImportExportTest extends TestCase {
 
     public function test_file_import_fail()
     {

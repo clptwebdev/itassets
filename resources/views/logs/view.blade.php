@@ -145,7 +145,7 @@
                                 <td class="text-left text-sm">@if($log->user()->exists()) {{ $log->user->name ?? 'Authentication'}} @else {{ 'Authentication' }} @endif</td>
                                 <td>{{ $log->loggable_type}}</td>
                                 <td>{{ $log->loggable_id }}</td>
-                                <td class="text-center">{{ $log->updated_at->diffForHumans() }}</td>
+                                <td class="text-center">{{ $log->created_at->diffForHumans() }}</td>
                             </tr>
                         @endforeach
                         </tbody>

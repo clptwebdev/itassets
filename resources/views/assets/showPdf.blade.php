@@ -290,17 +290,19 @@
         <table class="table">
             <thead>
             <tr style="background-color: #454777; padding: 10px; color: #fff;">
-                <th>Recent Actvity</th>
+                <th>Recent Activity</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($asset->logs()->orderBy('created_at', 'desc')->take(30)->get() as $log)
-                <tr>
-                    <td class="text-left">{{$log->data}}<br><span
-                            class="text-info">{{ $log->user->name }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $log->created_at, 'Europe/London');}}</span>
-                    </td>
-                </tr>
-            @endforeach
+            <?php $logs = $asset->logs()->orderBy('created_at', 'desc')->take(30)->get() ?>
+            @if($logs->first())
+                @foreach($logs as $log)
+                    <tr>
+                        <td class="text-left">{{$log->data}}<br><span class="text-info">{{ $log->user->name ?? 'N/A' }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $log->created_at, 'Europe/London')}}</span>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
             </tbody>
         </table>
     @endif

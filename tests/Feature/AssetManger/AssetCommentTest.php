@@ -5,12 +5,13 @@ namespace AssetManger;
 use App\Jobs\RoleBoot;
 use App\Models\Asset;
 use App\Models\Comment;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AssetComment extends TestCase {
+class AssetCommentTest extends TestCase {
 
     // must start with test_ to run test
+
+    /** @test */
     public function test_with_factories()
     {
         //shows error instead of request number like 404

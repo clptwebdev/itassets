@@ -1,7 +1,21 @@
-@props(['models'=>null , 'model' ,'tag'=>null])
+@props(['models'=>null , 'model'=>'Asset' ,'tag'=>null])
 <!-- Transfer Modal-->
-@php    $m = "\\App\\Models\\" . ucfirst($model);   $table = $m::first()->getTable();@endphp
+@if($model != null)
+    @php
+        $m = "\\App\\Models\\" . ucfirst($model);
+            if($model){
+                $firstM = $m::first();
 
+                if($firstM){
+
+                $table =$firstM->getTable();
+                }else{
+					$table = 'assets';
+                }
+
+                }
+    @endphp
+@endif
 <div class="modal fade bd-example-modal-lg" id="requestTransfer" tabindex="-1" role="dialog"
      aria-labelledby="requestTransferLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -67,3 +81,4 @@
         </div>
     </div>
 </div>
+

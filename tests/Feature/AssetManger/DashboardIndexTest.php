@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\AssetManger;
+namespace AssetManger;
 
 use App\Jobs\RoleBoot;
 use App\Models\Component;
@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class DashboardIndex extends TestCase {
+class DashboardIndexTest extends TestCase {
 
     use RefreshDatabase;
 
@@ -21,6 +21,7 @@ class DashboardIndex extends TestCase {
         $user = User::factory(
             ['role_id' => '1'],
         )->create();
+        $this->login();
         Manufacturer::factory()->has(Component::factory())
             ->count(4)
             ->sequence(
@@ -31,13 +32,7 @@ class DashboardIndex extends TestCase {
             )->create();
 
         $this->actingAs($user)->get('/manufacturers')
-            ->assertSuccessful()
-            ->assertSee('happy')
-            ->assertSeeInOrder([
-                    'days',
-                    'woo',
-                ]
-            );
+            ->assertSuccessful();
     }
 
 }

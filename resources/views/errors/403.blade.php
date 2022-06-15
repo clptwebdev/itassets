@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://fonts.googleapis.com/css?family=Raleway:500,800" rel="stylesheet">
-    <title>Document</title>
+    <title>403 - forbidden</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         * {
@@ -91,9 +91,10 @@
 <h1>403 - access forbidden!</h1>
 
 <h2>
-    {{ $message }}
+    {{ $message ?? 'Unauthorized Access'}}
 </h2>
-<div class="container text-center mt-4"><a href="{{$link}}"" class="btn btn-main p-2 text-center">Return to Button</a>
+<div class="container text-center mt-4"><a href="{{$link ?? '/'}}" class="btn btn-main p-2 text-center">Return to
+                                                                                                        Button</a>
 </div>
 </body>
 </html>

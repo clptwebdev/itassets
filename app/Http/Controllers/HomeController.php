@@ -49,13 +49,13 @@ class HomeController extends Controller {
         $request->validate([
             'name' => 'required',
         ]);
-        $assets = Asset::searchFilter($request->name)->get();
-        $FFE = FFE::searchFilter($request->name)->get();
-        $accessory = Accessory::searchFilter($request->name)->get();
+        $assets = Asset::locationFilter(auth()->user()->locations->pluck('id')->toArray())->searchFilter($request->name)->get();
+        $FFE = FFE::locationFilter(auth()->user()->locations->pluck('id')->toArray())->searchFilter($request->name)->get();
+        $accessory = Accessory::locationFilter(auth()->user()->locations->pluck('id')->toArray())->searchFilter($request->name)->get();
 
-        $component = Component::searchFilter($request->name)->get();
-        $misc = Miscellanea::searchFilter($request->name)->get();
-        $consumable = Consumable::searchFilter($request->name)->get();
+        $component = Component::locationFilter(auth()->user()->locations->pluck('id')->toArray())->searchFilter($request->name)->get();
+        $misc = Miscellanea::locationFilter(auth()->user()->locations->pluck('id')->toArray())->searchFilter($request->name)->get();
+        $consumable = Consumable::locationFilter(auth()->user()->locations->pluck('id')->toArray())->searchFilter($request->name)->get();
         $merged = collect([$FFE, $accessory, $component, $misc, $consumable, $assets]);
         $single = Collection::empty();
         //foreach $model then Foreach $item Push to a single collection

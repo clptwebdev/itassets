@@ -432,7 +432,6 @@ class AssetController extends Controller {
     //////////// Delete Functions /////////////////
     ///////////////////////////////////////////////
 
-
     public function destroy(Asset $asset)
     {
 
@@ -1174,7 +1173,8 @@ class AssetController extends Controller {
 
     public function downloadShowPDF(Asset $asset)
     {
-        if(auth()->user()->cant('view', $asset))
+
+        if(auth()->user()->cant('viewAll', Asset::class))
         {
             return ErrorController::forbidden(route('assets.index'), 'Unauthorised to Download Assets.');
 

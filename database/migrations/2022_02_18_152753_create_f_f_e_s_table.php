@@ -28,7 +28,7 @@ class CreateFFESTable extends Migration
             $table->foreignId("depreciation_id");
             $table->foreignId("location_id");
             $table->string("room")->nullable();
-            $table->foreignId("photo_id")->default("0");;
+            $table->foreignId("photo_id")->default("0");
             $table->text("notes")->nullable();
             $table->softDeletes();
             $table->timestamps();
