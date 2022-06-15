@@ -397,7 +397,7 @@ class AssetController extends Controller {
         {
             $asset->fields()->sync($array);
         }
-        if(! empty($request->category))
+        if($request->category != "" && ! empty(explode(',', $request->category)))
         {
             $asset->category()->sync(explode(',', $request->category));
         }

@@ -300,7 +300,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <x-form.input name="warranty"/>
+                                                <x-form.input name="warranty" title="Warranty (Months)"/>
                                             </div>
                                         </div>
 
