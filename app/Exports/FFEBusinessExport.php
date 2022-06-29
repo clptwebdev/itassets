@@ -204,7 +204,7 @@ class FFEBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, With
             $nbv1 += $ffe->depreciation_value_by_date($nbvYear1);
             $nbv2 += $ffe->depreciation_value_by_date($nbvYear2);
             $object[] = $array;
-            if(strtolower(str_replace('App\\Models\\', '', get_class($property))) == 'archive')
+            if(strtolower(str_replace('App\\Models\\', '', get_class($ffe))) == 'archive')
             {
                 $this->archived[] = $this->row;
             }
