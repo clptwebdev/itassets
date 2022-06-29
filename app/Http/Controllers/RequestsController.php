@@ -21,7 +21,12 @@ class RequestsController extends Controller {
     {
         $authUser = auth()->user()->id;
         $mangersUsers = User::whereManagerId($authUser)->pluck('id')->toArray();
-        $requests = Requests::managerFilter($mangersUsers)->orderBy('created_at', 'desc')->paginate(25);
+
+        if(auth()->user()->role_id === 1){
+            $requests = Requests::orderBy('created_at', 'desc')->paginate(25);
+        }else{
+            $requests = Requests::managerFilter($mangersUsers)->orderBy('created_at', 'desc')->paginate(25);
+        }
         //Returns the View for the list of requests
         $locations = Location::all();
 
