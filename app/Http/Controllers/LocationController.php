@@ -187,7 +187,7 @@ class LocationController extends Controller {
 
         $report = Report::create(['report' => $route, 'user_id' => $user->id]);
 
-        return to_route('business')
+        return to_route('dashboard')
             ->with('success_message', "Your Report is being processed, check your reports here - <a href='/reports/' title='View Report'>Generated Reports</a> ")
             ->withInput();
     }
