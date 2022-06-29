@@ -167,7 +167,7 @@ class VehicleBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, 
             $nbv1 += $vehicle->depreciation_value_by_date($nbvYear1);
             $nbv2 += $vehicle->depreciation_value_by_date($nbvYear2);
             $object[] = $array;
-            if(strtolower(str_replace('App\\Models\\', '', get_class($property))) == 'archive')
+            if(strtolower(str_replace('App\\Models\\', '', get_class($vehicle))) == 'archive')
             {
                 $this->archived[] = $this->row;
             }
