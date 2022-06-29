@@ -171,6 +171,7 @@ class VehicleBusinessExport implements FromArray, WithHeadings, ShouldAutoSize, 
             {
                 $this->archived[] = $this->row;
             }
+            
             $this->row++;
         }
         $blank = [];
