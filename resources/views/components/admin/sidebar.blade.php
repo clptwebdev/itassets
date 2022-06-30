@@ -9,7 +9,7 @@
     <!-- Sidebar - Brand -->
 
     <a class="d-flex flex-column align-items-center justify-content-center p-2 pt-0 pb-4"
-       href=" @if(!auth()->user()->isBusiness()){{ route('dashboard')  }}    @else {{ route('business')  }} @endif">
+       href="{{ route('dashboard')  }}">
         <div id="app-logo">
             <x-application-logo/>
         </div>
