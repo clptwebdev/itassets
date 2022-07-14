@@ -74,7 +74,7 @@
                                                 <small class="form-text text-muted">Can't find the Model your
                                                                                     after?
                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#newModel"> Click
-                                                                                                                   Here</a>to
+                                                                                                                   Here</a> to
                                                                                     create one.</small>
                                             </div>
                                             <div class="form-group">
@@ -99,7 +99,7 @@
                                                 }
                                             @endphp
                                             <div id="additional-fields"
-                                                 @if($asset->model()->exists() && $model->fieldset_id == 0){{ 'style="display: none;"'}}@endif class="border border-gray p-2 mb-3">
+                                                 @if($asset->model()->exists() && $model->fieldset_id == 0){{ 'style="display: none;"'}}@endif class="" mb-3">
                                                 @if($asset->model()->exists() && $model->fieldset()->exists())
                                                     @php( $field_array = [])
                                                     @foreach($asset->fields as $as)
@@ -184,16 +184,14 @@
                                         </div>
                                         <div class="col-12 col-md-6 p-4 mb-3 ">
                                             <div id="modelInfo" class="bg-light p-4">
-                                                <div
-                                                    class="model_title text-center h4 mb-3">{{ $asset->model->name ?? 'Asset Model' }}</div>
+                                                <div class="model_title text-center h4 mb-3">{{ $asset->model->name ?? 'Asset Model' }}</div>
                                                 <div class="model_image p-4">
                                                     @if($asset->model()->exists() && $asset->model->photo()->exists())
                                                         @php($path = $asset->model->photo()->path ?? asset('images/svg/device-image.svg'))
                                                     @else
                                                         @php($path = asset('images/svg/device-image.svg'))
                                                     @endif
-                                                    <img id="profileImage" onclick='getPhotoPage(1)' src="{{ $path }}"
-                                                         height="150px" alt="Select Profile Picture">
+                                                    <img id="profileImage" onclick='getPhotoPage(1)' src="{{ $path }}" height="150px" alt="Select Profile Picture">
                                                 </div>
                                                 <div class="model_no py-2 px-4">
                                                     Manufacturer: {{ $asset->model->manufacturer->name ?? 'No Manufacturer found'}}
@@ -212,7 +210,7 @@
                                                     @endif
                                                 </div>
                                                 <div class="model_no py-2 px-4">
-                                                    @if($asset->model)
+                                                    @if($asset->model && $asset->model->fieldset)
                                                         Additional Fieldsets: {{ $asset->model->fieldset->name}}
                                                     @endif
                                                 </div>
