@@ -180,13 +180,41 @@ class RequestsController extends Controller {
         $m = "\\App\\Models\\" . ucfirst($requests->model_type);
         $model = $m::find($requests->model_id);
 
-        if(auth()->user()->can('bypass_transfer', $model))
-        {
+        if(auth()->user()->can('bypass_transfer', $model)){
 
             //Additional Field to be stored in the Fields Array then passed to the Options Column in the DB
             $fields = [];
 
-            if($request->model_type == 'asset' && $model->model()->exists())
+
+            if($request->model_type == 'asset'){
+                //If the model is of an asset type
+                if($model->model()->exists() && $model->model->depreciation()->exists())
+                {
+                    $years = $model->model->depreciation->years;
+                } else
+                {
+                    $years = 0;
+                }
+            }else{
+                if( $model->depreciation_id && $model->depreciation_id != 0)           {
+                    if($model->depreciation()->exists())
+                    {
+                        $years = $model->depreciation->years;
+    
+                        $fields['depreciation_id'] = $model->depreciation_id;
+                    } else
+                    {
+                        $years = 0;
+                    }
+                }elseif($model->depreciation && $model->depreciation != 0){
+                    $years = $model->depreciation;
+                }else{
+                    $years = 0;
+                }
+            }
+
+
+         /*    if($request->model_type == 'asset' && )
             {
                 if($model->model->depreciation()->exists())
                 {
@@ -195,9 +223,8 @@ class RequestsController extends Controller {
                 } else
                 {
                     $years = 0;
-                }
-            } else if($model->depreciation_id != 0)
-            {
+                } */
+            /* }elseif( $model->depreciation_id && $model->depreciation_id != 0)           {
                 if($model->depreciation()->exists())
                 {
                     $years = $model->depreciation->years;
@@ -207,13 +234,12 @@ class RequestsController extends Controller {
                 {
                     $years = 0;
                 }
-            } else if($model->depreciation != 0)
-            {
+            }elseif($model->depreciation && $model->depreciation != 0){
                 $years = $model->depreciation;
             } else
             {
                 $years = 0;
-            }
+            } */
 
             $eol = \Carbon\Carbon::parse($model->purchased_date)->addYears($years);
             if($eol->isPast())
@@ -276,7 +302,7 @@ class RequestsController extends Controller {
                 'logs' => json_encode($logs),
                 'comments' => json_encode($comments),
                 'created_user' => $model->user_id ?? 0,
-                'created_on' => $model->created_at,
+                'created_on' => $model->created_at ?? \Carbon\Carbon::now(),
                 'user_id' => auth()->user()->id,
                 'super_id' => auth()->user()->id,
                 'date' => $requests->date,

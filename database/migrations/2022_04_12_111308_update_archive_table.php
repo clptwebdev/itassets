@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('archives', function (Blueprint $table) {
-            $table->integer('depreciation')->default(3);
+            $table->integer('depreciation')->nullable()->default(3);
         });
     }
 
